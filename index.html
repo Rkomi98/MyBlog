@@ -1138,6 +1138,19 @@
         const categoryFilterElement = document.getElementById('category-filter');
         const sortOrderElement = document.getElementById('sort-order');
         const localFileAccessHint = 'Serve il sito tramite un server locale (es. `python -m http.server 8000`) per consentire al browser di caricare i file Markdown. / Serve the site through a local HTTP server (e.g. `python -m http.server 8000`) so the browser can load the Markdown files.';
+        const ARTICLES_STORAGE_KEY = 'blogArticles';
+        const ARTICLES_SIGNATURE_KEY = 'blogArticlesSignature';
+
+        function computeArticlesSignature(articles) {
+            return JSON.stringify(articles.map(article => ({
+                title: article.title,
+                date: article.date,
+                markdownPath: article.markdownPath,
+                category: article.category,
+                readTime: article.readTime,
+                icon: article.icon
+            })));
+        }
         
         if (categoryFilterElement) {
             categoryFilterElement.addEventListener('change', (event) => {
@@ -1320,7 +1333,14 @@
             }
             
             const defaults = getDefaultArticles();
-            const stored = localStorage.getItem('blogArticles');
+            const defaultsSignature = computeArticlesSignature(defaults);
+            const storedSignature = localStorage.getItem(ARTICLES_SIGNATURE_KEY);
+            if (storedSignature !== defaultsSignature) {
+                localStorage.removeItem(ARTICLES_STORAGE_KEY);
+                localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
+            }
+            
+            const stored = localStorage.getItem(ARTICLES_STORAGE_KEY);
             if (stored) {
                 try {
                     const parsed = JSON.parse(stored);
@@ -1343,7 +1363,12 @@
                     });
                     
                     const updated = await Promise.all(merged.map(async (article) => {
+                        const isDefaultArticle = defaults.some(defaultArticle =>
+                            defaultArticle.title === article.title &&
+                            defaultArticle.markdownPath === article.markdownPath
+                        );
                         const needsFetch = article.markdownPath && (
+                            isDefaultArticle ||
                             !article.content ||
                             article.content.includes('Content will be loaded') ||
                             article.content.includes('Content unavailable') ||
@@ -1361,7 +1386,8 @@
                         return article;
                     }));
                     articlesCache = updated;
-                    localStorage.setItem('blogArticles', JSON.stringify(updated));
+                    localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(updated));
+                    localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
                     return articlesCache;
                 } catch (parseError) {
                     console.error('Failed to parse stored articles', parseError);
@@ -1382,7 +1408,8 @@
             }));
             
             articlesCache = loaded;
-            localStorage.setItem('blogArticles', JSON.stringify(loaded));
+            localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(loaded));
+            localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
             return articlesCache;
         }
         
@@ -1392,7 +1419,9 @@
         
         function saveArticles(articles) {
             articlesCache = articles;
-            localStorage.setItem('blogArticles', JSON.stringify(articles));
+            localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(articles));
+            const defaultsSignature = computeArticlesSignature(getDefaultArticles());
+            localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
         }
         
         function populateCategoryFilter(articles) {
@@ -1595,17 +1624,26 @@
         
         updateLanguage();
         
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const target = this.getAttribute('href');
-                if (target !== '#' && document.querySelector(target)) {
-                    e.preventDefault();
-                    document.querySelector(target).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
+        // Smooth scrolling for anchor links (works for dynamically injected content too)
+        document.addEventListener('click', function (event) {
+            const anchor = event.target.closest('a[href^="#"]');
+            if (!anchor) return;
+            
+            const targetSelector = anchor.getAttribute('href');
+            if (!targetSelector || targetSelector === '#') return;
+            
+            let targetElement = null;
+            try {
+                targetElement = document.querySelector(targetSelector);
+            } catch (selectionError) {
+                console.error('Invalid anchor selector', selectionError);
+                return;
+            }
+            
+            if (!targetElement) return;
+            
+            event.preventDefault();
+            targetElement.scrollIntoView({ behavior: 'smooth' });
         });
         
         // Add scroll effect to header
