@@ -1,6 +1,6 @@
-# Confronto tra _Vibe Coding_ e Programmazione Tradizionale (2023–2025) {#confronto-tra-_vibe-coding_-e-programmazione-tradizionale-20232025}
+# Confronto tra _Vibe Coding_ e Programmazione Tradizionale (2023–2025)
 
-## Indice {#indice}
+## Indice
 
 - [Pagina 1](#pagina-1)
 - [Pagina 2](#pagina-2)
@@ -18,7 +18,7 @@
 
 ---
 
-## Pagina 1 {#pagina-1}
+## Pagina 1
 
 Confronto tra Vibe Coding e Programmazione
 Tradizionale (2023–2025)
@@ -71,13 +71,13 @@ pratici e culturali difficilmente rilevabili dai soli numeri. Tutte le fonti son
 parentesi quadre (es.
 ) con link ai riferimenti originali, e un elenco completo è fornito in fondo.
 
-![Immagine Pagina 1](Assets/page_001_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 2 {#pagina-2}
+## Pagina 2
 
 Risultati Tecnici
 Impatto su produttività e velocità di sviluppo
@@ -138,13 +138,13 @@ annullare i guadagni di velocità in alcuni casi
 (prompting, agent AI più evoluti) o per task diversi, in futuro la bilancia potrebbe spostarsi
 .
 
-![Immagine Pagina 2](Assets/page_002_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 3 {#pagina-3}
+## Pagina 3
 
 Figura 1: Risultati di uno studio RCT (METR 2025) con 16 sviluppatori open-source esperti, comparando le
 previsioni di esperti e dev (verde = atteso speed-up) con l’effetto reale dell’AI (rosso = slowdown +19% tempo)
@@ -190,13 +190,13 @@ codice generato dall’AI è spesso buona, ma emergono problemi di mantenibilit�
 senza un intervento disciplinato del programmatore. In termini di correttezza funzionale out-of-the-box,
 diversi studi indicano che il codice con AI può essere altrettanto valido di quello scritto a mano. Ad
 
-![Immagine Pagina 3](Assets/page_003_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 4 {#pagina-4}
+## Pagina 4
 
 esempio, GitHub ha riportato che il codice creato con Copilot è “significativamente più funzionale,
 leggibile e affidabile” di quello di controllo in un loro studio del 2022
@@ -264,13 +264,13 @@ In sintesi, il vibe coding tende a produrre più codice, più velocemente, ma co
 al riuso e alla pulizia. Mentre un sviluppatore umano esperto, scrivendo a mano, spesso riflette su
 come integrare la nuova funzionalità nel design esistente (magari refactoring parti di codice correlate),
 
-![Immagine Pagina 4](Assets/page_004_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 5 {#pagina-5}
+## Pagina 5
 
 un AI su prompt genera una soluzione ex novo, ignaro di possibili duplicazioni o soluzioni analoghe già
 nel progetto. Per questo vediamo applicazioni AI-driven che consumano 3–4 volte le risorse server
@@ -334,13 +334,13 @@ vulnerabilità note o potenziali exploit
 – evidenza B (dato aggregato aziendale). In aggiunta, l’approccio
 disinvolto del vibe coding fa sì che  spesso vengano saltati passi essenziali di sicurezza: ad esempio
 
-![Immagine Pagina 5](Assets/page_005_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 6 {#pagina-6}
+## Pagina 6
 
 validazione  degli  input,  sanitizzazione  di  dati  esterni,  gestione  robusta  degli  errori  e  controlli  di
 autenticazione/permessi
@@ -403,13 +403,13 @@ carichi reali
 . Un altro caso citato: generazione di un blob JSON da 39 MB lato client, che
 ovviamente manda in crash il browser – l’AI non ha “capito” che quell’approccio non era scalabile,
 
-![Immagine Pagina 6](Assets/page_006_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 7 {#pagina-7}
+## Pagina 7
 
 mentre lo sviluppatore umano l’ha riconosciuto immediatamente
 . In generale,  architetture
@@ -467,13 +467,13 @@ ricerca di sintassi, gli sviluppatori si concentrano su aspetti più creativi o 
 l’engagement. Un sondaggio Microsoft su utenti early adopters di Copilot (2023) ha trovato che 77% non
 vuole più farne a meno dopo averlo provato, e ~70% riferisce un aumento di produttività percepita e
 
-![Immagine Pagina 7](Assets/page_007_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 8 {#pagina-8}
+## Pagina 8
 
 qualità del proprio lavoro
 . Questi dati mostrano un grande entusiasmo: molti vedono l’AI come un
@@ -535,13 +535,13 @@ riduzione costi), nelle comunità open-source e in generale tra gli sviluppatori
 nuove norme e linee guida su come utilizzare correttamente questi strumenti senza compromettere
 gli standard.
 
-![Immagine Pagina 8](Assets/page_008_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 9 {#pagina-9}
+## Pagina 9
 
 Formazione, competenze e impatto sui ruoli (junior vs senior)
 Forse  la  questione  culturale  più  discussa  è:  come  influisce  il  vibe  coding  sull’apprendimento  e  sulle
@@ -603,13 +603,13 @@ esperti senza guida rischiano di perdersi se qualcosa va storto: “AI abbassa l
 l’asticella per la padronanza”
 . Chi ha poca esperienza può ora costruire un’app full-stack demo in
 
-![Immagine Pagina 9](Assets/page_009_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 10 {#pagina-10}
+## Pagina 10
 
 pochi click – ma quando si rompe, spesso non ha le skill concettuali per ripararla senza aiuto. Questo
 può portare a frustrazione o stalli.
@@ -661,13 +661,13 @@ Il confronto netto tra vibe coding e sviluppo tradizionale può essere riassunto
 offre  velocità  ed  accessibilità  rivoluzionarie,  mentre  il  metodo  tradizionale  assicura  controllo,
 robustezza e chiarezza. Invece di proclamare un vincitore assoluto, le evidenze suggeriscono che un
 
-![Immagine Pagina 10](Assets/page_010_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 11 {#pagina-11}
+## Pagina 11
 
 approccio ibrido e strategico massimizza i benefici minimizzando i rischi. Di seguito, in punti, le
 conclusioni principali e raccomandazioni operative:
@@ -733,13 +733,13 @@ conoscenza tacita. Mantenere attività  kata di programmazione senza AI occasion
 
 •
 
-![Immagine Pagina 11](Assets/page_011_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 12 {#pagina-12}
+## Pagina 12
 
 allenare le capacità fondamentali e far emergere lacune. In sede di code review, porre domande
 ai coder (soprattutto se junior) per assicurarsi che abbiano compreso il codice AI che presentano.
@@ -801,13 +801,13 @@ reali)
 
 •
 
-![Immagine Pagina 12](Assets/page_012_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
 ---
 
-## Pagina 13 {#pagina-13}
+## Pagina 13
 
 White paper GitClear (Coding on Copilot 2024) – analisi quantitativa su repository GitHub (code
 churn, duplicazione post-Copilot)
@@ -882,28 +882,29 @@ ever-33c343bfc2e1
 
 •
 
-![Immagine Pagina 13](Assets/page_013_image_001.png)
+![Immagine](Assets/image_001.png)
 
 
 
-## Bibliografia {#bibliografia}
+## Bibliografia
 
-1. [https://arxiv.org/html/2505.10494v1](https://arxiv.org/html/2505.10494v1)
-2. [https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/)
-3. [https://arxiv.org/html/2506.11022v1](https://arxiv.org/html/2506.11022v1)
-4. [https://devclass.com/2025/04/30/jetbrains-defends-removal-of-negative-reviews-for-unpopular-ai-assistant/](https://devclass.com/2025/04/30/jetbrains-defends-removal-of-negative-reviews-for-unpopular-ai-assistant/)
-5. [https://trickle.so/blog/vibe-coding-vs-traditional-development](https://trickle.so/blog/vibe-coding-vs-traditional-development)
-6. [https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566)
-7. [https://nmn.gl/blog/ai-and-learning](https://nmn.gl/blog/ai-and-learning)
-8. [https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-](https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-)
+1. Cui et al. (MIT/Microsoft)
+2. [arXiv: 2506.11022v1](https://arxiv.org/html/2506.11022v1)
+3. [https://www.infoq.com/news/2025/07/ai-productivity/](https://www.infoq.com/news/2025/07/ai-productivity/)
+4. [https://www.secondtalent.com/resources/github-copilot-statistics/](https://www.secondtalent.com/resources/github-copilot-statistics/)
+5. [https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/)
+6. [https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-](https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-)
+7. [https://devclass.com/2025/04/30/jetbrains-defends-removal-of-negative-reviews-for-unpopular-ai-assistant/](https://devclass.com/2025/04/30/jetbrains-defends-removal-of-negative-reviews-for-unpopular-ai-assistant/)
+8. [https://www.future-processing.com/blog/github-copilot-speeding-up-developers-work/](https://www.future-processing.com/blog/github-copilot-speeding-up-developers-work/)
 9. [https://news.ycombinator.com/item?id=43074852](https://news.ycombinator.com/item?id=43074852)
 10. [https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-](https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-)
-11. [https://www.future-processing.com/blog/github-copilot-speeding-up-developers-work/](https://www.future-processing.com/blog/github-copilot-speeding-up-developers-work/)
-12. [https://arxiv.org/html/2510.10165v2](https://arxiv.org/html/2510.10165v2)
-13. [https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-](https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-)
-14. [https://socket.dev/blog/oss-maintainers-demand-ability-to-block-copilot-generated-issues-and-prs](https://socket.dev/blog/oss-maintainers-demand-ability-to-block-copilot-generated-issues-and-prs)
-15. [https://www.secondtalent.com/resources/github-copilot-statistics/](https://www.secondtalent.com/resources/github-copilot-statistics/)
-16. [https://www.infoq.com/news/2025/07/ai-productivity/](https://www.infoq.com/news/2025/07/ai-productivity/)
-17. [https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx)
-18. [https://www.intercity.technology/resources/copilotintheworkplace](https://www.intercity.technology/resources/copilotintheworkplace)
-19. [https://blog.gitguardian.com/crappy-code-crappy-copilot/](https://blog.gitguardian.com/crappy-code-crappy-copilot/)
+11. [https://trickle.so/blog/vibe-coding-vs-traditional-development](https://trickle.so/blog/vibe-coding-vs-traditional-development)
+12. [arXiv: 2505.10494v1](https://arxiv.org/html/2505.10494v1)
+13. [https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx)
+14. [https://www.intercity.technology/resources/copilotintheworkplace](https://www.intercity.technology/resources/copilotintheworkplace)
+15. [https://nmn.gl/blog/ai-and-learning](https://nmn.gl/blog/ai-and-learning)
+16. [arXiv: 2510.10165v2](https://arxiv.org/html/2510.10165v2)
+17. [https://blog.gitguardian.com/crappy-code-crappy-copilot/](https://blog.gitguardian.com/crappy-code-crappy-copilot/)
+18. [https://socket.dev/blog/oss-maintainers-demand-ability-to-block-copilot-generated-issues-and-prs](https://socket.dev/blog/oss-maintainers-demand-ability-to-block-copilot-generated-issues-and-prs)
+19. [https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566)
+20. [https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-](https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-)

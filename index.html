@@ -534,11 +534,60 @@
             margin: 0 auto;
         }
 
+        .blog-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: flex-end;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 220px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .control-group select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .control-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
         .articles-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
+        }
+
+        .articles-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-secondary);
+            background: var(--bg-tertiary);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
         }
 
         .article-card {
@@ -995,6 +1044,22 @@
                     <input type="file" id="markdown-upload" accept=".md,.markdown" onchange="handleFileUpload(event)">
                     <label for="markdown-upload">Upload Markdown</label>
                 </div>
+
+                <div class="blog-controls">
+                    <div class="control-group">
+                        <label for="category-filter" data-it="Filtra per categoria" data-en="Filter by category">Filtra per categoria</label>
+                        <select id="category-filter">
+                            <option value="all" data-it="Tutte" data-en="All">Tutte</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="sort-order" data-it="Ordina per data" data-en="Sort by date">Ordina per data</label>
+                        <select id="sort-order">
+                            <option value="desc" data-it="Più recenti" data-en="Newest first">Più recenti</option>
+                            <option value="asc" data-it="Meno recenti" data-en="Oldest first">Meno recenti</option>
+                        </select>
+                    </div>
+                </div>
                 
                 <div id="articles-container" class="articles-grid"></div>
             </div>
@@ -1044,6 +1109,25 @@
         let currentLang = 'en';
         let articlesCache = null;
         const themeToggleElement = document.querySelector('.theme-toggle');
+        let currentCategoryFilter = 'all';
+        let currentSortOrder = 'desc';
+        const categoryFilterElement = document.getElementById('category-filter');
+        const sortOrderElement = document.getElementById('sort-order');
+        const localFileAccessHint = 'Serve il sito tramite un server locale (es. `python -m http.server 8000`) per consentire al browser di caricare i file Markdown. / Serve the site through a local HTTP server (e.g. `python -m http.server 8000`) so the browser can load the Markdown files.';
+        
+        if (categoryFilterElement) {
+            categoryFilterElement.addEventListener('change', (event) => {
+                currentCategoryFilter = event.target.value;
+                displayArticles();
+            });
+        }
+        
+        if (sortOrderElement) {
+            sortOrderElement.addEventListener('change', (event) => {
+                currentSortOrder = event.target.value;
+                displayArticles();
+            });
+        }
         
         function toggleLanguage() {
             currentLang = currentLang === 'it' ? 'en' : 'it';
@@ -1113,16 +1197,19 @@
             const article = articles[index];
             
             const display = document.getElementById('article-display');
-            const date = new Date(article.date).toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+            const parsedDate = Date.parse(article.date || '');
+            const displayDate = Number.isNaN(parsedDate)
+                ? (currentLang === 'it' ? 'Data non disponibile' : 'Date unavailable')
+                : new Date(parsedDate).toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
             
             display.innerHTML = `
                 <h1>${article.title}</h1>
                 <div class="article-info">
-                    <span>📅 ${date}</span>
+                    <span>📅 ${displayDate}</span>
                     <span>📁 ${article.category}</span>
                     <span>⏱️ ${article.readTime} min</span>
                 </div>
@@ -1132,6 +1219,8 @@
         
         // Articles management with predefined content
         function getDefaultArticles() {
+            // Update the metadata below (title, category, readTime, date, icon, markdownPath)
+            // to control what appears in the blog grid by default.
             return [
                 {
                     title: "Confronto tra Vibe Coding e Programmazione Tradizionale (2023–2025)",
@@ -1140,6 +1229,14 @@
                     date: new Date('2025-01-15').toISOString(),
                     icon: "🤖",
                     markdownPath: "files/Confronto tra _Vibe Coding_ e Programmazione Tradizionale (2023–2025).md"
+                },
+                {
+                    title: "Vibe Coding vs Coding Tradizionale: Analisi Completa 2023-2025",
+                    category: "Programming",
+                    readTime: 20,
+                    date: new Date('2024-04-10').toISOString(),
+                    icon: "💡",
+                    markdownPath: "files/articolo-vibe-coding-vs-trad-coding.md"
                 },
                 {
                     title: "Innovazione nel Data Cleaning di Point Cloud 3D con Deep Learning",
@@ -1178,10 +1275,10 @@
                         if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300)) {
                             resolve(xhr.responseText);
                         } else {
-                            reject(new Error(`Failed to load ${path}: ${xhr.status}`));
+                            reject(new Error(`${localFileAccessHint}`));
                         }
                     };
-                    xhr.onerror = () => reject(new Error(`Failed to load ${path}`));
+                    xhr.onerror = () => reject(new Error(`${localFileAccessHint}`));
                     xhr.send();
                 });
             }
@@ -1222,14 +1319,19 @@
                     });
                     
                     const updated = await Promise.all(merged.map(async (article) => {
-                        const needsFetch = article.markdownPath && (!article.content || article.content.includes('Content will be loaded') || article.content.includes('Content unavailable'));
+                        const needsFetch = article.markdownPath && (
+                            !article.content ||
+                            article.content.includes('Content will be loaded') ||
+                            article.content.includes('Content unavailable') ||
+                            article.content.includes(localFileAccessHint)
+                        );
                         if (needsFetch) {
                             try {
                                 const text = await fetchMarkdown(article.markdownPath);
                                 return { ...article, content: text };
                             } catch (error) {
                                 console.error(error);
-                                return { ...article, content: 'Content unavailable at the moment.' };
+                                return { ...article, content: `⚠️ ${localFileAccessHint}` };
                             }
                         }
                         return article;
@@ -1249,7 +1351,7 @@
                         return { ...article, content: text };
                     } catch (error) {
                         console.error(error);
-                        return { ...article, content: 'Content unavailable at the moment.' };
+                        return { ...article, content: `⚠️ ${localFileAccessHint}` };
                     }
                 }
                 return { ...article, content: '' };
@@ -1269,22 +1371,97 @@
             localStorage.setItem('blogArticles', JSON.stringify(articles));
         }
         
+        function populateCategoryFilter(articles) {
+            if (!categoryFilterElement) return;
+            
+            const categories = Array.from(new Set(articles
+                .map(article => article.category)
+                .filter(Boolean)))
+                .sort((a, b) => a.localeCompare(b));
+            
+            const preferred = categories.includes(currentCategoryFilter) ? currentCategoryFilter : 'all';
+            const existingCategories = Array.from(categoryFilterElement.options)
+                .filter(option => option.value !== 'all')
+                .map(option => option.value);
+            
+            const needsUpdate = existingCategories.length !== categories.length ||
+                categories.some((category, index) => existingCategories[index] !== category);
+            
+            if (!needsUpdate) {
+                categoryFilterElement.value = preferred;
+                currentCategoryFilter = preferred;
+                return;
+            }
+            
+            categoryFilterElement.innerHTML = '';
+            const allOption = document.createElement('option');
+            allOption.value = 'all';
+            allOption.setAttribute('data-it', 'Tutte');
+            allOption.setAttribute('data-en', 'All');
+            allOption.textContent = currentLang === 'it' ? 'Tutte' : 'All';
+            categoryFilterElement.appendChild(allOption);
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.setAttribute('data-it', category);
+                option.setAttribute('data-en', category);
+                option.textContent = category;
+                categoryFilterElement.appendChild(option);
+            });
+            
+            currentCategoryFilter = preferred;
+            categoryFilterElement.value = preferred;
+        }
+        
         async function displayArticles() {
             const articles = await getArticles();
+            populateCategoryFilter(articles);
             const container = document.getElementById('articles-container');
+            if (!container) return;
             
             container.innerHTML = '';
             
-            articles.forEach((article, index) => {
+            const decoratedArticles = articles.map((article, index) => ({ article, index }));
+            
+            decoratedArticles.sort((a, b) => {
+                const dateA = Date.parse(a.article.date || '');
+                const dateB = Date.parse(b.article.date || '');
+                const safeA = Number.isNaN(dateA) ? 0 : dateA;
+                const safeB = Number.isNaN(dateB) ? 0 : dateB;
+                return currentSortOrder === 'asc' ? safeA - safeB : safeB - safeA;
+            });
+            
+            const filteredArticles = decoratedArticles.filter(item => {
+                if (currentCategoryFilter === 'all') return true;
+                return item.article.category === currentCategoryFilter;
+            });
+            
+            if (filteredArticles.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'articles-empty';
+                emptyState.setAttribute('data-it', 'Nessun articolo disponibile per questa categoria.');
+                emptyState.setAttribute('data-en', 'No articles available for this category.');
+                emptyState.textContent = currentLang === 'it' ?
+                    'Nessun articolo disponibile per questa categoria.' :
+                    'No articles available for this category.';
+                container.appendChild(emptyState);
+                return;
+            }
+            
+            filteredArticles.forEach(({ article, index }) => {
                 const card = document.createElement('div');
                 card.className = 'article-card';
                 card.onclick = () => showArticle(index);
                 
-                const date = new Date(article.date).toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
+                const parsedDate = Date.parse(article.date || '');
+                const cardDate = Number.isNaN(parsedDate)
+                    ? (currentLang === 'it' ? 'Data n/d' : 'Date n/a')
+                    : new Date(parsedDate).toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
                 
                 const plainText = (article.content || '').replace(/[#*`>-]/g, '').trim();
                 const excerpt = plainText.substring(0, 200) + '...';
@@ -1296,7 +1473,7 @@
                     <div class="article-content">
                         <div class="article-meta">
                             <span class="article-category">${article.category}</span>
-                            <span class="article-date">${date}</span>
+                            <span class="article-date">${cardDate}</span>
                         </div>
                         <h3 class="article-title">${article.title}</h3>
                         <p class="article-excerpt">${excerpt}</p>

@@ -50,8 +50,11 @@ def generate_table_of_contents(markdown_content):
     return ''
 
 
-def extract_images_from_page(page, page_num, output_dir):
-    """Extract images from a PDF page and save them to the output directory."""
+def extract_images_from_page(page, page_num, output_dir, extracted_images_hashes):
+    """Extract images from a PDF page and save them to the output directory.
+    Avoids extracting duplicate images by checking image hashes."""
+    import hashlib
+
     images = page.get_images(full=True)
     image_paths = []
 
@@ -61,14 +64,26 @@ def extract_images_from_page(page, page_num, output_dir):
         image_bytes = base_image["image"]
         image_ext = base_image["ext"]
 
-        # Create image filename
-        image_filename = f"page_{page_num+1:03d}_image_{img_index+1:03d}.{image_ext}"
+        # Calculate hash to check for duplicates
+        image_hash = hashlib.md5(image_bytes).hexdigest()
+
+        # Check if this image was already extracted
+        if image_hash in extracted_images_hashes:
+            # Use the existing image path
+            existing_filename = extracted_images_hashes[image_hash]
+            image_paths.append(existing_filename)
+            continue
+
+        # Create image filename (now global counter instead of page-specific)
+        image_filename = f"image_{len(extracted_images_hashes)+1:03d}.{image_ext}"
         image_path = os.path.join(output_dir, image_filename)
 
         # Save image
         with open(image_path, "wb") as img_file:
             img_file.write(image_bytes)
 
+        # Mark this image as extracted
+        extracted_images_hashes[image_hash] = image_filename
         image_paths.append(image_filename)
 
     return image_paths
@@ -103,33 +118,65 @@ def extract_citations(text):
     """Extract citations and sources from text."""
     citations = []
 
-    # Pattern for Harvard citations [Author, Year] or similar
-    citation_pattern = r'\[([^\]]+)\]'
+    # Pattern for Harvard citations [Author, Year] or similar - improved
+    # Match complete citations within brackets, with better filtering
+    citation_pattern = r'\[([^\[\]]{5,100})\]'  # Match content within brackets, 5-100 chars
     found_citations = re.findall(citation_pattern, text)
 
     for citation in found_citations:
         citation = citation.strip()
-        if citation and len(citation) > 2:  # Avoid very short citations
+        # Filter out citations that are just numbers, URLs, very short fragments, or punctuation
+        if (citation and
+            len(citation) > 4 and  # Minimum length increased
+            not citation.isdigit() and
+            not citation.startswith('http') and
+            not '://' in citation and
+            not citation.startswith('DOI:') and
+            not re.match(r'^[^\w\s]*$', citation) and  # Avoid pure punctuation
+            not re.match(r'^\d{4}$', citation) and  # Avoid just years
+            not re.match(r'^\w+,\s*\d{4}$', citation) and  # Avoid simple "Author, Year" that might be fragments
+            ',' in citation and  # Must contain comma (likely author, year format)
+            ' ' in citation):  # Must contain space (more complete citations)
             citations.append(citation)
 
     # Also extract URLs which are likely sources
-    url_pattern = r'https?://[^\s]+'
+    url_pattern = r'https?://[^\s\[\]<>"{}|\\^`]+'
     urls = re.findall(url_pattern, text)
     citations.extend(urls)
 
     # Extract DOI links
-    doi_pattern = r'(?:doi\.org|arxiv\.org)[^\s]+'
+    doi_pattern = r'(?:doi\.org|arxiv\.org)[^\s\[\]<>"{}|\\^`]+'
     dois = re.findall(doi_pattern, text)
-    citations.extend([f"https://{doi}" for doi in dois])
+    citations.extend([f"https://{doi}" for doi in dois if doi])
+
+    # Extract additional citation patterns that might be missed (without brackets)
+    # Only extract complete citations like "Author et al. (Year)" - avoid fragments
+    additional_pattern = r'\b([A-Z][a-z]+(?:\s+et\s+al\.?\s*\([^)]+\)|\s+et\s+al\.?\s*\(\d{4}\)))'
+    additional_citations = re.findall(additional_pattern, text)
+    for citation in additional_citations:
+        citation = citation.strip()
+        if (citation and
+            len(citation) > 8 and  # Must be reasonably complete
+            citation not in citations):
+            citations.append(citation)
 
     # Clean and deduplicate citations
     unique_citations = []
     seen = set()
     for citation in citations:
         citation = citation.strip()
-        if citation and citation not in seen and len(citation) > 5:  # Filter very short entries
-            unique_citations.append(citation)
-            seen.add(citation)
+        # More robust filtering and normalization
+        if (citation and
+            len(citation) > 3 and
+            not citation.isdigit() and
+            not re.match(r'^[^\w]*$', citation)):  # Avoid citations that are only punctuation
+
+            # Normalize citation for deduplication (remove extra spaces, normalize case for URLs)
+            normalized = citation.lower() if citation.startswith('http') else citation
+
+            if normalized not in seen:
+                unique_citations.append(citation)
+                seen.add(normalized)
 
     return unique_citations
 
@@ -140,14 +187,97 @@ def create_bibliography_section(citations):
         return ""
 
     bibliography = "\n\n## Bibliografia\n\n"
-    for i, citation in enumerate(citations, 1):
+
+    # Separate URLs from textual citations
+    urls = [c for c in citations if c.startswith('http')]
+    textual_citations = [c for c in citations if not c.startswith('http')]
+
+    # Sort citations: textual first, then URLs
+    sorted_citations = textual_citations + urls
+
+    for i, citation in enumerate(sorted_citations, 1):
         # If it's a URL, create a markdown link
         if citation.startswith('http'):
-            bibliography += f"{i}. [{citation}]({citation})\n"
+            # Try to create a more readable title from URL
+            title = citation
+            # Extract meaningful parts from common URL patterns
+            if 'arxiv.org' in citation:
+                title = f"arXiv: {citation.split('/')[-1] if '/' in citation else citation}"
+            elif 'doi.org' in citation:
+                title = f"DOI: {citation.split('/')[-1] if '/' in citation else citation}"
+            elif 'github.com' in citation:
+                title = f"GitHub: {citation.split('/')[-2] if '/' in citation else citation}"
+            bibliography += f"{i}. [{title}]({citation})\n"
         else:
+            # For textual citations, format them nicely with number
             bibliography += f"{i}. {citation}\n"
 
     return bibliography
+
+
+def add_inline_citations(text, citations_dict):
+    """Replace citation brackets with inline references to bibliography."""
+    result = text
+
+    # Find all citation patterns [text] in the text
+    citation_pattern = r'\[([^\[\]]{3,100})\]'
+    found_citations = re.findall(citation_pattern, result)
+
+    for citation in found_citations:
+        citation = citation.strip()
+        # Check if this citation is in our bibliography
+        if citation in citations_dict:
+            citation_num = citations_dict[citation]
+            # Replace [citation] with [citation_num]
+            result = re.sub(r'\[' + re.escape(citation) + r'\]', f'[{citation_num}]', result)
+
+    return result
+
+
+def apply_citations_to_document(pdf_path, citations_dict, assets_dir, extracted_images_hashes):
+    """Re-process the PDF document applying inline citations."""
+    try:
+        doc = fitz.open(pdf_path)
+        pdf_name = Path(pdf_path).stem
+
+        markdown_content = f"# {pdf_name}\n\n"
+
+        for page_num in range(len(doc)):
+            page = doc[page_num]
+            text = page.get_text()
+
+            if text.strip():
+                # Apply inline citations to the original text
+                text_with_citations = add_inline_citations(text, citations_dict)
+
+                # Clean the text with citations
+                clean_page_text = clean_text(text_with_citations)
+
+                # Skip last page if it's sources
+                page_citations = extract_citations(text)
+                if page_num == len(doc) - 1 and ('http' in clean_page_text.lower() or len(page_citations) > 5):
+                    continue
+
+                # Add page content
+                if page_num > 0:
+                    markdown_content += f"\n\n---\n\n## Pagina {page_num + 1}\n\n"
+                else:
+                    markdown_content += "## Pagina 1\n\n"
+
+                markdown_content += clean_page_text + "\n\n"
+
+            # Extract images (avoid duplicates using the same hash tracking)
+            if page_num < len(doc) - 1 or not ('http' in text.lower() or len(extract_citations(text)) > 5):
+                image_paths = extract_images_from_page(page, page_num, assets_dir, extracted_images_hashes)
+                for img_path in image_paths:
+                    markdown_content += f"![Immagine]({os.path.join('Assets', img_path)})\n\n"
+
+        doc.close()
+        return markdown_content
+
+    except Exception as e:
+        print(f"Error applying citations to document: {str(e)}")
+        return None
 
 
 def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
@@ -161,6 +291,7 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
         markdown_content = f"# {pdf_name}\n\n"
 
         all_citations = []
+        extracted_images_hashes = {}  # Track extracted images to avoid duplicates
 
         # Process each page
         for page_num in range(len(doc)):
@@ -169,19 +300,22 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
             # Extract text
             text = page.get_text()
             if text.strip():
+                # Extract citations from original text before cleaning
+                page_citations = extract_citations(text)
+                all_citations.extend(page_citations)
+
+                # Apply inline citations to original text before cleaning
+                # This will replace [citation text] with [number] in the original text
+                text_with_inline_citations = text  # Will be processed later with all citations
+
                 # Clean and format text
-                clean_page_text = clean_text(text)
+                clean_page_text = clean_text(text_with_inline_citations)
 
                 # Skip the last page if it contains mostly sources/links (avoid duplication in bibliography)
-                if page_num == len(doc) - 1 and ('http' in clean_page_text.lower() or len(extract_citations(clean_page_text)) > 5):
-                    # Extract citations from last page but don't include text content
-                    page_citations = extract_citations(clean_page_text)
-                    all_citations.extend(page_citations)
+                if page_num == len(doc) - 1 and ('http' in clean_page_text.lower() or len(page_citations) > 5):
+                    # Don't include text content for last page
+                    pass
                 else:
-                    # Extract citations from this page
-                    page_citations = extract_citations(clean_page_text)
-                    all_citations.extend(page_citations)
-
                     # Add page content
                     if page_num > 0:  # Add page separator for pages after first
                         markdown_content += f"\n\n---\n\n## Pagina {page_num + 1}\n\n"
@@ -192,33 +326,28 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
 
             # Extract and add images (except for last page if it's sources)
             if page_num < len(doc) - 1 or not ('http' in text.lower() or len(extract_citations(text)) > 5):
-                image_paths = extract_images_from_page(page, page_num, assets_dir)
+                image_paths = extract_images_from_page(page, page_num, assets_dir, extracted_images_hashes)
                 for img_path in image_paths:
-                    markdown_content += f"![Immagine Pagina {page_num + 1}]({os.path.join('Assets', img_path)})\n\n"
+                    markdown_content += f"![Immagine]({os.path.join('Assets', img_path)})\n\n"
+
+        # Create unique citations list and citation dictionary for inline references
+        unique_citations = list(set(all_citations))
+        citations_dict = {citation: i+1 for i, citation in enumerate(unique_citations) if not citation.startswith('http')}
+
+        # Apply inline citations to the entire document content before adding bibliography
+        # We need to re-process the PDF to apply citations inline
+        markdown_content_with_citations = apply_citations_to_document(pdf_path, citations_dict, assets_dir, extracted_images_hashes)
+
+        # Replace the content with citations
+        if markdown_content_with_citations:
+            markdown_content = markdown_content_with_citations
 
         # Add bibliography section
-        bibliography = create_bibliography_section(list(set(all_citations)))
+        bibliography = create_bibliography_section(unique_citations)
         markdown_content += bibliography
 
         # Generate table of contents and add it after the title
         toc = generate_table_of_contents(markdown_content)
-
-        # Add anchors to headers in the content
-        def add_header_anchors(content):
-            lines = content.split('\n')
-            processed_lines = []
-
-            for line in lines:
-                header_match = re.match(r'^(#{1,6})\s+(.+)', line.strip())
-                if header_match:
-                    level = len(header_match.group(1))
-                    title = header_match.group(2).strip()
-                    anchor = re.sub(r'[^\w\s-]', '', title).lower().replace(' ', '-')
-                    processed_lines.append(f'{header_match.group(1)} {title} {{#{anchor}}}')
-                else:
-                    processed_lines.append(line)
-
-            return '\n'.join(processed_lines)
 
         # Insert TOC after the main title
         title_end_pos = markdown_content.find('\n\n')
@@ -226,9 +355,6 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
             final_content = markdown_content[:title_end_pos + 2] + toc + markdown_content[title_end_pos + 2:]
         else:
             final_content = markdown_content
-
-        # Add anchors to headers
-        final_content = add_header_anchors(final_content)
 
         # Save markdown file
         output_file = os.path.join(output_dir, f"{pdf_name}.md")
