@@ -11,11 +11,6 @@ from pathlib import Path
 import markdown
 
 
-def normalize_citation(citation):
-    """Normalize citation text for consistent matching and deduplication."""
-    return re.sub(r'\s+', ' ', citation.strip()).lower()
-
-
 def generate_table_of_contents(markdown_content):
     """Generate a table of contents from markdown headers."""
     lines = markdown_content.split('\n')
@@ -123,118 +118,123 @@ def extract_citations(text):
     """Extract citations and sources from text."""
     citations = []
 
-    # Capture bracketed citations like [Author, Year]
-    bracket_pattern = r'\[([^\[\]]+?)\]'
-    for match in re.findall(bracket_pattern, text):
-        cleaned = match.strip().rstrip('.,; ')
-        if cleaned:
-            citations.append(cleaned)
+    # Pattern for Harvard citations [Author, Year] or similar - improved
+    # Match complete citations within brackets, with better filtering
+    citation_pattern = r'\[([^\[\]]{5,100})\]'  # Match content within brackets, 5-100 chars
+    found_citations = re.findall(citation_pattern, text)
 
-    # Capture plain URLs that may represent sources
-    url_pattern = r'https?://[^\s\]\)>,]+'
-    for url in re.findall(url_pattern, text):
-        cleaned = url.rstrip('.,; )]')
-        if cleaned:
-            citations.append(cleaned)
+    for citation in found_citations:
+        citation = citation.strip()
+        # Filter out citations that are just numbers, URLs, very short fragments, or punctuation
+        if (citation and
+            len(citation) > 4 and  # Minimum length increased
+            not citation.isdigit() and
+            not citation.startswith('http') and
+            not '://' in citation and
+            not citation.startswith('DOI:') and
+            not re.match(r'^[^\w\s]*$', citation) and  # Avoid pure punctuation
+            not re.match(r'^\d{4}$', citation) and  # Avoid just years
+            not re.match(r'^\w+,\s*\d{4}$', citation) and  # Avoid simple "Author, Year" that might be fragments
+            ',' in citation and  # Must contain comma (likely author, year format)
+            ' ' in citation):  # Must contain space (more complete citations)
+            citations.append(citation)
 
-    # Capture DOI/arXiv references that might not include protocol
-    doi_pattern = r'(?:doi\.org|arxiv\.org)[^\s\]\)>,]+'
-    for doi in re.findall(doi_pattern, text):
-        cleaned = doi.rstrip('.,; )]')
-        if cleaned:
-            if not cleaned.lower().startswith('http'):
-                cleaned = f"https://{cleaned}"
-            citations.append(cleaned)
+    # Also extract URLs which are likely sources
+    url_pattern = r'https?://[^\s\[\]<>"{}|\\^`]+'
+    urls = re.findall(url_pattern, text)
+    citations.extend(urls)
 
-    # Capture textual citations like "Author et al. (2023)"
-    textual_pattern = r'\b([A-Z][A-Za-z]+(?:\s+(?:et\s+al\.?|and))?\s*\(\d{4}[a-z]?\))'
-    for match in re.findall(textual_pattern, text):
-        cleaned = match.strip()
-        if cleaned:
-            citations.append(cleaned)
+    # Extract DOI links
+    doi_pattern = r'(?:doi\.org|arxiv\.org)[^\s\[\]<>"{}|\\^`]+'
+    dois = re.findall(doi_pattern, text)
+    citations.extend([f"https://{doi}" for doi in dois if doi])
 
-    # Deduplicate while preserving order
+    # Extract additional citation patterns that might be missed (without brackets)
+    # Only extract complete citations like "Author et al. (Year)" - avoid fragments
+    additional_pattern = r'\b([A-Z][a-z]+(?:\s+et\s+al\.?\s*\([^)]+\)|\s+et\s+al\.?\s*\(\d{4}\)))'
+    additional_citations = re.findall(additional_pattern, text)
+    for citation in additional_citations:
+        citation = citation.strip()
+        if (citation and
+            len(citation) > 8 and  # Must be reasonably complete
+            citation not in citations):
+            citations.append(citation)
+
+    # Clean and deduplicate citations
     unique_citations = []
     seen = set()
     for citation in citations:
-        normalized = normalize_citation(citation)
-        if normalized and normalized not in seen:
-            unique_citations.append(citation.strip())
-            seen.add(normalized)
+        citation = citation.strip()
+        # More robust filtering and normalization
+        if (citation and
+            len(citation) > 3 and
+            not citation.isdigit() and
+            not re.match(r'^[^\w]*$', citation)):  # Avoid citations that are only punctuation
+
+            # Normalize citation for deduplication (remove extra spaces, normalize case for URLs)
+            normalized = citation.lower() if citation.startswith('http') else citation
+
+            if normalized not in seen:
+                unique_citations.append(citation)
+                seen.add(normalized)
 
     return unique_citations
 
 
 def create_bibliography_section(citations):
-    """Create a formatted bibliography section and mapping."""
+    """Create a formatted bibliography section."""
     if not citations:
-        return "", {}
+        return ""
 
-    bibliography_lines = ["\n\n## Bibliografia\n\n"]
-    citation_map = {}
+    bibliography = "\n\n## Bibliografia\n\n"
 
-    for index, citation in enumerate(citations, 1):
-        anchor_id = f"ref-{index}"
-        citation_map[normalize_citation(citation)] = index
+    # Separate URLs from textual citations
+    urls = [c for c in citations if c.startswith('http')]
+    textual_citations = [c for c in citations if not c.startswith('http')]
 
+    # Sort citations: textual first, then URLs
+    sorted_citations = textual_citations + urls
+
+    for i, citation in enumerate(sorted_citations, 1):
+        # If it's a URL, create a markdown link
         if citation.startswith('http'):
-            display_text = citation
+            # Try to create a more readable title from URL
+            title = citation
+            # Extract meaningful parts from common URL patterns
             if 'arxiv.org' in citation:
-                display_text = f"arXiv: {citation.split('/')[-1]}"
+                title = f"arXiv: {citation.split('/')[-1] if '/' in citation else citation}"
             elif 'doi.org' in citation:
-                display_text = f"DOI: {citation.split('/')[-1]}"
+                title = f"DOI: {citation.split('/')[-1] if '/' in citation else citation}"
             elif 'github.com' in citation:
-                parts = citation.rstrip('/').split('/')
-                if len(parts) >= 2:
-                    display_text = f"GitHub: {parts[-2]}/{parts[-1]}"
-            bibliography_lines.append(f"{index}. <a id=\"{anchor_id}\"></a>[{display_text}]({citation})")
+                title = f"GitHub: {citation.split('/')[-2] if '/' in citation else citation}"
+            bibliography += f"{i}. [{title}]({citation})\n"
         else:
-            bibliography_lines.append(f"{index}. <a id=\"{anchor_id}\"></a>{citation}")
+            # For textual citations, format them nicely with number
+            bibliography += f"{i}. {citation}\n"
 
-    bibliography_lines.append("")  # Ensure trailing newline
-    return "\n".join(bibliography_lines), citation_map
-
-
-def link_citations_to_bibliography(content, citation_map):
-    """Link in-text citations to their bibliography entries."""
-    if not citation_map:
-        return content
-
-    citation_pattern = re.compile(r'\[([^\[\]]+?)\](?!\()')
-
-    def replace_citation(match):
-        citation_text = match.group(1).strip()
-        normalized = normalize_citation(citation_text)
-        index = citation_map.get(normalized)
-        if not index:
-            return match.group(0)
-        return f'[{citation_text}](#ref-{index})'
-
-    split_marker = '\n## Bibliografia'
-    if split_marker in content:
-        before, after = content.split(split_marker, 1)
-        linked_before = citation_pattern.sub(replace_citation, before)
-        return linked_before + split_marker + after
-
-    return citation_pattern.sub(replace_citation, content)
+    return bibliography
 
 
-def add_inline_citations(text, citation_numbers):
-    """Replace bracketed citations with clickable references to the bibliography."""
-    citation_regex = re.compile(r'\[([^\[\]]+?)\](?!\()')
+def add_inline_citations(text, citations_dict):
+    """Replace citation brackets with inline references to bibliography."""
+    result = text
 
-    def replacer(match):
-        citation_text = match.group(1).strip()
-        normalized = normalize_citation(citation_text)
-        index = citation_numbers.get(normalized)
-        if not index:
-            return match.group(0)
-        return f'[{index}](#ref-{index})'
+    # Find all citation patterns [text] in the text
+    citation_pattern = r'\[([^\[\]]{3,100})\]'
+    found_citations = re.findall(citation_pattern, result)
 
-    return citation_regex.sub(replacer, text)
+    for citation in found_citations:
+        citation = citation.strip()
+        # Check if this citation is in our bibliography
+        if citation in citations_dict:
+            citation_num = citations_dict[citation]
+            # Replace [citation] with [citation_num]
+            result = re.sub(r'\[' + re.escape(citation) + r'\]', f'[{citation_num}]', result)
+
+    return result
 
 
-def apply_citations_to_document(pdf_path, citation_numbers, assets_dir, extracted_images_hashes):
+def apply_citations_to_document(pdf_path, citations_dict, assets_dir, extracted_images_hashes):
     """Re-process the PDF document applying inline citations."""
     try:
         doc = fitz.open(pdf_path)
@@ -248,7 +248,7 @@ def apply_citations_to_document(pdf_path, citation_numbers, assets_dir, extracte
 
             if text.strip():
                 # Apply inline citations to the original text
-                text_with_citations = add_inline_citations(text, citation_numbers)
+                text_with_citations = add_inline_citations(text, citations_dict)
 
                 # Clean the text with citations
                 clean_page_text = clean_text(text_with_citations)
@@ -285,7 +285,7 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
     try:
         pdf_name = Path(pdf_path).stem
 
-        # First pass: extract all citations preserving order
+        # First pass: extract all citations
         doc = fitz.open(pdf_path)
         all_citations = []
 
@@ -298,24 +298,20 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
 
         doc.close()
 
-        unique_citations = []
-        citation_numbers = {}
-        for citation in all_citations:
-            normalized = normalize_citation(citation)
-            if normalized and normalized not in citation_numbers:
-                citation_numbers[normalized] = len(unique_citations) + 1
-                unique_citations.append(citation)
+        # Create unique citations list and citation dictionary for inline references
+        unique_citations = list(set(all_citations))
+        citations_dict = {citation: i+1 for i, citation in enumerate(unique_citations) if not citation.startswith('http')}
 
         # Second pass: apply inline citations and generate final markdown
         extracted_images_hashes = {}  # Track extracted images to avoid duplicates
-        markdown_content = apply_citations_to_document(pdf_path, citation_numbers, assets_dir, extracted_images_hashes)
+        markdown_content = apply_citations_to_document(pdf_path, citations_dict, assets_dir, extracted_images_hashes)
 
         if not markdown_content:
             return False
 
         # Add bibliography section
-        bibliography_section, citation_map = create_bibliography_section(unique_citations)
-        markdown_content += bibliography_section
+        bibliography = create_bibliography_section(unique_citations)
+        markdown_content += bibliography
 
         # Generate table of contents and add it after the title
         toc = generate_table_of_contents(markdown_content)
@@ -326,9 +322,6 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
             final_content = markdown_content[:title_end_pos + 2] + toc + markdown_content[title_end_pos + 2:]
         else:
             final_content = markdown_content
-
-        # Link citations to bibliography entries
-        final_content = link_citations_to_bibliography(final_content, citation_map)
 
         # Save markdown file
         output_file = os.path.join(output_dir, f"{pdf_name}.md")

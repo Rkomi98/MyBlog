@@ -1,5 +1,10 @@
 # Confronto tra vibe coding e programmazione tradizionale (2023–2025)
 
+## Indice
+
+- [Abstract](#abstract)
+- [Metodologia](#metodologia)
+
 ## Abstract
 
 Il vibe coding – ossia la programmazione guidata interamente dall’AI – si è diffuso tra il 2023 e il 2025 grazie a strumenti come GitHub Copilot, Cursor, Sourcegraph Cody, Tabnine, Codeium e assistenti AI integrati negli IDE. 
