@@ -283,64 +283,31 @@ def apply_citations_to_document(pdf_path, citations_dict, assets_dir, extracted_
 def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
     """Convert a PDF file to Markdown format."""
     try:
-        # Open PDF
-        doc = fitz.open(pdf_path)
         pdf_name = Path(pdf_path).stem
 
-        # Initialize markdown content
-        markdown_content = f"# {pdf_name}\n\n"
-
+        # First pass: extract all citations
+        doc = fitz.open(pdf_path)
         all_citations = []
-        extracted_images_hashes = {}  # Track extracted images to avoid duplicates
 
-        # Process each page
         for page_num in range(len(doc)):
             page = doc[page_num]
-
-            # Extract text
             text = page.get_text()
             if text.strip():
-                # Extract citations from original text before cleaning
                 page_citations = extract_citations(text)
                 all_citations.extend(page_citations)
 
-                # Apply inline citations to original text before cleaning
-                # This will replace [citation text] with [number] in the original text
-                text_with_inline_citations = text  # Will be processed later with all citations
-
-                # Clean and format text
-                clean_page_text = clean_text(text_with_inline_citations)
-
-                # Skip the last page if it contains mostly sources/links (avoid duplication in bibliography)
-                if page_num == len(doc) - 1 and ('http' in clean_page_text.lower() or len(page_citations) > 5):
-                    # Don't include text content for last page
-                    pass
-                else:
-                    # Add page content
-                    if page_num > 0:  # Add page separator for pages after first
-                        markdown_content += f"\n\n---\n\n## Pagina {page_num + 1}\n\n"
-                    else:
-                        markdown_content += "## Pagina 1\n\n"
-
-                    markdown_content += clean_page_text + "\n\n"
-
-            # Extract and add images (except for last page if it's sources)
-            if page_num < len(doc) - 1 or not ('http' in text.lower() or len(extract_citations(text)) > 5):
-                image_paths = extract_images_from_page(page, page_num, assets_dir, extracted_images_hashes)
-                for img_path in image_paths:
-                    markdown_content += f"![Immagine]({os.path.join('Assets', img_path)})\n\n"
+        doc.close()
 
         # Create unique citations list and citation dictionary for inline references
         unique_citations = list(set(all_citations))
         citations_dict = {citation: i+1 for i, citation in enumerate(unique_citations) if not citation.startswith('http')}
 
-        # Apply inline citations to the entire document content before adding bibliography
-        # We need to re-process the PDF to apply citations inline
-        markdown_content_with_citations = apply_citations_to_document(pdf_path, citations_dict, assets_dir, extracted_images_hashes)
+        # Second pass: apply inline citations and generate final markdown
+        extracted_images_hashes = {}  # Track extracted images to avoid duplicates
+        markdown_content = apply_citations_to_document(pdf_path, citations_dict, assets_dir, extracted_images_hashes)
 
-        # Replace the content with citations
-        if markdown_content_with_citations:
-            markdown_content = markdown_content_with_citations
+        if not markdown_content:
+            return False
 
         # Add bibliography section
         bibliography = create_bibliography_section(unique_citations)
@@ -362,9 +329,8 @@ def convert_pdf_to_markdown(pdf_path, output_dir, assets_dir):
             f.write(final_content)
 
         print(f"Successfully converted {pdf_path} to {output_file}")
-        print(f"Extracted {len(all_citations)} unique citations")
+        print(f"Extracted {len(unique_citations)} unique citations")
 
-        doc.close()
         return True
 
     except Exception as e:
