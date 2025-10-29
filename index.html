@@ -506,21 +506,6 @@
             color: white;
         }
 
-        /* Contact Section */
-        .contact-section {
-            padding: 5rem 0;
-            background: var(--bg-secondary);
-        }
-
-        .contact-wrapper {
-            display: flex;
-            justify-content: center;
-        }
-
-        .contact-card {
-            max-width: 350px;
-        }
-
         /* Blog Section */
         .blog-section {
             padding: 5rem 0;
@@ -900,9 +885,7 @@
             </a>
             <nav>
                 <div class="nav-links">
-                    <a href="#" class="nav-link" onclick="showHome(); return false;" data-it="Home" data-en="Home">Home</a>
                     <a href="#" class="nav-link" onclick="showBlog(); return false;" data-it="Blog" data-en="Blog">Blog</a>
-                    <a href="#contact" class="nav-link" data-no-smooth="true" onclick="showContact(event)" data-it="Contatti" data-en="Contact">Contatti</a>
                 </div>
                 <div class="controls">
                     <button class="lang-btn" onclick="toggleLanguage()">EN</button>
@@ -996,42 +979,6 @@
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section id="contact" class="contact-section">
-            <div class="container">
-                <div class="contact-wrapper">
-                    <div class="profile-card contact-card">
-                        <div class="profile-img-container">
-                            <img src="Assets/profile.JPG" alt="Mirko Calcaterra" class="profile-img" id="contact-profile-img">
-                            <div class="profile-status"></div>
-                        </div>
-                        <h2 class="profile-name">Mirko Calcaterra</h2>
-                        <p class="profile-title" data-it="Ingegnere Geoinformatico & AI Specialist" data-en="Geoinformatics Engineer & AI Specialist">
-                            Ingegnere Geoinformatico & AI Specialist
-                        </p>
-                        <div class="profile-contacts">
-                            <a href="mailto:mirko98@live.com" class="contact-item">
-                                <span class="contact-icon">✉️</span>
-                                <span>mirko98@live.com</span>
-                            </a>
-                            <a href="https://www.linkedin.com/in/mirko-calcaterra-30029519b/" class="contact-item" target="_blank">
-                                <span class="contact-icon">💼</span>
-                                <span>LinkedIn</span>
-                            </a>
-                            <a href="https://github.com/Rkomi98" class="contact-item" target="_blank">
-                                <span class="contact-icon">🔗</span>
-                                <span>GitHub</span>
-                            </a>
-                            <a href="https://www.youtube.com/@mirkocalcaterra983" class="contact-item" target="_blank">
-                                <span class="contact-icon">📺</span>
-                                <span>Mirko Calcaterra</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Blog Section -->
         <section id="blog" class="blog-section">
             <div class="container">
@@ -1094,11 +1041,12 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         // Language management
-        let currentLang = 'it';
+        let currentLang = 'en';
+        let articlesCache = null;
+        const themeToggleElement = document.querySelector('.theme-toggle');
         
         function toggleLanguage() {
             currentLang = currentLang === 'it' ? 'en' : 'it';
-            document.querySelector('.lang-btn').textContent = currentLang === 'it' ? 'EN' : 'IT';
             updateLanguage();
         }
         
@@ -1106,62 +1054,62 @@
             document.querySelectorAll('[data-it][data-en]').forEach(element => {
                 element.textContent = element.getAttribute(`data-${currentLang}`);
             });
+            
+            const langButton = document.querySelector('.lang-btn');
+            if (langButton) {
+                langButton.textContent = currentLang === 'it' ? 'EN' : 'IT';
+            }
             displayArticles();
         }
         
         // Theme management
         function toggleTheme() {
-            const toggle = document.querySelector('.theme-toggle');
+            if (!themeToggleElement) return;
             const isDark = document.documentElement.hasAttribute('data-theme');
             
             if (isDark) {
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
-                toggle.classList.remove('active');
+                themeToggleElement.classList.remove('active');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
-                toggle.classList.add('active');
+                themeToggleElement.classList.add('active');
             }
         }
         
         // Load saved theme
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
+        if (savedTheme === 'dark' || savedTheme === null) {
             document.documentElement.setAttribute('data-theme', 'dark');
-            document.querySelector('.theme-toggle').classList.add('active');
-        }
-        
-        // Navigation
-        function setContactVisibility(display) {
-            const contactSection = document.getElementById('contact');
-            if (contactSection) {
-                contactSection.style.display = display;
+            if (themeToggleElement) {
+                themeToggleElement.classList.add('active');
+            }
+            if (savedTheme === null) {
+                localStorage.setItem('theme', 'dark');
             }
         }
         
+        // Navigation
         function showHome() {
             document.getElementById('home').style.display = 'block';
-            setContactVisibility('block');
             document.getElementById('blog').style.display = 'none';
             document.getElementById('article-view').style.display = 'none';
         }
         
         function showBlog() {
             document.getElementById('home').style.display = 'none';
-            setContactVisibility('none');
             document.getElementById('blog').style.display = 'block';
             document.getElementById('article-view').style.display = 'none';
             displayArticles();
         }
         
-        function showArticle(index) {
+        async function showArticle(index) {
             document.getElementById('home').style.display = 'none';
-            setContactVisibility('none');
             document.getElementById('blog').style.display = 'none';
             document.getElementById('article-view').style.display = 'block';
             
-            const articles = getArticles();
+            const articles = await getArticles();
             const article = articles[index];
             
             const display = document.getElementById('article-display');
@@ -1182,35 +1130,24 @@
             `;
         }
         
-        function showContact(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            showHome();
-            requestAnimationFrame(() => {
-                const contactSection = document.getElementById('contact');
-                if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        }
-        
         // Articles management with predefined content
-        function getArticles() {
-            const stored = localStorage.getItem('blogArticles');
-            return stored ? JSON.parse(stored) : getDefaultArticles();
-        }
-        
         function getDefaultArticles() {
             return [
+                {
+                    title: "Confronto tra Vibe Coding e Programmazione Tradizionale (2023–2025)",
+                    category: "Programming",
+                    readTime: 18,
+                    date: new Date('2025-01-15').toISOString(),
+                    icon: "🤖",
+                    markdownPath: "files/Confronto tra _Vibe Coding_ e Programmazione Tradizionale (2023–2025).md"
+                },
                 {
                     title: "Innovazione nel Data Cleaning di Point Cloud 3D con Deep Learning",
                     category: "Deep Learning",
                     readTime: 15,
                     date: new Date('2024-05-01').toISOString(),
                     icon: "🧠",
-                    content: `# Content will be loaded from markdown files`
+                    markdownPath: "files/articolo-point-cloud-deep-learning.md"
                 },
                 {
                     title: "Da Geoinformatico ad AI Engineer: Il Mio Percorso in DataPizza",
@@ -1218,7 +1155,7 @@
                     readTime: 12,
                     date: new Date('2024-06-15').toISOString(),
                     icon: "🚀",
-                    content: `# Content will be loaded from markdown files`
+                    markdownPath: "files/articolo-datapizza-ai-engineer.md"
                 },
                 {
                     title: "Data Science nel Volleyball: La Mia Esperienza come Match Analyst",
@@ -1226,17 +1163,114 @@
                     readTime: 10,
                     date: new Date('2024-07-20').toISOString(),
                     icon: "🏐",
-                    content: `# Content will be loaded from markdown files`
+                    markdownPath: "files/articolo-volleyball-data-analyst.md"
                 }
             ];
         }
         
+        async function fetchMarkdown(path) {
+            const encodedPath = encodeURI(path);
+            if (window.location.protocol === 'file:') {
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', encodedPath);
+                    xhr.onload = () => {
+                        if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300)) {
+                            resolve(xhr.responseText);
+                        } else {
+                            reject(new Error(`Failed to load ${path}: ${xhr.status}`));
+                        }
+                    };
+                    xhr.onerror = () => reject(new Error(`Failed to load ${path}`));
+                    xhr.send();
+                });
+            }
+            
+            const response = await fetch(encodedPath);
+            if (!response.ok) {
+                throw new Error(`Failed to load ${path}: ${response.status}`);
+            }
+            return response.text();
+        }
+        
+        async function ensureArticlesLoaded() {
+            if (articlesCache) {
+                return articlesCache;
+            }
+            
+            const defaults = getDefaultArticles();
+            const stored = localStorage.getItem('blogArticles');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    const merged = parsed.map(storedArticle => {
+                        const match = defaults.find(def => def.title === storedArticle.title);
+                        if (match) {
+                            return {
+                                ...match,
+                                ...storedArticle,
+                                markdownPath: storedArticle.markdownPath || match.markdownPath
+                            };
+                        }
+                        return storedArticle;
+                    });
+                    
+                    defaults.forEach(defaultArticle => {
+                        if (!merged.some(article => article.title === defaultArticle.title)) {
+                            merged.push(defaultArticle);
+                        }
+                    });
+                    
+                    const updated = await Promise.all(merged.map(async (article) => {
+                        const needsFetch = article.markdownPath && (!article.content || article.content.includes('Content will be loaded') || article.content.includes('Content unavailable'));
+                        if (needsFetch) {
+                            try {
+                                const text = await fetchMarkdown(article.markdownPath);
+                                return { ...article, content: text };
+                            } catch (error) {
+                                console.error(error);
+                                return { ...article, content: 'Content unavailable at the moment.' };
+                            }
+                        }
+                        return article;
+                    }));
+                    articlesCache = updated;
+                    localStorage.setItem('blogArticles', JSON.stringify(updated));
+                    return articlesCache;
+                } catch (parseError) {
+                    console.error('Failed to parse stored articles', parseError);
+                }
+            }
+            
+            const loaded = await Promise.all(defaults.map(async (article) => {
+                if (article.markdownPath) {
+                    try {
+                        const text = await fetchMarkdown(article.markdownPath);
+                        return { ...article, content: text };
+                    } catch (error) {
+                        console.error(error);
+                        return { ...article, content: 'Content unavailable at the moment.' };
+                    }
+                }
+                return { ...article, content: '' };
+            }));
+            
+            articlesCache = loaded;
+            localStorage.setItem('blogArticles', JSON.stringify(loaded));
+            return articlesCache;
+        }
+        
+        async function getArticles() {
+            return ensureArticlesLoaded();
+        }
+        
         function saveArticles(articles) {
+            articlesCache = articles;
             localStorage.setItem('blogArticles', JSON.stringify(articles));
         }
         
-        function displayArticles() {
-            const articles = getArticles();
+        async function displayArticles() {
+            const articles = await getArticles();
             const container = document.getElementById('articles-container');
             
             container.innerHTML = '';
@@ -1252,7 +1286,7 @@
                     day: 'numeric'
                 });
                 
-                const plainText = article.content.replace(/[#*`>-]/g, '').trim();
+                const plainText = (article.content || '').replace(/[#*`>-]/g, '').trim();
                 const excerpt = plainText.substring(0, 200) + '...';
                 
                 card.innerHTML = `
@@ -1277,19 +1311,19 @@
         }
         
         // Hidden file upload handler (admin only)
-        function handleFileUpload(event) {
+        async function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
             
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 const content = e.target.result;
                 
                 // Extract title from first H1 or filename
                 const titleMatch = content.match(/^#\s+(.+)$/m);
                 const title = titleMatch ? titleMatch[1] : file.name.replace(/\.(md|markdown)$/i, '');
                 
-                const articles = getArticles();
+                const articles = await getArticles();
                 articles.unshift({
                     title: title,
                     category: "New Post",
@@ -1317,14 +1351,10 @@
             }
         });
         
-        function updateProfileImages(src) {
+        function updateProfileImage(src) {
             const mainImage = document.getElementById('profile-img');
             if (mainImage) {
                 mainImage.src = src;
-            }
-            const contactImage = document.getElementById('contact-profile-img');
-            if (contactImage) {
-                contactImage.src = src;
             }
         }
         
@@ -1338,7 +1368,7 @@
                     const reader = new FileReader();
                     reader.onload = function(event) {
                         const imageSrc = event.target.result;
-                        updateProfileImages(imageSrc);
+                        updateProfileImage(imageSrc);
                         localStorage.setItem('profileImage', imageSrc);
                     };
                     reader.readAsDataURL(file);
@@ -1347,28 +1377,25 @@
             input.click();
         }
         
-        ['profile-img', 'contact-profile-img'].forEach(id => {
-            const image = document.getElementById(id);
-            if (image) {
-                image.addEventListener('click', triggerProfileImageUpload);
-            }
-        });
+        const profileImage = document.getElementById('profile-img');
+        if (profileImage) {
+            profileImage.addEventListener('click', triggerProfileImageUpload);
+        }
         
         const savedProfileImage = localStorage.getItem('profileImage');
         if (savedProfileImage) {
-            updateProfileImages(savedProfileImage);
+            updateProfileImage(savedProfileImage);
         }
         
-        // Initialize articles if not present
-        if (!localStorage.getItem('blogArticles')) {
-            saveArticles(getDefaultArticles());
-        }
+        // Initialize articles cache
+        ensureArticlesLoaded().catch(error => {
+            console.error('Unable to preload articles', error);
+        });
+        
+        updateLanguage();
         
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            if (anchor.hasAttribute('data-no-smooth')) {
-                return;
-            }
             anchor.addEventListener('click', function (e) {
                 const target = this.getAttribute('href');
                 if (target !== '#' && document.querySelector(target)) {
