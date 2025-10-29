@@ -34,3 +34,13 @@ Durante  la  sintesi,  le  evidenze  sono  state  incrociate  per  evidenziare c
 
 Sono state incluse esperienze individuali (es.prototipo full-stack sviluppato interamente con AI) come evidenza  C per illuminare aspetti
 pratici e culturali difficilmente rilevabili dai soli numeri. Tutte le fonti sono citate tramite link ai riferimenti originali.
+
+## Risultati Tecnici
+### Impatto su produttività e velocità di sviluppo
+Dai dati emerge che gli assistenti AI  possono accelerare lo sviluppo software, ma con importanti distinzioni per contesto ed esperienza del programmatore. Un ampio studio sperimentale (3 trial RCT in
+Microsoft, Accenture e un’altra multinazionale) ha rilevato un +26% di task completati in media dai developer  con  accesso  a  GitHub  Copilot (non sto a rilinkare l'articolo).  In  pratica,  gli  sviluppatori  con  AI  chiudono  ~26%  di funzionalità/bug in più rispetto al gruppo tradizionale, con anche un aumento del 13,5% nel numero di
+commit  settimanali  e  del  [38%  nella  frequenza  di  compilazione](https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/#:~:text=Code%20Volume%20and%20Iteration%20Speed) (iterano  più  velocemente).
+
+Importante, lo studio non ha riscontrato peggioramenti di qualità del codice o maggiori bug nel gruppo con AI. Questo si traduce così: “nessun impatto negativo osservato sulla qualità”.
+
+Tutto questo ci suggerisce che la velocità extra non avviene a scapito del funzionamento corretto (evidenza A, bias basso). Un altro indicatore positivo viene da un trial controllato in Accenture: con Copilot si è osservato +8,7% di pull request per sviluppatore e +15% di merge rate (più PR accettate), unitamente a un [+84% di build riuscite al primo colpo](https://www.secondtalent.com/resources/github-copilot-statistics/#:~:text=Accenture%E2%80%99s%20randomized%20controlled%20trial%20with,in%20pull%20request%20merge%20rates).
