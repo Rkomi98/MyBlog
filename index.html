@@ -73,6 +73,10 @@
             transition: all 0.3s ease;
             overflow-x: hidden;
         }
+        
+        html {
+            scroll-behavior: smooth;
+        }
 
         /* Scrollbar personalizzata */
         ::-webkit-scrollbar {
@@ -744,6 +748,7 @@
             margin-top: 2rem;
             margin-bottom: 1rem;
             font-weight: 600;
+            scroll-margin-top: 140px;
         }
 
         .article-body h2 {
@@ -759,6 +764,17 @@
         .article-body p {
             margin-bottom: 1.5rem;
             color: var(--text-secondary);
+        }
+        
+        .article-body img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 15px;
+            box-shadow: var(--shadow-md);
+            background: var(--bg-card);
         }
 
         .article-body ul,
@@ -1105,6 +1121,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
+        if (window.marked && typeof marked.use === 'function') {
+            marked.use({
+                mangle: false,
+                headerIds: true,
+                headerPrefix: ''
+            });
+        }
+        
         // Language management
         let currentLang = 'en';
         let articlesCache = null;
