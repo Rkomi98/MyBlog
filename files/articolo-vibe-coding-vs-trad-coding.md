@@ -2,18 +2,6 @@
 
 ## Indice
 
-* [Abstract](#abstract)
-* [Metodologia](#metodologia)
-* [Risultati Tecnici](#risultati-tecnici)
-
-  * [Impatto su produttività e velocità di sviluppo](#impatto-su-produttività-e-velocità-di-sviluppo)
-  * [Qualità del codice e mantenibilità](#qualità-del-codice-e-mantenibilità)
-  * [Errori e sicurezza](#errori-e-sicurezza)
-  * [Performance e scalabilità](#performance-e-scalabilità)
-* [Risultati Culturali](#risultati-culturali)
-* [Sintesi e raccomandazioni](#sintesi-e-raccomandazioni)
-* [Limiti e fonti (con link)](#limiti-e-fonti-con-link)
-
 ## Abstract
 
 Il vibe coding – ossia la programmazione guidata interamente dall’AI – si è diffuso tra il 2023 e il 2025 grazie a strumenti come GitHub Copilot, Cursor, Sourcegraph Cody, Tabnine, Codeium e assistenti AI integrati negli IDE.
@@ -213,34 +201,4 @@ boilerplate, CRUD, mapping, test scaffolding, doc di base. Metti **guardrail** (
 5. **Crescita dei developer**: Implementare linee guida per usare l’AI in modo formativo. Ad esempio, incentivare i junior a chiedere all’AI spiegazioni (“spiegami il codice che hai proposto”) e non solo soluzioni, così da capire i concetti. Fare sessioni di coding congiunte dove un senior e un junior usano l’AI insieme, discutendo i pro e contro dei suggerimenti. Secondo me questo è un buon modo che trasferisce conoscenza tacita. Mantenere attività kata di programmazione senza AI occasionalmente, per 11 allenare le capacità fondamentali e far emergere lacune. In sede di code review, porre domande ai coder (soprattutto se junior) per assicurarsi che abbiano compreso il codice AI che presentano. L’obiettivo è prevenire la “calma apparente” di team che consegnano feature ma poi non sanno correggere un bug perché nessuno capisce davvero il codice generato.
 Se non si fosse capito mentorship e pairing sono per me cruciali (probabilmente è la mia natura di AI adoption specialist :)): l’AI non sostituisce il bisogno di spiegare il perché e il cosa ci sta dietro. 
 
-6. **Crescita delle persone**: per i junior alterna **kata senza AI** e sessioni **“spiegami perché”**, per i senior **direzione tecnica** (orchestrazione, prompt patterns, design review).
-7. **Iterazioni sicure**: evita loop “rigenera‑rigenera”; **ogni iterazione AI ⇒ verifica** (occhio alla **degradazione di sicurezza**: [Shukla 2025](https://arxiv.org/abs/2506.11022)).
-
-## Limiti e fonti (con link)
-
-> Priorità: **A** studi/white paper; **B** case study; **C** esperienze replicabili.
-
-* **Produttività (RCT multi‑azienda)** — *A*
-
-  * MIT/Microsoft/Accenture: **+26% task** (4.8k dev) — [IT Revolution](https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/) · [InfoQ](https://www.infoq.com/news/2024/09/copilot-developer-productivity/)
-* **Slowdown su maintainer OSS esperti** — *A*
-
-  * METR **+19% tempo** con AI — [Blog](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/) · [arXiv](https://arxiv.org/abs/2507.09089) · [InfoWorld](https://www.infoworld.com/article/4020931/ai-coding-tools-can-slow-down-seasoned-developers-by-19.html)
-* **Adozione enterprise / soddisfazione** — *B*
-
-  * GitHub×Accenture — [GitHub blog](https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/)
-  * ZoomInfo (400+ dev) — [arXiv](https://arxiv.org/abs/2501.13282)
-* **Qualità e mantenibilità (churn/duplicazioni)** — *B*
-
-  * GitClear — [Report](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality) · [Visual Studio Magazine](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx)
-* **Sicurezza** — *A*
-
-  * Copilot & CWE — [Pearce et al.](https://arxiv.org/abs/2108.09293)
-  * **Veracode 2025** — [PDF](https://www.veracode.com/wp-content/uploads/2025_GenAI_Code_Security_Report_Final.pdf)
-  * Degradazione iterativa — [Shukla et al.](https://arxiv.org/abs/2506.11022)
-* **Cultura e apprendimento** — *B/C*
-
-  * Stack Overflow Dev Survey 2024 — [AI](https://survey.stackoverflow.co/2024/ai)
-  * Comprensione profonda (junior) — [Namanyay Goel](https://nmn.gl/blog/ai-and-learning)
-
-> **Limiti**: fenomeno recente; metriche eterogenee tra studi; parte dei dati enterprise proviene da vendor; evidenze su performance/scalabilità spesso **C** (aneddotiche) da confermare con benchmark indipendenti.
+Concludo dicendo che secondo me il futuro della programmazione appartiene ai developer che sanno sfruttare il pilota automatico quando la guida è noiosa e standard e che sanno tenere saldamente i comandi dell'auto nei momenti in cui serve attenzione.
