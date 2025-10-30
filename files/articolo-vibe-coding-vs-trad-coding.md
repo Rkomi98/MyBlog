@@ -107,48 +107,112 @@ Tuttavia, diversi esperimenti mostrano che affidarsi ciecamente all’AI può in
 
 Il programmatore **deve restare nel loop** per verificare la correttezza del codice, o meglio la logica "deep" del codice. A conferma, uno [studio sull’uso di ChatGPT](https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-kelly/) per compiti di programmazione universitaria nota che studenti inesperti tendevano a fidarsi dell’output anche quando conteneva errori: se il programma generato “non funzionava, semplicemente chiedevano all’AI di aggiustarlo di nuovo” senza comprendere il vero motivo. Questo può creare cicli dove un bug viene “corretto” dall’AI con un altro patch potenzialmente sbagliato, portando a errori nascosti di difficile diagnosi.
 
-* **Vulnerabilità note**: su 89 scenari CWE, **~39–50%** degli snippet generati risultano **vulnerabili** a seconda del linguaggio ([Pearce et al., 2021/22](https://arxiv.org/abs/2108.09293)).
-* **Stato 2025**: **45%** dei task di generazione presentano almeno **una falla**; performance **piatte** tra modelli nuovi/vecchi → i modelli **non diventano automaticamente più sicuri** ([Veracode 2025—PDF](https://www.veracode.com/wp-content/uploads/2025_GenAI_Code_Security_Report_Final.pdf)).
-* **Effetto iterazioni**: dopo **5 iterazioni** di “migliorami il codice” senza supervisione, le **vulnerabilità critiche** crescono di **~37,6%** ([Shukla et al., 2025](https://arxiv.org/abs/2506.11022)).
-* **Mitigazioni pratiche**: pipeline **AI → SAST/DAST → review umana**; checklist **OWASP**; policy su **segreti/IP** nei prompt; **gates** extra per componenti *security‑critical*.
+#### Sicurezza
+La sicurezza del software merita un’attenzione particolare. Ammetto di aver condotto una deep research a riguardo ed emerge che il codice generato dall’AI spesso include vulnerabilità note o pratiche insicure, se l’utente non guida attivamente il modello verso soluzioni sicure. 
 
-**Tabella riassuntiva (sicurezza)**
+**Vulnerabilità note**: secondo uno studio di [Pearce et al., 2021/22](https://arxiv.org/abs/2108.09293) su 89 scenari CWE, il 39% dei programmi generati conteneva vulnerabilità e per i primi suggerimenti di Copilot il tasso era ~39% in Python e ~50% in C. Come se questo non bastasse, oltre 40% presentava almeno un punto
+debole (buffer overflow, injection SQL, hardcoded secrets, etc.).
+>  Questo dato rivela che senza alcun filtraggio, l’AI tende a **replicare pattern** visti in training data **anche se insicuri**.
+Ad esempio, potrebbe suggerire una query SQL costruita tramite string concatenation (vulnerabile a *injection*) perché ha visto spesso codice così su GitHub, non sapendo che è una pratica pericolosa. 
 
-| Tema                   | Dato chiave                       | Cosa fare subito           | Fonte                                                                                                  |
-| ---------------------- | --------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Tassi di vulnerabilità | **~39–50%** snippet vulnerabili   | Mai *commit* senza scanner | [Pearce et al.](https://arxiv.org/abs/2108.09293)                                                      |
-| Stato dell’arte 2025   | **45%** task con almeno 1 falla   | SAST/DAST in CI/CD         | [Veracode 2025](https://www.veracode.com/wp-content/uploads/2025_GenAI_Code_Security_Report_Final.pdf) |
-| Iterazioni AI          | **+37,6%** vulnerabilità critiche | Verifica ad ogni iter      | [Shukla 2025](https://arxiv.org/abs/2506.11022)                                                        |
-| Secret handling        | Rischio *leak* nei prompt         | Segreti fuori dai prompt   | Best practice OWASP                                                                                    |
+Vediamo insieme un caso comune, che mi ha visto protagonista. Non me ne vanto, anzi, tuttora penso a come io abbia fatto ad essere a poco dal pubblicare una cosa del genere: API key lasciate nel codice. 
+Chi mi conosce un minimo sa che una delle prime cose che faccio è proprio creare un file .env. Ma quella volta preso dalla fretta per un imprevisto, mi sono trovato a fare tutto in vibe coding e ad esporre quindi l'API Key a frontend.
+
+Va detto che gli assistenti AI stanno migliorando: Copilot e Cursor ora tentano di riconoscere e avvisare su pattern insicuri noti, e strumenti come CodeQL possono essere integrati per scansioni automatiche post-generazione.
+
+Un fenomeno interessante emerso da uno [studio 2025](https://arxiv.org/html/2506.11022v1#:~:text=analyzes%20security%20degradation%20in%20AI,iterations%20to%20prevent%20the%20paradoxical) è la **“degradazione iterativa” della sicurezza**: quando uno sviluppatore fa iterare l’AI più volte su un pezzo di codice per migliorarlo, magari alternando prompt di efficienza e aggiunta di funzionalità, possono comparire nuove vulnerabilità inattese. Nel test, dopo 5 iterazioni di miglioramenti richiesti a GPT, le vulnerabilità critiche nel codice sono aumentate del +37,6%. 
+Ciò sfida l’assunto che iterare con l’AI affini automaticamente il codice: senza supervisione umana attenta, ogni “miglioria” automatica può introdurre un nuovo problema di sicurezza altrove. Questo rafforza la raccomandazione che l’expertise umana in sicurezza rimanga nel loop.
+
+In conclusione, come leggevo su un [articolo di Bob Chen](https://trickle.so/blog/vibe-coding-vs-traditional-development), la best practice emersa è trattare l’AI come un junior developer molto veloce ma potenzialmente sprovveduto. Ovvero, mai fidarsi ciecamente, fare sempre peer review del codice generato, passare scanner di sicurezza (es. OWASP ZAP, Snyk).
 
 ### Performance e scalabilità
 
-* **Pattern ricorrenti** (report tecnici e *field notes*): prototipi AI‑only spesso **duplicano logiche**, **ignorano colli di bottiglia** (query non indicizzate, I/O sincrono), mancano di **scelte architetturali** (caching, asincronia, code/queue) → **fragilità sotto carico**.
-* **Approccio consigliato**: usare l’AI per **scaffold/boilerplate**, poi **profilare presto** con dati realistici, fissare **SLO/SLI**, pianificare **refactoring di performance** a ogni sprint; ottimizzazioni guidate da **senior/architetti**.
+Un ultimo confronto tecnico riguarda le prestazioni runtime e la scalabilità dei sistemi creati principalmente via AI rispetto a quelli progettati tradizionalmente. Le evidenze indicano che il vibe coding spesso **privilegia la soluzione funzionante più semplice**, **trascurando ottimizzazioni** che invece i developer esperti implementerebbero per **scalare**.
 
-**Tabella riassuntiva (performance/scalabilità)**
+Ti voglio portare un esempio che ho letto su [Medium](https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-ever-33c343bfc2e1#:~:text=,didn%E2%80%99t%20guess%20%E2%80%94%20I%20hypothesized). Qui l'autore racconta di aver generato un blob JSON da 39 MB lato client, che ovviamente ha mandato in crash il browser. Il focus che lui pone è sul fatto che "l’AI non ha capito” che quell’approccio non era scalabile, mentre lo sviluppatore umano l’ha riconosciuto immediatamente. 
 
-| Rischio tipico              | Effetto in prod            | Contromisura                          |
-| --------------------------- | -------------------------- | ------------------------------------- |
-| Query non indicizzate / N+1 | Latenze eccessive, costi ↑ | Profiling SQL, indici, caching        |
-| Elaborazioni in memoria     | OOM / tempi lunghi         | Batch/stream, strutture dati adeguate |
-| I/O sincrono bloccante      | Throughput basso           | Async I/O, code, *backpressure*       |
-| Duplicazioni logiche        | Bug speculari, debito ↑    | DRY, refactor, modulazione servizi    |
+Quello che voglio dire con questo esempio è in generale, architetture create “improvvisando” con l’AI tendono a essere monolitiche e poco modulari.  Il modello non impone separazione in servizi, non pensa a code asincrone, caching, streaming, etc., *a meno che l’utente non lo istruisca espressamente*. Ciò significa che un progetto nato via vibe coding può funzionare bene **per un numero limitato di utenti** o request, ma sotto carico elevato mostra **inefficienze gravi**, richiedendo spesso una riprogettazione. Un [effetto osservato](https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-kell) è che il tempo risparmiato inizialmente potrebbe essere perso dopo per scalare l’applicazione: “il codice creato ‘winging it’ con AI va bene per una demo veloce, ma quello stesso codice potrebbe non reggere in produzione
+sotto carico, richiedendo refactoring massiccio a posteriori” 
 
-## Risultati Culturali
+Detto questo, va riconosciuto che l’AI può anche aiutare a ottimizzare se usata bene: per es., può suggerire vectorization di un loop o indicare la complessità di un algoritmo se interrogata. 
+Inoltre, col maturare dei modelli e il fine-tuning su performance, è plausibile che in futuro gli assistenti evidenzieranno essi stessi i colli di bottiglia (es: “questa funzione ha complessità $O(n^2)$,  potresti usare un indice per migliorare”). 
 
-* **Soddisfazione e DevEx**: studi GitHub×Accenture riportano **sentiment alto (90–95%)** e minore sforzo mentale con Copilot ([GitHub blog](https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/)).
-* **Adozione e fiducia**: la **Stack Overflow Dev Survey 2024** mostra uso diffuso ma **fiducia limitata** nell’output “as‑is” → l’intervento umano resta centrale ([SO Survey 2024—AI](https://survey.stackoverflow.co/2024/ai)).
-* **Percezione vs dati**: nel trial **METR** gli esperti **stimano speed‑up**, ma i dati mostrano **+19% tempo** con AI su codebase complesse; l’AI **fa percepire** produttività, ma prompting/review **consumano tempo** ([METR blog](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/); [InfoQ](https://www.infoq.com/news/2025/07/ai-productivity/)).
-* **Junior vs senior; enterprise vs startup**: benefici **più marcati per junior** e task ripetitivi; in **enterprise** l’AI rende di più se **integrata nei processi** (policy, training, telemetria), in **startup** abilita **prototipazione lampo** ma va contenuto il *tech debt* ([MIT/Accenture—sintesi InfoQ](https://www.infoq.com/news/2024/09/copilot-developer-productivity/)).
+Lo rimarco ancora una volta se non si fosse capito: il modello vincente è ibrido: l’AI crea rapidamente una base funzionante, poi sviluppatori esperti profilano e ottimizzano dove serve, come farebbero su codice scritto da uno sviluppatore junior.
+
+Riassumendo i risultati tecnici: il vibe coding sta **oggettivamente rivoluzionando** la velocità di scrittura e la comodità (meno effort manuale su un gran numero di compiti), ma non garantisce qualità che definirei “strutturale” del prodotto finale. Il codice AI-driven tende ad essere più verboso e ridondante, richiedendo successivamente una fase di pulizia/ottimizzazione maggiore rispetto al codice pensato dall’inizio con metodo tradizionale. 
+
+Con le dovute pratiche di controllo (review, refactoring, test intensivi), team ben organizzati possono mitigare questi difetti e sfruttare il meglio dei due mondi – ma senza tali controlli il rischio è di ottenere “un castello di sabbia in riva al mare in Sardegna" Magari sta su fino a quando non inizia a soffiare Maestrale. Poi cadrà come corpo morto cade. 
+
+Prima di concludere ci tengo a parlare di una cosa di cui in pochi parlano ma effettivamente è poco tecnico e oggettivo
+
+### soddisfazione degli sviluppatori
+
+L’AI toglie di mezzo molte parti noiose o frustranti. Leggevo giusto ieri che il [70%](https://www.secondtalent.com/resources/github-copilot-statistics/#:~:text=Developer%20satisfaction%20metrics%20provide%20additional,searching%20for%20information%20or%20examples) ha riportato minore sforzo mentale nei task ripetitivi, e oltre la metà ha ridotto il tempo passato a cercare informazioni su Stack Overflow o documentazione. Potendo delegare all’AI la scrittura di boilerplate o la ricerca di sintassi, gli sviluppatori si concentrano su aspetti più creativi o interessanti e questo migliora l’**engagement**.
+
+Detto ciò, esistono anche voci critiche e resistenze culturali all’uso indiscriminato dell’AI. Alcuni sviluppatori, specialmente i più senior o meglio li definirei puristi, manifestano frustrazione verso l’eccessiva enfasi sull’AI. 
+
+Ad esempio, leggendo discussioni su alcuni forum (che non voglio citare) indicano che parte della comunità teme che gli IDE stiano diventando sovraccarichi di funzionalità AI a scapito della stabilità di base (“non voglio la tua AI, voglio un IDE che funzioni bene” è una ref tradotta apparsa online). [JetBrains ha affrontato critiche](https://devclass.com/2025/04/30/jetbrains-defends-removal-of-negative-reviews-for-unpopular-ai-assistant/) quando il suo assistente AI, lanciato nel 2023, ha ottenuto recensioni negative (rating 2.3/5) dovute a bug e intralci percepiti nel flusso di lavoro tradizionale.
+
+Ciò suggerisce che non tutti gli sviluppatori trovano utile l’AI allo stesso modo: chi lavora in maniera molto metodica e approfondita su problemi complessi può vedere l’AI come una fonte di distrazione o addirittura ho visto nutrire una sorta di sfiducia nelle sue soluzioni. 
+
+Altri temono di perdere il controllo sul codice (io sono tra quelli, ma dopo vi dico la soluzione che spesso uso): se l’AI scrive gran parte, lo sviluppatore sente di non “possedere” più la comprensione completa.
+Questo può generare ansia professionale, specie nei programmatori che tengono alla qualità "artigianale" (chiamiamola così dai) del proprio lavoro. Tuttavia, il trend generale sembra essere l’accettazione: man mano che gli strumenti migliorano e i developer imparano a guidarli, anche i tradizionalisti iniziano a integrarli nei propri processi, magari limitandosi alle feature che trovano più utili come completamenti automatici brevi, riassunti di codice, etc.
+
+Io spesso per riprendere il controllo chiedo, dopo ogni cosa creata in Cursor, un file markdown che mi spiega le feature implementate (o l'intera app), qual è lo scheletro del codice che ha creato e perché ha fatto determinate scelte. Ammetto che non è la soluzione definitiva, però spesso mi ha aiutato.
+
+Torniamo a noi. In ambito open-source, un dibattito culturale acceso riguarda l’uso di AI per contribuire ai progetti. 
+
+Da un lato, leggevo su Reddit che **GitHub ha reso Copilot gratuito** per i maintainer OS per *incentivarne l’uso*, convinta che questo aumenti la produttività. 
+Dall’altro lato, alcuni maintainer hanno espresso preoccupazione per Pull Requests generate dall’AI potenzialmente di bassa qualità: richieste di funzionalità o fix generati via ChatGPT senza un minimo di ragionamento da parte dell'umano. Pensate che c’è stato persino un appello di maintainer per avere la [possibilità su GitHub di bloccare contributi generati da AI](https://socket.dev/blog/oss-maintainers-demand-ability-to-block-copilot-generated-issues-and-prs) se non conformi. Questo denota una tensione tra la quantità (molti contributi rapidi via AI) e la qualità/controllabilità in comunità collaborative.
+
+Alcuni progetti hanno iniziato a richiedere che i contributor dichiarino se hanno usato AI per generare il codice, un po’ come indicazione per i revisori di porre extra attenzione. Culturalmente, quindi, se in azienda l’AI è caldeggiata dal management (anche perché vista come aumento di produttività e riduzione costi), nelle comunità open-source e in generale tra gli sviluppatori emerge la necessità di nuove norme e linee guida su come utilizzare correttamente questi strumenti senza compromettere gli standard.
+
+## Formazione, competenze e impatto sui ruoli
+
+Probabilmente la questione culturale più discussa è: come influisce il vibe coding sull’apprendimento e sulle competenze dei programmatori? Ho sentito persone enfatizzare il rischio di avere sviluppatori che sanno solo “promptare” l’AI senza capire davvero il codice. Sarà vero? 
+
+Dai vari resoconti, il rischio c’è, ma direi che è mitigabile. 
+
+Un post diventato virale, [“New Junior Developers Can’t Actually Code” (Goel, 2025)](https://nmn.gl/blog/ai-and-learning#:~:text=We%E2%80%99re%20at%20this%20weird%20inflection,That%E2%80%99s%20where%20things%20get%20concerning), sostiene che sta emergendo una generazione di nuovi dev che scrive codice più velocemente che mai grazie all’AI, ma senza capire davvero cosa
+sta facendo. L’autore, un tech lead, racconta di giovani assunti che hanno Copilot/ChatGPT sempre attivi e che consegnano feature apparentemente funzionanti; ma alle domande “Perché il tuo codice fa così?” non ottiene risposta. Ne approfitto anche per consigliare [questa lettura](https://nmn.gl/blog/ai-illiterate-programmers) dello stesso autore.
+
+Torniamo al primo articolo. Namanyay Goel osserva che manca quella conoscenza di base che una volta si costruiva “struggendo” sui problemi: molti non sanno spiegare alternative possibili o il ragionamento dietro il codice, perché si sono limitati ad accettare la soluzione suggerita dall’AI. Questo porta a comprensione superficiale e dipendenza dall’AI per debug: se qualcosa non va, invece di introspezione, i giovani sviluppatori chiedono di nuovo all’AI di risolvere. 
+In contesti educativi, leggendo uno scambio di botta e risposta su ycombinator, ho letto che alcuni docenti universitari confermano fenomeni simili. Ovvero, studenti che con ChatGPT consegnano compiti apparentemente corretti ma non sanno rispondere a domande semplici sul perché del codice (sintomo che non l’hanno scritto di proprio pugno né compreso a fondo). 
+
+Sia chiaro, non sono contro. Anzi!
+
+L’AI può anche essere uno strumento didattico potente se usato con criterio. Ad esempio, un junior può chiedere all’AI di spiegare un pezzo di codice, di fornire esempi o di suggerire come risolvere un bug, ottenendo risposte immediate e adattive (cosa che StackOverflow non faceva). Alcuni sviluppatori raccontano di aver colmato lacune più velocemente grazie all’AI: invece di cercare su Google, ottenevano mentoring istantaneo. La differenza principale è secondo me l’**atteggiamento dell’utente**: se il
+programmatore usa l’AI in modalità apprendimento, ovvero chiedendo “perché”, verificando attivamente le risposte, provando varianti, può imparare molto in breve tempo. 
+Al contrario, se usa l’AI in modalità pilota automatico, limitandosi a incollare soluzioni, imparerà pochissimo. Sempre Goel in un [suo articolo](https://nmn.gl/blog/ai-and-learning#:~:text=going%20anywhere%29,working) da consiglio per i profili junior: “usate Copilot/ChatGPT, ma con moderatezza: interrogate le soluzioni, studiate i perché, cercate di ricostruire il ragionamento”. 
+
+Alcuni percorsi educativi iniziano a integrare l’AI non come scorciatoia per fare meno, ma come strumento per fare di più e meglio: ad esempio generare rapidamente diversi approcci a un problema e poi analizzarli con l’insegnante. Oppure io personalmente ormai sono solito creare dei percorsi di formazione (per me o per altri) dopo un bel brainstorming con ChatGPT. Quello che ho visto è che i tempi non sono affidabili, ma il percorso da seguire è spesso super sensato.
+
+Tornando ai contesti aziendali, i mentor senior secondo me hanno una responsabilità incredibile, in quanto sono chiamati a guidare i junior su come usare l’AI responsabilmente per evitare **"skill atrophy"** (non so se questo termine esiste in italiano e preferisco evitare di tradurlo). Questo include fare pair review dove il senior chiede al junior di spiegare il codice generato, oppure impostare policy in cui il junior deve provare a implementare qualcosa da sé prima di
+chiedere all’AI, in modo da allenare il problem solving umano.
+
+Da qui nasce anche un cambiamento nel mentoring: i senior devono affiancare i junior non più solo nel coding tradizionale, ma nel **prompt engineering** e nel **controllo qualità** del codice AI. Alcune imprese stanno formalizzando linee guida, ad esempio: se un junior genera codice con Copilot, deve farlo rivedere a un senior con occhio critico, come parte del code review standard. 
+Invece di commentare solo lo stile o la logica, il senior deve anche insegnare al junior perché magari una soluzione “troppo facile” suggerita dall’AI non è ottimale. Ti faccio un esempio semplicissimo: “Copilot ti ha duplicato questa logica in 3 punti, dovresti estrarla in una funzione comune per facilitarne la manutenzione”. Oppure: “Attento, ChatGPT ha importato questa libreria da un esempio obsoleto, ma non è adatta in produzione per ragioni di performance”. Questo tipo di insegnamento *meta-cognitivo* diventa fondamentale per **far crescere le competenze** nonostante la presenza dell’AI.
+
+Ultimo ma tutt'altro che meno importante, c’è l’aspetto della dipendenza psicologica e identitaria. Scrivere codice “a mano” per molti sviluppatori non è solo un lavoro, ma una passione e un’arte.
+L’arrivo di assistenti AI in grado di generare codice ha scosso questa identità: ho parlato con alcuni sviluppatori che mi hanno espresso il timore di “diventare solo operatori che guidano l’AI” invece che craftsmen. C’è chi parla di loss of craftsmanship, paragonandolo ad altre automazioni industriali dove il ruolo umano passa da artigiano a supervisore di macchine. 
+Tuttavia, vedo questi assistenti come un amplificatore delle capacità umane, non un sostituto. Un po’ come l’introduzione dei computer stessi rispetto alla programmazione con schede perforate. Se non sbaglio all’inizio c’era chi storceva il naso, no? Ad oggi penso che nessuno tornerebbe indietro. La chiave per mantenere vivo l’aspetto craft è che gli sviluppatori si concentrino sui livelli più alti di astrazione e design, lasciando all’AI i dettagli implementativi routinari. In
+tal modo, il craft non muore, si sposta: dal scrivere ogni for loop manualmente, al plasmare un sistema intero orchestrando AI e codice umano in modo coeso. Come scrive [Greenman](https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-ever-33c343bfc2e1#:~:text=,Humans%20architect%20systems%20that%20work), “l'AI esegue il codice brillantemente. Gli umani architettano sistemi che funzionano”. In altre parole, la soddisfazione professionale può ancora derivare dall’aver progettato bene un sistema, anche se molte linee di codice sono state partorite dall’AI.
 
 ## Sintesi e raccomandazioni
 
-1. **Usa l’AI dove eccelle**: boilerplate, CRUD, mapping, test scaffolding, doc di base. Metti **guardrail** (linters, formatter, conventional commits).
-2. **Tienila fuori dove sbaglia**: **core di sicurezza**, moduli **performance‑sensitive**, logiche di **dominio** complesse → design tradizionale, AI come supporto.
-3. **Processi “trust but verify”**: **SAST/DAST** obbligatori in CI, **code review umana** su ogni contributo AI, policy su **segreti/IP** nei prompt.
-4. **Architettura prima del *****vibe***: definisci **moduli/interfacce/pattern**; usa l’AI per riempire i “blocchi”, non per inventare l’architettura.
-5. **Misura l’impatto**: piloti **A/B** con metriche dure (lead time, merge rate, churn, difetti post‑release) e morbide (soddisfazione). Framework: [Guida GitHub](https://resources.github.com/learn/pathways/copilot/essentials/measuring-the-impact-of-github-copilot/).
+Siamo arrivati al termine e il confronto tra vibe coding e sviluppo tradizionale può essere riassunto così: il vibe coding offre velocità ed accessibilità che definirei a dir poco rivoluzionarie, mentre il metodo tradizionale assicura controllo, robustezza e chiarezza. Invece di proclamare un vincitore assoluto, le evidenze suggeriscono che un approccio ibrido e strategico massimizza i benefici minimizzando i rischi. Di seguito, in punti, le conclusioni principali e raccomandazioni operative:
+
+1. **Produttività:**: L’uso dell’AI-driven coding accelera lo sviluppo in molti scenari, specialmente per compiti ripetitivi e per sviluppatori meno esperti. 
+boilerplate, CRUD, mapping, test scaffolding, doc di base. Metti **guardrail** (linters, formatter, conventional commits).
+
+2. **Qualità e mantenibilità**: Il codice generato dall’AI deve essere trattato al pari di quello scritto da un junior dev: richiede revisione, refactoring e testing diligenti. Si consiglia di non committare codice AI senza verifica: integrare obbligatoriamente un giro di code review umana su tutto il codice generato.  In pratica, mantenere alti standard di clean code: nominare un “AI code custodian” nel team che monitori la coerenza stilistica e architetturale del codice prodotto con AI.
+
+3. **Sicurezza**: Mai presupporre che il codice generato sia sicuro. Implementare pipeline di security review su tutto il codice, specialmente se generato automaticamente. L’AI può velocizzare l’implementazione, ma la sicurezza by design deve essere reintrodotta dallo sviluppatore.
+
+4. **Architettura e performance**: Prima di lanciare un progetto con vibe coding allo sbaraglio, investire tempo in una progettazione di massima tradizionale: definire moduli, interfacce, decisioni architetturali chiave. Questo può prevenire il caos eterogeneo che l’AI altrimenti genererebbe .
+5. **Crescita dei developer**: Implementare linee guida per usare l’AI in modo formativo. Ad esempio, incentivare i junior a chiedere all’AI spiegazioni (“spiegami il codice che hai proposto”) e non solo soluzioni, così da capire i concetti. Fare sessioni di coding congiunte dove un senior e un junior usano l’AI insieme, discutendo i pro e contro dei suggerimenti. Secondo me questo è un buon modo che trasferisce conoscenza tacita. Mantenere attività kata di programmazione senza AI occasionalmente, per 11 allenare le capacità fondamentali e far emergere lacune. In sede di code review, porre domande ai coder (soprattutto se junior) per assicurarsi che abbiano compreso il codice AI che presentano. L’obiettivo è prevenire la “calma apparente” di team che consegnano feature ma poi non sanno correggere un bug perché nessuno capisce davvero il codice generato.
+Se non si fosse capito mentorship e pairing sono per me cruciali (probabilmente è la mia natura di AI adoption specialist :)): l’AI non sostituisce il bisogno di spiegare il perché e il cosa ci sta dietro. 
+
 6. **Crescita delle persone**: per i junior alterna **kata senza AI** e sessioni **“spiegami perché”**, per i senior **direzione tecnica** (orchestrazione, prompt patterns, design review).
 7. **Iterazioni sicure**: evita loop “rigenera‑rigenera”; **ogni iterazione AI ⇒ verifica** (occhio alla **degradazione di sicurezza**: [Shukla 2025](https://arxiv.org/abs/2506.11022)).
 
