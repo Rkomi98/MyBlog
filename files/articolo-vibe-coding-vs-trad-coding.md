@@ -70,9 +70,17 @@ Dai dati emerge che gli assistenti AI possono accelerare lo sviluppo software, m
 
 Se parliamo di qualità del codice prodotto, si apre un discorso un po' controverso: la funzionalità immediata del codice generato dall’AI è spesso buona, ma emergono problemi di **mantenibilità nel medio termine** senza un intervento disciplinato del programmatore. In termini di correttezza funzionale out-of-the-box, diversi studi indicano che il codice con AI può essere altrettanto valido di quello scritto a mano. Di seguito alcuni esempi emersi dalla ricerca:
 
-* **Trend 2024–2025**: analisi longitudinali mostrano **aumento del *code churn*** (linee modificate/rimosse entro 2 settimane) **fino a ~2× vs 2021** e maggior peso di **“added/copied”** rispetto a **“updated/deleted/moved”** → più duplicazioni, minore riuso, mantenibilità a rischio ([GitClear report](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality); [Visual Studio Magazine](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx)).
+* **Trend 2024–2025**: analizzando la qualità interna e la manutenibilità, emergono trend preoccupanti legati all’uso massiccio dell’AI. Un white paper indipendente (Coding on Copilot, GitClear 2024) ha analizzato milioni di righe di codice su GitHub per misurarne l’evoluzione dopo l’introduzione di Copilot. Il risultato: il code churn, ossia la percentuale di codice che viene modificato o rimosso entro due settimane dalla sua creazione – è in forte aumento. ([GitClear report](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality); [Visual Studio Magazine](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx)).
+
 * **Esperienze di team**: in **ZoomInfo** (400+ dev) l’adozione di Copilot porta **~20% risparmio tempo percepito**, con **acceptance ~33% (suggestions) / ~20% (LoC)**; tra i limiti: **logica di dominio assente** e **qualità variabile** → necessità di **review e refactoring** sistematici ([Bakal et al., 2025—arXiv](https://arxiv.org/abs/2501.13282)).
 * **Lettura operativa**: il vibe coding **produce più codice più in fretta**, ma senza **guardrail** (DRY, linters, design guide) aumenta l’entropia. Misurare **churn/duplicazione**, inserire **slot di refactoring** e **code‑owner** per coerenza.
+
+**Qualità “esterna” (funzionalità a breve termine)**
+
+* **Studio GitHub 2022**: il codice assistito da Copilot è riportato come **più funzionale, leggibile e affidabile** rispetto al controllo, in compiti standardizzati (studio di laboratorio) ([GitHub Research – 2022](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.asp)).
+* **RCT 2025 (multi‑azienda)**: Nel grande RCT del 2025 citato prima, non sono state osservate differenze significative in bug o malfunzionamenti: i team con AI hanno mantenuto gli stessi standard di qualità apparente (test passati, review accettate) dei team
+tradizionali  ([sintesi IT Revolution](https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/).
+* **Testing**: l’AI riduce il carico di scrittura test; **fino a +38%** di velocità nel creare unit test in case study enterprise ([riepilogo Future Processing](https://www.future-processing.com/blog/github-copilot-speeding-up-developers-work/)).
 
 **Tabella riassuntiva (qualità/mantenibilità)**
 
