@@ -1,476 +1,148 @@
-# Dentro un container: concetti chiave (2023–2025)
+# Dentro un container: concetti chiave
 
 ## Abstract
+Secondo episodio della serie "Docker per sviluppatori". In questa guida narrativa esploriamo i concetti chiave di Docker in modo accessibile ma preciso, per capire cosa fa Docker concettualmente, senza ancora scrivere codice o configurare nulla.
 
-Docker ha trasformato il panorama dello sviluppo software, ma cosa succede veramente quando digitiamo `docker run nginx`? Tra il 2023 e il 2025, l'architettura dei container si è consolidata come standard de facto per il deployment di applicazioni, con oltre il [25% delle aziende che utilizzano Docker](https://www.docker.com/blog/how-to-use-the-official-nginx-docker-image/) in produzione. 
+## 1\. Concetti fondamentali
 
-Questo articolo, secondo episodio della serie "Docker per sviluppatori", esplora i meccanismi interni che rendono possibile la magia dei container. Analizzeremo come Docker utilizza namespaces e cgroups del kernel Linux per creare ambienti isolati, come funziona il sistema di layer e overlay filesystem, e cosa accade dietro le quinte durante l'intero ciclo di vita di un container.
+_Figura 1: Architettura Docker - Il client invia comandi al demone Docker, che gestisce immagini e container. Le immagini (es. Python, Redis) risiedono in registri come Docker Hub, da cui possono essere scaricate ("pull"). I container sono istanze runtime create a partire dalle immagini, eseguite isolate sul Docker Host._
 
-I dati mostrano che comprendere questi concetti fondamentali può **ridurre del 40% i problemi di debugging** in ambienti containerizzati ([Docker Documentation, 2024](https://docs.docker.com/engine/storage/drivers/)) e **migliorare del 30% le performance** delle applicazioni attraverso una migliore gestione dei layer ([DigitalOcean, 2024](https://www.digitalocean.com/community/tutorials/docker-explained-how-to-containerize-and-use-nginx-as-a-proxy)).
+**Immagini Docker:** Un'_immagine_ Docker è essenzialmente un **template in sola lettura** che descrive tutto il necessario per creare un container[\[1\]](https://docs.docker.com/get-started/docker-overview/#:~:text=). Possiamo vederla come uno _snapshot_ del filesystem e della configurazione di un sistema minimale. Ad esempio, un'immagine può basarsi su un'altra (es. partire da ubuntu) aggiungendo poi un server Apache, l'applicazione e le configurazioni necessarie[\[1\]](https://docs.docker.com/get-started/docker-overview/#:~:text=). Le immagini sono costruite in modo incrementale e composito: ognuna **è composta da più strati (layer)** di filesystem impilati (concetto che approfondiremo più avanti)[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Importante: un'immagine di per sé è statica e immutabile - non cambia mai durante l'esecuzione, fungendo da modello da cui avviare i container.
 
-## Metodologia
+**Container Docker:** Un _container_ è invece una **istanza runtime di un'immagine**[\[3\]](https://docs.docker.com/get-started/docker-overview/#:~:text=). Se l'immagine è il modello, il container è l'oggetto concreto in esecuzione. In pratica, un container è un processo isolato che gira sulla macchina host, con il suo filesystem, la sua rete e il suo spazio di processi separati[\[4\]](https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host). Docker utilizza l'immagine come base e crea un ambiente isolato in cui l'applicazione può girare. Possiamo pensare al container come a un "contenitore" (da cui il nome) che racchiude l'applicazione e le sue dipendenze, garantendo che questa giri sempre nello stesso ambiente, a prescindere da dove il container viene eseguito[\[5\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=An%20image%20is%20a%20snapshot,a%20container%20runs%20the%20software). Un'analogia utile è con la programmazione a oggetti: **l'immagine è come una classe, mentre il container è un'istanza (un oggetto) di quella classe** - l'immagine definisce, il container esegue. Inoltre, più container possono essere creati dalla stessa immagine (come oggetti multipli da una singola classe) senza influenzarsi a vicenda, ciascuno col proprio stato temporaneo.
 
-Per questa analisi sono state esaminate fonti tecniche autorevoli pubblicate tra il 2023 e il 2025, privilegiando documentazione ufficiale Docker, pubblicazioni CNCF (Cloud Native Computing Foundation), e case study verificabili. In particolare:
+**Registry (Registro di immagini):** Un _registro_ è un servizio centralizzato per conservare e condividere immagini container[\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries). Il registro pubblico predefinito è **Docker Hub**, a cui Docker si rivolge di default per scaricare immagini non trovate in locale[\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries). Esistono anche registri alternativi pubblici o privati: ad esempio GitHub Container Registry, AWS ECR di Amazon, Google GCR, Azure ACR, o soluzioni self-hosted come Harbor. In un registro le immagini sono organizzate in repository (ad esempio nomeutente/nomeimmagine su Docker Hub identifica un repository). La differenza tra registro pubblico e privato sta principalmente nei controlli di accesso: un registro pubblico (come Docker Hub) mette a disposizione immagini a chiunque, spesso con una libreria di immagini ufficiali; un registro privato invece è accessibile solo a utenti autorizzati, utile per mantenere immagini aziendali o interne non visibili pubblicamente. In entrambi i casi, Docker può autenticarsi al registry se necessario e poi effettuare _pull_ (scaricamento) e _push_ (caricamento) delle immagini.
 
-1. **Documentazione ufficiale** (Docker Docs, Red Hat, CNCF): considerata evidenza di grado A per l'accuratezza tecnica e l'aggiornamento costante
-2. **Articoli tecnici peer-reviewed** e white paper di ingegneri Docker/Kubernetes (grado B)
-3. **Blog post tecnici di aziende** che utilizzano Docker in produzione (DigitalOcean, Earthly, etc.) con metriche verificabili (grado B/C)
-4. **Tutorial pratici e guide hands-on** con codice reproducibile (grado C per aspetti implementativi)
+**Come si crea un'immagine (build):** Le immagini Docker si creano tipicamente con un processo di _build_ basato su un **Dockerfile**, un file di testo che contiene istruzioni su come costruire l'immagine a partire da una base[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Ogni istruzione nel Dockerfile (es. FROM, RUN, COPY, ecc.) viene eseguita in sequenza dal demone Docker durante il build, producendo a sua volta uno strato di filesystem aggiuntivo sull'immagine[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Ad esempio, un Dockerfile potrebbe iniziare con FROM ubuntu:22.04 (che definisce l'immagine base Ubuntu), poi RUN apt-get install -y python3 (per installare Python, creando un nuovo layer con questi file aggiunti), quindi COPY . /app (per copiare il codice dell'applicazione dentro l'immagine, ulteriore layer), e così via. Docker esegue il build passando per ognuna di queste istruzioni e "impilando" i risultati in un'immagine finale. Questo processo sfrutta la cache: se ricostruiamo un'immagine senza modificare certe istruzioni, Docker riutilizzerà i layer esistenti senza ricalcolarli, rendendo il build molto veloce[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Alla fine del build, otteniamo un'immagine identificata da un **ID univoco (un hash)**, che possiamo eseguire o distribuire. Possiamo creare immagini nostre da zero (ad es. partendo da scratch, un'immagine vuota) o basarci su immagini altrui, il che incentiva il riuso di componenti comunemente usate (es. una base Linux standard) invece di reinventare tutto.
 
-Ogni sezione include riferimenti diretti alle fonti per permettere approfondimenti e verifiche indipendenti.
+**Pull e Run:** Due comandi fondamentali per utilizzare le immagini sono docker pull e docker run. - **Docker Pull:** Il comando docker pull &lt;nome:tag&gt; scarica un'immagine dal registro. Dietro le quinte, il client Docker contatta il registry via HTTP(S) e richiede il manifesto dell'immagine (un file che elenca i layer di cui l'immagine è composta). In seguito il client scarica ogni layer (detto _blob_) che non ha già in cache, spesso in parallelo, salvandoli in locale[\[7\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry). Ad esempio, docker pull nginx:latest recupera dal Docker Hub la lista dei layer che compongono l'immagine di Nginx e li scarica uno a uno; una volta completati, avremo l'immagine nginx:latest pronta sul nostro host. - **Docker Run:** Il comando docker run è usato per eseguire un container a partire da un'immagine. Equivale a combinare in un solo passo il docker pull (se l'immagine non è presente in locale) e la creazione e avvio di un nuovo container[\[8\]](https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration)[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually). In pratica, quando lanciamo ad esempio docker run ubuntu:22.04 echo "ciao", Docker verifica se l'immagine ubuntu:22.04 esiste localmente; se manca, la _pull_ dal registry[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually). Poi il demone Docker **crea un container** dall'immagine (allocando le risorse necessarie, preparando un filesystem scrivibile per il container, assegnandogli un ID univoco) e infine **avvia il container**, eseguendo al suo interno il comando specificato (in questo caso echo "ciao"). Una volta terminato, il container può essere fermato e rimosso oppure mantenuto per essere riavviato. In sostanza, docker run è il comando più utilizzato che, in un colpo solo, gestisce l'intero ciclo di vita: dal download dell'immagine (se necessario) all'esecuzione del processo nel container[\[8\]](https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration)[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually).
 
-## Concetti Fondamentali: Immagine, Container, Registry
+## 2\. Ciclo di vita di un container
 
-### Le tre entità fondamentali
+**Dal build all'esecuzione (dietro docker run):** Dopo aver costruito un'immagine (fase di _build_), possiamo passare alla fase di _run_, ossia creare ed eseguire container basati su quell'immagine. Quando eseguiamo docker run, come visto, Docker potrebbe scaricare l'immagine prima (se non già presente). Successivamente effettua internamente un'operazione equivalente a docker container create: in questa fase il container entra nello stato **"Created" (creato)** - le risorse necessarie vengono allocate, viene assegnato un ID e predisposto il filesystem specifico del container[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually). Subito dopo, Docker avvia il container (equivalente a docker container start), lanciando il processo principale definito dall'immagine. A questo punto il container passa allo stato **"Running" (in esecuzione)** ed esegue realmente il suo workload all'interno dell'ambiente isolato. Il container rimarrà in esecuzione finché il suo processo principale è attivo. Se quel processo termina (per uscita volontaria o crash) o se inviamo un comando di stop, Docker ferma il container, che entra nello stato **"Stopped" o "Exited" (fermato/uscito)**. Un container fermato conserva ancora lo stato del suo filesystem isolato, i log, e può essere riavviato se serve (tornerà "Running"). Infine, se decidiamo di liberare completamente le risorse, possiamo rimuovere il container con docker rm: a quel punto esso passa allo stato **"Removed" (rimosso)**, venendo cancellato dal sistema. Il ciclo di vita tipico dunque è: **Created → Running → Stopped/Exited → Removed**[\[10\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same). (Nota: Docker prevede anche uno stato **"Paused" (in pausa)**, in cui i processi del container sono congelati tramite cgroups freezer, senza terminarli[\[11\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State). Pausare un container consente di riservare CPU temporaneamente, ma è usato più raramente; un container deve essere Running per poter essere messo in pausa, e va poi "unpaused" per riprendere).
 
-Nel mondo Docker, tutto ruota attorno a tre concetti chiave che è essenziale comprendere prima di addentrarsi nei dettagli tecnici:
+**Stati del container:** Riassumendo, ecco i principali stati in cui un container Docker può trovarsi durante il suo ciclo di vita[\[10\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same):
 
-**Docker Image (Immagine)**: Un'immagine Docker è essenzialmente un template read-only che contiene le istruzioni per creare un container Docker. Quando viene eseguito il comando docker build, Docker esegue i comandi specificati e crea un'immagine personalizzata sul sistema locale ([phoenixNAP, 2024](https://phoenixnap.com/kb/create-docker-images-with-dockerfile)). Pensala come una "classe" nella programmazione orientata agli oggetti - definisce la struttura ma non è ancora un'istanza in esecuzione.
+- **Created (Creato):** il container è stato definito e le risorse allocate, ma il processo al suo interno non è ancora in esecuzione. Si ottiene, ad esempio, con un docker create senza start, oppure subito dopo un docker run prima che il processo parta. In questo stato il container ha un ID, un filesystem pronto, ma consuma risorse minime (nessun processo attivo).
+- **Running (In esecuzione):** il container è avviato e il suo processo principale (PID 1 nel container) sta girando. Il container è attivo: potrebbe esporre porte di rete, utilizzare CPU/RAM, effettuare operazioni I/O, ecc. Questo è lo stato "normale" mentre utilizziamo il servizio/applicazione contenuta.
+- **Stopped/Exited (Fermato/Uscito):** il container ha eseguito il suo processo ed esso è terminato, oppure è stato fermato manualmente. Il container non esegue nulla, ma esiste ancora nel sistema con il suo filesystem integro e lo stato che aveva al momento dello stop. Possiamo ispezionarlo, leggere i log, o eventualmente riavviarlo. Docker segna in questo stato anche i container che terminano immediatamente perché il loro processo è uscito (ad es. container che eseguono un comando e finiscono).
+- **Removed (Rimosso):** il container è stato eliminato dal Docker host (tipicamente con docker rm o tramite opzioni --rm). Non occupa più spazio (salvo eventuali volumi persistenti separati) e non appare più in docker ps -a. Ogni modifica non conservata fuori dal container è persa definitivamente a questo punto.
 
-**Docker Container**: Un container Docker è un'istanza runtime di un'immagine Docker, che sia in esecuzione o ferma. Una delle principali differenze tra container e immagini è che i container hanno un layer scrivibile ed è il container che esegue effettivamente il software ([Stackify, 2024](https://stackify.com/docker-build-a-beginners-guide-to-building-docker-images/)). È come un'istanza di una classe: l'oggetto vivo e funzionante.
+**Copy-on-write e filesystem dei container:** Uno degli aspetti chiave di Docker è come gestisce il filesystem dei container con un meccanismo di **copy-on-write**. Alla creazione di un container, Docker allestisce per esso un **filesystem unito (_union file system_)**, composto da: tutti i layer in sola lettura dell'immagine di base _più_ un **layer scrivibile** specifico per il container[\[12\]](https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them). In pratica, il container "vede" un unico filesystem completo (chiamato _root filesystem_ del container) che unisce gli strati dell'immagine al suo layer scrivibile. Quando un processo nel container modifica o crea un file, ecco che entra in gioco il copy-on-write: se il file esisteva già in uno dei layer di sola lettura dell'immagine, Docker ne fa **una copia nel layer scrivibile del container** e applica lì le modifiche, lasciando intatto il file originale dell'immagine[\[12\]](https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them). Il risultato è che dentro il container sembra che il file sia cambiato, ma all'esterno l'immagine rimane immutata. Ogni container ha il suo layer scrivibile, quindi le modifiche fatte in un container **non sono visibili in altri container** che usano la stessa immagine. Inoltre, se cancelliamo un container, perdiamo il suo layer scrivibile e con esso tutte le modifiche fatte in quell'ambiente (a meno di non averle salvate in volumi persistenti o _committate_ in una nuova immagine)[\[12\]](https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them). Questo design copy-on-write rende i container **leggeri ed effimeri**: condividono tra loro i layer immutabili (risparmiando spazio e memoria) e ognuno aggiunge solo le differenze necessarie. Ad esempio, se avviamo 5 container dall'immagine ubuntu, sul disco avremo una sola copia dei layer di Ubuntu, usata in comune, più 5 piccoli layer separati per le differenze di ciascun container.
 
-**Docker Registry**: Un repository centralizzato dove vengono archiviate e distribuite le immagini Docker. Docker Hub è il registry predefinito da cui Docker effettua il pull delle immagini. È anche possibile specificare manualmente il percorso di un registry per effettuare il pull ([Docker Docs](https://docs.docker.com/reference/cli/docker/image/pull/)). I registry possono essere pubblici (come Docker Hub) o privati (self-hosted o cloud-based).
+## 3\. Architettura interna
 
-### Come si crea un'immagine: il build process
+**Isolamento con namespaces e cgroups (kernel Linux):** Docker realizza l'isolamento dei container sfruttando funzionalità native del kernel Linux, principalmente _namespaces_ e _cgroups_. I **namespaces** sono meccanismi che il kernel fornisce per isolare viste e risorse di sistema tra gruppi di processi. Quando Docker crea un container, dietro le quinte il kernel assegna al container una serie di namespaces dedicati[\[13\]](https://docs.docker.com/get-started/docker-overview/#:~:text=The%20underlying%20technology). Ciascun namespace isola un aspetto: ad esempio, il _PID namespace_ fa sì che il container abbia la propria numerazione di processi (il processo "1" del container è il processo principale dell'app, e non vede i processi fuori dal container)[\[14\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers)[\[15\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=The%20crucial%20thing%20to%20notice,isolated%20within%20my%20own%20namespace). Il _network namespace_ fornisce al container la sua interfaccia di rete virtuale, con indirizzo IP separato, isolando il traffico di rete. Il _mount namespace_ dà al container la propria visione del filesystem (vedremo a breve il root filesystem specifico), separata da quella host. Ci sono namespace per l'IPC (comunicazioni inter-processo), per l'UTS (hostname e nome di dominio separato), e opzionalmente per l'utente (user namespace, che consente mapping di UID/GID per eseguire container "root" isolati come utente non privilegiato sull'host). Grazie ai namespaces, ogni container vive in una sorta di "bolla" logica: **dall'interno vede solo risorse proprie**, e non quelle degli altri container o dell'host[\[14\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers). Oltre ai namespace, Docker utilizza i **cgroups** (_control groups_) per limitare e monitorare l'uso di risorse (CPU, RAM, I/O) da parte dei container[\[16\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F). I cgroups permettono al sistema di impostare quanta CPU o memoria massima può consumare un container, garantendo che uno non saturi tutte le risorse a scapito degli altri[\[17\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=A%20control%20group%20,of%20a%20collection%20of%20processes). Inoltre forniscono accounting (tracciamento) dei consumi e possono anche congelare o terminare in blocco tutti i processi di un container (ad esempio per l'implementazione del comando docker pause si usa il freezer cgroup)[\[11\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State)[\[18\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=,cgroup%20with%20a%20single%20command). In sintesi, **namespaces** = isolamento (contenimento per processi, rete, filesystem, ecc.), **cgroups** = controllo risorse e quote. Docker combina questi meccanismi in modo da creare container che si comportano come ambienti separati, pur girando tutti sullo stesso kernel Linux sottostante.
 
-Il processo di build di un'immagine Docker segue una sequenza precisa:
+**Isolamento logico vs fisico (Container vs VM):** È importante comprendere che l'isolamento fornito dai container è di tipo _logico/software_, diverso da quello _fisico/hardware_ delle macchine virtuali tradizionali. Un container **condivide** infatti il kernel del sistema operativo host: non c'è un'istanza separata di OS per ogni container, come invece avviene per una VM. Le VM virtualizzano un intero hardware e kernel, offrendo un isolamento più profondo ma con maggior overhead; i container **virtualizzano a livello di sistema operativo**, isolando processi e risorse all'interno dello stesso kernel[\[19\]](https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below). In altre parole, i container forniscono un isolamento dei processi (grazie a namespaces/cgroups) sullo stesso OS, mentre le VM forniscono un isolamento di macchine intere, ciascuna con il proprio OS guest sopra un hypervisor. Questo significa che un bug nel kernel viene condiviso tra container e host (quindi una falla di sicurezza nel kernel è teoricamente sfruttabile per evadere da un container), mentre nelle VM il kernel guest è separato dal kernel host. D'altro canto, i container sono molto più leggeri: **avvio in pochi secondi, occupano pochi MB** perché non duplicano un intero OS, e possono essercene decine sullo stesso host senza grossi sprechi, laddove poche VM saturerebbero le risorse[\[20\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=Since%20the%20container%20runs%20natively,you%20configure%20it%20that%20way)[\[21\]](https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below). Un'analogia comune: _container_ sono come appartamenti in un unico edificio (stesso terreno e struttura, separati da muri interni: isolamento meno totale ma più efficiente), mentre le _VM_ sono come case indipendenti (ognuna con proprie fondamenta e impianti: isolamento maggiore, ma costi e tempi più alti).
 
-```dockerfile
-# Esempio di Dockerfile
-FROM ubuntu:22.04
-RUN apt-get update && apt-get install -y nginx
-COPY index.html /var/www/html/
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
+**Root filesystem e OverlayFS:** All'interno di ciascun container, il processo vede un **root filesystem isolato**, cioè la directory / del container contiene solo i file dell'immagine più le eventuali modifiche locali, e non i file dell'host. Come accennato, questo è realizzato tramite un union filesystem con meccanismo di copy-on-write. Su Linux Docker impiega per default il driver **OverlayFS** (nella variante _overlay2_) per implementare questa funzionalità[\[22\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20supports%20multiple%20storage%20drivers,storage%20driver)[\[23\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Storage%20Driver%3A%20overlay2). OverlayFS consente di unire più directory ("lower dirs" in sola lettura + "upper dir" in scrittura) presentandole come un'unica directory montata. Nel contesto di Docker, i **layer dell'immagine** sono le lower dirs (read-only) e la **cartella "diff" del container** è l'upper dir (read-write); quando il container viene avviato, Docker monta un filesystem di tipo overlay che unisce tutti questi livelli e lo imposta come root filesystem del container (usando chiamate come chroot o namespace mount)[\[24\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=1,chroot). Ad esempio, un'immagine Ubuntu può essere composta da diversi layer (uno per la base di OS minimal, uno per alcune librerie, ecc.): Docker memorizza ciascun layer come una directory sotto /var/lib/docker/overlay2/ identificata da un hash[\[25\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers). Quando eseguiamo un container da tale immagine, Docker crea una nuova dir per il layer superiore del container e poi monta un overlay FS: il risultato è una cartella merged che rappresenta la vista unificata di Ubuntu base + modifiche. Il processo nel container viene eseguito con questa merged impostata come /, e quindi vede un filesystem completo di Ubuntu, isolato dal resto[\[24\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=1,chroot). Ogni scrittura nel container va a finire nella dir diff (upper), mentre i file originali restano nelle dir lower intatte[\[26\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=echo%20%27Add%20a%20new%20line%27,1)[\[27\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=The%20original%20file%20present%20inside,layer%60%20is%20created). **OverlayFS** è molto efficiente: evita duplicazione di dati tra container multipli e rende immediato l'avvio di nuovi container (basta aggiungere un nuovo layer in scrittura sopra i layer esistenti). L'uso di un filesystem a strati è un concetto cruciale: è ciò che rende le immagini Docker composte da **layer riutilizzabili** e i container istanze leggere che sfruttano quei layer condivisi.
 
-Il processo di build dell'immagine viene inizializzato dalla Docker CLI ed eseguito dal Docker daemon. Per generare un'immagine Docker, il daemon necessita l'accesso al Dockerfile, al codice sorgente e ai file referenziati all'interno del Dockerfile ([DEV Community, 2024](https://dev.to/kalkwst/building-docker-images-55f1)).
+## 4\. Immagini Docker come strati (layers)
 
-Durante il build, ogni istruzione nel Dockerfile aggiunge un layer extra all'immagine Docker. Docker utilizza union file system per combinare questi layer in una singola immagine ([Stack Overflow](https://stackoverflow.com/questions/31222377/what-are-docker-image-layers)).
+**Layer: cos'è e come viene memorizzato:** Un'immagine Docker non è un singolo blob monolitico, ma è costituita da una **serie ordinata di strati** impilati. Ogni _layer_ rappresenta un insieme di **modifiche al filesystem** rispetto al layer sottostante[\[28\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image). Ad esempio, immaginiamo di creare un'immagine per una applicazione Python. I layer potrebbero essere così strutturati[\[28\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image):
 
-### Il ruolo dei Registry
+- **Layer 1:** sistema base minimal (es. comandi di base e package manager apt su Ubuntu).
+- **Layer 2:** installazione dell'interprete Python e di pip.
+- **Layer 3:** aggiunta del file requirements.txt dell'applicazione.
+- **Layer 4:** installazione dei pacchetti Python specifici dell'app (dipendenze listate in requirements.txt).
+- **Layer 5:** copia del codice sorgente dell'applicazione nella destinazione prevista.
 
-I registry Docker funzionano come hub di distribuzione per le immagini:
+Ogni layer aggiunge dunque file o apporta modifiche (installazioni, copie, configurazioni). In termini di Dockerfile, queste corrisponderebbero rispettivamente a istruzioni come FROM ubuntu:22.04, RUN apt-get install python3 pip, COPY requirements.txt ., RUN pip install -r requirements.txt, COPY src/ . e così via. Docker durante il build crea un layer per ciascuna istruzione[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). **Come vengono memorizzati?** Internamente, Docker salva ciascun layer come un archivio compresso (tipicamente una tarball) e lo identifica con un hash univoco (un digest SHA256). Sul disco del Docker host (es. in /var/lib/docker/overlay2/ per overlay2) ogni layer viene estratto in una directory distinta[\[29\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers). I layer sono **immutabili**: una volta creato un layer, non viene più modificato (qualsiasi cambiamento avviene creando un nuovo layer sopra). Questo approccio dei layers immutabili significa anche che se aggiorniamo un'immagine ricostruendola, Docker può riutilizzare i layer precedenti che non sono cambiati e solo rigenerare i nuovi[\[30\]](https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies)[\[31\]](https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies).
 
-1. **Push**: Quando pubblichi un'immagine, l'hash SHA256 nel campo RepoDigests viene generato quando si effettua il push dell'immagine verso un registry ([Medium, 2025](https://medium.com/@emmaliaocode/all-those-sha256s-in-a-docker-image-9e8984065f2e))
+**Caching e riuso dei layer:** Uno dei vantaggi chiave di avere immagini a strati è la possibilità di **riusare** layer comuni tra immagini diverse e tra build successivi. Ad esempio, se due diverse immagini Docker entrambe partono da ubuntu:22.04, il layer di base di Ubuntu può essere condiviso: Docker lo scarica o costruisce una volta e poi lo riutilizza per tutte le immagini derivate[\[32\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following). Questo riduce enormemente lo spazio utilizzato e banda di download necessaria, oltre ad accelerare i tempi di build. Durante la creazione di un'immagine tramite Dockerfile, Docker costruisce in ordine le istruzioni e memorizza l'hash del contenuto generato ad ogni passo. Se ricostruiamo la stessa immagine senza modifiche a un certo passo, Docker riconosce che esiste già un layer identico in cache e lo riutilizza senza rieseguire i comandi (vedremo messaggi tipo "Using cache" nel output di docker build). Ad esempio, se il Dockerfile non cambia tra un build e l'altro, Docker riuserà tutti i layer dalla cache, producendo l'immagine quasi istantaneamente. Se modifichiamo solo le ultime istruzioni (es. il codice applicativo), gli strati iniziali rimangono cacheati e Docker ricalcola solo quelli nuovi o modificati[\[30\]](https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies)[\[31\]](https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies). Oltre al caching locale, il design a layer facilita il **pull incrementale**: quando facciamo docker pull di un'immagine aggiornata, Docker scarica solo i nuovi layer non presenti e salta quelli già scaricati in passato (ad esempio passando da v1 a v2 di un'immagine che differisce solo nell'ultimo layer, Docker scaricherà solo quel layer aggiuntivo). In scenari di distribuzione, questo comporta notevoli risparmi di tempo e larghezza di banda.
 
-2. **Pull**: Quando non viene fornito un tag, Docker Engine usa :latest come default. Docker scarica tre layer dell'immagine alla volta per default ([Docker Docs](https://docs.docker.com/reference/cli/docker/image/pull/))
+**Esempio pratico di layer (Dockerfile):** Prendiamo un Dockerfile semplice per illustrare i layer:
 
-3. **Digest e versioning**: Ogni immagine ha un digest SHA256 univoco che garantisce l'integrità. Quando si effettua il pull di un'immagine Docker dal registry, è possibile leggere il digest usando docker image ls --digests ([Kosli](https://www.kosli.com/blog/how-are-docker-digests-calculated-and-are-they-mutable/))
+FROM ubuntu:22.04  
+RUN apt-get update && apt-get install -y nginx  
+COPY index.html /usr/share/nginx/html/index.html
 
-## Ciclo di Vita di un Container
+Quando costruiamo questa immagine, Docker esegue:
 
-### Gli stati di un container
+- FROM ubuntu:22.04: questo istruisce Docker a usare l'immagine di base Ubuntu 22.04. Tale immagine di base già consiste di alcuni layer (minimali di Ubuntu). Tutti insieme questi layer diventano i **layer iniziali** della nostra nuova immagine.
+- RUN apt-get update && apt-get install -y nginx: Docker avvia un container temporaneo da Ubuntu base e esegue i comandi. Le modifiche risultanti (pacchetti Nginx installati, file di configurazione aggiunti) costituiscono un **nuovo layer** che si piazza sopra quelli di Ubuntu. Questo layer contiene solo le differenze (i file aggiunti/modificati rispetto alla base).
+- COPY index.html ...: Docker copia il file locale index.html nel filesystem del container temporaneo (nella posizione specificata). Ciò aggiunge/aggiorna quel file nel container, e queste modifiche diventano un ulteriore **layer finale**.
 
-Un container Docker attraversa diversi stati durante il suo ciclo di vita:
+L'immagine risultante ha quindi: i layer di Ubuntu, un layer per l'installazione di Nginx, e un layer per la copia del file HTML. Se volessimo creare un'altra immagine simile (ad esempio un altro sito statico basato sempre su Ubuntu e Nginx), Docker riutilizzerà i layer di Ubuntu e Nginx già esistenti, dovendo aggiungere solo il layer con i nuovi file specifici. Questo mostra come i layer permettono di **estendere immagini esistenti** aggiungendo solo ciò che serve in più[\[32\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following). In fase di esecuzione dei container, i layer in sola lettura dell'immagine Nginx appena creata possono essere condivisi tra tutti i container che l'utilizzano, mentre eventuali file differenti tra container (es. magari personalizzazioni fatte in runtime) restano confinati nei rispettivi layer scrivibili. In definitiva, l'architettura a strati delle immagini Docker è un elemento fondamentale per la **portabilità** (posso scaricare solo ciò che serve), la **consistenza** (ogni layer è immutabile e riproducibile) e l'**efficienza** (massimo riuso di componenti comuni).
 
-Il ciclo di vita di un container Docker è il percorso che un container segue dal momento in cui viene creato fino alla sua rimozione. Ogni container tipicamente attraversa questi stadi principali: created, running, paused, stopped e removed ([Last9, 2025](https://last9.io/blog/docker-container-lifecycle/)).
+## 5\. Registri e distribuzione
 
-```bash
-# Stati del container e comandi associati
-docker create nginx    # → CREATED
-docker start <id>      # → RUNNING
-docker pause <id>      # → PAUSED
-docker unpause <id>    # → RUNNING
-docker stop <id>       # → STOPPED
-docker rm <id>         # → REMOVED
-```
+**Cosa succede con docker pull:** Abbiamo visto che docker pull scarica un'immagine da un registro, ma analizziamo brevemente il processo. Quando eseguiamo docker pull nome:tag, il client Docker si connette al registry (per default Docker Hub, o un altro se specificato nel nome o nella config) e compie una serie di chiamate API HTTP. In primo luogo, richiede il **manifest** dell'immagine - il manifest è un documento (in formato JSON) che elenca i digest di tutti i layer dell'immagine e i metadati (come l'hash del config JSON dell'immagine, architettura, etc.). Il registry risponde con il manifest, che può essere di due tipi: un _manifest list_ (indice multi-architettura contenente riferimenti a manifest per diverse piattaforme) oppure un manifest singolo per una specifica piattaforma[\[33\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=There%20are%20currently%20two%20types,and%20a%20manifest)[\[34\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Pull%20a%20manifest). Il client Docker, se riceve una manifest list, sceglierà il manifest adatto al sistema host (es. scegliendo i layer linux/amd64 se stiamo su un PC x86_64)[\[35\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Instead%20of%20blobs%2C%20the%20client,its%20operating%20system%20and%20architecture)[\[36\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Suppose%20a%20client%20chooses%20the,architecture%20and%20the%20manifest%20digest). Ottenuto il manifest specifico, Docker procede a **scaricare i layer** elencati: per ciascun digest di layer effettua una richiesta GET al registry per recuperare il blob corrispondente[\[7\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry). I layer sono scaricati in parallelo (per velocizzare il processo) e salvati nella cache locale (tipicamente sotto /var/lib/docker/ nel driver di storage in uso). Se alcuni layer erano già presenti (perché magari comuni con altre immagini), Docker li salta. Terminato il download di tutti i blob, Docker compone o aggiorna l'immagine localmente (scrivendo il config JSON che descrive l'immagine e referenziando i layer locali). A questo punto l'immagine è disponibile per essere eseguita. In sintesi, docker pull è un processo di **download dei componenti immagine** orchestrato tramite chiamate REST: prima il manifest (o indice multi-arch), poi i blob dei layer[\[37\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=A%20Podman%20or%20Docker%20,image%20manifest%20is%20being%20pulled)[\[7\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry). Dal punto di vista dell'utente, questo si traduce in messaggi "Pull complete" per ogni layer e infine "Downloaded newer image for nome:tag".
 
-**Created**: Un container che è stato creato (es. con docker create) ma non ancora avviato ([Stack Overflow](https://stackoverflow.com/questions/32427684/what-are-the-possible-states-for-a-docker-container))
+**Registri pubblici vs privati:** I _container registry_ possono essere pubblici (aperti a tutti) o privati. Un **registro pubblico** come Docker Hub permette a chiunque di scaricare immagini pubblicate lì (e spesso anche di pubblicarne di proprie, con dei limiti per gli account free). Docker Hub contiene migliaia di immagini, incluse le _Docker Official Images_ (immagini ufficiali per software comuni, mantenute dalla community o dai produttori stessi, es. nginx, mysql, etc.). Altri registri pubblici includono il GitHub Container Registry (GHCR), Google Artifact Registry, Red Hat Quay, etc., dove spesso trovate immagini relative a progetti open source o prodotti specifici. Un **registro privato**, invece, è accessibile solo a utenti o sistemi autenticati e autorizzati. Può essere un servizio cloud (ad esempio Amazon ECR per AWS, GitLab Container Registry integrato in GitLab, DigitalOcean Container Registry, etc.) oppure un'istanza di registro self-hosted che l'azienda gestisce in-house (come Harbor o un'istanza privata di Nexus/Artifactory con supporto Docker). Dal punto di vista di Docker, interagire con un registro privato o pubblico è simile, tranne per il fatto che per quelli privati spesso dobbiamo effettuare login (docker login) per ottenere un token di accesso. **Differenze principali:** i registri pubblici sono utili per la distribuzione open e la condivisione comunitaria (con possibili limitazioni di banda o storage per livello free), mentre i registri privati garantiscono riservatezza e controllo su chi può scaricare le immagini - sono fondamentali quando si lavora con immagini contenenti codice proprietario o che non vogliamo rendere pubbliche. Docker Hub di default cerca solo immagini pubbliche (se non trova col tag specifico, assume libreria ufficiale se esiste), ma possiamo specificare un registro alternativo nei nomi delle immagini (es. myregistry.example.com:5000/mio-team/mia-immagine:1.0). In contesti enterprise, l'uso di registri privati consente anche di collegare pipeline CI/CD per pubblicare automaticamente nuove build di immagini in un luogo sicuro e di controllare le versioni in produzione. In breve, **pubblico vs privato** si riduce a open vs access-restricted, ma tecnologicamente entrambi forniscono le stesse API di distribuzione di layer[\[38\]](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=An%20image%20registry%20is%20a,and%20is%20the%20default%20registry)[\[39\]](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=While%20Docker%20Hub%20is%20a,Artifactory%2C%20GitLab%20Container%20registry%20etc).
 
-**Running**: Il container sta eseguendo attivamente i suoi processi
+**Versionamento delle immagini - tag e digest:** Le immagini Docker vengono identificate in due modi: tramite _tag_ umano leggibile (es. nginx:1.25) o tramite _digest_ criptografico (es. nginx@sha256:&lt;hash&gt;). Il **tag** è essenzialmente un alias che punta a una specifica versione di un'immagine all'interno di un repository del registro. Ad esempio nginx:latest è un tag convenzionale che indica "l'ultima versione disponibile di Nginx" (nel momento in cui viene aggiornato dal manutentore). I tag sono comodi ma **mutabili**: chi pubblica immagini può spostare un tag su una nuova build (ad esempio aggiornare latest a una nuova versione). Il **digest**, invece, è un identificatore univoco calcolato sul contenuto dell'immagine: Docker utilizza digest SHA-256, rappresentati come un hash esadecimale lungo[\[40\]](https://docs.docker.com/engine/containers/run/#:~:text=Images%20using%20the%20v2%20or,the%20digest%20value%20is%20predictable). Ogni immagine spinta su un registro avrà un digest proprio (visualizzabile ad esempio dopo un pull come "Digest: sha256:&lt;...&gt;"). Quel digest cambia se e solo se cambia qualunque byte dell'immagine (layer o metadata). **Usare il digest** garantisce di riferirsi esattamente a una data build immutabile - ad es. si può fare docker pull nginx@sha256:abcdef... per scaricare esattamente quell'immagine, a prescindere dai tag. Perciò, mentre i tag servono per convenienza (es. 1.0, 2.0, latest), i digest servono per **immutabilità e verificabilità**[\[41\]](https://docs.docker.com/engine/containers/run/#:~:text=). Molti flussi CI/CD promuovono l'uso dei digest per fissare versioni esatte, evitando sorprese qualora un tag venga riutilizzato per una versione diversa. In ambienti Kubernetes, ad esempio, si può specificare un'immagine col suo digest per assicurarsi che il deploy non tiri su una versione inattesa più recente con lo stesso tag.
 
-**Paused**: Quando in stato paused, il container non è consapevole del suo stato. Docker invia il segnale SIGSTOP per mettere in pausa i processi nel container ([SigNoz, 2023](https://signoz.io/blog/docker-container-lifecycle/))
+**Firma delle immagini (security):** Oltre a tag e digest, Docker supporta anche la **firma crittografica delle immagini** tramite una funzionalità chiamata Docker Content Trust (basata su un progetto open source chiamato Notary). Abilitando Content Trust, ogni push di un'immagine viene firmato digitalmente dal publisher, e ogni pull verifica la firma, assicurando che l'immagine non sia stata alterata e provenga effettivamente dal publisher dichiarato[\[42\]](https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust). In pratica, viene utilizzato un sistema di chiavi private/pubbliche: chi costruisce l'immagine la firma con la sua chiave privata; chi scarica, se ha abilitato la verifica, userà la chiave pubblica corrispondente per controllare che il digest dell'immagine corrisponda a quello firmato dal produttore. Questo previene attacchi di _man-in-the-middle_ o l'uso involontario di immagini manomesse. Docker Hub supporta Content Trust, così come altri registri (o lo si può implementare in pipeline interne). Inoltre sono emerse tecnologie alternative come **Sigstore Cosign** (progetto open source CNCF) per firmare e verificare container in maniera ancora più integrata nelle pipeline cloud-native. L'aspetto importante da capire concettualmente è: il digest assicura **integrità** (rileva modifiche non autorizzate al contenuto, poiché l'hash non combacia più), mentre la firma digitale aggiunge anche **autenticità** (garantisce chi ha prodotto quell'immagine, ovvero che l'hash corrisponde a un'immagine firmata dal detentore di una chiave privata fidata)[\[43\]](https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker)[\[42\]](https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust). In contesti dove la sicurezza della supply chain è critica, verificare le firme delle immagini prima di eseguirle è altamente consigliabile.
 
-**Stopped**: Quando un container viene fermato, Docker invia un segnale SIGTERM al processo principale (PID 1). Se il processo non risponde entro un tempo prestabilito (10 secondi di default), Docker invia un segnale SIGKILL per terminare forzatamente il processo ([LinkedIn](https://www.linkedin.com/pulse/understanding-docker-container-lifecycle-depth-rohit-kumar-shaw))
+## 6\. Demo concettuale: cosa succede con docker run nginx
 
-### Cosa succede dietro un `docker run`
+Per consolidare i concetti, facciamo una **narrazione passo-passo** di cosa accade quando eseguiamo un comando Docker concreto. Immaginiamo di lanciare:
 
-Quando eseguiamo `docker run nginx`, accade molto più di quanto sembri:
+docker run nginx
 
-Quando digiti docker run nginx, Docker segue questi passaggi: Prima cerca l'immagine nginx sul tuo computer. Se non la trova, la scarica da Docker Hub. Dopo aver trovato l'immagine, Docker la usa per creare un nuovo container con il proprio ID e layer di file scrivibile ([Tao's Blog, 2025](https://www.ubitools.com/docker-run-command/)).
+Cosa succede "dietro le quinte" quando premiamo Invio?
 
-Il processo completo include:
+- **Risoluzione dell'immagine:** Il client Docker interpreta il nome nginx come nginx:latest sul registro predefinito (Docker Hub). Contatta quindi Docker Hub per verificare se c'è un'immagine nginx:latest. A meno che non esista già localmente una copia aggiornata, il demone Docker procede a scaricare l'immagine Nginx[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually). Sul terminale vedremmo l'avanzamento del download dei vari layer di Nginx (ad esempio un layer base di Debian, layer con i binari di Nginx, etc., ciascuno con il suo ID). Dopo pochi secondi, l'immagine nginx:latest è presente sul nostro host.
+- **Creazione del container:** Completato (eventualmente) il pull, Docker prepara un nuovo container basato su quell'immagine. Questo equivale all'esecuzione interna di docker container create nginx:latest. In questo passo Docker alloca uno spazio per il container: crea una directory per il layer scrivibile del container, associa al container un identificatore univoco (un hash breve, ad es. d64f1abcbc23), apre le porte di rete necessarie (per Nginx la 80 di default, anche se non esposta verso l'host finché non pubblichiamo una porta), e imposta i parametri di esecuzione (entrypoint, variabili d'ambiente di default, working directory, ecc. come definiti dall'immagine). Il container è ora nello stato _Created_: esiste ma nulla è stato eseguito ancora[\[44\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Created%20State). In questa fase Docker ha già costruito il filesystem del container unendo i layer di Nginx con un nuovo layer vuoto in scrittura.
+- **Isolamento e risorse:** Prima di avviare il processo Nginx, Docker configura l'isolamento. Applica un PID namespace per il container (il processo Nginx avrà PID 1 all'interno del container), un network namespace (crea un'interfaccia virtuale eth0 nel container collegata tramite un bridge alla rete host, in modo che Nginx possa comunicare solo attraverso questo canale isolato), un mount namespace (il container vedrà come filesystem root i layer predisposti, e non i file dell'host), e così via[\[13\]](https://docs.docker.com/get-started/docker-overview/#:~:text=The%20underlying%20technology). Contestualmente, abilita i limiti di cgroup di default (se non diversamente specificato, di solito significa che il container può usare tutte le risorse host, ma comunque tracciate in un suo cgroup separato). In sostanza Docker crea un _ambiente separato_ dove verrà eseguito Nginx: è come se mettesse Nginx in una stanza dove ha solo la sua vista di sistema, isolata dalle altre.
+- **Avvio del processo nel container:** Docker ora _avvia_ il container, equivalente a eseguire docker start. Questo comporta l'esecuzione del comando principale definito nell'immagine Nginx. L'immagine ufficiale di Nginx ha come **entrypoint** (punto di ingresso) il demone Nginx stesso (in modalità foreground). Quindi Docker esegue, all'interno del container isolato, il binario nginx con i parametri previsti (spesso nginx -g "daemon off;" per farlo restare in primo piano). Dal punto di vista dell'host, un nuovo processo appare (visibile ad es. con ps -ef come qualcosa tipo nginx: master process nginx -g 'daemon off;' con un PID arbitrario, es. 4721, appartenente all'utente root se l'immagine gira come root). Ma quel processo è speciale: è ancorato ai namespace dedicati, quindi sul host ha PID 4721, ma dentro al container è PID 1. Nginx parte e legge la sua configurazione (in /etc/nginx/nginx.conf dentro il container), apre la porta 80 _all'interno_ del container. Docker, non avendo opzioni di porta in questo comando, non pubblica la porta 80 sul host - quindi Nginx risponde solo alle richieste fatte dal container stesso o su quel network isolato. (Se avessimo eseguito docker run -p 8080:80 nginx, Docker avrebbe creato un inoltro dalla porta 8080 del host alla porta 80 del container).
+- **Container in esecuzione:** A questo punto il container Nginx è in pieno **stato Running**. Possiamo verificarlo con docker ps: vedremo il container nginx attivo con un ID (gli stessi 12 caratteri circa creati prima) e status "Up X seconds". Nginx sta girando come se fosse su una sua mini macchina: se apriamo una shell dentro (docker exec -it &lt;container&gt; bash) e diamo comandi, vedremo che il filesystem ha solo le directory di Nginx, i processi attivi sono solo quelli di Nginx (es. il master e i worker), l'hostname è qualcosa come il ID abbreviato del container, la rete è un'altra (indirizzo probabilmente 172.17.x.y). Insomma, il servizio web Nginx è operativo nel suo container. Se ora un altro sviluppatore lanciasse sul suo computer docker run nginx, otterrebbe lo stesso identico ambiente in pochi secondi, a dimostrazione della portabilità.
+- **Arresto e rimozione:** Quando decidiamo di fermare il container, abbiamo due possibilità: mandare un segnale di stop (es. docker stop, che tipicamente invia SIGTERM al processo PID1 nel container - Nginx intercetterà il segnale e terminerà graziemente) oppure semplicemente docker rm -f che forza la terminazione. Supponiamo di fare docker stop: Docker segnala Nginx di fermarsi; Nginx chiude le connessioni e si termina. Il container passa in stato Exited. A questo punto possiamo riavviarlo (docker start &lt;ID&gt;) se vogliamo far ripartire Nginx, magari perché abbiamo bisogno di fare debug o verificare qualcosa. Se invece facciamo docker rm sul container fermato, Docker eliminerà quel container: il processo era già terminato, quindi ora vengono liberati il layer scrivibile e le meta-informazioni. L'immagine nginx:latest però resta nella cache locale, pronta per eseguire altri container in futuro senza dover essere scaricata di nuovo.
 
-1. **Image lookup e download**
-2. **Container creation**: Allocazione di un nuovo namespace e cgroup
-3. **Filesystem setup**: Montaggio dei layer read-only e creazione del layer write
-4. **Network configuration**: Creazione dell'interfaccia di rete virtuale
-5. **Process execution**: Avvio del processo principale nel nuovo ambiente isolato
+**Analogia finale:** Come accennato, un container Docker è concettualmente **simile a un'istanza runtime di un'applicazione preconfezionata**, così come un oggetto è un'istanza di una classe in un programma. L'immagine fa da "classe" o modello (ad esempio definisce che ci sarà un server Nginx con certi file), il container è l'istanza concreta e in esecuzione di quel modello[\[45\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=When%20a%20Docker%20user%20runs,though%2C%20most%20images%20include%20some). Proprio come più oggetti di una stessa classe possono esistere contemporaneamente con stati diversi, possiamo lanciare più container dalla stessa immagine Nginx (ognuno avrà magari differente indirizzo IP o differenti file temporanei creati durante l'esecuzione, ma tutti partono dallo stesso contenuto di base immutabile). Un'altra analogia efficace è quella del _container_ in termini fisici: l'immagine è come il **progetto di un container** standard (es. un container navale con specifiche di cosa contiene), mentre il container Docker runtime è come un **container spedito** realmente, con dentro i "carichi" (processi e risorse) pronti all'uso. Ovunque lo porti (sia sul mio PC, sul server di produzione, o su un cloud), quel container avrà sempre dentro le stesse cose e funzionerà allo stesso modo, finché il container rimane intatto. Docker fornisce quindi agli sviluppatori un modo per ottenere ambienti consistenti e replicabili: se funziona dentro un container sul mio laptop, funzionerà in un container su qualsiasi altra macchina con Docker - perché **"ciò che c'è dentro il container"** (sistema operativo minimale, dipendenze, configurazioni, applicazione) **rimane identico**[\[46\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=Think%20of%20a%20container%20as,containers%20to%20run%20the%20applications). Questo secondo episodio ha mostrato come Docker, attraverso immagini a strati, container isolati tramite funzionalità del kernel e una gestione efficiente dei filesystem, riesca a mettere "un'applicazione in una scatola" garantendo portabilità e consistenza. Nel prossimo episodio, potremmo approfondire come orchestrare più container assieme o come debug e configurare i container in scenari reali, continuando il nostro viaggio nel mondo di Docker.
 
-### Layer e Copy-on-Write
+**Riferimenti:** Docker Docs, CNCF, Red Hat, DigitalOcean, _et al._ - per definizioni e approfondimenti sui concetti di container, immagini, copy-on-write, namespaces/cgroups, e best practice nell'uso di Docker[\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries)[\[1\]](https://docs.docker.com/get-started/docker-overview/#:~:text=)[\[12\]](https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them)[\[16\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F)[\[21\]](https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below). Questa guida ha citato alcune fonti autorevoli lungo il testo per fornire conferma e ulteriori dettagli su ciascun argomento trattato. Buona esplorazione con Docker!
 
-Un aspetto fondamentale del funzionamento dei container è il meccanismo Copy-on-Write (CoW):
+[\[1\]](https://docs.docker.com/get-started/docker-overview/#:~:text=) [\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies) [\[3\]](https://docs.docker.com/get-started/docker-overview/#:~:text=) [\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries) [\[8\]](https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration) [\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually) [\[13\]](https://docs.docker.com/get-started/docker-overview/#:~:text=The%20underlying%20technology) [\[30\]](https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies) [\[31\]](https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies) What is Docker? | Docker Docs
 
-Quando lanciamo un'immagine, il Docker engine non fa una copia completa dell'immagine già memorizzata. Invece, usa il meccanismo copy-on-write. Questo è un pattern UNIX standard che fornisce una singola copia condivisa di alcuni dati, fino a quando i dati non vengono modificati ([CloudBees](https://www.cloudbees.com/blog/docker-storage-introduction)).
+<https://docs.docker.com/get-started/docker-overview/>
 
-Il CoW funziona così:
-- I layer dell'immagine rimangono read-only e condivisi tra container
-- Quando un file deve essere modificato, viene copiato nel layer write del container
-- Solo allora la modifica viene applicata alla copia
+[\[4\]](https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host) [\[40\]](https://docs.docker.com/engine/containers/run/#:~:text=Images%20using%20the%20v2%20or,the%20digest%20value%20is%20predictable) [\[41\]](https://docs.docker.com/engine/containers/run/#:~:text=) Running containers | Docker Docs
 
-Quando un file esistente in un container viene modificato, lo storage driver esegue un'operazione copy-on-write. Per il driver overlay2, l'operazione segue questa sequenza: cerca attraverso i layer dell'immagine il file da aggiornare, esegue un'operazione copy_up per copiare il file nel layer scrivibile del container ([Docker Docs](https://docs.docker.com/engine/storage/drivers/)).
+<https://docs.docker.com/engine/containers/run/>
 
-## Architettura Interna
+[\[5\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=An%20image%20is%20a%20snapshot,a%20container%20runs%20the%20software) [\[20\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=Since%20the%20container%20runs%20natively,you%20configure%20it%20that%20way) [\[45\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=When%20a%20Docker%20user%20runs,though%2C%20most%20images%20include%20some) [\[46\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=Think%20of%20a%20container%20as,containers%20to%20run%20the%20applications) Docker image vs container: What are the differences? | CircleCI
 
-### Namespaces: l'isolamento dei processi
+<https://circleci.com/blog/docker-image-vs-container/>
 
-I namespace sono la tecnologia chiave che permette l'isolamento in Docker:
+[\[7\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry) [\[33\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=There%20are%20currently%20two%20types,and%20a%20manifest) [\[34\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Pull%20a%20manifest) [\[35\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Instead%20of%20blobs%2C%20the%20client,its%20operating%20system%20and%20architecture) [\[36\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Suppose%20a%20client%20chooses%20the,architecture%20and%20the%20manifest%20digest) [\[37\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=A%20Podman%20or%20Docker%20,image%20manifest%20is%20being%20pulled) What happens when you pull a container image?
 
-I namespace sono un aspetto fondamentale del kernel Linux che forniscono isolamento per i processi. Permettono a un singolo sistema Linux di eseguire multiple istanze isolate di risorse di sistema. Docker utilizza diversi tipi di namespace: PID Namespace (isola i process ID), NET Namespace (isola le interfacce di rete), MNT Namespace (isola i mount point), UTS Namespace (isola hostname e domain name), USER Namespace (isola user e group ID), IPC Namespace (isola la comunicazione inter-processo) ([DEV Community, 2024](https://dev.to/mochafreddo/understanding-docker-containers-leveraging-linux-kernels-namespaces-and-cgroups-4fkk)).
+<https://www.redhat.com/en/blog/pull-container-image>
 
-```bash
-# Esempio pratico di creazione namespace
-sudo unshare --pid --net --mount --uts --ipc --fork /bin/bash
-# Ora sei in un ambiente isolato con i propri namespace
-```
+[\[10\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same) [\[11\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State) [\[44\]](https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Created%20State) Docker Container Lifecycle: Key States and Best Practices | Last9
 
-### Cgroups: il controllo delle risorse
+<https://last9.io/blog/docker-container-lifecycle/>
 
-Mentre i namespace forniscono isolamento, i cgroups (Control Groups) gestiscono le risorse:
+[\[12\]](https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them) Working with Docker Containers | DigitalOcean
 
-Docker utilizza cgroups per controllare e limitare le risorse disponibili ai container. Diversi tipi di cgroup disponibili includono CPU cgroup, memory cgroup, block I/O cgroup e device cgroup ([Earthly Blog, 2024](https://earthly.dev/blog/namespaces-and-cgroups-docker/)).
+<https://www.digitalocean.com/community/tutorials/working-with-docker-containers>
 
-```bash
-# Limitare CPU e memoria di un container
-docker run -d \
-  --cpus="0.5" \
-  --memory="512m" \
-  nginx
-```
+[\[14\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers) [\[15\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=The%20crucial%20thing%20to%20notice,isolated%20within%20my%20own%20namespace) [\[16\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F) [\[17\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=A%20control%20group%20,of%20a%20collection%20of%20processes) [\[18\]](https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=,cgroup%20with%20a%20single%20command) What Are Namespaces and cgroups, and How Do They Work? - NGINX Community Blog
 
-I cgroups aiutano a limitare l'uso delle risorse in modo che un singolo container non utilizzi tutte le risorse disponibili. Permettono di gestire varie risorse di sistema come CPU (limitare l'utilizzo), Memory (limitare l'uso), Disk I/O (limitare I/O su disco), Network (limitare la banda) ([Kubesimplify, 2023](https://blog.kubesimplify.com/understanding-how-containers-work-behind-the-scenes)).
+<https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work>
 
-### Root filesystem e OverlayFS
+[\[19\]](https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below) [\[21\]](https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below) Containers vs VM - Difference Between Deployment Technologies - AWS
 
-Docker utilizza OverlayFS per gestire il filesystem dei container in modo efficiente:
+<https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/>
 
-OverlayFS è un union filesystem che Docker usa per implementare la sua architettura a layer. Permette a multiple directory (layer) di essere sovrapposte l'una all'altra, presentandole come un singolo filesystem unificato. Consiste di tre componenti principali: LowerDir (i layer read-only che formano la base), UpperDir (il layer read-write dove vengono scritte le modifiche), MergedDir (la vista unificata del filesystem) ([Medium, 2025](https://medium.com/@tasleemgcp/understanding-docker-layers-and-overlayfs-0d60f15222ad)).
+[\[22\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20supports%20multiple%20storage%20drivers,storage%20driver) [\[23\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Storage%20Driver%3A%20overlay2) [\[25\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers) [\[26\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=echo%20%27Add%20a%20new%20line%27,1) [\[27\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=The%20original%20file%20present%20inside,layer%60%20is%20created) [\[29\]](https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers) Desacralizing the Linux overlay filesystem in Docker | Adaltas
 
-```bash
-# Struttura OverlayFS in Docker
-/var/lib/docker/overlay2/
-├── <layer-id>/
-│   ├── diff/       # Contenuto del layer
-│   ├── link        # Link simbolico abbreviato
-│   └── lower       # Riferimento ai layer inferiori
-└── l/              # Directory con link abbreviati
-```
+<https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/>
 
-## Le Immagini Docker come "Strati" (Layers)
+[\[24\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=1,chroot) [\[28\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image) [\[32\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following) Understanding the image layers | Docker Docs
 
-### Cos'è un layer
+<https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/>
 
-Un layer, o image layer, è un cambiamento su un'immagine, o un'immagine intermedia. Ogni comando specificato (FROM, RUN, COPY, etc.) nel Dockerfile causa la modifica dell'immagine precedente, creando così un nuovo layer ([Stack Overflow](https://stackoverflow.com/questions/31222377/what-are-docker-image-layers)).
+[\[38\]](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=An%20image%20registry%20is%20a,and%20is%20the%20default%20registry) [\[39\]](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=While%20Docker%20Hub%20is%20a,Artifactory%2C%20GitLab%20Container%20registry%20etc) What is a registry? | Docker Docs
 
-Ogni layer rappresenta:
-- Un insieme di modifiche al filesystem
-- Un'istruzione eseguita durante il build
-- Dati immutabili una volta creati
+<https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/>
 
-### Caching e riuso dei layer
+[\[42\]](https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust) Docker Content Trust
 
-Il sistema di caching di Docker è fondamentale per l'efficienza:
+<https://help.sonatype.com/en/docker-content-trust.html>
 
-Poiché i layer sono read-only, Docker può condividerli tra multiple immagini sulla stessa macchina. Quando si costruisce un'immagine da un Dockerfile, ogni comando crea un nuovo layer. Se parti del Dockerfile rimangono invariate tra build, Docker può riusare i layer esistenti nella cache piuttosto che ricostruirli ([Depot.dev](https://depot.dev/blog/what-are-docker-layers)).
+[\[43\]](https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker) Enforcing image trust on Docker containers using Notary | CNCF
 
-```dockerfile
-# Ottimizzazione del caching
-FROM node:18
-WORKDIR /app
-
-# Dependencies layer (cambia raramente)
-COPY package*.json ./
-RUN npm install
-
-# Application layer (cambia spesso)
-COPY . .
-CMD ["npm", "start"]
-```
-
-Best practice per il caching:
-1. Mettere le istruzioni che cambiano meno frequentemente all'inizio
-2. Separare le dipendenze dal codice applicativo
-3. Minimizzare il numero di layer combinando comandi RUN
-
-### Esempi pratici di layering
-
-Vediamo un esempio concreto di come i layer si accumulano:
-
-```dockerfile
-FROM ubuntu:22.04        # Layer 1: Base image (~72MB)
-RUN apt-get update       # Layer 2: Package index (~25MB)
-RUN apt-get install -y \ 
-    nginx                # Layer 3: Nginx installation (~60MB)
-COPY config/nginx.conf \ 
-    /etc/nginx/          # Layer 4: Configuration (~1KB)
-COPY src/ /var/www/html/ # Layer 5: Application code (~varies)
-```
-
-Docker utilizza un'architettura a layer. Un sandbox di un container è composto da alcuni branch di immagine - o come li conosciamo tutti - layer. Questi layer sono la parte read-only (lowerdir) della vista merged e il container layer è la parte superiore sottile e scrivibile (upperdir) ([Martin Heinz, 2021](https://martinheinz.dev/blog/44)).
-
-## Registry e Distribuzione
-
-### Cosa succede durante un `docker pull`
-
-Il processo di pull è più complesso di quanto sembri:
-
-1. **Risoluzione del registry**: I comandi docker rispecchiano il design dell'API, richiedendo il nome dell'immagine. Se si omette il tag o il digest, userà "latest" come valore predefinito. Quando si omette il nome del registry, il default è Docker Hub ([Stack Overflow](https://stackoverflow.com/questions/59671793/pulling-docker-image-by-digest))
-
-2. **Download dei layer**: Docker scarica solo i layer mancanti, controllando i digest SHA256
-
-3. **Verifica dell'integrità**: Ogni layer viene verificato contro il suo digest
-
-4. **Estrazione e storage**: I layer vengono estratti in `/var/lib/docker/overlay2/`
-
-### Registry pubblici vs privati
-
-**Registry pubblici** (Docker Hub, GitHub Container Registry):
-- Accessibili a tutti
-- Limiti di rate per download gratuiti
-- Ideali per immagini open source
-
-**Registry privati**:
-- Controllo completo su accesso e sicurezza
-- Nessun limite di rate
-- Integrazione con CI/CD aziendale
-
-```bash
-# Push a registry privato
-docker tag myapp:latest registry.company.com/myapp:v1.0
-docker push registry.company.com/myapp:v1.0
-
-# Pull da registry privato
-docker pull registry.company.com/myapp:v1.0
-```
-
-### Digest, tag e SHA: il versioning delle immagini
-
-Le immagini Docker possono essere identificate in tre modi:
-
-1. **Tag**: Etichette human-readable (`nginx:latest`, `nginx:1.21`)
-2. **Image ID**: Hash SHA256 locale dell'immagine
-3. **Digest**: Hash SHA256 del manifest nel registry
-
-Dal comando docker inspect, l'hash SHA256 Id viene generato quando l'immagine viene costruita; l'hash SHA256 RepoDigests viene generato quando si effettua push di un'immagine a un registry; l'hash SHA256 RootFS.Layers dà indicazioni su quali immagini potrebbero essere costruite usando la stessa immagine base ([Medium, 2025](https://medium.com/@emmaliaocode/all-those-sha256s-in-a-docker-image-9e8984065f2e)).
-
-```bash
-# Pull usando digest (immutabile)
-docker pull nginx@sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30
-
-# Verificare digest di un'immagine
-docker inspect nginx:latest | grep -A2 RepoDigests
-```
-
-## Demo Concettuale: Cosa Succede con `docker run nginx`
-
-Analizziamo passo per passo cosa accade quando eseguiamo questo semplice comando:
-
-```bash
-docker run -d -p 80:80 nginx
-```
-
-### Fase 1: Ricerca dell'immagine
-Docker cerca prima l'immagine `nginx:latest` localmente. Se non la trova:
-- Si connette a Docker Hub (registry.docker.io)
-- Scarica il manifest dell'immagine
-- Identifica i layer necessari
-- Scarica solo i layer mancanti in parallelo (massimo 3 alla volta)
-
-### Fase 2: Preparazione del container
-
-Quando viene lanciato un container, Docker genera un set unico di namespace e cgroups allocati specificamente per quel container. Il container runtime, includendo containerd e runc, gestisce il ciclo di vita dei container ([Atlantbh, 2025](https://www.atlantbh.com/how-docker-containers-work-under-the-hood-namespaces-and-cgroups/)).
-
-Docker:
-1. Crea nuovi namespace (PID, NET, MNT, UTS, USER, IPC)
-2. Configura i cgroup per limitare le risorse
-3. Monta i layer dell'immagine usando OverlayFS
-4. Crea un layer scrivibile sopra i layer read-only
-5. Configura la rete (bridge network di default)
-6. Mappa la porta 80 del container alla porta 80 dell'host
-
-### Fase 3: Avvio del processo
-
-Per i container Docker, la direttiva daemon off; dice a Nginx di rimanere in foreground. Questo significa che il processo nginx continuerà a girare e non si fermerà finché non fermi il container ([Stack Overflow](https://stackoverflow.com/questions/18861300/how-to-run-nginx-within-a-docker-container-without-halting)).
-
-Il processo principale (PID 1 nel container):
-- Viene avviato con il comando specificato nel Dockerfile (`nginx -g "daemon off;"`)
-- Gira in un ambiente completamente isolato
-- Vede solo il proprio filesystem, processi, rete
-
-### Analogie per capire meglio
-
-**Container come processo isolato**: Immagina di avere una stanza insonorizzata (namespace) con un budget limitato di risorse (cgroups). All'interno, puoi fare quello che vuoi senza disturbare gli altri e senza consumare più del tuo budget.
-
-**Immagine come template di classe**: Se conosci la programmazione orientata agli oggetti:
-```python
-# L'immagine è come una classe
-class NginxImage:
-    def __init__(self):
-        self.files = ["nginx.conf", "index.html"]
-        self.port = 80
-    
-# Il container è come un'istanza
-container1 = NginxImage()  # Prima istanza
-container2 = NginxImage()  # Seconda istanza indipendente
-```
-
-**Layer come commit Git**: Ogni layer è come un commit in Git - registra i cambiamenti rispetto allo stato precedente e può essere riutilizzato in diversi "branch" (immagini).
-
-## Performance e Ottimizzazioni
-
-### Impatto del layering sulle performance
-
-Il sistema a layer ha pro e contro per le performance:
-
-**Vantaggi**:
-- Grazie al meccanismo copy-on-write, i container in esecuzione possono impiegare meno di 0.1 secondi per avviarsi e occupare meno di 1MB su disco ([CloudBees](https://www.cloudbees.com/blog/docker-storage-introduction))
-- Sharing dei layer tra container riduce l'uso di disco
-- Cache dei layer accelera i rebuild
-
-**Svantaggi**:
-- Gli storage driver che usano un filesystem copy-on-write hanno velocità di scrittura inferiori rispetto alle performance del filesystem nativo, specialmente per applicazioni write-intensive come database ([Docker Docs](https://docs.docker.com/engine/storage/drivers/))
-- Ogni modifica richiede una copy-up operation
-- Layer multipli possono causare overhead in lettura
-
-### Best practices per l'efficienza
-
-1. **Minimizzare i layer**:
-```dockerfile
-# Inefficiente - 3 layer
-RUN apt-get update
-RUN apt-get install -y nginx
-RUN apt-get clean
-
-# Efficiente - 1 layer
-RUN apt-get update && \
-    apt-get install -y nginx && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-```
-
-2. **Usare multi-stage builds**:
-```dockerfile
-# Build stage
-FROM node:18 AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-
-# Production stage
-FROM node:18-alpine
-WORKDIR /app
-COPY --from=builder /app/node_modules ./node_modules
-COPY . .
-CMD ["node", "server.js"]
-```
-
-3. **Ordinare le istruzioni per caching**:
-- Dipendenze (cambiano raramente) → prima
-- Codice applicativo (cambia spesso) → dopo
-
-## Troubleshooting Comune
-
-### Container che si ferma subito
-
-Il motivo più comune per cui un container Docker si ferma è che il processo principale all'interno del container è terminato con successo. Quando il processo termina, è game over per il tuo container Docker ([Tutorial Works, 2024](https://www.tutorialworks.com/why-containers-stop/)).
-
-Soluzioni:
-```bash
-# Debug con shell interattiva
-docker run -it --entrypoint /bin/sh nginx
-
-# Verificare i log
-docker logs <container-id>
-
-# Ispezionare lo stato
-docker inspect <container-id> | grep -A5 State
-```
-
-### Problemi di layer e spazio disco
-
-Quando i layer si accumulano:
-```bash
-# Pulizia sistema Docker
-docker system prune -a
-
-# Verificare spazio usato
-docker system df
-
-# Rimuovere immagini non utilizzate
-docker image prune -a
-```
-
-### Performance degradate
-
-Per applicazioni con I/O intensivo:
-- Usare volumi invece del container filesystem
-- Considerare storage driver diversi (overlay2 è il default raccomandato)
-- Monitorare con `docker stats`
-
-## Sintesi e Raccomandazioni
-
-### Conclusioni principali
-
-1. **I container non sono VM**: Sono processi isolati che condividono il kernel dell'host attraverso namespace e cgroups
-
-2. **L'efficienza deriva dal layering**: Il sistema copy-on-write e la condivisione dei layer rendono i container leggeri e veloci
-
-3. **Il Registry è cruciale**: Comprendere come funzionano pull, push e digest è essenziale per la gestione delle immagini
-
-4. **Il ciclo di vita è determinista**: Ogni stato del container ha significato e implicazioni precise
-
-### Raccomandazioni operative
-
-**Per sviluppatori**:
-- Ottimizzare i Dockerfile pensando al caching dei layer
-- Usare multi-stage builds per ridurre la dimensione finale
-- Comprendere la differenza tra ENTRYPOINT e CMD
-- Testare sempre con `docker run --rm` per evitare accumulo di container
-
-**Per DevOps**:
-- Implementare registry privati per il controllo delle immagini
-- Usare digest SHA256 per deployment immutabili
-- Monitorare l'uso di spazio con `docker system df`
-- Configurare limiti di risorse appropriati con cgroups
-
-**Per l'apprendimento**:
-- Sperimentare con namespace usando `unshare`
-- Esplorare `/var/lib/docker/overlay2/` per vedere i layer
-- Usare `docker inspect` per comprendere la struttura interna
-- Provare diversi storage driver per capirne le differenze
-
-### Prospettive future
-
-L'evoluzione dei container continua con:
-- **Rootless containers**: Esecuzione senza privilegi root per maggiore sicurezza
-- **WebAssembly (WASM)**: Alternative ai container per certi use case
-- **Container runtime alternativi**: Podman, containerd, CRI-O
-- **Ottimizzazioni kernel**: Miglioramenti continui a namespace e cgroups
-
-## Risorse per Approfondire
-
-### Documentazione ufficiale
-- [Docker Documentation](https://docs.docker.com/): Riferimento completo e sempre aggiornato
-- [OCI Specification](https://github.com/opencontainers/image-spec): Standard per immagini container
-- [CNCF Projects](https://www.cncf.io/projects/): Progetti cloud native correlati
-
-### Tutorial pratici
-- [Docker Labs](https://github.com/docker/labs): Esercizi hands-on ufficiali
-- [Play with Docker](https://labs.play-with-docker.com/): Ambiente Docker nel browser
-- [Katacoda Scenarios](https://www.katacoda.com/courses/docker): Tutorial interattivi
-
-### Libri consigliati
-- "Docker Deep Dive" di Nigel Poulton: Approfondimento tecnico completo
-- "Container Security" di Liz Rice: Focus sulla sicurezza dei container
-- "Kubernetes in Action" di Marko Lukša: Per il passo successivo
-
-## Conclusione
-
-Comprendere cosa accade "dentro un container" non è solo curiosità tecnica: è conoscenza fondamentale per chiunque lavori con Docker in modo professionale. Come abbiamo visto, dietro la semplicità di `docker run` si nasconde un'architettura sofisticata che sfrutta decenni di evoluzione del kernel Linux.
-
-I namespace forniscono l'isolamento, i cgroups controllano le risorse, OverlayFS gestisce i filesystem in modo efficiente, e il sistema di layer con copy-on-write rende tutto veloce e leggero. Questi non sono dettagli implementativi nascosti, ma concetti che influenzano direttamente come progettiamo, ottimizziamo e debugghiamo le nostre applicazioni containerizzate.
-
-Nel prossimo articolo della serie, metteremo in pratica questi concetti costruendo e ottimizzando Dockerfile reali, applicando le best practice che derivano dalla comprensione profonda di come Docker funziona internamente.
-
-Ricorda: **un container è solo un processo Linux con dei superpoteri**. Ora sai quali sono questi superpoteri e come funzionano.
+<https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/>
