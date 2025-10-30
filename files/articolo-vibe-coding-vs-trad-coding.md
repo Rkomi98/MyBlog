@@ -1,7 +1,5 @@
 # Confronto tra vibe coding e programmazione tradizionale (2023–2025)
 
-## Indice
-
 ## Abstract
 
 Il vibe coding – ossia la programmazione guidata interamente dall’AI – si è diffuso tra il 2023 e il 2025 grazie a strumenti come GitHub Copilot, Cursor, Sourcegraph Cody, Tabnine, Codeium e assistenti AI integrati negli IDE.
@@ -136,6 +134,8 @@ Prima di concludere ci tengo a parlare di una cosa di cui in pochi parlano ma ef
 ### soddisfazione degli sviluppatori
 
 L’AI toglie di mezzo molte parti noiose o frustranti. Leggevo giusto ieri che il [70%](https://www.secondtalent.com/resources/github-copilot-statistics/#:~:text=Developer%20satisfaction%20metrics%20provide%20additional,searching%20for%20information%20or%20examples) ha riportato minore sforzo mentale nei task ripetitivi, e oltre la metà ha ridotto il tempo passato a cercare informazioni su Stack Overflow o documentazione. Potendo delegare all’AI la scrittura di boilerplate o la ricerca di sintassi, gli sviluppatori si concentrano su aspetti più creativi o interessanti e questo migliora l’**engagement**.
+
+![Immagine](Assets/image_001.png)
 
 Detto ciò, esistono anche voci critiche e resistenze culturali all’uso indiscriminato dell’AI. Alcuni sviluppatori, specialmente i più senior o meglio li definirei puristi, manifestano frustrazione verso l’eccessiva enfasi sull’AI. 
 

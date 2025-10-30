@@ -837,6 +837,81 @@
             border-bottom-color: var(--primary);
         }
 
+        .article-toc {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .article-toc-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .article-toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .article-toc-item {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .article-toc-item.level-1 {
+            padding-left: 1rem;
+        }
+
+        .article-toc-item.level-2 {
+            padding-left: 2rem;
+        }
+
+        .article-toc-item.level-3 {
+            padding-left: 3rem;
+        }
+
+        .article-toc-item.level-4 {
+            padding-left: 4rem;
+        }
+
+        .article-toc-item.level-5 {
+            padding-left: 5rem;
+        }
+
+        .article-toc-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .article-toc-link::before {
+            content: "•";
+            color: var(--primary);
+            font-size: 0.75rem;
+        }
+
+        .article-toc-link:hover,
+        .article-toc-link:focus {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            outline: none;
+        }
+
         /* Footer */
         footer {
             padding: 3rem 0;
@@ -1183,6 +1258,12 @@
             if (langButton) {
                 langButton.textContent = currentLang === 'it' ? 'EN' : 'IT';
             }
+
+            const tocTitle = document.querySelector('.article-toc-title');
+            if (tocTitle) {
+                tocTitle.textContent = currentLang === 'it' ? 'Indice' : 'Table of contents';
+            }
+
             displayArticles();
         }
         
@@ -1227,6 +1308,110 @@
             document.getElementById('article-view').style.display = 'none';
             displayArticles();
         }
+
+        function slugifyHeading(text) {
+            return text
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9\s-]/g, '')
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        }
+
+        function ensureHeadingId(heading, usedIds) {
+            const baseId = slugifyHeading(heading.textContent || '');
+            if (!baseId) {
+                return null;
+            }
+            let candidate = baseId;
+            let counter = 1;
+            while (usedIds.has(candidate) || document.getElementById(candidate)) {
+                candidate = `${baseId}-${counter++}`;
+            }
+            heading.id = candidate;
+            usedIds.add(candidate);
+            return candidate;
+        }
+
+        function buildArticleTOC(articleBody) {
+            if (!articleBody) return;
+
+            articleBody.querySelectorAll('.article-toc').forEach(el => el.remove());
+
+            const rawHeadings = Array.from(articleBody.querySelectorAll('h2, h3, h4, h5, h6'));
+            if (!rawHeadings.length) return;
+
+            const tocHeading = rawHeadings.find(heading => (heading.textContent || '').trim().toLowerCase() === 'indice');
+            const contentHeadings = rawHeadings.filter(heading => heading !== tocHeading);
+            if (!contentHeadings.length) return;
+
+            const usedIds = new Set(contentHeadings.map(h => h.id).filter(Boolean));
+
+            contentHeadings.forEach(heading => {
+                if (!heading.id) {
+                    ensureHeadingId(heading, usedIds);
+                } else {
+                    usedIds.add(heading.id);
+                }
+            });
+
+            const levels = contentHeadings
+                .map(heading => parseInt(heading.tagName.slice(1), 10))
+                .filter(level => !Number.isNaN(level));
+
+            if (!levels.length) return;
+
+            const baseLevel = Math.min(...levels);
+
+            const toc = document.createElement('nav');
+            toc.className = 'article-toc';
+
+            const title = document.createElement('div');
+            title.className = 'article-toc-title';
+            title.textContent = currentLang === 'it' ? 'Indice' : 'Table of contents';
+            toc.appendChild(title);
+
+            const list = document.createElement('ul');
+            list.className = 'article-toc-list';
+
+            contentHeadings.forEach(heading => {
+                const level = parseInt(heading.tagName.slice(1), 10);
+                if (Number.isNaN(level)) return;
+
+                const offset = Math.max(0, level - baseLevel);
+                const id = heading.id || ensureHeadingId(heading, usedIds);
+
+                if (!id) return;
+
+                const item = document.createElement('li');
+                item.className = `article-toc-item level-${offset}`;
+
+                const link = document.createElement('a');
+                link.className = 'article-toc-link';
+                link.href = `#${id}`;
+                link.textContent = (heading.textContent || '').trim();
+
+                item.appendChild(link);
+                list.appendChild(item);
+            });
+
+            if (!list.children.length) return;
+
+            toc.appendChild(list);
+
+            if (tocHeading) {
+                tocHeading.insertAdjacentElement('afterend', toc);
+            } else {
+                articleBody.insertAdjacentElement('afterbegin', toc);
+            }
+        }
+
+        function enhanceArticleBody(articleBody) {
+            if (!articleBody) return;
+            buildArticleTOC(articleBody);
+        }
         
         async function showArticle(index) {
             document.getElementById('home').style.display = 'none';
@@ -1255,6 +1440,9 @@
                 </div>
                 <div class="article-body">${marked.parse(article.content)}</div>
             `;
+
+            const articleBody = display.querySelector('.article-body');
+            enhanceArticleBody(articleBody);
         }
         
         // Articles management with predefined content
