@@ -32,15 +32,13 @@ Culturalmente, gli assistenti AI aumentano la soddisfazione dei developer [riduc
 
 Per questa analisi sono state esaminate fonti pubblicate tra il 2023 e il 2025 in più lingue, privilegiando evidenze quantitative e riproducibili. In particolare:
 
-*
-
 1. studi sperimentali peer-reviewed e white paper tecnici con metodologia chiara (RCT, benchmark). Questi sono stati considerati evidenza di grado A (alta solidità, basso rischio di bias);
 2. case study industriali con metriche reali su team (grado B se condotti internamente con  possibile  bias  di  contesto);
 3. testimonianze  dirette  di  sviluppatori  (blog,  video,  forum)  che includono esperimenti concreti o codice verificabile (grado C in quanto aneddotiche, rischio bias medio/alto). Abbiamo estratto per ogni fonte dettagli su:  contesto e tool usati, tipo di attività svolta (es. nuovo sviluppo, refactoring, bugfix, testing), metriche oggettive (tempo impiegato, percentuale di bug o vulnerabilità, copertura di test, performance) e metriche soggettive (soddisfazione, carico cognitivo, apprendimento  percepito).
 
 Durante  la  sintesi,  le  evidenze  sono  state  incrociate  per  evidenziare convergenze o discrepanze. Ad esempio, si confrontano i risultati di un ampio RCT aziendale (4.800 sviluppatori in Microsoft/Accenture, evidenza A) con quelli di un RCT su sviluppatori OSS esperti (16 maintainer open-source, evidenza A), nonché con case study come l’adozione interna di Copilot in un’azienda (ZoomInfo, 400 ingegneri, evidenza B).
 
-Sono state incluse esperienze individuali (es.prototipo full-stack sviluppato interamente con AI) come evidenza  C per illuminare aspetti
+Sono state incluse esperienze individuali (es.prototipo full-stack sviluppato interamente con AI) come evidenza  C per evidenziare aspetti
 pratici e culturali difficilmente rilevabili dai soli numeri. Tutte le fonti sono citate tramite link ai riferimenti originali.
 
 ## Risultati Tecnici
@@ -69,6 +67,8 @@ Dai dati emerge che gli assistenti AI possono accelerare lo sviluppo software, m
 | Tempo su task OSS complessi | **+19%** (più lento) | [METR](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/)                                                                              |
 
 ### Qualità del codice e mantenibilità
+
+Se parliamo di qualità del codice prodotto, si apre un discorso un po' controverso: la funzionalità immediata del codice generato dall’AI è spesso buona, ma emergono problemi di **mantenibilità nel medio termine** senza un intervento disciplinato del programmatore. In termini di correttezza funzionale out-of-the-box, diversi studi indicano che il codice con AI può essere altrettanto valido di quello scritto a mano. Di seguito alcuni esempi emersi dalla ricerca:
 
 * **Trend 2024–2025**: analisi longitudinali mostrano **aumento del *code churn*** (linee modificate/rimosse entro 2 settimane) **fino a ~2× vs 2021** e maggior peso di **“added/copied”** rispetto a **“updated/deleted/moved”** → più duplicazioni, minore riuso, mantenibilità a rischio ([GitClear report](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality); [Visual Studio Magazine](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx)).
 * **Esperienze di team**: in **ZoomInfo** (400+ dev) l’adozione di Copilot porta **~20% risparmio tempo percepito**, con **acceptance ~33% (suggestions) / ~20% (LoC)**; tra i limiti: **logica di dominio assente** e **qualità variabile** → necessità di **review e refactoring** sistematici ([Bakal et al., 2025—arXiv](https://arxiv.org/abs/2501.13282)).
