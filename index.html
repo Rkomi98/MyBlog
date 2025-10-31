@@ -1022,13 +1022,13 @@
 <body>
     <header>
         <div class="header-content">
-            <a href="#" class="logo" onclick="showHome(); return false;">
+            <a href="index.html" class="logo">
                 <img src="Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
                 <span>Mirko Calcaterra</span>
             </a>
             <nav>
                 <div class="nav-links">
-                    <a href="#" class="nav-link" onclick="showBlog(); return false;" data-it="Blog" data-en="Blog">Blog</a>
+                    <a href="blog/index.html" class="nav-link" data-it="Blog" data-en="Blog">Blog</a>
                 </div>
                 <div class="controls">
                     <button class="lang-btn" onclick="toggleLanguage()">EN</button>
@@ -1108,7 +1108,7 @@
                         </div>
                         
                         <div class="cta-buttons">
-                            <a href="#" class="cta-button cta-primary" onclick="showBlog(); return false;">
+                            <a href="blog/index.html" class="cta-button cta-primary">
                                 <span data-it="Esplora il Blog" data-en="Explore Blog">Esplora il Blog</span>
                                 <span>→</span>
                             </a>
@@ -1163,7 +1163,7 @@
         <section id="article-view" class="article-view">
             <div class="container">
                 <div class="article-header">
-                    <a href="#" class="article-back" onclick="showBlog(); return false;">
+                    <a href="blog/index.html" class="article-back">
                         <span>←</span>
                         <span data-it="Torna al Blog" data-en="Back to Blog">Torna al Blog</span>
                     </a>
@@ -1441,11 +1441,7 @@
         }
         
         function showBlog() {
-            document.getElementById('home').style.display = 'none';
-            document.getElementById('blog').style.display = 'block';
-            document.getElementById('article-view').style.display = 'none';
-            displayArticles();
-            currentArticleIndex = null;
+            window.location.href = 'blog/index.html';
         }
 
         function slugifyHeading(text) {

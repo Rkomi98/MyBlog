@@ -1,0 +1,31 @@
+{
+  "name": "myblog",
+  "version": "1.0.0",
+  "description": "Static blog generator with automatic translation support",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "clean": "rm -rf dist",
+    "deploy": "npm run build && gh-pages -d dist",
+    "translate": "node scripts/translate-missing.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rkomi98/MyBlog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rkomi98/MyBlog/issues"
+  },
+  "homepage": "https://github.com/Rkomi98/MyBlog#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.2",
+    "gh-pages": "^6.3.0",
+    "marked": "^16.4.1",
+    "slugify": "^1.6.6"
+  }
+}
