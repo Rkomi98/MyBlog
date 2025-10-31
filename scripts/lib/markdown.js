@@ -47,27 +47,65 @@ function resolveRelativeLink(href, relativeRoot) {
   return toPosix(path.posix.join(base, href));
 }
 
+function stripHtmlEntities(text) {
+  if (text == null) {
+    return '';
+  }
+  return String(text)
+    .replace(/<[^>]*>/g, '')
+    .trim();
+}
+
+function generateSlug(value, registry) {
+  const base = stripHtmlEntities(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+  const candidate = base || `section-${registry.size + 1}`;
+  const count = registry.get(candidate) ?? 0;
+  registry.set(candidate, count + 1);
+  return count > 0 ? `${candidate}-${count}` : candidate;
+}
+
 export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
   const renderer = new marked.Renderer();
   const originalImage = renderer.image.bind(renderer);
   const originalLink = renderer.link.bind(renderer);
+  const originalHeading = renderer.heading.bind(renderer);
+  const headings = [];
+  const slugRegistry = new Map();
 
-  renderer.image = (href, title, text) => {
-    const resolved = resolveRelativeLink(href, relativeRoot);
-    return originalImage(resolved, title, text);
+  renderer.image = function image(token) {
+    const resolved = resolveRelativeLink(token?.href, relativeRoot);
+    return originalImage.call(this, { ...token, href: resolved });
   };
 
-  renderer.link = (href, title, text) => {
-    const resolved = resolveRelativeLink(href, relativeRoot);
-    return originalLink(resolved, title, text);
+  renderer.link = function link(token) {
+    const resolved = resolveRelativeLink(token?.href, relativeRoot);
+    return originalLink.call(this, { ...token, href: resolved });
   };
 
-  return marked.parse(markdown, {
+  renderer.heading = function heading(token) {
+    const slug = generateSlug(token?.text ?? '', slugRegistry);
+    if (token?.depth >= 2 && token.depth <= 4) {
+      headings.push({
+        level: token.depth,
+        text: stripHtmlEntities(token.text ?? ''),
+        id: slug,
+      });
+    }
+    const html = originalHeading.call(this, token);
+    return html.replace(/^(<h\d)(>)/, `$1 id="${slug}"$2`);
+  };
+
+  const html = marked.parse(markdown, {
     mangle: false,
-    headerIds: true,
     gfm: true,
     renderer,
   });
+
+  return { html, headings };
 }
 
 export function extractTitle(markdown, fallback = '') {

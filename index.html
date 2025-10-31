@@ -1220,6 +1220,85 @@
         const ARTICLES_STORAGE_KEY = 'blogArticles';
         const ARTICLES_SIGNATURE_KEY = 'blogArticlesSignature';
         const SUPPORTED_LANGUAGES = ['it', 'en'];
+        const DEFAULT_ARTICLES_FALLBACK = [
+            {
+                slug: "docker-container-fundamentals",
+                titles: {
+                    it: "Docker: Basics",
+                    en: "Docker Basics"
+                },
+                category: "Docker",
+                categoryLabels: {
+                    it: "Docker",
+                    en: "Docker"
+                },
+                readTime: 15,
+                date: "2025-10-15",
+                icon: "🐳",
+                markdownPaths: {
+                    it: "files/Docker_01.md",
+                    en: "files/Docker_01_en.md"
+                }
+            },
+            {
+                slug: "docker-dentro-il-container",
+                titles: {
+                    it: "Docker: Dentro il Container",
+                    en: "Docker Deep Dive: Inside the Container"
+                },
+                category: "Docker",
+                categoryLabels: {
+                    it: "Docker",
+                    en: "Docker"
+                },
+                readTime: 15,
+                date: "2025-10-30",
+                icon: "🐳",
+                markdownPaths: {
+                    it: "files/Docker_02.md",
+                    en: "files/Docker_02_en.md"
+                }
+            },
+            {
+                slug: "vibe-coding-vs-traditional",
+                titles: {
+                    it: "Vibe Coding vs Programmazione Tradizionale (2023-2025)",
+                    en: "Vibe Coding vs Traditional Development (2023-2025)"
+                },
+                category: "Programming",
+                categoryLabels: {
+                    it: "Programmazione",
+                    en: "Programming"
+                },
+                readTime: 15,
+                date: "2025-10-29",
+                icon: "🤖",
+                markdownPaths: {
+                    it: "files/articolo-vibe-coding-vs-trad-coding.md",
+                    en: "files/articolo-vibe-coding-vs-trad-coding_en.md"
+                }
+            },
+            {
+                slug: "kinetica-cache-optimization",
+                titles: {
+                    it: "Ottimizzazione della Cache con Kinetica",
+                    en: "Cache Optimization with Kinetica"
+                },
+                category: "Data Engineering",
+                categoryLabels: {
+                    it: "Data Engineering",
+                    en: "Data Engineering"
+                },
+                readTime: 10,
+                date: "2025-10-25",
+                icon: "💻",
+                markdownPaths: {
+                    it: "files/Arkemis_Kinetica.md",
+                    en: "files/Arkemis_Kinetica_en.md"
+                }
+            }
+        ];
+        let defaultArticlesPromise = null;
 
         function normalizeSlug(value) {
             return (value || '')
@@ -1594,121 +1673,41 @@
         }
         
         // Articles management with predefined content
-        function getDefaultArticles() {
-            // Update the metadata below (title, category, readTime, date, icon, markdownPath)
-            // to control what appears in the blog grid by default.
-            return [
-            {
-                    slug: "docker-container-fundamentals",
-                    titles: {
-                        it: "Docker: Basics",
-                        en: "Docker Basics"
-                    },
-                    category: "Docker",
-                    categoryLabels: {
-                        it: "Docker",
-                        en: "Docker"
-                    },
-                    readTime: 15,
-                    date: new Date('2025-10-15').toISOString(),
-                    icon: "🐳",
-                    markdownPaths: {
-                        it: "files/Docker_01.md",
-                        en: "files/Docker_01_en.md"
+        function normalizeMetadataEntry(entry) {
+            const fallbackIso = new Date().toISOString();
+            try {
+                if (entry.date) {
+                    const parsed = new Date(entry.date);
+                    if (!Number.isNaN(parsed.valueOf())) {
+                        return { ...entry, date: parsed.toISOString() };
                     }
-                },
-                {
-                    slug: "docker-container-fundamentals",
-                    titles: {
-                        it: "Docker: Dentro il Container",
-                        en: "Docker Deep Dive: Inside the Container"
-                    },
-                    category: "Docker",
-                    categoryLabels: {
-                        it: "Docker",
-                        en: "Docker"
-                    },
-                    readTime: 15,
-                    date: new Date('2025-10-30').toISOString(),
-                    icon: "🐳",
-                    markdownPaths: {
-                        it: "files/Docker_02.md",
-                        en: "files/Docker_02_en.md"
-                    }
-                },
-                {
-                    slug: "vibe-coding-vs-traditional",
-                    titles: {
-                        it: "Vibe Coding vs Programmazione Tradizionale (2023-2025)",
-                        en: "Vibe Coding vs Traditional Development (2023-2025)"
-                    },
-                    category: "Programming",
-                    categoryLabels: {
-                        it: "Programmazione",
-                        en: "Programming"
-                    },
-                    readTime: 15,
-                    date: new Date('2025-10-29').toISOString(),
-                    icon: "🤖",
-                    markdownPaths: {
-                        it: "files/articolo-vibe-coding-vs-trad-coding.md",
-                        en: "files/articolo-vibe-coding-vs-trad-coding_en.md"
-                    }
-                },
-                {
-                    slug: "kinetica-cache-optimization",
-                    titles: {
-                        it: "Ottimizzazione della Cache con Kinetica",
-                        en: "Cache Optimization with Kinetica"
-                    },
-                    category: "Data Engineering",
-                    categoryLabels: {
-                        it: "Data Engineering",
-                        en: "Data Engineering"
-                    },
-                    readTime: 10,
-                    date: new Date('2025-10-25').toISOString(),
-                    icon: "💻",
-                    markdownPaths: {
-                        it: "files/Arkemis_Kinetica.md",
-                        en: "files/Arkemis_Kinetica_en.md"
-                    }
-                },
-                /*
-                {
-                    title: "Confronto tra Vibe Coding e Programmazione Tradizionale (2023–2025)",
-                    category: "Programming",
-                    readTime: 18,
-                    date: new Date('2025-01-15').toISOString(),
-                    icon: "🤖",
-                    markdownPath: "files/Confronto tra _Vibe Coding_ e Programmazione Tradizionale (2023–2025).md"
-                },
-                {
-                    title: "Innovazione nel Data Cleaning di Point Cloud 3D con Deep Learning",
-                    category: "Deep Learning",
-                    readTime: 15,
-                    date: new Date('2024-05-01').toISOString(),
-                    icon: "🧠",
-                    markdownPath: "files/articolo-point-cloud-deep-learning.md"
-                },
-                {
-                    title: "Da Geoinformatico ad AI Engineer: Il Mio Percorso in DataPizza",
-                    category: "Career",
-                    readTime: 12,
-                    date: new Date('2024-06-15').toISOString(),
-                    icon: "🚀",
-                    markdownPath: "files/articolo-datapizza-ai-engineer.md"
-                },
-                {
-                    title: "Data Science nel Volleyball: La Mia Esperienza come Match Analyst",
-                    category: "Sports Analytics",
-                    readTime: 10,
-                    date: new Date('2024-07-20').toISOString(),
-                    icon: "🏐",
-                    markdownPath: "files/articolo-volleyball-data-analyst.md"
                 }
-                */
-            ];
+            } catch (error) {
+                console.warn('Failed to parse blog post date', entry.date, error);
+            }
+            return { ...entry, date: fallbackIso };
+        }
+
+        async function getDefaultArticles() {
+            if (!defaultArticlesPromise) {
+                defaultArticlesPromise = (async () => {
+                    try {
+                        const response = await fetch('data/blog-posts.json', { cache: 'no-store' });
+                        if (!response.ok) {
+                            throw new Error(`Failed to load blog metadata (${response.status})`);
+                        }
+                        const payload = await response.json();
+                        if (!Array.isArray(payload)) {
+                            throw new Error('Unexpected blog metadata format');
+                        }
+                        return payload.map(normalizeMetadataEntry);
+                    } catch (error) {
+                        console.warn('Falling back to embedded blog metadata', error);
+                        return DEFAULT_ARTICLES_FALLBACK.map(normalizeMetadataEntry);
+                    }
+                })();
+            }
+            return defaultArticlesPromise;
         }
         
         async function fetchMarkdown(path) {
@@ -1741,7 +1740,8 @@
                 return articlesCache;
             }
 
-            const defaults = getDefaultArticles().map(normalizeArticle);
+            const defaultsRaw = await getDefaultArticles();
+            const defaults = defaultsRaw.map(normalizeArticle);
             const defaultsSignature = computeArticlesSignature(defaults);
             const storedSignature = localStorage.getItem(ARTICLES_SIGNATURE_KEY);
             if (storedSignature !== defaultsSignature) {
@@ -1822,11 +1822,12 @@
             return ensureArticlesLoaded();
         }
         
-        function saveArticles(articles) {
+        async function saveArticles(articles) {
             const normalized = articles.map(normalizeArticle);
             articlesCache = normalized;
             localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(normalized));
-            const defaultsSignature = computeArticlesSignature(getDefaultArticles().map(normalizeArticle));
+            const defaultsRaw = await getDefaultArticles();
+            const defaultsSignature = computeArticlesSignature(defaultsRaw.map(normalizeArticle));
             localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
         }
         
@@ -1993,7 +1994,7 @@
                 };
                 articles.unshift(newArticle);
                 
-                saveArticles(articles);
+                await saveArticles(articles);
                 displayArticles();
                 
                 // Reset file input
