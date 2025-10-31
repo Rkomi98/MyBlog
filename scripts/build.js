@@ -150,6 +150,7 @@ async function build() {
 
   const distDir = path.join(rootDir, 'dist');
   await fs.emptyDir(distDir);
+  await fs.writeFile(path.join(distDir, '.nojekyll'), '');
 
   await copyIfExists(path.join(rootDir, 'index.html'), path.join(distDir, 'index.html'));
   await copyIfExists(path.join(rootDir, 'Assets'), path.join(distDir, 'Assets'));
