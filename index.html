@@ -1206,6 +1206,14 @@
                 headerPrefix: ''
             });
         }
+
+        const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1']);
+        const isLocalEnvironment = window.location.protocol === 'file:' || LOCAL_HOSTS.has(window.location.hostname);
+        if (isLocalEnvironment) {
+            document.querySelectorAll('a[href="blog/index.html"]').forEach((link) => {
+                link.setAttribute('href', 'docs/blog/index.html');
+            });
+        }
         
         // Language management
         let currentLang = 'en';
