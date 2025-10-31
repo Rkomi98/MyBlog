@@ -1,10 +1,11 @@
 # Dentro un container: concetti chiave
 
 ## Abstract
-Secondo episodio della serie "Docker per sviluppatori". In questa guida narrativa esploriamo i concetti chiave di Docker in modo accessibile ma preciso, per capire cosa fa Docker concettualmente, senza ancora scrivere codice o configurare nulla.
+Eccoci arrivati al secondo episodio della serie "Docker per sviluppatori". Dato che il primo articolo è stato apprezzato, direi che possiamo andare deep questa volta analizzando i concetti chiave di Docker in modo (spero :)) accessibile a tutti, per capire cosa fa Docker concettualmente, senza ancora scrivere codice o configurare nulla.
 
 ## 1\. Concetti fondamentali
 
+![Immagine](Assets/Docker.png)
 _Figura 1: Architettura Docker - Il client invia comandi al demone Docker, che gestisce immagini e container. Le immagini (es. Python, Redis) risiedono in registri come Docker Hub, da cui possono essere scaricate ("pull"). I container sono istanze runtime create a partire dalle immagini, eseguite isolate sul Docker Host._
 
 **Immagini Docker:** Un'_immagine_ Docker è essenzialmente un **template in sola lettura** che descrive tutto il necessario per creare un container[\[1\]](https://docs.docker.com/get-started/docker-overview/#:~:text=). Possiamo vederla come uno _snapshot_ del filesystem e della configurazione di un sistema minimale. Ad esempio, un'immagine può basarsi su un'altra (es. partire da ubuntu) aggiungendo poi un server Apache, l'applicazione e le configurazioni necessarie[\[1\]](https://docs.docker.com/get-started/docker-overview/#:~:text=). Le immagini sono costruite in modo incrementale e composito: ognuna **è composta da più strati (layer)** di filesystem impilati (concetto che approfondiremo più avanti)[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Importante: un'immagine di per sé è statica e immutabile - non cambia mai durante l'esecuzione, fungendo da modello da cui avviare i container.
