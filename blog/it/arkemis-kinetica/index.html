@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arkemis Kinetica</title>
+  <style>
+    
+  :root {
+    color-scheme: light dark;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg, #0f172a);
+    color: #0f172a;
+  }
+  @media (prefers-color-scheme: dark) {
+    body {
+      color: #e2e8f0;
+    }
+  }
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+  }
+  header nav a {
+    margin-left: 1rem;
+    text-decoration: none;
+    font-weight: 500;
+    color: inherit;
+  }
+  header nav a:hover {
+    text-decoration: underline;
+  }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      margin-bottom: 1rem;
+    }
+    .meta {
+      color: #64748b;
+      margin-bottom: 2.5rem;
+    }
+    article {
+      font-size: 1.05rem;
+    }
+    article img {
+      max-width: 100%;
+      border-radius: 0.75rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 10px 25px -12px rgba(15, 23, 42, 0.35);
+    }
+    article pre {
+      background: rgba(15, 23, 42, 0.85);
+      color: #e2e8f0;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      border-radius: 0.75rem;
+    }
+    nav {
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+    nav a {
+      text-decoration: none;
+      font-weight: 500;
+      color: inherit;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <a href="../../../blog/index.html">← Blog</a>
+      <a href="../../../index.html">Home</a>
+      <a href="../../../blog/en/arkemis-kinetica/">Read in English</a>
+    </nav>
+    <article>
+      <header>
+        <h1>Arkemis Kinetica</h1>
+        <p class="meta">
+          Aggiornato il 2025-10-31
+        </p>
+      </header>
+      <p>In parole semplici, Kinetica consente alle aziende di processare e analizzare enormi quantità di dati “live” in modo rapidissimo,
+sfruttando le GPU al posto delle sole CPU tradizionali .
+È pensato per carichi OLAP (analisi)
+complessi, includendo analisi su dati streaming, funzioni geospaziali, grafo e persino integrazione con
+modelli di machine learning direttamente nel database . In sostanza, Kinetica punta a colmare il gap
+delle basi di dati tradizionali nel gestire dati multi-sorgente su scala massiva e con requisiti di tempo
+reale, unificando velocità, scalabilità orizzontale, location intelligence e AI in un’unica piattaforma.</p>
+<p>Kinetica sfrutta infatti l’elaborazione vettoriale
+(vectorized query execution) per processare intere colonne di dati in blocco, anziché riga per riga,
+sfruttando al massimo il parallelismo hardware.</p>
+<p>Grazie a questa architettura, Kinetica dichiara di poter eseguire query su dataset di miliardi di righe in pochi millisecondi, senza bisogno di indici o pre-aggregazioni pesanti.</p>
+<p>Kinetica è un database distribuito, colonnare e vettorizzato con un
+approccio memory-first e tiered storage (memoria stratificata).</p>
+<p>I dati vengono automaticamente suddivisi (shardati) tra i vari worker node, e il nodo head si occupa di ricevere le query SQL e frammentarle in task più piccoli da eseguire in parallelo sui worker.</p>
+<p>Questo design consente una scalabilità quasi lineare: aggiungendo nodi (ognuno con ulteriore potenza computazionale e memoria) il throughput del sistema cresce quasi proporzionalmente, permettendo di lavorare su petabyte di dati in tempi ridotti </p>
+<p>Kinetica espone un’interfaccia SQL (ANSI SQL-92) e API compatibili Postgres/JDBC/ODBC, astratta rispetto al numero di nodi e alla loro ubicazione</p>
+<p>Columnar store &amp; vectorization: internamente i dati sono memorizzati per colonne (formato colonnare) anziché per righe, similmente ai data warehouse analitici. Questo migliora la località dei dati
+e la compressione: le colonne possono essere compresse efficacemente (ad es. tramite dictionary encoding) così da ridurre il footprint in memoria e accelerare i trasferimenti verso la GPU. </p>
+<p>La vectorized query engine assegna automaticamente ogni operazione (filtri, aggregazioni, join, funzioni finestra ecc.) al processore più
+adatto – CPU o GPU – in base a dove può essere eseguita più velocemente. In pratica, Kinetica esegue un bilanciamento eterogeneo: le operazioni altamente parallele e computazionalmente intense vengono offloaded (scaricate) sui core della GPU, mentre altre parti della query possono girare sui core della CPU in parallelo.</p>
+<p>L’approccio ibrido consente di ottenere speed-up anche di 50-100x rispetto a esecuzioni CPU tradizionali, come riportato nei white paper di Kinetica. Il motore di Kinetica è “GPU-aware”: suddivide e orchestra le query in modo da utilizzare le GPU dove possibile, mantenendo però la flessibilità di scala e compatibilità di un database distribuito SQL completo.</p>
+<h2>Memory-First e Tiered Storage</h2>
+<p>Uno dei pilastri di Kinetica è la gestione intelligente della memoria attraverso tiered storage “memory-
+first”. In un sistema tradizionale, l’accesso ai dati è spesso limitato dalla necessità di spostarli continuamente dal disco alla RAM (I/O); Kinetica minimizza questo collo di bottiglia tenendo il più possibile i dati in memoria veloce e relegando su disco solo quelli meno usati </p>
+<p>In pratica, Kinetica suddivide le risorse di storage in più livelli (tier) con priorità decrescente di velocità:</p>
+<ul>
+<li>VRAM Tier – la memoria video della GPU (VRAM, Video RAM), vicinissima ai core GPU e ad altissima banda;</li>
+<li>RAM Tier – la memoria centrale di sistema (RAM) disponibile sui nodi;</li>
+<li>Disk Cache Tier – storage SSD/disco locale usato come cache estesa (per dati non persistenti o risultati temporanei);</li>
+<li>Persist Tier – storage disco primario per i dati persistenti (ad es. NVMe/SSD dove risiedono le tabelle in modo permanente);</li>
+<li>Cold Storage Tier – storage di capacità (ad es. HDFS, S3 o altro storage esterno) per dati storici o poco usati.</li>
+</ul>
+<p> L’idea chiave del memory-first è che i dati “hot” e “warm” (quelli di uso più frequente o recente) risiedano nei tier più veloci – VRAM sulla GPU e RAM di sistema – mentre i dati “cold” (meno critici o storici) possono essere spostati su supporti più lenti ed economici come disco locale o persino object storage cloud.</p>
+<p>In uno scenario tipico, ad esempio, si potrebbe configurare Kinetica per mantenere in memoria tutti i dati delle ultime 2 settimane, mentre le partizioni più vecchie vengono evacuate su disco o su S3; la selezione può essere fatta con strategie basate su predicati (es. un timestamp) configurabili dall’utente. Questa gestione multi-tier è automatica e altamente configurabile. 
+Kinetica mantiene i dati caldi direttamente in VRAM quando possibile.</p>
+<p>In sintesi, tiered storage + columnar compression permettono a Kinetica di mantenere prestazioni elevate senza richiedere quantità proibitive di RAM: solo i dati più importanti stanno nella costosa memoria veloce, 
+ma grazie alla compressione ce ne può stare molto di più di quanto si pensi </p>
+<h2>Gestione della Cache (RAM, VRAM, Disk) e GPU Offloading</h2>
+<p>La VRAM funge da cache L1 ultraveloce, la RAM da cache L2 più ampia, e il disco locale/SSD come L3 ulteriore.</p>
+<ol>
+<li>Resource Manager di Kinetica decide dinamicamente dove devono risiedere i dati per soddisfare le richieste. Ogni operazione che sfrutta la GPU richiede che i dati coinvolti siano presenti nel tier VRAM.</li>
+</ol>
+<p>Per rendere efficienti questi movimenti, Kinetica all’avvio pre-alloca uno spazio di VRAM su ciascun nodo GPU, riservandolo al suo buffer pool; questo assicura che ci sia VRAM dedicata al database e consente di gestirne il contenuto con le politiche di watermark/eviction descritte prima.  Analogamente, si può configurare un’area di Disk Cache: se abilitata, funge da “valvola di sfogo” sul disco per oggetti transienti o per scaricare la RAM quando quest’ultima è satura.</p>
+<p>L’ottimizzazione della cache in Kinetica consiste quindi nel tenere sempre i dati “giusti” nei layer più alti: il sistema monitora l’accesso ai dati e può applicare strategie basate su predicati (es. “colonna timestamp &lt; 2023 goes to cold storage”) per distribuire le porzioni di tabelle tra VRAM, RAM e storage persistente automaticamente. L’obiettivo è ridurre al minimo gli accessi al disco durante le query. </p>
+<p>L’engine può sovrapporre il caricamento dati con il calcolo: mentre una parte di dati viene copiata dalla RAM alla VRAM, la GPU può già iniziare ad elaborare un’altra porzione – ottenendo una sorta di pipeline.</p>
+<p>Si noti che in ambienti con dataset enormi su storage remoto (es. HDFS o S3), Kinetica può anche eseguire query unendo dati esterni senza doverli importare completamente: ad esempio, fare join tra una tabella interna e dati su S3 è supportato in modo parallelo, spostando in GPU solo i risultati rilevanti.</p>
+<p>Un altro aspetto cruciale è il GPU offloading, ossia quali operazioni “spedire” alla GPU e quali no. Kinetica delega ai core GPU tutte le operazioni fortemente parallele e ad alto costo computazionale,
+mentre affida alla CPU quelle non adatte al modello SIMD o che non giustificano il costo di trasferimento su GPU. 
+Kinetica sfrutta questo potenziale dividendo le query in tanti task vettoriali che vengono messi in una coda di esecuzione parallela su GPU.</p>
+<p>Kinetica adotta quindi un modello eterogeneo bilanciato: CPU e GPU
+lavorano di concerto. Il risultato finale è che il tempo totale di una query viene drasticamente ridotto rispetto all’uso esclusivo della CPU, pur senza sacrificare la generalità del sistema (che rimane SQL completo).
+Va detto che Kinetica non è l’unico ad adottare questa filosofia.In HeavyDB, la GPU è vista come una cache L1: il suo ottimizzatore prova a mettere i dati “hot” in GPU per avere latenza zero, usando la CPU (L2) se la VRAM si riempie, e andando su disco (L3) solo se necessario. Un aspetto distintivo di Kinetica è la gestione esplicita e personalizzabile di tutti i tier di memoria.
+In pratica, l’utente può intervenire nelle strategie di posizionamento dei dati (perfino a livello di singola
+colonna/tabella) mediante configurazione, mentre in soluzioni come HeavyDB gran parte del caching è automatica.</p>
+
+    </article>
+  </div>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vibe Coding vs Traditional Programming (2023–2025)</title>
+  <style>
+    
+  :root {
+    color-scheme: light dark;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg, #0f172a);
+    color: #0f172a;
+  }
+  @media (prefers-color-scheme: dark) {
+    body {
+      color: #e2e8f0;
+    }
+  }
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+  }
+  header nav a {
+    margin-left: 1rem;
+    text-decoration: none;
+    font-weight: 500;
+    color: inherit;
+  }
+  header nav a:hover {
+    text-decoration: underline;
+  }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      margin-bottom: 1rem;
+    }
+    .meta {
+      color: #64748b;
+      margin-bottom: 2.5rem;
+    }
+    article {
+      font-size: 1.05rem;
+    }
+    article img {
+      max-width: 100%;
+      border-radius: 0.75rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 10px 25px -12px rgba(15, 23, 42, 0.35);
+    }
+    article pre {
+      background: rgba(15, 23, 42, 0.85);
+      color: #e2e8f0;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      border-radius: 0.75rem;
+    }
+    nav {
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+    nav a {
+      text-decoration: none;
+      font-weight: 500;
+      color: inherit;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <a href="../../../blog/index.html">← Blog</a>
+      <a href="../../../index.html">Home</a>
+      <a href="../../../blog/it/confronto-tra-vibe-coding-e-programmazione-tradizionale-2023-2025-2/">Leggi in Italiano</a>
+    </nav>
+    <article>
+      <header>
+        <h1>Vibe Coding vs Traditional Programming (2023–2025)</h1>
+        <p class="meta">
+          Aggiornato il 2025-10-31
+        </p>
+      </header>
+      <h1>Vibe Coding vs Traditional Programming (2023–2025)</h1>
+<h2>Abstract</h2>
+<p>“Vibe coding” — letting an AI pair programmer drive the entire implementation — exploded between 2023 and 2025 thanks to tools such as GitHub Copilot, Cursor, Sourcegraph Cody, Tabnine, Codeium, and the assistants now embedded in mainstream IDEs.</p>
+<p>This first article compares vibe coding with the traditional (“old coding”) approach through the lens of recent studies, enterprise case studies, and developer testimonials. The data paints a nuanced picture. In <strong>controlled enterprise environments</strong>, AI pair programming boosts delivery (<a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">+26% tasks completed on average</a>), especially for <em>junior developers</em>, without immediate quality regressions. That headline number is well known.</p>
+<p>Less publicised: on complex projects, seasoned engineers have reported unexpected slowdowns (up to <a href="https://www.infoq.com/news/2025/07/ai-productivity/">+19% longer when using AI</a>) even though the experience felt faster.</p>
+<p>Quality-wise, AI-generated code generally runs, but tends to be less maintainable due to <em>duplication</em>, <em>higher code churn</em>, and <strong>potential security gaps</strong> <a href="https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx">when unsupervised</a>. The market is responding with tools such as Code Mender, which I analysed in an earlier podcast.</p>
+<p>On the cultural side, AI assistants raise developer satisfaction by <a href="https://www.secondtalent.com/resources/github-copilot-statistics/">reducing repetitive work</a>. Yet concerns are mounting: inexperienced programmers risk missing the <a href="https://nmn.gl/blog/ai-and-learning">deep understanding of code</a> that defines a professional engineer, and blind trust in AI (“accept all and ship”) can lead to <strong>loss of control</strong> and <strong>opaque systems</strong>. Bottom line: vibe coding unlocks remarkable velocity and accessibility, but it still demands <strong>strong human intervention</strong> in <em>architecture, review, and testing</em> to <strong>guarantee quality, security, and long-term sustainability</strong>.</p>
+<h2>Methodology</h2>
+<p>Sources published between 2023 and 2025 in multiple languages were analysed, prioritising quantitative, reproducible evidence. In particular:</p>
+<ol>
+<li><strong>Peer-reviewed experiments and technical white papers</strong> with clear methodology (RCTs, benchmarks). Classified as grade A evidence (high robustness, low bias).</li>
+<li><strong>Industry case studies</strong> with real team metrics (grade B when conducted internally, acknowledging context bias).</li>
+<li><strong>Direct developer accounts</strong> (blogs, videos, forums) that include concrete experiments or verifiable code (grade C, anecdotal with medium/high bias). For each source we extracted: context and tools used, type of activity (greenfield development, refactoring, bug fixing, testing), objective metrics (time, bug rate, vulnerability rate, test coverage, performance), and subjective metrics (satisfaction, cognitive load, perceived learning).</li>
+</ol>
+<p>During synthesis, we compared evidence to highlight convergences or discrepancies. Example: results from a large corporate RCT (4,800 developers across Microsoft/Accenture, grade A) were contrasted with an RCT on experienced OSS maintainers (16 contributors, grade A) and with case studies such as Copilot’s internal adoption at ZoomInfo (400 engineers, grade B).</p>
+<p>Individual experiences (e.g., a full-stack prototype built entirely with AI) were included as grade C evidence to capture practical and cultural aspects that raw numbers miss. Every source is linked to its original reference.</p>
+<h2>Technical Findings</h2>
+<h3>Impact on Productivity and Delivery Speed</h3>
+<p>The data confirms that AI assistants can accelerate software development, but the uplift depends heavily on <strong>context</strong> and engineer <strong>seniority</strong>.</p>
+<ul>
+<li><strong>Multi-company RCT (Microsoft, Accenture, global enterprise).</strong> GitHub Copilot users achieved <strong>+26% more tasks</strong>, <strong>+13.5% weekly commits</strong>, and <strong>+38% compilation frequency</strong>. The study reports <strong>no negative quality impact</strong> (bugs, reviews, builds), indicating that the extra speed did <strong>not</strong> compromise correctness. (<a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">IT Revolution summary</a>)</li>
+<li><strong>Accenture controlled trial.</strong> Teams saw <strong>+8.7% pull requests per engineer</strong>, <strong>+15% merge rate</strong>, and <strong>+84% first-pass build success</strong> thanks to faster boilerplate generation and inline test scaffolding.</li>
+<li><strong>Advanced OSS maintainers benchmark.</strong> When tackling deep refactors or unfamiliar stacks, experienced developers reported a <strong>+19% time cost</strong> despite feeling faster. (<a href="https://www.infoq.com/news/2025/07/ai-productivity/">InfoQ analysis</a>) Extra time was spent debugging hallucinated code and stitching partial snippets.</li>
+</ul>
+<p><strong>Takeaway:</strong> AI improves throughput on patterned, well-understood tasks. The closer you get to novel architecture, brittle legacy code, or multi-repo changes, the more the human must slow down and reassert intent.</p>
+<h3>Code Quality and Maintainability</h3>
+<ul>
+<li><strong>Duplication and churn.</strong> AI-generated patches often include redundant logic and inflate churn because the assistant rewrites more context than necessary. Teams without tight review discipline report double-digit increases in duplicated blocks and “fix-forward” commits.</li>
+<li><strong>Readability.</strong> Default suggestions lean toward generic naming and mixed paradigms. Without prompts that enforce house style, readability drops, especially in polyglot repositories.</li>
+<li><strong>Second-order debt.</strong> Case studies from regulated industries describe “confidence cliffs”: initial velocity hides the fact that AI-suggested abstractions rarely match the domain language, leading to expensive cleanups later.</li>
+</ul>
+<p>ZoomInfo’s internal metrics (400 engineers) illustrate the trade-offs:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Trend with AI use</th>
+<th>Notes</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Build success</td>
+<td><strong>+84%</strong></td>
+<td>Thanks to templated tests and guardrails</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+<tr>
+<td>Review iteration</td>
+<td><strong>+24%</strong></td>
+<td>More rounds to align on structure</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+<tr>
+<td>Code churn</td>
+<td><strong>~2×</strong></td>
+<td>AI rewrites large chunks between revisions</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+<tr>
+<td>Acceptance LoC</td>
+<td><strong>~20%</strong></td>
+<td>Significant boilerplate / partial outputs</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+<tr>
+<td>Perceived quality</td>
+<td>Variable</td>
+<td>Requires standards plus iterative refactoring</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+</tbody></table>
+<p>Overall, vibe coding tends to deliver <strong>more code, faster</strong>, but with <strong>lower intrinsic cleanliness and reuse</strong>.</p>
+<p>Senior engineers writing code manually often pause to integrate the new feature into the existing design—refactoring neighbouring modules when appropriate. An AI prompted in isolation usually emits a fresh solution, unaware of duplication elsewhere. The result: AI-driven applications that consume 3–4× more server resources than hand-crafted equivalents.</p>
+<h3>Defects and Security</h3>
+<p>The critical question: does AI coding introduce more <strong>bugs</strong> or <strong>security issues</strong>? Evidence suggests AI is good at avoiding <em>syntactic/compilation</em> errors but can inject <em>logic bugs or subtle vulnerabilities</em> if unchecked. Controlled studies so far have not identified higher functional bug rates attributable to AI; in fact, build errors often decrease and tests pass more easily thanks to AI assistance.</p>
+<p>However, multiple experiments show that blind trust in AI causes mistakes an expert would catch. Models such as GPT-4 occasionally “invent” functions or APIs when prompts are ambiguous, or produce plausible but incorrect solutions for edge cases. A <a href="https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx#:~:text=%2A%20,is%20needed%20in%20the%20future">Microsoft 2022 study</a> found situations where Copilot delivered misleading algorithmic solutions: the base case worked, but boundary conditions failed — errors a careful developer would have spotted via tests. Literature repeatedly advises against letting the AI “fly solo”: “Copilot is powerful; it should not pilot the plane alone.”</p>
+<p>The developer <strong>must stay in the loop</strong> to validate business logic. Supporting evidence: a <a href="https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-kelly/">study on ChatGPT in university programming tasks</a> observed that inexperienced students trusted the output even when it contained mistakes. If the program failed, they simply asked the AI to “fix it again” without understanding the root cause. This can create cycles where a bug is “patched” by the AI with another flawed change, sowing hard-to-diagnose issues.</p>
+<h4>Security</h4>
+<p>Security deserves special attention. My deep dive shows AI-generated code often includes known vulnerabilities or unsafe practices unless the user steers the model explicitly toward hardened implementations.</p>
+<ul>
+<li><strong>Known vulnerabilities.</strong> <a href="https://arxiv.org/abs/2108.09293">Pearce et al. (2021/22)</a> evaluated 89 CWE scenarios: 39% of generated programs contained vulnerabilities, with first Copilot suggestions hitting ~39% in Python and ~50% in C. Over 40% exhibited at least one weakness (buffer overflow, SQL injection, hard-coded secrets, etc.). Without filtering, AI tends to <strong>replicate patterns</strong> seen in training data <strong>even when unsafe</strong>. Example: suggesting a SQL query via string concatenation (injection-prone) because that pattern appears frequently on GitHub.</li>
+<li><strong>Personal anecdote.</strong> I nearly shipped an exposed API key. In the rush of an incident I relied entirely on vibe coding and forgot to hide secrets in <code>.env</code>. This illustrates how AI-accelerated workflows can bypass long-ingrained security habits if we disengage.</li>
+</ul>
+<p>AI assistants are improving: Copilot and Cursor now attempt to flag known insecure patterns, and tools like CodeQL can run automatic scans post-generation. Still, a <a href="https://arxiv.org/html/2506.1102v1">2025 study</a> uncovered <em>malicious prompts</em> designed to trick developers into inserting backdoors by hiding them within seemingly harmless prompt histories. Attackers can weaponise shared prompt libraries or contextual cues to smuggle payloads into generated code, reinforcing the need for stringent review.</p>
+<p>Practical mitigation strategies:</p>
+<ol>
+<li><strong>Automated security gates.</strong> Integrate SAST/DAST/SCA scanners at commit or CI time to catch common issues before merge.</li>
+<li><strong>Prompt hygiene.</strong> Avoid pasting secrets, internal architecture layouts, or proprietary algorithms into prompts. Even if the vendor promises retention controls, treat prompts as potentially recoverable.</li>
+<li><strong>Defense-in-depth culture.</strong> Encourage threat modeling, test-first habits, and security code review even when AI produces the initial patch.</li>
+</ol>
+<h3>Performance and Scalability</h3>
+<p>AI can draft distributed-system scaffolding or microservice templates quickly, but it rarely accounts for non-functional constraints unless explicitly guided. Engineers report that generative snippets often ignore backpressure, batching, circuit breakers, or resource pools — ingredients essential for latency and throughput. Pushing AI-generated code straight to production without human optimisation can therefore degrade performance.</p>
+<p>Benchmark tuning (GPU kernels, concurrency hot paths, caching strategies) still demands domain expertise. AI provides decent pseudocode, but not the nuanced micro-optimisations that production workloads require. Experienced teams treat AI as a brainstorming partner, then profile and refine manually.</p>
+<h3>Developer Satisfaction</h3>
+<p>Synthesised surveys (e.g., <a href="https://www.secondtalent.com/resources/github-copilot-statistics/">Second Talent</a>) show higher morale because AI removes repetitive work such as CRUD endpoints, table mappings, unit test scaffolding, and boilerplate docs.</p>
+<p>Still, senior engineers warn about <strong>skill atrophy</strong>: entry-level developers who accept suggestions blindly struggle to build conceptual depth. Namanyay Goel’s viral post “<a href="https://nmn.gl/blog/ai-and-learning#:~:text=We%E2%80%99re%20at%20this%20weird%20inflection,That%E2%80%99s%20where%20things%20get%20concerning">New Junior Developers Can’t Actually Code</a>” describes junior hires who deliver features courtesy of Copilot/ChatGPT, yet cannot answer “why does your code work this way?” Similar anecdotes appear on university forums: students submit seemingly correct assignments but cannot explain basic design decisions, indicating they neither wrote nor understood the solution.</p>
+<p>AI can also be a powerful teaching aid when used deliberately. Juniors can ask the assistant to explain a snippet, propose alternatives, or outline debugging strategies — getting instant, tailored feedback that static resources never provided. Many engineers report closing knowledge gaps faster thanks to AI-as-mentor. The difference lies in <strong>user mindset</strong>: if the developer approaches AI to learn (“why?”), validates the answers, and experiments with variants, they grow quickly. If they stay in autopilot mode, copying solutions without reflection, learning stalls. Goel advises juniors: “Use Copilot/ChatGPT sparingly; interrogate the solutions and rebuild the reasoning.”</p>
+<p>Education programmes are adapting. Some curricula integrate AI as a tool to explore multiple approaches and then critique them with instructors. Personally, I rely on ChatGPT to brainstorm training roadmaps: while time estimates remain shaky, the structured paths are often spot on.</p>
+<p>Within companies, senior mentors carry an even bigger load. They must coach juniors on responsible AI usage to avoid <strong>skill atrophy</strong>. This means pair reviews where mentors ask juniors to explain AI-generated code, or policies requiring juniors to attempt a manual solution before prompting the AI. Mentors now teach <strong>prompt engineering</strong> and <strong>AI code quality control</strong> in addition to traditional craftsmanship. Some organisations codify guidelines: AI-generated code must undergo human review by a senior who inspects not only style but also architecture. Examples:</p>
+<ul>
+<li>“Copilot duplicated this logic in three places; extract a shared function.”</li>
+<li>“ChatGPT imported an outdated library from a sample; it’s not production-grade for performance reasons.”</li>
+</ul>
+<p>These meta-cognitive lessons are vital to grow engineers who can reason even when AI suggests the first draft.</p>
+<p>Finally, there is the psychological dimension. For many developers, hand-writing code is both craft and passion. AI assistants capable of generating large chunks shake that identity. Some fear becoming “operators steering AI” rather than craftsmen. Analogies abound: loss of craftsmanship mirrors industrial automation where the human shifts from artisan to machine supervisor. I see AI as an amplifier, not a replacement — akin to moving from punch cards to modern programming. The craft survives by shifting focus: less time manually writing every loop, more time architecting systems that weave AI and human code coherently. As <a href="https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-ever-33c343bfc2e1#:~:text=,Humans%20architect%20systems%20that%20work">Greenman</a> puts it, “AI executes code brilliantly. Humans architect systems that work.”</p>
+<h2>Training, Skill Development, and Role Impact</h2>
+<p>The cultural debate often centres on learning: will vibe coding create a generation that can only “prompt” without understanding code? The risk exists, but it is manageable.</p>
+<ul>
+<li><strong>Learning posture matters.</strong> Developers who interrogate AI output, ask for explanations, and refactor suggestions build intuition. Those who simply paste suggestions don’t.</li>
+<li><strong>Mentorship evolves.</strong> Seniors must coach juniors on prompt design, validation, and clean-up. Code reviews focus not only on correctness but also on understanding: “Explain the decision behind this AI snippet.” Teams are adopting joint AI sessions (senior + junior) to discuss pros/cons of AI proposals synchronously.</li>
+<li><strong>Continual practice.</strong> Mixing AI-assisted work with periodic “no-AI kata” keeps foundational skills sharp and reveals gaps. Some teams nominate an “AI custodian” to steward code quality across AI contributions.</li>
+<li><strong>Identity and motivation.</strong> Reposition AI as a co-pilot that frees engineers to tackle higher-order design. Satisfaction comes from orchestrating robust systems, even if the assistant generated part of the code.</li>
+</ul>
+<h2>Summary and Recommendations</h2>
+<p>Vibe coding versus traditional development is <strong>not</strong> a zero-sum game. AI delivers revolutionary speed and accessibility; traditional methods guarantee control, robustness, and clarity. The evidence favours a hybrid strategy that maximises upside and mitigates risk. Key takeaways:</p>
+<ol>
+<li><strong>Productivity.</strong> AI-driven coding accelerates repetitive work (boilerplate, CRUD, mappings, test scaffolding, baseline docs), particularly for less-experienced engineers. Put <strong>guardrails</strong> in place: linters, formatters, conventional commits, automated tests.</li>
+<li><strong>Quality and maintainability.</strong> Treat AI output like junior developer code. Require human review, refactoring, and testing before merge. Consider designating an “AI code custodian” to oversee stylistic and architectural coherence.</li>
+<li><strong>Security.</strong> Never assume AI output is safe. Run security pipelines (SAST/DAST/SCA), enforce secure coding checklists, and reintroduce threat modeling. AI speeds implementation; developers must restore security-by-design.</li>
+<li><strong>Architecture and performance.</strong> Do not let vibe coding run wild without a plan. Establish architecture, module boundaries, and critical decisions upfront to avoid heterogeneous chaos. Profile and optimise critical paths manually.</li>
+<li><strong>Developer growth.</strong> Use AI deliberately as a learning tool. Encourage juniors to ask for explanations, not only solutions. Pair programming sessions (human + AI) expose tacit knowledge. Schedule occasional “no AI” exercises to maintain core skills. During code review, ask developers to justify AI-generated code to ensure comprehension. Mentorship and pairing remain essential — AI does not remove the need to explain the “why” and “how”.</li>
+</ol>
+<p>In short: the future belongs to developers who know <strong>when to engage autopilot</strong> and <strong>when to grip the steering wheel</strong>. Use AI to handle the tedious stretches; rely on human judgment for intent, architecture, and safety.</p>
+
+    </article>
+  </div>
+</body>
+</html>
