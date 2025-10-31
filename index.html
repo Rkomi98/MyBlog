@@ -1213,18 +1213,154 @@
         const themeToggleElement = document.querySelector('.theme-toggle');
         let currentCategoryFilter = 'all';
         let currentSortOrder = 'desc';
+        let currentArticleIndex = null;
         const categoryFilterElement = document.getElementById('category-filter');
         const sortOrderElement = document.getElementById('sort-order');
         const localFileAccessHint = 'Serve il sito tramite un server locale (es. `python -m http.server 8000`) per consentire al browser di caricare i file Markdown. / Serve the site through a local HTTP server (e.g. `python -m http.server 8000`) so the browser can load the Markdown files.';
         const ARTICLES_STORAGE_KEY = 'blogArticles';
         const ARTICLES_SIGNATURE_KEY = 'blogArticlesSignature';
+        const SUPPORTED_LANGUAGES = ['it', 'en'];
+
+        function normalizeSlug(value) {
+            return (value || '')
+                .toString()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function getArticleSlug(article) {
+            if (article.slug) return article.slug;
+            if (article.titles) {
+                for (const lang of SUPPORTED_LANGUAGES) {
+                    if (article.titles[lang]) {
+                        return normalizeSlug(article.titles[lang]);
+                    }
+                }
+            }
+            if (article.title) {
+                return normalizeSlug(article.title);
+            }
+            return `article-${Math.random().toString(36).slice(2)}`;
+        }
+
+        function getArticleTitles(article) {
+            if (article.titles) return article.titles;
+            if (article.title) {
+                return {
+                    it: article.title,
+                    en: article.title
+                };
+            }
+            return {};
+        }
+
+        function getLocalizedTitle(article, lang = currentLang) {
+            const titles = getArticleTitles(article);
+            if (titles[lang]) return titles[lang];
+            const fallback = lang === 'it' ? 'en' : 'it';
+            if (titles[fallback]) return titles[fallback];
+            return article.title || '';
+        }
+
+        function getArticleCategoryLabels(article) {
+            if (article.categoryLabels) return article.categoryLabels;
+            if (article.category) {
+                return {
+                    it: article.category,
+                    en: article.category
+                };
+            }
+            return {
+                it: '',
+                en: ''
+            };
+        }
+
+        function getLocalizedCategoryLabel(article, lang = currentLang) {
+            const labels = getArticleCategoryLabels(article);
+            if (labels[lang]) return labels[lang];
+            const fallback = lang === 'it' ? 'en' : 'it';
+            return labels[fallback] || article.category || '';
+        }
+
+        function getArticleMarkdownPaths(article) {
+            if (article.markdownPaths) return article.markdownPaths;
+            if (article.markdownPath) {
+                return {
+                    it: article.markdownPath,
+                    en: article.markdownPath
+                };
+            }
+            return {};
+        }
+
+        function getMarkdownPathForLang(article, lang = currentLang) {
+            const paths = getArticleMarkdownPaths(article);
+            if (paths[lang]) return paths[lang];
+            const fallback = lang === 'it' ? 'en' : 'it';
+            return paths[fallback] || article.markdownPath || '';
+        }
+
+        function getArticleContents(article) {
+            if (article.contents) return article.contents;
+            if (article.content) {
+                const inferred = {};
+                SUPPORTED_LANGUAGES.forEach(lang => {
+                    inferred[lang] = article.content;
+                });
+                return inferred;
+            }
+            return {};
+        }
+
+        function getArticleContent(article, lang = currentLang) {
+            const contents = getArticleContents(article);
+            if (contents[lang]) return contents[lang];
+            const fallback = lang === 'it' ? 'en' : 'it';
+            if (contents[fallback]) return contents[fallback];
+            return article.content || '';
+        }
+
+        function getCategoryLabelByValue(articles, categoryValue, lang = currentLang) {
+            const match = articles.find(item => item.category === categoryValue);
+            if (match) {
+                return getLocalizedCategoryLabel(match, lang);
+            }
+            return categoryValue || '';
+        }
+
+        function normalizeArticle(article) {
+            const normalized = {
+                ...article,
+                slug: getArticleSlug(article),
+                titles: { ...getArticleTitles(article) },
+                categoryLabels: { ...getArticleCategoryLabels(article) },
+                markdownPaths: { ...getArticleMarkdownPaths(article) },
+                contents: { ...(article.contents || {}) }
+            };
+
+            if (article.content && (!normalized.contents.en || !normalized.contents.it)) {
+                SUPPORTED_LANGUAGES.forEach(lang => {
+                    if (!normalized.contents[lang]) {
+                        normalized.contents[lang] = article.content;
+                    }
+                });
+            }
+
+            return normalized;
+        }
 
         function computeArticlesSignature(articles) {
             return JSON.stringify(articles.map(article => ({
-                title: article.title,
+                slug: getArticleSlug(article),
+                titles: getArticleTitles(article),
                 date: article.date,
-                markdownPath: article.markdownPath,
+                markdownPaths: getArticleMarkdownPaths(article),
                 category: article.category,
+                categoryLabels: getArticleCategoryLabels(article),
                 readTime: article.readTime,
                 icon: article.icon
             })));
@@ -1265,6 +1401,7 @@
             }
 
             displayArticles();
+            renderCurrentArticle();
         }
         
         // Theme management
@@ -1300,6 +1437,7 @@
             document.getElementById('home').style.display = 'block';
             document.getElementById('blog').style.display = 'none';
             document.getElementById('article-view').style.display = 'none';
+            currentArticleIndex = null;
         }
         
         function showBlog() {
@@ -1307,6 +1445,7 @@
             document.getElementById('blog').style.display = 'block';
             document.getElementById('article-view').style.display = 'none';
             displayArticles();
+            currentArticleIndex = null;
         }
 
         function slugifyHeading(text) {
@@ -1413,15 +1552,18 @@
             buildArticleTOC(articleBody);
         }
         
-        async function showArticle(index) {
-            document.getElementById('home').style.display = 'none';
-            document.getElementById('blog').style.display = 'none';
-            document.getElementById('article-view').style.display = 'block';
-            
+        async function renderCurrentArticle() {
+            if (currentArticleIndex === null) return;
+            const articleView = document.getElementById('article-view');
+            if (!articleView || articleView.style.display === 'none') return;
+
             const articles = await getArticles();
-            const article = articles[index];
-            
+            const article = articles[currentArticleIndex];
+            if (!article) return;
+
             const display = document.getElementById('article-display');
+            if (!display) return;
+
             const parsedDate = Date.parse(article.date || '');
             const displayDate = Number.isNaN(parsedDate)
                 ? (currentLang === 'it' ? 'Data non disponibile' : 'Date unavailable')
@@ -1430,19 +1572,29 @@
                     month: 'long',
                     day: 'numeric'
                 });
-            
+
+            const content = getArticleContent(article, currentLang);
+
             display.innerHTML = `
-                <h1>${article.title}</h1>
+                <h1>${getLocalizedTitle(article, currentLang)}</h1>
                 <div class="article-info">
                     <span>📅 ${displayDate}</span>
-                    <span>📁 ${article.category}</span>
-                    <span>⏱️ ${article.readTime} min</span>
+                    <span>📁 ${getLocalizedCategoryLabel(article, currentLang)}</span>
+                    <span>⏱️ ${article.readTime || 0} min</span>
                 </div>
-                <div class="article-body">${marked.parse(article.content)}</div>
+                <div class="article-body">${marked.parse(content || '')}</div>
             `;
 
             const articleBody = display.querySelector('.article-body');
             enhanceArticleBody(articleBody);
+        }
+        
+        async function showArticle(index) {
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('blog').style.display = 'none';
+            document.getElementById('article-view').style.display = 'block';
+            currentArticleIndex = index;
+            await renderCurrentArticle();
         }
         
         // Articles management with predefined content
@@ -1451,28 +1603,61 @@
             // to control what appears in the blog grid by default.
             return [
                 {
-                    title: "What is Docker: Dentro un container",
+                    slug: "docker-container-fundamentals",
+                    titles: {
+                        it: "Docker: Dentro il Container",
+                        en: "Docker Deep Dive: Inside the Container"
+                    },
                     category: "Docker",
+                    categoryLabels: {
+                        it: "Docker",
+                        en: "Docker"
+                    },
                     readTime: 15,
                     date: new Date('2025-10-30').toISOString(),
-                    icon: "🐳 ",
-                    markdownPath: "files/Docker_02.md"
+                    icon: "🐳",
+                    markdownPaths: {
+                        it: "files/Docker_02.md",
+                        en: "files/Docker_02_en.md"
+                    }
                 },
                 {
-                    title: "Vibe Coding vs Coding Tradizionale: Analisi Completa 2023-2025",
+                    slug: "vibe-coding-vs-traditional",
+                    titles: {
+                        it: "Vibe Coding vs Programmazione Tradizionale (2023-2025)",
+                        en: "Vibe Coding vs Traditional Development (2023-2025)"
+                    },
                     category: "Programming",
+                    categoryLabels: {
+                        it: "Programmazione",
+                        en: "Programming"
+                    },
                     readTime: 15,
                     date: new Date('2025-10-29').toISOString(),
                     icon: "🤖",
-                    markdownPath: "files/articolo-vibe-coding-vs-trad-coding.md"
+                    markdownPaths: {
+                        it: "files/articolo-vibe-coding-vs-trad-coding.md",
+                        en: "files/articolo-vibe-coding-vs-trad-coding_en.md"
+                    }
                 },
                 {
-                    title: "Cache optimization with Kinetica",
-                    category: "Programming",
-                    readTime: 5,
+                    slug: "kinetica-cache-optimization",
+                    titles: {
+                        it: "Ottimizzazione della Cache con Kinetica",
+                        en: "Cache Optimization with Kinetica"
+                    },
+                    category: "Data Engineering",
+                    categoryLabels: {
+                        it: "Data Engineering",
+                        en: "Data Engineering"
+                    },
+                    readTime: 10,
                     date: new Date('2025-10-25').toISOString(),
                     icon: "💻",
-                    markdownPath: "files/Arkemis_Kinetica.md"
+                    markdownPaths: {
+                        it: "files/Arkemis_Kinetica.md",
+                        en: "files/Arkemis_Kinetica_en.md"
+                    }
                 },
                 /*
                 {
@@ -1540,82 +1725,78 @@
             if (articlesCache) {
                 return articlesCache;
             }
-            
-            const defaults = getDefaultArticles();
+
+            const defaults = getDefaultArticles().map(normalizeArticle);
             const defaultsSignature = computeArticlesSignature(defaults);
             const storedSignature = localStorage.getItem(ARTICLES_SIGNATURE_KEY);
             if (storedSignature !== defaultsSignature) {
                 localStorage.removeItem(ARTICLES_STORAGE_KEY);
                 localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
             }
-            
-            const stored = localStorage.getItem(ARTICLES_STORAGE_KEY);
-            if (stored) {
+
+            const storedRaw = localStorage.getItem(ARTICLES_STORAGE_KEY);
+            let mergedArticles = [...defaults];
+
+            if (storedRaw) {
                 try {
-                    const parsed = JSON.parse(stored);
-                    const merged = parsed.map(storedArticle => {
-                        const match = defaults.find(def => def.title === storedArticle.title);
-                        if (match) {
-                            return {
-                                ...match,
-                                ...storedArticle,
-                                markdownPath: storedArticle.markdownPath || match.markdownPath
-                            };
-                        }
-                        return storedArticle;
+                    const storedParsed = JSON.parse(storedRaw).map(normalizeArticle);
+                    const mergedMap = new Map();
+
+                    mergedArticles.forEach(article => {
+                        mergedMap.set(article.slug, article);
                     });
-                    
-                    defaults.forEach(defaultArticle => {
-                        if (!merged.some(article => article.title === defaultArticle.title)) {
-                            merged.push(defaultArticle);
+
+                    storedParsed.forEach(article => {
+                        const existing = mergedMap.get(article.slug);
+                        if (existing) {
+                            mergedMap.set(article.slug, {
+                                ...existing,
+                                ...article,
+                                titles: { ...existing.titles, ...article.titles },
+                                categoryLabels: { ...existing.categoryLabels, ...article.categoryLabels },
+                                markdownPaths: { ...existing.markdownPaths, ...article.markdownPaths },
+                                contents: { ...existing.contents, ...article.contents }
+                            });
+                        } else {
+                            mergedMap.set(article.slug, article);
                         }
                     });
-                    
-                    const updated = await Promise.all(merged.map(async (article) => {
-                        const isDefaultArticle = defaults.some(defaultArticle =>
-                            defaultArticle.title === article.title &&
-                            defaultArticle.markdownPath === article.markdownPath
-                        );
-                        const needsFetch = article.markdownPath && (
-                            isDefaultArticle ||
-                            !article.content ||
-                            article.content.includes('Content will be loaded') ||
-                            article.content.includes('Content unavailable') ||
-                            article.content.includes(localFileAccessHint)
-                        );
-                        if (needsFetch) {
-                            try {
-                                const text = await fetchMarkdown(article.markdownPath);
-                                return { ...article, content: text };
-                            } catch (error) {
-                                console.error(error);
-                                return { ...article, content: `⚠️ ${localFileAccessHint}` };
-                            }
-                        }
-                        return article;
-                    }));
-                    articlesCache = updated;
-                    localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(updated));
-                    localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
-                    return articlesCache;
-                } catch (parseError) {
-                    console.error('Failed to parse stored articles', parseError);
+
+                    mergedArticles = Array.from(mergedMap.values());
+                } catch (error) {
+                    console.error('Failed to parse stored articles', error);
                 }
             }
-            
-            const loaded = await Promise.all(defaults.map(async (article) => {
-                if (article.markdownPath) {
+
+            const loaded = await Promise.all(mergedArticles.map(async (article) => {
+                const markdownPaths = { ...article.markdownPaths };
+                const contents = { ...article.contents };
+
+                await Promise.all(Object.entries(markdownPaths).map(async ([lang, path]) => {
+                    if (!path) return;
+
+                    const shouldFetch = !contents[lang] ||
+                        contents[lang].includes('Content will be loaded') ||
+                        contents[lang].includes('Content unavailable') ||
+                        contents[lang].includes(localFileAccessHint);
+
+                    if (!shouldFetch) return;
+
                     try {
-                        const text = await fetchMarkdown(article.markdownPath);
-                        return { ...article, content: text };
+                        const text = await fetchMarkdown(path);
+                        contents[lang] = text;
                     } catch (error) {
                         console.error(error);
-                        return { ...article, content: `⚠️ ${localFileAccessHint}` };
+                        contents[lang] = `⚠️ ${localFileAccessHint}`;
                     }
-                }
-                return { ...article, content: '' };
+                }));
+
+                return {
+                    ...article,
+                    contents
+                };
             }));
-            
+
             articlesCache = loaded;
             localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(loaded));
             localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
@@ -1627,9 +1808,10 @@
         }
         
         function saveArticles(articles) {
-            articlesCache = articles;
-            localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(articles));
-            const defaultsSignature = computeArticlesSignature(getDefaultArticles());
+            const normalized = articles.map(normalizeArticle);
+            articlesCache = normalized;
+            localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(normalized));
+            const defaultsSignature = computeArticlesSignature(getDefaultArticles().map(normalizeArticle));
             localStorage.setItem(ARTICLES_SIGNATURE_KEY, defaultsSignature);
         }
         
@@ -1650,6 +1832,13 @@
                 categories.some((category, index) => existingCategories[index] !== category);
             
             if (!needsUpdate) {
+                Array.from(categoryFilterElement.options).forEach(option => {
+                    if (option.value === 'all') {
+                        option.textContent = currentLang === 'it' ? 'Tutte' : 'All';
+                    } else {
+                        option.textContent = getCategoryLabelByValue(articles, option.value, currentLang);
+                    }
+                });
                 categoryFilterElement.value = preferred;
                 currentCategoryFilter = preferred;
                 return;
@@ -1666,9 +1855,11 @@
             categories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
-                option.setAttribute('data-it', category);
-                option.setAttribute('data-en', category);
-                option.textContent = category;
+                const labelIt = getCategoryLabelByValue(articles, category, 'it');
+                const labelEn = getCategoryLabelByValue(articles, category, 'en');
+                option.setAttribute('data-it', labelIt);
+                option.setAttribute('data-en', labelEn);
+                option.textContent = currentLang === 'it' ? labelIt : labelEn;
                 categoryFilterElement.appendChild(option);
             });
             
@@ -1725,8 +1916,9 @@
                         day: 'numeric'
                     });
                 
-                const plainText = (article.content || '').replace(/[#*`>-]/g, '').trim();
-                const excerpt = plainText.substring(0, 200) + '...';
+                const localizedContent = getArticleContent(article, currentLang) || '';
+                const plainText = localizedContent.replace(/[#*`>-]/g, '').trim();
+                const excerpt = plainText.length > 200 ? `${plainText.substring(0, 200)}...` : plainText;
                 
                 card.innerHTML = `
                     <div class="article-image">
@@ -1734,10 +1926,10 @@
                     </div>
                     <div class="article-content">
                         <div class="article-meta">
-                            <span class="article-category">${article.category}</span>
+                            <span class="article-category">${getLocalizedCategoryLabel(article, currentLang)}</span>
                             <span class="article-date">${cardDate}</span>
                         </div>
-                        <h3 class="article-title">${article.title}</h3>
+                        <h3 class="article-title">${getLocalizedTitle(article, currentLang)}</h3>
                         <p class="article-excerpt">${excerpt}</p>
                         <a href="#" class="article-read-more" onclick="event.stopPropagation(); showArticle(${index}); return false;">
                             ${currentLang === 'it' ? 'Leggi di più' : 'Read more'} →
@@ -1761,16 +1953,30 @@
                 // Extract title from first H1 or filename
                 const titleMatch = content.match(/^#\s+(.+)$/m);
                 const title = titleMatch ? titleMatch[1] : file.name.replace(/\.(md|markdown)$/i, '');
+                const slug = `${normalizeSlug(title)}-${Date.now()}`;
                 
                 const articles = await getArticles();
-                articles.unshift({
-                    title: title,
+                const newArticle = {
+                    slug,
+                    titles: {
+                        it: title,
+                        en: title
+                    },
                     category: "New Post",
+                    categoryLabels: {
+                        it: "Nuovo articolo",
+                        en: "New Post"
+                    },
                     readTime: Math.ceil(content.split(' ').length / 200),
                     date: new Date().toISOString(),
                     icon: "📝",
-                    content: content
-                });
+                    contents: {
+                        it: content,
+                        en: content
+                    },
+                    markdownPaths: {}
+                };
+                articles.unshift(newArticle);
                 
                 saveArticles(articles);
                 displayArticles();
