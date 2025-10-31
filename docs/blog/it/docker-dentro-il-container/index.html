@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker: Dentro il Container</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.15rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .post-toc__item.level-1 {
+      padding-left: 1rem;
+    }
+    .post-toc__item.level-2 {
+      padding-left: 2rem;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: rgba(15, 23, 42, 0.65);
+      color: #f8fafc;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    body[data-theme="light"] .post-body code {
+      background: rgba(15, 23, 42, 0.08);
+      color: #111827;
+    }
+    .post-body pre {
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      padding: 1.2rem 1.4rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    body[data-theme="light"] .post-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    .post-body tr {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    .post-body th,
+    .post-body td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    body[data-theme="light"] .post-body table {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🐳</div>
+        <span class="post-hero__category">Docker</span>
+        <h1 class="post-hero__title">Docker: Dentro il Container</h1>
+        <div class="post-hero__meta">
+          <span>📅 30 ottobre 2025</span>
+          <span>⏱️ 15 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc">
+        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+        <ul class="post-toc__list">
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-concetti-fondamentali">1\. Concetti fondamentali</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-ciclo-di-vita-di-un-container">2\. Ciclo di vita di un container</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-architettura-interna">3\. Architettura interna</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-immagini-docker-come-strati-layers">4\. Immagini Docker come strati (layers)</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-registri-e-distribuzione">5\. Registri e distribuzione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-demo-concettuale-cosa-succede-con-docker-run-nginx">6\. Demo concettuale: cosa succede con docker run nginx</a></li>
+        </ul>
+      </aside>
+        <div class="post-body">
+          <h2 id="abstract">Abstract</h2>
+<p>Eccoci arrivati al secondo episodio della serie &quot;Docker per sviluppatori&quot;. Dato che il primo articolo è stato apprezzato, direi che possiamo andare deep questa volta analizzando i concetti chiave di Docker in modo accessibile a tutti. Cerchiamo di capire cosa fa Docker concettualmente, senza ancora scrivere codice o configurare nulla.</p>
+<h2 id="1-concetti-fondamentali">1. Concetti fondamentali</h2>
+<p><img src="../../../Assets/Docker.png" alt="Immagine"></p>
+<p><em>Figura 1: Architettura Docker - Il client invia comandi al demone Docker, che gestisce immagini e container. Le immagini (es. Python, Redis) risiedono in registri come Docker Hub, da cui possono essere scaricate (&quot;pull&quot;). I container sono istanze runtime create a partire dalle immagini, eseguite isolate sul Docker Host.</em></p>
+<p>Partiamo da una delle definizioni principali in questo campo, cos&#39;è un&#39;<strong>immagine Docker</strong>.</p>
+<p><strong>Immagini Docker:</strong> Un&#39;<em>immagine</em> Docker è essenzialmente un <strong>template in sola lettura</strong> che descrive tutto il necessario per creare un container. <a href="https://docs.docker.com/get-started/docker-overview/">Nel sito ufficiale</a> possiamo vederlo come uno <em>snapshot</em> del filesystem e della configurazione di un sistema minimale. 
+Attenzione però, un&#39;immagine può basarsi su un&#39;altra. Per esempio si può partire da Ubuntu aggiungendo poi un server Apache, l&#39;applicazione e le configurazioni necessarie. </p>
+<p>Una cosa da tenere a mente è che le immagini sono costruite in modo incrementale e composito: ognuna <strong>è composta da più strati (layer)</strong> di filesystem impilati (concetto che approfondiremo più avanti). 
+Un&#39;altra cosa <strong>importante</strong>: un&#39;immagine di per sé è <strong>statica e immutabile</strong>. Questo significa che <strong>non cambia mai durante l&#39;esecuzione</strong>, fungendo da modello da cui avviare i container.</p>
+<p>Un momento ma cos&#39;è un container docker?</p>
+<p><strong>Container Docker:</strong> Un <em>container</em> è invece una <strong>istanza runtime di un&#39;immagine</strong>, o meglio <a href="https://docs.docker.com/get-started/docker-overview/#containers">così viene definito ufficialmente</a>. Se l&#39;immagine è il modello, il container è l&#39;oggetto concreto in esecuzione. </p>
+<p>In pratica, un container non è altro che un processo isolato che gira sulla macchina host, con il suo filesystem, la sua rete e il suo spazio di processi separati. <a href="https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host">Qui sto citando testualmente</a>. </p>
+<p>Docker utilizza l&#39;immagine come base e crea un ambiente isolato in cui l&#39;applicazione può girare. Possiamo pensare al container come a un <em>&quot;contenitore&quot;</em> (da cui ovviamente il nome) che racchiude l&#39;applicazione e le sue dipendenze, garantendo che questa giri sempre nello stesso ambiente, a prescindere da dove il container viene eseguito. </p>
+<p>Un&#39;analogia utile è con la programmazione a oggetti: <strong>l&#39;immagine è come una classe, mentre il container è un&#39;istanza (un oggetto) di quella classe</strong></p>
+<ul>
+<li>l&#39;immagine definisce</li>
+<li>il container esegue.</li>
+</ul>
+<p> Inoltre, più container possono essere creati dalla stessa immagine (come oggetti multipli da una singola classe) senza influenzarsi a vicenda, ciascuno col proprio stato temporaneo.</p>
+<p> Dato che non c&#39;è due senza tre, voglio dare una terza definizione molto importante.</p>
+<p><strong>Registry (Registro di immagini):</strong> Un <a href="https://docs.docker.com/get-started/docker-overview/#docker-registries"><em>registry</em></a> è un servizio centralizzato per conservare e condividere immagini container. Il registro pubblico predefinito (e aggiungo largamente utilizzato) è <strong>Docker Hub</strong>, a cui Docker si rivolge di default per scaricare immagini che non vengono trovate in locale. </p>
+<p>Esistono anche registri alternativi pubblici o privati: ad esempio GitHub Container Registry, AWS ECR di Amazon, Google GCR, Azure ACR, o soluzioni self-hosted come Harbor. In un registro (da ora mi permetto di tradurlo in italiano), le immagini sono organizzate in repository (ad esempio nomeutente/nomeimmagine su Docker Hub identifica un repository). La differenza tra registro pubblico e privato sta principalmente nei controlli di accesso: un <strong>registro pubblico</strong> (come Docker Hub) <strong>mette a disposizione immagini a chiunque</strong>, spesso con una libreria di immagini ufficiali; un <strong>registro privato</strong> invece è accessibile solo a <strong>utenti autorizzati</strong>, utile per mantenere immagini aziendali o interne non visibili pubblicamente. In entrambi i casi, Docker può autenticarsi al registry se necessario e poi effettuare <em>pull</em> (nel senso di scaricare) e <em>push</em> (qui invece nel senso di caricare) delle immagini.</p>
+<p>Ora che abbiamo capito dato alcune definizioni, possiamo iniziare a mettere le mani in pasta, magari partendo da come si crea un&#39;immagine.</p>
+<p><strong>Come si crea un&#39;immagine (build):</strong> Le immagini Docker si creano tipicamente con un processo di <em>build</em> basato su un <a href="../../../(https:/docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies)"><strong>Dockerfile</strong></a>, che è un file di testo che contiene istruzioni su come costruire l&#39;immagine a partire da una base. Ogni istruzione nel Dockerfile (es. FROM, RUN, COPY, ecc.) viene eseguita in sequenza dal demone Docker durante il build, producendo a sua volta uno strato di filesystem aggiuntivo sull&#39;immagine<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">[2]</a>. </p>
+<p>Ad esempio, un Dockerfile potrebbe iniziare definendo l&#39;immagine base Ubuntu con:</p>
+<pre><code class="language-docker">FROM ubuntu:22.04
+</code></pre>
+<p>poi per installare Python, creando un nuovo layer con questi file aggiunti</p>
+<pre><code class="language-docker">RUN apt-get install -y python3
+</code></pre>
+<p>quindi per copiare il codice dell&#39;applicazione dentro l&#39;immagine:</p>
+<pre><code class="language-docker">COPY . /app
+</code></pre>
+<p>e così via. Docker esegue il build passando per ognuna di queste istruzioni e &quot;impilando&quot; i risultati nell&#39;immagine definitiva. </p>
+<p>Questo processo sfrutta la cache: se ricostruiamo un&#39;immagine senza modificare certe istruzioni, Docker riutilizzerà i layer esistenti senza ricalcolarli, rendendo il build molto veloce. Per sfruttare al meglio la cache, vi lascio direttamente <a href="https://docs.docker.com/build/cache/">il codice ufficiale</a> per sfruttare la cache.</p>
+<pre><code class="language-docker"># syntax=docker/dockerfile:1
+FROM ubuntu:latest
+
+RUN apt-get update &amp;&amp; apt-get install -y build-essentials
+COPY main.c Makefile /src/
+WORKDIR /src/
+RUN make build
+</code></pre>
+<p>Alla fine del build, otteniamo un&#39;immagine identificata da un <strong>ID univoco (un hash)</strong>, che possiamo eseguire o distribuire. Possiamo creare immagini nostre da zero (ad es. partendo da scratch, un&#39;immagine vuota) o basarci su immagini altrui, il che incentiva il riuso di componenti comunemente usate (es. una base Linux standard) invece di reinventare tutto.</p>
+<p>Concludiamo questa sezione parlando di due comandi di cui abbiamo in parte già parlato.</p>
+<p><strong>Pull e Run:</strong> Due comandi fondamentali per lavorare con le immagini sono <code>docker pull</code> e <code>docker run</code>.</p>
+<ul>
+<li><p><strong>Docker Pull.</strong> Il comando <code>docker pull &lt;nome:tag&gt;</code> scarica un&#39;immagine dal registro. Dietro le quinte il client Docker contatta il registry via HTTP(S), richiede il manifesto dell&#39;immagine (il file che elenca i layer) e scarica ogni layer — il cosiddetto <em>blob</em> — che non ha già in cache, spesso in parallelo, salvandolo in locale. <a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry">Se volete approfondire</a>. Ad esempio <code>docker pull nginx:latest</code> recupera da Docker Hub la lista dei layer di Nginx, li scarica uno alla volta e, al termine, rende l&#39;immagine pronta sull&#39;host.</p>
+</li>
+<li><p><strong>Docker Run.</strong> Il comando <code>docker run</code> avvia un container a partire da un&#39;immagine. In un solo passo esegue l&#39;eventuale <code>docker pull</code> (se l&#39;immagine manca in locale) e crea/avvia il nuovo container. Se lanci <code>docker run ubuntu:22.04 echo &quot;ciao&quot;</code>, Docker verifica la presenza dell&#39;immagine <code>ubuntu:22.04</code>, la scarica se necessario, <strong>crea un container</strong> (allocando risorse, preparando il filesystem, assegnando un ID) e <strong>lo avvia</strong> eseguendo <code>echo &quot;ciao&quot;</code> al suo interno. Una volta che il comando è terminato, il container può essere fermato e rimosso oppure riutilizzato. In sintesi, <code>docker run</code> gestisce l&#39;intero ciclo di vita: download (se serve) e esecuzione del processo nel container.</p>
+</li>
+</ul>
+<h2 id="2-ciclo-di-vita-di-un-container">2. Ciclo di vita di un container</h2>
+<p><strong>Dal build all&#39;esecuzione (dietro docker run):</strong> Dopo aver costruito un&#39;immagine (fase di <em>build</em>), possiamo passare alla fase di <em>run</em>, ossia creare ed eseguire container basati su quell&#39;immagine. Quando eseguiamo docker run, come visto, Docker potrebbe scaricare l&#39;immagine prima (se non già presente). Successivamente effettua internamente un&#39;operazione equivalente a docker container create: in questa fase il container entra nello stato <strong>&quot;Created&quot; (creato)</strong> - le risorse necessarie vengono allocate, viene assegnato un ID e predisposto il filesystem specifico del container<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a>. Subito dopo, Docker avvia il container (equivalente a docker container start), lanciando il processo principale definito dall&#39;immagine. A questo punto il container passa allo stato <strong>&quot;Running&quot; (in esecuzione)</strong> ed esegue realmente il suo workload all&#39;interno dell&#39;ambiente isolato. Il container rimarrà in esecuzione finché il suo processo principale è attivo. Se quel processo termina (per uscita volontaria o crash) o se inviamo un comando di stop, Docker ferma il container, che entra nello stato <strong>&quot;Stopped&quot; o &quot;Exited&quot; (fermato/uscito)</strong>. Un container fermato conserva ancora lo stato del suo filesystem isolato, i log, e può essere riavviato se serve (tornerà &quot;Running&quot;). Infine, se decidiamo di liberare completamente le risorse, possiamo rimuovere il container con docker rm: a quel punto esso passa allo stato <strong>&quot;Removed&quot; (rimosso)</strong>, venendo cancellato dal sistema. Il ciclo di vita tipico dunque è: <strong>Created → Running → Stopped/Exited → Removed</strong><a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same">[10]</a>. (Nota: Docker prevede anche uno stato <strong>&quot;Paused&quot; (in pausa)</strong>, in cui i processi del container sono congelati tramite cgroups freezer, senza terminarli<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State">[11]</a>. Pausare un container consente di riservare CPU temporaneamente, ma è usato più raramente; un container deve essere Running per poter essere messo in pausa, e va poi &quot;unpaused&quot; per riprendere).</p>
+<p><strong>Stati del container:</strong> Riassumendo, ecco i principali stati in cui un container Docker può trovarsi durante il suo ciclo di vita<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same">[10]</a>:</p>
+<ul>
+<li><strong>Created (Creato):</strong> il container è stato definito e le risorse allocate, ma il processo al suo interno non è ancora in esecuzione. Si ottiene, ad esempio, con un docker create senza start, oppure subito dopo un docker run prima che il processo parta. In questo stato il container ha un ID, un filesystem pronto, ma consuma risorse minime (nessun processo attivo).</li>
+<li><strong>Running (In esecuzione):</strong> il container è avviato e il suo processo principale (PID 1 nel container) sta girando. Il container è attivo: potrebbe esporre porte di rete, utilizzare CPU/RAM, effettuare operazioni I/O, ecc. Questo è lo stato &quot;normale&quot; mentre utilizziamo il servizio/applicazione contenuta.</li>
+<li><strong>Stopped/Exited (Fermato/Uscito):</strong> il container ha eseguito il suo processo ed esso è terminato, oppure è stato fermato manualmente. Il container non esegue nulla, ma esiste ancora nel sistema con il suo filesystem integro e lo stato che aveva al momento dello stop. Possiamo ispezionarlo, leggere i log, o eventualmente riavviarlo. Docker segna in questo stato anche i container che terminano immediatamente perché il loro processo è uscito (ad es. container che eseguono un comando e finiscono).</li>
+<li><strong>Removed (Rimosso):</strong> il container è stato eliminato dal Docker host (tipicamente con docker rm o tramite opzioni --rm). Non occupa più spazio (salvo eventuali volumi persistenti separati) e non appare più in docker ps -a. Ogni modifica non conservata fuori dal container è persa definitivamente a questo punto.</li>
+</ul>
+<p><strong>Copy-on-write e filesystem dei container:</strong> Uno degli aspetti chiave di Docker è come gestisce il filesystem dei container con un meccanismo di <strong>copy-on-write</strong>. Alla creazione di un container, Docker allestisce per esso un <strong>filesystem unito (<em>union file system</em>)</strong>, composto da: tutti i layer in sola lettura dell&#39;immagine di base <em>più</em> un <strong>layer scrivibile</strong> specifico per il container<a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a>. In pratica, il container &quot;vede&quot; un unico filesystem completo (chiamato <em>root filesystem</em> del container) che unisce gli strati dell&#39;immagine al suo layer scrivibile. Quando un processo nel container modifica o crea un file, ecco che entra in gioco il copy-on-write: se il file esisteva già in uno dei layer di sola lettura dell&#39;immagine, Docker ne fa <strong>una copia nel layer scrivibile del container</strong> e applica lì le modifiche, lasciando intatto il file originale dell&#39;immagine<a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a>. Il risultato è che dentro il container sembra che il file sia cambiato, ma all&#39;esterno l&#39;immagine rimane immutata. Ogni container ha il suo layer scrivibile, quindi le modifiche fatte in un container <strong>non sono visibili in altri container</strong> che usano la stessa immagine. Inoltre, se cancelliamo un container, perdiamo il suo layer scrivibile e con esso tutte le modifiche fatte in quell&#39;ambiente (a meno di non averle salvate in volumi persistenti o <em>committate</em> in una nuova immagine)<a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a>. Questo design copy-on-write rende i container <strong>leggeri ed effimeri</strong>: condividono tra loro i layer immutabili (risparmiando spazio e memoria) e ognuno aggiunge solo le differenze necessarie. Ad esempio, se avviamo 5 container dall&#39;immagine ubuntu, sul disco avremo una sola copia dei layer di Ubuntu, usata in comune, più 5 piccoli layer separati per le differenze di ciascun container.</p>
+<h2 id="3-architettura-interna">3. Architettura interna</h2>
+<p><strong>Isolamento con namespaces e cgroups (kernel Linux):</strong> Docker realizza l&#39;isolamento dei container sfruttando funzionalità native del kernel Linux, principalmente <em>namespaces</em> e <em>cgroups</em>. I <strong>namespaces</strong> sono meccanismi che il kernel fornisce per isolare viste e risorse di sistema tra gruppi di processi. Quando Docker crea un container, dietro le quinte il kernel assegna al container una serie di namespaces dedicati<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=The%20underlying%20technology">[13]</a>. Ciascun namespace isola un aspetto: ad esempio, il <em>PID namespace</em> fa sì che il container abbia la propria numerazione di processi (il processo &quot;1&quot; del container è il processo principale dell&#39;app, e non vede i processi fuori dal container)<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers">[14]</a><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=The%20crucial%20thing%20to%20notice,isolated%20within%20my%20own%20namespace">[15]</a>. Il <em>network namespace</em> fornisce al container la sua interfaccia di rete virtuale, con indirizzo IP separato, isolando il traffico di rete. Il <em>mount namespace</em> dà al container la propria visione del filesystem (vedremo a breve il root filesystem specifico), separata da quella host. Ci sono namespace per l&#39;IPC (comunicazioni inter-processo), per l&#39;UTS (hostname e nome di dominio separato), e opzionalmente per l&#39;utente (user namespace, che consente mapping di UID/GID per eseguire container &quot;root&quot; isolati come utente non privilegiato sull&#39;host). Grazie ai namespaces, ogni container vive in una sorta di &quot;bolla&quot; logica: <strong>dall&#39;interno vede solo risorse proprie</strong>, e non quelle degli altri container o dell&#39;host<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers">[14]</a>. Oltre ai namespace, Docker utilizza i <strong>cgroups</strong> (<em>control groups</em>) per limitare e monitorare l&#39;uso di risorse (CPU, RAM, I/O) da parte dei container<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F">[16]</a>. I cgroups permettono al sistema di impostare quanta CPU o memoria massima può consumare un container, garantendo che uno non saturi tutte le risorse a scapito degli altri<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=A%20control%20group%20,of%20a%20collection%20of%20processes">[17]</a>. Inoltre forniscono accounting (tracciamento) dei consumi e possono anche congelare o terminare in blocco tutti i processi di un container (ad esempio per l&#39;implementazione del comando docker pause si usa il freezer cgroup)<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State">[11]</a><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=,cgroup%20with%20a%20single%20command">[18]</a>. In sintesi, <strong>namespaces</strong> = isolamento (contenimento per processi, rete, filesystem, ecc.), <strong>cgroups</strong> = controllo risorse e quote. Docker combina questi meccanismi in modo da creare container che si comportano come ambienti separati, pur girando tutti sullo stesso kernel Linux sottostante.</p>
+<p><strong>Isolamento logico vs fisico (Container vs VM):</strong> È importante comprendere che l&#39;isolamento fornito dai container è di tipo <em>logico/software</em>, diverso da quello <em>fisico/hardware</em> delle macchine virtuali tradizionali. Un container <strong>condivide</strong> infatti il kernel del sistema operativo host: non c&#39;è un&#39;istanza separata di OS per ogni container, come invece avviene per una VM. Le VM virtualizzano un intero hardware e kernel, offrendo un isolamento più profondo ma con maggior overhead; i container <strong>virtualizzano a livello di sistema operativo</strong>, isolando processi e risorse all&#39;interno dello stesso kernel<a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[19]</a>. In altre parole, i container forniscono un isolamento dei processi (grazie a namespaces/cgroups) sullo stesso OS, mentre le VM forniscono un isolamento di macchine intere, ciascuna con il proprio OS guest sopra un hypervisor. Questo significa che un bug nel kernel viene condiviso tra container e host (quindi una falla di sicurezza nel kernel è teoricamente sfruttabile per evadere da un container), mentre nelle VM il kernel guest è separato dal kernel host. D&#39;altro canto, i container sono molto più leggeri: <strong>avvio in pochi secondi, occupano pochi MB</strong> perché non duplicano un intero OS, e possono essercene decine sullo stesso host senza grossi sprechi, laddove poche VM saturerebbero le risorse<a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=Since%20the%20container%20runs%20natively,you%20configure%20it%20that%20way">[20]</a><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[21]</a>. Un&#39;analogia comune: <em>container</em> sono come appartamenti in un unico edificio (stesso terreno e struttura, separati da muri interni: isolamento meno totale ma più efficiente), mentre le <em>VM</em> sono come case indipendenti (ognuna con proprie fondamenta e impianti: isolamento maggiore, ma costi e tempi più alti).</p>
+<p><strong>Root filesystem e OverlayFS:</strong> All&#39;interno di ciascun container, il processo vede un <strong>root filesystem isolato</strong>, cioè la directory / del container contiene solo i file dell&#39;immagine più le eventuali modifiche locali, e non i file dell&#39;host. Come accennato, questo è realizzato tramite un union filesystem con meccanismo di copy-on-write. Su Linux Docker impiega per default il driver <strong>OverlayFS</strong> (nella variante <em>overlay2</em>) per implementare questa funzionalità<a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20supports%20multiple%20storage%20drivers,storage%20driver">[22]</a><a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Storage%20Driver%3A%20overlay2">[23]</a>. OverlayFS consente di unire più directory (&quot;lower dirs&quot; in sola lettura + &quot;upper dir&quot; in scrittura) presentandole come un&#39;unica directory montata. Nel contesto di Docker, i <strong>layer dell&#39;immagine</strong> sono le lower dirs (read-only) e la <strong>cartella &quot;diff&quot; del container</strong> è l&#39;upper dir (read-write); quando il container viene avviato, Docker monta un filesystem di tipo overlay che unisce tutti questi livelli e lo imposta come root filesystem del container (usando chiamate come chroot o namespace mount)<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=1,chroot">[24]</a>. Ad esempio, un&#39;immagine Ubuntu può essere composta da diversi layer (uno per la base di OS minimal, uno per alcune librerie, ecc.): Docker memorizza ciascun layer come una directory sotto /var/lib/docker/overlay2/ identificata da un hash<a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[25]</a>. Quando eseguiamo un container da tale immagine, Docker crea una nuova dir per il layer superiore del container e poi monta un overlay FS: il risultato è una cartella merged che rappresenta la vista unificata di Ubuntu base + modifiche. Il processo nel container viene eseguito con questa merged impostata come /, e quindi vede un filesystem completo di Ubuntu, isolato dal resto<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=1,chroot">[24]</a>. Ogni scrittura nel container va a finire nella dir diff (upper), mentre i file originali restano nelle dir lower intatte<a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=echo%20%27Add%20a%20new%20line%27,1">[26]</a><a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=The%20original%20file%20present%20inside,layer%60%20is%20created">[27]</a>. <strong>OverlayFS</strong> è molto efficiente: evita duplicazione di dati tra container multipli e rende immediato l&#39;avvio di nuovi container (basta aggiungere un nuovo layer in scrittura sopra i layer esistenti). L&#39;uso di un filesystem a strati è un concetto cruciale: è ciò che rende le immagini Docker composte da <strong>layer riutilizzabili</strong> e i container istanze leggere che sfruttano quei layer condivisi.</p>
+<h2 id="4-immagini-docker-come-strati-layers">4. Immagini Docker come strati (layers)</h2>
+<p><strong>Layer: cos&#39;è e come viene memorizzato:</strong> Un&#39;immagine Docker non è un singolo blob monolitico, ma è costituita da una <strong>serie ordinata di strati</strong> impilati. Ogni <em>layer</em> rappresenta un insieme di <strong>modifiche al filesystem</strong> rispetto al layer sottostante<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a>. Ad esempio, immaginiamo di creare un&#39;immagine per una applicazione Python. I layer potrebbero essere così strutturati<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a>:</p>
+<ul>
+<li><strong>Layer 1:</strong> sistema base minimal (es. comandi di base e package manager apt su Ubuntu).</li>
+<li><strong>Layer 2:</strong> installazione dell&#39;interprete Python e di pip.</li>
+<li><strong>Layer 3:</strong> aggiunta del file requirements.txt dell&#39;applicazione.</li>
+<li><strong>Layer 4:</strong> installazione dei pacchetti Python specifici dell&#39;app (dipendenze listate in requirements.txt).</li>
+<li><strong>Layer 5:</strong> copia del codice sorgente dell&#39;applicazione nella destinazione prevista.</li>
+</ul>
+<p>Ogni layer aggiunge dunque file o apporta modifiche (installazioni, copie, configurazioni). In termini di Dockerfile, queste corrisponderebbero rispettivamente a istruzioni come FROM ubuntu:22.04, RUN apt-get install python3 pip, COPY requirements.txt ., RUN pip install -r requirements.txt, COPY src/ . e così via. Docker durante il build crea un layer per ciascuna istruzione<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">[2]</a>. <strong>Come vengono memorizzati?</strong> Internamente, Docker salva ciascun layer come un archivio compresso (tipicamente una tarball) e lo identifica con un hash univoco (un digest SHA256). Sul disco del Docker host (es. in /var/lib/docker/overlay2/ per overlay2) ogni layer viene estratto in una directory distinta<a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[29]</a>. I layer sono <strong>immutabili</strong>: una volta creato un layer, non viene più modificato (qualsiasi cambiamento avviene creando un nuovo layer sopra). Questo approccio dei layers immutabili significa anche che se aggiorniamo un&#39;immagine ricostruendola, Docker può riutilizzare i layer precedenti che non sono cambiati e solo rigenerare i nuovi<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a>.</p>
+<p><strong>Caching e riuso dei layer:</strong> Uno dei vantaggi chiave di avere immagini a strati è la possibilità di <strong>riusare</strong> layer comuni tra immagini diverse e tra build successivi. Ad esempio, se due diverse immagini Docker entrambe partono da ubuntu:22.04, il layer di base di Ubuntu può essere condiviso: Docker lo scarica o costruisce una volta e poi lo riutilizza per tutte le immagini derivate<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following">[32]</a>. Questo riduce enormemente lo spazio utilizzato e banda di download necessaria, oltre ad accelerare i tempi di build. Durante la creazione di un&#39;immagine tramite Dockerfile, Docker costruisce in ordine le istruzioni e memorizza l&#39;hash del contenuto generato ad ogni passo. Se ricostruiamo la stessa immagine senza modifiche a un certo passo, Docker riconosce che esiste già un layer identico in cache e lo riutilizza senza rieseguire i comandi (vedremo messaggi tipo &quot;Using cache&quot; nel output di docker build). Ad esempio, se il Dockerfile non cambia tra un build e l&#39;altro, Docker riuserà tutti i layer dalla cache, producendo l&#39;immagine quasi istantaneamente. Se modifichiamo solo le ultime istruzioni (es. il codice applicativo), gli strati iniziali rimangono cacheati e Docker ricalcola solo quelli nuovi o modificati<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a>. Oltre al caching locale, il design a layer facilita il <strong>pull incrementale</strong>: quando facciamo docker pull di un&#39;immagine aggiornata, Docker scarica solo i nuovi layer non presenti e salta quelli già scaricati in passato (ad esempio passando da v1 a v2 di un&#39;immagine che differisce solo nell&#39;ultimo layer, Docker scaricherà solo quel layer aggiuntivo). In scenari di distribuzione, questo comporta notevoli risparmi di tempo e larghezza di banda.</p>
+<p><strong>Esempio pratico di layer (Dockerfile):</strong> Prendiamo un Dockerfile semplice per illustrare i layer:</p>
+<p>FROM ubuntu:22.04<br>RUN apt-get update &amp;&amp; apt-get install -y nginx<br>COPY index.html /usr/share/nginx/html/index.html</p>
+<p>Quando costruiamo questa immagine, Docker esegue:</p>
+<ul>
+<li>FROM ubuntu:22.04: questo istruisce Docker a usare l&#39;immagine di base Ubuntu 22.04. Tale immagine di base già consiste di alcuni layer (minimali di Ubuntu). Tutti insieme questi layer diventano i <strong>layer iniziali</strong> della nostra nuova immagine.</li>
+<li>RUN apt-get update &amp;&amp; apt-get install -y nginx: Docker avvia un container temporaneo da Ubuntu base e esegue i comandi. Le modifiche risultanti (pacchetti Nginx installati, file di configurazione aggiunti) costituiscono un <strong>nuovo layer</strong> che si piazza sopra quelli di Ubuntu. Questo layer contiene solo le differenze (i file aggiunti/modificati rispetto alla base).</li>
+<li>COPY index.html ...: Docker copia il file locale index.html nel filesystem del container temporaneo (nella posizione specificata). Ciò aggiunge/aggiorna quel file nel container, e queste modifiche diventano un ulteriore <strong>layer finale</strong>.</li>
+</ul>
+<p>L&#39;immagine risultante ha quindi: i layer di Ubuntu, un layer per l&#39;installazione di Nginx, e un layer per la copia del file HTML. Se volessimo creare un&#39;altra immagine simile (ad esempio un altro sito statico basato sempre su Ubuntu e Nginx), Docker riutilizzerà i layer di Ubuntu e Nginx già esistenti, dovendo aggiungere solo il layer con i nuovi file specifici. Questo mostra come i layer permettono di <strong>estendere immagini esistenti</strong> aggiungendo solo ciò che serve in più<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following">[32]</a>. In fase di esecuzione dei container, i layer in sola lettura dell&#39;immagine Nginx appena creata possono essere condivisi tra tutti i container che l&#39;utilizzano, mentre eventuali file differenti tra container (es. magari personalizzazioni fatte in runtime) restano confinati nei rispettivi layer scrivibili. In definitiva, l&#39;architettura a strati delle immagini Docker è un elemento fondamentale per la <strong>portabilità</strong> (posso scaricare solo ciò che serve), la <strong>consistenza</strong> (ogni layer è immutabile e riproducibile) e l&#39;<strong>efficienza</strong> (massimo riuso di componenti comuni).</p>
+<h2 id="5-registri-e-distribuzione">5. Registri e distribuzione</h2>
+<p><strong>Cosa succede con docker pull:</strong> Abbiamo visto che docker pull scarica un&#39;immagine da un registro, ma analizziamo brevemente il processo. Quando eseguiamo docker pull nome:tag, il client Docker si connette al registry (per default Docker Hub, o un altro se specificato nel nome o nella config) e compie una serie di chiamate API HTTP. In primo luogo, richiede il <strong>manifest</strong> dell&#39;immagine - il manifest è un documento (in formato JSON) che elenca i digest di tutti i layer dell&#39;immagine e i metadati (come l&#39;hash del config JSON dell&#39;immagine, architettura, etc.). Il registry risponde con il manifest, che può essere di due tipi: un <em>manifest list</em> (indice multi-architettura contenente riferimenti a manifest per diverse piattaforme) oppure un manifest singolo per una specifica piattaforma<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=There%20are%20currently%20two%20types,and%20a%20manifest">[33]</a><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Pull%20a%20manifest">[34]</a>. Il client Docker, se riceve una manifest list, sceglierà il manifest adatto al sistema host (es. scegliendo i layer linux/amd64 se stiamo su un PC x86_64)<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Instead%20of%20blobs%2C%20the%20client,its%20operating%20system%20and%20architecture">[35]</a><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Suppose%20a%20client%20chooses%20the,architecture%20and%20the%20manifest%20digest">[36]</a>. Ottenuto il manifest specifico, Docker procede a <strong>scaricare i layer</strong> elencati: per ciascun digest di layer effettua una richiesta GET al registry per recuperare il blob corrispondente<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry">[7]</a>. I layer sono scaricati in parallelo (per velocizzare il processo) e salvati nella cache locale (tipicamente sotto /var/lib/docker/ nel driver di storage in uso). Se alcuni layer erano già presenti (perché magari comuni con altre immagini), Docker li salta. Terminato il download di tutti i blob, Docker compone o aggiorna l&#39;immagine localmente (scrivendo il config JSON che descrive l&#39;immagine e referenziando i layer locali). A questo punto l&#39;immagine è disponibile per essere eseguita. In sintesi, docker pull è un processo di <strong>download dei componenti immagine</strong> orchestrato tramite chiamate REST: prima il manifest (o indice multi-arch), poi i blob dei layer<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=A%20Podman%20or%20Docker%20,image%20manifest%20is%20being%20pulled">[37]</a><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry">[7]</a>. Dal punto di vista dell&#39;utente, questo si traduce in messaggi &quot;Pull complete&quot; per ogni layer e infine &quot;Downloaded newer image for nome:tag&quot;.</p>
+<p><strong>Registri pubblici vs privati:</strong> I <em>container registry</em> possono essere pubblici (aperti a tutti) o privati. Un <strong>registro pubblico</strong> come Docker Hub permette a chiunque di scaricare immagini pubblicate lì (e spesso anche di pubblicarne di proprie, con dei limiti per gli account free). Docker Hub contiene migliaia di immagini, incluse le <em>Docker Official Images</em> (immagini ufficiali per software comuni, mantenute dalla community o dai produttori stessi, es. nginx, mysql, etc.). Altri registri pubblici includono il GitHub Container Registry (GHCR), Google Artifact Registry, Red Hat Quay, etc., dove spesso trovate immagini relative a progetti open source o prodotti specifici. Un <strong>registro privato</strong>, invece, è accessibile solo a utenti o sistemi autenticati e autorizzati. Può essere un servizio cloud (ad esempio Amazon ECR per AWS, GitLab Container Registry integrato in GitLab, DigitalOcean Container Registry, etc.) oppure un&#39;istanza di registro self-hosted che l&#39;azienda gestisce in-house (come Harbor o un&#39;istanza privata di Nexus/Artifactory con supporto Docker). Dal punto di vista di Docker, interagire con un registro privato o pubblico è simile, tranne per il fatto che per quelli privati spesso dobbiamo effettuare login (docker login) per ottenere un token di accesso. <strong>Differenze principali:</strong> i registri pubblici sono utili per la distribuzione open e la condivisione comunitaria (con possibili limitazioni di banda o storage per livello free), mentre i registri privati garantiscono riservatezza e controllo su chi può scaricare le immagini - sono fondamentali quando si lavora con immagini contenenti codice proprietario o che non vogliamo rendere pubbliche. Docker Hub di default cerca solo immagini pubbliche (se non trova col tag specifico, assume libreria ufficiale se esiste), ma possiamo specificare un registro alternativo nei nomi delle immagini (es. myregistry.example.com:5000/mio-team/mia-immagine:1.0). In contesti enterprise, l&#39;uso di registri privati consente anche di collegare pipeline CI/CD per pubblicare automaticamente nuove build di immagini in un luogo sicuro e di controllare le versioni in produzione. In breve, <strong>pubblico vs privato</strong> si riduce a open vs access-restricted, ma tecnologicamente entrambi forniscono le stesse API di distribuzione di layer<a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=An%20image%20registry%20is%20a,and%20is%20the%20default%20registry">[38]</a><a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=While%20Docker%20Hub%20is%20a,Artifactory%2C%20GitLab%20Container%20registry%20etc">[39]</a>.</p>
+<p><strong>Versionamento delle immagini - tag e digest:</strong> Le immagini Docker vengono identificate in due modi: tramite <em>tag</em> umano leggibile (es. nginx:1.25) o tramite <em>digest</em> criptografico (es. nginx@sha256:&lt;hash&gt;). Il <strong>tag</strong> è essenzialmente un alias che punta a una specifica versione di un&#39;immagine all&#39;interno di un repository del registro. Ad esempio nginx:latest è un tag convenzionale che indica &quot;l&#39;ultima versione disponibile di Nginx&quot; (nel momento in cui viene aggiornato dal manutentore). I tag sono comodi ma <strong>mutabili</strong>: chi pubblica immagini può spostare un tag su una nuova build (ad esempio aggiornare latest a una nuova versione). Il <strong>digest</strong>, invece, è un identificatore univoco calcolato sul contenuto dell&#39;immagine: Docker utilizza digest SHA-256, rappresentati come un hash esadecimale lungo<a href="https://docs.docker.com/engine/containers/run/#:~:text=Images%20using%20the%20v2%20or,the%20digest%20value%20is%20predictable">[40]</a>. Ogni immagine spinta su un registro avrà un digest proprio (visualizzabile ad esempio dopo un pull come &quot;Digest: sha256:&lt;...&gt;&quot;). Quel digest cambia se e solo se cambia qualunque byte dell&#39;immagine (layer o metadata). <strong>Usare il digest</strong> garantisce di riferirsi esattamente a una data build immutabile - ad es. si può fare docker pull nginx@sha256:abcdef... per scaricare esattamente quell&#39;immagine, a prescindere dai tag. Perciò, mentre i tag servono per convenienza (es. 1.0, 2.0, latest), i digest servono per <strong>immutabilità e verificabilità</strong><a href="https://docs.docker.com/engine/containers/run/#:~:text=">[41]</a>. Molti flussi CI/CD promuovono l&#39;uso dei digest per fissare versioni esatte, evitando sorprese qualora un tag venga riutilizzato per una versione diversa. In ambienti Kubernetes, ad esempio, si può specificare un&#39;immagine col suo digest per assicurarsi che il deploy non tiri su una versione inattesa più recente con lo stesso tag.</p>
+<p><strong>Firma delle immagini (security):</strong> Oltre a tag e digest, Docker supporta anche la <strong>firma crittografica delle immagini</strong> tramite una funzionalità chiamata Docker Content Trust (basata su un progetto open source chiamato Notary). Abilitando Content Trust, ogni push di un&#39;immagine viene firmato digitalmente dal publisher, e ogni pull verifica la firma, assicurando che l&#39;immagine non sia stata alterata e provenga effettivamente dal publisher dichiarato<a href="https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust">[42]</a>. In pratica, viene utilizzato un sistema di chiavi private/pubbliche: chi costruisce l&#39;immagine la firma con la sua chiave privata; chi scarica, se ha abilitato la verifica, userà la chiave pubblica corrispondente per controllare che il digest dell&#39;immagine corrisponda a quello firmato dal produttore. Questo previene attacchi di <em>man-in-the-middle</em> o l&#39;uso involontario di immagini manomesse. Docker Hub supporta Content Trust, così come altri registri (o lo si può implementare in pipeline interne). Inoltre sono emerse tecnologie alternative come <strong>Sigstore Cosign</strong> (progetto open source CNCF) per firmare e verificare container in maniera ancora più integrata nelle pipeline cloud-native. L&#39;aspetto importante da capire concettualmente è: il digest assicura <strong>integrità</strong> (rileva modifiche non autorizzate al contenuto, poiché l&#39;hash non combacia più), mentre la firma digitale aggiunge anche <strong>autenticità</strong> (garantisce chi ha prodotto quell&#39;immagine, ovvero che l&#39;hash corrisponde a un&#39;immagine firmata dal detentore di una chiave privata fidata)<a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker">[43]</a><a href="https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust">[42]</a>. In contesti dove la sicurezza della supply chain è critica, verificare le firme delle immagini prima di eseguirle è altamente consigliabile.</p>
+<h2 id="6-demo-concettuale-cosa-succede-con-docker-run-nginx">6. Demo concettuale: cosa succede con docker run nginx</h2>
+<p>Per consolidare i concetti, facciamo una <strong>narrazione passo-passo</strong> di cosa accade quando eseguiamo un comando Docker concreto. Immaginiamo di lanciare:</p>
+<p>docker run nginx</p>
+<p>Cosa succede &quot;dietro le quinte&quot; quando premiamo Invio?</p>
+<ul>
+<li><strong>Risoluzione dell&#39;immagine:</strong> Il client Docker interpreta il nome nginx come nginx:latest sul registro predefinito (Docker Hub). Contatta quindi Docker Hub per verificare se c&#39;è un&#39;immagine nginx:latest. A meno che non esista già localmente una copia aggiornata, il demone Docker procede a scaricare l&#39;immagine Nginx<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a>. Sul terminale vedremmo l&#39;avanzamento del download dei vari layer di Nginx (ad esempio un layer base di Debian, layer con i binari di Nginx, etc., ciascuno con il suo ID). Dopo pochi secondi, l&#39;immagine nginx:latest è presente sul nostro host.</li>
+<li><strong>Creazione del container:</strong> Completato (eventualmente) il pull, Docker prepara un nuovo container basato su quell&#39;immagine. Questo equivale all&#39;esecuzione interna di docker container create nginx:latest. In questo passo Docker alloca uno spazio per il container: crea una directory per il layer scrivibile del container, associa al container un identificatore univoco (un hash breve, ad es. d64f1abcbc23), apre le porte di rete necessarie (per Nginx la 80 di default, anche se non esposta verso l&#39;host finché non pubblichiamo una porta), e imposta i parametri di esecuzione (entrypoint, variabili d&#39;ambiente di default, working directory, ecc. come definiti dall&#39;immagine). Il container è ora nello stato <em>Created</em>: esiste ma nulla è stato eseguito ancora<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Created%20State">[44]</a>. In questa fase Docker ha già costruito il filesystem del container unendo i layer di Nginx con un nuovo layer vuoto in scrittura.</li>
+<li><strong>Isolamento e risorse:</strong> Prima di avviare il processo Nginx, Docker configura l&#39;isolamento. Applica un PID namespace per il container (il processo Nginx avrà PID 1 all&#39;interno del container), un network namespace (crea un&#39;interfaccia virtuale eth0 nel container collegata tramite un bridge alla rete host, in modo che Nginx possa comunicare solo attraverso questo canale isolato), un mount namespace (il container vedrà come filesystem root i layer predisposti, e non i file dell&#39;host), e così via<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=The%20underlying%20technology">[13]</a>. Contestualmente, abilita i limiti di cgroup di default (se non diversamente specificato, di solito significa che il container può usare tutte le risorse host, ma comunque tracciate in un suo cgroup separato). In sostanza Docker crea un <em>ambiente separato</em> dove verrà eseguito Nginx: è come se mettesse Nginx in una stanza dove ha solo la sua vista di sistema, isolata dalle altre.</li>
+<li><strong>Avvio del processo nel container:</strong> Docker ora <em>avvia</em> il container, equivalente a eseguire docker start. Questo comporta l&#39;esecuzione del comando principale definito nell&#39;immagine Nginx. L&#39;immagine ufficiale di Nginx ha come <strong>entrypoint</strong> (punto di ingresso) il demone Nginx stesso (in modalità foreground). Quindi Docker esegue, all&#39;interno del container isolato, il binario nginx con i parametri previsti (spesso nginx -g &quot;daemon off;&quot; per farlo restare in primo piano). Dal punto di vista dell&#39;host, un nuovo processo appare (visibile ad es. con ps -ef come qualcosa tipo nginx: master process nginx -g &#39;daemon off;&#39; con un PID arbitrario, es. 4721, appartenente all&#39;utente root se l&#39;immagine gira come root). Ma quel processo è speciale: è ancorato ai namespace dedicati, quindi sul host ha PID 4721, ma dentro al container è PID 1. Nginx parte e legge la sua configurazione (in /etc/nginx/nginx.conf dentro il container), apre la porta 80 <em>all&#39;interno</em> del container. Docker, non avendo opzioni di porta in questo comando, non pubblica la porta 80 sul host - quindi Nginx risponde solo alle richieste fatte dal container stesso o su quel network isolato. (Se avessimo eseguito docker run -p 8080:80 nginx, Docker avrebbe creato un inoltro dalla porta 8080 del host alla porta 80 del container).</li>
+<li><strong>Container in esecuzione:</strong> A questo punto il container Nginx è in pieno <strong>stato Running</strong>. Possiamo verificarlo con docker ps: vedremo il container nginx attivo con un ID (gli stessi 12 caratteri circa creati prima) e status &quot;Up X seconds&quot;. Nginx sta girando come se fosse su una sua mini macchina: se apriamo una shell dentro (docker exec -it &lt;container&gt; bash) e diamo comandi, vedremo che il filesystem ha solo le directory di Nginx, i processi attivi sono solo quelli di Nginx (es. il master e i worker), l&#39;hostname è qualcosa come il ID abbreviato del container, la rete è un&#39;altra (indirizzo probabilmente 172.17.x.y). Insomma, il servizio web Nginx è operativo nel suo container. Se ora un altro sviluppatore lanciasse sul suo computer docker run nginx, otterrebbe lo stesso identico ambiente in pochi secondi, a dimostrazione della portabilità.</li>
+<li><strong>Arresto e rimozione:</strong> Quando decidiamo di fermare il container, abbiamo due possibilità: mandare un segnale di stop (es. docker stop, che tipicamente invia SIGTERM al processo PID1 nel container - Nginx intercetterà il segnale e terminerà graziemente) oppure semplicemente docker rm -f che forza la terminazione. Supponiamo di fare docker stop: Docker segnala Nginx di fermarsi; Nginx chiude le connessioni e si termina. Il container passa in stato Exited. A questo punto possiamo riavviarlo (docker start &lt;ID&gt;) se vogliamo far ripartire Nginx, magari perché abbiamo bisogno di fare debug o verificare qualcosa. Se invece facciamo docker rm sul container fermato, Docker eliminerà quel container: il processo era già terminato, quindi ora vengono liberati il layer scrivibile e le meta-informazioni. L&#39;immagine nginx:latest però resta nella cache locale, pronta per eseguire altri container in futuro senza dover essere scaricata di nuovo.</li>
+</ul>
+<p><strong>Analogia finale:</strong> Come accennato, un container Docker è concettualmente <strong>simile a un&#39;istanza runtime di un&#39;applicazione preconfezionata</strong>, così come un oggetto è un&#39;istanza di una classe in un programma. L&#39;immagine fa da &quot;classe&quot; o modello (ad esempio definisce che ci sarà un server Nginx con certi file), il container è l&#39;istanza concreta e in esecuzione di quel modello<a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=When%20a%20Docker%20user%20runs,though%2C%20most%20images%20include%20some">[45]</a>. Proprio come più oggetti di una stessa classe possono esistere contemporaneamente con stati diversi, possiamo lanciare più container dalla stessa immagine Nginx (ognuno avrà magari differente indirizzo IP o differenti file temporanei creati durante l&#39;esecuzione, ma tutti partono dallo stesso contenuto di base immutabile). Un&#39;altra analogia efficace è quella del <em>container</em> in termini fisici: l&#39;immagine è come il <strong>progetto di un container</strong> standard (es. un container navale con specifiche di cosa contiene), mentre il container Docker runtime è come un <strong>container spedito</strong> realmente, con dentro i &quot;carichi&quot; (processi e risorse) pronti all&#39;uso. Ovunque lo porti (sia sul mio PC, sul server di produzione, o su un cloud), quel container avrà sempre dentro le stesse cose e funzionerà allo stesso modo, finché il container rimane intatto. Docker fornisce quindi agli sviluppatori un modo per ottenere ambienti consistenti e replicabili: se funziona dentro un container sul mio laptop, funzionerà in un container su qualsiasi altra macchina con Docker - perché <strong>&quot;ciò che c&#39;è dentro il container&quot;</strong> (sistema operativo minimale, dipendenze, configurazioni, applicazione) <strong>rimane identico</strong><a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=Think%20of%20a%20container%20as,containers%20to%20run%20the%20applications">[46]</a>. Questo secondo episodio ha mostrato come Docker, attraverso immagini a strati, container isolati tramite funzionalità del kernel e una gestione efficiente dei filesystem, riesca a mettere &quot;un&#39;applicazione in una scatola&quot; garantendo portabilità e consistenza. Nel prossimo episodio, potremmo approfondire come orchestrare più container assieme o come debug e configurare i container in scenari reali, continuando il nostro viaggio nel mondo di Docker.</p>
+<p><strong>Riferimenti:</strong> Docker Docs, CNCF, Red Hat, DigitalOcean, <em>et al.</em> - per definizioni e approfondimenti sui concetti di container, immagini, copy-on-write, namespaces/cgroups, e best practice nell&#39;uso di Docker<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries">[6]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[1]</a><a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F">[16]</a><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[21]</a>. Questa guida ha citato alcune fonti autorevoli lungo il testo per fornire conferma e ulteriori dettagli su ciascun argomento trattato. Buona esplorazione con Docker!</p>
+<p><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[1]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">[2]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[3]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries">[6]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration">[8]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=The%20underlying%20technology">[13]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a> <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a> What is Docker? | Docker Docs</p>
+<p><a href="https://docs.docker.com/get-started/docker-overview/">https://docs.docker.com/get-started/docker-overview/</a></p>
+<p><a href="https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host">[4]</a> <a href="https://docs.docker.com/engine/containers/run/#:~:text=Images%20using%20the%20v2%20or,the%20digest%20value%20is%20predictable">[40]</a> <a href="https://docs.docker.com/engine/containers/run/#:~:text=">[41]</a> Running containers | Docker Docs</p>
+<p><a href="https://docs.docker.com/engine/containers/run/">https://docs.docker.com/engine/containers/run/</a></p>
+<p><a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=An%20image%20is%20a%20snapshot,a%20container%20runs%20the%20software">[5]</a> <a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=Since%20the%20container%20runs%20natively,you%20configure%20it%20that%20way">[20]</a> <a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=When%20a%20Docker%20user%20runs,though%2C%20most%20images%20include%20some">[45]</a> <a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=Think%20of%20a%20container%20as,containers%20to%20run%20the%20applications">[46]</a> Docker image vs container: What are the differences? | CircleCI</p>
+<p><a href="https://circleci.com/blog/docker-image-vs-container/">https://circleci.com/blog/docker-image-vs-container/</a></p>
+<p><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry">[7]</a> <a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=There%20are%20currently%20two%20types,and%20a%20manifest">[33]</a> <a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Pull%20a%20manifest">[34]</a> <a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Instead%20of%20blobs%2C%20the%20client,its%20operating%20system%20and%20architecture">[35]</a> <a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Suppose%20a%20client%20chooses%20the,architecture%20and%20the%20manifest%20digest">[36]</a> <a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=A%20Podman%20or%20Docker%20,image%20manifest%20is%20being%20pulled">[37]</a> What happens when you pull a container image?</p>
+<p><a href="https://www.redhat.com/en/blog/pull-container-image">https://www.redhat.com/en/blog/pull-container-image</a></p>
+<p><a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same">[10]</a> <a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State">[11]</a> <a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Created%20State">[44]</a> Docker Container Lifecycle: Key States and Best Practices | Last9</p>
+<p><a href="https://last9.io/blog/docker-container-lifecycle/">https://last9.io/blog/docker-container-lifecycle/</a></p>
+<p><a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a> Working with Docker Containers | DigitalOcean</p>
+<p><a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers">https://www.digitalocean.com/community/tutorials/working-with-docker-containers</a></p>
+<p><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers">[14]</a> <a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=The%20crucial%20thing%20to%20notice,isolated%20within%20my%20own%20namespace">[15]</a> <a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F">[16]</a> <a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=A%20control%20group%20,of%20a%20collection%20of%20processes">[17]</a> <a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=,cgroup%20with%20a%20single%20command">[18]</a> What Are Namespaces and cgroups, and How Do They Work? - NGINX Community Blog</p>
+<p><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work">https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work</a></p>
+<p><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[19]</a> <a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[21]</a> Containers vs VM - Difference Between Deployment Technologies - AWS</p>
+<p><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/">https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/</a></p>
+<p><a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20supports%20multiple%20storage%20drivers,storage%20driver">[22]</a> <a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Storage%20Driver%3A%20overlay2">[23]</a> <a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[25]</a> <a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=echo%20%27Add%20a%20new%20line%27,1">[26]</a> <a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=The%20original%20file%20present%20inside,layer%60%20is%20created">[27]</a> <a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[29]</a> Desacralizing the Linux overlay filesystem in Docker | Adaltas</p>
+<p><a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/">https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/</a></p>
+<p><a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=1,chroot">[24]</a> <a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a> <a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following">[32]</a> Understanding the image layers | Docker Docs</p>
+<p><a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/">https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/</a></p>
+<p><a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=An%20image%20registry%20is%20a,and%20is%20the%20default%20registry">[38]</a> <a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/#:~:text=While%20Docker%20Hub%20is%20a,Artifactory%2C%20GitLab%20Container%20registry%20etc">[39]</a> What is a registry? | Docker Docs</p>
+<p><a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/">https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/</a></p>
+<p><a href="https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust">[42]</a> Docker Content Trust</p>
+<p><a href="https://help.sonatype.com/en/docker-content-trust.html">https://help.sonatype.com/en/docker-content-trust.html</a></p>
+<p><a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker">[43]</a> Enforcing image trust on Docker containers using Notary | CNCF</p>
+<p><a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/">https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/</a></p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/docker-dentro-il-container/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>

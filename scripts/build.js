@@ -134,6 +134,13 @@ async function writeManifest(posts, outputDir) {
   await fs.writeJson(path.join(outputDir, 'posts.json'), manifest, { spaces: 2 });
 }
 
+async function syncDocsDirectory(distDir, rootDir) {
+  const docsDir = path.join(rootDir, 'docs');
+  await fs.ensureDir(docsDir);
+  await fs.emptyDir(docsDir);
+  await fs.copy(distDir, docsDir, { overwrite: true });
+}
+
 async function build() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -178,6 +185,8 @@ async function build() {
   }
 
   await writeManifest(posts, blogDir);
+
+  await syncDocsDirectory(distDir, rootDir);
 
   console.log(`✔️  Generated ${posts.length} post(s) into ${toPosix(path.relative(rootDir, distDir))}`);
 }
