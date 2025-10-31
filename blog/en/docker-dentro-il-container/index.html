@@ -3,103 +3,518 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inside a Container: Key Concepts</title>
+  <title>Docker Deep Dive: Inside the Container</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    
-  :root {
-    color-scheme: light dark;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height: 1.6;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg, #0f172a);
-    color: #0f172a;
-  }
-  @media (prefers-color-scheme: dark) {
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
-      color: #e2e8f0;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
     }
-  }
-  .page {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 4rem;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-  }
-  header nav a {
-    margin-left: 1rem;
-    text-decoration: none;
-    font-weight: 500;
-    color: inherit;
-  }
-  header nav a:hover {
-    text-decoration: underline;
-  }
-
-    h1 {
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      margin-bottom: 1rem;
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
     }
-    .meta {
-      color: #64748b;
-      margin-bottom: 2.5rem;
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
     }
-    article {
-      font-size: 1.05rem;
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
     }
-    article img {
-      max-width: 100%;
-      border-radius: 0.75rem;
-      margin: 1.5rem 0;
-      box-shadow: 0 10px 25px -12px rgba(15, 23, 42, 0.35);
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
     }
-    article pre {
-      background: rgba(15, 23, 42, 0.85);
-      color: #e2e8f0;
-      padding: 1rem 1.25rem;
-      overflow-x: auto;
-      border-radius: 0.75rem;
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
     }
-    nav {
-      margin-bottom: 2rem;
-      display: flex;
-      gap: 1rem;
-    }
-    nav a {
-      text-decoration: none;
-      font-weight: 500;
+    a {
       color: inherit;
+      text-decoration: none;
     }
-    nav a:hover {
-      text-decoration: underline;
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.15rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .post-toc__item.level-1 {
+      padding-left: 1rem;
+    }
+    .post-toc__item.level-2 {
+      padding-left: 2rem;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: rgba(15, 23, 42, 0.65);
+      color: #f8fafc;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    body[data-theme="light"] .post-body code {
+      background: rgba(15, 23, 42, 0.08);
+      color: #111827;
+    }
+    .post-body pre {
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      padding: 1.2rem 1.4rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    body[data-theme="light"] .post-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    .post-body tr {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    .post-body th,
+    .post-body td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    body[data-theme="light"] .post-body table {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
     }
   </style>
 </head>
-<body>
-  <div class="page">
-    <nav>
-      <a href="../../../blog/index.html">← Blog</a>
-      <a href="../../../index.html">Home</a>
-      <a href="../../../blog/it/deep-dive-in-docker/">Leggi in Italiano</a>
-    </nav>
-    <article>
-      <header>
-        <h1>Inside a Container: Key Concepts</h1>
-        <p class="meta">
-          Aggiornato il 2025-10-31
-        </p>
-      </header>
-      <h1>Inside a Container: Key Concepts</h1>
-<h2>Abstract</h2>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🐳</div>
+        <span class="post-hero__category">Docker</span>
+        <h1 class="post-hero__title">Docker Deep Dive: Inside the Container</h1>
+        <div class="post-hero__meta">
+          <span>📅 October 30, 2025</span>
+          <span>⏱️ 15 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc">
+        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+        <ul class="post-toc__list">
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-core-concepts">1. Core Concepts</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-container-lifecycle">2. Container Lifecycle</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-internal-architecture">3. Internal Architecture</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-docker-images-as-layers">4. Docker Images as Layers</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-registries-and-distribution">5. Registries and Distribution</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-conceptual-demo-what-happens-when-you-docker-run-nginx">6. Conceptual Demo: What Happens When You `docker run nginx`</a></li>
+        </ul>
+      </aside>
+        <div class="post-body">
+          <h2 id="abstract">Abstract</h2>
 <p>Second episode of the “Docker for Developers” series. This narrative guide walks through Docker’s core ideas with production-grade precision while staying approachable: the goal is to understand what Docker does conceptually before touching the CLI or writing manifests.</p>
-<h2>1. Core Concepts</h2>
+<h2 id="1-core-concepts">1. Core Concepts</h2>
 <p><em>Figure 1: Docker architecture – the client talks to the Docker daemon, which manages images and containers. Images (for example Python, Redis) live in registries such as Docker Hub and can be pulled. Containers are runtime instances created from images and executed in isolation on the Docker host.</em></p>
 <p><strong>Docker image.</strong> A Docker <em>image</em> is a <strong>read‑only template</strong> that describes everything required to spin up a container.<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[1]</a> It is effectively a snapshot of a minimal filesystem plus configuration. Images can build on top of other images (start from <code>ubuntu</code>, add Apache, your application, and its configuration).<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[1]</a> They are assembled incrementally: each image <strong>is composed of multiple filesystem layers</strong> stacked on top of one another (see section 4 for details).<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">[2]</a> Crucially, an image is static and immutable: it never changes at runtime and serves as the template from which containers are launched.</p>
 <p><strong>Docker container.</strong> A <em>container</em> is the <strong>runtime instance of an image</strong>.<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[3]</a> If the image is the blueprint, the container is the concrete object being executed. Practically speaking, a container is an isolated process on the host machine with its own filesystem, network stack, and process tree.<a href="https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host">[4]</a> Docker uses the image as a base, creates a sandboxed environment, and runs your workload inside it. A helpful analogy is object-oriented programming: <strong>the image behaves like a class; the container is an instance of that class</strong>—the image defines, the container executes. You can create multiple containers from the same image (separate objects from one class) without them affecting one another; each keeps its own ephemeral state.<a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=An%20image%20is%20a%20snapshot,a%20container%20runs%20the%20software">[5]</a></p>
@@ -110,7 +525,7 @@
 <li><strong><code>docker pull</code>.</strong> The command <code>docker pull &lt;name:tag&gt;</code> downloads an image from a registry. Behind the scenes the Docker client contacts the registry via HTTP(S) and requests the image manifest (a file listing the layers composing the image). It then downloads each layer (called <em>blobs</em>) that is not already cached, often in parallel, and stores them locally.<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry">[7]</a> For example, <code>docker pull nginx:latest</code> fetches the list of layers for the Nginx image from Docker Hub and downloads them one by one; once complete, the image is ready on the host.</li>
 <li><strong><code>docker run</code>.</strong> The command <code>docker run</code> creates and starts a container from an image. It is conceptually equivalent to running <code>docker pull</code> (if the image is missing) followed by <code>docker container create</code> and <code>docker container start</code>.<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration">[8]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a> When you execute <code>docker run ubuntu:22.04 echo &quot;hello&quot;</code>, Docker checks whether <code>ubuntu:22.04</code> exists locally; if not it pulls it from the registry.<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a> The daemon then <strong>creates a container</strong> (allocating resources, preparing a writable filesystem layer, assigning an ID) and <strong>starts</strong> it by executing the specified command (in this case <code>echo &quot;hello&quot;</code>). When the process finishes the container stops; you can restart it or remove it entirely. In short, <code>docker run</code> orchestrates the download (if needed), creation, and execution of the workload in one step—the most common command in daily Docker usage.<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration">[8]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a></li>
 </ul>
-<h2>2. Container Lifecycle</h2>
+<h2 id="2-container-lifecycle">2. Container Lifecycle</h2>
 <p><strong>From build to run (<code>docker run</code> under the hood).</strong> After building an image you move to the <em>run</em> phase, meaning you create and execute containers based on it. When <code>docker run</code> is invoked, Docker may pull the image first (if required). Internally the daemon performs the equivalent of <code>docker container create</code>: the container enters the <strong>Created</strong> state, resources are allocated, an ID is assigned, and a container-specific filesystem is prepared.<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a> Docker then starts the container (similar to <code>docker container start</code>), launching the primary process defined in the image. At this point the container is in the <strong>Running</strong> state and executes the workload inside the isolated environment. The container stays running while that process is alive. When the process exits (voluntarily or due to a crash) or when you issue a stop command, Docker halts the container, which transitions to <strong>Stopped/Exited</strong>. A stopped container retains its isolated filesystem, logs, and state at the moment of shutdown and can be restarted. Finally, if you want to free the resources entirely you remove the container with <code>docker rm</code>, moving it to the <strong>Removed</strong> state: the container disappears from the host. The typical lifecycle therefore is <strong>Created → Running → Stopped/Exited → Removed</strong>.<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same">[10]</a> (Docker also offers a <strong>Paused</strong> state in which the container’s processes are frozen via the cgroups freezer, allowing you to temporarily suspend CPU usage without terminating them.<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State">[11]</a> Pausing is less common; a container must be running to be paused and must be “unpaused” to resume.)</p>
 <p><strong>Container states recap.</strong> The key states a Docker container can occupy during its lifecycle are:<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same">[10]</a></p>
 <ul>
@@ -120,10 +535,10 @@
 <li><strong>Removed.</strong> The container has been deleted from the host (<code>docker rm</code> or <code>docker run --rm</code>). It no longer appears in <code>docker ps -a</code> and no data remains (unless you used separate volumes). Any in-container changes that were not persisted externally are gone.</li>
 </ul>
 <p><strong>Copy-on-write and container filesystems.</strong> Docker relies on <strong>copy-on-write</strong> filesystems for containers. When a container is created Docker assembles a <strong>union filesystem</strong> composed of: all the image’s read-only layers plus a <strong>container-specific writable layer</strong>.<a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a> The container sees a single unified filesystem (its root filesystem) that merges the image layers and the writable layer. If a process modifies or creates a file, copy-on-write kicks in: if the file already existed in one of the image’s read-only layers, Docker <strong>copies it into the writable layer</strong> and applies the change there, keeping the original intact.<a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a> New files created by the container live solely in the writable layer. When you delete the container the writable layer disappears and those changes vanish (unless you mounted volumes to persist data). Conversely, you can inspect previous state by starting new containers from the same image: the read-only layers guarantee a clean, reproducible baseline every time.</p>
-<h2>3. Internal Architecture</h2>
+<h2 id="3-internal-architecture">3. Internal Architecture</h2>
 <p><strong>Isolation via namespaces and cgroups (Linux kernel).</strong> Docker builds isolation on native Linux features—primarily <em>namespaces</em> and <em>cgroups</em>. <strong>Namespaces</strong> allow the kernel to isolate system views and resources for groups of processes. When Docker creates a container, the kernel assigns dedicated namespaces.<a href="https://docs.docker.com/get-started/docker-overview/#:text=The%20underlying%20technology">[13]</a> Each namespace isolates a different aspect: the PID namespace gives the container its own process numbering (PID 1 inside the container is its main process, unaware of host processes),<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers">[14]</a><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=The%20crucial%20thing%20to%20notice,isolated%20within%20my%20own%20namespace">[15]</a> the network namespace provides a virtual network interface with its own IP stack, the mount namespace offers an isolated filesystem view, and so on. Additional namespaces handle IPC, hostname (UTS), and optionally user mappings (user namespaces let a container run as “root” inside while mapping to an unprivileged UID on the host). Thanks to namespaces each container lives in a logical bubble: <strong>from the inside it only sees its own resources</strong>, not those of other containers or the host.<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers">[14]</a> In parallel Docker leverages <strong>cgroups</strong> (control groups) to limit and monitor resource usage—CPU, memory, and I/O—for containers.<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F">[16]</a> Cgroups let the system cap how much CPU or RAM a container may consume, preventing any single workload from starving others,<a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=A%20control%20group%20,of%20a%20collection%20of%20processes">[17]</a> provide resource accounting, and can freeze or terminate all container processes at once (for example <code>docker pause</code> uses the freezer cgroup).<a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State">[11]</a><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=,cgroup%20with%20a%20single%20command">[18]</a> Summing up: <strong>namespaces = isolation</strong> (processes, network, filesystem); <strong>cgroups = resource control</strong>. Combined, they let Docker create environments that behave like separate systems even though they share the same Linux kernel.</p>
 <p><strong>Logical vs physical isolation (containers vs VMs).</strong> Container isolation is <em>logical/software</em> isolation rather than the <em>physical/hardware</em> isolation of traditional virtual machines. A container <strong>shares the host’s kernel</strong>: there is no separate OS instance per container, unlike a VM. Virtual machines virtualize an entire hardware stack and kernel, yielding stronger isolation at the cost of higher overhead; containers virtualize at the operating-system level, isolating processes and resources within the same kernel.<a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[19]</a> In practice, containers deliver process isolation through namespaces/cgroups, whereas VMs provide full machine isolation with separate guest kernels atop a hypervisor. This means a kernel vulnerability is shared between containers and the host (so kernel exploits can theoretically break out of a container), while on VMs the guest kernel is isolated from the host. Conversely containers are much lighter: <strong>they start in seconds, consume only a few megabytes</strong>, and dozens can run on a single host without major waste, whereas a small number of VMs might exhaust resources quickly.<a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=Since%20the%20container%20runs%20natively,you%20configure%20it%20that%20way">[20]</a><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[21]</a> Popular analogies liken containers to apartments in the same building (shared structure, isolated units) and VMs to detached houses (complete separation but higher cost).</p>
-<h2>4. Docker Images as Layers</h2>
+<h2 id="4-docker-images-as-layers">4. Docker Images as Layers</h2>
 <p><strong>What a layer is and how it is stored.</strong> A Docker image is not a single monolithic blob: it is a <strong>stacked series of ordered layers</strong>. Every <em>layer</em> represents a set of <strong>filesystem changes</strong> relative to the layer below it.<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a> Consider building an image for a Python application. The layers might look like this:<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a></p>
 <ul>
 <li><strong>Layer 1:</strong> Minimal base OS (core commands and the package manager on Ubuntu).</li>
@@ -146,11 +561,11 @@ COPY index.html /usr/share/nginx/html/index.html
 <li><code>COPY index.html ...</code>: Docker copies the local <code>index.html</code> file into the temporary container. The update becomes another <strong>final layer</strong>.</li>
 </ul>
 <p>The resulting image contains the Ubuntu layers, a layer for the Nginx installation, and a layer with the HTML file. If you build another similar image (for example another static site on Ubuntu + Nginx) Docker reuses the Ubuntu and Nginx layers and adds only the delta with the new files. At runtime multiple containers can share the read-only layers, while per-container differences stay in their writable layers. Layered images therefore underpin Docker’s <strong>portability</strong> (download only what you need), <strong>consistency</strong> (each layer is immutable and reproducible), and <strong>efficiency</strong> (maximum reuse of shared components).</p>
-<h2>5. Registries and Distribution</h2>
+<h2 id="5-registries-and-distribution">5. Registries and Distribution</h2>
 <p><strong>What happens during <code>docker pull</code>.</strong> While we already described <code>docker pull</code>, let’s detail the flow. When you run <code>docker pull name:tag</code>, the client contacts the registry (Docker Hub by default, or another one specified in the reference) over HTTP APIs. The first step is requesting the image <strong>manifest</strong>—a JSON document listing the digests of all image layers plus metadata (configuration digest, architecture, etc.). The registry returns either a <em>manifest list</em> (also called an index, containing multiple manifests for different platforms) or a single manifest for a specific platform.<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=There%20are%20currently%20two%20types,and%20a%20manifest">[33]</a><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Pull%20a%20manifest">[34]</a> If a manifest list is returned, Docker chooses the manifest matching the host platform (for example <code>linux/amd64</code> on an x86_64 PC).<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Instead%20of%20blobs%2C%20the%20client,its%20operating%20system%20and%20architecture">[35]</a><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Suppose%20a%20client%20chooses%20the,architecture%20and%20the%20manifest%20digest">[36]</a> Once the specific manifest is available, Docker <strong>downloads the layers</strong> listed there: for every layer digest it issues a GET request to fetch the corresponding blob.<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry">[7]</a> Layers are downloaded in parallel and stored in the local cache (typically under <code>/var/lib/docker/</code> in the active storage driver). Layers already present are skipped. After all blobs have arrived, Docker assembles or updates the local image metadata (writing the config JSON and referencing the local layer digests). The image is now ready to run. From the user’s perspective you see “Pull complete” for each layer and “Downloaded newer image for name:tag”. Summarising, <code>docker pull</code> orchestrates <strong>REST calls</strong>: manifest (or multi-arch index) first, then the layer blobs.<a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=A%20Podman%20or%20Docker%20,image%20manifest%20is%20being%20pulled">[37]</a></p>
 <p><strong>Public vs private registries.</strong> Public registries are open to everyone (subject to rate limits or authentication for pushing). They host official images, community builds, and shared artefacts. Security best practice is to pull only from trusted sources and verify image signatures (e.g. Docker Content Trust or Notary).<a href="https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust">[42]</a><a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker">[43]</a> Private registries, on the other hand, restrict access to authenticated users or service accounts. They are used to store internal images (for example corporate microservices), enforce vulnerability scanning, integrate with CI/CD, and host multi-architecture builds tailored to company infrastructure. Regardless of visibility the distribution protocol is the same: manifests and layers are transferred over HTTPS.</p>
 <p><strong><code>docker push</code> basics.</strong> When you execute <code>docker push</code>, Docker performs the inverse flow. It authenticates with the registry, checks which layers the registry already owns, and uploads only the missing ones. The manifest—referencing the layer digests—is uploaded last. Pushing large images efficiently often involves keeping the number of layers small and arranging Dockerfile instructions so that rarely-changing layers stay near the top of the Dockerfile (allowing maximum cache reuse downstream). CI/CD pipelines usually push images tagged with semantic versions plus immutable digests to preserve traceability.</p>
-<h2>6. Conceptual Demo: What Happens When You <code>docker run nginx</code></h2>
+<h2 id="6-conceptual-demo-what-happens-when-you-docker-run-nginx">6. Conceptual Demo: What Happens When You <code>docker run nginx</code></h2>
 <p>To consolidate the concepts, let’s walk through a <strong>step-by-step narrative</strong> of what happens when we execute:</p>
 <pre><code>docker run nginx
 </code></pre>
@@ -180,8 +595,113 @@ COPY index.html /usr/share/nginx/html/index.html
 <hr>
 <p><strong>References</strong></p>
 <p><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[1]</a> Docker Docs – Docker overview<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">[2]</a> Docker Docs – Build images<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=">[3]</a> Docker Docs – What is a container<br><a href="https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host">[4]</a> Docker Docs – Run a container<br><a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=An%20image%20is%20a%20snapshot,a%20container%20runs%20the%20software">[5]</a> CircleCI – Image vs container<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries">[6]</a> Docker Docs – Registries<br><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry">[7]</a> Red Hat – Pulling container images<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration">[8]</a> Docker Docs – <code>docker run</code> explained<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a> Docker Docs – Pulling and running images<br><a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=Every%20container%20typically%20goes%20through,general%20flow%20stays%20the%20same">[10]</a> Last9 – Container lifecycle<br><a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Paused%20State">[11]</a> Last9 – Paused state<br><a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers#:~:text=Images%20come%20to%20life%20with,are%20taken%20to%20preserve%20them">[12]</a> DigitalOcean – Working with Docker containers<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=The%20underlying%20technology">[13]</a> Docker Docs – Underlying technology<br><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=Namespaces%20and%20Containers">[14]</a> NGINX – Namespaces overview<br><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=The%20crucial%20thing%20to%20notice,isolated%20within%20my%20own%20namespace">[15]</a> NGINX – PID namespaces<br><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=What%20Are%20cgroups%3F">[16]</a> NGINX – cgroups intro<br><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=A%20control%20group%20,of%20a%20collection%20of%20processes">[17]</a> NGINX – Resource control<br><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work#:~:text=,cgroup%20with%20a%20single%20command">[18]</a> NGINX – Managing cgroups<br><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[19]</a> AWS – Containers vs VMs<br><a href="https://circleci.com/blog/docker-image-vs-container/#:~:text=Since%20the%20container%20runs%20natively,you%20configure%20it%20that%20way">[20]</a> CircleCI – Performance considerations<br><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/#:~:text=Containers%20virtualize%20the%20operating%20system,give%20some%20more%20differences%20below">[21]</a> AWS – Virtualization differences<br><a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a> Docker Docs – Image layers<br><a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[29]</a> Adaltas – Overlay filesystem<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a> Docker Docs – Build caching<br><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a> Docker Docs – Image reuse<br><a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following">[32]</a> Docker Docs – Benefits of layering<br><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=There%20are%20currently%20two%20types,and%20a%20manifest">[33]</a> Red Hat – Manifest lists<br><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Pull%20a%20manifest">[34]</a> Red Hat – Pulling manifests<br><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Instead%20of%20blobs%2C%20the%20client,its%20operating%20system%20and%20architecture">[35]</a> Red Hat – Platform negotiation<br><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=Suppose%20a%20client%20chooses%20the,architecture%20and%20the%20manifest%20digest">[36]</a> Red Hat – Selecting the right manifest<br><a href="https://www.redhat.com/en/blog/pull-container-image#:~:text=A%20Podman%20or%20Docker%20,image%20manifest%20is%20being%20pulled">[37]</a> Red Hat – Registry downloads<br><a href="https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust">[42]</a> Sonatype – Docker Content Trust<br><a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker">[43]</a> CNCF – Enforcing image trust<br><a href="https://last9.io/blog/docker-container-lifecycle/#:~:text=The%20Created%20State">[44]</a> Last9 – Created state explained</p>
-
+        </div>
+      </section>
     </article>
-  </div>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/docker-dentro-il-container/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
 </body>
 </html>
