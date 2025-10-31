@@ -19,7 +19,7 @@ Un'altra cosa **importante**: un'immagine di per sé è **statica e immutabile**
 
 Un momento ma cos'è un container docker?
 
-**Container Docker:** Un _container_ è invece una **istanza runtime di un'immagine**[\[3\]](https://docs.docker.com/get-started/docker-overview/#containers). Se l'immagine è il modello, il container è l'oggetto concreto in esecuzione. 
+**Container Docker:** Un _container_ è invece una **istanza runtime di un'immagine**, o meglio [così viene definito ufficialmente](https://docs.docker.com/get-started/docker-overview/#containers). Se l'immagine è il modello, il container è l'oggetto concreto in esecuzione. 
 
 In pratica, un container non è altro che un processo isolato che gira sulla macchina host, con il suo filesystem, la sua rete e il suo spazio di processi separati. [Qui sto citando testualmente](https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host). 
 
@@ -31,11 +31,51 @@ Un'analogia utile è con la programmazione a oggetti: **l'immagine è come una c
  
  Inoltre, più container possono essere creati dalla stessa immagine (come oggetti multipli da una singola classe) senza influenzarsi a vicenda, ciascuno col proprio stato temporaneo.
 
-**Registry (Registro di immagini):** Un _registro_ è un servizio centralizzato per conservare e condividere immagini container[\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries). Il registro pubblico predefinito è **Docker Hub**, a cui Docker si rivolge di default per scaricare immagini non trovate in locale[\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries). Esistono anche registri alternativi pubblici o privati: ad esempio GitHub Container Registry, AWS ECR di Amazon, Google GCR, Azure ACR, o soluzioni self-hosted come Harbor. In un registro le immagini sono organizzate in repository (ad esempio nomeutente/nomeimmagine su Docker Hub identifica un repository). La differenza tra registro pubblico e privato sta principalmente nei controlli di accesso: un registro pubblico (come Docker Hub) mette a disposizione immagini a chiunque, spesso con una libreria di immagini ufficiali; un registro privato invece è accessibile solo a utenti autorizzati, utile per mantenere immagini aziendali o interne non visibili pubblicamente. In entrambi i casi, Docker può autenticarsi al registry se necessario e poi effettuare _pull_ (scaricamento) e _push_ (caricamento) delle immagini.
+ Dato che non c'è due senza tre, voglio dare una terza definizione molto importante.
 
-**Come si crea un'immagine (build):** Le immagini Docker si creano tipicamente con un processo di _build_ basato su un **Dockerfile**, un file di testo che contiene istruzioni su come costruire l'immagine a partire da una base[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Ogni istruzione nel Dockerfile (es. FROM, RUN, COPY, ecc.) viene eseguita in sequenza dal demone Docker durante il build, producendo a sua volta uno strato di filesystem aggiuntivo sull'immagine[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Ad esempio, un Dockerfile potrebbe iniziare con FROM ubuntu:22.04 (che definisce l'immagine base Ubuntu), poi RUN apt-get install -y python3 (per installare Python, creando un nuovo layer con questi file aggiunti), quindi COPY . /app (per copiare il codice dell'applicazione dentro l'immagine, ulteriore layer), e così via. Docker esegue il build passando per ognuna di queste istruzioni e "impilando" i risultati in un'immagine finale. Questo processo sfrutta la cache: se ricostruiamo un'immagine senza modificare certe istruzioni, Docker riutilizzerà i layer esistenti senza ricalcolarli, rendendo il build molto veloce[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). Alla fine del build, otteniamo un'immagine identificata da un **ID univoco (un hash)**, che possiamo eseguire o distribuire. Possiamo creare immagini nostre da zero (ad es. partendo da scratch, un'immagine vuota) o basarci su immagini altrui, il che incentiva il riuso di componenti comunemente usate (es. una base Linux standard) invece di reinventare tutto.
+**Registry (Registro di immagini):** Un [_registry_](https://docs.docker.com/get-started/docker-overview/#docker-registries) è un servizio centralizzato per conservare e condividere immagini container. Il registro pubblico predefinito (e aggiungo largamente utilizzato) è **Docker Hub**, a cui Docker si rivolge di default per scaricare immagini che non vengono trovate in locale. 
 
-**Pull e Run:** Due comandi fondamentali per utilizzare le immagini sono docker pull e docker run. - **Docker Pull:** Il comando docker pull &lt;nome:tag&gt; scarica un'immagine dal registro. Dietro le quinte, il client Docker contatta il registry via HTTP(S) e richiede il manifesto dell'immagine (un file che elenca i layer di cui l'immagine è composta). In seguito il client scarica ogni layer (detto _blob_) che non ha già in cache, spesso in parallelo, salvandoli in locale[\[7\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry). Ad esempio, docker pull nginx:latest recupera dal Docker Hub la lista dei layer che compongono l'immagine di Nginx e li scarica uno a uno; una volta completati, avremo l'immagine nginx:latest pronta sul nostro host. - **Docker Run:** Il comando docker run è usato per eseguire un container a partire da un'immagine. Equivale a combinare in un solo passo il docker pull (se l'immagine non è presente in locale) e la creazione e avvio di un nuovo container[\[8\]](https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration)[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually). In pratica, quando lanciamo ad esempio docker run ubuntu:22.04 echo "ciao", Docker verifica se l'immagine ubuntu:22.04 esiste localmente; se manca, la _pull_ dal registry[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually). Poi il demone Docker **crea un container** dall'immagine (allocando le risorse necessarie, preparando un filesystem scrivibile per il container, assegnandogli un ID univoco) e infine **avvia il container**, eseguendo al suo interno il comando specificato (in questo caso echo "ciao"). Una volta terminato, il container può essere fermato e rimosso oppure mantenuto per essere riavviato. In sostanza, docker run è il comando più utilizzato che, in un colpo solo, gestisce l'intero ciclo di vita: dal download dell'immagine (se necessario) all'esecuzione del processo nel container[\[8\]](https://docs.docker.com/get-started/docker-overview/#:~:text=When%20you%20run%20this%20command%2C,using%20the%20default%20registry%20configuration)[\[9\]](https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually).
+Esistono anche registri alternativi pubblici o privati: ad esempio GitHub Container Registry, AWS ECR di Amazon, Google GCR, Azure ACR, o soluzioni self-hosted come Harbor. In un registro (da ora mi permetto di tradurlo in italiano), le immagini sono organizzate in repository (ad esempio nomeutente/nomeimmagine su Docker Hub identifica un repository). La differenza tra registro pubblico e privato sta principalmente nei controlli di accesso: un **registro pubblico** (come Docker Hub) **mette a disposizione immagini a chiunque**, spesso con una libreria di immagini ufficiali; un **registro privato** invece è accessibile solo a **utenti autorizzati**, utile per mantenere immagini aziendali o interne non visibili pubblicamente. In entrambi i casi, Docker può autenticarsi al registry se necessario e poi effettuare _pull_ (nel senso di scaricare) e _push_ (qui invece nel senso di caricare) delle immagini.
+
+Ora che abbiamo capito dato alcune definizioni, possiamo iniziare a mettere le mani in pasta, magari partendo da come si crea un'immagine.
+
+**Come si crea un'immagine (build):** Le immagini Docker si creano tipicamente con un processo di _build_ basato su un [**Dockerfile**]((https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies)), che è un file di testo che contiene istruzioni su come costruire l'immagine a partire da una base. Ogni istruzione nel Dockerfile (es. FROM, RUN, COPY, ecc.) viene eseguita in sequenza dal demone Docker durante il build, producendo a sua volta uno strato di filesystem aggiuntivo sull'immagine[\[2\]](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies). 
+
+Ad esempio, un Dockerfile potrebbe iniziare definendo l'immagine base Ubuntu con:
+```docker
+FROM ubuntu:22.04
+```
+poi per installare Python, creando un nuovo layer con questi file aggiunti
+```docker
+RUN apt-get install -y python3
+```
+quindi per copiare il codice dell'applicazione dentro l'immagine:
+```docker
+COPY . /app
+```
+e così via. Docker esegue il build passando per ognuna di queste istruzioni e "impilando" i risultati nell'immagine definitiva. 
+
+Questo processo sfrutta la cache: se ricostruiamo un'immagine senza modificare certe istruzioni, Docker riutilizzerà i layer esistenti senza ricalcolarli, rendendo il build molto veloce. Per sfruttare al meglio la cache, vi lascio direttamente [il codice ufficiale](https://docs.docker.com/build/cache/) per sfruttare la cache.
+
+```docker
+# syntax=docker/dockerfile:1
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y build-essentials
+COPY main.c Makefile /src/
+WORKDIR /src/
+RUN make build
+```
+
+Alla fine del build, otteniamo un'immagine identificata da un **ID univoco (un hash)**, che possiamo eseguire o distribuire. Possiamo creare immagini nostre da zero (ad es. partendo da scratch, un'immagine vuota) o basarci su immagini altrui, il che incentiva il riuso di componenti comunemente usate (es. una base Linux standard) invece di reinventare tutto.
+
+Concludiamo questa sezione parlando di due comandi di cui abbiamo in parte già parlato.
+
+**Pull e Run:** Due comandi fondamentali per lavorare con le immagini sono `docker pull` e `docker run`.
+
+- **Docker Pull.** Il comando `docker pull <nome:tag>` scarica un'immagine dal registro. Dietro le quinte il client Docker contatta il registry via HTTP(S), richiede il manifesto dell'immagine (il file che elenca i layer) e scarica ogni layer — il cosiddetto _blob_ — che non ha già in cache, spesso in parallelo, salvandolo in locale. [Se volete approfondire](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry). Ad esempio `docker pull nginx:latest` recupera da Docker Hub la lista dei layer di Nginx, li scarica uno alla volta e, al termine, rende l'immagine pronta sull'host.
+
+- **Docker Run.** Il comando `docker run` avvia un container a partire da un'immagine. In un solo passo esegue l'eventuale `docker pull` (se l'immagine manca in locale) e crea/avvia il nuovo container. Se lanci `docker run ubuntu:22.04 echo "ciao"`, Docker verifica la presenza dell'immagine `ubuntu:22.04`, la scarica se necessario, **crea un container** (allocando risorse, preparando il filesystem, assegnando un ID) e **lo avvia** eseguendo `echo "ciao"` al suo interno. Una volta che il comando è terminato, il container può essere fermato e rimosso oppure riutilizzato. In sintesi, `docker run` gestisce l'intero ciclo di vita: download (se serve) e esecuzione del processo nel container.
 
 ## 2\. Ciclo di vita di un container
 
