@@ -1,4 +1,4 @@
-# Deep dive dentro un container
+# Deep dive in Docker
 
 ## Abstract
 Eccoci arrivati al secondo episodio della serie "Docker per sviluppatori". Dato che il primo articolo è stato apprezzato, direi che possiamo andare deep questa volta analizzando i concetti chiave di Docker in modo accessibile a tutti. Cerchiamo di capire cosa fa Docker concettualmente, senza ancora scrivere codice o configurare nulla.
@@ -21,7 +21,15 @@ Un momento ma cos'è un container docker?
 
 **Container Docker:** Un _container_ è invece una **istanza runtime di un'immagine**[\[3\]](https://docs.docker.com/get-started/docker-overview/#containers). Se l'immagine è il modello, il container è l'oggetto concreto in esecuzione. 
 
-In pratica, un container non è altro che un processo isolato che gira sulla macchina host, con il suo filesystem, la sua rete e il suo spazio di processi separati[\[4\]](https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host). Docker utilizza l'immagine come base e crea un ambiente isolato in cui l'applicazione può girare. Possiamo pensare al container come a un "contenitore" (da cui il nome) che racchiude l'applicazione e le sue dipendenze, garantendo che questa giri sempre nello stesso ambiente, a prescindere da dove il container viene eseguito[\[5\]](https://circleci.com/blog/docker-image-vs-container/#:~:text=An%20image%20is%20a%20snapshot,a%20container%20runs%20the%20software). Un'analogia utile è con la programmazione a oggetti: **l'immagine è come una classe, mentre il container è un'istanza (un oggetto) di quella classe** - l'immagine definisce, il container esegue. Inoltre, più container possono essere creati dalla stessa immagine (come oggetti multipli da una singola classe) senza influenzarsi a vicenda, ciascuno col proprio stato temporaneo.
+In pratica, un container non è altro che un processo isolato che gira sulla macchina host, con il suo filesystem, la sua rete e il suo spazio di processi separati. [Qui sto citando testualmente](https://docs.docker.com/engine/containers/run/#:~:text=Docker%20runs%20processes%20in%20isolated,tree%20separate%20from%20the%20host). 
+
+Docker utilizza l'immagine come base e crea un ambiente isolato in cui l'applicazione può girare. Possiamo pensare al container come a un *"contenitore"* (da cui ovviamente il nome) che racchiude l'applicazione e le sue dipendenze, garantendo che questa giri sempre nello stesso ambiente, a prescindere da dove il container viene eseguito. 
+
+Un'analogia utile è con la programmazione a oggetti: **l'immagine è come una classe, mentre il container è un'istanza (un oggetto) di quella classe**
+ - l'immagine definisce
+ - il container esegue. 
+ 
+ Inoltre, più container possono essere creati dalla stessa immagine (come oggetti multipli da una singola classe) senza influenzarsi a vicenda, ciascuno col proprio stato temporaneo.
 
 **Registry (Registro di immagini):** Un _registro_ è un servizio centralizzato per conservare e condividere immagini container[\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries). Il registro pubblico predefinito è **Docker Hub**, a cui Docker si rivolge di default per scaricare immagini non trovate in locale[\[6\]](https://docs.docker.com/get-started/docker-overview/#:~:text=Docker%20registries). Esistono anche registri alternativi pubblici o privati: ad esempio GitHub Container Registry, AWS ECR di Amazon, Google GCR, Azure ACR, o soluzioni self-hosted come Harbor. In un registro le immagini sono organizzate in repository (ad esempio nomeutente/nomeimmagine su Docker Hub identifica un repository). La differenza tra registro pubblico e privato sta principalmente nei controlli di accesso: un registro pubblico (come Docker Hub) mette a disposizione immagini a chiunque, spesso con una libreria di immagini ufficiali; un registro privato invece è accessibile solo a utenti autorizzati, utile per mantenere immagini aziendali o interne non visibili pubblicamente. In entrambi i casi, Docker può autenticarsi al registry se necessario e poi effettuare _pull_ (scaricamento) e _push_ (caricamento) delle immagini.
 

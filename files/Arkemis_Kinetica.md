@@ -35,6 +35,7 @@ Uno dei pilastri di Kinetica è la gestione intelligente della memoria attravers
 first”. In un sistema tradizionale, l’accesso ai dati è spesso limitato dalla necessità di spostarli continuamente dal disco alla RAM (I/O); Kinetica minimizza questo collo di bottiglia tenendo il più possibile i dati in memoria veloce e relegando su disco solo quelli meno usati 
 
 In pratica, Kinetica suddivide le risorse di storage in più livelli (tier) con priorità decrescente di velocità:
+
 - VRAM Tier – la memoria video della GPU (VRAM, Video RAM), vicinissima ai core GPU e ad altissima banda;
 - RAM Tier – la memoria centrale di sistema (RAM) disponibile sui nodi;
 - Disk Cache Tier – storage SSD/disco locale usato come cache estesa (per dati non persistenti o risultati temporanei);
