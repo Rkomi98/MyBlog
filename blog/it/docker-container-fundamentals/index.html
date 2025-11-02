@@ -3,7 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docker: Basics</title>
+  <title>Docker: cos'è, perché esiste e come usare i container | Mirko Calcaterra</title>
+  <meta name="description" content="Scopri cos'è Docker, perché i container risolvono il problema &quot;funziona sul mio PC&quot; e come integrarli nel tuo workflow di sviluppo moderno.">
+  <meta name="keywords" content="Docker, container, sviluppo software, DevOps, workflow, ambienti di sviluppo">
+  <meta name="author" content="Mirko Calcaterra">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rkomi98.github.io/MyBlog/blog/it/docker-container-fundamentals/">
+  <link rel="alternate" hreflang="en" href="https://rkomi98.github.io/MyBlog/blog/en/docker-container-fundamentals/">
+  <meta property="og:title" content="Docker: cos'è, perché esiste e come usare i container | Mirko Calcaterra">
+  <meta property="og:description" content="Scopri cos'è Docker, perché i container risolvono il problema &quot;funziona sul mio PC&quot; e come integrarli nel tuo workflow di sviluppo moderno.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Mirko Calcaterra">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/docker-container-fundamentals/">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Docker.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Docker: cos'è, perché esiste e come usare i container | Mirko Calcaterra">
+  <meta name="twitter:description" content="Scopri cos'è Docker, perché i container risolvono il problema &quot;funziona sul mio PC&quot; e come integrarli nel tuo workflow di sviluppo moderno.">
+  <meta name="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Docker.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -498,7 +515,7 @@
       <section class="post-hero">
         <div class="post-hero__icon">🐳</div>
         <span class="post-hero__category">Docker</span>
-        <h1 class="post-hero__title">Docker: Basics</h1>
+        <h1 class="post-hero__title">Docker: cos'è, perché esiste e come usare i container</h1>
         <div class="post-hero__meta">
           <span>📅 15 ottobre 2025</span>
           <span>⏱️ 15 min</span>
@@ -508,7 +525,7 @@
         <aside class="post-toc">
         <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
         <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-il-problema-iniziale-funziona-sul-mio-pc">1\. Il problema iniziale (&quot;Funziona sul mio PC&quot;)</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-le-soluzioni-pre-docker">2\. Le soluzioni pre-Docker</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-cos-docker-in-parole-semplici">3\. Cos&#39;è Docker in parole semplici</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-container-vs-macchina-virtuale">4\. Container vs Macchina Virtuale</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-perch-docker-stato-un-punto-di-svolta">5\. Perché Docker è stato un punto di svolta</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-quando-docker-non-serve">6\. Quando Docker non serve</a></li>
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-il-problema-iniziale-funziona-sul-mio-pc">1\. Il problema iniziale (&quot;Funziona sul mio PC&quot;)</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-le-soluzioni-pre-docker">2\. Le soluzioni pre-Docker</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-cos-docker-in-parole-semplici">3\. Cos&#39;è Docker in parole semplici</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-container-vs-macchina-virtuale">4\. Container vs Macchina Virtuale</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-perch-docker-stato-un-punto-di-svolta">5\. Perché Docker è stato un punto di svolta</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-quando-docker-non-serve">6\. Quando Docker non serve</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#bibliografia">Bibliografia</a></li>
         </ul>
       </aside>
         <div class="post-body">
@@ -581,6 +598,18 @@ A ciò si aggiunge il cosiddetto <strong>dependency hell</strong>, ovvero la giu
 <p><a href="https://lukesmith.xyz/articles/everyone-should-be-avoiding-docker/">https://lukesmith.xyz/articles/everyone-should-be-avoiding-docker/</a></p>
 <p><a href="https://blog.stackademic.com/i-stopped-using-docker-and-everything-got-easier-yes-seriously-c52777853ab1?gi=1cb8bc3c031d#:~:text=Waiting%2015%20minutes%20for%20a,internet%E2%80%A6%20for%20the%2017th%20time">[45]</a> <a href="https://blog.stackademic.com/i-stopped-using-docker-and-everything-got-easier-yes-seriously-c52777853ab1?gi=1cb8bc3c031d#:~:text=Here%E2%80%99s%20the%20truth%20no%20one,wants%20to%20say%20out%20loud">[46]</a> I Stopped Using Docker - And Everything Got Easier (Yes, Seriously) | by Crafting-Code | Stackademic</p>
 <p><a href="https://blog.stackademic.com/i-stopped-using-docker-and-everything-got-easier-yes-seriously-c52777853ab1?gi=1cb8bc3c031d">https://blog.stackademic.com/i-stopped-using-docker-and-everything-got-easier-yes-seriously-c52777853ab1?gi=1cb8bc3c031d</a></p>
+          <h2 id="bibliografia">Bibliografia</h2>
+          <ul>
+            <li><a href="https://dzone.com/articles/works-on-my-machine">Dave Nicolette, &quot;Works on My Machine&quot; – analisi delle cause degli ambienti incoerenti.</a></li>
+            <li><a href="https://cgatoxford.wordpress.com/2017/05/12/the-dependency-hell-in-software-development/">CGAT Oxford, &quot;The Dependency Hell in Software Development&quot; – impatto delle dipendenze in conflitto.</a></li>
+            <li><a href="https://release.com/blog/hidden-costs-of-staging">Release, &quot;The Hidden Costs of Staging&quot; – stime sul tempo perso dagli sviluppatori per ambienti di test fragili.</a></li>
+            <li><a href="https://blog.stackademic.com/why-i-switched-from-vms-to-docker-container-and-never-looked-back-2bddbfb05efe">Stackademic, &quot;Why I Switched from VMs to Docker&quot; – confronto pratico tra VM e container.</a></li>
+            <li><a href="https://kinsta.com/it/blog/vagrant-vs-docker/">Kinsta, &quot;Vagrant vs Docker&quot; – panoramica sui vantaggi dei container rispetto alle VM.</a></li>
+            <li><a href="https://www.freecodecamp.org/italian/news/il-manuale-docker/">freeCodeCamp, &quot;Il manuale Docker&quot; – guida introduttiva all&#39;ecosistema Docker.</a></li>
+            <li><a href="https://aws.plainenglish.io/the-docker-revolution-2013-2025-how-containers-transformed-devops-forever-af977962f682">AWS Plain English, &quot;The Docker Revolution&quot; – come i container hanno trasformato il DevOps moderno.</a></li>
+            <li><a href="https://www.freecodecamp.org/news/7-cases-when-not-to-use-docker/">freeCodeCamp, &quot;7 Cases When Not to Use Docker&quot; – casi in cui i container introducono complessità inutile.</a></li>
+            <li><a href="https://lukesmith.xyz/articles/everyone-should-be-avoiding-docker/">Luke Smith, &quot;Everyone Should Be Avoiding Docker&quot; – critica alle astrazioni non necessarie.</a></li>
+          </ul>
         </div>
       </section>
     </article>

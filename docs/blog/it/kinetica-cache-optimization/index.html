@@ -508,7 +508,7 @@
         <aside class="post-toc">
         <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
         <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#memory-first-e-tiered-storage">Memory-First e Tiered Storage</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#gestione-della-cache-ram-vram-disk-e-gpu-offloading">Gestione della Cache (RAM, VRAM, Disk) e GPU Offloading</a></li>
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#memory-first-e-tiered-storage">Memory-First e Tiered Storage</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#gestione-della-cache-ram-vram-disk-e-gpu-offloading">Gestione della Cache (RAM, VRAM, Disk) e GPU Offloading</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#bibliografia">Bibliografia</a></li>
         </ul>
       </aside>
         <div class="post-body">
@@ -566,6 +566,16 @@ lavorano di concerto. Il risultato finale è che il tempo totale di una query vi
 Va detto che Kinetica non è l’unico ad adottare questa filosofia.In HeavyDB, la GPU è vista come una cache L1: il suo ottimizzatore prova a mettere i dati “hot” in GPU per avere latenza zero, usando la CPU (L2) se la VRAM si riempie, e andando su disco (L3) solo se necessario. Un aspetto distintivo di Kinetica è la gestione esplicita e personalizzabile di tutti i tier di memoria.
 In pratica, l’utente può intervenire nelle strategie di posizionamento dei dati (perfino a livello di singola
 colonna/tabella) mediante configurazione, mentre in soluzioni come HeavyDB gran parte del caching è automatica.</p>
+        <h2 id="bibliografia">Bibliografia</h2>
+        <ul>
+          <li><a href="https://www.kinetica.com/product/">Kinetica, &quot;Product Overview&quot; – architettura e componenti principali della piattaforma GPU-first.</a></li>
+          <li><a href="https://docs.kinetica.com/">Kinetica Documentation – reference ufficiale su gestione della memoria, caching e API.</a></li>
+          <li><a href="https://www.nvidia.com/en-us/data-center/what-is-a-gpu-database/">NVIDIA, &quot;What Is a GPU Database?&quot; – panoramica sui motori analitici accelerati da GPU.</a></li>
+          <li><a href="https://www.heavy.ai/learn/gpu-databases">Heavy.AI, &quot;GPU Databases&quot; – confronti tra architetture columnar su GPU.</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Column-oriented_DBMS">Wikipedia, &quot;Column-oriented DBMS&quot; – principi e vantaggi dello storage colonnare.</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Vector_processor">Wikipedia, &quot;Vector processor&quot; – concetti di esecuzione vettoriale utilizzati dal query engine.</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Tiered_storage">Wikipedia, &quot;Tiered storage&quot; – definizione e scenari d&#39;uso dello storage stratificato.</a></li>
+        </ul>
         </div>
       </section>
     </article>

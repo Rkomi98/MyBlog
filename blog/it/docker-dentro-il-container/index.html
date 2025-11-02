@@ -3,7 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docker: Dentro il Container</title>
+  <title>Docker: dentro il container - concetti chiave per ambienti production | Mirko Calcaterra</title>
+  <meta name="description" content="Analisi approfondita dei container Docker: namespaces, cgroups, filesystem a layer e best practice per portare workload pronti alla produzione.">
+  <meta name="keywords" content="Docker, container, namespaces, cgroups, runtime, ambienti production">
+  <meta name="author" content="Mirko Calcaterra">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rkomi98.github.io/MyBlog/blog/it/docker-dentro-il-container/">
+  <link rel="alternate" hreflang="en" href="https://rkomi98.github.io/MyBlog/blog/en/docker-dentro-il-container/">
+  <meta property="og:title" content="Docker: dentro il container - concetti chiave per ambienti production | Mirko Calcaterra">
+  <meta property="og:description" content="Analisi approfondita dei container Docker: namespaces, cgroups, filesystem a layer e best practice per portare workload pronti alla produzione.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Mirko Calcaterra">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/docker-dentro-il-container/">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Docker.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Docker: dentro il container - concetti chiave per ambienti production | Mirko Calcaterra">
+  <meta name="twitter:description" content="Analisi approfondita dei container Docker: namespaces, cgroups, filesystem a layer e best practice per portare workload pronti alla produzione.">
+  <meta name="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Docker.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -498,7 +515,7 @@
       <section class="post-hero">
         <div class="post-hero__icon">🐳</div>
         <span class="post-hero__category">Docker</span>
-        <h1 class="post-hero__title">Docker: Dentro il Container</h1>
+        <h1 class="post-hero__title">Docker: dentro il container, concetti chiave per ambienti production</h1>
         <div class="post-hero__meta">
           <span>📅 30 ottobre 2025</span>
           <span>⏱️ 15 min</span>
@@ -508,7 +525,7 @@
         <aside class="post-toc">
         <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
         <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-concetti-fondamentali">1\. Concetti fondamentali</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-ciclo-di-vita-di-un-container">2\. Ciclo di vita di un container</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-architettura-interna">3\. Architettura interna</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-immagini-docker-come-strati-layers">4\. Immagini Docker come strati (layers)</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-registri-e-distribuzione">5\. Registri e distribuzione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-demo-concettuale-cosa-succede-con-docker-run-nginx">6\. Demo concettuale: cosa succede con docker run nginx</a></li>
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-concetti-fondamentali">1\. Concetti fondamentali</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-ciclo-di-vita-di-un-container">2\. Ciclo di vita di un container</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-architettura-interna">3\. Architettura interna</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-immagini-docker-come-strati-layers">4\. Immagini Docker come strati (layers)</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-registri-e-distribuzione">5\. Registri e distribuzione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-demo-concettuale-cosa-succede-con-docker-run-nginx">6\. Demo concettuale: cosa succede con docker run nginx</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#bibliografia">Bibliografia</a></li>
         </ul>
       </aside>
         <div class="post-body">
@@ -644,6 +661,18 @@ RUN make build
 <p><a href="https://help.sonatype.com/en/docker-content-trust.html">https://help.sonatype.com/en/docker-content-trust.html</a></p>
 <p><a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker">[43]</a> Enforcing image trust on Docker containers using Notary | CNCF</p>
 <p><a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/">https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/</a></p>
+        <h2 id="bibliografia">Bibliografia</h2>
+        <ul>
+          <li><a href="https://docs.docker.com/get-started/docker-overview/">Docker Docs, &quot;Get Started&quot; – panoramica ufficiale su immagini, container e registri.</a></li>
+          <li><a href="https://docs.docker.com/engine/containers/run/">Docker Docs, &quot;Run containers&quot; – dettagli sul runtime e sull&#39;isolamento dei processi.</a></li>
+          <li><a href="https://docs.docker.com/build/cache/">Docker Docs, &quot;Build cache&quot; – come funziona la cache dei layer durante il build.</a></li>
+          <li><a href="https://www.redhat.com/en/blog/pull-container-image">Red Hat, &quot;What happens when you pull a container image&quot; – flusso HTTP e manifest dei registri.</a></li>
+          <li><a href="https://last9.io/blog/docker-container-lifecycle/">Last9, &quot;Docker Container Lifecycle&quot; – stati principali (created, running, paused, exited).</a></li>
+          <li><a href="https://www.digitalocean.com/community/tutorials/working-with-docker-containers">DigitalOcean, &quot;Working with Docker Containers&quot; – guida operativa su pull, run e gestione.</a></li>
+          <li><a href="https://blog.nginx.org/blog/what-are-namespaces-cgroups-how-do-they-work">NGINX, &quot;What Are Namespaces and cgroups&quot; – meccanismi Linux che abilitano l&#39;isolamento.</a></li>
+          <li><a href="https://aws.amazon.com/compare/the-difference-between-containers-and-virtual-machines/">AWS, &quot;Containers vs Virtual Machines&quot; – confronto tra container e VM nei workload cloud.</a></li>
+          <li><a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/">Adaltas, &quot;Linux overlay filesystem in Docker&quot; – funzionamento di overlay2 e copy-on-write.</a></li>
+        </ul>
         </div>
       </section>
     </article>

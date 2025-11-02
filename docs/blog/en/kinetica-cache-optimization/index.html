@@ -508,7 +508,7 @@
         <aside class="post-toc">
         <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
         <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#memory-first-and-tiered-storage">Memory-First and Tiered Storage</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#cache-management-ram-vram-disk-and-gpu-offloading">Cache Management (RAM, VRAM, Disk) and GPU Offloading</a></li>
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#memory-first-and-tiered-storage">Memory-First and Tiered Storage</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#cache-management-ram-vram-disk-and-gpu-offloading">Cache Management (RAM, VRAM, Disk) and GPU Offloading</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#bibliography">Bibliography</a></li>
         </ul>
       </aside>
         <div class="post-body">
@@ -544,6 +544,16 @@
 <p>When datasets live in external storage (HDFS, S3, etc.), Kinetica can execute queries that join internal and external tables without fully ingesting them; it moves only relevant result segments to the GPU.</p>
 <p>Another crucial aspect is GPU offloading — deciding which operations to “ship” to the GPU and which to keep on the CPU. Kinetica delegates highly parallel, compute-heavy tasks to GPU cores and leaves CPU-bound portions (those ill-suited for SIMD or not worth the transfer cost) on the CPU. Queries are decomposed into many vector tasks queued for parallel execution on the GPU.</p>
 <p>Kinetica thus implements a balanced heterogeneous model: CPU and GPU work together. Query latency shrinks dramatically relative to CPU-only databases, while the system remains fully SQL-compliant. Kinetica is not alone in this philosophy — for instance, HeavyDB treats GPU memory as an L1 cache. Its optimiser pushes hot data to GPU memory for near-zero latency, then falls back to CPU (L2) or disk (L3) as needed. Kinetica’s differentiator lies in the explicit, customisable control over every memory tier: users can tune data placement down to specific columns or tables, whereas other systems automate most caching decisions.</p>
+        <h2 id="bibliography">Bibliography</h2>
+        <ul>
+          <li><a href="https://www.kinetica.com/product/">Kinetica, &quot;Product Overview&quot; — architecture and core services of the GPU-first platform.</a></li>
+          <li><a href="https://docs.kinetica.com/">Kinetica Documentation — official reference for memory tiers, caching, and developer APIs.</a></li>
+          <li><a href="https://www.nvidia.com/en-us/data-center/what-is-a-gpu-database/">NVIDIA, &quot;What Is a GPU Database?&quot; — fundamentals of GPU-accelerated analytics.</a></li>
+          <li><a href="https://www.heavy.ai/learn/gpu-databases">Heavy.AI, &quot;GPU Databases&quot; — comparative view of GPU-native analytical engines.</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Column-oriented_DBMS">Wikipedia, &quot;Column-oriented DBMS&quot; — concepts behind columnar storage.</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Vector_processor">Wikipedia, &quot;Vector processor&quot; — vector execution models leveraged by Kinetica.</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Tiered_storage">Wikipedia, &quot;Tiered storage&quot; — definition and typical patterns of hierarchical storage.</a></li>
+        </ul>
         </div>
       </section>
     </article>
