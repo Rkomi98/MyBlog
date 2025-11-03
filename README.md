@@ -40,6 +40,14 @@ During `npm run build` the generator checks Italian sources for a missing Englis
 Translations are cached as regular files, so subsequent builds do not hit the API again unless the English
 file is removed.
 
+## Adding a new Markdown article
+
+1. **Create the source file** under `files/<topic>/`. Keep the Italian version as the primary source (e.g. `files/AI Engineering/NomeArticolo.md`). Add or reuse folders to group posts by topic.
+2. **Add the English version** by either writing `*_en.md` manually or running `npm run translate`. If you do not plan to translate immediately, set `SKIP_TRANSLATION=true` when building to avoid API calls.
+3. **Register the post metadata** in `data/blog-posts.json`: choose a unique `slug`, set `category`/`categoryLabels`, pick an icon and read time (≈ word count ÷ 200), and point `markdownPaths.it`/`.en` to the files you just created.
+4. **Store supporting assets** (SVG, PNG, etc.) inside `Assets/` and reference them relatively (e.g. `![Alt](../Assets/my-graphic.svg)`).
+5. **Regenerate the site** with `npm run build` (or `npm run translate && npm run build`) and open `dist/blog/index.html` to verify the article card and detail page.
+
 ## GitHub Pages
 
 After running `npm run build` locally, the generated site lives in `dist/`.  
