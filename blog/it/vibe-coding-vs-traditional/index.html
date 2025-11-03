@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vibe coding vs programmazione tradizionale: dati 2023-2025 | Mirko Calcaterra</title>
+  <meta name="description" content="Confronto tra vibe coding e sviluppo tradizionale: produttività, qualità del codice, rischi e best practice emersi da studi e casi reali 2023-2025.">
+  <meta name="keywords" content="vibe coding, programmazione tradizionale, AI pair programming, produttività developer, qualità del codice, best practice">
+  <meta name="author" content="Mirko Calcaterra">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rkomi98.github.io/MyBlog/blog/it/vibe-coding-vs-traditional/">
+  <link rel="alternate" hreflang="en" href="https://rkomi98.github.io/MyBlog/blog/en/vibe-coding-vs-traditional/">
+  <meta property="og:title" content="Vibe coding vs programmazione tradizionale: dati 2023-2025 | Mirko Calcaterra">
+  <meta property="og:description" content="Confronto tra vibe coding e sviluppo tradizionale: produttività, qualità del codice, rischi e best practice emersi da studi e casi reali 2023-2025.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Mirko Calcaterra">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/vibe-coding-vs-traditional/">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vibe coding vs programmazione tradizionale: dati 2023-2025 | Mirko Calcaterra">
+  <meta name="twitter:description" content="Confronto tra vibe coding e sviluppo tradizionale: produttività, qualità del codice, rischi e best practice emersi da studi e casi reali 2023-2025.">
+  <meta name="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.15rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .post-toc__item.level-1 {
+      padding-left: 1rem;
+    }
+    .post-toc__item.level-2 {
+      padding-left: 2rem;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: rgba(15, 23, 42, 0.65);
+      color: #f8fafc;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    body[data-theme="light"] .post-body code {
+      background: rgba(15, 23, 42, 0.08);
+      color: #111827;
+    }
+    .post-body pre {
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      padding: 1.2rem 1.4rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    body[data-theme="light"] .post-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    .post-body tr {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    .post-body th,
+    .post-body td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    body[data-theme="light"] .post-body table {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🤖</div>
+        <span class="post-hero__category">Programmazione</span>
+        <h1 class="post-hero__title">Vibe coding vs programmazione tradizionale: dati 2023-2025</h1>
+        <div class="post-hero__meta">
+          <span>📅 29 ottobre 2025</span>
+          <span>⏱️ 15 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc">
+        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+        <ul class="post-toc__list">
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#metodologia">Metodologia</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#risultati-tecnici">Risultati Tecnici</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#impatto-su-produttivit-e-velocit-di-sviluppo">Impatto su produttività e velocità di sviluppo</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#qualit-del-codice-e-mantenibilit">Qualità del codice e mantenibilità</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#errori-e-sicurezza">Errori e sicurezza</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#sicurezza">Sicurezza</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#performance-e-scalabilit">Performance e scalabilità</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#soddisfazione-degli-sviluppatori">soddisfazione degli sviluppatori</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#formazione-competenze-e-impatto-sui-ruoli">Formazione, competenze e impatto sui ruoli</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#sintesi-e-raccomandazioni">Sintesi e raccomandazioni</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#bibliografia">Bibliografia</a></li>
+        </ul>
+      </aside>
+        <div class="post-body">
+          <h2 id="abstract">Abstract</h2>
+<p>Il vibe coding – ossia la programmazione guidata interamente dall’AI – si è diffuso tra il 2023 e il 2025 grazie a strumenti come GitHub Copilot, Cursor, Sourcegraph Cody, Tabnine, Codeium e assistenti AI integrati negli IDE.</p>
+<p>In questo primo articolo voglio confrontare il vibe coding con l’approccio tradizionale (“old coding”) sulla base di studi recenti, casi aziendali ed esperienze degli utenti. I dati mostrano un quadro sfumato: in <strong>contesti controllati aziendali</strong>, l’AI pair programming può accelerare lo sviluppo (<a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">+26% task completati in media</a>) soprattutto per <em>sviluppatori junior</em>, senza apparenti cali immediati di qualità.
+Questo penso sia quel dato che tutti raccontano e che anche tu che stai leggendo questo articolo conosci.</p>
+<p>Tuttavia, ciò che probabilmente non conosci è che, in progetti complessi, sviluppatori esperti hanno riscontrato rallentamenti inattesi (si parla di addirittura <a href="https://www.infoq.com/news/2025/07/ai-productivity/">+19% del tempo usando l&#39;AI</a>) nonostante la percezione di maggiore velocità.</p>
+<p>Sul fronte qualitativo, il codice generato dall’AI funziona ma tende ad avere mantenibilità inferiore, a causa di <em>duplicazioni</em>, <em>code churn
+raddoppiato</em> e <strong>potenziali falle di sicurezza</strong> <a href="https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx">se usato senza supervisione</a>. Per ovviare a questo problema iniziano a nascere tool, come Code Mender di cui ho già parlato in un precedente podcast.</p>
+<p>Culturalmente, gli assistenti AI aumentano la soddisfazione dei developer <a href="https://www.secondtalent.com/resources/github-copilot-statistics/">riducendo i compiti ripetitivi</a>, ma emergono preoccupazioni: i programmatori meno esperti rischiano di non sviluppare quella <a href="https://nmn.gl/blog/ai-and-learning">comprensione profonda del codice</a> che caratterizza uno sviluppatore degno di essere chiamato tale, e una fiducia cieca nell’AI (“accetto tutto e via”) può portare a <strong>perdita del controllo</strong> e ad un <strong>codice opaco</strong>. In sintesi, il vibe coding offre velocità e accessibilità senza precedenti, ma richiede <strong>forte intervento</strong> umano in fase di <em>architettura, revisione e test</em> per <strong>garantire qualità, sicurezza e sostenibilità nel tempo</strong>.</p>
+<h2 id="metodologia">Metodologia</h2>
+<p>Per questa analisi sono state esaminate fonti pubblicate tra il 2023 e il 2025 in più lingue, privilegiando evidenze quantitative e riproducibili. In particolare:</p>
+<ol>
+<li>studi sperimentali peer-reviewed e white paper tecnici con metodologia chiara (RCT, benchmark). Questi sono stati considerati evidenza di grado A (alta solidità, basso rischio di bias);</li>
+<li>case study industriali con metriche reali su team (grado B se condotti internamente con  possibile  bias  di  contesto);</li>
+<li>testimonianze  dirette  di  sviluppatori  (blog,  video,  forum)  che includono esperimenti concreti o codice verificabile (grado C in quanto aneddotiche, rischio bias medio/alto). Abbiamo estratto per ogni fonte dettagli su:  contesto e tool usati, tipo di attività svolta (es. nuovo sviluppo, refactoring, bugfix, testing), metriche oggettive (tempo impiegato, percentuale di bug o vulnerabilità, copertura di test, performance) e metriche soggettive (soddisfazione, carico cognitivo, apprendimento  percepito).</li>
+</ol>
+<p>Durante  la  sintesi,  le  evidenze  sono  state  incrociate  per  evidenziare convergenze o discrepanze. Ad esempio, si confrontano i risultati di un ampio RCT aziendale (4.800 sviluppatori in Microsoft/Accenture, evidenza A) con quelli di un RCT su sviluppatori OSS esperti (16 maintainer open-source, evidenza A), nonché con case study come l’adozione interna di Copilot in un’azienda (ZoomInfo, 400 ingegneri, evidenza B).</p>
+<p>Sono state incluse esperienze individuali (es.prototipo full-stack sviluppato interamente con AI) come evidenza  C per evidenziare aspetti
+pratici e culturali difficilmente rilevabili dai soli numeri. Tutte le fonti sono citate tramite link ai riferimenti originali.</p>
+<h2 id="risultati-tecnici">Risultati Tecnici</h2>
+<h3 id="impatto-su-produttivit-e-velocit-di-sviluppo">Impatto su produttività e velocità di sviluppo</h3>
+<p>Dai dati emerge che gli assistenti AI possono accelerare lo sviluppo software, ma con distinzioni importanti per <strong>contesto</strong> e <strong>seniority</strong> del programmatore.</p>
+<ul>
+<li><strong>RCT multi‑azienda (Microsoft, Accenture, altra multinazionale)</strong>: con GitHub Copilot si osserva <strong>+26% di task completati</strong> in media, <strong>+13,5%</strong> di commit settimanali e <strong>+38%</strong> nella frequenza di compilazione. Lo studio <strong>non rileva impatti negativi sulla qualità</strong> (bug, review, build) → la velocità extra <strong>non</strong> avviene a scapito del funzionamento (<a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">IT Revolution – sintesi dello studio</a>).</li>
+<li><strong>Trial controllato Accenture</strong>: <strong>+8,7%</strong> di pull request per sviluppatore, <strong>+15%</strong> di <em>merge rate</em> e <strong>+84%</strong> di build riuscite al primo colpo (minor attrito iniziale) (<a href="https://www.secondtalent.com/resources/github-copilot-statistics/">riepilogo metriche</a>; vedi anche <a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/">GitHub × Accenture</a>).</li>
+<li><strong>Dove accelera di più</strong>: compiti ripetitivi/boilerplate (CRUD, mapping, test scaffolding, integrazioni standard) e onboarding su codebase nuove; <strong>meno effetto</strong> su logiche di business complesse/inedite (necessaria guida e verifica umana) (<a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/">GitHub × Accenture</a>).</li>
+<li><strong>Junior vs Senior</strong>: benefici <strong>più marcati per profili junior</strong> (adozione e accettazione suggerimenti maggiori); per i senior l’incremento è più contenuto e dipende dalla bontà dell’integrazione nel flusso di lavoro (<a href="https://economics.mit.edu/sites/default/files/inline-files/draft_copilot_experiments.pdf">MIT working paper – RCT</a>).</li>
+</ul>
+<blockquote>
+<p><strong>Nota di contesto (OSS esperti)</strong>: in un RCT indipendente su maintainer open‑source, l’uso di tool AI (Cursor/Claude) ha prodotto <strong>uno <strong>slowdown</strong> medio del +19%</strong> su 246 task reali, <strong>nonostante</strong> la percezione di <em>speed‑up</em> (~–20%). Tempo extra in prompting, revisione e adattamento all’architettura ha annullato i guadagni (<a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR – blog</a>; <a href="https://arxiv.org/abs/2507.09089">arXiv</a>; <a href="https://www.infoq.com/news/2025/07/ai-productivity/">InfoQ</a>).</p>
+</blockquote>
+<p><strong>Tabella riassuntiva (produttività/velocità)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metrica</th>
+<th>Variazione con AI</th>
+<th>Contesto/Fonte</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Task completati</td>
+<td><strong>+26%</strong></td>
+<td><a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">IT Revolution</a></td>
+</tr>
+<tr>
+<td>Commit settimanali</td>
+<td><strong>+13,5%</strong></td>
+<td><a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">IT Revolution</a></td>
+</tr>
+<tr>
+<td>Frequenza di compilazione</td>
+<td><strong>+38%</strong></td>
+<td><a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">IT Revolution</a></td>
+</tr>
+<tr>
+<td>PR per sviluppatore</td>
+<td><strong>+8,7%</strong></td>
+<td><a href="https://www.secondtalent.com/resources/github-copilot-statistics/">SecondTalent – Accenture</a></td>
+</tr>
+<tr>
+<td>Merge rate</td>
+<td><strong>+15%</strong></td>
+<td><a href="https://www.secondtalent.com/resources/github-copilot-statistics/">SecondTalent – Accenture</a></td>
+</tr>
+<tr>
+<td>Build al primo tentativo</td>
+<td><strong>+84%</strong></td>
+<td><a href="https://www.secondtalent.com/resources/github-copilot-statistics/">SecondTalent – Accenture</a></td>
+</tr>
+<tr>
+<td>Tempo su task OSS complessi</td>
+<td><strong>+19%</strong> (più lento)</td>
+<td><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR</a></td>
+</tr>
+</tbody></table>
+<h3 id="qualit-del-codice-e-mantenibilit">Qualità del codice e mantenibilità</h3>
+<p>Se parliamo di qualità del codice prodotto, si apre un discorso un po&#39; controverso: la funzionalità immediata del codice generato dall’AI è spesso buona, ma emergono problemi di <strong>mantenibilità nel medio termine</strong> senza un intervento disciplinato del programmatore. In termini di correttezza funzionale out-of-the-box, diversi studi indicano che il codice con AI può essere altrettanto valido di quello scritto a mano. Di seguito alcuni esempi emersi dalla ricerca:</p>
+<ul>
+<li><p><strong>Trend 2024–2025</strong>: analizzando la qualità interna e la manutenibilità, emergono trend preoccupanti legati all’uso massiccio dell’AI. Un white paper indipendente (Coding on Copilot, GitClear 2024) ha analizzato milioni di righe di codice su GitHub per misurarne l’evoluzione dopo l’introduzione di Copilot. Il risultato: il code churn, ossia la percentuale di codice che viene modificato o rimosso entro due settimane dalla sua creazione – è in forte aumento. (<a href="https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality">GitClear report</a>; <a href="https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx">Visual Studio Magazine</a>). Contestualmente,
+GitClear rileva un aumento del codice “aggiunto” e “copiato/incollato” rispetto a quello riorganizzato o cancellato. In altre parole, gli sviluppatori con AI tendono ad aggiungere nuove parti di codice (magari suggerite) invece di riutilizzare o modificare quelle esistenti, generando duplicazioni.</p>
+</li>
+<li><p>Un <a href="https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-kelly/#:~:text=making%20future%20modifications%20and%20debugging,hard%20to%20read%2C%20fix%2C%20or">programmatore</a> racconta la sua esperienza rivedendo un’app creata interamente via vibe coding: “sono rimasto scioccato da quanto fosse brutto il codice in molti punti. Sembrava scritto da tanti sviluppatori junior, ognuno con pratiche diverse”.  In quell’app c’erano funzioni duplicate in moltissimi file e nessuna coerenza nello stile, rendendo arduo perfino tracciare i bug; alla fine lo sviluppatore ha deciso di gettare tutto e riprogettare l’architettura a mano prima di riusare l’AI, per evitare tale caos.</p>
+</li>
+<li><p><strong>Lettura operativa</strong>: il vibe coding <strong>produce più codice più in fretta</strong>, ma senza <strong>guardrail</strong> (DRY, linters, design guide) aumenta l’entropia. Misurare <strong>churn/duplicazione</strong>, inserire <strong>slot di refactoring</strong> e <strong>code‑owner</strong> per coerenza.</p>
+</li>
+</ul>
+<p><strong>Qualità “esterna” (funzionalità a breve termine)</strong></p>
+<ul>
+<li><strong>Studio GitHub 2022</strong>: il codice assistito da Copilot è riportato come <strong>più funzionale, leggibile e affidabile</strong> rispetto al controllo, in compiti standardizzati (studio di laboratorio) (<a href="https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.asp">GitHub Research – 2022</a>).</li>
+<li><strong>RCT 2025 (multi‑azienda)</strong>: Nel grande RCT del 2025 citato prima, non sono state osservate differenze significative in bug o malfunzionamenti: i team con AI hanno mantenuto gli stessi standard di qualità apparente (test passati, review accettate) dei team
+tradizionali  (<a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">sintesi IT Revolution</a>.</li>
+<li><strong>Testing</strong>: l’AI riduce il carico di scrittura test; <strong>fino a +38%</strong> di velocità nel creare unit test in case study enterprise (<a href="https://www.future-processing.com/blog/github-copilot-speeding-up-developers-work/">riepilogo Future Processing</a>).</li>
+</ul>
+<p><strong>Tabella riassuntiva (qualità/mantenibilità)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicatore</th>
+<th>Evidenza</th>
+<th>Impatto atteso</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>Code churn</em></td>
+<td>Fino a <strong>~2×</strong> vs 2021</td>
+<td>Più rimaneggiamenti a breve; costi di manutenzione</td>
+<td><a href="https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality">GitClear</a></td>
+</tr>
+<tr>
+<td>Duplicazioni</td>
+<td><strong>In aumento</strong></td>
+<td>Violazioni DRY, rischio bug speculari</td>
+<td><a href="https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality">GitClear</a></td>
+</tr>
+<tr>
+<td>Acceptance suggerimenti</td>
+<td><strong>~33%</strong> (suggestions)</td>
+<td>Velocità ↑ ma richiede review</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+<tr>
+<td>Acceptance LoC</td>
+<td><strong>~20%</strong> (linee)</td>
+<td>Output parziale/boilerplate</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+<tr>
+<td>Qualità percepita</td>
+<td>Variabile</td>
+<td>Richiede standard e refactor ciclici</td>
+<td><a href="https://arxiv.org/abs/2501.13282">ZoomInfo</a></td>
+</tr>
+</tbody></table>
+<p>In sintesi, il vibe coding tende a produrre <strong>più codice, più velocemente</strong>, ma con <strong>minore propensione al riuso e alla pulizia</strong>.</p>
+<p>Mentre un sviluppatore umano esperto, scrivendo a mano, spesso riflette su come integrare la nuova funzionalità nel design esistente (magari refactoring parti di codice correlate), un AI su prompt genera una soluzione ex novo, ignaro di possibili duplicazioni o soluzioni analoghe già nel progetto. Per questo vediamo applicazioni AI-driven che consumano 3–4 volte le risorse server rispetto a equivalenti scritte a mano.</p>
+<h3 id="errori-e-sicurezza">Errori e sicurezza</h3>
+<p>Vorrei porre l&#39;attenzione su un aspetto fondamentale da confrontare, ovvero l&#39;incidenza di bug e vulnerabilità nel codice AI-driven rispetto al codice tradizionale. </p>
+<p>Vorrei porre quindi questa domanda: il coding con AI porta a più <strong>errori</strong> o <strong>problemi di sicurezza</strong>? Le evidenze indicano che l’AI è abile nell’evitare errori <em>sintattici/compilativi</em>, ma può introdurre <em>bug logici o vulnerabilità di sicurezza sottili</em> se non controllata attentamente. In termini di bug funzionali, gli studi controllati finora non hanno segnalato tassi di bug significativamente più alti imputabili all’AI, anzi, come visto, inizialmente i build error diminuiscono e i test passano più facilmente grazie all’AI.</p>
+<p>Tuttavia, diversi esperimenti mostrano che affidarsi ciecamente all’AI può indurre errori che un umano esperto eviterebbe. Ad esempio, modelli come GPT-4 tendono talvolta a “inventare” funzioni o chiamate non esistenti se il prompt è ambiguo, oppure a fornire soluzioni plausibili ma scorrette su edge case. Uno studio (<a href="https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx#:~:text=%2A%20,is%20needed%20in%20the%20future">Microsoft 2022</a>) ha riscontrato casi in cui Copilot suggeriva soluzioni fuorvianti a problemi algoritmici, risolvendo il caso base ma sbagliando in situazioni limite – errori che uno sviluppatore attento avrebbe scoperto scrivendo i test. Per questo la letteratura raccomanda di non lasciare mai “volare l’AI da sola”: “Copilot è uno strumento potente; tuttavia non dovrebbe pilotare l’aereo da solo”. </p>
+<p>Il programmatore <strong>deve restare nel loop</strong> per verificare la correttezza del codice, o meglio la logica &quot;deep&quot; del codice. A conferma, uno <a href="https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-kelly/">studio sull’uso di ChatGPT</a> per compiti di programmazione universitaria nota che studenti inesperti tendevano a fidarsi dell’output anche quando conteneva errori: se il programma generato “non funzionava, semplicemente chiedevano all’AI di aggiustarlo di nuovo” senza comprendere il vero motivo. Questo può creare cicli dove un bug viene “corretto” dall’AI con un altro patch potenzialmente sbagliato, portando a errori nascosti di difficile diagnosi.</p>
+<h4 id="sicurezza">Sicurezza</h4>
+<p>La sicurezza del software merita un’attenzione particolare. Ammetto di aver condotto una deep research a riguardo ed emerge che il codice generato dall’AI spesso include vulnerabilità note o pratiche insicure, se l’utente non guida attivamente il modello verso soluzioni sicure. </p>
+<p><strong>Vulnerabilità note</strong>: secondo uno studio di <a href="https://arxiv.org/abs/2108.09293">Pearce et al., 2021/22</a> su 89 scenari CWE, il 39% dei programmi generati conteneva vulnerabilità e per i primi suggerimenti di Copilot il tasso era ~39% in Python e ~50% in C. Come se questo non bastasse, oltre 40% presentava almeno un punto
+debole (buffer overflow, injection SQL, hardcoded secrets, etc.).</p>
+<blockquote>
+<p> Questo dato rivela che senza alcun filtraggio, l’AI tende a <strong>replicare pattern</strong> visti in training data <strong>anche se insicuri</strong>.
+Ad esempio, potrebbe suggerire una query SQL costruita tramite string concatenation (vulnerabile a <em>injection</em>) perché ha visto spesso codice così su GitHub, non sapendo che è una pratica pericolosa. </p>
+</blockquote>
+<p>Vediamo insieme un caso comune, che mi ha visto protagonista. Non me ne vanto, anzi, tuttora penso a come io abbia fatto ad essere a poco dal pubblicare una cosa del genere: API key lasciate nel codice. 
+Chi mi conosce un minimo sa che una delle prime cose che faccio è proprio creare un file .env. Ma quella volta preso dalla fretta per un imprevisto, mi sono trovato a fare tutto in vibe coding e ad esporre quindi l&#39;API Key a frontend.</p>
+<p>Va detto che gli assistenti AI stanno migliorando: Copilot e Cursor ora tentano di riconoscere e avvisare su pattern insicuri noti, e strumenti come CodeQL possono essere integrati per scansioni automatiche post-generazione.</p>
+<p>Un fenomeno interessante emerso da uno <a href="https://arxiv.org/html/2506.11022v1#:~:text=analyzes%20security%20degradation%20in%20AI,iterations%20to%20prevent%20the%20paradoxical">studio 2025</a> è la <strong>“degradazione iterativa” della sicurezza</strong>: quando uno sviluppatore fa iterare l’AI più volte su un pezzo di codice per migliorarlo, magari alternando prompt di efficienza e aggiunta di funzionalità, possono comparire nuove vulnerabilità inattese. Nel test, dopo 5 iterazioni di miglioramenti richiesti a GPT, le vulnerabilità critiche nel codice sono aumentate del +37,6%. 
+Ciò sfida l’assunto che iterare con l’AI affini automaticamente il codice: senza supervisione umana attenta, ogni “miglioria” automatica può introdurre un nuovo problema di sicurezza altrove. Questo rafforza la raccomandazione che l’expertise umana in sicurezza rimanga nel loop.</p>
+<p>In conclusione, come leggevo su un <a href="https://trickle.so/blog/vibe-coding-vs-traditional-development">articolo di Bob Chen</a>, la best practice emersa è trattare l’AI come un junior developer molto veloce ma potenzialmente sprovveduto. Ovvero, mai fidarsi ciecamente, fare sempre peer review del codice generato, passare scanner di sicurezza (es. OWASP ZAP, Snyk).</p>
+<h3 id="performance-e-scalabilit">Performance e scalabilità</h3>
+<p>Un ultimo confronto tecnico riguarda le prestazioni runtime e la scalabilità dei sistemi creati principalmente via AI rispetto a quelli progettati tradizionalmente. Le evidenze indicano che il vibe coding spesso <strong>privilegia la soluzione funzionante più semplice</strong>, <strong>trascurando ottimizzazioni</strong> che invece i developer esperti implementerebbero per <strong>scalare</strong>.</p>
+<p>Ti voglio portare un esempio che ho letto su <a href="https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-ever-33c343bfc2e1#:~:text=,didn%E2%80%99t%20guess%20%E2%80%94%20I%20hypothesized">Medium</a>. Qui l&#39;autore racconta di aver generato un blob JSON da 39 MB lato client, che ovviamente ha mandato in crash il browser. Il focus che lui pone è sul fatto che &quot;l’AI non ha capito” che quell’approccio non era scalabile, mentre lo sviluppatore umano l’ha riconosciuto immediatamente. </p>
+<p>Quello che voglio dire con questo esempio è in generale, architetture create “improvvisando” con l’AI tendono a essere monolitiche e poco modulari.  Il modello non impone separazione in servizi, non pensa a code asincrone, caching, streaming, etc., <em>a meno che l’utente non lo istruisca espressamente</em>. Ciò significa che un progetto nato via vibe coding può funzionare bene <strong>per un numero limitato di utenti</strong> o request, ma sotto carico elevato mostra <strong>inefficienze gravi</strong>, richiedendo spesso una riprogettazione. Un <a href="https://cybersecurityadvisors.network/2025/08/06/ai-assisted-software-development-and-the-vibe-coding-debate-by-nick-kell">effetto osservato</a> è che il tempo risparmiato inizialmente potrebbe essere perso dopo per scalare l’applicazione: “il codice creato ‘winging it’ con AI va bene per una demo veloce, ma quello stesso codice potrebbe non reggere in produzione
+sotto carico, richiedendo refactoring massiccio a posteriori” </p>
+<p>Detto questo, va riconosciuto che l’AI può anche aiutare a ottimizzare se usata bene: per es., può suggerire vectorization di un loop o indicare la complessità di un algoritmo se interrogata. 
+Inoltre, col maturare dei modelli e il fine-tuning su performance, è plausibile che in futuro gli assistenti evidenzieranno essi stessi i colli di bottiglia (es: “questa funzione ha complessità $O(n^2)$,  potresti usare un indice per migliorare”). </p>
+<p>Lo rimarco ancora una volta se non si fosse capito: il modello vincente è ibrido: l’AI crea rapidamente una base funzionante, poi sviluppatori esperti profilano e ottimizzano dove serve, come farebbero su codice scritto da uno sviluppatore junior.</p>
+<p>Riassumendo i risultati tecnici: il vibe coding sta <strong>oggettivamente rivoluzionando</strong> la velocità di scrittura e la comodità (meno effort manuale su un gran numero di compiti), ma non garantisce qualità che definirei “strutturale” del prodotto finale. Il codice AI-driven tende ad essere più verboso e ridondante, richiedendo successivamente una fase di pulizia/ottimizzazione maggiore rispetto al codice pensato dall’inizio con metodo tradizionale. </p>
+<p>Con le dovute pratiche di controllo (review, refactoring, test intensivi), team ben organizzati possono mitigare questi difetti e sfruttare il meglio dei due mondi – ma senza tali controlli il rischio è di ottenere “un castello di sabbia in riva al mare in Sardegna&quot; Magari sta su fino a quando non inizia a soffiare Maestrale. Poi cadrà come corpo morto cade. </p>
+<p>Prima di concludere ci tengo a parlare di una cosa di cui in pochi parlano ma effettivamente è poco tecnico e oggettivo</p>
+<h3 id="soddisfazione-degli-sviluppatori">soddisfazione degli sviluppatori</h3>
+<p>L’AI toglie di mezzo molte parti noiose o frustranti. Leggevo giusto ieri che il <a href="https://www.secondtalent.com/resources/github-copilot-statistics/#:~:text=Developer%20satisfaction%20metrics%20provide%20additional,searching%20for%20information%20or%20examples">70%</a> ha riportato minore sforzo mentale nei task ripetitivi, e oltre la metà ha ridotto il tempo passato a cercare informazioni su Stack Overflow o documentazione. Potendo delegare all’AI la scrittura di boilerplate o la ricerca di sintassi, gli sviluppatori si concentrano su aspetti più creativi o interessanti e questo migliora l’<strong>engagement</strong>.</p>
+<p><img src="../../../Assets/image_001.png" alt="Immagine"></p>
+<p>Detto ciò, esistono anche voci critiche e resistenze culturali all’uso indiscriminato dell’AI. Alcuni sviluppatori, specialmente i più senior o meglio li definirei puristi, manifestano frustrazione verso l’eccessiva enfasi sull’AI. </p>
+<p>Ad esempio, leggendo discussioni su alcuni forum (che non voglio citare) indicano che parte della comunità teme che gli IDE stiano diventando sovraccarichi di funzionalità AI a scapito della stabilità di base (“non voglio la tua AI, voglio un IDE che funzioni bene” è una ref tradotta apparsa online). <a href="https://devclass.com/2025/04/30/jetbrains-defends-removal-of-negative-reviews-for-unpopular-ai-assistant/">JetBrains ha affrontato critiche</a> quando il suo assistente AI, lanciato nel 2023, ha ottenuto recensioni negative (rating 2.3/5) dovute a bug e intralci percepiti nel flusso di lavoro tradizionale.</p>
+<p>Ciò suggerisce che non tutti gli sviluppatori trovano utile l’AI allo stesso modo: chi lavora in maniera molto metodica e approfondita su problemi complessi può vedere l’AI come una fonte di distrazione o addirittura ho visto nutrire una sorta di sfiducia nelle sue soluzioni. </p>
+<p>Altri temono di perdere il controllo sul codice (io sono tra quelli, ma dopo vi dico la soluzione che spesso uso): se l’AI scrive gran parte, lo sviluppatore sente di non “possedere” più la comprensione completa.
+Questo può generare ansia professionale, specie nei programmatori che tengono alla qualità &quot;artigianale&quot; (chiamiamola così dai) del proprio lavoro. Tuttavia, il trend generale sembra essere l’accettazione: man mano che gli strumenti migliorano e i developer imparano a guidarli, anche i tradizionalisti iniziano a integrarli nei propri processi, magari limitandosi alle feature che trovano più utili come completamenti automatici brevi, riassunti di codice, etc.</p>
+<p>Io spesso per riprendere il controllo chiedo, dopo ogni cosa creata in Cursor, un file markdown che mi spiega le feature implementate (o l&#39;intera app), qual è lo scheletro del codice che ha creato e perché ha fatto determinate scelte. Ammetto che non è la soluzione definitiva, però spesso mi ha aiutato.</p>
+<p>Torniamo a noi. In ambito open-source, un dibattito culturale acceso riguarda l’uso di AI per contribuire ai progetti. </p>
+<p>Da un lato, leggevo su Reddit che <strong>GitHub ha reso Copilot gratuito</strong> per i maintainer OS per <em>incentivarne l’uso</em>, convinta che questo aumenti la produttività. 
+Dall’altro lato, alcuni maintainer hanno espresso preoccupazione per Pull Requests generate dall’AI potenzialmente di bassa qualità: richieste di funzionalità o fix generati via ChatGPT senza un minimo di ragionamento da parte dell&#39;umano. Pensate che c’è stato persino un appello di maintainer per avere la <a href="https://socket.dev/blog/oss-maintainers-demand-ability-to-block-copilot-generated-issues-and-prs">possibilità su GitHub di bloccare contributi generati da AI</a> se non conformi. Questo denota una tensione tra la quantità (molti contributi rapidi via AI) e la qualità/controllabilità in comunità collaborative.</p>
+<p>Alcuni progetti hanno iniziato a richiedere che i contributor dichiarino se hanno usato AI per generare il codice, un po’ come indicazione per i revisori di porre extra attenzione. Culturalmente, quindi, se in azienda l’AI è caldeggiata dal management (anche perché vista come aumento di produttività e riduzione costi), nelle comunità open-source e in generale tra gli sviluppatori emerge la necessità di nuove norme e linee guida su come utilizzare correttamente questi strumenti senza compromettere gli standard.</p>
+<h2 id="formazione-competenze-e-impatto-sui-ruoli">Formazione, competenze e impatto sui ruoli</h2>
+<p>Probabilmente la questione culturale più discussa è: come influisce il vibe coding sull’apprendimento e sulle competenze dei programmatori? Ho sentito persone enfatizzare il rischio di avere sviluppatori che sanno solo “promptare” l’AI senza capire davvero il codice. Sarà vero? </p>
+<p>Dai vari resoconti, il rischio c’è, ma direi che è mitigabile. </p>
+<p>Un post diventato virale, <a href="https://nmn.gl/blog/ai-and-learning#:~:text=We%E2%80%99re%20at%20this%20weird%20inflection,That%E2%80%99s%20where%20things%20get%20concerning">“New Junior Developers Can’t Actually Code” (Goel, 2025)</a>, sostiene che sta emergendo una generazione di nuovi dev che scrive codice più velocemente che mai grazie all’AI, ma senza capire davvero cosa
+sta facendo. L’autore, un tech lead, racconta di giovani assunti che hanno Copilot/ChatGPT sempre attivi e che consegnano feature apparentemente funzionanti; ma alle domande “Perché il tuo codice fa così?” non ottiene risposta. Ne approfitto anche per consigliare <a href="https://nmn.gl/blog/ai-illiterate-programmers">questa lettura</a> dello stesso autore.</p>
+<p>Torniamo al primo articolo. Namanyay Goel osserva che manca quella conoscenza di base che una volta si costruiva “struggendo” sui problemi: molti non sanno spiegare alternative possibili o il ragionamento dietro il codice, perché si sono limitati ad accettare la soluzione suggerita dall’AI. Questo porta a comprensione superficiale e dipendenza dall’AI per debug: se qualcosa non va, invece di introspezione, i giovani sviluppatori chiedono di nuovo all’AI di risolvere. 
+In contesti educativi, leggendo uno scambio di botta e risposta su ycombinator, ho letto che alcuni docenti universitari confermano fenomeni simili. Ovvero, studenti che con ChatGPT consegnano compiti apparentemente corretti ma non sanno rispondere a domande semplici sul perché del codice (sintomo che non l’hanno scritto di proprio pugno né compreso a fondo). </p>
+<p>Sia chiaro, non sono contro. Anzi!</p>
+<p>L’AI può anche essere uno strumento didattico potente se usato con criterio. Ad esempio, un junior può chiedere all’AI di spiegare un pezzo di codice, di fornire esempi o di suggerire come risolvere un bug, ottenendo risposte immediate e adattive (cosa che StackOverflow non faceva). Alcuni sviluppatori raccontano di aver colmato lacune più velocemente grazie all’AI: invece di cercare su Google, ottenevano mentoring istantaneo. La differenza principale è secondo me l’<strong>atteggiamento dell’utente</strong>: se il
+programmatore usa l’AI in modalità apprendimento, ovvero chiedendo “perché”, verificando attivamente le risposte, provando varianti, può imparare molto in breve tempo. 
+Al contrario, se usa l’AI in modalità pilota automatico, limitandosi a incollare soluzioni, imparerà pochissimo. Sempre Goel in un <a href="https://nmn.gl/blog/ai-and-learning#:~:text=going%20anywhere%29,working">suo articolo</a> da consiglio per i profili junior: “usate Copilot/ChatGPT, ma con moderatezza: interrogate le soluzioni, studiate i perché, cercate di ricostruire il ragionamento”. </p>
+<p>Alcuni percorsi educativi iniziano a integrare l’AI non come scorciatoia per fare meno, ma come strumento per fare di più e meglio: ad esempio generare rapidamente diversi approcci a un problema e poi analizzarli con l’insegnante. Oppure io personalmente ormai sono solito creare dei percorsi di formazione (per me o per altri) dopo un bel brainstorming con ChatGPT. Quello che ho visto è che i tempi non sono affidabili, ma il percorso da seguire è spesso super sensato.</p>
+<p>Tornando ai contesti aziendali, i mentor senior secondo me hanno una responsabilità incredibile, in quanto sono chiamati a guidare i junior su come usare l’AI responsabilmente per evitare <strong>&quot;skill atrophy&quot;</strong> (non so se questo termine esiste in italiano e preferisco evitare di tradurlo). Questo include fare pair review dove il senior chiede al junior di spiegare il codice generato, oppure impostare policy in cui il junior deve provare a implementare qualcosa da sé prima di
+chiedere all’AI, in modo da allenare il problem solving umano.</p>
+<p>Da qui nasce anche un cambiamento nel mentoring: i senior devono affiancare i junior non più solo nel coding tradizionale, ma nel <strong>prompt engineering</strong> e nel <strong>controllo qualità</strong> del codice AI. Alcune imprese stanno formalizzando linee guida, ad esempio: se un junior genera codice con Copilot, deve farlo rivedere a un senior con occhio critico, come parte del code review standard. 
+Invece di commentare solo lo stile o la logica, il senior deve anche insegnare al junior perché magari una soluzione “troppo facile” suggerita dall’AI non è ottimale. Ti faccio un esempio semplicissimo: “Copilot ti ha duplicato questa logica in 3 punti, dovresti estrarla in una funzione comune per facilitarne la manutenzione”. Oppure: “Attento, ChatGPT ha importato questa libreria da un esempio obsoleto, ma non è adatta in produzione per ragioni di performance”. Questo tipo di insegnamento <em>meta-cognitivo</em> diventa fondamentale per <strong>far crescere le competenze</strong> nonostante la presenza dell’AI.</p>
+<p>Ultimo ma tutt&#39;altro che meno importante, c’è l’aspetto della dipendenza psicologica e identitaria. Scrivere codice “a mano” per molti sviluppatori non è solo un lavoro, ma una passione e un’arte.
+L’arrivo di assistenti AI in grado di generare codice ha scosso questa identità: ho parlato con alcuni sviluppatori che mi hanno espresso il timore di “diventare solo operatori che guidano l’AI” invece che craftsmen. C’è chi parla di loss of craftsmanship, paragonandolo ad altre automazioni industriali dove il ruolo umano passa da artigiano a supervisore di macchine. 
+Tuttavia, vedo questi assistenti come un amplificatore delle capacità umane, non un sostituto. Un po’ come l’introduzione dei computer stessi rispetto alla programmazione con schede perforate. Se non sbaglio all’inizio c’era chi storceva il naso, no? Ad oggi penso che nessuno tornerebbe indietro. La chiave per mantenere vivo l’aspetto craft è che gli sviluppatori si concentrino sui livelli più alti di astrazione e design, lasciando all’AI i dettagli implementativi routinari. In
+tal modo, il craft non muore, si sposta: dal scrivere ogni for loop manualmente, al plasmare un sistema intero orchestrando AI e codice umano in modo coeso. Come scrive <a href="https://medium.com/data-science-collective/the-ai-vibe-coding-paradox-why-experience-matters-more-than-ever-33c343bfc2e1#:~:text=,Humans%20architect%20systems%20that%20work">Greenman</a>, “l&#39;AI esegue il codice brillantemente. Gli umani architettano sistemi che funzionano”. In altre parole, la soddisfazione professionale può ancora derivare dall’aver progettato bene un sistema, anche se molte linee di codice sono state partorite dall’AI.</p>
+<h2 id="sintesi-e-raccomandazioni">Sintesi e raccomandazioni</h2>
+<p>Siamo arrivati al termine e il confronto tra vibe coding e sviluppo tradizionale può essere riassunto così: il vibe coding offre velocità ed accessibilità che definirei a dir poco rivoluzionarie, mentre il metodo tradizionale assicura controllo, robustezza e chiarezza. Invece di proclamare un vincitore assoluto, le evidenze suggeriscono che un approccio ibrido e strategico massimizza i benefici minimizzando i rischi. Di seguito, in punti, le conclusioni principali e raccomandazioni operative:</p>
+<ol>
+<li><p><strong>Produttività:</strong>: L’uso dell’AI-driven coding accelera lo sviluppo in molti scenari, specialmente per compiti ripetitivi e per sviluppatori meno esperti. 
+boilerplate, CRUD, mapping, test scaffolding, doc di base. Metti <strong>guardrail</strong> (linters, formatter, conventional commits).</p>
+</li>
+<li><p><strong>Qualità e mantenibilità</strong>: Il codice generato dall’AI deve essere trattato al pari di quello scritto da un junior dev: richiede revisione, refactoring e testing diligenti. Si consiglia di non committare codice AI senza verifica: integrare obbligatoriamente un giro di code review umana su tutto il codice generato.  In pratica, mantenere alti standard di clean code: nominare un “AI code custodian” nel team che monitori la coerenza stilistica e architetturale del codice prodotto con AI.</p>
+</li>
+<li><p><strong>Sicurezza</strong>: Mai presupporre che il codice generato sia sicuro. Implementare pipeline di security review su tutto il codice, specialmente se generato automaticamente. L’AI può velocizzare l’implementazione, ma la sicurezza by design deve essere reintrodotta dallo sviluppatore.</p>
+</li>
+<li><p><strong>Architettura e performance</strong>: Prima di lanciare un progetto con vibe coding allo sbaraglio, investire tempo in una progettazione di massima tradizionale: definire moduli, interfacce, decisioni architetturali chiave. Questo può prevenire il caos eterogeneo che l’AI altrimenti genererebbe .</p>
+</li>
+<li><p><strong>Crescita dei developer</strong>: Implementare linee guida per usare l’AI in modo formativo. Ad esempio, incentivare i junior a chiedere all’AI spiegazioni (“spiegami il codice che hai proposto”) e non solo soluzioni, così da capire i concetti. Fare sessioni di coding congiunte dove un senior e un junior usano l’AI insieme, discutendo i pro e contro dei suggerimenti. Secondo me questo è un buon modo che trasferisce conoscenza tacita. Mantenere attività kata di programmazione senza AI occasionalmente, per 11 allenare le capacità fondamentali e far emergere lacune. In sede di code review, porre domande ai coder (soprattutto se junior) per assicurarsi che abbiano compreso il codice AI che presentano. L’obiettivo è prevenire la “calma apparente” di team che consegnano feature ma poi non sanno correggere un bug perché nessuno capisce davvero il codice generato.
+Se non si fosse capito mentorship e pairing sono per me cruciali (probabilmente è la mia natura di AI adoption specialist :)): l’AI non sostituisce il bisogno di spiegare il perché e il cosa ci sta dietro.</p>
+</li>
+</ol>
+<p>Concludo dicendo che secondo me il futuro della programmazione appartiene ai developer che sanno sfruttare il pilota automatico quando la guida è noiosa e standard e che sanno tenere saldamente i comandi dell&#39;auto nei momenti in cui serve attenzione.</p>
+        <h2 id="bibliografia">Bibliografia</h2>
+        <ul>
+          <li><a href="https://itrevolution.com/articles/new-research-reveals-ai-coding-assistants-boost-developer-productivity-by-26-what-it-leaders-need-to-know/">IT Revolution, &quot;AI Coding Assistants Boost Developer Productivity by 26%&quot; – RCT multi-azienda su Copilot.</a></li>
+          <li><a href="https://www.infoq.com/news/2025/07/ai-productivity/">InfoQ, &quot;AI Productivity&quot; – studio sui rallentamenti riscontrati da sviluppatori senior.</a></li>
+          <li><a href="https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx">Visual Studio Magazine, &quot;Copilot Research&quot; – impatto su qualità e sicurezza del codice.</a></li>
+          <li><a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/">GitHub Blog, &quot;Quantifying Copilot&#39;s Impact&quot; – risultati sull&#39;adozione enterprise con Accenture.</a></li>
+          <li><a href="https://economics.mit.edu/sites/default/files/inline-files/draft_copilot_experiments.pdf">MIT Economics, &quot;Copilot Experiments Draft&quot; – esperimenti controllati sull&#39;uso di AI pair programming.</a></li>
+          <li><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR, &quot;Experienced OSS Maintainers Study&quot; – studio su developer esperti e produttività percepita.</a></li>
+          <li><a href="https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality">GitClear, &quot;AI&#39;s Downward Pressure on Code Quality&quot; – analisi di codebase e qualità del codice.</a></li>
+          <li><a href="https://socket.dev/blog/oss-maintainers-demand-ability-to-block-copilot-generated-issues-and-prs">Socket.dev, &quot;OSS Maintainers Demand Controls&quot; – richieste della community open-source su PR generate da AI.</a></li>
+          <li><a href="https://nmn.gl/blog/ai-and-learning">nmn.gl, &quot;AI and Learning&quot; – effetti dell&#39;AI sulla formazione degli sviluppatori.</a></li>
+          <li><a href="https://trickle.so/blog/vibe-coding-vs-traditional-development">Trickle, &quot;Vibe Coding vs Traditional Development&quot; – confronto su cultura e governance dei team.</a></li>
+        </ul>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/vibe-coding-vs-traditional/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>

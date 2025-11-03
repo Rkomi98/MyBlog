@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog | Mirko Calcaterra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 24px 45px -32px rgba(15, 23, 42, 0.85);
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 24px 45px -30px rgba(15, 23, 42, 0.12);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4rem;
+    }
+    .hero {
+      margin-bottom: 2.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      margin: 0 0 1rem;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 720px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .filter {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 220px;
+    }
+    .filter label {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    .filter select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.65rem 0.9rem;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+    .filter select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.22);
+    }
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .post-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .post-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 32px 60px -40px rgba(15, 23, 42, 0.95);
+    }
+    .post-card-hero {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-card-icon {
+      font-size: 2.8rem;
+      filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.45));
+    }
+    .post-card-body {
+      padding: 1.8rem 1.8rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      flex: 1;
+    }
+    .post-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.92rem;
+    }
+    .post-card-category {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.18);
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    body[data-theme="light"] .post-card-category {
+      background: rgba(37, 99, 235, 0.12);
+    }
+    .post-card-date {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .post-card-title {
+      margin: 0;
+      font-size: 1.35rem;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+    .post-card-summary {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+    .post-card-footer {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .post-card-link {
+      font-weight: 600;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .post-card-link:hover {
+      color: var(--accent-strong);
+      transform: translateX(2px);
+    }
+    .no-results {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-muted);
+      font-size: 1rem;
+      display: none;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 768px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 3.25rem;
+      }
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter {
+        width: 100%;
+      }
+      .post-card-body {
+        padding: 1.6rem 1.6rem 1.4rem;
+      }
+      .post-card-hero {
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="../index.html">
+        <img src="../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+        <span class="logo-text">Mirko Calcaterra</span>
+      </a>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <section class="hero">
+      <h1 data-it="Il mio blog tecnico" data-en="My technical blog">Il mio blog tecnico</h1>
+      <p data-it="Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software."
+         data-en="Deep dives, case studies, and experiments on AI, Data Engineering, and modern software development.">
+         Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software.
+      </p>
+    </section>
+    <section class="filters" aria-label="Blog controls">
+      <div class="filter">
+        <label for="category-filter" data-it="Filtra per categoria" data-en="Filter by category">Filtra per categoria</label>
+        <select id="category-filter">
+          <option value="all" data-it="Tutte" data-en="All">Tutte</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="sort-order" data-it="Ordina per data" data-en="Sort by date">Ordina per data</label>
+        <select id="sort-order">
+          <option value="desc" data-it="Più recenti" data-en="Newest first">Più recenti</option>
+          <option value="asc" data-it="Meno recenti" data-en="Oldest first">Meno recenti</option>
+        </select>
+      </div>
+    </section>
+    <section aria-live="polite">
+      <div id="posts-grid" class="posts-grid"></div>
+      <p id="no-results" class="no-results" data-it="Nessun articolo trovato." data-en="No articles found.">Nessun articolo trovato.</p>
+    </section>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const POSTS_DATA = [{"slug":"docker-dentro-il-container","icon":"🐳","category":"Docker","categoryLabels":{"it":"Docker","en":"Docker"},"readTime":15,"publishedAt":"2025-10-30T00:00:00.000Z","timestamp":1761782400000,"languages":{"it":{"title":"Docker: Dentro il Container","summary":"Deep dive in Docker Abstract Eccoci arrivati al secondo episodio della serie \"Docker per sviluppatori\". Dato che il primo articolo è stato apprezzato, direi che possiamo andare deep questa volta analizzando i concetti chiave di Docker in modo accessibile a tu…","link":"it/docker-dentro-il-container/index.html"},"en":{"title":"Docker Deep Dive: Inside the Container","summary":"Inside a Container: Key Concepts Abstract Second episode of the “Docker for Developers” series. This narrative guide walks through Docker’s core ideas with productiongrade precision while staying approachable: the goal is to understand what Docker does concep…","link":"en/docker-dentro-il-container/index.html"}}},{"slug":"vibe-coding-vs-traditional","icon":"🤖","category":"Programming","categoryLabels":{"it":"Programmazione","en":"Programming"},"readTime":15,"publishedAt":"2025-10-29T00:00:00.000Z","timestamp":1761696000000,"languages":{"it":{"title":"Vibe Coding vs Programmazione Tradizionale (2023-2025)","summary":"Confronto tra vibe coding e programmazione tradizionale (2023–2025) Abstract Il vibe coding, che non è altro che un metodo di programmare guidati interamente dall’AI, si è diffuso tra il 2023 e il 2025 grazie a strumenti come GitHub Copilot, Cursor, Sourcegra…","link":"it/vibe-coding-vs-traditional/index.html"},"en":{"title":"Vibe Coding vs Traditional Development (2023-2025)","summary":"Vibe Coding vs. Traditional Programming (2023–2025) Abstract Vibe coding, which is nothing more than a method of programming guided entirely by AI, spread between 2023 and 2025 thanks to tools like GitHub Copilot, Cursor, Sourcegraph Cody, Tabnine, Codeium, a…","link":"en/vibe-coding-vs-traditional/index.html"}}},{"slug":"kinetica-cache-optimization","icon":"💻","category":"Data Engineering","categoryLabels":{"it":"Data Engineering","en":"Data Engineering"},"readTime":10,"publishedAt":"2025-10-25T00:00:00.000Z","timestamp":1761350400000,"languages":{"it":{"title":"Ottimizzazione della Cache con Kinetica","summary":"In parole semplici, Kinetica consente alle aziende di processare e analizzare enormi quantità di dati “live” in modo rapidissimo, sfruttando le GPU al posto delle sole CPU tradizionali . È pensato per carichi OLAP (analisi) complessi, includendo analisi su da…","link":"it/kinetica-cache-optimization/index.html"},"en":{"title":"Cache Optimization with Kinetica","summary":"Kinetica allows organisations to process and analyse massive volumes of live data at high speed by harnessing GPUs instead of relying solely on conventional CPUs. It targets complex OLAPstyle analytics workloads, including streaming data, geospatial functions…","link":"en/kinetica-cache-optimization/index.html"}}},{"slug":"docker-container-fundamentals","icon":"🐳","category":"Docker","categoryLabels":{"it":"Docker","en":"Docker"},"readTime":15,"publishedAt":"2025-10-15T00:00:00.000Z","timestamp":1760486400000,"languages":{"it":{"title":"Docker: Basics","summary":"Cos'è Docker e perché esiste Ti è mai capitato di sentir un collega dire “sì ok ma funziona sul mio computer” e chiederti perché succede? Oppure di perdere ore a configurare un ambiente che sembrava identico a quello del collega? Ecco, questo articolo nasce p…","link":"it/docker-container-fundamentals/index.html"},"en":{"title":"Docker Basics","summary":"What is Docker and why it exists Have you ever heard a colleague say \"yeah, okay, but it works on my computer\" and wondered why that happens? Or spent hours configuring an environment that seemed identical to your colleague's? Well, this article stems from th…","link":"en/docker-container-fundamentals/index.html"}}}];
+    (function() {
+      const gradients = [
+        'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+        'linear-gradient(135deg, #f97316 0%, #fb7185 100%)',
+        'linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%)',
+        'linear-gradient(135deg, #f472b6 0%, #c084fc 100%)'
+      ];
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const storedTheme = (localStorage.getItem('blogTheme') || '').toLowerCase();
+      const storedLang = (localStorage.getItem('blogLang') || '').toLowerCase();
+      const state = {
+        lang: storedLang === 'en' ? 'en' : 'it',
+        theme: storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light')),
+        category: 'all',
+        sort: 'desc'
+      };
+      const elements = {
+        body: document.body,
+        langBtn: document.querySelector('.lang-btn'),
+        themeToggle: document.querySelector('.theme-toggle'),
+        themeThumb: document.querySelector('.theme-toggle .theme-thumb'),
+        categorySelect: document.getElementById('category-filter'),
+        sortSelect: document.getElementById('sort-order'),
+        postsGrid: document.getElementById('posts-grid'),
+        noResults: document.getElementById('no-results')
+      };
+      const categoryEntries = Array.from(
+        POSTS_DATA.reduce((acc, post) => {
+          if (!acc.has(post.category)) {
+            acc.set(post.category, post.categoryLabels || {});
+          }
+          return acc;
+        }, new Map())
+      );
+      function formatDate(isoString) {
+        const date = new Date(isoString);
+        if (Number.isNaN(date.valueOf())) {
+          return '';
+        }
+        const formatter = state.lang === 'it'
+          ? new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
+          : new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+        return formatter.format(date);
+      }
+      function applyTheme(theme) {
+        state.theme = theme === 'dark' ? 'dark' : 'light';
+        elements.body.setAttribute('data-theme', state.theme);
+        if (elements.themeToggle) {
+          elements.themeToggle.classList.toggle('active', state.theme === 'dark');
+        }
+        if (elements.themeThumb) {
+          elements.themeThumb.textContent = state.theme === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem('blogTheme', state.theme);
+      }
+      function updateTexts() {
+        document.querySelectorAll('[data-it][data-en]').forEach((node) => {
+          const value = node.getAttribute(state.lang === 'it' ? 'data-it' : 'data-en');
+          if (value !== null) {
+            node.textContent = value;
+          }
+        });
+        if (elements.langBtn) {
+          elements.langBtn.textContent = state.lang === 'it' ? 'EN' : 'IT';
+        }
+      }
+      function populateCategoryOptions() {
+        if (!elements.categorySelect) {
+          return;
+        }
+        const currentValue = state.category;
+        elements.categorySelect.innerHTML = '';
+        const allOption = document.createElement('option');
+        allOption.value = 'all';
+        allOption.setAttribute('data-it', 'Tutte');
+        allOption.setAttribute('data-en', 'All');
+        elements.categorySelect.appendChild(allOption);
+        categoryEntries.forEach(([value, labels]) => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.setAttribute('data-it', labels.it || value);
+          option.setAttribute('data-en', labels.en || value);
+          elements.categorySelect.appendChild(option);
+        });
+        const availableValues = new Set(['all', ...categoryEntries.map(([value]) => value)]);
+        if (availableValues.has(currentValue)) {
+          elements.categorySelect.value = currentValue;
+        } else {
+          elements.categorySelect.value = 'all';
+          state.category = 'all';
+        }
+      }
+      function renderPosts() {
+        if (!elements.postsGrid) {
+          return;
+        }
+        const posts = POSTS_DATA.filter((post) => state.category === 'all' || post.category === state.category)
+          .sort((a, b) => {
+            if (state.sort === 'asc') {
+              return a.timestamp - b.timestamp;
+            }
+            return b.timestamp - a.timestamp;
+          });
+        elements.postsGrid.innerHTML = '';
+        if (!posts.length) {
+          if (elements.noResults) {
+            elements.noResults.style.display = 'block';
+          }
+          return;
+        }
+        if (elements.noResults) {
+          elements.noResults.style.display = 'none';
+        }
+        const fragment = document.createDocumentFragment();
+        posts.forEach((post, index) => {
+          const card = document.createElement('article');
+          card.className = 'post-card';
+          card.setAttribute('data-category', post.category);
+          const hero = document.createElement('div');
+          hero.className = 'post-card-hero';
+          hero.style.background = gradients[index % gradients.length];
+          const icon = document.createElement('div');
+          icon.className = 'post-card-icon';
+          icon.textContent = post.icon || '📝';
+          hero.appendChild(icon);
+          card.appendChild(hero);
+          const body = document.createElement('div');
+          body.className = 'post-card-body';
+          const metaRow = document.createElement('div');
+          metaRow.className = 'post-card-meta';
+          const categoryChip = document.createElement('span');
+          categoryChip.className = 'post-card-category';
+          const categoryLabel = (post.categoryLabels && post.categoryLabels[state.lang]) || post.category;
+          categoryChip.textContent = categoryLabel;
+          const dateSpan = document.createElement('span');
+          dateSpan.className = 'post-card-date';
+          dateSpan.textContent = formatDate(post.publishedAt);
+          metaRow.appendChild(categoryChip);
+          metaRow.appendChild(dateSpan);
+          body.appendChild(metaRow);
+          const titleEl = document.createElement('h3');
+          titleEl.className = 'post-card-title';
+          titleEl.textContent =
+            (post.languages[state.lang] && post.languages[state.lang].title) ||
+            (post.languages.it && post.languages.it.title) ||
+            (post.languages.en && post.languages.en.title) ||
+            '';
+          body.appendChild(titleEl);
+          const summaryEl = document.createElement('p');
+          summaryEl.className = 'post-card-summary';
+          summaryEl.textContent =
+            (post.languages[state.lang] && post.languages[state.lang].summary) ||
+            (post.languages.it && post.languages.it.summary) ||
+            (post.languages.en && post.languages.en.summary) ||
+            '';
+          body.appendChild(summaryEl);
+          const footerRow = document.createElement('div');
+          footerRow.className = 'post-card-footer';
+          const readSpan = document.createElement('span');
+          readSpan.className = 'post-card-readtime';
+          readSpan.textContent = '⏱️ ' + post.readTime + ' min';
+          const linkEl = document.createElement('a');
+          linkEl.className = 'post-card-link';
+          const fallbackLink = (post.languages.it && post.languages.it.link) || (post.languages.en && post.languages.en.link) || '#';
+          linkEl.href = (post.languages[state.lang] && post.languages[state.lang].link) || fallbackLink;
+          linkEl.textContent = state.lang === 'it' ? 'Leggi di più →' : 'Read more →';
+          footerRow.appendChild(readSpan);
+          footerRow.appendChild(linkEl);
+          body.appendChild(footerRow);
+          card.appendChild(body);
+          fragment.appendChild(card);
+        });
+        elements.postsGrid.appendChild(fragment);
+      }
+      function applyLanguage(lang) {
+        state.lang = lang === 'en' ? 'en' : 'it';
+        document.documentElement.setAttribute('lang', state.lang);
+        localStorage.setItem('blogLang', state.lang);
+        updateTexts();
+        renderPosts();
+      }
+      function init() {
+        document.documentElement.setAttribute('lang', state.lang);
+        populateCategoryOptions();
+        updateTexts();
+        applyTheme(state.theme);
+        if (elements.categorySelect) {
+          elements.categorySelect.addEventListener('change', (event) => {
+            state.category = event.target.value;
+            renderPosts();
+          });
+        }
+        if (elements.sortSelect) {
+          elements.sortSelect.value = state.sort;
+          elements.sortSelect.addEventListener('change', (event) => {
+            state.sort = event.target.value === 'asc' ? 'asc' : 'desc';
+            renderPosts();
+          });
+        }
+        if (elements.langBtn) {
+          elements.langBtn.addEventListener('click', () => {
+            applyLanguage(state.lang === 'it' ? 'en' : 'it');
+          });
+        }
+        if (elements.themeToggle) {
+          elements.themeToggle.addEventListener('click', () => {
+            applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+          });
+        }
+        renderPosts();
+      }
+      init();
+    })();
+  </script>
+</body>
+</html>

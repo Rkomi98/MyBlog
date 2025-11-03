@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker: Basics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.15rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .post-toc__item.level-1 {
+      padding-left: 1rem;
+    }
+    .post-toc__item.level-2 {
+      padding-left: 2rem;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: rgba(15, 23, 42, 0.65);
+      color: #f8fafc;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    body[data-theme="light"] .post-body code {
+      background: rgba(15, 23, 42, 0.08);
+      color: #111827;
+    }
+    .post-body pre {
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      padding: 1.2rem 1.4rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    body[data-theme="light"] .post-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    .post-body tr {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    .post-body th,
+    .post-body td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    body[data-theme="light"] .post-body table {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🐳</div>
+        <span class="post-hero__category">Docker</span>
+        <h1 class="post-hero__title">Docker: Basics</h1>
+        <div class="post-hero__meta">
+          <span>📅 15 ottobre 2025</span>
+          <span>⏱️ 15 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc">
+        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+        <ul class="post-toc__list">
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-il-sempre-verde-problema-funziona-sul-mio-pc">1\. Il sempre verde problema &quot;Funziona sul mio PC&quot;</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-le-soluzioni-pre-docker">2\. Le soluzioni pre-Docker</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-cos-docker-in-parole-semplici">3\. Cos&#39;è Docker in parole semplici</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-container-vs-macchina-virtuale">4\. Container vs Macchina Virtuale</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-perch-docker-stato-un-punto-di-svolta">5\. Perché Docker è stato un punto di svolta</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-quando-docker-non-serve">6\. Quando Docker non serve</a></li>
+        </ul>
+      </aside>
+        <div class="post-body">
+          <p>Ti è mai capitato di sentir un collega dire “sì ok ma funziona sul mio computer” e chiederti perché succede? Oppure di perdere ore a configurare un ambiente che sembrava identico a quello del collega? Ecco, questo articolo nasce proprio da lì: dal desiderio di capire perché Docker è diventato così importante e come ha cambiato il modo di sviluppare software.</p>
+<h2 id="abstract">Abstract</h2>
+<p>Questo articolo non è altro che il primo di una serie di articoli in cui voglio spiegare perché i container sono così importanti.
+In questa serie, l&#39;obiettivo è spiegare in modo chiaro (ma tecnicamente accurato) il motivo per cui è nato Docker, come funziona e quando usarlo o <strong>non</strong> usarlo.</p>
+<h2 id="1-il-sempre-verde-problema-funziona-sul-mio-pc">1. Il sempre verde problema &quot;Funziona sul mio PC&quot;</h2>
+<p>Uno dei problemi più classici nello sviluppo software si riassume con la classica frase <strong>&quot;sì ma funziona sul mio PC, vedrai che riesci a farlo andare anche sul tuo&quot;</strong>.
+Per chi legge questo articolo e non conosce questo problema, sostanzialmente è quando il codice che sul computer di un developer gira senza problemi, ma che in un ambiente diverso (può essere un collega, come il server di test o produzione) fallisce. 
+Riassumo brevemente <a href="https://dzone.com/articles/works-on-my-machine#:~:text=project%20is%20active%20at%20the,moment">un articolo</a> che secondo me ben analizza le cause tipiche. Secondo Dave Nicolette, ci sono differenze di configurazione e <strong>drift dell&#39;ambiente</strong>. Col tempo, in fase di sviluppo si accumulano librerie, configurazioni e dipendenze che la rendono unica. </p>
+<p>Questo cosa causa?</p>
+<p>Ecco, piccole discrepanze, ovvero versioni diverse di un database, un file di configurazione locale non replicato altrove, generano bug difficili da individuare. 
+A ciò si aggiunge il cosiddetto <a href="https://cgatoxford.wordpress.com/2017/05/12/the-dependency-hell-in-software-development/#:~:text=As%20you%20can%20imagine%2C%20the,to%20propose%20a%20feasible%20solution"><strong>dependency hell</strong></a>, ovvero la &quot;giungla&quot; di dipendenze software conflittuali: più un progetto cresce, più dipende da librerie esterne (con versioni potenzialmente incompatibili fra loro), creando un incubo di gestione.
+Quello che accade è che, se vi trovate in ambienti &quot;multi-sviluppatore&quot;, queste divergenze causano ritardi e notti insonni per risolvere errori che &quot;in locale andava&quot;.</p>
+<p>Diciamo che oltre alle innumerevoli <strong>testimonianze aneddotiche</strong>, il fenomeno è talmente diffuso da essere oggetto di ironia e alcune squadre Agile, <a href="https://dzone.com/articles/works-on-my-machine#:~:text=There%E2%80%99s%20a%20longstanding%20tradition%20on,shrug%3E%E2%80%9D%20qualifies">come racconta Dave Nicolette</a>, avevano introdotto penitenze goliardiche per chi usava questa scusa (come versare una piccola multa nel fondo snack bar). Ma al di là delle battute, <strong>l&#39;impatto reale</strong> è notevole: quando ambienti di dev/test/staging non sono allineati, si incorre in rework e ritardi. <a href="https://release.com/blog/hidden-costs-of-staging#:~:text=,fitting%20solutions%20%28Release%20customer%20testimony">Studi recenti</a> indicano che <strong>il 69% degli sviluppatori perde almeno 8 ore a settimana</strong> a causa di inefficienze tecniche, incluse le differenze di ambiente e build rotte per configurazioni incoerenti. </p>
+<p>In sostanza, prima di Docker molte aziende hanno visto rallentare il flusso di sviluppo perché ogni &quot;funziona sul mio PC&quot; significava tempo perso a rifare setup o cacciare bug fantasma.</p>
+<p>Ora vediamo cosa si faceva prima che nascesse Docker.</p>
+<h2 id="2-le-soluzioni-pre-docker">2. Le soluzioni pre-Docker</h2>
+<p>In pochissime parole, prima del 2013 (anno di nascita di Docker), gli sviluppatori avevano ovviamente già provato diversi approcci per evitare i problemi di ambiente.</p>
+<p><strong>Virtual Machine (VM)</strong> tradizionali erano la soluzione più comune: duplicare interi sistemi operativi in macchine virtuali isolate, su cui ricreare le stesse dipendenze. Strumenti come <strong>Vagrant</strong> semplificavano la definizione e condivisione di queste VM (tramite file di configurazione e &quot;base box&quot; versionate), mentre tool di <strong>Configuration Management</strong> come <strong>Ansible, Puppet, Chef</strong> automatizzavano l&#39;installazione di pacchetti e configurazioni sulle VM o sui server reali. In teoria, queste soluzioni permettevano di raggiungere l&#39;obiettivo, che era avere ambienti coerenti, ma <strong>nella pratica erano spesso complesse o inefficienti</strong>. Ad esempio, avviare una VM significa allocare risorse per un intero sistema operativo guest: è <a href="https://blog.stackademic.com/why-i-switched-from-vms-to-docker-container-and-never-looked-back-2bddbfb05efe?gi=aca1ec025925#:~:text=Let%E2%80%99s%20be%20real%2C%20Virtual%20Machines,just%20to%20bake%20one%20pizza">&quot;come affittare un intero palazzo di appartamenti solo per cuocere una pizza&quot;</a>. Questo causava un isolamento assicurato, per carità, ma c&#39;era uno spreco enorme di risorse e lentezza intrinseca. 
+Anche strumenti come Vagrant, pur facilitando la creazione di ambienti riproducibili, richiedevano di mantenere immagini VM pesanti (svariati gigabyte) e provisioning script complessi per installare dipendenze, con tempi di avvio lunghi (minuti). Allo stesso modo, sistemi di configurazione automatica abbassavano il tasso di errore manuale, ma avevano <strong>curve di apprendimento molto ripide</strong> e introducevano un <strong>ulteriore layer di astrazione</strong>. </p>
+<p>In sintesi, <strong>prima di Docker mancava una soluzione che fosse allo stesso tempo semplice, leggera e portatile</strong>: le VM garantivano l&#39;isolamento ma al costo di overhead elevato; gli script e tool pre-container rendevano le installazioni replicabili, ma non eliminavano del tutto il problema e non erano molto facili da comprendere e da usare (ed era soprattutto facile sbagliare).</p>
+<p>Ovviamente potreste fidarvi di me ma penso che sia meglio fornirvi qualche dato in più. Una <strong>VM</strong> replica sì un ambiente intero, ma <a href="https://blog.stackademic.com/why-i-switched-from-vms-to-docker-container-and-never-looked-back-2bddbfb05efe?gi=aca1ec025925#:~:text=In%20a%20VM%2C%20every%20app,But%20also%E2%80%A6%20totally%20heavy"><strong>ogni VM contiene un intero OS</strong></a> e richiede un hypervisor per girare con conseguente consumo di CPU, RAM e tempi di boot elevati. Per rendere il processo più agile, si usava <a href="https://kinsta.com/it/blog/vagrant-vs-docker/#:~:text=Vagrant%20permette%20di%20creare%20e,software%20e%20modificare%20le%20configurazioni"><strong>Vagrant</strong></a> per &quot;codificare&quot; la creazione di VM tramite un&#39;unica CLI e file dichiarativi condivisi (Vagrantfile), migliorando ripetibilità rispetto alla creazione manuale di macchine. </p>
+<p>In definitiva, <strong>nel mondo pre-Docker</strong> manca(va) &quot;la scatola unica&quot; in cui mettere tutto il necessario e portarla in giro: ed è proprio questa l&#39;idea rivoluzionaria che Docker ha introdotto.</p>
+<p>Per anni il motto o meglio la battuta è stata: <em>&quot;Spediamo il computer del developer in produzione&quot;</em>, utile a esorcizzare il problema che abbiamo descritto prima. In assenza di soluzioni migliori, infatti, <strong>si finiva per sovra-compensare</strong>: o esagerando con ambienti di test fotocopia (costosi e statici), o affidandosi a lunghe checklist manuali (<em>installare X, impostare Y, ricordarsi la patch Z…</em>) che però prima o poi saltavano. C&#39;era bisogno di un meccanismo più <strong>elegante e affidabile</strong> per impacchettare applicazioni e relative dipendenze, sul modello di altri settori (ad esempio l&#39;elettronica con le macchine virtuali Java, o il mondo <em>ops</em> con le immagini VM). Docker è arrivato a colmare proprio questa lacuna, facendo tesoro di tecnologie Linux esistenti ma rendendole <strong>facili da usare per gli sviluppatori</strong>.</p>
+<p>Di seguito ti fornisco una panoramica comparativa per capire meglio i pro e contro delle principali soluzioni utilizzate prima di Docker:</p>
+<table>
+<thead>
+<tr>
+<th>Soluzione</th>
+<th>Vantaggi</th>
+<th>Svantaggi</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Virtual Machine (VM)</strong></td>
+<td>Isolamento completo, ambiente replicabile</td>
+<td>Pesante, lenta da avviare, consuma molte risorse</td>
+</tr>
+<tr>
+<td><strong>Vagrant</strong></td>
+<td>Automatizza la creazione di VM, ambienti condivisibili</td>
+<td>Dipende da VM sottostanti, provisioning complesso</td>
+</tr>
+<tr>
+<td><strong>Ansible / Puppet / Chef</strong></td>
+<td>Configurazione automatica e coerente</td>
+<td>Curva di apprendimento ripida, richiede manutenzione</td>
+</tr>
+</tbody></table>
+<p>Spero che ora sia chiaro quanto è stato d&#39;impatto l&#39;arrivo di Docker. Bene ma, capiamo ora cos&#39;è Docker?</p>
+<h2 id="3-cos-docker-in-parole-semplici">3. Cos&#39;è Docker in parole semplici</h2>
+<p>Possiamo pensare all’immagine Docker come un set LEGO con il suo libretto di istruzioni per montarla: è impacchettata, versionata, identica per chiunque la apra. Una volta aperta la scatola, puoi montarle il set e lo puoi mettere sul tavolo, o su una mensola. Ecco questo lego montato è il container. Il bello è che ottieni lo stesso risultato indipendentemente da dove lo posizioni. Se lo smonti o lo rompi, il set di istruzioni (l’immagine) resta intatto e puoi rimontarne quanti vuoi, anche su tavoli diversi (macchine diverse), ottenendo sempre lo stesso risultato.</p>
+<p><strong>Docker</strong> è una piattaforma open-source che ha introdotto il concetto di <strong>container</strong> nel mainstream dello sviluppo software. In parole semplici, un <em>container</em> è un <strong>pacchetto leggero ed eseguibile</strong> che include tutto il necessario per far girare un&#39;applicazione: codice, runtime, librerie di sistema, configurazioni - il tutto isolato dal resto del sistema (ma lo vedremo bene nel prossimo articolo). Possiamo immaginarlo come una sorta di mini-computer &quot;usa e getta&quot; a livello applicativo: invece di virtualizzare un&#39;intera macchina con il suo sistema operativo (come fa una VM), il container <strong>riutilizza il kernel del sistema host</strong> e virtualizza solo lo spazio utente (processi, file system, rete) necessario all&#39;app. Ciò lo rende estremamente <strong>efficiente e portabile</strong>: un container avviato su un laptop dello sviluppatore funzionerà allo stesso modo su un server Linux in cloud, perché all&#39;interno porta con sé le proprie dipendenze in una forma standardizzata. </p>
+<p>In Docker questa standardizzazione si concretizza attraverso le <strong>immagini</strong> e i <strong>container runtime</strong>: un&#39;<strong>immagine Docker</strong> è come un&#39;istantanea (immutabile e versionabile) di un ambiente con una certa applicazione pronta all&#39;uso, mentre un <strong>container</strong> è l&#39;istanza attiva di quell&#39;immagine. In altre parole, usando un esempio che ho trovato su <a href="https://www.reddit.com/r/docker/comments/6puqse/what_is_difference_between_image_and_container_in/?tl=it#:~:text=Docker%3F%20www,il%20container%20dell%27immagine%20Docker">Reddit</a>, <em>&quot;l&#39;immagine è un Live-CD, e il container è il computer avviato da quel Live-CD&quot;</em>. Probabilmente è un esempio adatto per chi ha vissuto l&#39;era dei CD.</p>
+<p>In ogni caso le immagini sono costruite a strati (layers) e possono essere condivise tramite registri centralizzati (es. Docker Hub), così che i team possano riutilizzare componenti comuni. Il container, quando viene eseguito, aggiunge un livello scrivibile sopra gli strati immagine di sola lettura, permettendo all&#39;app al suo interno di creare file temporanei, log, ecc., senza modificare l&#39;immagine di base.</p>
+<p>Per definizioni più accurate, ci torneremo in un prossimo articolo. Passiamo ora a capire la differenza tra container e macchina virtuale.</p>
+<h2 id="4-container-vs-macchina-virtuale">4. Container vs Macchina Virtuale</h2>
+<p>Arrivati a questo punto è utile chiarire le <strong>differenze tecniche tra un container e una VM (Virtual Machine)</strong>, perché ho visto spesso confondere questi concetti, o, ancora più spesso, non capire quando usare uno invece che l&#39;altro. </p>
+<p>Partiamo dal motivo della confusione. Diciamo che sia container che VM isolano applicazioni in un ambiente dedicato, <strong>ma</strong> lo fanno con approcci molto diversi. Mi farò aiutare con schemi che ho trovato su <a href="https://www.freecodecamp.org/italian/news/il-manuale-docker/">questo link</a> e che ho riadattato.</p>
+<ul>
+<li>In una <strong>VM classica</strong>, l&#39;isolamento è ottenuto virtualizzando <strong>completamente l&#39;hardware</strong>: su un unico host possono girare più VM, ognuna con il proprio <em>guest OS</em> (sistema operativo guest) e le proprie applicazioni. Questo significa che se ho 5 VM sullo stesso server, sto in realtà eseguendo <strong>5 sistemi operativi completi</strong> (Linux, Windows, ecc.) <strong>sopra uno strato di hypervisor</strong>.</li>
+</ul>
+<p><img src="../../../Assets/virtual-machines.svg" alt="Diagramma dell'architettura a macchine virtuali"></p>
+<p><em>Figura 1: ogni VM incapsula applicazione, dipendenze e un intero sistema operativo guest sopra l&#39;hypervisor.</em></p>
+<ul>
+<li>Un <strong>container</strong>, invece, <strong>non ha un suo sistema operativo completo al proprio interno</strong>: condivide il kernel dell&#39;OS host e virtualizza solo lo spazio necessario per far girare i processi dell&#39;app, grazie a meccanismi come i <em>namespace</em> e i <em>cgroup</em> del kernel Linux (che isolano rispettivamente la vista delle risorse e il consumo di risorse).</li>
+</ul>
+<p><img src="../../../Assets/containers.svg" alt="Diagramma dell'architettura a container"></p>
+<p><em>Figura 2: ogni container include applicazione e dipendenze, appoggiandosi al runtime Docker e al kernel dell&#39;host condiviso.</em></p>
+<p>In sintesi, <strong>una VM &quot;crede&quot; di essere un computer a sé</strong> (con tanto di kernel proprio, driver virtuali, ecc.), mentre <strong>un container è più simile a un processo incapsulato</strong> in una bolla isolata sul kernel comune.</p>
+<p>La rappresentazione delle VM (<em>Figura 1</em>) evidenzia come l&#39;applicazione giri su un intero sistema operativo guest, che comunica con l&#39;hypervisor e infine con l&#39;hardware reale. Nel diagramma dei container (<em>Figura 2</em>), invece, applicazione e librerie dialogano direttamente con il kernel dell&#39;host attraverso il runtime, senza la necessità di un OS guest completo. Questa differenza permette ai container di essere <strong>molto più leggeri</strong> delle VM, eliminando lo strato intermedio del sistema operativo duplicato. Inoltre, un container consuma meno RAM e CPU e si avvia in pochi secondi, <a href="https://www.freecodecamp.org/italian/news/il-manuale-docker/#:~:text=Come%20risultato%20dell%27eliminazione%20dell%27intero%20livello,rispetto%20alle%20tradizionali%20macchine%20virtuali">contro i minuti</a> che spesso servono a fare boot di una VM. </p>
+<p>Una prova pratica? Se <a href="https://www.freecodecamp.org/italian/news/il-manuale-docker/#:~:text=Nel%20blocco%20di%20codice%20qui,del%20container%20di%20Alpine%20Linux">eseguo <code>uname -a</code></a> dentro un container Docker, vedrò lo <strong>stesso kernel</strong> del sistemo operativo su cui sto lavorando: i container Linux usano infatti il kernel del sistema host (come dimostrato dall&#39;output identico dentro e fuori il container). Le VM invece presentano un kernel distinto (il guest). Questo offre più isolamento a livello di sistema, ma con l&#39;overhead di mantenere quel sistema operativo separato.</p>
+<p>In termini di <strong>performance</strong>, i container sicuramente vincono in &quot;leggerezza&quot;. Mi spiego meglio. Non devono riservare a priori memoria e CPU fissa come spesso fanno le VM, ma <a href="https://kinsta.com/it/blog/vagrant-vs-docker/#:~:text=Le%20immagini%20vengono%20poi%20eseguite,CPU%20di%20cui%20hanno%20bisogno">consumano solo le risorse strettamente necessarie all&#39;app</a>, condividendo efficientemente quelle inutilizzate. 
+Inoltre possiamo lanciare decine di container senza impatto enorme, mentre eseguire decine di VM sarebbe proibitivo, proprio perché i container evitano di duplicare i &quot;pesi morti&quot; (concedetemi questa definizione dato che siamo vicini ad Halloween) di ogni macchina. </p>
+<p>Di contro, una <strong>VM garantisce isolamento totale</strong>: ogni VM è come un fortino a sé, e questo può essere preferibile per eseguire codice non fidato o con requisiti di sicurezza stringenti. Il &quot;confine&quot; della VM è più difficile da violare rispetto a un container, che condivide, lo ricordiamo per l&#39;ennesima volta, il kernel host. </p>
+<p>La VM non fa altro che virtualizzare <strong>hardware intero</strong> e può fare tutto ciò che fa un computer (infatti all&#39;inizio il cloud si basava sulle VM), mentre un container virtualizza <strong>il sistema operativo</strong> e fornisce solo ciò che serve a far girare l&#39;app, nulla di più, o meglio, nulla di superfluo.</p>
+<p>Un modo intuitivo di capire la differenza è attraverso un&#39;<a href="https://blog.stackademic.com/why-i-switched-from-vms-to-docker-container-and-never-looked-back-2bddbfb05efe?gi=aca1ec025925#:~:text=Let%E2%80%99s%20be%20real%2C%20Virtual%20Machines,just%20to%20bake%20one%20pizza">analogia</a> che abbiamo già visto all&#39;inizio: <em>&quot;Eseguire una VM è come prendere in affitto un intero condominio solo per cucinare una pizza; usare un container è come affittare una singola cucina in un ristorante condiviso&quot;</em>. La VM offre isolamento completo (nessuno disturberà la tua &quot;pizza&quot;, perché sei nell&#39;edificio da solo), ma a un costo elevato in termini di risorse inutilizzate. Il container condivide l&#39;infrastruttura comune (il forno, le utenze - cioè il kernel) insieme ad altri container, ma mantiene il suo piccolo spazio separato per operare. In pratica, Docker ha scelto un compromesso che possiamo definire &quot;giusto&quot; per la maggior parte delle applicazioni cloud-native, ovvero un <strong>isolamento a livello di processo</strong>, sufficiente per evitare conflitti, senza la pesantezza di simulare ogni volta un intero computer. Ecco perché nel mondo DevOps si è passati in pochi anni dall&#39;avere <em>&quot;una VM per ogni servizio&quot;</em> all&#39;avere <em>&quot;un container per ogni microservizio&quot;</em>: un cambio di paradigma che ha reso possibile scalare e gestire sistemi distribuiti con molta più agilità.</p>
+<h2 id="5-perch-docker-stato-un-punto-di-svolta">5. Perché Docker è stato un punto di svolta</h2>
+<p>Arrivati a questo punto penso sia chiaro perché Docker è stato visto come un <strong>punto di svolta</strong> nell&#39;IT.</p>
+<p>Nel 2013 Docker ha preso tecnologie Linux esistenti (contenitori LXC, union filesystem) e <a href="https://aws.plainenglish.io/the-docker-revolution-2013-2025-how-containers-transformed-devops-forever-af977962f682?gi=d6b47fe4b613#:~:text=Containers%20existed%20long%20before%20Docker,changing%20the%20DevOps%20landscape%20forever">le ha trasformate in uno strumento alla portata di tutti i developer</a>, <strong>cambiando per sempre il paesaggio DevOps</strong>. </p>
+<p>Tre aspetti chiave riassumono il suo impatto: </p>
+<ul>
+<li><strong>(a) Portabilità</strong>: il motto &quot;works on my machine&quot; si è trasformato in &quot;works anywhere&quot; grazie ai container che garantiscono environment parity; </li>
+<li><strong>(b) Developer Experience</strong>: al posto di uno scripting manuale, Docker offre una CLI pulita e dichiarativa (con Dockerfile, docker run, ecc.) che rende più semplice usare container rispetto a VM; </li>
+<li><strong>(c) Ecosistema</strong>: con Docker Hub è nato il primo registro pubblico di immagini, in pratica un &quot;app store&quot; di componenti pronti all&#39;uso condivisi dalla community.</li>
+</ul>
+<p>Quello che ho notato è che questo insieme di fattori ha fatto sì che Docker divenisse <strong>sinonimo di container</strong> e che in pochissimo tempo fosse adottato ovunque, accompagnando e abilitando trend come il movimento <strong>DevOps</strong>, le pipeline <strong>CI/CD</strong> automatizzate e l&#39;architettura a <strong>microservizi</strong>. </p>
+<p>In un momento storico in cui le aziende stavano spezzettando le applicazioni monolitiche in tanti servizi indipendenti, Docker ha fornito quell&#39;ingrediente che ha permesso di inserire ogni microservizio in un container. Questo ha reso facile da distribuire e replicare in produzione i vari microservizi. </p>
+<p>Tutti i maggiori cloud provider hanno abbracciato Docker: oggi è <em>raro trovare un PaaS che non supporti i container Docker</em>. Questo standard universale ha liberato le aziende dal lock-in dello specifico ambiente: se un&#39;app è containerizzata, puoi eseguirla su AWS, GCP, Azure, on-premise, insomma ovunque ci sia un runtime compatibile e <strong>ottenendo la stessa portabilità</strong> che i container navali hanno dato al mondo supply chain globale. </p>
+<p>Se vogliamo misurare il successo, Docker ha sicuramente portato guadagni in <strong>velocità e efficienza</strong>: basti pensare che nel primo demo pubblico di Docker (PyCon 2013) si mostrò come <a href="https://aws.plainenglish.io/the-docker-revolution-2013-2025-how-containers-transformed-devops-forever-af977962f682?gi=d6b47fe4b613">&quot;containerizzare&quot; un database Redis in pochi secondi, un processo che prima richiedeva ore di configurazione manuale</a>. 
+Allo stesso modo, rilasciare una nuova versione di applicazione è diventato più rapido e sicuro: invece di dover riconfigurare un server esistente (rischiando di rompere qualcosa), con Docker si fa il build di una nuova immagine e si fa il deploy, sapendo che include esattamente tutto il necessario. </p>
+<p>In conclusione, oggi è naturale per un team di sviluppo pensare in termini di <em>immagini</em> e <em>container</em> quando si lavora a nuove applicazioni: questo ha migliorato la collaborazione tra sviluppatori e sistemisti che oggi parlano un linguaggio comune. Inoltre ha aperto la strada a tecnologie come <strong>Kubernetes</strong> che orchestrano migliaia di container mantenendo i sistemi affidabili e scalabili. La &quot;Docker revolution&quot; ha anche democratizzato l&#39;accesso a ambienti complessi: uno sviluppatore junior può far girare in locale l&#39;intero stack di un&#39;app (database, cache, backend, ecc.) con pochi comandi Docker Compose, cosa impensabile una dozzina di anni fa usando solo VM e altre alternative definite all&#39;inizio.</p>
+<p>Dire che ora abbiamo capito l&#39;importanza di Docker e quanto è utile. Ora penso sia utile concludere l&#39;articolo comprendendo al meglio quando non serve usare Docker.</p>
+<h2 id="6-quando-docker-non-serve">6. Quando Docker non serve</h2>
+<p>Deve essere chiaro che, per quanto Docker sia potente e alla moda, <strong>non è una bacchetta magica adatta ad ogni scenario</strong>. Ci sono casi in cui introdurre Docker aggiunge più complessità che benefici, o situazioni in cui una soluzione più semplice basta e avanza. Ad esempio, <strong>per applicazioni molto semplici</strong> (una piccola API o un sito statico) o per progetti personali, usare Docker rischia essere solo un modo per complicare inutilmente le cose. Ovvviamente non lo dico solo io ma anche <a href="https://www.freecodecamp.org/news/7-cases-when-not-to-use-docker/#:~:text=At%20the%20same%20time%2C%20you,it%20just%20adds%20unnecessary%20complexity">alcuni esperti</a>. In questi casi, configurare direttamente l&#39;app sul sistemo operativo host (o utilizzare ambienti virtuale leggeri come venv per Python, ecc.) può essere più rapido e lineare. </p>
+<p>Altri in cui Docker <strong>potrebbe non servire</strong> sono riportate in questo <a href="https://www.freecodecamp.org/news/7-cases-when-not-to-use-docker/#:~:text=Do%20Not%20Use%20Docker%20if,Develop%20a%20Desktop%20GUI%20Application">link</a>. Docker aggiunge uno strato in più e, in certi scenari (limiti di memoria non impostati, overhead di I/O), può persino rallentare o rendere instabile il sistema quando il kernel va in out-of-memory. In questi casi una distribuzione “nativa” del servizio può essere più lineare. 
+Quando la priorità assoluta è la sicurezza e l’isolamento totale, ricordati che i container condividono il kernel dell’host. Un breakout avrebbe privilegi &quot;elevati&quot;. Se l’isolamento tipo VM è un requisito non negoziabile, Docker potrebbe non essere lo strumento giusto. </p>
+<p>Se stai sviluppando una applicazione desktop con GUI un po&#39; complicata, Docker tende a essere un&#39;opzione scomoda: infatti questo nasce per processi “headless” e CLI. Certo, esistono workaround (X11 forwarding, alcuni casi con QT su Linux), ma sono soluzioni macchinose: in molti contesti l’installazione nativa è più semplice.</p>
+<p>Quando l’app gestisce molti dati persistenti e preziosi, l’approccio “stateless” dei container non aiuta: i dati nello strato scrivibile del container sono effimeri e legati all’host. Si può usare il meccanismo di volumi, ma la gestione resta più intricata rispetto a uno storage “fuori” dal container. </p>
+<p>I motivi per <a href="https://www.freecodecamp.org/news/7-cases-when-not-to-use-docker/#:~:text=Do%20Not%20Use%20Docker%20if,You%20Need%20to%20Boost%20Speed"><em>non</em> usare Docker</a> possono essere riassunti in alcuni punti: </p>
+<ul>
+<li><p><strong>(a) Performance pura:</strong> Docker non rende &quot;più veloce&quot; il tuo codice, anzi, aggiunge uno strato in più. Per workload che richiedono il massimo delle prestazioni (ad es. calcolo scientifico HPC, rendering 3D in tempo reale) o quando ogni millisecondo conta, eseguire nativamente sull&#39;host (o in una VM ottimizzata) può essere preferibile. Docker, infatti, potrebbe introdurre un leggero overhead e consumare risorse se non configurato con limiti adeguati. </p>
+</li>
+<li><p><strong>(b) Sicurezza &amp; isolamento:</strong> sebbene Docker offra un certo isolamento, tutti i container condividono lo stesso kernel host. Quindi una vulnerabilità nel kernel o una fuga dal container possono compromettere l&#39;intero sistema. Inoltre il daemon Docker gira spesso con privilegi elevati; se un processo malevolo &quot;esce&quot; dal container, otterrebbe privilegi di root sull&#39;host. In contesti dove la sicurezza è molto importante (magari in sistemi con dati sensibili soggetti a compliance), una VM può offrire isolamento più forte (anche se Docker sta colmando il gap con tecniche come rootless mode, gVisor, ecc.).</p>
+</li>
+<li><p><strong>(c) Persistenza dei dati e complessità operativa:</strong> contenitori per loro natura sono effimeri. Questo significa che se devi gestire molti dati persistenti o uno stato complesso, finisci per dover aggiungere volumi, backup esterni, etc., altrimenti distruggere un container significa perdere dati. 
+Per alcuni, l&#39;approccio containerizzato rende più &quot;opaco&quot; il sistema. Per operazioni banali come modificare un file di configurazione o eseguire un comando di sistema potrebbero richiedere di &quot;entrare&quot; nel container o ricostruire l&#39;immagine, cosa meno immediata rispetto a fare ssh in una VM tradizionale. Non a caso c&#39;è chi ironizza dicendo che <strong>&quot;Docker è utile solo a chi non conosce bene Linux e vuole evitare di impararlo&quot;</strong>, e che per tante piccole implementazioni <a href="https://lukesmith.xyz/articles/everyone-should-be-avoiding-docker/#:~:text=So%20for%20my%20purposes%2C%20when,totally%20unnecessary%20layer%20of%20abstraction"><em>&quot;aggiunge uno strato di astrazione totalmente non necessario&quot;</em></a>. Questa è una visione estrema, ma evidenzia come per progetti semplici un normale script di provisioning potrebbe ottenere lo stesso risultato in modo più trasparente.</p>
+</li>
+</ul>
+<p>Siamo arrivati in fondo. La decisione <strong>se usare Docker o no</strong> dovrebbe, secondo me, sempre basarsi su un&#39;analisi costi-benefici nel contesto specifico. Docker è fantastico per garantire coerenza e scalabilità nei casi complessi, ma <strong>non è obbligatorio usarlo sempre e comunque</strong>. </p>
+<p>Un team piccolo che deploya una singola applicazione monolitica un paio di volte l&#39;anno forse può gestire tranquillamente un server configurato a mano o con una VM di riferimento, senza introdurre container. In fondo, l&#39;obiettivo è risolvere problemi, non aggiungere tecnologia &quot;alla moda&quot;, o meglio, perché tutti oggi fanno così. Ho letto su Reddit e anche un articolo su medium che ne parlava. Ci sono alcuni sviluppatori che spendono più tempo a combattere con YAML e container che quello dedicato a scrivere codice. In altre parole, <strong>Docker non è una panacea universale</strong>. Va usato quando porta un valore chiaro: portabilità, consistenza, scalabilità o isolamento rapido. In caso contrario, esistono alternative più semplici: dall&#39;uso di ambienti virtuali leggeri, ad alcuni più complessi ma più sicuri, come i deployment su VM tradizionali, fino ai moderni servizi serverless. L&#39;importante è ricordare che ogni strumento ha il suo posto.</p>
+<p>In conclusione, Docker è potente, ma non è la bacchetta magica che risolve tutto. È uno strumento che dà il meglio di sé quando serve davvero: quando ci sono ambienti complessi da replicare, team numerosi o sistemi distribuiti da orchestrare. Ma se lo usi solo perché “lo usano tutti”, rischi di complicarti la vita. In fondo, anche la tecnologia più brillante perde senso se non serve al problema che hai davanti.</p>
+<p><strong>Il buon ingegnere sceglie la soluzione meno complessa in grado di risolvere il problema</strong>. Docker ha senso quando il gioco vale la candela; quando non serve, deve scegliere l&#39;opzione più semplice ed efficace per lui e per il suo obiettivo.</p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/docker-container-fundamentals/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>
