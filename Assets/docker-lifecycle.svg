@@ -90,10 +90,9 @@
 
       <!-- Stopped → Created (freccia curva di ritorno) -->
       <path d="M 470 156
-            Q 470 190, 440 190
-            L 160 190
-            Q 130 190, 130 160
-            L 130 156"
+            C 470 195, 430 210, 360 210
+            S 170 210, 140 180
+            C 140 170, 140 162, 140 156"
             stroke="#60a5fa"
             stroke-width="2"
             marker-end="url(#arrowReturn)"
@@ -101,13 +100,14 @@
             stroke-dasharray="5,3"/>
       </g>
 
-      <!-- Testo esplicativo in basso, ben separato -->
-      <text x="360" y="230" font-size="13" text-anchor="middle" fill="#94a3b8">
-        Da Stopped puoi riutilizzare il container (torna a Created → Running) oppure rimuoverlo definitivamente con `docker rm`
+      <!-- Testo esplicativo in basso, diviso su due righe -->
+      <text font-size="12" text-anchor="middle" fill="#94a3b8">
+        <tspan x="360" y="220">Da Stopped puoi riutilizzare il container (torna a Created → Running)</tspan>
+        <tspan x="360" y="238">oppure rimuoverlo definitivamente con `docker rm`</tspan>
       </text>
 
       <!-- Legenda piccola per la freccia di ritorno -->
-      <g transform="translate(240, 205)">
+      <g transform="translate(290, 202)">
         <line x1="0" y1="0" x2="20" y2="0" stroke="#60a5fa" stroke-width="2" stroke-dasharray="5,3" opacity="0.7"/>
         <text x="25" y="4" font-size="11" fill="#64748b">restart workflow</text>
       </g>
