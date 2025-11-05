@@ -78,6 +78,7 @@ const sharedStyles = `
 
 export function renderBlogIndex({ posts, relativeRoot }) {
   const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
+  const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
   const postsPayload = posts.map((post) => {
     const languages = {};
     for (const [lang, langData] of Object.entries(post.languages)) {
@@ -443,7 +444,11 @@ export function renderBlogIndex({ posts, relativeRoot }) {
   <header class="site-header">
     <div class="site-header__inner">
       <a class="logo" href="${homeLink}">
-        <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img">
+        <picture>
+          <source srcset="${logoWebpPath}" type="image/webp">
+          <source srcset="${logoPath}" type="image/png">
+          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img" width="40" height="40">
+        </picture>
         <span class="logo-text">Mirko Calcaterra</span>
       </a>
       <div class="header-controls">

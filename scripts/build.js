@@ -156,6 +156,7 @@ async function build() {
   await copyIfExists(path.join(rootDir, 'Assets'), path.join(distDir, 'Assets'));
   await copyIfExists(path.join(rootDir, 'pdf'), path.join(distDir, 'pdf'));
   await copyIfExists(path.join(rootDir, 'data'), path.join(distDir, 'data'));
+  await copyIfExists(path.join(rootDir, 'robots.txt'), path.join(distDir, 'robots.txt'));
 
   const metadata = await loadBlogMetadata({ rootDir, logger: console });
 
