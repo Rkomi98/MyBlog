@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Psychometric Profiling, Micro-Targeting and AI Chatbots: User Data, Training and Governance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.15rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .post-toc__item.level-1 {
+      padding-left: 1rem;
+    }
+    .post-toc__item.level-2 {
+      padding-left: 2rem;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: rgba(15, 23, 42, 0.65);
+      color: #f8fafc;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    body[data-theme="light"] .post-body code {
+      background: rgba(15, 23, 42, 0.08);
+      color: #111827;
+    }
+    .post-body pre {
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      padding: 1.2rem 1.4rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    body[data-theme="light"] .post-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    .post-body tr {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    .post-body th,
+    .post-body td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    body[data-theme="light"] .post-body table {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🛡️</div>
+        <span class="post-hero__category">Privacy</span>
+        <h1 class="post-hero__title">Psychometric Profiling, Micro-Targeting and AI Chatbots: User Data, Training and Governance</h1>
+        <div class="post-hero__meta">
+          <span>📅 November 5, 2025</span>
+          <span>⏱️ 84 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc">
+        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+        <ul class="post-toc__list">
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#cambridge-analytica-what-happened">Cambridge Analytica: what happened?</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#data-collected">Data collected</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#psychometric-characteristics-ocean-model">Psychometric characteristics (OCEAN model)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#predictive-models-and-ml-employed">Predictive models and ML employed</a></li>
+        </ul>
+      </aside>
+        <div class="post-body">
+          <h2 id="abstract">Abstract</h2>
+<p>The <strong>Cambridge Analytica (CA)</strong> scandal revealed how psychometric profiling can transform social media data into powerful tools for political micro-targeting. From 2014, <a href="https://ico.org.uk/media2/migrated/2259371/investigation-into-data-analytics-for-political-purposes-update.pdf">CA collected Facebook data ([1])</a> from tens of millions of people through a quiz (&quot;thisisyourdigitallife&quot;), obtaining <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=personality%20and%20other%20drivers%20that,second%20amendment%2C%20which%20guarantees%20the"><strong>OCEAN profiles</strong> ([2])</a> (the &quot;Big Five&quot; personality traits) and matching them with demographic and consumer information. These <strong>psychometric profiles</strong> were used to segment the electorate and experiment with targeted political messages: for example, by modulating <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=%E2%80%98Openness%E2%80%99%2C%20%E2%80%98Conscientiousness%E2%80%99%2C%20%E2%80%98Extraversion%E2%80%99%2C%20%E2%80%98Agreeableness%E2%80%99%20and,39">pro-gun ads based on the &quot;neuroticism&quot; trait ([3])</a>. CA propagated content on <strong>Facebook</strong> (via <strong>Custom Audiences</strong> and similar tools), testing ad variants with <strong>A/B testing</strong> techniques to maximize impact.</p>
+<p>Okay, but what was the impact of all this?</p>
+<p>Evidence on real effectiveness is mixed: <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=micro,turnout%2C%20for%20the%20targeted%20groups">CA itself ([4])</a> reported increases of <strong>39%</strong> in awareness on certain issues and a <strong>+30%</strong> in turnout for targeted groups in 2014 US campaigns.
+However, other independent analyses <a href="https://www.niemanlab.org/2018/03/this-is-how-cambridge-analyticas-facebook-targeting-model-really-worked-according-to-the-person-who-built-it/#:~:text=In%20an%20email%20to%20me%2C,like%20race%2C%20age%2C%20and%20gender">[5]</a><a href="https://www.niemanlab.org/2018/03/this-is-how-cambridge-analyticas-facebook-targeting-model-really-worked-according-to-the-person-who-built-it/#:~:text=Regarding%20one%20key%20public%20concern%2C,quite%20as%20it%20was%20billed">[6]</a> noted that CA&#39;s predictive model <strong>did not significantly outperform normal demographic criteria</strong>.</p>
+<p>Today, similar logics of <strong>intensive user data collection and use</strong> are found in major <strong>chatbot and LLM</strong> (large language model) services. Consumer platforms like <strong>ChatGPT</strong> (OpenAI, <a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=improve%20over%20time,it%2C%20unless%20you%20opt%20out">[7]</a>) and <strong>Gemini</strong> (Google) by default <strong>record user prompts, conversations, and feedback</strong> and use them to continuously improve models <a href="https://support.google.com/gemini/answer/13594961?hl=en">[8]</a>. Private users can &quot;opt-out&quot; (i.e., refuse to share their data) by limiting the sharing of their conversation history, but in the absence of such a choice, chat data can be stored for extended periods (e.g., <strong>OpenAI</strong> keeps general user chats indefinitely to train models, unless opted out, while <strong>Anthropic</strong> from 2025 offers a choice: no training and 30-day retention or active training with <strong>5-year</strong> retention <a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=Extended%20data%20retention">[9]</a>). In contrast, <strong>business/enterprise</strong> services offer <strong>isolation</strong> guarantees: for example, <strong>OpenAI API/Enterprise</strong> and <strong>Microsoft 365 Copilot</strong> ensure that input and output <strong>do not feed into the training data</strong> of public models <a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=Services%20for%20businesses%2C%20such%20as,Enterprise%2C%20and%20our%20API%20Platform">[10]</a><a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-privacy#:~:text=Important">[11]</a>, remaining confined to the client&#39;s environment. On the <strong>transparency and governance</strong> front, companies have introduced <strong>controls for users and administrators</strong> (such as privacy dashboards, retention settings, objection forms for the EU <a href="https://about.fb.com/news/2025/04/making-ai-work-harder-for-europeans/#:~:text=Beginning%20this%20week%2C%20people%20based,well%20as%20newly%20submitted%20ones">[12]</a><a href="https://about.fb.com/news/2025/04/making-ai-work-harder-for-europeans/#:~:text=As%20we%E2%80%99ve%20previously%20mentioned%2C%20we,being%20used%20for%20training%20purposes">[13]</a>) and adopted contractual commitments (e.g., <strong>SOC 2</strong>, <strong>DPA</strong> on data processing) to reassure businesses and regulators <a href="https://openai.com/enterprise-privacy/#:~:text=Comprehensive%20compliance">OpenAI [14]</a><a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=,outside%20your%20domain%20without%20permission">Google [15]</a>. However, concerns remain: for example, the <strong>DeepSeek</strong> chatbot, a popular Chinese app, collects <strong>every input, file, and chat history</strong>, sending everything to servers in China <a href="https://www.wired.com/story/deepseek-ai-china-privacy-data/#:~:text=To%20be%20clear%2C%20DeepSeek%20is,%E2%80%9D">[16]</a><a href="https://www.wired.com/story/deepseek-ai-china-privacy-data/#:~:text=The%20first%20of%20these%20areas,%E2%80%9D">[17]</a>; this raises security doubts and has attracted the attention of experts for potential risks of government access <a href="https://www.wired.com/story/deepseek-ai-china-privacy-data/#:~:text=DeepSeek%E2%80%99s%20privacy%20policy%20also%20says,is%20required%20to%20do%20so">[18]</a>.</p>
+<blockquote>
+<p>To access this article, a Wired premium account is required.</p>
+</blockquote>
+<p>In summary, from the Cambridge Analytica era to today&#39;s AI chatbot boom, users&#39; <strong>personal and behavioral data</strong> have become the <strong>&quot;fuel for predictive and generative models&quot;</strong>. While this enables more &quot;intelligent&quot; services and tailored campaigns, it also poses new challenges for <strong>privacy, control, and responsibility</strong>. Platforms are responding with greater transparency (dedicated policies) and control options, but it is also up to users, and especially regulators, to demand <strong>clarity on the use of their data</strong>, exercise opt-out/off rights, and carefully evaluate what to share with these AIs.</p>
+<h2 id="cambridge-analytica-what-happened">Cambridge Analytica: what happened?</h2>
+<p>Now let&#39;s look in detail at what happened with the Cambridge Analytica case. To do this, I will use the first two sources we saw in the article <a href="https://ico.org.uk/media2/migrated/2259371/investigation-into-data-analytics-for-political-purposes-update.pdf">1</a>,<a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=personality%20and%20other%20drivers%20that,second%20amendment%2C%20which%20guarantees%20the">2</a></p>
+<h3 id="data-collected">Data collected</h3>
+<p>Cambridge Analytica (an affiliate of <strong>SCL Elections</strong>) acquired a massive dataset of Facebook users in 2014-2015 through the company <strong>GSR</strong> (Global Science Research) of researcher Aleksandr Kogan. Kogan developed a personality quiz app (&quot;thisisyourdigitallife&quot;) leveraging Facebook&#39;s Graph API, which at the time allowed extracting not only the data of the consenting user but also that of their <strong>friends</strong> (<em>friends permissions</em> functionality valid until 2014). Approximately <strong>320,000</strong> Facebook users, mainly Americans, completed the OCEAN test by logging in via Facebook; in exchange for a few dollars, they gave the app permission to read a wide range of information: public profile (name, gender), date of birth, current city, <strong>&quot;Liked&quot; pages</strong>, wall posts, friend list, even private messages and tagged photos.</p>
+<p>Since the app inherited the access rights of Kogan&#39;s previous academic app (developed before Facebook&#39;s 2015 restrictions), it could also collect data from participants&#39; friends, if the latter had not set their privacy differently. <strong>In total, ~87 million people</strong> (including over <strong>1 million</strong> in the UK) underwent this massive data collection without their knowledge. Facebook confirmed the estimate and published the list of involved countries in 2018. Approximately <strong>30 million</strong> individuals had both Facebook data and psychometric quiz results matched, forming the core for predictive analyses.</p>
+<h3 id="psychometric-characteristics-ocean-model">Psychometric characteristics (OCEAN model)</h3>
+<p>The Big Five personality model, known as <strong>OCEAN</strong> (Openness, Conscientiousness, Extroversion, Agreeableness, Neuroticism), was central to CA&#39;s profiling <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=personality%20and%20other%20drivers%20that,second%20amendment%2C%20which%20guarantees%20the">[2]</a>. Kogan and colleagues applied methodologies from the Cambridge Psychometrics Centre (known for the &quot;MyPersonality&quot; project) which demonstrated how <strong>Facebook Likes</strong> could predict OCEAN traits and other personal attributes with surprising accuracy <a href="https://ico.org.uk/media2/migrated/2259371/investigation-into-data-analytics-for-political-purposes-update.pdf#:~:text=OCEAN%20model%20and%20pioneer%20the,as%20ethnicity%20and%20political%20affiliation">[19]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=Cambridge%20Psychometrics%20Centre%2C%20Michal%20Kosinski%2C,to%20this%20approach%2C%20stating%20that">[20]</a>.</p>
+<p>In the contract stipulated with SCL on June 4, 2014, Kogan declared that his techniques allowed for predictivity &quot;<strong>close to test-retest</strong>&quot; in personality scores, with correlations such that an algorithm based on likes was <em>more accurate</em> in describing a person than knowing their friends or even family members <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=Nix%20told%20us%3A%20%E2%80%9CWe%20do,41">[21]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=personality%20and%20other%20drivers%20that,second%20amendment%2C%20which%20guarantees%20the">[2]</a>.</p>
+<blockquote>
+<p>This statement echoed a 2015 academic study [<a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=Cambridge%20Psychometrics%20Centre%2C%20Michal%20Kosinski%2C,to%20this%20approach%2C%20stating%20that">22</a>], where Michal Kosinski, Kogan&#39;s colleague, showed that 70 Facebook likes outperformed friends in delineating an individual&#39;s psychological profile.</p>
+</blockquote>
+<p>In practice, CA had estimated OCEAN scores for millions of US voters, obtained directly from the quiz or inferred through models trained on Kogan&#39;s data.</p>
+<p>Since it might seem complicated now, let&#39;s take <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=%E2%80%98Openness%E2%80%99%2C%20%E2%80%98Conscientiousness%E2%80%99%2C%20%E2%80%98Extraversion%E2%80%99%2C%20%E2%80%98Agreeableness%E2%80%99%20and,39">an example</a>. A user with a high &quot;Neuroticism&quot; score and low &quot;Openness&quot; was identified as <strong>sensitive to messages of fear and order</strong>, while a highly &quot;Extraverted&quot; individual might respond better to optimistic and social content. Cambridge Analytica <strong>clustered</strong> the public into psychographic groups and identified key themes for each segment: according to former CEO Alexander Nix, &quot;presenting a fact supported by an emotion&quot; was the strategy, adapting the argument to the audience&#39;s emotional profile <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=We%20are%20trying%20to%20make,109">[23]</a>.</p>
+<h3 id="predictive-models-and-ml-employed">Predictive models and ML employed</h3>
+<p>While not publishing technical details of its algorithms, CA combined <strong>machine learning</strong> approaches with traditional analytics. Kogan in <a href="https://www.niemanlab.org/2018/03/this-is-how-cambridge-analyticas-facebook-targeting-model-really-worked-according-to-the-person-who-built-it/">an email</a> explained that his model for CA operated similarly to Netflix&#39;s recommendation system, i.e., via <strong>SVD/factor analysis</strong>: reducing a user-like matrix to latent components, which incorporated personality, demographics, and social networks together. In essence, the algorithm did not &quot;openly&quot; isolate the 5 traits but mixed them with dozens of other variables (age, gender, political orientation, etc.) into correlated factors useful for predicting electoral behavior.</p>
+<p>As we did in the previous section, let&#39;s take an example. CA used <em>regressions</em> and <em>decision trees</em> to estimate the probability that an individual would support certain causes or candidates, given their known psychographic and demographic characteristics.</p>
+<p>CA&#39;s data scientists built models to identify so-called <strong>persuadables</strong>, i.e., undecided voters strongly influenced by specific emotional levers. The volume of data (likes, tests, online and offline behaviors) also allowed the use of <strong>shallow neural networks</strong> or multivariate classification models to associate profiles with <em>outcomes</em> of interest (vote, donation, abstention). <strong>Facebook&#39;s look-alike models</strong> played an important role: CA could upload lists of known users (e.g., individuals with high &quot;openness&quot; scores identified by the quiz) and use Facebook&#39;s algorithm to find other similar users, expanding the reach of targeting.</p>
+<p><strong>Data→profile→targeting pipeline</strong></p>
+<p><img src="../../../Assets/ca-data-pipeline.svg" alt="Diagram of the Cambridge Analytica pipeline"></p>
+<p><em>Figure:</em> the numbering follows the phases by which CA transforms social and commercial data into micro-targeted messages and continuously refines the models.</p>
+<p>First, CA (via GSR) <strong>extracts raw data</strong> from social media (Facebook) and combines it with other sources (e.g., public <strong>voter rolls</strong>, data from commercial brokers such as purchases and subscriptions) <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=order%20to%20match%20the%20right,might%20support%20and%20how%20to">[40]</a>. This data feeds into <strong>psychometric analysis</strong>: individual OCEAN traits are calculated from the quiz and likes, which are then <strong>aggregated and inserted</strong> into a unique profile for each voter (including age, gender, location, political leanings, etc.) <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=required%20under%20the%20contract%20to,electoral%20register%20in%20those%20states">[41]</a>. On this basis, CA statisticians develop <strong>predictive models</strong> to segment the population into key groups (e.g., &quot;insecure neurotics,&quot; &quot;open progressives&quot;) and predict for each their susceptibility to specific messages <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=personality%20and%20other%20drivers%20that,second%20amendment%2C%20which%20guarantees%20the">[2]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=required%20under%20the%20contract%20to,electoral%20register%20in%20those%20states">[41]</a>. In parallel, the creative team develops <strong>message variants</strong> (memes, videos, slogans) tailored to the psychological insights of the segments: for example, the same theme (such as gun rights) is packaged in a <em>fear and protection</em> version for individuals with high neuroticism, and in a <em>sports hobby</em> version for open/calm subjects <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=%E2%80%98Openness%E2%80%99%2C%20%E2%80%98Conscientiousness%E2%80%99%2C%20%E2%80%98Extraversion%E2%80%99%2C%20%E2%80%98Agreeableness%E2%80%99%20and,39">[3]</a>. Messages are then <strong>delivered via micro-targeting</strong>: CA uploaded lists of target users (identified by name/ID, email, or phone) to Facebook and used tools like <strong>Custom Audience</strong> and <strong>Dark Posts</strong> to show different ads to different groups, without them being publicly visible to others <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=3%20The%20issue%20of%20data,GSR%20and%20Cambridge%20Analytica%20allegations">[38]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=data%2C%20involving%20various%20organisations%20including,overseas%20elections%20in%20Chapter%206">[39]</a>. This phase included <strong>A/B tests</strong> and effectiveness checks: clicks, shares, view time, and conversion rates (e.g., event registration, donation) were monitored for each variant, then iterating on the winning creative. Finally, campaign results (actual engagement, changes in internal polls) were <strong>fed back</strong> into the process: user reactions served to further refine persuasion models, in a continuous optimization cycle.</p>
+<p><strong>Delivery channels and A/B experimentation:</strong> The main vehicle for CA&#39;s messages was <strong>Facebook</strong>. The company created targeted ads using Facebook&#39;s advertising system, which allowed ads to be directed to very specific demographic and psychographic clusters (by geographic area, interests, similar to a provided list). CA also leveraged Canadian partner <strong>AggregateIQ</strong> for campaigns on other platforms and the <strong>display network</strong> (e.g., targeted web banners): AIQ managed advertising spending for pro-Brexit and pro-Trump groups, using data and segments provided by CA <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=sharing%20of%20data%20in%20the,overseas%20elections%20in%20Chapter%206">[42]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=micro,uplift%20in%20voter">[43]</a>. Furthermore, CA did not disdain traditional methods: in some cases, it provided <em>scripts</em> for <strong>telemarketing</strong> or for political volunteers, calibrated to the profile of the voter to be contacted (e.g., emphasizing immigration when speaking with a &quot;closed&quot; and fearful subject, vs. economy with an &quot;open&quot; cosmopolitan). <strong>A/B experiments</strong> were central: <strong>hundreds of ad variants</strong> were tested simultaneously - changing, for example, color, emotional tone, call-to-action - measuring which version had the highest click-through or conversion rate in each segment <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=92,Some%20of%20the">[44]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=data%2C%20involving%20various%20organisations%20including,overseas%20elections%20in%20Chapter%206">[39]</a>. A famous example reported by Wylie is the &quot;Defeat Crooked Hillary&quot; campaign in which CA allegedly tested dozens of anti-Clinton messages (from the most moderate to the most conspiratorial) to understand which resonated with groups of doubtful voters, then bombarding them with the optimized message. Facebook at that time <strong>did not effectively track</strong> these <em>dark ads</em> nor limit their extreme personalization, which allowed CA to conduct a kind of propaganda laboratory invisible to the public and to the victims themselves.</p>
+<p><strong>Integration with external data:</strong> In addition to Facebook data, CA had a mosaic of other information. In the USA, it leveraged state <strong>voter rolls</strong> (containing voting history, party affiliation, etc.) and cross-referenced them with commercial datasets (from brokers like Acxiom, Experian) on purchasing habits, type of car owned, magazines read, charitable donations… <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=order%20to%20match%20the%20right,might%20support%20and%20how%20to">[40]</a>. Nix stated that CA had &quot;up to <strong>5,000 datapoints per individual</strong>&quot; for American citizens, building a detailed picture of each voter&#39;s personality and preferences <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=order%20to%20match%20the%20right,might%20support%20and%20how%20to">[40]</a>. This <strong>hybrid strategy</strong> (social media + offline data) allowed for the identification of unprecedented correlations - for example, discovering that pickup truck owners in North Carolina with few political &quot;likes&quot; but high conscientiousness scores were potential undecided Republican supporters. CA uploaded to Facebook not only user IDs collected by GSR but also lists of voters from specific counties obtained from parties or PAC committees, using <strong>Custom Audiences</strong> to reach them online with tailored messages. A further tool was <strong>Lookalike Audiences</strong>: starting from an audience whose orientation CA knew (e.g., people profiled as <em>pro-Trump</em>), Facebook&#39;s algorithm found other users with similar characteristics to extend the campaign to <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=3%20The%20issue%20of%20data,GSR%20and%20Cambridge%20Analytica%20allegations">[38]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=data%2C%20involving%20various%20organisations%20including,overseas%20elections%20in%20Chapter%206">[39]</a>.</p>
+<p><strong>Evidence of effectiveness and methodological limitations:</strong> Measuring the concrete impact of CA&#39;s tactics is complex and highly debated. CA itself boasted some numerical results in the <strong>2014 US Midterm</strong> elections: in a race supported by the then <em>John Bolton Super PAC</em>, the use of psychographic profiles for micro-targeting advertising in 5 personality groups led - according to SCL - to a <strong>39%</strong> increase in <em>brand awareness</em> of key issues among exposed voters <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=micro,turnout%2C%20for%20the%20targeted%20groups">[4]</a>. Another campaign (&quot;For America&quot;, 2014) aimed at mobilizing conservative online voters, again according to an internal SCL report, allegedly generated <strong>1.5 million</strong> targeted impressions, resulting in a surprising <strong>+30% voter turnout</strong> compared to expectations in the target groups <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=micro,turnout%2C%20for%20the%20targeted%20groups">[4]</a>. These data, difficult to verify independently, aroused skepticism: the uplifts were calculated against non-transparent baselines and confounded with other factors (e.g., an increase in turnout could result from external causes, not just ads). Subsequent academic studies have downplayed the CA &quot;mythology.&quot; For example, an analysis by Eitan Hersh (2019) to the US Senate concluded that <strong>the persuasive effect of psychometric micro-targeting was probably modest</strong>, as previous campaigns (Obama 2012) had already used similar data and models without miraculous results <a href="https://www.judiciary.senate.gov/imo/media/doc/Professor%20Emma%20L.%20Briant%20Report%20on%20Cambrige%20Analytica.pdf#:~:text=,really%20championed%20by%20Obama%27s">[45]</a>. Matthew Hindman noted that Kogan&#39;s model explained a portion of variance comparable to traditional models on age, sex, and race <a href="https://www.niemanlab.org/2018/03/this-is-how-cambridge-analyticas-facebook-targeting-model-really-worked-according-to-the-person-who-built-it/#:~:text=In%20an%20email%20to%20me%2C,like%20race%2C%20age%2C%20and%20gender">[5]</a>. Furthermore, internal <strong>methodological limitations</strong> undermined robustness: OCEAN scores deduced from likes have a margin of error and are static, while voter preferences evolve; the algorithm could therefore erroneously label subjects (e.g., mistaking a cynical young person for a persuadable undecided voter). There is also a <strong>selection bias</strong>: not all 87 million users were undecided voters - indeed many were already aligned, reducing the usefulness of convincing them. Even Christopher Wylie, the whistleblower, admitted that CA could not perform macro-level controlled tests on who voted what, so <strong>there is no direct proof</strong> that it &quot;shifted&quot; X decisive votes. Finally, a UK Commission report highlighted how the entire CA operation was <strong>opaque and non-replicable</strong>: the company refused to fully satisfy a Subject Access Request from a citizen, preventing them from knowing exactly what information it held about them and how it had used it <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=100,43">[46]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=101,119">[47]</a>. This suggests a lack of rigor that casts doubt on the quality of CA&#39;s final product and makes it difficult to scientifically evaluate its impact.</p>
+<p><strong>Outcomes and implications:</strong> In 2018, the Cambridge Analytica scandal, which emerged thanks to investigations (<em>The Guardian</em>, <em>NY Times</em>) and the action of the UK Parliament, led to the closure of CA/SCL and a symbolic fine to Facebook (£500k from the UK ICO) for failing to protect data <a href="https://now.tufts.edu/2018/05/17/did-cambridge-analytica-sway-election#:~:text=Tufts%20political%20scientist%20Eitan%20Hersh,a%20Senate%20Judiciary%20Committee%20hearing">[48]</a><a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmcumeds/363/36306.htm#:~:text=conflicted%20with%20Mr%20Nix%E2%80%99s%20evidence%3B,as%20they%20were%20never%20enforced">[49]</a>. The main legacy has been a global awakening to the risks of personal data abuse for <strong>mass manipulation</strong>. The tools refined by CA (psychological profiling + social media targeting) were not entirely new in themselves - but CA pushed their use beyond ethical limits, operating without transparency or informed consent from those concerned. The episode accelerated reforms: Facebook in 2018-19 further limited APIs and made political ads more controllable, while in the regulatory sphere, cases like this contributed to the drafting of guidelines (e.g., GDPR in the EU already provides for the right to object to profiling and automated decisions since 2018, although it was</p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/cambridge-analytica-privacy/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>
