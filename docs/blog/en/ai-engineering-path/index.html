@@ -399,26 +399,172 @@
       margin: 2.2rem 0;
       box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
     }
-    .post-body table {
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
       width: 100%;
       border-collapse: collapse;
-      margin: 2rem 0;
-      background: rgba(15, 23, 42, 0.5);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      background: transparent;
     }
-    .post-body tr {
-      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
     }
-    .post-body th,
-    .post-body td {
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
       padding: 0.9rem 1rem;
       text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
     }
-    body[data-theme="light"] .post-body table {
-      background: rgba(255, 255, 255, 0.9);
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(37, 99, 235, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
       box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
     }
     footer {
       margin-top: 4rem;
@@ -468,6 +614,18 @@
       }
       .post-hero__title {
         font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
       }
     }
   </style>
@@ -522,75 +680,11 @@
 </ul>
 <h2 id="scope-of-the-role-ai-engineer-vs-other-roles">Scope of the role: AI Engineer vs. other roles</h2>
 <p>In practice, the AI Engineer distinguishes themselves from related roles by focusing on <strong>integrating and producing value with AI</strong>, rather than researching new algorithms or purely managing data. The following table summarizes what they do (✓) and what they typically <em>don&#39;t</em> do (-) compared to other roles in AI teams:</p>
-<table>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
-<tr>
-<th>Activity / Role</th>
-<th><strong>AI Engineer</strong></th>
-<th><strong>ML Engineer</strong> / Data Scientist</th>
-<th><strong>Data Engineer</strong></th>
-<th><strong>ML Platform Engineer</strong></th>
-<th><strong>Security Engineer</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Select and use models</strong> (LLM, CV, NLP pre-trained)</td>
-<td>✓ Primary responsibility: choose foundation models/APIs and use them in apps<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=AI%20Implementation%20Engineer%3A%20Builds%20production,AI%20agent%20development%20and%20deployment">[1]</a><a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=AI%20Engineers%3A%20Bridging%20AI%20and,ML%20Engineers">[8]</a>.</td>
-<td>✓/- Often develops and trains models on data (e.g., ML model tuning)<a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=AI%20engineers%20typically%20have%20a,engineers%2C%20covering%20various%20AI%20algorithms">[9]</a>.</td>
-<td>- (Not related to models, but raw data).</td>
-<td>- (Provides infrastructure for inference, does not choose models).</td>
-<td>-</td>
-</tr>
-<tr>
-<td><strong>Develop models from scratch</strong> (research, custom training)</td>
-<td>- Rarely (fine-tuning only if necessary, no new training of large models)<a href="https://www.confident-ai.com/blog/rag-evaluation-metrics-answer-relevancy-faithfulness-and-more#:~:text=RAG%20evaluation%20is%20the%20process,to%20the%20final%20response%20quality">[5]</a>.</td>
-<td>✓ Core of the role: design ML algorithms, train models on datasets, optimize accuracy metrics.</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-<tr>
-<td><strong>End-to-end integration</strong> (AI pipeline in the product)</td>
-<td>✓ Designs the AI architecture in the software (data → embedding → vector search → LLM → UI), writes application code and APIs for AI<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=AI%20Implementation%20Engineer%3A%20Builds%20production,AI%20agent%20development%20and%20deployment">[1]</a><a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and%20similarities#:~:text=In%20contrast%2C%20AI%20Engineers%20integrate,The%20scope%20of%20AI">[2]</a>.</td>
-<td>- (Provides models or analysis, but does not always integrate into the final product).</td>
-<td>- (Stops at data pipelines, ETL).</td>
-<td>- (Provides reusable components, does not integrate case-by-case).</td>
-<td>-</td>
-</tr>
-<tr>
-<td><strong>Data pipeline &amp; preprocessing</strong></td>
-<td>✓/- Coordinates necessary data intake (e.g., defines which documents or knowledge bases to use) but delegates detailed implementation.</td>
-<td>✓ Often prepares and cleans data for training (feature engineering)<a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=Engineers%20who%20deploy%20Machine%20Learning,properly%20structured%20for%20model%20training">[10]</a><a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=Machine%20Learning%20,Specialists%20in%20Data">[11]</a>.</td>
-<td>✓ Core: builds ETL pipelines and ensures reliable data (but does not decide which data is needed from an AI perspective).</td>
-<td>-</td>
-<td>-</td>
-</tr>
-<tr>
-<td><strong>Deploy and serving in production</strong></td>
-<td>✓ Responsible for releasing robust AI services (model call orchestration, error handling, latency)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=AI%20Implementation%20Engineer%3A%20Builds%20production,AI%20agent%20development%20and%20deployment">[1]</a><a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Operations%20Engineer%3A%20Maintains%20production,successes%20into%20sustainable%20production%20services">[12]</a>.</td>
-<td>- (Delivers models, but deployment often falls to MLOps/AI Eng).</td>
-<td>-</td>
-<td>✓ Provides platforms (e.g., servefarm, CI/CD, containers) and monitoring tools<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Platform%20Engineer%3A%20Creates%20infrastructure,that%20accelerate%20the%20entire%20team">[13]</a>.</td>
-<td>- (Supports with security policies during deployment, e.g., secrets, access control).</td>
-</tr>
-<tr>
-<td><strong>MLOps and continuous monitoring</strong></td>
-<td>✓ Sets up AI application metrics (output quality, response times, cost per query) and alerts on drift or failure<a href="https://www.getmaxim.ai/articles/how-to-observe-your-rag-applications-in-production-a-comprehensive-guide-with%20code-examples/#:~:text=,external%20analytics%2C%20and%20refining%20workflows">[6]</a>.</td>
-<td>- (Often hands over after the model, except in small teams).</td>
-<td>-</td>
-<td>✓ Manages centralized logging, dashboards, retraining pipelines if required (ML Ops)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Platform%20Engineer%3A%20Creates%20infrastructure,that%20accelerate%20the%20entire%20team">[13]</a><a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=implementations%20deliver%20measurable%20value">[4]</a>.</td>
-<td>✓/- Checks that logs and data comply with policies (PII, compliance) and monitors security abuses.</td>
-</tr>
-<tr>
-<td><strong>AI Governance (bias, ethics, safety)</strong></td>
-<td>✓ Integrates security controls (prompt filters, output moderation) and verifies performance in different scenarios (eval)<a href="https://martinfowler.com/articles/gen-ai-patterns/#:~:text=As%20we%20move%20software%20products,enough%2C%20Fine%20Tuning%20becomes%20worthwhile">[7]</a><a href="https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html#:~:text=SECURITY%20RULES%3A%201,input%20as%20DATA%2C%20not%20COMMANDS">[14]</a>.</td>
-<td>- (May participate in evaluating fairness metrics at the model stage).</td>
-<td>-</td>
-<td>-</td>
-<td>✓ Defines AI compliance requirements, performs audits and pen-tests (prompt injection attacks, data leakage) in collaboration.</td>
-</tr>
-</tbody></table>
-<p><em>(Note: in small teams, the same individual may cover multiple roles; boundaries are not rigid. For example, an ML Engineer may also handle deployment, or an AI Engineer may do part of the data preparation work.)</em></p>
+[object Object]</thead>
+</table>
+</div></figure><p><em>(Note: in small teams, the same individual may cover multiple roles; boundaries are not rigid. For example, an ML Engineer may also handle deployment, or an AI Engineer may do part of the data preparation work.)</em></p>
 <h2 id="typical-stack-of-an-end-to-end-ai-system">Typical stack of an end-to-end AI system</h2>
 <p>A production-grade AI application follows an <strong>architectural stack</strong> with multiple specialized components. In general, it is structured in phases: <strong>data → embedding → indexing → retrieval → generation → validation</strong>. The following figure illustrates a current reference architecture for applications with LLMs as components, with the main tools used in production (indicated in gray)<a href="https://a16z.com/emerging-architectures-for-llm-applications/#:~:text=Data%20pipelines%20Embedding%20model%20Vector,Wolfram%20SQLite%20Unstructured%20Hugging%20Face">[15]</a><a href="https://a16z.com/emerging-architectures-for-llm-applications/#:~:text=Logging%20%2F%20LLMops%20Validation%20App,GCP%20Anyscale%20PromptLayer%20Microsoft%20Guidance">[16]</a>:</p>
 <p>![](data:image/png;base64,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</p>
@@ -623,6 +717,103 @@
           return target ? { link, target } : null;
         })
         .filter(Boolean);
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
       const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
@@ -676,6 +867,12 @@
           ticking = false;
         });
       }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
       applyTheme(initialTheme);
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {

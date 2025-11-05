@@ -99,6 +99,13 @@ export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
     return html.replace(/^(<h\d)(>)/, `$1 id="${slug}"$2`);
   };
 
+  renderer.table = function table(header, body) {
+    const headerHtml = header ? `<thead>\n${header}</thead>\n` : '';
+    const bodyHtml = body ? `<tbody>\n${body}</tbody>\n` : '';
+    const tableHtml = `<table>\n${headerHtml}${bodyHtml}</table>\n`;
+    return `<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll">${tableHtml}</div></figure>`;
+  };
+
   const html = marked.parse(markdown, {
     mangle: false,
     gfm: true,
