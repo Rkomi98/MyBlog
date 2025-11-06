@@ -828,8 +828,118 @@ Questi dati alimentano l&#39;<strong>analisi psicometrica</strong>: dal quiz e d
 <p><em>Tabella 1: Confronto pratiche dati e opzioni privacy dei fornitori LLM (agg. 2025).</em><br><em>Fonti: Policy ufficiali e documentazione dei rispettivi servizi</em><a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=When%20you%20use%20our%20services,content%20to%20train%20our%20models"><em>[180]</em></a><a href="https://support.google.com/gemini/answer/13594961?hl=en#:~:text=Human%20reviewers%20,learning%20technologies"><em>[181]</em></a><a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=These%20updates%20do%20not%20apply,under%20our%20Commercial%20Terms%2C%20including"><em>[107]</em></a><a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-privacy#:~:text=Important"><em>[15]</em></a><a href="https://discuss.privacyguides.net/t/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/26702#:~:text=submitted%20ones.%20,"><em>[135]</em></a><a href="https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy-2025-02-14.html#:~:text=,or%20other%20policies"><em>[150]</em></a><em>.</em></p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
-[object Object]</thead>
-</table>
+<tr>
+<th><strong>Vendor (Prodotto)</strong></th>
+<th><strong>Ambito</strong></th>
+<th><strong>Dati utente usati per training (default)</strong></th>
+<th><strong>Opt‑out/Opt‑in</strong></th>
+<th><strong>Conservazione dati utente</strong></th>
+<th><strong>Revisione umana</strong></th>
+<th><strong>Controlli e garanzie</strong></th>
+<th><strong>Agg. policy</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>OpenAI (ChatGPT)</strong></td>
+<td>Consumer (Web/App)</td>
+<td>Sì (conversaz. e feedback)<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=improve%20over%20time,it%2C%20unless%20you%20opt%20out">[7]</a></td>
+<td>Opt‑out disponibile (cronologia off)<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=may%20use%20your%20content%20to,train%20our%20models">[9]</a></td>
+<td><del>Indefinita (se history on); 30 giorni se off[[9]](<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#">https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#</a>:</del>:text=may%20use%20your%20content%20to,train%20our%20models)</td>
+<td>Sì, su campioni (pseudonimiz.)<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=We%20retain%20certain%20data%20from,become%20more%20efficient%20over%20time">[56]</a></td>
+<td>Toggle &quot;Do not train&quot;, Privacy Portal per opposizione, Chat effimera<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=may%20use%20your%20content%20to,train%20our%20models">[9]</a><a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=When%20you%20use%20ChatGPT%2C%20you,used%20to%20train%20our%20models">[61]</a></td>
+<td>Apr 2023 (Italia DPA), Jun 2025 (Enterprise)<a href="https://openai.com/enterprise-privacy/#:~:text=Updated%3A%20June%204%2C%202025">[182]</a></td>
+</tr>
+<tr>
+<td><strong>OpenAI (API / Enterprise)</strong></td>
+<td>Business/Dev</td>
+<td>No (per default)<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=Services%20for%20businesses%2C%20such%20as,Enterprise%2C%20and%20our%20API%20Platform">[14]</a></td>
+<td>Opt‑in facoltativo (feedback)<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=Services%20for%20businesses%2C%20such%20as,Enterprise%2C%20and%20our%20API%20Platform">[14]</a></td>
+<td>Log 30 giorni (standard); opzione <em>zero log</em><a href="https://openai.com/index/response-to-nyt-data-demands/#:~:text=How%20we%27re%20responding%20to%20The,Retention%20API%3A%20If%20a">[57]</a><a href="https://medium.com/@jeffkessie50/openais-zero-data-retention-policy-916ff04a3599#:~:text=OpenAI%27s%20Zero%20Data%20Retention%20Policy,Enterprise%20customers%20can">[58]</a></td>
+<td>No (opt‑out human monitoring)</td>
+<td>Data encryption, SOC2; admin controls retention<a href="https://openai.com/enterprise-privacy/#:~:text=,where%20allowed%20by%20law">[60]</a></td>
+<td>Mar 2023 (no-train API)<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance#:~:text=Services%20for%20businesses%2C%20such%20as,Enterprise%2C%20and%20our%20API%20Platform">[14]</a>; Aug 2023 (ChatGPT Ent.)</td>
+</tr>
+<tr>
+<td><strong>Google (Gemini/Bard)</strong></td>
+<td>Consumer (Account Google)</td>
+<td>Sì (prompt &amp; conv.)<a href="https://support.google.com/gemini/answer/13594961?hl=en#:~:text=,and%20the%20public">[79]</a></td>
+<td>Opt‑out disponibile (disattiva &quot;Attività Gemini&quot;)<a href="https://support.google.com/gemini/answer/13594961?hl=en#:~:text=,Manage%20Gems%20in%20Gem%20Manager">[10]</a></td>
+<td>18 mesi predef. (3-36 mesi configur.)<a href="https://heydata.eu/en/magazine/is-your-data-safe-with-google-gemini#:~:text=Gemini%20Data%20Collection%20and%20Storage">[85]</a>; <del>72h se off[[86]](<a href="https://heydata.eu/en/magazine/is-your-data-safe-with-google-gemini#">https://heydata.eu/en/magazine/is-your-data-safe-with-google-gemini#</a>:</del>:text=Google%20stores%20user%20data%20from,Apps%20Activity%20settings%20but%20remains)</td>
+<td>Sì, limitata (0.2% conv.)<a href="https://news.ycombinator.com/item?id=38186828#:~:text=Google%20Bard%20introduces%20,learning%20models">[80]</a></td>
+<td>Toggle in MyActivity (UE: diritto opposizione); elimina cronologia chat<a href="https://support.google.com/gemini/answer/13594961?hl=en#:~:text=,Manage%20Gems%20in%20Gem%20Manager">[10]</a></td>
+<td>Jul 2023 (Bard EU); Nov 2025 (Privacy Hub Workspace)<a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=Last%20updated%3A%C2%A0November%204%2C%202025">[93]</a></td>
+</tr>
+<tr>
+<td><strong>Google (Workspace AI)</strong></td>
+<td>Business (Gsuite)</td>
+<td>No (rimane nel dominio)<a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=,outside%20your%20domain%20without%20permission">[19]</a></td>
+<td>N/A (opt‑in richiesto se share)</td>
+<td>Session only (no retention prompt)<a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=How%20long%20are%20prompts%20saved%3F">[183]</a>; conv. facolt. salvabili 3-36 mesi<a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=The%20Gemini%20app%20enables%20admins,The%20default%20is%2018%20months">[88]</a></td>
+<td>No (nessuna review esterna)<a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=,outside%20your%20domain%20without%20permission">[19]</a></td>
+<td>Admin: abilita/disabilita AI; data in EU boundary<a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=,outside%20your%20domain%20without%20permission">[19]</a><a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=Gemini%20data%20retention">[94]</a></td>
+<td>Nov 2023 (Workspace Hub)<a href="https://support.google.com/a/answer/15706919?hl=en#:~:text=Last%20updated%3A%C2%A0November%204%2C%202025">[93]</a></td>
+</tr>
+<tr>
+<td><strong>Anthropic (Claude)</strong></td>
+<td>Consumer (Free/Pro)</td>
+<td><em>Dal Q4 2025:</em> Sì (se utente consente)<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=">[104]</a></td>
+<td><em>Opt‑out possibile</em> (toggle &quot;no training&quot;)<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=,training%20during%20the%20signup%20process">[13]</a>; default = opt‑in (toggle on)<a href="https://www.wired.com/story/anthropic-using-claude-chats-for-training-how-to-opt-out/#:~:text=%E2%80%9CAllow%20the%20use%20of%20your,into%20the%20new%20training%20policy">[103]</a></td>
+<td>5 anni se training on<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=Extended%20data%20retention">[12]</a>; 30 giorni se off<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=resumed%20chats%20and%20coding%20sessions%2C,day%20data%20retention%20period">[109]</a></td>
+<td>Sì (su dati opt-in)</td>
+<td>Privacy Settings per scelta training; cancella chat; no app EU ancora</td>
+<td>Ott 2025 (nuovi Termini)<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=Aug%2028%2C%202025%E2%97%8F2%20min%20read">[184]</a></td>
+</tr>
+<tr>
+<td><strong>Anthropic (Claude Ent/API)</strong></td>
+<td>Business/API</td>
+<td>No (mai usati x training)<a href="https://www.anthropic.com/news/updates-to-our-consumer-terms#:~:text=These%20updates%20apply%20to%20users,and%20Google%20Cloud%E2%80%99s%20Vertex%20AI">[106]</a></td>
+<td>N/A (di default esclusi)</td>
+<td>30 giorni log (per abusi)</td>
+<td>No</td>
+<td>Contract: data isolati; opzione self-host in cloud privato</td>
+<td>Lug 2023 (Claude 2)</td>
+</tr>
+<tr>
+<td><strong>Microsoft (365 Copilot)</strong></td>
+<td>Enterprise (M365)</td>
+<td>No<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-privacy#:~:text=Important">[15]</a></td>
+<td>N/A (nessun training est.)</td>
+<td>Conservato come dati M365 standard; controllabile via retention policy<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-privacy#:~:text=Teams%20support,used%20by%20Microsoft%20365%20Copilot">[185]</a><a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-privacy#:~:text=To%20view%20and%20manage%20this,information%2C%20see%20the%20following%20articles">[127]</a></td>
+<td>No (opt‑out da monit.)<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-privacy#:~:text=While%20abuse%20monitoring%2C%20which%20includes,section%20later%20in%20this%20article">[124]</a></td>
+<td>DPA e Product Terms (no data use); EU Data Boundary; user delete history<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-privacy#:~:text=Deleting%20the%20history%20of%20user,interactions%20with%20Microsoft%20365%20Copilot">[186]</a></td>
+<td>Mar 2024 (Prod. Terms, EU boundary)</td>
+</tr>
+<tr>
+<td><strong>Meta (AI Assistant)</strong></td>
+<td>Consumer (Facebook, IG)</td>
+<td>Sì (post/commenti pubblici; chat AI)<a href="https://techcrunch.com/2025/04/14/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/?guccounter=1#:~:text=regulatory%20pressure%20due%20to%20data,used%20to%20train%20its%20models">[142]</a></td>
+<td>Opt‑out modulo (UE) - diritto opposizione<a href="https://discuss.privacyguides.net/t/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/26702#:~:text=,messages%2C%20nor%20public%20data%20from">[138]</a><a href="https://discuss.privacyguides.net/t/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/26702#:~:text=notifications%20to%20explain%20that%20Meta,">[146]</a></td>
+<td>N/D (simile ad altri msg FB); posts finché online</td>
+<td>Sì (per moderazione &amp; RLHF)</td>
+<td>Notifiche in-app; form &quot;Generative AI&quot; UE<a href="https://discuss.privacyguides.net/t/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/26702#:~:text=,messages%2C%20nor%20public%20data%20from">[138]</a>; promesse: niente dati privati<a href="https://discuss.privacyguides.net/t/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/26702#:~:text=submitted%20ones.%20,">[135]</a></td>
+<td>Apr 2025 (EU roll-out AI)<a href="https://techcrunch.com/2025/04/14/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/?guccounter=1#:~:text=Meta%20to%20start%20training%20its,public%20content%20in%20the%20EU">[187]</a><a href="https://techcrunch.com/2025/04/14/meta-to-start-training-its-ai-models-on-public-content-in-the-eu/?guccounter=1#:~:text=Starting%20this%20week%2C%20users%20in,received%2C%20as%20well%20as%20newly">[139]</a></td>
+</tr>
+<tr>
+<td><strong>Meta (business data)</strong></td>
+<td>Enterprise (Workplace)</td>
+<td>No (esclusi training)</td>
+<td>N/A</td>
+<td>Norme interne (customer data isolati)</td>
+<td>No</td>
+<td>DPA Meta, sub-processors list;</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>DeepSeek</strong></td>
+<td>Consumer (Global)</td>
+<td>Sì (tutto prompt/chat)<a href="https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy-2025-02-14.html#:~:text=,or%20other%20policies">[150]</a><a href="https://www.wired.com/story/deepseek-ai-china-privacy-data/#:~:text=Crucially%2C%20though%2C%20the%20company%E2%80%99s%20privacy,our%20technology%2C%E2%80%9D%20its%20policies%20say">[161]</a></td>
+<td>No opt-out (implicit consent)</td>
+<td>Finché account attivo (no scadenza definita)<a href="https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy-2025-02-14.html#:~:text=The%20retention%20periods%20will%20be,necessary%20to%20process%20the%20violation">[168]</a></td>
+<td>Sì (accesso staff + poss. autorità cinesi)<a href="https://www.wired.com/story/deepseek-ai-china-privacy-data/#:~:text=DeepSeek%E2%80%99s%20privacy%20policy%20also%20says,is%20required%20to%20do%20so">[22]</a></td>
+<td>Cancella chat manuale<a href="https://www.wired.com/story/deepseek-ai-china-privacy-data/#:~:text=The%20first%20of%20these%20areas,%E2%80%9D">[151]</a>; nessuna garanzia su trasferimenti (-&gt; Cina)<a href="https://www.wired.com/story/deepseek-ai-china-privacy-data/#:~:text=To%20be%20clear%2C%20DeepSeek%20is,%E2%80%9D">[170]</a></td>
+<td>Feb 2025 (policy PIPL)<a href="https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy-2025-02-14.html#:~:text=,2025">[188]</a></td>
+</tr>
+</tbody></table>
 </div></figure><p><em>(Legenda: &quot;Ambito&quot; distingue se servizio consumer o business; TrainingUseDefault indica se i dati utente alimentano il training del modello per default; Opt-out/in indica se l&#39;utente può opporsi o deve acconsentire; Retention è il periodo tipico di conservazione dei contenuti utente; HumanReview se avviene revisione manuale routine; Controls evidenzia gli strumenti di controllo dati forniti; Agg. policy dà ultimo aggiornamento significativo)</em></p>
 <p><strong>Osservazioni dalla tabella:</strong> OpenAI, Google e Meta nel contesto consumer adottano un approccio simile: <strong>inclusione predefinita</strong> dei dati utente nel ciclo di miglioramento dell&#39;AI, mitigata dalla possibilità di opt-out (più o meno nascosta: OpenAI con togglina in UI, Google nell&#39;account, Meta via modulo). Al contrario, i servizi rivolti alle imprese (OpenAI Enterprise/API, Google Workspace, MS Copilot) sono impostati per <strong>non riutilizzare i dati</strong> dei clienti nel training, per rassicurare su privacy e conformità: questi di fatto trattano i dati come un cloud privato dell&#39;azienda. Il caso Anthropic spicca per il cambio recente: da full opt-out sono passati a un sistema di <em>consenso obbligatorio</em> (l&#39;utente deve scegliere, con default verso training), il che l&#39;ha allineata a OpenAI/Google (in termini pratici, molti utenti lasceranno attivo e i dati verranno usati). Sul fronte <strong>retention</strong>, vediamo variabilità: da log brevissimi (30 gg) per API di OpenAI e ChatGPT con history off, fino a periodi lunghi come 5 anni se l&#39;utente acconsente (Anthropic) o indefiniti (OpenAI con history on). Google dà controllo granulare ma di base tiene 18 mesi. Microsoft e Workspace mantengono i dati allineati alle normali retention enterprise (quindi potenzialmente per molti anni se l&#39;azienda li archivia). Per <strong>revisione umana</strong>, tutti i consumer (tranne DeepSeek che è un mondo a parte) indicano un certo grado di intervento umano su dati utente, generalmente <em>limitato e pseudonimizzato</em>. Microsoft e Workspace affermano di non farne affatto per i dati cliente. Su <strong>trasparenza e controlli</strong>, Microsoft appare la più restrittiva/protettiva, seguita da OpenAI enterprise; Google e OpenAI consumer forniscono toggles ma richiedono consapevolezza da parte dell&#39;utente; Meta offre il modulo di opt-out in UE ma manca un banale switch in impostazioni (il che potrebbe ridurre le opposizioni per attrito). DeepSeek, infine, rappresenta un <em>worst-case</em>: l&#39;utente non ha praticamente voce in capitolo, e i dati finiscono in un contesto di minore tutela giuridica.</p>
 <h2 id="trasparenza-governance-e-protezioni-tendenze-attuali">Trasparenza, governance e protezioni: tendenze attuali</h2>

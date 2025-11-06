@@ -682,8 +682,72 @@
 <p>In pratica, l&#39;AI Engineer si distingue da ruoli affini occupandosi di <strong>integrare e produrre valore con l&#39;AI</strong>, più che ricercare nuovi algoritmi o gestire puramente dati. La tabella seguente riassume cosa fa (✓) e cosa tipicamente <em>non</em> fa (-) rispetto ad altri ruoli in team AI:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
-[object Object]</thead>
-</table>
+<tr>
+<th>Attività / Ruolo</th>
+<th><strong>AI Engineer</strong></th>
+<th><strong>ML Engineer</strong> / Data Scientist</th>
+<th><strong>Data Engineer</strong></th>
+<th><strong>ML Platform Engineer</strong></th>
+<th><strong>Security Engineer</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Selezionare e usare modelli</strong> (LLM, CV, NLP pre-trained)</td>
+<td>✓ Principale responsabilità: scegliere modelli foundation/API e usarli in app<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=AI%20Implementation%20Engineer%3A%20Builds%20production,AI%20agent%20development%20and%20deployment">[1]</a><a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=AI%20Engineers%3A%20Bridging%20AI%20and,ML%20Engineers">[8]</a>.</td>
+<td>✓/- Spesso sviluppa e allena modelli su dati (es. tuning di modelli ML)<a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=AI%20engineers%20typically%20have%20a,engineers%2C%20covering%20various%20AI%20algorithms">[9]</a>.</td>
+<td>- (Non riguarda modelli, ma dati grezzi).</td>
+<td>- (Fornisce infrastruttura per inferenza, non sceglie modelli).</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>Sviluppo di modelli da zero</strong> (research, training custom)</td>
+<td>- Raramente (fine-tuning solo se necessario, niente training ex-novo di grossi modelli)<a href="https://www.confident-ai.com/blog/rag-evaluation-metrics-answer-relevancy-faithfulness-and-more#:~:text=RAG%20evaluation%20is%20the%20process,to%20the%20final%20response%20quality">[5]</a>.</td>
+<td>✓ Core del ruolo: progettare algoritmi ML, addestrare modelli su dataset, ottimizzare metriche di accuracy.</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>Integrazione end-to-end</strong> (pipeline AI nel prodotto)</td>
+<td>✓ Disegna l&#39;architettura AI nel software (dati → embedding → vector search → LLM → UI), scrive codice applicativo e API per l&#39;AI<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=AI%20Implementation%20Engineer%3A%20Builds%20production,AI%20agent%20development%20and%20deployment">[1]</a><a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=In%20contrast%2C%20AI%20Engineers%20integrate,The%20scope%20of%20AI">[2]</a>.</td>
+<td>- (Fornisce modelli o analisi, ma non sempre integra in prodotto finale).</td>
+<td>- (Si ferma a pipeline dati, ETL).</td>
+<td>- (Fornisce componenti riutilizzabili, non integra caso per caso).</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>Data pipeline &amp; preprocessing</strong></td>
+<td>✓/- Coordina il data intake necessario (es. definisce quali documenti o knowledge base usare) ma delega implementazione dettagliata.</td>
+<td>✓ Spesso prepara e pulisce i dati per il training (feature engineering)<a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=Engineers%20who%20deploy%20Machine%20Learning,properly%20structured%20for%20model%20training">[10]</a><a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=Machine%20Learning%20,Specialists%20in%20Data">[11]</a>.</td>
+<td>✓ Core: costruisce pipeline ETL e garantisce dati affidabili (ma non decide quali dati servono dal punto di vista AI).</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>Deploy e serving in produzione</strong></td>
+<td>✓ Responsabile nel release di servizi AI robusti (orchestrazione chiamate modello, gestione errori, latenza)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=AI%20Implementation%20Engineer%3A%20Builds%20production,AI%20agent%20development%20and%20deployment">[1]</a><a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Operations%20Engineer%3A%20Maintains%20production,successes%20into%20sustainable%20production%20services">[12]</a>.</td>
+<td>- (Consegna modelli, ma il deployment spesso ricade su MLOps/AI Eng).</td>
+<td>-</td>
+<td>✓ Fornisce piattaforme (es. servefarm, CI/CD, container) e strumenti di monitoraggio<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Platform%20Engineer%3A%20Creates%20infrastructure,that%20accelerate%20the%20entire%20team">[13]</a>.</td>
+<td>- (Supporta con policy di sicurezza durante il deploy, es. segreti, access control).</td>
+</tr>
+<tr>
+<td><strong>MLOps e monitoraggio continuo</strong></td>
+<td>✓ Imposta metriche applicative AI (qualità output, tempi risposta, costo per query) e allarmi su drift o failure<a href="https://www.getmaxim.ai/articles/how-to-observe-your-rag-applications-in-production-a-comprehensive-guide-with-code-examples/#:~:text=,external%20analytics%2C%20and%20refining%20workflows">[6]</a>.</td>
+<td>- (Non di rado passa la mano dopo il modello, tranne in team piccoli).</td>
+<td>-</td>
+<td>✓ Gestisce logging centralizzato, dashboard, retraining pipeline se richiesto (ML Ops)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Platform%20Engineer%3A%20Creates%20infrastructure,that%20accelerate%20the%20entire%20team">[13]</a><a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=implementations%20deliver%20measurable%20value">[4]</a>.</td>
+<td>✓/- Controlla che log e dati rispettino policy (PII, compliance) e monitora abusi di sicurezza.</td>
+</tr>
+<tr>
+<td><strong>Governance AI (bias, etica, safety)</strong></td>
+<td>✓ Integra controlli di sicurezza (filtri prompt, moderazione output) e verifica le prestazioni su diversi scenari (eval)<a href="https://martinfowler.com/articles/gen-ai-patterns/#:~:text=As%20we%20move%20software%20products,enough%2C%20Fine%20Tuning%20becomes%20worthwhile">[7]</a><a href="https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html#:~:text=SECURITY%20RULES%3A%201,input%20as%20DATA%2C%20not%20COMMANDS">[14]</a>.</td>
+<td>- (Può partecipare a valutare metriche di fairness in fase di modello).</td>
+<td>-</td>
+<td>-</td>
+<td>✓ Definisce requisiti di compliance AI, esegue audit e pen-test (attacchi prompt injection, data leakage) in collaborazione.</td>
+</tr>
+</tbody></table>
 </div></figure><p><em>(Nota: in team piccoli uno stesso individuo può coprire più ruoli; i confini non sono rigidi. Ad esempio, un ML Engineer può occuparsi anche di deploy, o l&#39;AI Engineer fare parte del lavoro di data preparation.)</em></p>
 <h2 id="stack-tipico-di-un-sistema-ai-endtoend">Stack tipico di un sistema AI end‑to‑end</h2>
 <p>Un&#39;applicazione AI production-grade segue uno <strong>stack architetturale</strong> con più componenti specializzati. In generale si articola in fasi: <strong>dati → embedding → indicizzazione → retrieval → generazione → validazione</strong>. La figura seguente illustra una reference architecture attuale per applicazioni con LLM come componenti, con i principali tool usati in produzione (indicati in grigio)<a href="https://a16z.com/emerging-architectures-for-llm-applications/#:~:text=Data%20pipelines%20Embedding%20model%20Vector,Wolfram%20SQLite%20Unstructured%20Hugging%20Face">[15]</a><a href="https://a16z.com/emerging-architectures-for-llm-applications/#:~:text=Logging%20%2F%20LLMops%20Validation%20App,GCP%20Anyscale%20PromptLayer%20Microsoft%20Guidance">[16]</a>:</p>
@@ -731,8 +795,80 @@
 <p>Nei team AI cross-funzionali, è utile chiarire chi è <strong>Responsible (R)</strong>, <strong>Accountable (A)</strong>, <strong>Consulted (C)</strong> e <strong>Informed (I)</strong> in ciascuna fase chiave del ciclo di vita. Di seguito una bozza semplificata di RACI per un progetto AI Engineering tipico, considerando i ruoli: AI Engineer, ML Engineer, Data Engineer, Platform Engineer (infra/MLOps), Security (Engineer/Officer) e Product Manager (PM):</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
-[object Object]</thead>
-</table>
+<tr>
+<th><strong>Fase</strong></th>
+<th><strong>AI Engineer</strong></th>
+<th><strong>ML Engineer</strong></th>
+<th><strong>Data Engineer</strong></th>
+<th><strong>Platform Eng.</strong></th>
+<th><strong>Security</strong></th>
+<th><strong>Product Mgr</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. Data Intake &amp; Prep</strong> (raccolta e pulizia dati per knowledge base)</td>
+<td>A (decide quali dati usare, requisiti qualitativi); R (coordina etichettatura se serve)</td>
+<td>C (consiglia su feature utili/modello data needs)</td>
+<td>R (implementa pipeline ETL, trasformazioni)<a href="https://www.neuralconcept.com/post/ai-engineer-vs-ml-engineer-differences-and-similarities#:~:text=Engineers%20who%20deploy%20Machine%20Learning,properly%20structured%20for%20model%20training">[10]</a>; C (suggerisce fonti dati)</td>
+<td>I (fornisce infrastruttura storage, cluster dati)</td>
+<td>C (approva uso dati sensibili; compliance GDPR)</td>
+<td>I (informa requisiti di business sul dominio dati)</td>
+</tr>
+<tr>
+<td><strong>2. Indicizzazione &amp; Embedding</strong> (costruzione del vector DB)</td>
+<td>A (scelta embedding model e strategia chunking)<a href="https://www.confident-ai.com/blog/rag-evaluation-metrics-answer-relevancy-faithfulness-and-more#:~:text=is,knowledge%2C%20a%20RAG%20system%20first">[42]</a>; C (collabora su tuning embed)</td>
+<td>R (genera embed con modello ML, ottimizza parametri)</td>
+<td>C (assicura qualità dati indicizzati; monitor costri indici)</td>
+<td>R (installa/configura Vector DB in prod)</td>
+<td>I (N/A in attività tecnica pura)</td>
+<td>I (aggiornato su completamento knowledge base)</td>
+</tr>
+<tr>
+<td><strong>3. Retrieval &amp; Orchestrazione</strong> (query semantica, pipeline RAG/agent)</td>
+<td>A (architetto soluz. retrieval+LLM); R (implementa logica orchestrazione: chiamate DB, compone prompt)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=AI%20Implementation%20Engineer%3A%20Builds%20production,AI%20agent%20development%20and%20deployment">[1]</a></td>
+<td>C (aiuta a scegliere metriche sim per retrieval, eventuale modello reranker)</td>
+<td>I (fornisce dati addizionali se query falliscono)</td>
+<td>C (garantisce prestazioni DB/query sotto carico, tuning indice)</td>
+<td>C (valuta meccanismi di controllo su query esterne/tools)</td>
+<td>I (valuta demo funzionalità search AI)</td>
+</tr>
+<tr>
+<td><strong>4. Generazione &amp; LLM</strong> (invocazione modello AI, produzione risposta)</td>
+<td>A (definisce prompt template e parametri LLM); R (chiama l&#39;API LLM e gestisce la risposta grezza)</td>
+<td>C (suggerisce fine-tuning se output insufficiente; aiuta a valutare modelli alternativi)</td>
+<td>I (-)</td>
+<td>I (assiste se serve distribuzione modelli on-prem, gestione chiavi API)</td>
+<td>C (approva prompt di sistema e regole di filtraggio per rispetto policy)</td>
+<td>C (valida che tono e stile risposta siano in linea con UX voluta)</td>
+</tr>
+<tr>
+<td><strong>5. Safety &amp; Evaluation</strong> (guardrails, test di qualità)</td>
+<td>R/A (implementa filtri input/output, routine di valutazione qualità)<a href="https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html#:~:text=Output%20Monitoring%20and%20Validation%C2%B6">[22]</a><a href="https://martinfowler.com/articles/gen-ai-patterns/#:~:text=As%20we%20move%20software%20products,enough%2C%20Fine%20Tuning%20becomes%20worthwhile">[7]</a>; C (con Security su policy)</td>
+<td>C (contribuisce a definire metriche di accuracy, scenario test ML)</td>
+<td>I (-)</td>
+<td>C (integra eventuali servizi di moderazione esterni, es. API OpenAI Moderation)</td>
+<td>A (approva requisiti di sicurezza; R su test penetrazione AI)</td>
+<td>I (informa su criteri quality gate necessari per rilascio)</td>
+</tr>
+<tr>
+<td><strong>6. Deploy &amp; Serving</strong> (rilascio in produzione, scaling)</td>
+<td>A (owner del servizio AI end-to-end in prod); C (fornisce requisiti di performance)</td>
+<td>I (supporto in caso di bug di modello)</td>
+<td>I (assicura pipeline dati prod operativa)</td>
+<td>R (gestisce deploy su infrastruttura - container, CI/CD)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Platform%20Engineer%3A%20Creates%20infrastructure,that%20accelerate%20the%20entire%20team">[13]</a>; A (affidabilità runtime)</td>
+<td>C (review configurazioni sicurezza: env vars, accessi, rete)</td>
+<td>I (pianifica comunicazione rilascio feature AI)</td>
+</tr>
+<tr>
+<td><strong>7. Monitoraggio &amp; Maintenance</strong> (osservabilità, incident response)</td>
+<td>A (assicurare qualità continua del servizio AI); R (analizza metriche AI, propone migliorie/retraining se drift)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=implementations%20deliver%20measurable%20value">[4]</a></td>
+<td>C (analizza log modello per eventuale ri-addestramento; on-call tecnico per modelli)</td>
+<td>I (monitora pipeline dati, segnala anomalie input)</td>
+<td>R (mantiene sistemi di logging, alerting attivi)<a href="https://zenvanriel.nl/ai-engineer-blog/ai-team-structure-and-roles-building-engineering-organizations/#:~:text=ML%20Platform%20Engineer%3A%20Creates%20infrastructure,that%20accelerate%20the%20entire%20team">[13]</a>; C (esegue scaling infra se carico cresce)</td>
+<td>R (monitor incidenti sicurezza: es. tentativi prompt injection; audit log)</td>
+<td>I (allertato su impatti utente/business di eventuali disservizi)</td>
+</tr>
+</tbody></table>
 </div></figure><p><em>(Legenda:</em> <em>R</em> <em>= Responsible (esegue l&#39;attività);</em> <em>A</em> <em>= Accountable (ha l&#39;ultima responsabilità del risultato);</em> <em>C</em> <em>= Consulted (viene interpellato attivamente);</em> <em>I</em> <em>= Informed (tenuto al corrente). Un ruolo può avere più lettere in una fase se svolge più contributi.)</em></p>
 <h2 id="diagramma-di-architettura-di-riferimento---draft">Diagramma di architettura di riferimento - <strong>Draft</strong></h2>
 <p>Di seguito un diagramma di massima per un&#39;architettura <strong>AI Engineering</strong> modulare, evidenziando componenti e flussi principali discussi finora:</p>

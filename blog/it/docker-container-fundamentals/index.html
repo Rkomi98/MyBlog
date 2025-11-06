@@ -696,8 +696,28 @@ Anche strumenti come Vagrant, pur facilitando la creazione di ambienti riproduci
 <p>Di seguito ti fornisco una panoramica comparativa per capire meglio i pro e contro delle principali soluzioni utilizzate prima di Docker:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
-[object Object]</thead>
-</table>
+<tr>
+<th>Soluzione</th>
+<th>Vantaggi</th>
+<th>Svantaggi</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Virtual Machine (VM)</strong></td>
+<td>Isolamento completo, ambiente replicabile</td>
+<td>Pesante, lenta da avviare, consuma molte risorse</td>
+</tr>
+<tr>
+<td><strong>Vagrant</strong></td>
+<td>Automatizza la creazione di VM, ambienti condivisibili</td>
+<td>Dipende da VM sottostanti, provisioning complesso</td>
+</tr>
+<tr>
+<td><strong>Ansible / Puppet / Chef</strong></td>
+<td>Configurazione automatica e coerente</td>
+<td>Curva di apprendimento ripida, richiede manutenzione</td>
+</tr>
+</tbody></table>
 </div></figure><p>Spero che ora sia chiaro quanto è stato d&#39;impatto l&#39;arrivo di Docker. Bene ma, capiamo ora cos&#39;è Docker?</p>
 <h2 id="3-cos-docker-in-parole-semplici">3. Cos&#39;è Docker in parole semplici</h2>
 <p>Possiamo pensare all’immagine Docker come un set LEGO con il suo libretto di istruzioni per montarla: è impacchettata, versionata, identica per chiunque la apra. Una volta aperta la scatola, puoi montarle il set e lo puoi mettere sul tavolo, o su una mensola. Ecco questo lego montato è il container. Il bello è che ottieni lo stesso risultato indipendentemente da dove lo posizioni. Se lo smonti o lo rompi, il set di istruzioni (l’immagine) resta intatto e puoi rimontarne quanti vuoi, anche su tavoli diversi (macchine diverse), ottenendo sempre lo stesso risultato.</p>
