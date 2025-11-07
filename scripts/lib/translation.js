@@ -66,21 +66,53 @@ function getGeminiConfig() {
 
 export async function translateMarkdown(
   markdown,
-  { apiKey, endpoint, model, apiVersion, retries = 2 } = {},
+  { apiKey, endpoint, model, apiVersion, retries = 2, maxChunkChars = 9000 } = {},
+) {
+  const chunks = splitMarkdownIntoChunks(markdown, maxChunkChars);
+  const translatedChunks = [];
+
+  for (let i = 0; i < chunks.length; i += 1) {
+    const meta = chunks.length > 1 ? { index: i + 1, total: chunks.length } : null;
+    // eslint-disable-next-line no-await-in-loop
+    const translated = await translateChunk(chunks[i], {
+      apiKey,
+      endpoint,
+      model,
+      apiVersion,
+      retries,
+      meta,
+    });
+    translatedChunks.push(translated.trim());
+  }
+
+  return translatedChunks.join('\n\n');
+}
+
+async function translateChunk(
+  markdown,
+  { apiKey, endpoint, model, apiVersion, retries = 2, meta } = {},
 ) {
   const config = endpoint
     ? { endpoint, model: model ?? 'unknown', apiVersion: apiVersion ?? 'v1beta' }
     : getGeminiConfig();
   const resolvedEndpoint = config.endpoint;
 
+  const chunkContext = meta
+    ? `You are translating part ${meta.index} of ${meta.total} of a longer Markdown document. ` +
+      'Keep headings, numbering, references, and tables consistent so the parts can be concatenated.'
+    : null;
+
   const prompt = [
     'You are a professional technical translator.',
-    'Translate the following Markdown document from Italian to English.',
+    chunkContext,
+    'Translate the following Markdown content from Italian to English.',
     'Preserve the original Markdown structure, code blocks, formatting, images, links, and emphasis.',
     'Do not add commentary or explanations. Return only the translated Markdown.',
     '',
     markdown,
-  ].join('\n');
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   let attempt = 0;
   let lastError;
@@ -151,4 +183,40 @@ export async function translateMarkdown(
   }
 
   throw lastError;
+}
+
+function splitMarkdownIntoChunks(text, maxChars = 9000) {
+  if (!text || text.length <= maxChars) {
+    return [text];
+  }
+
+  const chunks = [];
+  let start = 0;
+
+  while (start < text.length) {
+    let end = Math.min(text.length, start + maxChars);
+    if (end < text.length) {
+      const paragraphBreak = text.lastIndexOf('\n\n', end);
+      if (paragraphBreak > start + maxChars * 0.5) {
+        end = paragraphBreak + 1;
+      } else {
+        const lineBreak = text.lastIndexOf('\n', end);
+        if (lineBreak > start + maxChars * 0.5) {
+          end = lineBreak;
+        }
+      }
+    }
+
+    if (end <= start) {
+      end = Math.min(text.length, start + maxChars);
+    }
+
+    const chunk = text.slice(start, end).trim();
+    if (chunk) {
+      chunks.push(chunk);
+    }
+    start = end;
+  }
+
+  return chunks.length ? chunks : [text];
 }
