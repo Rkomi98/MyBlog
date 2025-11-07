@@ -696,8 +696,28 @@ Even tools like Vagrant, while facilitating the creation of reproducible environ
 <p>Below is a comparative overview to better understand the pros and cons of the main solutions used before Docker:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
-[object Object]</thead>
-</table>
+<tr>
+<th>Solution</th>
+<th>Advantages</th>
+<th>Disadvantages</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Virtual Machine (VM)</strong></td>
+<td>Complete isolation, replicable environment</td>
+<td>Heavy, slow to start, consumes many resources</td>
+</tr>
+<tr>
+<td><strong>Vagrant</strong></td>
+<td>Automates VM creation, shareable environments</td>
+<td>Depends on underlying VMs, complex provisioning</td>
+</tr>
+<tr>
+<td><strong>Ansible / Puppet / Chef</strong></td>
+<td>Automatic and consistent configuration</td>
+<td>Steep learning curve, requires maintenance</td>
+</tr>
+</tbody></table>
 </div></figure><p>I hope it is now clear how impactful the arrival of Docker has been. Good, but now let&#39;s understand what Docker is.</p>
 <h2 id="3-what-docker-is-in-simple-terms">3. What Docker is in simple terms</h2>
 <p>We can think of a Docker image as a LEGO set with its instruction manual for assembly: it&#39;s packaged, versioned, and identical for anyone who opens it. Once the box is open, you can assemble the set and place it on a table or a shelf. This assembled LEGO is the container. The beauty is that you get the same result regardless of where you place it. If you disassemble or break it, the instruction set (the image) remains intact, and you can reassemble as many as you want, even on different tables (different machines), always getting the same result.</p>

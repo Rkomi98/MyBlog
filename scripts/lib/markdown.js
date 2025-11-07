@@ -73,6 +73,7 @@ export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
   const originalImage = renderer.image.bind(renderer);
   const originalLink = renderer.link.bind(renderer);
   const originalHeading = renderer.heading.bind(renderer);
+  const originalTable = renderer.table ? renderer.table.bind(renderer) : null;
   const headings = [];
   const slugRegistry = new Map();
 
@@ -100,9 +101,9 @@ export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
   };
 
   renderer.table = function table(header, body) {
-    const headerHtml = header ? `<thead>\n${header}</thead>\n` : '';
-    const bodyHtml = body ? `<tbody>\n${body}</tbody>\n` : '';
-    const tableHtml = `<table>\n${headerHtml}${bodyHtml}</table>\n`;
+    const tableHtml = originalTable
+      ? originalTable(header, body)
+      : `<table>\n${header ?? ''}${body ?? ''}</table>\n`;
     return `<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll">${tableHtml}</div></figure>`;
   };
 
