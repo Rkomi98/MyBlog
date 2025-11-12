@@ -39,7 +39,7 @@ Esistono anche registri alternativi pubblici o privati: ad esempio GitHub Contai
 
 Ora che abbiamo capito dato alcune definizioni, possiamo iniziare a mettere le mani in pasta, magari partendo da come si crea un'immagine.
 
-**Come si crea un'immagine (build):** Le immagini Docker si creano tipicamente con un processo di _build_ basato su un [**Dockerfile**]((https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies)), che è un file di testo che contiene istruzioni su come costruire l'immagine a partire da una base. Ogni istruzione nel Dockerfile (es. FROM, RUN, COPY, ecc.) viene eseguita in sequenza dal demone Docker durante il build, producendo a sua volta uno strato di filesystem aggiuntivo sull'immagine. 
+**Come si crea un'immagine (build):** Le immagini Docker si creano tipicamente con un processo di _build_ basato su un [**Dockerfile**](https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies), che è un file di testo che contiene istruzioni su come costruire l'immagine a partire da una base. Ogni istruzione nel Dockerfile (es. FROM, RUN, COPY, ecc.) viene eseguita in sequenza dal demone Docker durante il build, producendo a sua volta uno strato di filesystem aggiuntivo sull'immagine. 
 
 Ad esempio, un Dockerfile potrebbe iniziare definendo l'immagine base Ubuntu con:
 ```docker

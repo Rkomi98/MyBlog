@@ -410,7 +410,9 @@ Una questione critica è **dove** vanno questi dati: DeepSeek informa apertament
 
 Penso che tutti sappiano che questo chatbot non risponde nulla quando si chiede cos'è successo in piazza Tiananmen. In caso contrario ti consiglio di approfondire. 
 
-Ciò implica che i prompt degli utenti passano in un sistema di filtro e potenzialmente segnalazione. Essendo un'azienda cinese, se un utente scrive roba vietata, quell'informazione potrebbe essere isolata e trasmessa a chi di dovere (non confermato, ma plausibile). Sul miglioramento modelli: certamente i tecnici di DeepSeek esamineranno conversazioni utente in massa per rifinire l'AI. Non c'è menzione di offuscamento PII, e magari i dati spediti in Cina includono tutto, in tal caso i revisori potrebbero vedere nomi o dati privati.
+Ciò implica che i prompt degli utenti passano in un sistema di filtro e potenzialmente segnalazione. Essendo un'azienda cinese, se un utente scrive roba vietata, quell'informazione potrebbe essere isolata e trasmessa a chi di dovere (non confermato, ma plausibile). 
+
+Il capitolo "miglioramento modelli" merita una menzione particolare. Certamente i tecnici di DeepSeek esamineranno conversazioni utente in massa per rifinire l'AI. Non c'è menzione di offuscamento PII, e magari i dati spediti in Cina includono tutto, in tal caso i revisori potrebbero vedere nomi o dati privati.
 
 #### Controlli utente
 Ultima volta in cui ci facciamo la celebre domanda, quindi noi cosa possiamo fare?
@@ -419,7 +421,7 @@ Ultima volta in cui ci facciamo la celebre domanda, quindi noi cosa possiamo far
 
 - **Cancellazione account:** bisogna scrivere a loro (<privacy@deepseek.com>) per richiedere cancellazione dati, secondo la policy. 
 
-- **Opt-out training:** non previsto esplicitamente. Nella policy c'è una frase: "Se ti rifiuti di permetterci di trattare i dati come sopra descritto, devi mandare una richiesta via email"[\[172\]](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy-2025-02-14.html#:~:text=services%20with%20information%20in%20urgent,to%20protect%20health%20or%20life). Quindi l'unico modo è scrivere e supplicare di non usare i tuoi dati.
+- **Opt-out training:** non previsto esplicitamente. Nella policy c'è una [frase](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy-2025-02-14.html#:~:text=services%20with%20information%20in%20urgent,to%20protect%20health%20or%20life): "Se ti rifiuti di permetterci di trattare i dati come sopra descritto, devi mandare una richiesta via email". Quindi l'unico modo è scrivere e supplicare di non usare i tuoi dati.
 
 #### Conclsuione
 

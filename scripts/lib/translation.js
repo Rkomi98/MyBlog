@@ -48,7 +48,7 @@ export async function ensureEnglishTranslation(inputPath, { logger = console } =
   );
 
   const markdown = await fs.readFile(itPath, 'utf8');
-  const translated = await translateMarkdown(markdown, { apiKey, endpoint, model, apiVersion });
+  const translated = await translateMarkdown(markdown, { apiKey, endpoint, model, apiVersion, logger });
 
   await fs.writeFile(englishPath, translated, 'utf8');
   logger.info(`[translate] Saved ${toPosix(path.relative(process.cwd(), englishPath))}`);
@@ -64,15 +64,48 @@ function getGeminiConfig() {
   return { endpoint, model, apiVersion };
 }
 
+const DEFAULT_SAFETY_THRESHOLD = process.env.GEMINI_SAFETY_THRESHOLD || 'BLOCK_ONLY_HIGH';
+const ENV_SAFETY_CATEGORIES = process.env.GEMINI_SAFETY_CATEGORIES
+  ?.split(',')
+  .map((entry) => entry.trim())
+  .filter(Boolean);
+const DEFAULT_SAFETY_CATEGORIES = [
+  'HARM_CATEGORY_DANGEROUS_CONTENT',
+  'HARM_CATEGORY_HARASSMENT',
+  'HARM_CATEGORY_HATE_SPEECH',
+  'HARM_CATEGORY_CIVIC_INTEGRITY',
+];
+
+function buildSafetySettings(
+  threshold = DEFAULT_SAFETY_THRESHOLD,
+  categories = ENV_SAFETY_CATEGORIES ?? DEFAULT_SAFETY_CATEGORIES,
+) {
+  if (!categories?.length) {
+    return null;
+  }
+
+  return categories.map((category) => ({
+    category,
+    threshold,
+  }));
+}
+
 export async function translateMarkdown(
   markdown,
-  { apiKey, endpoint, model, apiVersion, retries = 2, maxChunkChars = 9000 } = {},
+  { apiKey, endpoint, model, apiVersion, retries = 2, maxChunkChars = 5000, logger = console } = {},
 ) {
   const chunks = splitMarkdownIntoChunks(markdown, maxChunkChars);
   const translatedChunks = [];
 
+  if (chunks.length > 1) {
+    logger?.info(`[translate] Document split into ${chunks.length} chunks for translation`);
+  }
+
   for (let i = 0; i < chunks.length; i += 1) {
     const meta = chunks.length > 1 ? { index: i + 1, total: chunks.length } : null;
+    if (chunks.length > 1) {
+      logger?.info(`[translate] Processing chunk ${i + 1}/${chunks.length}`);
+    }
     // eslint-disable-next-line no-await-in-loop
     const translated = await translateChunk(chunks[i], {
       apiKey,
@@ -119,6 +152,7 @@ async function translateChunk(
 
   while (attempt <= retries) {
     try {
+      const safetySettings = buildSafetySettings();
       const response = await fetch(`${resolvedEndpoint}?key=${apiKey}`, {
         method: 'POST',
         headers: {
@@ -133,8 +167,9 @@ async function translateChunk(
           ],
           generationConfig: {
             temperature: 0.2,
-            maxOutputTokens: 8192,
+            maxOutputTokens: parseInt(process.env.GEMINI_MAX_OUTPUT_TOKENS || '8192', 10),
           },
+          ...(safetySettings ? { safetySettings } : {}),
         }),
       });
 
@@ -167,7 +202,20 @@ async function translateChunk(
           .trim() ?? '';
 
       if (!text) {
-        throw new Error('Gemini API did not return any text.');
+        const finishReason = payload?.candidates?.[0]?.finishReason;
+        const blockReason = payload?.promptFeedback?.blockReason;
+        const safetyHits = payload?.promptFeedback?.safetyRatings
+          ?.filter((rating) => rating?.probability && rating?.probability !== 'NEGLIGIBLE')
+          ?.map((rating) => `${rating.category}:${rating.probability}`);
+        const details = [
+          finishReason ? `finishReason=${finishReason}` : null,
+          blockReason ? `blockReason=${blockReason}` : null,
+          safetyHits?.length ? `safety=${safetyHits.join('|')}` : null,
+        ]
+          .filter(Boolean)
+          .join(', ');
+        const suffix = details ? ` (${details})` : '';
+        throw new Error(`Gemini API did not return any text${suffix}.`);
       }
 
       return text;
