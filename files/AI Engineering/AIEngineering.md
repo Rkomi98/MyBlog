@@ -153,24 +153,24 @@ Nei team AI cross-funzionali, è utile chiarire chi è **Responsible (R)**, **Ac
 
 _(Legenda:_ _R_ _\= Responsible (esegue l'attività);_ _A_ _\= Accountable (ha l'ultima responsabilità del risultato);_ _C_ _\= Consulted (viene interpellato attivamente);_ _I_ _\= Informed (tenuto al corrente). Un ruolo può avere più lettere in una fase se svolge più contributi.)_
 
-## Glossario dell'architettura di riferimento - **Draft**
+## Glossario dell'AI Engineer
 
-Per fissare bene i blocchi del diagramma, trasformo la sezione in un piccolo glossario dell'architettura **AI Engineering** modulare:
+Per fissare bene le tante cose di cui abbiamo parlato, può essere utile un glossario con tutti i concetti imparati oggi.
 
-**Data intake / ETL** — pipeline di raccolta e normalizzazione dei dati grezzi (documenti aziendali, knowledge base, log) che alimentano l'intero stack.  
-**Vector DB + Indice** — archivio vettoriale (Pinecone, Weaviate, pgVector, ecc.) che conserva embedding generati dai dati e offre ricerca semantica rapida.  
-**Retrieval service** — microservizio che prende la query utente, calcola l'embedding corrispondente e interroga il Vector DB per ottenere i top-K documenti rilevanti.  
-**Reranker (opzionale)** — modello ML aggiuntivo che riordina i risultati del retrieval secondo il contesto della conversazione o le metriche di business.  
-**LLM Gateway** — modulo di orchestrazione che costruisce il prompt finale (query + documenti di grounding), sceglie il modello (API esterna o locale) e gestisce time-out/costi.  
-**Tool & Plugin interfaces** — insiemi di strumenti controllati che l'LLM può invocare per compiti specifici (geocoding, calcoli, ricerca STAC) tramite API sicure.  
-**Cache layer** — cache semantica di prompt e risposte per servire rapidamente richieste simili, riducendo costi API e latenza.  
-**Policy guardrails & validator** — filtri e validatori che controllano input/output, applicano policy aziendali e fanno sanitizzazione dei contenuti prima di consegnarli.  
-**Telemetry & logging** — infrastruttura di osservabilità che registra chiamate modello, tempi, costi, errori e segnali di qualità per audit e incident response.  
-**Eval & feedback** — servizi o script periodici che valutano la qualità delle risposte (groundedness, factuality, cost) e raccolgono feedback degli utenti finali.
+**Data intake / ETL**: pipeline di raccolta e normalizzazione dei dati grezzi (documenti aziendali, knowledge base, log) che alimentano l'intero stack.  
+**Vector DB + Indice**: archivio vettoriale (Pinecone, Weaviate, pgVector, ecc.) che conserva embedding generati dai dati e offre ricerca semantica rapida.  
+**Retrieval service**: microservizio che prende la query utente, calcola l'embedding corrispondente e interroga il Vector DB per ottenere i top-K documenti rilevanti.  
+**Reranker (opzionale)**: modello ML aggiuntivo che riordina i risultati del retrieval secondo il contesto della conversazione o le metriche di business.  
+**LLM Gateway**: modulo di orchestrazione che costruisce il prompt finale (query + documenti di grounding), sceglie il modello (API esterna o locale) e gestisce time-out/costi.  
+**Tool & Plugin interfaces**: insiemi di strumenti controllati che l'LLM può invocare per compiti specifici (geocoding, calcoli, ricerca STAC) tramite API sicure.  
+**Cache layer**: cache semantica di prompt e risposte per servire rapidamente richieste simili, riducendo costi API e latenza.  
+**Policy guardrails & validator**: filtri e validatori che controllano input/output, applicano policy aziendali e fanno sanitizzazione dei contenuti prima di consegnarli.  
+**Telemetry & logging**: infrastruttura di osservabilità che registra chiamate modello, tempi, costi, errori e segnali di qualità per audit e incident response.  
+**Eval & feedback**: servizi o script periodici che valutano la qualità delle risposte (groundedness, factuality, cost) e raccolgono feedback degli utenti finali.
 
-**Flusso principale (Happy path)** — l'utente invia una query → il Retrieval service (eventualmente con Reranker) prende i documenti dal Vector DB → l'LLM Gateway costruisce il prompt e invoca il modello → la risposta passa dai guardrail di uscita → viene cacheata e inviata all'utente → Telemetry registra l'interazione e l'Eval pipeline potrà analizzarla offline.
+**Flusso principale (Happy path)**: l'utente invia una query → il Retrieval service (eventualmente con Reranker) prende i documenti dal Vector DB → l'LLM Gateway costruisce il prompt e invoca il modello → la risposta passa dai guardrail di uscita → viene cacheata e inviata all'utente → Telemetry registra l'interazione e l'Eval pipeline potrà analizzarla offline.
 
-**Nota GEO** — quando servono dati geospaziali, il Retrieval include cataloghi STAC o tile server dedicati; l'LLM riceve link o analisi raster e li integra nella risposta mantenendo invariato il resto del flusso.
+**Nota per il mondo Geospaziale**: quando servono dati geospaziali, il Retrieval include cataloghi STAC o tile server dedicati; l'LLM riceve link o analisi raster e li integra nella risposta mantenendo invariato il resto del flusso.
 
 ## Fonti utilizzate
 
