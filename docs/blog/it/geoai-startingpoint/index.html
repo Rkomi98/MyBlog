@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GeoAI Stack: Una guida per il 2025</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.15rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .post-toc__item.level-1 {
+      padding-left: 1rem;
+    }
+    .post-toc__item.level-2 {
+      padding-left: 2rem;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: rgba(15, 23, 42, 0.65);
+      color: #f8fafc;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    body[data-theme="light"] .post-body code {
+      background: rgba(15, 23, 42, 0.08);
+      color: #111827;
+    }
+    .post-body pre {
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      padding: 1.2rem 1.4rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    body[data-theme="light"] .post-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(37, 99, 235, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">Percorso AI Engineering</span>
+        <h1 class="post-hero__title">GeoAI Stack: Una guida per il 2025</h1>
+        <div class="post-hero__meta">
+          <span>📅 15 novembre 2025</span>
+          <span>⏱️ 25 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc">
+        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+        <ul class="post-toc__list">
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#1-panoramica-architetturale-dello-stack-ai-geospaziale">1\. Panoramica architetturale dello Stack AI Geospaziale</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-mappa-di-strumenti-e-risorse-2025">2\. Mappa di Strumenti e Risorse (2025)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#21-gestione-ambiente-python-venv-conda-poetry-ecc">2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#24-gestione-di-secret-e-configurazioni">2.4 Gestione di Secret e Configurazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#25-dataset-open-e-cataloghi-staccog-per-disastri">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#27-template-progetti-repos-di-riferimento-e-best-practice">2.7 Template Progetti, Repos di Riferimento e Best Practice</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#28-piano-pratico-setup-completo-in-7-10-giorni">2.8 Piano Pratico: Setup Completo in 7-10 giorni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#29-azioni-immediate-prime-24h">2.9 Azioni Immediate (prime 24h)</a></li>
+        </ul>
+      </aside>
+        <div class="post-body">
+          <p>Seconda puntata del nostro lungo cammino diventare GeoAI engineer. La scorsa volta abbiamo descritto molto in generale cosa fa un AI engineer e cosa lo differenzia. </p>
+<p>Ora capiamo cosa serve ad un aspirante GeoAI engineer per iniziare, ovvero gli strumenti, i dataset e il setup necessario.</p>
+<h2 id="1-panoramica-architetturale-dello-stack-ai-geospaziale">1. Panoramica architetturale dello Stack AI Geospaziale</h2>
+<p>Partiamo dall&#39;obiettivo principale e teniamolo a mente.</p>
+<blockquote>
+<p><strong>Obiettivo:</strong> Integrare modelli di <strong>Linguaggio (LLM)</strong> e pipeline di <strong>Visione Geospaziale</strong> in un ambiente riproducibile, dal development locale alla produzione. </p>
+</blockquote>
+<p>L&#39;architettura tipica combina:</p>
+<ul>
+<li><strong>Ingestione dati geospaziali:</strong> accesso a immagini satellitari ottiche (come per es. Sentinel-2) e radar SAR (come Sentinel-1) tramite cataloghi <strong>STAC/COG</strong> (Planetary Computer, Earth Data, ecc.). Ne parleremo bene dopo.</li>
+<li><strong>Pre-processing e analisi remote sensing:</strong> pipeline Python per leggere, allineare e processare grandi raster (con <em>rasterio</em>/<em>GDAL</em>, <em>rioxarray</em>/<em>dask</em> per dati voluminosi) e vettori (con <em>geopandas</em>/<em>shapely</em>). Si producono <em>features</em> come mappe di danno, estensione di alluvioni, edifici estratti, ecc.</li>
+<li><strong>Modelli di visione e geospaziali:</strong> applicazione di modelli di deep learning specializzati sui dati pre-processati. Per esempio <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=Our%20main%20algorithm%20of%20choice,algorithm%20for%20semantic%20image%20segmentation">IBM ha usato <strong>U-Net</strong></a> in una delle sue attività di ricerca per segmentazione di danni a post disastro naturale. Oppure, modelli derivati da <a href="https://arxiv.org/abs/2105.15203"><strong>SegFormer</strong></a> per fare change detection, come <a href="https://arxiv.org/abs/2407.15317v1">Open-CD</a>.<br>Librerie come <a href="https://github.com/torchgeo/torchgeo"><strong>TorchGeo</strong></a> forniscono dataset e modelli pre-addestrati specifici geospaziali.
+<img src="../../../Assets/Unet.png" alt="Immagine">
+<em>Figura 1 – Architettura U-Net con encoder/decoder e skip connection per segmentare danni e classi in immagini satellitari.</em>
+<img src="../../../Assets/TorchGeo.png" alt="Immagine">
+<em>Figura 2 – TorchGeo raccoglie dataset pronti all&#39;uso e modelli pre-addestrati pensati per scenari di computer vision geospaziale.</em></li>
+<li><strong>Integrazione LLM/RAG:</strong> un modulo di <strong>Retrieval-Augmented Generation (RAG)</strong> collega i risultati geospaziali con un <strong>LLM</strong> (es. GPT-4 o Llama 2) per consentire Q&amp;A e reportistica. L&#39;LLM può attingere a knowledge base aggiornate (documenti, descrizioni di luoghi) oltre che ai dati estratti. Ciò riduce le &quot;allucinazioni&quot; fornendo contesto verificabile<a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=search%20engines%20with%20LLMs%20to,more%20accurate%20and%20reliable%20answers">[4]</a><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=This%20teamwork%20reduces%20the%20chance,existent%20street">[5]</a>. Ad esempio, un utente può chiedere <em>&quot;Quanti edifici sono stati distrutti dal terremoto in Turchia?&quot;</em> e il sistema usa i dati estratti dal modello CV + descrizioni testuali per generare una risposta citando fonti.</li>
+<li><strong>Agenti e automazione:</strong> componenti agent-based (costruiti con framework come <strong>LangChain</strong> o <strong>Haystack</strong>) orchestrano i passi - es. un <em>agent</em> può: (1) interrogare un database geospaziale per trovare immagini post-disastro rilevanti, (2) eseguire il modello CV per ottenere le metriche (numero edifici danneggiati, area allagata, ecc.), (3) chiamare l&#39;LLM per spiegare i risultati. Questo consente workflow complessi &quot;domanda -&gt; azioni -&gt; risposta&quot; in modo modulare<a href="https://github.com/langchain-ai/langchain#:~:text=LangChain%20is%20a%20framework%20for,as%20the%20underlying%20technology%20evolves">[6]</a><a href="https://github.com/langchain-ai/langchain#:~:text=Why%20use%20LangChain%3F">[7]</a>.</li>
+<li><strong>Servizi e deploy:</strong> il tutto viene containerizzato (Docker) e può essere esposto tramite API REST (ad es. con <strong>FastAPI</strong>) o interfacce grafiche leggere. Ad esempio, una dashboard <em>Streamlit</em> può mostrare mappe interattive con i layer di danno e offrire una chat LLM per domande sul disastro.</li>
+</ul>
+<p><strong>Architettura locale vs produzione:</strong> in sviluppo si lavora su dataset di test (ad es. poche scene satellitari) usando notebook (Jupyter Lab) e script modulari (in src/). In produzione, i componenti vengono orchestrati in microservizi: un servizio per l&#39;analisi geospaziale (es. calcolo di mappe di rischio) e un servizio per l&#39;LLM (es. generazione risposte), con logging e monitoring. I dati grezzi (immagini) risiedono in uno storage (file system locale o bucket cloud), mentre i risultati intermedi (COG generati, shapefile, embedding vettoriali) possono essere cacheati per velocizzare le richieste ripetute. Si noti che i grandi LLM sono tipicamente usati via API esterne (OpenAI, etc.) o modelli open source ottimizzati (es. Llama 2 7B) se l&#39;inferenza on-premise è fattibile.</p>
+<p>Questa architettura <strong>ibrida AI + GIS</strong> supera i limiti individuali: i GIS classici faticano con input in linguaggio naturale, mentre <em>&quot;i LLM mostrano forti capacità linguistiche ma faticano nel ragionamento spaziale e nel ground truth geospaziale&quot;</em><a href="https://arxiv.org/html/2502.18470v5#:~:text=On%20the%20other%20hand%2C%20large,zhang2024bb%20%2C%20but%20the%20resulting">[8]</a>. Combinandoli, otteniamo un sistema in cui i modelli visivi forniscono &quot;occhi&quot; e dati strutturati, e gli LLM forniscono &quot;ragionamento linguistico&quot; su tali dati, con la possibilità di consultare basi conoscitive real-time. In sintesi, lo stack abbraccia il ciclo completo: <strong>Data (Geo) → AI Vision → Knowledge → LLM</strong>. La figura seguente illustra i componenti chiave e il flusso di dati nel sistema (dalla raccolta dati alla risposta all&#39;utente):</p>
+<p><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=A%20RAG%20pipeline%20works%20like,The%20team%20includes">[9]</a><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=capture%20the%20essence%20of%20each,or%20another%20LLM%2C%20the%20model%E2%80%99s">[10]</a></p>
+<p><em>Figura:</em> <em>Schema di una pipeline RAG geospaziale.</em> In blu i componenti di retrieval (database vettoriale, motore di ricerca), in arancione il modello generativo. La fase &quot;Spatial DB&quot; può includere filtri spaziali (e.g. <em>cerca immagini entro 10 km dall&#39;epicentro</em>), migliorando pertinenza e precisione<a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=Image%3A%20rag%20pipeline%20architecture%20diagram">[11]</a><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=find%20documents%20discussing%20%E2%80%9Creturns%2C%E2%80%9D%20%E2%80%9Cdownloads%2C%E2%80%9D,of%20the%20context%20it%20receives">[12]</a>.</p>
+<h2 id="2-mappa-di-strumenti-e-risorse-2025">2. Mappa di Strumenti e Risorse (2025)</h2>
+<p>Di seguito presentiamo le principali opzioni tecnologiche per ciascun aspetto dello stack - gestione ambiente Python, strumenti di sviluppo, container base, dataset geospaziali open e librerie chiave - confrontandone caratteristiche, vantaggi e stato di aggiornamento.</p>
+<h3 id="21-gestione-ambiente-python-venv-conda-poetry-ecc">2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)</h3>
+<p>Una base solida è un <strong>ambiente Python riproducibile</strong> con tutte le dipendenze (inclusi pacchetti per GPU e geospatial). La tabella seguente confronta gli approcci più diffusi nel 2025:</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Approccio</th>
+<th>Tipo</th>
+<th>Vantaggi (pro)</th>
+<th>Svantaggi (contro)</th>
+<th>Aggiornamento</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>pip + venv</strong></td>
+<td>Installer + env isolato</td>
+<td>Semplice e nativo; velocità nell&#39;installazione diretta</td>
+<td>Risoluzione dipendenze limitata (installazione greedy)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20OG%20of%20Python%20package,be%20completely%20decoupled%20from%20a">[13]</a>; no lockfile nativo; richiede rimozione manuale sub-deps non usati<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20of%20the%20key%20faults,that%20are%20no%20longer%20useful">[14]</a></td>
+<td>pip 23.2 (2023)</td>
+</tr>
+<tr>
+<td><strong>conda / mamba</strong></td>
+<td>Gestore pacchetti con solver SAT C++</td>
+<td>Gestisce librerie <strong>non-Python</strong> (es. GDAL, PROJ) in env isolati<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>; risoluzione completa e veloce grazie al solver <em>libmamba</em><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG">[17]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=">[18]</a></td>
+<td>Ambiente base pesante (hundreds MB); manca lockfile out-of-the-box; a volte necessità di mix pip→ possibili conflitti<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20core%20tradeoff%20with%20,possible%20leading%20to%20a%20potentially">[19]</a></td>
+<td>Conda 23.7 (2024)</td>
+</tr>
+<tr>
+<td><strong>Poetry</strong></td>
+<td>Gestore PyPI con lockfile</td>
+<td>Usa standard <em>pyproject.toml</em> unificato<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=tools%20like%20,to%20build%20and%20publish%20Python">[20]</a>; genera <strong>lockfile</strong> multi-piattaforma per piena riproducibilità; gestisce env virtuale automaticamente</td>
+<td>Risolutore in Python relativamente lento su grandi req. (DFS backtracking)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG">[17]</a>; lockfile voluminoso; attenzione a vincoli eccessivi (^version) che possono causare conflitti in team ampi<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=specify%20upper%20and%20lower%20bounds,intended%20to%20be%20used%20widely">[21]</a></td>
+<td>Poetry 1.6 (2023)</td>
+</tr>
+<tr>
+<td><strong>PDM / Hatch</strong></td>
+<td>Gestori moderni PyPI</td>
+<td><strong>PDM</strong> supporta PEP 582 (ambiente locale senza activate)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=pdm">[22]</a>; <strong>Hatch</strong> funge anche da build system completo e consente test multi-versione Python<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Unlike%20the%20other%20tools%20on,on%20multiple%20versions%20of%20python">[23]</a></td>
+<td>Meno diffusi della triade pip/conda/poetry; Hatch ha curva apprendimento più alta e focus packaging (non solo env)</td>
+<td>PDM 2.5 (2024), Hatch 1.7 (2023)</td>
+</tr>
+<tr>
+<td><strong>pipenv</strong> <em>(legacy)</em></td>
+<td>Pip + virtualenv unificati</td>
+<td>Facile bootstrap con <em>Pipfile</em> e <em>Pipfile.lock</em> (risoluzione iniziale)</td>
+<td>Risoluzione non più avanzata di pip (usa pip internamente)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20downside%20to%20,%E2%80%9Cidiomatic%E2%80%9D%20in%20the%20long%20run%E2%80%A6">[24]</a>; progetto meno attivo; formato Pipfile meno &quot;idiomatico&quot; dopo PEP-621 (pyproject)</td>
+<td>Pipenv 2023.9 (2023)</td>
+</tr>
+<tr>
+<td><strong>uv (Astral)</strong></td>
+<td>Tool unificato all-in-one (Rust)</td>
+<td><strong>Estremamente veloce</strong> (10-100× pip) grazie a core in Rust<a href="https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI">[25]</a>; rimpiazza pip, pipx, poetry, pyenv con un solo strumento<a href="https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI">[25]</a>; supporto lockfile universale e workspace multi-progetto; integrazione trasparente con venv esistenti<a href="https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/#:~:text=updoot%20for%20,Here%20is%20their%20site">[26]</a> (puoi attivare uv, poi usare pip normale se vuoi)</td>
+<td>API e CLI ancora instabili (progetto giovane); community emergente (uv è sviluppato da Astral.sh, gli autori del linter Ruff che in passato ha rapidamente soppiantato i predecessori)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022">[27]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=written%20in%20Rust%20and%20is,rye">[28]</a></td>
+<td>uv 0.5.4 (2024)</td>
+</tr>
+<tr>
+<td><strong>pixi (prefix.dev)</strong></td>
+<td>Package manager conda-like (Rust)</td>
+<td><strong>Velocità</strong> <del>3× micromamba, &gt;10× conda (risoluzione + install)[[29]](<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#">https://prefix.dev/blog/pixi_a_fast_conda_alternative#</a>:</del>:text=benchmarks%20show%20that%20pixi%20is,on%20a%20M2%20MacBook%20Pro); supporta lockfile cross-platform proprio (risolve uno dei limiti di conda)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=dependencies.%20In%20mid%202024%2C%20,for%20reproducibility">[30]</a>; integra pacchetti PyPI nel solver con unificati (usa librerie di uv)<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=In%20comparison%20with%20conda%2C%20pixi,conda%20packages%20for%20real%20reproducibility">[31]</a>; niente base env conda da installare (eseguibile standalone)<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Reason%203%3A%20No%20more%20Miniconda,base%20environment">[32]</a></td>
+<td>Ecosistema nuovo (rilasci &lt;1 anno); meno pacchetti precompilati rispetto a conda-forge (usa comunque i binari conda-forge sotto il cofano); alcuni comandi in evoluzione</td>
+<td>pixi 0.3 (2024)</td>
+</tr>
+<tr>
+<td><strong>pyenv</strong></td>
+<td>Gestore versioni Python</td>
+<td>Permette installare e switchare versioni Python diverse facilmente per progetto<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20thing%20to%20note%20about,were%20using%20for%20different%20projects">[33]</a> (utile per test multi-versione o legacy)</td>
+<td>Non gestisce i pacchetti; usato in combinazione con venv/poetry; se usato global può creare confusione su versioni attive</td>
+<td>pyenv 2.3.24 (2025)</td>
+</tr>
+</tbody></table>
+</div></figure><p><em>Tabelle note:</em> <strong>mamba</strong> è l&#39;implementazione in C++ di conda - oggi <em>conda</em> stesso incorpora <em>libmamba</em> di default, quindi i due convergono in velocità<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=">[18]</a>. In ambienti data science, conda/mamba rimane popolare per facilità con pacchetti scientifici complicati, mentre in produzione spesso si preferisce pip/poetry per evitare dipendenze extra e avere più controllo<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict">[34]</a>. Strumenti emergenti come uv e pixi mirano a unificare il meglio dei due mondi (velocità e completezza). Ad esempio, <strong>uv</strong> è sviluppato in Rust dai creatori di Ruff e punta a diventare il &quot;Cargo per Python&quot; (un unico tool per gestire versioni Python, dipendenze, virtualenv, publishing)<a href="https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI">[25]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022">[27]</a>. <strong>Pixi</strong>, creato dal team di mamba, è un sostituto drop-in di conda scritto in Rust: utilizza <em>uv</em> per risolvere pacchetti pip, genera lockfile e rimuove la necessità di un base environment conda, migliorando drasticamente la velocità e l&#39;ergonomia per portare env conda in produzione<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=At%20prefix%2C%20we%E2%80%99re%20solving%20conda,tasks%20for%20collaboration%2C%20and%20more">[35]</a><a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Image">[36]</a>.</p>
+<p><strong>Reproducibilità GPU/Geo:</strong> Per un progetto AI/RS su GPU in locale, conda offre spesso la via più semplice (es. conda install pytorch cudatoolkit=... gdal rasterio in un env) perché gestisce i binari compatibili (CUDA, GDAL). In alternativa, in ambienti containerizzati, si può optare per <strong>pip + Docker</strong> usando immagini base con driver appropriati (vedi §2.3). In tutti i casi, è consigliato <strong>fissare le versioni</strong> in un lockfile (es. poetry.lock) o file requirements con hash, e documentare il setup (ad es. fornendo un environment.yml conda + requirements.txt pip per sicurezza).</p>
+<p>Un layout ideale del progetto prevede una struttura simile a:</p>
+<p>proj-root/<br>├── src/ # codice applicativo (package principale)<br>├── notebooks/ # Jupyter notebook di esplorazione<br>├── data/ # dati grezzi o di esempio (gitignored se grandi)<br>├── models/ # modelli salvati o pesi<br>├── tests/ # test unità/integrati<br>├── configs/ # config per Hydra/pydantic (es. dev.yaml, prod.yaml)<br>├── Dockerfile # definizione container<br>├── pyproject.toml # specifiche package/dep (poetry/pdm)<br>├── requirements.txt # dipendenze (se pip)<br>├── Makefile # comandi utili (setup, run, lint, test, deploy)<br>└── README.md # documentazione progetto</p>
+<p>Questa organizzazione segue in parte il modello <em>Cookiecutter Data Science</em> (per separare chiaramente code, data, docs) e facilita il passaggio <strong>dallo sviluppo locale alla produzione</strong>: il codice è impacchettato (in src/ con eventuale _<em>init</em>_.py), i test assicurano funzionamento, e config/secrets separati per ambiente permettono deploy consistenti.</p>
+<h3 id="22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</h3>
+<p>Per garantire <strong>qualità del codice e velocità di sviluppo</strong>, adottiamo una serie di strumenti DevOps/MLOps leggeri:</p>
+<ul>
+<li><strong>Linting &amp; Format:</strong> <em>Black</em> per il formato automatico del codice (opinionated, PEP8) e <strong>Ruff</strong> per il linting ultrarapido in Rust. Ruff include centinaia di regole (rimpiazza flake8, isort, ecc.) ed esegue fix di molti problemi in automatico<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=line,by%20Black%20fix%20%3D%20true">[38]</a>. Ha praticamente soppiantato i linters tradizionali in poco tempo grazie alla velocità e copertura<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=drop,it%20was%20released%20in%202022">[39]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=linter%20notes,it%20was%20released%20in%202022">[40]</a>. <strong>Consiglio:</strong> configurare Black e Ruff per non sovrapporre regole (es. disattivare in Ruff le regole che Black già sistema, come lunghezza riga) - ciò si può fare centralizzando la config in pyproject.toml<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311">[41]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a>.</li>
+<li><strong>Type Checking:</strong> utilizzare la <strong>tipizzazione statica</strong> per prevenire bug. <em>Mypy</em> è lo standard per type-checking in Python; in alternativa <em>Pyright</em> (integrato in VSCode/Pylance) offre analisi incrementale molto veloce durante la scrittura. Impostare un livello &quot;strict&quot; (es. warn_unused_configs, disallow_untyped_defs in mypy) aiuta a mantenere il codice robusto<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.mypy%5D%20python_version%20%3D%20,true%20plugins%20%3D">[42]</a>.</li>
+<li><strong>Testing:</strong> <em>Pytest</em> è de facto per test unitari e funzionali in Python. Organizzare i test in tests/ e magari usare plugin utili: ad es. <strong>pytest-snapshot</strong> (o <strong>Syrupy</strong>) per <em>snapshot testing</em> di output complessi (confronta automaticamente output attuale con uno salvato in precedenza)<a href="https://github.com/syrupy-project/syrupy#:~:text=syrupy,assert%20immutability%20of%20computed%20results">[43]</a> - comodo per validare ad es. JSON di risposta API o risultati di analisi raster. Per pipeline geospaziali, potrebbe essere utile generare piccoli dataset sintetici per testare le funzioni (es. creare un raster 100x100 e una geometria nota e verificare che l&#39;overlay produca risultati attesi).</li>
+<li><strong>Pre-commit hooks:</strong> configurare <em>pre-commit</em> (file .pre-commit-config.yaml) per eseguire automaticamente tool di qualità prima di ogni commit. Un set raccomandato di hook: <strong>black</strong>, <strong>ruff</strong>, <strong>mypy</strong>, <em>isort</em> (se non uso ruff per sorting import), <em>end-of-file-fixer</em> e <em>trailing-whitespace</em> (semplici pulizie), eventualmente <strong>nbstripout</strong> o <strong>nbqa</strong> per normalizzare i notebook. Questo garantisce che ogni commit aderisca agli standard di code style e passa i test statici. Ad esempio, un hook ruff/black combinato rende il codice consistente - uno sviluppatore nota <em>&quot;Ruff + Black + isort configurati insieme forniscono qualità senza frizioni&quot;</em> in CI e editor<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=friction%20Python%20code%20quality%20with,commit%2C%20CI%2C%20and%20editor%20tips">[44]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a>.</li>
+<li><strong>CI/CD minimo:</strong> impostare una GitHub Action semplice che su ogni push esegue: lint (ruff/black), type-check (mypy) e test (pytest) su una matrice di ambienti (almeno Python 3.x). Ciò automatizza il controllo qualità. Per progetti ML, si può includere un test su sample data (es. eseguire inferenza su un&#39;immagine piccola) per assicurare che pipeline e modelli funzionino. Un workflow YAML minimo includerebbe step per installare dipendenze (usando poetry/mamba per velocità in CI) e poi pre-commit run --all-files seguito da pytest.</li>
+<li><strong>Notebook e collaborazione:</strong> usare <strong>JupyterLab 4</strong> (moderno, supporta plugin e realtime collaboration) o l&#39;<strong>interfaccia notebook di VSCode</strong> per prototipazione. In contesti condivisi o cloud: <em>Deepnote</em>, <em>Google Colab</em> o JupyterHub offrono ambienti pronti (Colab ad esempio fornisce GPU free limitate). È buona prassi mantenere sincronizzati notebook e codice: si può usare <em>Jupytext</em> (notebook come script paired) per versionarli facilmente. Per visualizzare dati geospaziali nei notebook, strumenti come <strong>folium</strong> (mappe interattive Leaflet) o <strong>ipyleaflet/leafmap</strong> permettono di visualizzare tiles, shapefile e risultati di modelli direttamente (vedi §2.5).</li>
+</ul>
+<p><strong>Consiglio:</strong> configurare tutti questi strumenti fin dall&#39;inizio. Ad esempio, aggiungere al pyproject.toml: black, ruff, isort, mypy con config coerente (stessa line-length, ecc.)<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311">[41]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a>. Installare pre-commit e attivarlo (pre-commit install) in modo che ogni git commit lanci i controlli. Queste automazioni rendono lo sviluppo <strong>&quot;no drama&quot;</strong>: il dev può concentrarsi sulla logica AI/Geo, mentre gli strumenti mantengono il codice pulito e funzionante.</p>
+<h3 id="23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</h3>
+<p>Containerizzare l&#39;app consente di uniformare ambiente (specialmente per librerie native e driver GPU) e facilitare il deploy. Presentiamo due esempi di <strong>Dockerfile</strong> ottimizzati, uno per un servizio LLM/RAG leggero, l&#39;altro per una pipeline geospaziale pesante, e una tabella di immagini base consigliate.</p>
+<p><strong>Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</strong></p>
+<p># Use Python slim base for minimal size<br>FROM python:3.11-slim as base<br><br/># Install system deps (if any minimal, e.g. git)<br>RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; rm -rf /var/lib/apt/lists/*<br><br/># Create non-root user<br>RUN useradd -m appuser<br>WORKDIR /app<br><br/># Install Poetry and dependencies<br>RUN pip install poetry==1.6.1<br>COPY pyproject.toml poetry.lock ./<br>RUN poetry config virtualenvs.create false &amp;&amp; poetry install --no-dev<br><br/># Copy app code<br>COPY src/ ./src/<br>COPY main.py ./<br>USER appuser<br><br/>CMD [&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;]</p>
+<p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
+<p><strong>Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)</strong></p>
+<p># Start from miniconda image for geospatial ease<br>FROM continuumio/miniconda3:4.12.0 as builder<br><br/># Create env with mamba for faster solving<br>RUN conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy<br><br/># Copy environment file and install<br>COPY environment.yaml /tmp/environment.yaml<br>RUN mamba env update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy<br><br/># (Optional) Install additional pip packages if any<br>RUN pip install -U rastervision==0.31.2<br><br/># -- Second stage for final image (slimmer) --<br>FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, se serve<br># (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)<br><br/>COPY --from=builder /opt/conda /opt/conda<br>ENV PATH=&quot;/opt/conda/bin:$PATH&quot;<br>WORKDIR /app<br>COPY src/ ./src/<br>COPY entrypoint.py ./<br><br/>CMD [&quot;python&quot;, &quot;entrypoint.py&quot;]</p>
+<p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
+<p>Di seguito una tabella di <strong>immagini base</strong> comuni per vari scenari:</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Immagine base</th>
+<th>Contenuto</th>
+<th>Uso consigliato</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>python:3.11-slim</strong></td>
+<td>Debian slim + Python 3.x</td>
+<td>Servizi Python leggeri (API, agent) - minima (50MB)</td>
+</tr>
+<tr>
+<td><strong>continuumio/miniconda3</strong></td>
+<td>Miniconda + conda (base env)</td>
+<td>Data science/Geo completo; facile installare pacchetti complessi (es. GDAL)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a> ma molto pesante (&gt;\<del>1GB)[[45]](<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#">https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#</a>:</del>:text=We%20are%20starting%20from%20Miniconda,of%20dockerfile%20are%20as%20follows)</td>
+</tr>
+<tr>
+<td><strong>mambaorg/micromamba</strong></td>
+<td>Micromamba in Alpine/CentOS</td>
+<td>Costruire immagini con env conda in maniera snella; ideale in multi-stage (scarica solo i pacchetti richiesti)</td>
+</tr>
+<tr>
+<td><strong>nvidia/cuda:12.2-runtime</strong></td>
+<td>Librerie CUDA + runtime base</td>
+<td>Aggiungere supporto GPU. Da usare con pip/conda per installare PyTorch/TF con CUDA compatibile.</td>
+</tr>
+<tr>
+<td><strong>pytorch/pytorch:2.0-cuda11.8</strong></td>
+<td>Python + PyTorch 2.0 + CUDA preinstallati</td>
+<td>Lavori di training/inference DL su GPU - evita configurazioni manuali di CUDA/cuDNN. Include però anche varie libs (immagine ~&gt;10GB).</td>
+</tr>
+<tr>
+<td><strong>osgeo/gdal:ubuntu-full</strong></td>
+<td>Ubuntu + GDAL precompilato (full drivers)</td>
+<td>Pipeline GIS/RS intensive: include GDAL, PROJ, GEOS ecc. già configurati. Utile per tool OGR, conversioni, ecc., evitando compilazioni.</td>
+</tr>
+<tr>
+<td><strong>jupyter/scipy-notebook</strong></td>
+<td>Python con JupyterLab + stack SciPy</td>
+<td>Ambienti notebook pronti all&#39;uso (CPU). Include numpy, pandas, matplotlib, etc. Utile per sviluppo interattivo, anche su cloud (ad es. Docker Stacks di JupyterHub).</td>
+</tr>
+</tbody></table>
+</div></figure><p><strong>Caching &amp; multi-stage:</strong> Per velocizzare il rebuild, sfruttare la cache Docker: ordinare le istruzioni Dockerfile dal meno volatile al più volatile. Esempio: installare prima le dipendenze (che cambiano raramente) e copiare poi il codice. Inoltre, usare multi-stage build consente di copiare solo l&#39;essenziale (es. binari compilati) in produzione, riducendo la taglia. Per immagini AI, è buona norma <strong>pulire cache pip/conda</strong> (come fatto sopra con conda clean) e rimuovere compilatori se installati temporaneamente.</p>
+<p><strong>Gestione GPU:</strong> in deployment on-prem, abilitare runtime GPU con --gpus all su Docker run (usando i runtime NVIDIA). In Kubernetes, usare device plugins NVIDIA. Se l&#39;host non ha GPU (es. nostro caso locale), basterà che l&#39;immagine contenga comunque le librerie giuste - potremo eseguire in CPU senza errori, o delegare a Colab per esecuzione GPU.</p>
+<h3 id="24-gestione-di-secret-e-configurazioni">2.4 Gestione di Secret e Configurazioni</h3>
+<p>Le applicazioni AI/geo spesso richiedono <strong>chiavi API, credenziali o config</strong> per servizi (es. token Mapbox, key OpenAI, URL database). È fondamentale <strong>non hardcodare</strong> questi valori nel codice sorgente, ma usare sistemi di config.</p>
+<p><strong>Approccio .env (locale):</strong> per sviluppo, semplice e funzionale: mettere le chiavi in un file .env escluso da git, e caricarlo con <a href="https://pypi.org/project/python-dotenv/">python-dotenv</a>. Ad esempio:</p>
+<p># config.py<br>from pydantic import BaseSettings<br><br/>class Settings(BaseSettings):<br>openai_api_key: str<br>db_url: str<br>debug: bool = False<br><br/>class Config:<br>env_file = &quot;.env&quot; # legge le variabili da .env<br>env_prefix = &quot;MYAPP_&quot; # opzionale: prefisso richiesto nelle env var<br>settings = Settings()</p>
+<p>Questo codice usa <strong>Pydantic BaseSettings</strong>: ad ogni avvio legge le variabili d&#39;ambiente (o dal file .env) e costruisce un oggetto settings. Offre il vantaggio della <strong>validazione e tipi</strong> (ad es. se db_url deve essere una URL, Pydantic può validarla). Si possono definire default e Pydantic converte automaticamente tipi (int, bool ecc) e gestisce nested config. Pydantic è ottimo quando <em>&quot;la struttura di configurazione è relativamente semplice e basata su env var/.env&quot;</em><a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=">[46]</a> - e.g. pochi parametri principali. Inoltre, integrandolo con FastAPI, le settings possono essere utilizzate come dependences.</p>
+<p><strong>Approccio file YAML/INI + classi:</strong> In progetti più grandi o con molte configurazioni, usare file YAML o TOML per ambienti diversi può risultare organizzato. Ad esempio, uno schema:</p>
+<p>config/<br>default.yaml<br>dev.yaml<br>prod.yaml</p>
+<p>con <em>default</em> e override specifici. Librerie come <strong>Dynaconf</strong> supportano <em>multi-layer configuration</em> caricando più file e mergeando in base a un <em>environment key</em>. Dynaconf permette definire config in diversi formati (YAML, TOML, Python) e distingue contesti <em>development</em> vs <em>production</em>, oltre a supportare secrets criptati<a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bproduction%5D%20DATABASE_URL%20%3D%20,Dynaconf%20can%20handle%20encrypted%20secrets">[47]</a><a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=API_KEY%20%3D%20%22%40STRONGLY_ENCRYPTED%3Aprod_api_key_encrypted_value%22%20,can%20handle%20encrypted%20secrets">[48]</a>. È indicato quando <em>&quot;servono configurazioni complesse, multi-sorgente e con separazione netta tra ambienti&quot;</em><a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=">[49]</a>. Alternativamente, <strong>Hydra</strong> (di Facebook) permette di comporre configurazioni da file modulari e sovrascriverle via CLI. Hydra è comune in contesti research per gestire molti parametri (es. architettura modelli, hyperparam) e variare esperimenti semplicemente lanciando ad es. python train.py data=bigearthnet model.unet.depth=5. Hydra crea automaticamente directory di output versionate con la config usata.</p>
+<p><strong>Consigli pratici config:</strong> Se l&#39;app è relativamente semplice (pochi parametri e segreti), <strong>Pydantic BaseSettings</strong> offre semplicità e robustezza (type-safe). Se cresce in complessità (es. decine di voci, più file), <strong>Dynaconf</strong> potrebbe essere utile per evitare boilerplate e gestire più sorgenti. Hydra è ottima se prevedi di fare molte variazioni di run (tipico nel training di modelli ML), ma per un servizio web forse è overkill.</p>
+<p><strong>Gestione secret in produzione:</strong> Mai committare credenziali. In ambienti cloud, utilizzare servizi dedicati: AWS Secrets Manager, GCP Secret Manager, Hashicorp Vault. Ad esempio, su AWS si può memorizzare la OPENAI_API_KEY e recuperarla dinamicamente nella container ECS oppure injectarla come variabile d&#39;ambiente tramite il sistema di configurazione (Terraform, etc.). Molti servizi CI/CD (GitHub Actions, GitLab CI) offrono un vault integrato per salvare secret e renderli disponibili come env var durante il deploy. Quindi, il pattern consigliato è: <strong>in locale .env</strong>, in CI/prod <strong>env var</strong> o config criptata.</p>
+<p><strong>Strutturare config dev/stage/prod:</strong> Mantenere un default comune e solo le differenze per ambiente. Ad esempio:</p>
+<ul>
+<li>config-default.yaml: DEBUG: false, DB_URL: postgres://prod...</li>
+<li>config-dev.yaml: override: DEBUG: true, DB_URL: sqlite:///dev.db</li>
+<li>config-stage.yaml: override per staging.</li>
+</ul>
+<p>Con Dynaconf, potresti avere un unico settings.toml con sezioni [development], [production]<a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bdevelopment%5D%20DATABASE_URL%20%3D%20">[50]</a><a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=DATABASE_URL%20%3D%20">[51]</a>. Oppure, semplicemente usare variabili d&#39;ambiente diverse su server (il codice Pydantic di cui sopra legge dall&#39;OS, quindi in prod basta settare MYAPP_DB_URL e co.).</p>
+<p><strong>Esempio:</strong> Utilizzando l&#39;approccio .env/Pydantic illustrato, avrai in .env (solo locale dev) le chiavi, es.:</p>
+<p>MYAPP_OPENAI_API_KEY=&quot;sk-...dev&quot;<br>MYAPP_DB_URL=&quot;sqlite:///dev.db&quot;<br>MYAPP_DEBUG=true</p>
+<p>Sul server di produzione, invece di .env, esporterai direttamente:</p>
+<p>export MYAPP_OPENAI_API_KEY=&quot;sk-...prod&quot;<br>export MYAPP_DB_URL=&quot;postgresql://user:pass@host/prod&quot;<br>export MYAPP_DEBUG=false</p>
+<p>Il codice rimane uguale e legge i valori appropriati.</p>
+<p>In caso di necessità di secret altamente sensibili, una pratica avanzata è usare <strong>Vault</strong>: l&#39;app al boot può interrogare Vault per ottenere ad esempio le credenziali DB runtime (così non risiedono mai su disco). Ciò aggiunge complessità e solitamente è usato in contesti enterprise.</p>
+<p><strong>Log delle config:</strong> È utile, in fase di avvio applicazione, loggare quali config file sono stati caricati e quali environment attiva (ovviamente <em>non</em> loggare i valori dei secret!). Ad esempio, Dynaconf stampa Current Environment: development e da dove legge i valori<a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=">[52]</a><a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=print%28f,Debug%20Mode%3A%20%7Bsettings.get%28%27DEBUG_MODE">[53]</a>. Questo aiuta a evitare confusioni (es. variabile non letta per typo nel nome).</p>
+<p>In sintesi, investire tempo in una solida gestione di config/secret garantisce che l&#39;app possa passare da dev a prod senza modifiche manuali al codice, minimizzando rischi di leak (niente chiavi in repo) e facilitando tuning per ambienti diversi.</p>
+<h3 id="25-dataset-open-e-cataloghi-staccog-per-disastri">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</h3>
+<p>Per progetti di <strong>Disaster Intelligence</strong>, attingere a dataset open aggiornati è cruciale. Fortunatamente 2022-2025 ha visto crescere cataloghi <strong>STAC</strong> (SpatioTemporal Asset Catalog) e dataset specializzati. Ecco una selezione dei dataset e risorse <em>state-of-the-art</em>:</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Dataset / Catalog</th>
+<th>Dati (tipo e risoluzione)</th>
+<th>Copertura/Dimensione</th>
+<th>Task / Utilizzo</th>
+<th>Fonte (link)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>xBD / xView2</strong> (2019)</td>
+<td>Immagini satellitari Maxar pre- e post-evento (RGB, ~0.3 m/px, tile 1024×1024); annotazioni edifici + classe danno</td>
+<td>19 eventi in 15 Paesi (terremoti, uragani, incendi); 850k edifici annotati su <del>45k km²[[54]](<a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#">https://www.ibm.com/think/insights/the-xview2-ai-challenge#</a>:</del>:text=The%20data%20used%20for%20the,resolution%20color%20images)<a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world">[55]</a>; 9k coppie immagine pre/post per training</td>
+<td><strong>Building Damage Assessment</strong> - segmentazione edifici e classificazione danno (nessuno, leggero, moderato, pesante, distrutto)</td>
+<td>DIU xView2 <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images">[54]</a> - [Paper xBD]<a href="https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf#:~:text=Imagery%20openaccess,of%20imagery%20from%2015%20countries">[56]</a></td>
+</tr>
+<tr>
+<td><strong>C2SMS Floods</strong> (2022)</td>
+<td>Chips Sentinel-1 (SAR) + Sentinel-2 (Ottico) co-registrati, 256×256 px; maschere binarie acqua (inondazione vs acqua permanente)</td>
+<td><del>900 coppie chip da eventi alluvionali globali (es. Harvey 2017, Kerala 2018)[[57]](<a href="https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#">https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#</a>:</del>:text=The%20C2S,of%20chips%2C%20and%20water%20labels) - totale 1800 immagini</td>
+<td><strong>Flood segmentation (multimodale)</strong> - addestramento modelli a rilevare acqua alluvionale combinando SAR e ottico</td>
+<td>Microsoft/Cloud to Street - [DOI Radiant]<a href="https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf#:~:text=The%20C2S,oz32gz">[58]</a></td>
+</tr>
+<tr>
+<td><strong>Sen1Floods11</strong> (2020)</td>
+<td>Chip Sentinel-1 GRD (SAR) 512×512 px; maschera acqua binaria</td>
+<td>4.831 chip da 11 eventi alluvionali in 5 continenti<a href="https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1#:~:text=,to%20train%20and%20evaluate">[59]</a><a href="https://eod-grss-ieee.com/dataset-detail/ekFTRmNnWmtGOE52LzgrVUE4Ykd4dz09#:~:text=Sen1Floods11%20is%20a%20surface%20water,consists%20of%204%2C831%20512">[60]</a> (inclusi Tsunami Giappone 2011, Harvey 2017, etc.)</td>
+<td><strong>Flood segmentation (SAR)</strong> - benchmarking su solo radar (robusto anche con nubi)</td>
+<td>Cloud to Street - [Paper IEEE]<a href="https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.pdf#:~:text=,ter%20data%20set">[61]</a> (HuggingFace Datasets disponibile)</td>
+</tr>
+<tr>
+<td><strong>NASA/UN Flood Extents</strong> (2023)</td>
+<td>Raster Sentinel-1 (sigma0 backscatter, ~10 m) con poligoni vettoriali flood delineation</td>
+<td>Eventi recenti globali (es. Pakistan 2022, cicloni 2023) - dati rilasciati via UNOSAT o NASA. Dimensione varia (es. Pakistan ~1000 raster)</td>
+<td><strong>Flood mapping rapido</strong> - segmentazione acqua tramite pipeline automatizzate (Google, UN)</td>
+<td>UNOSAT / NASA (HRC) - es. dataset interni condivisi su Radiant MLHub</td>
+</tr>
+<tr>
+<td><strong>Maxar Open Data</strong> (2017-2025)</td>
+<td>Immagini satellitari ottiche ad alta risoluzione (30-50 cm) pre e post-disastro (GeoTIFF)</td>
+<td>&gt;100 eventi globali (Terremoto Nepal 2015, Explosion Beirut 2020, Alluvione Libia 2023, ecc.) - copertura varia per evento (decine di immagini ciascuno)<a href="https://gee-community-catalog.org/projects/maxar_opendata/#:~:text=MAXAR%20Open%20Data%20Events%20,events%20like%20earthquakes%20and">[62]</a></td>
+<td><strong>Damage mapping visivo</strong> - fornisce rapidamente immagini post-evento CC BY 4.0 per usi umanitari, ad es. mappatura edifici crollati</td>
+<td>Maxar Open Data Program (AWS OpenData)<a href="https://www.reddit.com/r/AirlinerAbduction2014/comments/17190ge/maxar_technologies_open_data_list_of_the_last/#:~:text=Maxar%20Technologies%20Open%20Data%20List,some%20of%20these%20datasets">[63]</a> (include index STAC su registry.opendata.aws)</td>
+</tr>
+<tr>
+<td><strong>Copernicus EMS</strong> (2015-)</td>
+<td>Prodotti <em>analyst-derived</em> da immagini (GeoTIFF e shapefile): es. poligoni di edifici distrutti, estensione alluvioni, mappe grado di danno (EMS-98)</td>
+<td>Attivazioni emergenza in Europa e mondo (migliaia di mappe per terremoti, inondazioni, incendi) - risoluzione dipende da immagini (Sentinel-2 10 m, Pléiades 0.5 m, etc.)</td>
+<td><strong>Rapid Mapping</strong> - risultati ufficiali da analisti in poche ore/giorni (ground truth utile per training o verifica modelli)</td>
+<td>Copernicus Emergency Mgt Service (public downloads per attivazione)</td>
+</tr>
+<tr>
+<td><strong>Landslide4Sense / GDCLD</strong> (2024)</td>
+<td>Immagini multi-sorgente HR (PlanetScope ~3 m, Gaofen-6 2 m, UAV ~0.1 m) con maschere frane (poligoni pixel)</td>
+<td>9 eventi sismici globali (Nepal 2015, Amatrice 2016, ecc.) con contesti geologici vari<a href="https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These">[64]</a>; ~60.000 frane etichettate. + Test su 1 evento da piogge.</td>
+<td><strong>Landslide detection</strong> - segmentazione frane in contesti montuosi. Consente addestrare modelli robusti a dataset globali.</td>
+<td><em>Globally Distributed Coseismic Landslide Dataset</em> - [DOI Zenodo]<a href="https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These">[64]</a> (Fang et al, ESSD 2024)</td>
+</tr>
+<tr>
+<td><strong>Planetary Computer STAC</strong> (ongoing)</td>
+<td>Catalogo cloud di ~100 dataset ambientali/EO: collezioni Sentinel-1, Sentinel-2, Landsat, MODIS, NAIP, ecc., con API STAC e azure storage per tile on-demand</td>
+<td>Copertura globale o nazionale a seconda del dataset. Esempi: Sentinel-2 L2A global (2017-2025), NAIP USA (aerea 60 cm).</td>
+<td><strong>Base data hub</strong> - accedere in modo standardizzato a imagery e dati geo open per analytics personalizzate (subset, mosaico, ecc.). Consente query spaziali e temporali via API.<a href="https://github.com/microsoft/PlanetaryComputerExamples#:~:text=quickstarts%2C%20dataset%20examples%2C%20and%20tutorials">[65]</a></td>
+<td>Microsoft Planetary Computer - [Docs]<a href="https://github.com/microsoft/PlanetaryComputerExamples#:~:text=If%20you%27re%20viewing%20this%20repository,quickstarts%2C%20dataset%20examples%2C%20and%20tutorials">[66]</a> (chiave API gratuita richiesta per throughput elevato)</td>
+</tr>
+<tr>
+<td><strong>Radiant MLHub</strong> (ongoing)</td>
+<td>Catalogo di <strong>dataset geospaziali per ML</strong> con labels: es. LandCoverNet (class. uso suolo global), BigEarthNet, Functional Map of World, etc. + modelli pre-addestrati</td>
+<td>Vari - globale (LandCoverNet copre 5 continenti), regionali (crop type in ruanda, ecc.). Dati spesso in formato chips/COCO.</td>
+<td><strong>Training data repository</strong> - unifica dataset curati usati in competizioni e paper, pronti all&#39;uso con librerie (torchgeo, tf.data).</td>
+<td>Radiant Earth - [Registry on AWS]<a href="https://registry.opendata.aws/radiant-mlhub/#:~:text=Radiant%20MLHub%20,as%20other%20training%20data">[67]</a><a href="https://medium.com/radiant-earth-insights/geospatial-models-now-available-in-radiant-mlhub-a41eb795d7d7#:~:text=Radiant%20MLHub%20has%20been%20the,ML%29%20algorithms%20since%202019">[68]</a> (API key gratuita disponibile)</td>
+</tr>
+<tr>
+<td><strong>NOAA NGS Aerial</strong> (varie)</td>
+<td>Immagini aeree nadir oblique post-evento (~10-20 cm/px)</td>
+<td>USA (coste e aree colpite da uragani, tornado, incendi). Esempio: <del>15k foto aeree dopo uragano Ian 2022 Florida[[69]](<a href="https://storms.ngs.noaa.gov/storms/ian/index.html#">https://storms.ngs.noaa.gov/storms/ian/index.html#</a>:</del>:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote).</td>
+<td><strong>Damage inspection</strong> - utilizzate per valutazione visuale danni subito dopo eventi (anche input per CV - es. rilevamento tetti danneggiati).</td>
+<td>NOAA NGS Emergency Response Imagery<a href="https://storms.ngs.noaa.gov/storms/ian/index.html#:~:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote">[69]</a> (visualizzatore storms.ngs.noaa.gov, dati scaricabili via API)</td>
+</tr>
+<tr>
+<td><strong>Planet Disaster Data</strong> (2020-)</td>
+<td>Immagini PlanetScope (3-5 m) e SkySat (~0.8 m) con licenza temporanea libera per disastri maggiori</td>
+<td>Globale, selettiva. Esempi: Incendi Australia 2020, Beirut 2020, ecc. Spesso copertura area evento completa per giorni/settimane successive.</td>
+<td><strong>Rapid Monitoring</strong> - immagini ottiche ad alta frequenza (quotidiane) per monitoraggio evoluzione disastri. Utili per time series prima/dopo non disponibili altrove.</td>
+<td>Planet/Open Region - (richiede registrazione, dati forniti su richiesta o via partner)<a href="https://esri-disasterresponse.hub.arcgis.com/pages/imagery#:~:text=disasterresponse,major%20earthquakes%2C%20floods%2C%20storms">[70]</a></td>
+</tr>
+</tbody></table>
+</div></figure><p>Questi dataset consentono di allenare e validare modelli per <em>damage assessment</em>, <em>flood mapping</em>, <em>change detection</em>, ecc., sfruttando dati reali di eventi passati. Notiamo la tendenza a dataset multi-modali (SAR+ottico insieme), multi-evento (generalizzazione) e con <strong>etichettatura ricca</strong> (non solo binaria, ma gradi di danno, tipologia land cover, ecc.). Ad esempio, xBD rimane il riferimento per damage detection con la sua ampiezza senza precedenti<a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images">[54]</a><a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world">[55]</a>, mentre i dataset di flood di Cloud to Street uniscono Sentinel-1 e 2 per mitigare problemi di copertura nuvole<a href="https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#:~:text=The%20C2S,of%20chips%2C%20and%20water%20labels">[57]</a>.</p>
+<p><strong>Cataloghi STAC attivi:</strong> Planetary Computer e Radiant MLHub citati offrono API uniformi per cercare dati per area e data. Ad esempio, con <strong>pystac-client</strong> possiamo interrogare Planetary Computer:</p>
+<p>from pystac_client import Client<br>catalog = Client.open(&quot;<a href="https://planetarycomputer.microsoft.com/api/stac/v1">https://planetarycomputer.microsoft.com/api/stac/v1</a>&quot;)<br>search = catalog.search(collections=[&quot;sentinel-2-l2a&quot;],<br>intersects={&quot;type&quot;: &quot;Point&quot;, &quot;coordinates&quot;: [30.5,50.5]},<br>datetime=&quot;2023-06-01/2023-06-30&quot;)<br>items = list(search.get_items())<br>print(f&quot;Trovate {len(items)} immagini Sentinel-2 in giugno 2023 nel AOI.&quot;)<br>for item in items[:5]:<br>print(item.id, item.assets[&quot;B04&quot;].href) # stampa link alla banda 4 (rosso)</p>
+<p><em>(Esempio di utilizzo pystac-client per cercare immagini Sentinel-2 in un AOI e periodo dati. Ci consente di ottenere URL (spesso firmati) a cui accedere il file COG direttamente, oppure scaricare i subset.)</em></p>
+<p>Analogamente, Radiant MLHub fornisce SDK e API per scaricare dataset ML. Ad esempio, con il pacchetto radiant_mlhub possiamo fare query di collezioni per nome e scaricare le annotazioni.</p>
+<p><strong>Altri dataset degni di nota 2025:</strong> SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, road network extraction, change detection di edifici su tempi multi-annuali (SpaceNet 7), ecc. Anche se un po&#39; datati, rimangono preziosi per benchmark. Ad esempio, SpaceNet8 (2022) fornisce immagini PlanetScope pre/post alluvione + mask flood e building footprints, utile per approcci multimodali (simile a xBD ma per inondazioni). Inoltre, dataset come <strong>CASA Landslide</strong> e <strong>DMLD</strong> (China) offrono migliaia di esempi di frane mappate in diverse regioni<a href="https://www.mdpi.com/2072-4292/16/11/1886#:~:text=The%20Diverse%20Mountainous%20Landslide%20Dataset,across%20different%20terrain%20in">[71]</a><a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City">[72]</a>. La comunità open si sta muovendo anche verso <strong>foundation models geospaziali</strong>: ad es. <em>BigEarthNet</em> (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari.</p>
+<h3 id="26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</h3>
+<p>L&#39;ecosistema Python geospaziale è maturo. Strumenti chiave:</p>
+<ul>
+<li><strong>GDAL (osgeo)</strong> - la libreria <em>foundation</em> per raster e vettori GIS. In Python si usa indirettamente via binding (osgeo.gdal) ma più spesso tramite wrapper più pitonici:</li>
+<li><strong>rasterio</strong> (per raster) e <strong>fiona</strong> (per shapefile) sono <em>wrapper</em> pythonic di GDAL/OGR. <em>Rasterio</em> offre lettura/scrittura di GeoTIFF, cropping, reproiezione, e funzioni numpy-friendly.</li>
+<li><strong>Geopandas</strong> (per vettori) combina Fiona + Shapely: permette di leggere shapefile/GeoJSON in DataFrame e usare operazioni geografiche (buffer, intersection) via Shapely in modo vectorizzato. Ottimo per layer vettoriali non enormi (fino a ~100k entità).</li>
+<li><strong>Shapely 2.0</strong> - libreria geometrica (in C) usata da geopandas; con la v2 supporta nativamente <em>array</em> (grazie a PyGEOS), quindi molto efficiente su grandi insiemi di geometrie.</li>
+<li><strong>pyproj</strong> - gestisce sistemi di coordinate e trasformazioni (usa PROJ sotto).</li>
+<li><strong>rasterio vs rioxarray vs xarray</strong>: <em>rasterio</em> è ideale per operazioni raster file-per-file ad alte prestazioni e batch processing (script); <em>xarray</em> è preferibile per analisi su stack di dati come cubi temporali o mosaici grandi, grazie a <em>dask</em> per la parallelizzazione. <em>rioxarray</em> è un&#39;estensione di xarray che aggiunge consapevolezza geospaziale (CRS, trasformate) usando rasterio sotto il cofano. <strong>Ruff</strong> - <em>&quot;Rasterio is for speed, batch processing of many files, Rioxarray shines for interactive analytical work in notebooks&quot;</em> notano gli utenti<a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%207mo%20ago">[73]</a>. Attenzione però: rioxarray/xarray possono consumare molta memoria se non ben chunk-ati, e su dataset grandi a volte crashano, dove rasterio a basse prestazioni esegue comunque (&quot;quando dataset grandi rallentano o crashano con rioxarray, passo a GDAL/rasterio che risolve in pochi secondi&quot; cit.)<a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%206mo%20ago">[74]</a><a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=This,to">[75]</a>. <strong>Consiglio:</strong> usare <em>xarray + dask</em> per elaborazioni distribuite (es. calcolare NDVI su 1000 scene) - dask creerà grafo ed eseguirà in parallelo (anche su cluster).</li>
+<li><strong>rio-tiler</strong>: libreria per lavorare con COG (Cloud Optimized GeoTIFF) e generare tile (es. 256x256) per visualizzazione web. Permette di estrarre rapidamente porzioni di immagine via HTTP range requests e creare tile XYZ o WMTS. Indispensabile se si costruisce un servizio di mappe (tipo fornire una mappa interattiva delle predizioni modello). Esempio: con rio-tiler puoi ottenere il tile PNG di zoom 15, x=17342,y=11945 da un COG in S3 con una chiamata, includendo magari applicazione di color mapping.</li>
+<li><strong>folium / ipyleaflet / leafmap</strong>: per visualizzare i risultati su mappe interattive in Jupyter. <em>Folium</em> è semplice: produce una mappa Leaflet HTML con marker, layer raster/vettoriali (puoi addirittura aggiungere l&#39;URL di un tile server o di un COG). <em>ipyleaflet</em> è più avanzato (bidirezionale, reagisce a Python in real-time) - ad es. permette di disegnare un poligono sulla mappa e averlo in Python per analisi. <em>Leafmap</em> fornisce un&#39;API di alto livello e supporta anche interfacce come Google Earth Engine. Integrare queste librerie aiuta a <strong>validare visualmente</strong> le output del modello (es. mostrare in rosso gli edifici danneggiati su una mappa).</li>
+<li><strong>TorchGeo</strong>: merita menzione di nuovo qui - è un <em>PyTorch Domain Library</em> ufficiale<a href="https://pytorch.org/blog/geospatial-deep-learning-with-torchgeo/#:~:text=Geospatial%20deep%20learning%20with%20TorchGeo,models%20specific%20to%20geospatial%20data">[76]</a> che fornisce dataset loader per molti dataset geospaziali (come quelli sopra), samplers per estrarre patch geolocalizzate bilanciando classi, e modelli pre-addestrati (es. una ResNet50 pre-addestrata su BigEarthNet). Semplifica la creazione di pipeline di training con PyTorch Lightning per compiti come segmentazione di edifici, classificazione uso suolo, ecc., riducendo il codice custom da scrivere. Ad esempio, TorchGeo include il datamodule per xView2, così puoi ottenere facilmente coppie pre/post e mask danno con un semplice API<a href="https://github.com/torchgeo/torchgeo#:~:text=from%20torchgeo,trainers%20import%20SemanticSegmentationTask">[77]</a><a href="https://github.com/torchgeo/torchgeo#:~:text=datasets%20can%20be%20challenging%20to,reprojected%20into%20a%20matching%20CRS">[78]</a>.</li>
+<li><strong>Altre</strong>: <em>scikit-image</em> per filtri su raster (es. filtro mediano per rimuovere speckle SAR), <em>OpenCV</em> se servono trasformazioni veloci, <em>pySAR</em> (o <em>Gamma</em>) per processare SAR (ad es. generare interferogrammi - ambito specialistico). <strong>SNAP</strong> (di ESA) ha API Java che si possono chiamare in Python (non triviale, ma utile per pre-processing Sentinel-1).</li>
+<li><strong>Database geospaziali</strong>: se i dati vettoriali diventano grandi, considerare <em>PostGIS</em> (PostgreSQL + estensione GIS) per memorizzare e interrogare efficacemente. Ad esempio, i risultati di building detection per una città (milioni di punti) possono essere messi in PostGIS e interrogati con indici spaziali (es. trovare edifici danneggiati in un raggio di 1 km da coordinate X). O ancora, in retrieval geospaziale per agenti LLM (vedi Spatial RAG), un database spaziale può filtrare rapidamente candidati (come suggerito da Yu et al. 2024<a href="https://arxiv.org/html/2502.18470v5#:~:text=Answering%20real,the%20answering%20process%20as%20a">[79]</a><a href="https://arxiv.org/html/2502.18470v5#:~:text=geographic%20relationships%20and%20semantic%20user,retriever%20that%20combines%20sparse%20spatial">[80]</a>). Con Python, si interagisce via SQLAlchemy/GeoAlchemy o direttamente con geopandas (che può leggere da PostGIS con read_postgis).</li>
+</ul>
+<p><strong>Quando usare cosa:</strong> - Se devi solo leggere qualche immagine, fare calcoli pixel-wise o maschere =&gt; <em>rasterio</em> + numpy è semplice e sufficiente. - Se hai bisogno di gestire un grande stack di dati (time series, data cube su area vasta) =&gt; <em>xarray + dask</em> è più appropriato (ma richiede riflettere su chunking e memoria). - Per pipeline a streaming (molte immagini indipendenti) =&gt; sfrutta <em>concurrent.futures</em> o <em>dask.bag</em> con rasterio (che rilascia GIL nelle operazioni I/O). - Per vettori, se &lt;100k features =&gt; <em>geopandas</em> va bene; &gt;100k considerare PostGIS o usare <em>spatialindex</em>/Rtree per query spaziali in-memory. - Per <em>serving tile maps</em> =&gt; <em>rio-tiler</em> per il backend (taglia immagini) e <em>folium/ipyleaflet</em> per frontend map. - Per <em>analisi raster-vector miste</em> (zonal stats, clip raster con maschera) =&gt; <em>rasterstats</em> è un pacchetto utile (costruito su rasterio). - Se stai lavorando con <em>dati 3D o LiDAR</em> =&gt; <em>PDAL</em> (Point Data Abstraction Lib) con binding Python o <em>pylas</em> per LAS.</p>
+<p><strong>Pipeline esempio (ottico + SAR):</strong> supponiamo di voler individuare aree alluvionate combinando Sentinel-1 e Sentinel-2: 1. <strong>Data loading:</strong> scarichiamo un&#39;immagine Sentinel-2 post-evento (es. banda infrarosso e rosso) e una Sentinel-1 coeva. Possiamo usare pystac-client per ottenere gli asset URL e scaricarli. Carichiamo con rasterio: s2 = rasterio.open(&#39;sentinel2.tif&#39;), s1 = rasterio.open(&#39;sentinel1.tif&#39;). 2. <strong>Pre-process:</strong> allineiamo risoluzione e CRS - ad es. portiamo Sentinel-1 (10 m, polarizzazione VV) nella grid di Sentinel-2 (10 m). Con rasterio: rasterio.warp.reproject(source=s1.read(1), src_transform=s1.transform, src_crs=s1.crs, destination=arr, dst_transform=s2.transform, dst_crs=s2.crs, dst_shape=s2.shape). Otteniamo arr SAR registrato. 3. <strong>Stack &amp; filter:</strong> normalizziamo le bande (es. Sentinel-1 in dB, applicando soglia per rimuovere rumore) e impiliamo: costruiamo un array 3-canali: NIR, Red, SAR. Possiamo farlo con numpy su piccole immagini, o con xarray (un DataArray multi-band). Applichiamo magari un filtro mediano sul SAR per ridurre speckle. 4. <strong>Inferenza modello:</strong> passiamo il tensor [H,W,3] al modello di segmentazione (es. U-Net addestrata su dataset di flood). Otteniamo una mask binaria predetta. 5. <strong>Post-process &amp; vectorize:</strong> usando <em>rasterio.features</em>, trasformiamo la mask in shapefile (poligoni allagati). shapes = rasterio.features.shapes(mask_pred, transform=s2.transform) fornisce geometrie; filtriamo quelle con area minima e le scriviamo con geopandas in un GeoJSON. 6. <strong>Visualizza/valida:</strong> apriamo la mappa con folium: folium.Map(...). Add layer Sentinel-2 RGB, poi add i poligoni alluvione semi-trasparenti in blu.</p>
+<p>Questa pipeline combina <strong>rasterio</strong> per I/O e warp, <strong>numpy/scikit-image</strong> per filtri, <strong>deep learning (PyTorch)</strong> per inferenza, <strong>rasterio.features/geopandas</strong> per output vettoriale. Se la scala cresce (immagini molto grandi o tante), possiamo distribuire su dask: ad es. leggere le immagini come dask array via rioxarray (rioxarray.open_rasterio(..., chunks=...)), fare calcoli in lazy, usare map_blocks per inferenza modello (se il modello è deployato in modo che dask possa chiamarlo - non banale, ma possibile con dask.delayed). Oppure processare a tile (es. 512x512) iterativamente.</p>
+<p><strong>Integrazione con LLM:</strong> i risultati geospaziali finali (es. shapefile di aree allagate con attributi) possono essere inseriti in un <em>knowledge base</em> testuale: ad esempio, generare un breve riassunto in JSON o CSV (50 km² allagati in regione X). Un agente LLM può poi fare query geospaziali semplici tramite codice Python (es. usando <em>shapely</em> per controllare se un punto è dentro area allagata) - come visto in approcci <em>Spatial-QA</em> di ricerca recente.</p>
+<p>In breve, <strong>librerie geospaziali Python offrono potenza simile a GIS desktop</strong> ma programmabile: da semplici buffer a complessi join spaziali o reproiezioni in massa. La chiave è scegliere lo strumento giusto in base a <strong>scalabilità e complessità</strong>: un mix di rasterio/geopandas per task mirati, xarray/dask per big data, database/servizi dedicati se necessario. Fortunatamente, la compatibilità reciproca è buona (geopandas può usare shapely/dask-geopandas per parallelismo, rasterio interagisce con numpy/xarray facilmente). Il tutto integrato con il mondo PyData (numpy, pandas) e ora PyTorch/TensorFlow per modelli ML crea un <strong>ecosistema potente per l&#39;AI geospaziale</strong>.</p>
+<h3 id="27-template-progetti-repos-di-riferimento-e-best-practice">2.7 Template Progetti, Repos di Riferimento e Best Practice</h3>
+<p>Per costruire uno stack <strong>production-ready</strong> è utile studiare progetti open-source esistenti che affrontano problemi simili. Ecco <strong>10 repository e template di riferimento (2025)</strong> da cui trarre insegnamenti, con motivazione:</p>
+<ul>
+<li><strong>LangChain</strong> - 【67†repo】 (framework per agenti e LLM apps). <strong>Perché:</strong> È lo standard de facto per orchestrare LLM con memory, tool e data augmentation. Studiare come struttura il codice modulare (chains, agents), il suo <strong>pyproject.toml</strong> con <em>uv</em> (lo mantengono con uv e rilasciano frequente, <del>14k commit) e come gestiscono integrazioni (es. vectorstores). <em>Aggiornamento:</em> v1.0 rilasciata 2025, repo attivissimo (commits daily)[[81]](<a href="https://github.com/hwchase17/langchain/commits#">https://github.com/hwchase17/langchain/commits#</a>:</del>:text=Commits%20%C2%B7%20langchain,%C2%B7%20fix%28infra%29%3A).</li>
+<li><strong>LlamaIndex (GPT Index)</strong> - <a href="https://github.com/run-llama/llama_index/releases#:~:text=Release%20Notes.%20%5B2025,core%20%5B0.14.0%5D.%20breaking%3A%20bumped">[82]</a> (framework RAG centrato sui dati). <strong>Perché:</strong> Fornisce pattern per indicizzare documenti e immagini e far retrieval efficiente per LLM. Ha componenti per query spaziali (es. potresti indicizzare coordinate e fare filtraggio). Vedere come implementa i vari Storage e i <strong>reader per dati eterogenei</strong>. Repo Python attivo (rilasci 0.14.x nel 2025).</li>
+<li><strong>Haystack</strong> (deepset.ai) - <a href="https://github.com/deepset-ai/haystack">GitHub</a>. <strong>Perché:</strong> End-to-end QA pipeline open-source, con supporto a document retrieval, generazione e persino agenti. Hanno un design orientato a <strong>produrre API</strong> (es. GraphQL) e pipeline componibili YAML. Studiare come definiscono i componenti (Reader, Retriever, Generator) e gestione config. Molto production-friendly (usato in aziende). Aggiornato regolarmente (v1.x in 2025).</li>
+<li><strong>TorchGeo</strong> - 【49†repo】 (PyTorch GeoAI library). <strong>Perché:</strong> Esempio di libreria <em>domain-specific</em> ben progettata: vedere struttura (modularità in datasets, samplers, models), test approfonditi, e uso di CI (hanno integrazione con OSGeo, ecc.). Attivamente mantenuta da Microsoft Research (recenti commit 2025). Utile per capire best practice nel <em>packaging</em> di modelli geospaziali (in HuggingFace Hub ad esempio).</li>
+<li><strong>Segment Anything (Meta AI)</strong> - <a href="https://github.com/facebookresearch/segment-anything">GitHub</a>. <strong>Perché:</strong> Anche se non geospaziale, <em>SAM</em> ha avuto impatto anche in RS (usato per segmentare oggetti generici in immagini satellitari). Il repo mostra come distribuire un modello foundation con annotazioni interattive. Da studiare la parte di <strong>inference pipeline ottimizzata</strong> (batched mask generation su immagini grandi) e il design del demo notebook/web. Ultimo update: 2023-11 (Meta ha rilasciato SAM-1).</li>
+<li><strong>xView2 First Place Solution</strong> - <a href="https://github.com/DIUx-xView/xView2_first_place#:~:text=DIUx,idea%20will%20be%20improved%20further">[83]</a> (DIUx-xView GitHub). <strong>Perché:</strong> Codice di un team vincitore per building damage. Permette di vedere un progetto completo: data preprocessing da xBD, modello (U-Net ensemble), inferenza e post-processing, e come packaging finale (hanno script per inferenza su directory di immagini). Sebbene del 2019, molti principi restano validi. Struttura in PyTorch con config JSON, training e inferenza separati. Utile per capire <em>tricks</em> per migliorare performance (es. split model in due stadi per localization vs classification<a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20U,sampler%20or%20the%20decoder">[84]</a>).</li>
+<li><strong>SpaceNet 8 Baseline (Flood Detection)</strong> - <a href="https://github.com/SpaceNetChallenge/SpaceNet8#:~:text=Algorithmic%20baseline%20for%20SpaceNet%208,%C2%B7%20Finetune%20the">[85]</a> (spacenet8 repo). <strong>Perché:</strong> Un esempio di <strong>pipeline multimodale</strong>: legge Sentinel-2 e -1, usa modelli per estrarre strade, edifici e alluvioni. Contiene notebook e script, e mostra come valutare risultati con metriche custom. Insegna come organizzare un progetto di challenge e applicare augmentations specifiche. Ultimo update 2023.</li>
+<li><strong>Raster Vision</strong> - <a href="https://nocomplexity.com/documents/fossml/generatedfiles/rastervision.html#:~:text=Complexity%20nocomplexity,metric%21%20Stars%20count%20are">[86]</a> (Azavea). <strong>Perché:</strong> Framework generale per CV su immagini geospaziali, scritto con architettura plugin. Consente definire pipeline di training con config JSON. Studiarne il <em>design config-driven</em>, l&#39;uso di Docker per isolare ambienti, e le componenti (scenario, dataset, backend). Dimostra come un tool può astrarre common tasks (clip, retiling, train, predict) per vari problemi. Aggiornato all&#39;ultima versione 0.31 nel 2025<a href="https://nocomplexity.com/documents/fossml/generatedfiles/rastervision.html#:~:text=Complexity%20nocomplexity,metric%21%20Stars%20count%20are">[86]</a>.</li>
+<li><strong>Lightning + Hydra Template</strong> - <em>Lightning-Hydra-Template</em> (ashleve) - <a href="https://github.com/ashleve/lightning-hydra-template">GitHub</a>. <strong>Perché:</strong> Un repository scaffolding molto popolare per progetti di deep learning. Unisce PyTorch Lightning per training modulare e Hydra per gestire config di esperimenti. Offre struttura pulita (src con pl_modules, data_module, configs separati per dataset/model/training). Anche se generale, è utile per vedere best practice di <em>organizzazione del codice ML</em>, logging (neptune/mlflow integrato), e automazione train/val. Continuamente aggiornato con nuove best practice (v2024).</li>
+<li><strong>Cookiecutter MLOps</strong> - (DrivenData Cookiecutter Data Science 2.0) - <a href="https://github.com/drivendata/cookiecutter-data-science">GitHub</a>. <strong>Perché:</strong> Un template di progetto che enfatizza il ciclo completo: data, modeling, deployment. Anche se più data-science oriented, fornisce un riferimento su come strutturare repository con cartelle per dati grezzi, intermedi, modelli salvati, report, ecc., e su come documentare le decisioni. Utile per non dimenticare nulla (ad es. include anche setup di CI e docs scaffolding).</li>
+</ul>
+<p>Oltre a questi, monitorare repository di aziende tech su <em>disaster response</em> - es: <strong>Google&#39;s flood forecasting</strong> (codice proprietario, ma pubblicazioni dettagliate), <strong>UNOSAT open products</strong> (script GIS). E community come <strong>OSGeo</strong> e <strong>OMEN (Open Mapping)</strong> per tool di mappatura automatica.</p>
+<p><strong>Repository structure ideale (AI+Geo):</strong> combinando ispirazione dai sopra, consigliamo: - <strong>Modularizzare</strong> per componenti: es. src/models/ per modelli ML, src/data/ per utilità di caricamento, src/utils/geo.py per funzioni geospaziali (buffer, reproject, etc.), src/api/ per il codice FastAPI. - <strong>Configs fuori dal codice</strong>: usare Hydra o Pydantic come discusso. Fornire config esempio per dataset (specie se open) cosicché nuovi contributori possano replicare risultati facilmente puntando ai path giusti. - <strong>Makefile/CLI</strong>: prevedere comandi rapidi: make data (scarica dataset open), make train (avvia training se previsto), make infer (esegue inferenza su input di esempio), make serve (lancia API). Questo riduce la frizione nell&#39;eseguire parti del progetto. - <strong>README</strong> completo: spiegare architettura, come settare env, lanciare test, ecc. Vedere README di LangChain<a href="https://github.com/langchain-ai/langchain#:~:text=LangChain%20is%20a%20framework%20for,as%20the%20underlying%20technology%20evolves">[6]</a> o TorchGeo per esempio di documentazione chiara e badge di build. - <strong>Test &amp; CI</strong>: includere qualche test anche per funzioni geospaziali (es. un test che crea un geometria, applica buffer e confronta area attesa). O test che il modello caricato produce output con dimensioni corrette su un dummy input.</p>
+<p>Infine, <strong>best practice</strong> generali: versionare i modelli (usare semver o data per sapere con quali dati sono stati addestrati), mantenere traccia dei <em>cron job</em> se ci sono (es. aggiornamento dati quotidiano), e includere strumenti di monitoring se in produzione (prometheus exporter per risorse e magari contatore di quante volte è chiamata una certa funzione di inferenza).</p>
+<h3 id="28-piano-pratico-setup-completo-in-7-10-giorni">2.8 Piano Pratico: Setup Completo in 7-10 giorni</h3>
+<p>Proponiamo ora una roadmap <em>day-by-day</em> (circa 2-3 ore al giorno per una settimana) per costruire lo stack locale e portarlo verso produzione minima.</p>
+<p><strong>Giorno 1: Ambiente e Struttura Iniziale</strong><br><strong>Obiettivo:</strong> Impostare l&#39;ambiente Python e la struttura base del progetto.<br>- <em>Attività:</em> Installare pyenv e creare una nuova versione Python 3.11 se necessario. Inizializzare un repository git (git init). Scegliere l&#39;<strong>environment manager</strong> (es. Poetry vs Conda): per iniziare, puoi usare Poetry per semplicità. Eseguire poetry init e aggiungere subito dipendenze principali: poetry add rasterio geopandas shapely torch torchvision fastapi uvicorn.<br>- <em>Comandi:</em> pyenv install 3.11.5 &amp;&amp; pyenv local 3.11.5 (oppure usare l&#39;interprete di sistema/conda), poetry init, poetry add .... Creare la struttura cartelle come in §2.1 (puoi usare cookiecutter data science come riferimento).<br>- <em>Risultato:</em> Progetto con layout directory, env Python attivo con pacchetti core installati. Verificare import cruciali (aprire REPL: import rasterio, torch, geopandas per confermare funzionano - se geopandas lamenta gdal, potrebbe servire apt-get install libgdal-dev o installare via conda invece). In caso di problemi di dipendenze (es. GDAL), aggiustare usando conda: e.g. creare env con mamba create -n myenv python=3.11 gdal rasterio geopandas.</p>
+<p><strong>Giorno 2: Tooling e Qualità del Codice</strong><br><strong>Obiettivo:</strong> Configurare pre-commit, lint, formatter, test scaffolding.<br>- <em>Attività:</em> Aggiungere <em>Black, Ruff, Mypy</em> al progetto (poetry add --dev black ruff mypy pre-commit pytest). Creare .pre-commit-config.yaml con hook:  </p>
+<p>repos:<br>- repo: <a href="https://github.com/astral-sh/ruff-pre-commit">https://github.com/astral-sh/ruff-pre-commit</a><br>rev: v0.5.4<br>hooks:<br>- id: ruff<br>args: [&quot;--fix&quot;] # lascia che ruff applichi fix semplici<br>- repo: <a href="https://github.com/psf/black">https://github.com/psf/black</a><br>rev: 23.9.1<br>hooks:<br>- id: black<br>- repo: <a href="https://github.com/pre-commit/mirrors-mypy">https://github.com/pre-commit/mirrors-mypy</a><br>rev: v1.5.1<br>hooks:<br>- id: mypy<br>- repo: local<br>hooks:<br>- id: pytest<br>name: pytest<br>entry: pytest<br>language: system<br>files: &quot;^tests/&quot;</p>
+<p>Installare i pre-commit hook (pre-commit install). Creare file di configurazione in pyproject.toml per black/ruff (line-length, etc. come in Medium combos<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311">[41]</a>). Creare uno stub di test in tests/test_basic.py con una asserzione banale (es. assert 2+2==4).<br>- <em>Comandi:</em> pre-commit run --all-files per testare i hook subito. pytest per vedere che la suite (con 1 test banale) passi.<br>- <em>Risultato:</em> Ogni commit ora formatterà automaticamente il codice e segnalerà problemi. La base di test è impostata (anche se triviale). L&#39;introduzione di errori di lint o type-check verrà bloccata dal hook, garantendo standard dal primo codice scritto.</p>
+<p><strong>Giorno 3: Ingestione Dati di Esempio</strong><br><strong>Obiettivo:</strong> Scaricare un piccolo dataset di esempio (es. 1 evento) e implementare script di lettura.<br>- <em>Attività:</em> Scegli un dataset target - p.es. immagini e label dell&#39;uragano Harvey 2017 (flood). Utilizza l&#39;API STAC planetario o direttamente link noti (Maxar Open Data, ecc.) per scaricare 1-2 immagini pre e post e qualche label vettoriale. Scrivi uno script Python in src/data/download_data.py che scarica questi file (puoi usare requests o pystac-client + urllib). Implementa una funzione per caricare in memoria una coppia di raster (usa rasterio).<br>- <em>Comandi:</em> Esempio: poetry add requests pystac-client. Esegui lo script: python src/data/download_data.py --event harvey (parametrizza in base all&#39;evento). Questo dovrebbe salvare file in data/raw/harvey/.<br>- <em>Risultato:</em> Disponi di un sottoinsieme di dati locali. Verifica aprendo con rasterio che i file siano leggibili e controlla dimensioni. Questo ti prepara terreno per sviluppare pipeline senza scaricare ogni volta (metti in .gitignore i dati). - <em>Extra:</em> Potresti scrivere un test per la funzione di load (es. assert img.shape == (….) atteso). Oppure generare un&#39;immagine sintetica per testare (utile per CI: non vorrai scaricare 100MB di dati in CI, ma puoi creare un GeoTIFF 10x10 in memory e passarlo alle funzioni per testare flusso).</p>
+<p><strong>Giorno 4: Modello e Pipeline Geospaziale</strong><br><strong>Obiettivo:</strong> Implementare la pipeline ottico+SAR -&gt; predizione -&gt; vettorializzazione su un caso di test.<br>- <em>Attività:</em> Se hai un modello pre-addestrato (ad es. potresti usare segnaposto come: se pixel SAR &gt; X e NDVI &lt; Y =&gt; flood), implementalo ora in src/models/model.py come funzione predict_flood(mask, arr_s2, arr_s1). Altrimenti, se hai tempo/dati, puoi addestrare un piccolo modello: installa Lightning (poetry add lightning) e scrivi un LightningModule di segmentazione. Ma date le tempistiche, assumiamo di usare un euristico semplice o un modello pre-addestrato caricato (es. utilizzare weights di torchvision segmentation e adattarlo).<br>- <em>Comandi:</em> Esegui la pipeline completa su un tile di test: leggi le immagini (Day3), passa al modello, ottieni mask. Usa geopandas per convertire in vettore e salva shapefile in data/predictions/. Visualizza il risultato (puoi creare un piccolo script con folium che carica immagine e overlay shapefile - aprilo in browser).<br>- <em>Risultato:</em> Pipeline locale funzionale su almeno un input. Validazione qualitativa: se modello non addestrato, va bene anche vedere che produce <em>qualcosa</em>. Questo step consolida l&#39;integrazione tra componenti geospaziali e ML. - <em>Extra:</em> Aggiungi log oppure stampa dei risultati (es. % pixel flood: 12%). Puoi anche calcolare una metrica se hai la verità a terra per quell&#39;immagine (se nel dataset c&#39;è mask manuale, confronta con predetta).</p>
+<p><strong>Giorno 5: API di Servizio e LLM Integration</strong><br><strong>Obiettivo:</strong> Creare un microservizio FastAPI che esponga la funzionalità e integri un LLM per Q&amp;A.<br>- <em>Attività:</em> Scrivere in src/api/app.py una FastAPI app con endpoint: /predict che accetta magari coordinate o id evento e restituisce quanti edifici/allagamenti trovati; /ask che accetta una domanda utente e usa un LLM chain per rispondere. Per quest&#39;ultimo, serve integrare l&#39;LLM: puoi usare OpenAI API (se hai key) o un modello open locale (installare pip install openai o transformers + un modello HF). Implementa semplice: ricevi domanda, in backend richiami la funzione interna (che eventualmente consulta i risultati geospaziali - se la domanda è tipo &quot;quanti edifici danneggiati a X&quot;, fai una query su geopandas data). Infine componi la risposta - se hai OpenAI, mandala con prompt contenente i dati come context.<br>- <em>Comandi:</em> Avvia il server locale: uvicorn src.api.app:app --reload e prova query con curl o nel browser (FastAPI doc UI). Esempio: GET /predict?event=harvey -&gt; ritorna JSON {&quot;flooded_area_km2&quot;: ..., &quot;buildings_damaged&quot;: ...}. Poi POST /ask con body {&quot;question&quot;: &quot;Quanti edifici danneggiati dall&#39;uragano Harvey?&quot;} -&gt; il codice prende buildings_damaged dal precedente output e formula &quot;Sono stati danneggiati circa XYZ edifici&quot;. (In futuro questo sarebbe fatto via agent).<br>- <em>Risultato:</em> Un prototipo di servizio <strong>disaster API</strong>. Non ancora robusto o con sicurezza, ma dimostra l&#39;idea. - <em>Extra:</em> Integrare l&#39;LLM vero e proprio - se OpenAI, aggiungi chiave in .env e usa openai.Completion.create(prompt=...). Oppure se locale, carica un piccolo modello (ex: pip install sentence-transformers e usa un modello Q/A come &quot;deepset/roberta-base-squad2&quot; con Transformers QA pipeline).</p>
+<p><strong>Giorno 6: Dockerizzazione e Portability</strong><br><strong>Obiettivo:</strong> Creare l&#39;immagine Docker dell&#39;app e testarla (CPU).<br>- <em>Attività:</em> Scrivere il Dockerfile basandoti sugli esempi (§2.3). Poiché il focus è leggero (no training pesante), potresti usare Python slim + pip. Attento alle dip geospaziali: aggiungi nel Dockerfile apt-get per geos/gdal. Esempio:  </p>
+<p>FROM python:3.11-slim<br>RUN apt-get update &amp;&amp; apt-get install -y libgdal-dev libgeos-dev<br>...<br>RUN pip install -r requirements.txt</p>
+<p>(Oppure usa miniconda image e conda install). Copia l&#39;app ed entrypoint.<br>- <em>Comandi:</em> docker build -t myapp:dev . (dalla root) e poi docker run --rm -p 8000:8000 myapp:dev. Verifica che facendo le stesse richieste di Day5 ottieni risposte. Se funziona in Docker, hai risolto eventuali gap di dipendenze nativi. Se fallisce (es. errori Import GDAL), sperimenta con base image differente (conda).<br>- <em>Risultato:</em> Container local funzionante. Ciò simula l&#39;ambiente di produzione. Dimensione immagine attuale? Forse ~1-2 GB con tutte le libs (geopandas e Torch gonfiano un po&#39;). Considera di ottimizzare multi-stage se tempo. - <em>Extra:</em> Testa multi-arch: se hai solo CPU local, almeno hai test su linux/amd64.</p>
+<p><strong>Giorno 7: Deploy su Cloud o Documentazione</strong><br><em>(Opzionale, se volessi proseguire oltre)</em><br><strong>Obiettivo:</strong> Preparare il terreno per deployment e scrivere doc finale.<br>- <em>Attività:</em> Scrivi documentazione utente: come usare API, come replicare i risultati (magari in README). Crea magari uno script di <em>smoke test</em> in tests/test_api.py che avvia test client FastAPI e chiama /predict su sample e verifica formato risposta.<br>- Considera dove deployare: potresti provare su <strong>Heroku</strong> (semplice per FastAPI, ma senza GPU) o <strong>Railway</strong>. Configura il Dockerfile per prod (es. usare gunicorn).<br>- Imposta eventuale CI/CD: ad esempio workflow GitHub Actions che su push su main builda l&#39;immagine e la pubblica su Docker Hub.<br>- <em>Risultato:</em> Progetto pronto per essere condiviso: codice, docker, doc e magari un link live (anche se performance limitate in free tier).</p>
+<p>Naturalmente, ogni fase può richiedere aggiustamenti. Ad esempio, potresti scoprire che un pacchetto manca - risolto aggiungendolo e rifacendo poetry.lock o environment.yml (un motivo per fissare environment presto).</p>
+<p>Il piano prevede ~7 giorni, ma potrebbe estendersi a 10 se dedichi tempo ad addestramento modello custom o a refine dell&#39;agente LLM. In tal caso: Giorno 8-9 potrebbe essere dedicato a fine-tuning di un modello (usando dataset open, e salvando i pesi), e Giorno 10 a integrazione di quell&#39;output nel servizio (es. endpoint /retrain se vuoi fare MLOps continuo).</p>
+<h3 id="29-azioni-immediate-prime-24h">2.9 Azioni Immediate (prime 24h)</h3>
+<p>Per partire subito, ecco una checklist rapida delle prime azioni da compiere:</p>
+<ul>
+<li><strong>1. Preparare l&#39;ambiente di sviluppo:</strong> Installare Anaconda/Miniconda o Poetry sul tuo sistema Linux. Aggiornare driver NVIDIA se prevedi test su GPU remota (Colab). Creare un nuovo env Python 3.11 pulito.</li>
+<li><strong>2. Inizializzare il progetto:</strong> Strutturare le cartelle come descritto e iniziare un git repo. Creare un repository remoto (GitHub) e fare il primo commit con README.md e pyproject.toml/requirements.txt.</li>
+<li><strong>3. Configurare i tool Dev:</strong> Impostare subito pre-commit e Black/Ruff. Eseguire pre-commit install così ogni file che creerai verrà già formattato e lintato su commit. Questo ti evita di accumulare debito tecnico di stile.</li>
+<li><strong>4. Recuperare dataset di esempio:</strong> Identificare un piccolo evento (anche solo un&#39;immagine pre/post dal Maxar Open Data o dal Copernicus EMS). Scaricali manualmente intanto (via browser o AWS CLI) e mettili in data/raw/. In parallelo, richiedi eventuali API key (es. OpenAI API se intendi usarla).</li>
+<li><strong>5. Studiare riferimenti:</strong> Dedica qualche ora a leggere documentazione di 1-2 strumenti chiave che userai per primi. Ad esempio: sintassi base di rasterio (leggi il tutorial ufficiale), uso base di FastAPI (come definire un endpoint e far girare uvicorn), e se non hai familiarità, la guida di pystac-client per capire come query i dati STAC<a href="https://pystac-client.readthedocs.io/en/stable/usage.html#:~:text=The%20following%20code%20creates%20an,Microsoft%20Planetary%20Computer%20root%20catalog">[87]</a><a href="https://pystac-client.readthedocs.io/en/stable/usage.html#:~:text=,Microsoft%20Planetary%20Computer%20STAC%20API">[88]</a>. Questo investimento iniziale ti farà risparmiare grattacapi dopo.</li>
+<li><strong>6. Impostare variabili config:</strong> Creare un file .env.example con dentro chiavi attese (es. OPENAI_API_KEY=) e aggiungerlo a git. Copiarlo in .env e valorizzare per dev. Includere nel README come ottenere e settare queste variabili (es. link alla pagina OpenAI per crear key).</li>
+<li><strong>7. Pianificare risorse computazionali:</strong> Dato che non hai GPU locale, decidere come testare parti pesanti. Esempio: configurare un notebook su Colab con repo GitHub collegato, così potrai eseguire inferenza su GPU li se serve. Oppure assicurati che il codice sia parametrizzato per usare .to(&#39;cpu&#39;) come default e funzioni comunque.</li>
+<li><strong>8. Comunicare e documentare:</strong> anche se sei solo sviluppatore, abituati a mantenere changelog o commit message chiari. Ad esempio, dopo Day1, scrivi un commit &quot;setup environment, add base deps (rasterio, torch, etc.) - verify imports OK&quot;. Questo ti aiuterà a tracciare progressi e facilitare eventuale coinvolgimento di altri collaboratori in futuro.</li>
+</ul>
+<p>Seguendo queste azioni nelle prime 24 ore, metterai basi solide: ambiente pronto, repo configurato con quality gate, e dati a disposizione per iniziare a sviluppare la <strong>funzionalità core</strong>. Da lì in poi, potrai iterare costruendo man mano la pipeline, sapendo di avere un <em>scaffolding</em> professionale attorno (test, lint, container) che ti supporta nel produrre codice affidabile e riproducibile.</p>
+<p><a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=Our%20main%20algorithm%20of%20choice,algorithm%20for%20semantic%20image%20segmentation">[1]</a> <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images">[54]</a> <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world">[55]</a> <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20U,sampler%20or%20the%20decoder">[84]</a> The xView2 AI Challenge | IBM</p>
+<p><a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge">https://www.ibm.com/think/insights/the-xview2-ai-challenge</a></p>
+<p><a href="https://github.com/torchgeo/torchgeo#:~:text=Image%3A%20TorchGeo%20logo">[2]</a> <a href="https://github.com/torchgeo/torchgeo#:~:text=First%20we%27ll%20import%20various%20classes,used%20in%20the%20following%20sections">[3]</a> <a href="https://github.com/torchgeo/torchgeo#:~:text=from%20torchgeo,trainers%20import%20SemanticSegmentationTask">[77]</a> <a href="https://github.com/torchgeo/torchgeo#:~:text=datasets%20can%20be%20challenging%20to,reprojected%20into%20a%20matching%20CRS">[78]</a> GitHub - torchgeo/torchgeo: TorchGeo: datasets, samplers, transforms, and pre-trained models for geospatial data</p>
+<p><a href="https://github.com/torchgeo/torchgeo">https://github.com/torchgeo/torchgeo</a></p>
+<p><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=search%20engines%20with%20LLMs%20to,more%20accurate%20and%20reliable%20answers">[4]</a> <a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=This%20teamwork%20reduces%20the%20chance,existent%20street">[5]</a> <a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=A%20RAG%20pipeline%20works%20like,The%20team%20includes">[9]</a> <a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=capture%20the%20essence%20of%20each,or%20another%20LLM%2C%20the%20model%E2%80%99s">[10]</a> <a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=Image%3A%20rag%20pipeline%20architecture%20diagram">[11]</a> <a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=find%20documents%20discussing%20%E2%80%9Creturns%2C%E2%80%9D%20%E2%80%9Cdownloads%2C%E2%80%9D,of%20the%20context%20it%20receives">[12]</a> How to Build a RAG Pipeline: A Step-by-Step Guide</p>
+<p><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline">https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline</a></p>
+<p><a href="https://github.com/langchain-ai/langchain#:~:text=LangChain%20is%20a%20framework%20for,as%20the%20underlying%20technology%20evolves">[6]</a> <a href="https://github.com/langchain-ai/langchain#:~:text=Why%20use%20LangChain%3F">[7]</a> GitHub - langchain-ai/langchain: The platform for reliable agents.</p>
+<p><a href="https://github.com/langchain-ai/langchain">https://github.com/langchain-ai/langchain</a></p>
+<p><a href="https://arxiv.org/html/2502.18470v5#:~:text=On%20the%20other%20hand%2C%20large,zhang2024bb%20%2C%20but%20the%20resulting">[8]</a> <a href="https://arxiv.org/html/2502.18470v5#:~:text=Answering%20real,the%20answering%20process%20as%20a">[79]</a> <a href="https://arxiv.org/html/2502.18470v5#:~:text=geographic%20relationships%20and%20semantic%20user,retriever%20that%20combines%20sparse%20spatial">[80]</a> Spatial-RAG: Spatial Retrieval Augmented Generation for Real-World Geospatial Reasoning Questions</p>
+<p><a href="https://arxiv.org/html/2502.18470v5">https://arxiv.org/html/2502.18470v5</a></p>
+<p><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20OG%20of%20Python%20package,be%20completely%20decoupled%20from%20a">[13]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20of%20the%20key%20faults,that%20are%20no%20longer%20useful">[14]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG">[17]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=">[18]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20core%20tradeoff%20with%20,possible%20leading%20to%20a%20potentially">[19]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=tools%20like%20,to%20build%20and%20publish%20Python">[20]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=specify%20upper%20and%20lower%20bounds,intended%20to%20be%20used%20widely">[21]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=pdm">[22]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Unlike%20the%20other%20tools%20on,on%20multiple%20versions%20of%20python">[23]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20downside%20to%20,%E2%80%9Cidiomatic%E2%80%9D%20in%20the%20long%20run%E2%80%A6">[24]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022">[27]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=written%20in%20Rust%20and%20is,rye">[28]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=dependencies.%20In%20mid%202024%2C%20,for%20reproducibility">[30]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20thing%20to%20note%20about,were%20using%20for%20different%20projects">[33]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict">[34]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=drop,it%20was%20released%20in%202022">[39]</a> <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=linter%20notes,it%20was%20released%20in%202022">[40]</a> Python has too many package managers</p>
+<p><a href="https://dublog.net/blog/so-many-python-package-managers/">https://dublog.net/blog/so-many-python-package-managers/</a></p>
+<p><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a> <a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a> <a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=We%20are%20starting%20from%20Miniconda,of%20dockerfile%20are%20as%20follows">[45]</a> Docker image for geospatial python application</p>
+<p><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application">https://www.geosynopsis.com/posts/docker-image-for-geospatial-application</a></p>
+<p><a href="https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI">[25]</a> uv</p>
+<p><a href="https://docs.astral.sh/uv/">https://docs.astral.sh/uv/</a></p>
+<p><a href="https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/#:~:text=updoot%20for%20,Here%20is%20their%20site">[26]</a> Poetry, Conda, Pipenv or just Pip. What are you using? : r/learnpython</p>
+<p><a href="https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/">https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/</a></p>
+<p><a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=benchmarks%20show%20that%20pixi%20is,on%20a%20M2%20MacBook%20Pro">[29]</a> <a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=In%20comparison%20with%20conda%2C%20pixi,conda%20packages%20for%20real%20reproducibility">[31]</a> <a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Reason%203%3A%20No%20more%20Miniconda,base%20environment">[32]</a> <a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=At%20prefix%2C%20we%E2%80%99re%20solving%20conda,tasks%20for%20collaboration%2C%20and%20more">[35]</a> <a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Image">[36]</a> 7 Reasons to Switch from Conda to Pixi | prefix.dev</p>
+<p><a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative">https://prefix.dev/blog/pixi_a_fast_conda_alternative</a></p>
+<p><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a> <a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=line,by%20Black%20fix%20%3D%20true">[38]</a> <a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311">[41]</a> <a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.mypy%5D%20python_version%20%3D%20,true%20plugins%20%3D">[42]</a> <a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=friction%20Python%20code%20quality%20with,commit%2C%20CI%2C%20and%20editor%20tips">[44]</a> 10 mypy/ruff/black/isort Combos for Zero-Friction Quality | by Syntal | Oct, 2025 | Medium</p>
+<p><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac">https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac</a></p>
+<p><a href="https://github.com/syrupy-project/syrupy#:~:text=syrupy,assert%20immutability%20of%20computed%20results">[43]</a> syrupy-project/syrupy: :pancakes: The sweeter pytest snapshot plugin</p>
+<p><a href="https://github.com/syrupy-project/syrupy">https://github.com/syrupy-project/syrupy</a></p>
+<p><a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=">[46]</a> <a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bproduction%5D%20DATABASE_URL%20%3D%20,Dynaconf%20can%20handle%20encrypted%20secrets">[47]</a> <a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=API_KEY%20%3D%20%22%40STRONGLY_ENCRYPTED%3Aprod_api_key_encrypted_value%22%20,can%20handle%20encrypted%20secrets">[48]</a> <a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=">[49]</a> <a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bdevelopment%5D%20DATABASE_URL%20%3D%20">[50]</a> <a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=DATABASE_URL%20%3D%20">[51]</a> <a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=">[52]</a> <a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=print%28f,Debug%20Mode%3A%20%7Bsettings.get%28%27DEBUG_MODE">[53]</a> Pydantic BaseSettings vs. Dynaconf A Modern Guide to Application Configuration | Leapcell</p>
+<p><a href="https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration">https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration</a></p>
+<p><a href="https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf#:~:text=Imagery%20openaccess,of%20imagery%20from%2015%20countries">[56]</a> [PDF] A Dataset for Assessing Building Damage from Satellite Imagery</p>
+<p><a href="https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf">https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf</a></p>
+<p><a href="https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#:~:text=The%20C2S,of%20chips%2C%20and%20water%20labels">[57]</a> Cloud to Street - Microsoft flood dataset - CMR Search</p>
+<p><a href="https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html">https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html</a></p>
+<p><a href="https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf#:~:text=The%20C2S,oz32gz">[58]</a> [PDF] C2SMS Floods - NET</p>
+<p><a href="https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf">https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf</a></p>
+<p><a href="https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1#:~:text=,to%20train%20and%20evaluate">[59]</a> (PDF) Sen1Floods11: a georeferenced dataset to train and test deep ...</p>
+<p><a href="https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1">https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1</a></p>
+<p><a href="https://eod-grss-ieee.com/dataset-detail/ekFTRmNnWmtGOE52LzgrVUE4Ykd4dz09#:~:text=Sen1Floods11%20is%20a%20surface%20water,consists%20of%204%2C831%20512">[60]</a> Sen1Floods11 - Earth Observation Database</p>
+<p><a href="https://eod-grss-ieee.com/dataset-detail/ekFTRmNnWmtGOE52LzgrVUE4Ykd4dz09">https://eod-grss-ieee.com/dataset-detail/ekFTRmNnWmtGOE52LzgrVUE4Ykd4dz09</a></p>
+<p><a href="https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.pdf#:~:text=,ter%20data%20set">[61]</a> [PDF] Sen1Floods11: A Georeferenced Dataset to Train and Test Deep ...</p>
+<p><a href="https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.pdf">https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.pdf</a></p>
+<p><a href="https://gee-community-catalog.org/projects/maxar_opendata/#:~:text=MAXAR%20Open%20Data%20Events%20,events%20like%20earthquakes%20and">[62]</a> MAXAR Open Data Events - awesome-gee-community-catalog</p>
+<p><a href="https://gee-community-catalog.org/projects/maxar_opendata/">https://gee-community-catalog.org/projects/maxar_opendata/</a></p>
+<p><a href="https://www.reddit.com/r/AirlinerAbduction2014/comments/17190ge/maxar_technologies_open_data_list_of_the_last/#:~:text=Maxar%20Technologies%20Open%20Data%20List,some%20of%20these%20datasets">[63]</a> Maxar Technologies Open Data List of the Last Decade of Global ...</p>
+<p><a href="https://www.reddit.com/r/AirlinerAbduction2014/comments/17190ge/maxar_technologies_open_data_list_of_the_last/">https://www.reddit.com/r/AirlinerAbduction2014/comments/17190ge/maxar_technologies_open_data_list_of_the_last/</a></p>
+<p><a href="https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These">[64]</a> ESSD - A globally distributed dataset of coseismic landslide mapping via multi-source high-resolution remote sensing images</p>
+<p><a href="https://essd.copernicus.org/articles/16/4817/2024/">https://essd.copernicus.org/articles/16/4817/2024/</a></p>
+<p><a href="https://github.com/microsoft/PlanetaryComputerExamples#:~:text=quickstarts%2C%20dataset%20examples%2C%20and%20tutorials">[65]</a> <a href="https://github.com/microsoft/PlanetaryComputerExamples#:~:text=If%20you%27re%20viewing%20this%20repository,quickstarts%2C%20dataset%20examples%2C%20and%20tutorials">[66]</a> GitHub - microsoft/PlanetaryComputerExamples: Examples of using the Planetary Computer</p>
+<p><a href="https://github.com/microsoft/PlanetaryComputerExamples">https://github.com/microsoft/PlanetaryComputerExamples</a></p>
+<p><a href="https://registry.opendata.aws/radiant-mlhub/#:~:text=Radiant%20MLHub%20,as%20other%20training%20data">[67]</a> Radiant MLHub - Registry of Open Data on AWS</p>
+<p><a href="https://registry.opendata.aws/radiant-mlhub/">https://registry.opendata.aws/radiant-mlhub/</a></p>
+<p><a href="https://medium.com/radiant-earth-insights/geospatial-models-now-available-in-radiant-mlhub-a41eb795d7d7#:~:text=Radiant%20MLHub%20has%20been%20the,ML%29%20algorithms%20since%202019">[68]</a> Geospatial Models Now Available in Radiant MLHub - Medium</p>
+<p><a href="https://medium.com/radiant-earth-insights/geospatial-models-now-available-in-radiant-mlhub-a41eb795d7d7">https://medium.com/radiant-earth-insights/geospatial-models-now-available-in-radiant-mlhub-a41eb795d7d7</a></p>
+<p><a href="https://storms.ngs.noaa.gov/storms/ian/index.html#:~:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote">[69]</a> Hurricane IAN Imagery</p>
+<p><a href="https://storms.ngs.noaa.gov/storms/ian/index.html">https://storms.ngs.noaa.gov/storms/ian/index.html</a></p>
+<p><a href="https://esri-disasterresponse.hub.arcgis.com/pages/imagery#:~:text=disasterresponse,major%20earthquakes%2C%20floods%2C%20storms">[70]</a> Imagery - Esri Disaster Response Program - ArcGIS Online</p>
+<p><a href="https://esri-disasterresponse.hub.arcgis.com/pages/imagery">https://esri-disasterresponse.hub.arcgis.com/pages/imagery</a></p>
+<p><a href="https://www.mdpi.com/2072-4292/16/11/1886#:~:text=The%20Diverse%20Mountainous%20Landslide%20Dataset,across%20different%20terrain%20in">[71]</a> The Diverse Mountainous Landslide Dataset (DMLD) - MDPI</p>
+<p><a href="https://www.mdpi.com/2072-4292/16/11/1886">https://www.mdpi.com/2072-4292/16/11/1886</a></p>
+<p><a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City">[72]</a> Landslide detection based on deep learning and remote sensing ...</p>
+<p><a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568">https://www.sciencedirect.com/science/article/pii/S2666592124000568</a></p>
+<p><a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%207mo%20ago">[73]</a> <a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%206mo%20ago">[74]</a> <a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=This,to">[75]</a> Rasterio vs Rioxarray : r/remotesensing</p>
+<p><a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/">https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/</a></p>
+<p><a href="https://pytorch.org/blog/geospatial-deep-learning-with-torchgeo/#:~:text=Geospatial%20deep%20learning%20with%20TorchGeo,models%20specific%20to%20geospatial%20data">[76]</a> Geospatial deep learning with TorchGeo - PyTorch</p>
+<p><a href="https://pytorch.org/blog/geospatial-deep-learning-with-torchgeo/">https://pytorch.org/blog/geospatial-deep-learning-with-torchgeo/</a></p>
+<p><a href="https://github.com/hwchase17/langchain/commits#:~:text=Commits%20%C2%B7%20langchain,%C2%B7%20fix%28infra%29%3A">[81]</a> Commits · langchain-ai/langchain - GitHub</p>
+<p><a href="https://github.com/hwchase17/langchain/commits">https://github.com/hwchase17/langchain/commits</a></p>
+<p><a href="https://github.com/run-llama/llama_index/releases#:~:text=Release%20Notes.%20%5B2025,core%20%5B0.14.0%5D.%20breaking%3A%20bumped">[82]</a> Releases · run-llama/llama_index - GitHub</p>
+<p><a href="https://github.com/run-llama/llama_index/releases">https://github.com/run-llama/llama_index/releases</a></p>
+<p><a href="https://github.com/DIUx-xView/xView2_first_place#:~:text=DIUx,idea%20will%20be%20improved%20further">[83]</a> DIUx-xView/xView2_first_place: 1st place solution for &quot;xView2 - GitHub</p>
+<p><a href="https://github.com/DIUx-xView/xView2_first_place">https://github.com/DIUx-xView/xView2_first_place</a></p>
+<p><a href="https://github.com/SpaceNetChallenge/SpaceNet8#:~:text=Algorithmic%20baseline%20for%20SpaceNet%208,%C2%B7%20Finetune%20the">[85]</a> Algorithmic baseline for SpaceNet 8 Challenge - GitHub</p>
+<p><a href="https://github.com/SpaceNetChallenge/SpaceNet8">https://github.com/SpaceNetChallenge/SpaceNet8</a></p>
+<p><a href="https://nocomplexity.com/documents/fossml/generatedfiles/rastervision.html#:~:text=Complexity%20nocomplexity,metric%21%20Stars%20count%20are">[86]</a> Raster Vision - Free and Open Machine Learning - NO Complexity</p>
+<p><a href="https://nocomplexity.com/documents/fossml/generatedfiles/rastervision.html">https://nocomplexity.com/documents/fossml/generatedfiles/rastervision.html</a></p>
+<p><a href="https://pystac-client.readthedocs.io/en/stable/usage.html#:~:text=The%20following%20code%20creates%20an,Microsoft%20Planetary%20Computer%20root%20catalog">[87]</a> <a href="https://pystac-client.readthedocs.io/en/stable/usage.html#:~:text=,Microsoft%20Planetary%20Computer%20STAC%20API">[88]</a> Usage - pystac-client 0.8.5 documentation</p>
+<p><a href="https://pystac-client.readthedocs.io/en/stable/usage.html">https://pystac-client.readthedocs.io/en/stable/usage.html</a></p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/geoai-startingpoint/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>
