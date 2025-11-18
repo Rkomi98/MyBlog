@@ -383,15 +383,61 @@
       background: rgba(15, 23, 42, 0.92);
       color: #f8fafc;
       padding: 1.2rem 1.4rem;
+      padding-right: 3.6rem;
       border-radius: 18px;
       overflow-x: auto;
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.95rem;
       box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      margin: 2rem 0;
+      position: relative;
     }
     body[data-theme="light"] .post-body pre {
       background: #0f172a;
       color: #f8fafc;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      background: rgba(96, 165, 250, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .code-copy-btn__icon {
+      font-size: 0.95rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      background: rgba(248, 250, 252, 0.85);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.92);
+      color: #ffffff;
     }
     .post-body img {
       max-width: 100%;
@@ -666,7 +712,7 @@
         <aside class="post-toc">
         <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
         <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#1-panoramica-architetturale-dello-stack-ai-geospaziale">1\. Panoramica architetturale dello Stack AI Geospaziale</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#architettura-locale-vs-produzione">Architettura locale vs produzione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-mappa-di-strumenti-e-risorse-2025">2\. Mappa di Strumenti e Risorse (2025)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#21-gestione-ambiente-python-venv-conda-poetry-ecc">2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#reproducibilit-gpugeo">Reproducibilità GPU/Geo</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#24-gestione-di-secret-e-configurazioni">2.4 Gestione di Secret e Configurazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#25-dataset-open-e-cataloghi-staccog-per-disastri">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#27-template-progetti-repos-di-riferimento-e-best-practice">2.7 Template Progetti, Repos di Riferimento e Best Practice</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#28-piano-pratico-setup-completo-in-7-10-giorni">2.8 Piano Pratico: Setup Completo in 7-10 giorni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#29-azioni-immediate-prime-24h">2.9 Azioni Immediate (prime 24h)</a></li>
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#1-panoramica-architetturale-dello-stack-ai-geospaziale">1\. Panoramica architetturale dello Stack AI Geospaziale</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#architettura-locale-vs-produzione">Architettura locale vs produzione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-mappa-di-strumenti-e-risorse-2025">2\. Mappa di Strumenti e Risorse (2025)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#21-gestione-ambiente-python-venv-conda-poetry-ecc">2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#reproducibilit-gpugeo">Reproducibilità GPU/Geo</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#ha-senso-tutto-questo-oggi-con-lai">Ha senso tutto questo oggi con l&#39;AI?</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#esempio-1-dockerfile-per-servizio-llmrag-fastapi-cpu">Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#24-gestione-di-secret-e-configurazioni">2.4 Gestione di Secret e Configurazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#25-dataset-open-e-cataloghi-staccog-per-disastri">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#27-template-progetti-repos-di-riferimento-e-best-practice">2.7 Template Progetti, Repos di Riferimento e Best Practice</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#28-piano-pratico-setup-completo-in-7-10-giorni">2.8 Piano Pratico: Setup Completo in 7-10 giorni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#29-azioni-immediate-prime-24h">2.9 Azioni Immediate (prime 24h)</a></li>
         </ul>
       </aside>
         <div class="post-body">
@@ -774,7 +820,7 @@
 </tr>
 </tbody></table>
 </div></figure><p><em>Tabelle note:</em> <strong>mamba</strong> è l&#39;implementazione in C++ di conda. Oggi <em>conda</em> stesso incorpora <em>libmamba</em> di default, quindi i due convergono in velocità. In ambienti data science, conda/mamba rimane popolare per facilità con pacchetti scientifici complicati, mentre in produzione spesso si <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict">preferisce pip/poetry</a> per evitare dipendenze extra e avere più controllo. Strumenti emergenti come uv e pixi mirano a unificare il meglio dei due mondi (velocità e completezza). Ad esempio, <strong>uv</strong> è sviluppato in Rust dai creatori di Ruff e punta a diventare il &quot;Cargo per Python&quot; (un unico tool per gestire versioni Python, dipendenze, virtualenv, publishing). <strong>Pixi</strong>, creato dal team di mamba, è un sostituto drop-in di conda scritto in Rust: utilizza <em>uv</em> per risolvere pacchetti pip, genera lockfile e rimuove la necessità di un base environment conda, migliorando drasticamente la velocità e l&#39;ergonomia per portare env conda in produzione.</p>
-<h3 id="reproducibilit-gpugeo">Reproducibilità GPU/Geo</h3>
+<h4 id="reproducibilit-gpugeo">Reproducibilità GPU/Geo</h4>
 <p>Per un progetto AI/RS su GPU in locale, conda offre spesso la via più semplice (es. <code>conda install pytorch cudatoolkit gdal rasterio</code> in un env) perché gestisce i &quot;binary&quot; compatibili (CUDA, GDAL). In alternativa, in ambienti containerizzati, si può optare per <strong>pip + Docker</strong> usando immagini base con driver appropriati (ne parleremo tra un attimo). </p>
 <p>In tutti i casi, è consigliato <strong>fissare le versioni</strong> in un lockfile (per esempio usando poetry.lock) o file requirements con hash, e documentare il setup (ad es. fornendo un environment.yml conda + requirements.txt pip per sicurezza).</p>
 <p>Un layout ideale del progetto prevede una struttura simile a:</p>
@@ -819,13 +865,65 @@ In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sist
 <blockquote>
 <p><strong>Consiglio:</strong> configurare tutti questi strumenti fin dall&#39;inizio. Ad esempio, aggiungere al pyproject.toml: black, ruff, isort, mypy con config coerente (stessa line-length, ecc.). Installare pre-commit e attivarlo (pre-commit install) in modo che ogni git commit lanci i controlli. Queste automazioni rendono lo sviluppo <strong>&quot;no drama&quot;</strong>: il dev può concentrarsi sulla logica AI/Geo, mentre gli strumenti mantengono il codice pulito e funzionante.</p>
 </blockquote>
+<h4 id="ha-senso-tutto-questo-oggi-con-lai">Ha senso tutto questo oggi con l&#39;AI?</h4>
+<p>Negli ultimi anni l&#39;introduzione dell&#39;AI negli strumenti di sviluppo ha rivoluzionato il modo in cui scriviamo, manteniamo e versioniamo il codice. Eppure, questa rivoluzione non ha eliminato la necessità di buone pratiche: ha semplicemente spostato il baricentro di ciò che conta davvero. L&#39;AI accelera, suggerisce, genera, ma non garantisce qualità e coerenza strutturale. Per questo, molti degli strumenti classici non solo restano rilevanti, ma in alcuni casi diventano più importanti di prima.</p>
+<p>Iniziamo da linting e formattazione. Non è più una questione di estetica, ma di avere più sostanza.</p>
+<p>Formatter come <strong>Black</strong> rimangono imprescindibili. Anche se l&#39;AI produce codice già leggibile, un formato coerente è essenziale per avere diff puliti e review senza frizioni. </p>
+<p>Quanto ai linters, strumenti come <strong>Ruff</strong> diventano fondamentali non per la parte estetica (che l&#39;AI già gestisce bene), ma per intercettare errori, import inutilizzati, codice morto o pattern rischiosi. L&#39;obiettivo non è rendere il codice &quot;più bello&quot;, ma evitare bug introdotti da generazioni un po&#39; troppo ottimistiche.</p>
+<p>Passiamo ai guardrails introdotti dal type checking.</p>
+<p>Con l&#39;AI che propone codice complesso o funzioni plausibili ma non sempre corrette, strumenti come <strong>Mypy</strong> o <strong>Pyright</strong> diventano essenziali come rete di sicurezza. La tipizzazione statica non è solo una misura di qualità, ma una guida strutturale che l&#39;AI stessa utilizza per generare soluzioni più precise. In particolare, nei moduli core di un progetto, un profilo di type checking semi-strict riduce enormemente il rischio di errori silenziosi (intendo errori che non si vedono per ora, ma emergono poi).</p>
+<p>Ora analizziamo il punto, secondo me più importante, il <strong>testing</strong>.</p>
+<p>Con test ben strutturati e snapshot test per output complessi, è possibile controllare che ottimizzazioni o refactor guidati dall’AI non modifichino comportamenti, diciamo, delicati. </p>
+<p>Siamo quasi arrivati in fondo, ora tocca al precommit, quello che io definisco la sentinella tra noi e git.</p>
+<p>Gli hook di <strong>pre-commit</strong> continuano a essere utili come ultimo filtro prima di far entrare codice su Git (con Git qui unifico Github e Gitlab). </p>
+<p>Black, Ruff e alcune pulizie leggere come rimozione di whitespace sono spesso sufficienti. Altri tool più pesanti, come Mypy, possono rimanere in CI per evitare rallentamenti locali. In progetti personali si può anche farne a meno, ma in team resta un meccanismo che evita piccoli errori inutili.</p>
+<p>Infine per indipendenza e riproducibilità resta il classico CI/CD</p>
+<p>Con l’AI che facilita generazioni di blocchi di codice interi, cresce la probabilità di modifiche involontariamente distruttive. Una pipeline CI minima, quindi linting, type checking e test, garantisce che ogni push sia valido in un ambiente pulito e controllato. </p>
+<p>Questo è un passaggio fondamentale per evitare che il codice generato dall&#39;AI rompa funzioni a distanza o introduca regressioni difficili da individuare.</p>
+<p>In conclusione, in un mondo in cui l’AI supporta lo sviluppo, gli strumenti di &quot;safety del codice&quot; non spariscono: si riposizionano. Black standardizza, Ruff protegge, Mypy o Pyright guidano, Pytest garantisce stabilità, la CI assicura riproducibilità. </p>
+<p>Quindi l’AI non elimina la necessità di queste pratiche. Anzi, le rende ancora più rilevanti perché aumenta il volume e la velocità del codice prodotto.</p>
+<p>La qualità non è più solo questione di scrittura, ma di ecosistema. E in questo ecosistema, l’AI è un acceleratore potente, ma non un sostituto!</p>
 <h3 id="23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</h3>
 <p>Containerizzare l&#39;app consente di uniformare ambiente (specialmente per librerie native e driver GPU) e facilitare il deploy. Presentiamo due esempi di <strong>Dockerfile</strong> ottimizzati, uno per un servizio LLM/RAG leggero, l&#39;altro per una pipeline geospaziale pesante, e una tabella di immagini base consigliate.</p>
-<p><strong>Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</strong></p>
-<p># Use Python slim base for minimal size<br>FROM python:3.11-slim as base<br><br/># Install system deps (if any minimal, e.g. git)<br>RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; rm -rf /var/lib/apt/lists/*<br><br/># Create non-root user<br>RUN useradd -m appuser<br>WORKDIR /app<br><br/># Install Poetry and dependencies<br>RUN pip install poetry==1.6.1<br>COPY pyproject.toml poetry.lock ./<br>RUN poetry config virtualenvs.create false &amp;&amp; poetry install --no-dev<br><br/># Copy app code<br>COPY src/ ./src/<br>COPY main.py ./<br>USER appuser<br><br/>CMD [&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;]</p>
+<h4 id="esempio-1-dockerfile-per-servizio-llmrag-fastapi-cpu">Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</h4>
+<pre><code class="language-Docker"># Use Python slim base for minimal size  
+FROM python:3.11-slim as base  
+# Install system deps (if any minimal, e.g. git)  
+RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; rm -rf /var/lib/apt/lists/\*  
+&lt;br/&gt;\# Create non-root user  
+RUN useradd -m appuser  
+WORKDIR /app  
+&lt;br/&gt;\# Install Poetry and dependencies  
+RUN pip install poetry==1.6.1  
+COPY pyproject.toml poetry.lock ./  
+RUN poetry config virtualenvs.create false &amp;&amp; poetry install --no-dev  
+&lt;br/&gt;\# Copy app code  
+COPY src/ ./src/  
+COPY main.py ./  
+USER appuser  
+&lt;br/&gt;CMD \[&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;\]
+</code></pre>
 <p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
 <p><strong>Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)</strong></p>
-<p># Start from miniconda image for geospatial ease<br>FROM continuumio/miniconda3:4.12.0 as builder<br><br/># Create env with mamba for faster solving<br>RUN conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy<br><br/># Copy environment file and install<br>COPY environment.yaml /tmp/environment.yaml<br>RUN mamba env update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy<br><br/># (Optional) Install additional pip packages if any<br>RUN pip install -U rastervision==0.31.2<br><br/># -- Second stage for final image (slimmer) --<br>FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, se serve<br># (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)<br><br/>COPY --from=builder /opt/conda /opt/conda<br>ENV PATH=&quot;/opt/conda/bin:$PATH&quot;<br>WORKDIR /app<br>COPY src/ ./src/<br>COPY entrypoint.py ./<br><br/>CMD [&quot;python&quot;, &quot;entrypoint.py&quot;]</p>
+<pre><code class="language-Docker">\# Start from miniconda image for geospatial ease  
+FROM continuumio/miniconda3:4.12.0 as builder  
+&lt;br/&gt;\# Create env with mamba for faster solving  
+RUN conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy  
+&lt;br/&gt;\# Copy environment file and install  
+COPY environment.yaml /tmp/environment.yaml  
+RUN mamba env update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy  
+&lt;br/&gt;\# (Optional) Install additional pip packages if any  
+RUN pip install -U rastervision==0.31.2  
+&lt;br/&gt;\# -- Second stage for final image (slimmer) --  
+FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, se serve  
+\# (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)  
+&lt;br/&gt;COPY --from=builder /opt/conda /opt/conda  
+ENV PATH=&quot;/opt/conda/bin:\$PATH&quot;  
+WORKDIR /app  
+COPY src/ ./src/  
+COPY entrypoint.py ./  
+&lt;br/&gt;CMD \[&quot;python&quot;, &quot;entrypoint.py&quot;\]
+</code></pre>
 <p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
 <p>Di seguito una tabella di <strong>immagini base</strong> comuni per vari scenari:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
@@ -1167,6 +1265,11 @@ In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sist
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
         : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
@@ -1260,6 +1363,85 @@ In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sist
           wrapper.dataset.enhanced = 'true';
         });
       }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true') {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">📋</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          pre.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
       const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
@@ -1319,6 +1501,7 @@ In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sist
         }
       });
       enhanceTables();
+      enhanceCodeBlocks();
       applyTheme(initialTheme);
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {
