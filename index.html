@@ -27,6 +27,7 @@
             --bg-secondary: #f9fafb;
             --bg-tertiary: #f3f4f6;
             --bg-card: #ffffff;
+            --bg-code: #edf1f5;
             
             --text-primary: #111827;
             --text-secondary: #4b5563;
@@ -53,6 +54,7 @@
             --bg-secondary: #1e293b;
             --bg-tertiary: #334155;
             --bg-card: #1e293b;
+            --bg-code: #1e2a44;
             
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
@@ -789,7 +791,7 @@
         }
 
         .article-body code {
-            background: var(--bg-tertiary);
+            background: var(--bg-code);
             padding: 2px 8px;
             border-radius: 4px;
             font-family: 'JetBrains Mono', monospace;
@@ -798,7 +800,7 @@
         }
 
         .article-body pre {
-            background: var(--bg-secondary);
+            background: var(--bg-code);
             padding: 1.5rem;
             border-radius: 10px;
             overflow-x: auto;
@@ -807,9 +809,10 @@
         }
 
         .article-body pre code {
-            background: none;
+            background: inherit;
             padding: 0;
             color: var(--text-primary);
+            display: block;
         }
 
         .article-body blockquote {

@@ -375,6 +375,61 @@
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.9rem;
     }
+    .post-body pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    body[data-theme="light"] .hljs {
+      color: #1f2937;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
     body[data-theme="light"] .post-body code {
       background: rgba(15, 23, 42, 0.08);
       color: #111827;
@@ -383,15 +438,63 @@
       background: rgba(15, 23, 42, 0.92);
       color: #f8fafc;
       padding: 1.2rem 1.4rem;
+      padding-right: 3.6rem;
       border-radius: 18px;
       overflow-x: auto;
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.95rem;
       box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      margin: 2rem 0;
+      position: relative;
     }
     body[data-theme="light"] .post-body pre {
-      background: #0f172a;
-      color: #f8fafc;
+      background: #f1f5f9;
+      color: #0f172a;
+      box-shadow: 0 18px 32px -30px rgba(15, 23, 42, 0.35), inset 0 0 0 1px rgba(15, 23, 42, 0.05);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      background: rgba(96, 165, 250, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .code-copy-btn__icon {
+      font-size: 0.95rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      background: rgba(248, 250, 252, 0.85);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.92);
+      color: #ffffff;
     }
     .post-body img {
       max-width: 100%;
@@ -666,7 +769,7 @@
         <aside class="post-toc">
         <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
         <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#1-panoramica-architetturale-dello-stack-ai-geospaziale">1\. Panoramica architetturale dello Stack AI Geospaziale</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-mappa-di-strumenti-e-risorse-2025">2\. Mappa di Strumenti e Risorse (2025)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#21-gestione-ambiente-python-venv-conda-poetry-ecc">2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#24-gestione-di-secret-e-configurazioni">2.4 Gestione di Secret e Configurazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#25-dataset-open-e-cataloghi-staccog-per-disastri">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#27-template-progetti-repos-di-riferimento-e-best-practice">2.7 Template Progetti, Repos di Riferimento e Best Practice</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#28-piano-pratico-setup-completo-in-7-10-giorni">2.8 Piano Pratico: Setup Completo in 7-10 giorni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#29-azioni-immediate-prime-24h">2.9 Azioni Immediate (prime 24h)</a></li>
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#1-panoramica-architetturale-dello-stack-ai-geospaziale">1\. Panoramica architetturale dello Stack AI Geospaziale</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#architettura-locale-vs-produzione">Architettura locale vs produzione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-mappa-di-strumenti-e-risorse-2025">2\. Mappa di Strumenti e Risorse (2025)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#21-gestione-ambiente-python-venv-conda-poetry-ecc">2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#reproducibilit-gpugeo">Reproducibilità GPU/Geo</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#ha-senso-tutto-questo-oggi-con-lai">Ha senso tutto questo oggi con l&#39;AI?</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#esempio-1-dockerfile-per-servizio-llmrag-fastapi-cpu">Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#24-gestione-di-secret-e-configurazioni">2.4 Gestione di Secret e Configurazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#25-dataset-open-e-cataloghi-staccog-per-disastri">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#27-template-progetti-repos-di-riferimento-e-best-practice">2.7 Template Progetti, Repos di Riferimento e Best Practice</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#28-piano-pratico-setup-completo-in-7-10-giorni">2.8 Piano Pratico: Setup Completo in 7-10 giorni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#29-azioni-immediate-prime-24h">2.9 Azioni Immediate (prime 24h)</a></li>
         </ul>
       </aside>
         <div class="post-body">
@@ -681,23 +784,38 @@
 <ul>
 <li><strong>Ingestione dati geospaziali:</strong> accesso a immagini satellitari ottiche (come per es. Sentinel-2) e radar SAR (come Sentinel-1) tramite cataloghi <strong>STAC/COG</strong> (Planetary Computer, Earth Data, ecc.). Ne parleremo bene dopo.</li>
 <li><strong>Pre-processing e analisi remote sensing:</strong> pipeline Python per leggere, allineare e processare grandi raster (con <em>rasterio</em>/<em>GDAL</em>, <em>rioxarray</em>/<em>dask</em> per dati voluminosi) e vettori (con <em>geopandas</em>/<em>shapely</em>). Si producono <em>features</em> come mappe di danno, estensione di alluvioni, edifici estratti, ecc.</li>
-<li><strong>Modelli di visione e geospaziali:</strong> applicazione di modelli di deep learning specializzati sui dati pre-processati. Per esempio <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=Our%20main%20algorithm%20of%20choice,algorithm%20for%20semantic%20image%20segmentation">IBM ha usato <strong>U-Net</strong></a> in una delle sue attività di ricerca per segmentazione di danni a post disastro naturale. Oppure, modelli derivati da <a href="https://arxiv.org/abs/2105.15203"><strong>SegFormer</strong></a> per fare change detection, come <a href="https://arxiv.org/abs/2407.15317v1">Open-CD</a>.<br>Librerie come <a href="https://github.com/torchgeo/torchgeo"><strong>TorchGeo</strong></a> forniscono dataset e modelli pre-addestrati specifici geospaziali.
-<img src="../../../Assets/Unet.png" alt="Immagine">
-<em>Figura 1 – Architettura U-Net con encoder/decoder e skip connection per segmentare danni e classi in immagini satellitari.</em>
-<img src="../../../Assets/TorchGeo.png" alt="Immagine">
-<em>Figura 2 – TorchGeo raccoglie dataset pronti all&#39;uso e modelli pre-addestrati pensati per scenari di computer vision geospaziale.</em></li>
-<li><strong>Integrazione LLM/RAG:</strong> un modulo di <strong>Retrieval-Augmented Generation (RAG)</strong> collega i risultati geospaziali con un <strong>LLM</strong> (es. GPT-4 o Llama 2) per consentire Q&amp;A e reportistica. L&#39;LLM può attingere a knowledge base aggiornate (documenti, descrizioni di luoghi) oltre che ai dati estratti. Ciò riduce le &quot;allucinazioni&quot; fornendo contesto verificabile<a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=search%20engines%20with%20LLMs%20to,more%20accurate%20and%20reliable%20answers">[4]</a><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=This%20teamwork%20reduces%20the%20chance,existent%20street">[5]</a>. Ad esempio, un utente può chiedere <em>&quot;Quanti edifici sono stati distrutti dal terremoto in Turchia?&quot;</em> e il sistema usa i dati estratti dal modello CV + descrizioni testuali per generare una risposta citando fonti.</li>
-<li><strong>Agenti e automazione:</strong> componenti agent-based (costruiti con framework come <strong>LangChain</strong> o <strong>Haystack</strong>) orchestrano i passi - es. un <em>agent</em> può: (1) interrogare un database geospaziale per trovare immagini post-disastro rilevanti, (2) eseguire il modello CV per ottenere le metriche (numero edifici danneggiati, area allagata, ecc.), (3) chiamare l&#39;LLM per spiegare i risultati. Questo consente workflow complessi &quot;domanda -&gt; azioni -&gt; risposta&quot; in modo modulare<a href="https://github.com/langchain-ai/langchain#:~:text=LangChain%20is%20a%20framework%20for,as%20the%20underlying%20technology%20evolves">[6]</a><a href="https://github.com/langchain-ai/langchain#:~:text=Why%20use%20LangChain%3F">[7]</a>.</li>
-<li><strong>Servizi e deploy:</strong> il tutto viene containerizzato (Docker) e può essere esposto tramite API REST (ad es. con <strong>FastAPI</strong>) o interfacce grafiche leggere. Ad esempio, una dashboard <em>Streamlit</em> può mostrare mappe interattive con i layer di danno e offrire una chat LLM per domande sul disastro.</li>
+<li><strong>Modelli di visione e geospaziali:</strong> applicazione di modelli di deep learning specializzati sui dati pre-processati. Per esempio <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=Our%20main%20algorithm%20of%20choice,algorithm%20for%20semantic%20image%20segmentation">IBM ha usato <strong>U-Net</strong></a> in una delle sue attività di ricerca per segmentazione di danni a post disastro naturale. Oppure, modelli derivati da <a href="https://arxiv.org/abs/2105.15203"><strong>SegFormer</strong></a> per fare change detection, come <a href="https://arxiv.org/abs/2407.15317v1">Open-CD</a>.<br>Librerie come <a href="https://github.com/torchgeo/torchgeo"><strong>TorchGeo</strong></a> forniscono dataset e modelli pre-addestrati specifici geospaziali.</li>
 </ul>
-<p><strong>Architettura locale vs produzione:</strong> in sviluppo si lavora su dataset di test (ad es. poche scene satellitari) usando notebook (Jupyter Lab) e script modulari (in src/). In produzione, i componenti vengono orchestrati in microservizi: un servizio per l&#39;analisi geospaziale (es. calcolo di mappe di rischio) e un servizio per l&#39;LLM (es. generazione risposte), con logging e monitoring. I dati grezzi (immagini) risiedono in uno storage (file system locale o bucket cloud), mentre i risultati intermedi (COG generati, shapefile, embedding vettoriali) possono essere cacheati per velocizzare le richieste ripetute. Si noti che i grandi LLM sono tipicamente usati via API esterne (OpenAI, etc.) o modelli open source ottimizzati (es. Llama 2 7B) se l&#39;inferenza on-premise è fattibile.</p>
-<p>Questa architettura <strong>ibrida AI + GIS</strong> supera i limiti individuali: i GIS classici faticano con input in linguaggio naturale, mentre <em>&quot;i LLM mostrano forti capacità linguistiche ma faticano nel ragionamento spaziale e nel ground truth geospaziale&quot;</em><a href="https://arxiv.org/html/2502.18470v5#:~:text=On%20the%20other%20hand%2C%20large,zhang2024bb%20%2C%20but%20the%20resulting">[8]</a>. Combinandoli, otteniamo un sistema in cui i modelli visivi forniscono &quot;occhi&quot; e dati strutturati, e gli LLM forniscono &quot;ragionamento linguistico&quot; su tali dati, con la possibilità di consultare basi conoscitive real-time. In sintesi, lo stack abbraccia il ciclo completo: <strong>Data (Geo) → AI Vision → Knowledge → LLM</strong>. La figura seguente illustra i componenti chiave e il flusso di dati nel sistema (dalla raccolta dati alla risposta all&#39;utente):</p>
-<p><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=A%20RAG%20pipeline%20works%20like,The%20team%20includes">[9]</a><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=capture%20the%20essence%20of%20each,or%20another%20LLM%2C%20the%20model%E2%80%99s">[10]</a></p>
-<p><em>Figura:</em> <em>Schema di una pipeline RAG geospaziale.</em> In blu i componenti di retrieval (database vettoriale, motore di ricerca), in arancione il modello generativo. La fase &quot;Spatial DB&quot; può includere filtri spaziali (e.g. <em>cerca immagini entro 10 km dall&#39;epicentro</em>), migliorando pertinenza e precisione<a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=Image%3A%20rag%20pipeline%20architecture%20diagram">[11]</a><a href="https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=find%20documents%20discussing%20%E2%80%9Creturns%2C%E2%80%9D%20%E2%80%9Cdownloads%2C%E2%80%9D,of%20the%20context%20it%20receives">[12]</a>.</p>
+<p><img src="../../../Assets/Unet.png" alt="Immagine">
+<em>Figura 1 – Architettura U-Net con encoder/decoder e skip connection per segmentare danni e classi in immagini satellitari.</em></p>
+<p><img src="../../../Assets/TorchGeo.png" alt="Immagine">
+<em>Figura 2 – TorchGeo raccoglie dataset pronti all&#39;uso e modelli pre-addestrati pensati per scenari di computer vision geospaziale.</em></p>
+<ul>
+<li><p><strong>Integrazione LLM/RAG:</strong> un modulo di <strong>Retrieval-Augmented Generation (RAG)</strong> collega i risultati geospaziali con un <strong>LLM</strong> (es. GPT-5 o Mistral Large) per consentire Q&amp;A e reportistica. L&#39;LLM può attingere a knowledge base aggiornate (documenti, descrizioni di luoghi) oltre che ai dati estratti. Ciò riduce il problema delle allucinazioni fornendo contesto verificabile. Ad esempio, un utente può chiedere <em>&quot;Quanti edifici sono stati distrutti dal terremoto in Turchia?&quot;</em> e il sistema usa i dati estratti dal modello CV + descrizioni testuali per generare una risposta citando fonti.</p>
+</li>
+<li><p><strong>Agenti e automazione:</strong> componenti agent-based (costruiti con framework come <strong>LangChain</strong>, <strong>Haystack</strong> o Datapizza-AI) orchestrano i passi e le chiamate a determinati strumenti. <br>In particolare un <em>agent</em> può: </p>
+<ol>
+<li>interrogare un <em>database geospaziale</em> per trovare immagini post-disastro rilevanti;</li>
+<li>eseguire il modello di computer vision per ottenere le metriche (numero edifici danneggiati, area alluvionata, ecc.);</li>
+<li>chiamare l&#39;LLM per spiegare i risultati.</li>
+</ol>
+<p>  Questo consente workflow complessi &quot;domanda -&gt; azioni -&gt; risposta&quot; in modo modulare.</p>
+</li>
+<li><p><strong>Servizi e deploy:</strong> il tutto viene containerizzato (Docker) e può essere esposto tramite API REST (ad es. con <a href="https://fastapi.tiangolo.com/"><strong>FastAPI</strong></a>) o interfacce grafiche leggere. Ad esempio, una dashboard <em>Streamlit</em> può mostrare mappe interattive con i layer di danno e offrire una chat LLM per domande sul disastro.</p>
+</li>
+</ul>
+<h3 id="architettura-locale-vs-produzione">Architettura locale vs produzione</h3>
+<p>Quando si sviluppa la soluzione, è buona prassi lavorare su dataset di test (per esempio su poche scene satellitari rappresentative) usando notebook (come Jupyter Lab, Colab, ecc.) oppure script modulari (in src/). </p>
+<p>In produzione invece, i singoli <strong>componenti</strong> vengono orchestrati in <strong>microservizi</strong>: può esserci un servizio per l&#39;analisi geospaziale (es. calcolo di mappe di rischio) e un servizio per l&#39;LLM (es. generazione risposte), con logging e monitoring. I dati grezzi in questo caso, come le immagini, risiedono in uno storage (o file system locale o bucket cloud), mentre i risultati intermedi, come i COG (Cloud Optimized GeoTIFF) generati, shapefile, embedding vettoriali,  possono essere inseriti in cache per velocizzare le richieste ripetute. </p>
+<p>Vorrei far notare che i modelli di linguaggio sono tipicamente usati via API esterne (OpenAI, etc.) o, nel caso di modelli open source ottimizzati (es. gemma3n 4B), l&#39;inferenza avviene on-premise.</p>
+<p>Come leggevo in <a href="https://arxiv.org/html/2502.18470v5#:~:text=On%20the%20other%20hand%2C%20large,zhang2024bb%20%2C%20but%20the%20resulting">questo paper</a>, questa architettura <strong>ibrida AI + GIS</strong> supera i limiti dei singoli sistemi: quelli GIS classici faticano con input in linguaggio naturale, mentre <em>&quot;i Large Language Model mostrano forti capacità linguistiche ma faticano nel ragionamento spaziale e nel ground truth geospaziale&quot;</em>. Combinandoli, otteniamo un sistema in cui i modelli visivi forniscono &quot;occhi&quot; e dati strutturati, e gli LLM forniscono &quot;ragionamento linguistico&quot; su tali dati, con la possibilità di consultare basi conoscitive real-time. In sintesi, lo stack abbraccia il ciclo completo: <strong>Data (Geo) → AI Vision → Knowledge → LLM</strong>. La figura seguente illustra i componenti chiave e il flusso di dati nel sistema (dalla raccolta dati alla risposta all&#39;utente):</p>
+<p><img src="../../../Assets/framework.png" alt="Immagine"></p>
+<p><em>Figura 3 – Schema riassuntivo dello stack GeoAI che collega ingestion e analisi geospaziale, modelli CV, componenti RAG/LLM e servizi di deployment orchestrati da agenti.</em> </p>
 <h2 id="2-mappa-di-strumenti-e-risorse-2025">2. Mappa di Strumenti e Risorse (2025)</h2>
-<p>Di seguito presentiamo le principali opzioni tecnologiche per ciascun aspetto dello stack - gestione ambiente Python, strumenti di sviluppo, container base, dataset geospaziali open e librerie chiave - confrontandone caratteristiche, vantaggi e stato di aggiornamento.</p>
+<p>In questo capitolo vediamo insieme le principali opzioni per ciascun aspetto dello stack: dalla gestione ambiente Python, agli strumenti di sviluppo, passando per le basi sui container, i dataset geospaziali open e le librerie chiave. L&#39;obiettivo non sarà solo conoscere tutto questo, ma anche avere in mente un confronto delle caratteristiche, esponendo i vantaggi di ciascun metodo.</p>
 <h3 id="21-gestione-ambiente-python-venv-conda-poetry-ecc">2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)</h3>
-<p>Una base solida è un <strong>ambiente Python riproducibile</strong> con tutte le dipendenze (inclusi pacchetti per GPU e geospatial). La tabella seguente confronta gli approcci più diffusi nel 2025:</p>
+<p>Una cosa su cui siamo tutti d&#39;accordo: per avere una base solida è necessario un <strong>ambiente Python riproducibile</strong> con tutte le dipendenze inclusi pacchetti per GPU e le librerie geospaziali. </p>
+<p>La tabella seguente confronta gli approcci più diffusi oggi (nel 2025):</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
@@ -712,83 +830,158 @@
 <td><strong>pip + venv</strong></td>
 <td>Installer + env isolato</td>
 <td>Semplice e nativo; velocità nell&#39;installazione diretta</td>
-<td>Risoluzione dipendenze limitata (installazione greedy)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20OG%20of%20Python%20package,be%20completely%20decoupled%20from%20a">[13]</a>; no lockfile nativo; richiede rimozione manuale sub-deps non usati<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20of%20the%20key%20faults,that%20are%20no%20longer%20useful">[14]</a></td>
-<td>pip 23.2 (2023)</td>
+<td>Risolutore <a href="https://debuglab.net/2024/01/26/resolving-new-pip-backtracking-runtime-issue/"><strong>non più greedy</strong></a> ma comunque meno potente di solver SAT; no lockfile nativo; richiede <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20OG%20of%20Python%20package,be%20completely%20decoupled%20from%20a">rimozione manuale sub-deps non usati</a></td>
+<td>pip 25.3 (2025)</td>
 </tr>
 <tr>
 <td><strong>conda / mamba</strong></td>
 <td>Gestore pacchetti con solver SAT C++</td>
-<td>Gestisce librerie <strong>non-Python</strong> (es. GDAL, PROJ) in env isolati<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>; risoluzione completa e veloce grazie al solver <em>libmamba</em><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG">[17]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=">[18]</a></td>
-<td>Ambiente base pesante (hundreds MB); manca lockfile out-of-the-box; a volte necessità di mix pip→ possibili conflitti<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20core%20tradeoff%20with%20,possible%20leading%20to%20a%20potentially">[19]</a></td>
-<td>Conda 23.7 (2024)</td>
+<td><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">Gestisce librerie <strong>non-Python</strong></a> (es. GDAL, PROJ) in env isolati; risoluzione completa e veloce grazie al solver <em>libmamba</em></td>
+<td>Ambiente base pesante (hundreds MB); manca lockfile out-of-the-box; a volte necessità di mix pip→ possibili conflitti</td>
+<td>Conda 25.9.1 (2025)</td>
 </tr>
 <tr>
 <td><strong>Poetry</strong></td>
 <td>Gestore PyPI con lockfile</td>
-<td>Usa standard <em>pyproject.toml</em> unificato<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=tools%20like%20,to%20build%20and%20publish%20Python">[20]</a>; genera <strong>lockfile</strong> multi-piattaforma per piena riproducibilità; gestisce env virtuale automaticamente</td>
-<td>Risolutore in Python relativamente lento su grandi req. (DFS backtracking)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG">[17]</a>; lockfile voluminoso; attenzione a vincoli eccessivi (^version) che possono causare conflitti in team ampi<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=specify%20upper%20and%20lower%20bounds,intended%20to%20be%20used%20widely">[21]</a></td>
-<td>Poetry 1.6 (2023)</td>
+<td>Usa standard <em>pyproject.toml</em> unificato; genera <strong>lockfile</strong> multi-piattaforma per riproducibilità; gestisce env virtuale automaticamente</td>
+<td>Risolutore in Python relativamente lento su grandi req. (DFS backtracking); lockfile voluminoso; attenzione a vincoli eccessivi (^version) che possono causare conflitti in team ampi.</td>
+<td>Poetry 2.1 (2025)</td>
 </tr>
 <tr>
 <td><strong>PDM / Hatch</strong></td>
 <td>Gestori moderni PyPI</td>
-<td><strong>PDM</strong> supporta PEP 582 (ambiente locale senza activate)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=pdm">[22]</a>; <strong>Hatch</strong> funge anche da build system completo e consente test multi-versione Python<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Unlike%20the%20other%20tools%20on,on%20multiple%20versions%20of%20python">[23]</a></td>
+<td><strong>PDM</strong> supporta PEP 582 (ambiente locale senza activate); <strong>Hatch</strong> funge anche da build system completo e consente test multi-versione Python</td>
 <td>Meno diffusi della triade pip/conda/poetry; Hatch ha curva apprendimento più alta e focus packaging (non solo env)</td>
-<td>PDM 2.5 (2024), Hatch 1.7 (2023)</td>
-</tr>
-<tr>
-<td><strong>pipenv</strong> <em>(legacy)</em></td>
-<td>Pip + virtualenv unificati</td>
-<td>Facile bootstrap con <em>Pipfile</em> e <em>Pipfile.lock</em> (risoluzione iniziale)</td>
-<td>Risoluzione non più avanzata di pip (usa pip internamente)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20downside%20to%20,%E2%80%9Cidiomatic%E2%80%9D%20in%20the%20long%20run%E2%80%A6">[24]</a>; progetto meno attivo; formato Pipfile meno &quot;idiomatico&quot; dopo PEP-621 (pyproject)</td>
-<td>Pipenv 2023.9 (2023)</td>
+<td>PDM 2.26 (2025), Hatch 1.15 (2025)</td>
 </tr>
 <tr>
 <td><strong>uv (Astral)</strong></td>
 <td>Tool unificato all-in-one (Rust)</td>
-<td><strong>Estremamente veloce</strong> (10-100× pip) grazie a core in Rust<a href="https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI">[25]</a>; rimpiazza pip, pipx, poetry, pyenv con un solo strumento<a href="https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI">[25]</a>; supporto lockfile universale e workspace multi-progetto; integrazione trasparente con venv esistenti<a href="https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/#:~:text=updoot%20for%20,Here%20is%20their%20site">[26]</a> (puoi attivare uv, poi usare pip normale se vuoi)</td>
-<td>API e CLI ancora instabili (progetto giovane); community emergente (uv è sviluppato da Astral.sh, gli autori del linter Ruff che in passato ha rapidamente soppiantato i predecessori)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022">[27]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=written%20in%20Rust%20and%20is,rye">[28]</a></td>
-<td>uv 0.5.4 (2024)</td>
+<td><a href="https://docs.astral.sh/uv/"><strong>Estremamente veloce</strong></a> (10-100× pip) grazie a core in Rust; rimpiazza pip, pipx, poetry, pyenv con un solo strumento; supporto lockfile universale e workspace multi-progetto; integrazione trasparente con venv esistenti (puoi attivare uv, poi usare pip normale se vuoi)</td>
+<td>API e CLI ancora instabili (progetto giovane); community emergente</td>
+<td>uv 0.9.9 (2025)</td>
 </tr>
 <tr>
 <td><strong>pixi (prefix.dev)</strong></td>
 <td>Package manager conda-like (Rust)</td>
-<td><strong>Velocità</strong> <del>3× micromamba, &gt;10× conda (risoluzione + install)[[29]](<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#">https://prefix.dev/blog/pixi_a_fast_conda_alternative#</a>:</del>:text=benchmarks%20show%20that%20pixi%20is,on%20a%20M2%20MacBook%20Pro); supporta lockfile cross-platform proprio (risolve uno dei limiti di conda)<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=dependencies.%20In%20mid%202024%2C%20,for%20reproducibility">[30]</a>; integra pacchetti PyPI nel solver con unificati (usa librerie di uv)<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=In%20comparison%20with%20conda%2C%20pixi,conda%20packages%20for%20real%20reproducibility">[31]</a>; niente base env conda da installare (eseguibile standalone)<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Reason%203%3A%20No%20more%20Miniconda,base%20environment">[32]</a></td>
-<td>Ecosistema nuovo (rilasci &lt;1 anno); meno pacchetti precompilati rispetto a conda-forge (usa comunque i binari conda-forge sotto il cofano); alcuni comandi in evoluzione</td>
-<td>pixi 0.3 (2024)</td>
+<td><a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=benchmarks%20show%20that%20pixi%20is,on%20a%20M2%20MacBook%20Pro"><strong>Velocità</strong></a> <del>4× micromamba, &gt;10× conda (risoluzione + install); supporta lockfile cross-platform proprio (risolve uno dei limiti di conda); integra pacchetti PyPI nel solver con unificati (<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative">usa librerie di uv</a>); niente base env conda da installare ([eseguibile standalone](<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#">https://prefix.dev/blog/pixi_a_fast_conda_alternative#</a>:</del>:text=Reason%203%3A%20No%20more%20Miniconda,base%20environment))</td>
+<td>Ecosistema nuovo (rilasci &lt;1 anno); meno pacchetti precompilati rispetto a conda-forge; alcuni comandi sono ancora in evoluzione</td>
+<td>pixi 0.59 (2025)</td>
 </tr>
 <tr>
 <td><strong>pyenv</strong></td>
 <td>Gestore versioni Python</td>
-<td>Permette installare e switchare versioni Python diverse facilmente per progetto<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20thing%20to%20note%20about,were%20using%20for%20different%20projects">[33]</a> (utile per test multi-versione o legacy)</td>
+<td>Permette installare e switchare versioni Python diverse facilmente per progetto (utile per test multi-versione o legacy)</td>
 <td>Non gestisce i pacchetti; usato in combinazione con venv/poetry; se usato global può creare confusione su versioni attive</td>
-<td>pyenv 2.3.24 (2025)</td>
+<td>pyenv 2.6.12 (2025)</td>
 </tr>
 </tbody></table>
-</div></figure><p><em>Tabelle note:</em> <strong>mamba</strong> è l&#39;implementazione in C++ di conda - oggi <em>conda</em> stesso incorpora <em>libmamba</em> di default, quindi i due convergono in velocità<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=">[18]</a>. In ambienti data science, conda/mamba rimane popolare per facilità con pacchetti scientifici complicati, mentre in produzione spesso si preferisce pip/poetry per evitare dipendenze extra e avere più controllo<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict">[34]</a>. Strumenti emergenti come uv e pixi mirano a unificare il meglio dei due mondi (velocità e completezza). Ad esempio, <strong>uv</strong> è sviluppato in Rust dai creatori di Ruff e punta a diventare il &quot;Cargo per Python&quot; (un unico tool per gestire versioni Python, dipendenze, virtualenv, publishing)<a href="https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI">[25]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022">[27]</a>. <strong>Pixi</strong>, creato dal team di mamba, è un sostituto drop-in di conda scritto in Rust: utilizza <em>uv</em> per risolvere pacchetti pip, genera lockfile e rimuove la necessità di un base environment conda, migliorando drasticamente la velocità e l&#39;ergonomia per portare env conda in produzione<a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=At%20prefix%2C%20we%E2%80%99re%20solving%20conda,tasks%20for%20collaboration%2C%20and%20more">[35]</a><a href="https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Image">[36]</a>.</p>
-<p><strong>Reproducibilità GPU/Geo:</strong> Per un progetto AI/RS su GPU in locale, conda offre spesso la via più semplice (es. conda install pytorch cudatoolkit=... gdal rasterio in un env) perché gestisce i binari compatibili (CUDA, GDAL). In alternativa, in ambienti containerizzati, si può optare per <strong>pip + Docker</strong> usando immagini base con driver appropriati (vedi §2.3). In tutti i casi, è consigliato <strong>fissare le versioni</strong> in un lockfile (es. poetry.lock) o file requirements con hash, e documentare il setup (ad es. fornendo un environment.yml conda + requirements.txt pip per sicurezza).</p>
+</div></figure><p><em>Tabelle note:</em> <strong>mamba</strong> è l&#39;implementazione in C++ di conda. Oggi <em>conda</em> stesso incorpora <em>libmamba</em> di default, quindi i due convergono in velocità. In ambienti data science, conda/mamba rimane popolare per facilità con pacchetti scientifici complicati, mentre in produzione spesso si <a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict">preferisce pip/poetry</a> per evitare dipendenze extra e avere più controllo. Strumenti emergenti come uv e pixi mirano a unificare il meglio dei due mondi (velocità e completezza). Ad esempio, <strong>uv</strong> è sviluppato in Rust dai creatori di Ruff e punta a diventare il &quot;Cargo per Python&quot; (un unico tool per gestire versioni Python, dipendenze, virtualenv, publishing). <strong>Pixi</strong>, creato dal team di mamba, è un sostituto drop-in di conda scritto in Rust: utilizza <em>uv</em> per risolvere pacchetti pip, genera lockfile e rimuove la necessità di un base environment conda, migliorando drasticamente la velocità e l&#39;ergonomia per portare env conda in produzione.</p>
+<h4 id="reproducibilit-gpugeo">Reproducibilità GPU/Geo</h4>
+<p>Per un progetto AI/RS su GPU in locale, conda offre spesso la via più semplice (es. <code>conda install pytorch cudatoolkit gdal rasterio</code> in un env) perché gestisce i &quot;binary&quot; compatibili (CUDA, GDAL). In alternativa, in ambienti containerizzati, si può optare per <strong>pip + Docker</strong> usando immagini base con driver appropriati (ne parleremo tra un attimo). </p>
+<p>In tutti i casi, è consigliato <strong>fissare le versioni</strong> in un lockfile (per esempio usando poetry.lock) o file requirements con hash, e documentare il setup (ad es. fornendo un environment.yml conda + requirements.txt pip per sicurezza).</p>
 <p>Un layout ideale del progetto prevede una struttura simile a:</p>
-<p>proj-root/<br>├── src/ # codice applicativo (package principale)<br>├── notebooks/ # Jupyter notebook di esplorazione<br>├── data/ # dati grezzi o di esempio (gitignored se grandi)<br>├── models/ # modelli salvati o pesi<br>├── tests/ # test unità/integrati<br>├── configs/ # config per Hydra/pydantic (es. dev.yaml, prod.yaml)<br>├── Dockerfile # definizione container<br>├── pyproject.toml # specifiche package/dep (poetry/pdm)<br>├── requirements.txt # dipendenze (se pip)<br>├── Makefile # comandi utili (setup, run, lint, test, deploy)<br>└── README.md # documentazione progetto</p>
-<p>Questa organizzazione segue in parte il modello <em>Cookiecutter Data Science</em> (per separare chiaramente code, data, docs) e facilita il passaggio <strong>dallo sviluppo locale alla produzione</strong>: il codice è impacchettato (in src/ con eventuale _<em>init</em>_.py), i test assicurano funzionamento, e config/secrets separati per ambiente permettono deploy consistenti.</p>
+<pre><code class="hljs language-bash">proj-root/  
+├── src/ <span class="hljs-comment"># codice applicativo (package principale)  </span>
+├── notebooks/ <span class="hljs-comment"># Jupyter notebook di esplorazione  </span>
+├── data/ <span class="hljs-comment"># dati grezzi o di esempio (gitignored se grandi)  </span>
+├── models/ <span class="hljs-comment"># modelli salvati o pesi  </span>
+├── tests/ <span class="hljs-comment"># test unità/integrati  </span>
+├── configs/ <span class="hljs-comment"># config per Hydra/pydantic (es. dev.yaml, prod.yaml)  </span>
+├── Dockerfile <span class="hljs-comment"># definizione container  </span>
+├── pyproject.toml <span class="hljs-comment"># specifiche package/dep (poetry/pdm)  </span>
+├── requirements.txt <span class="hljs-comment"># dipendenze (se pip)  </span>
+├── Makefile <span class="hljs-comment"># comandi utili (setup, run, lint, test, deploy)  </span>
+└── README.md <span class="hljs-comment"># documentazione progetto</span></code></pre><p>Questa organizzazione segue in parte il modello <a href="https://cookiecutter-data-science.drivendata.org/#directory-structure"><em>Cookiecutter Data Science</em></a> (per separare chiaramente code, data, docs) e facilita il passaggio <strong>dallo sviluppo locale alla produzione</strong>: il codice è impacchettato (in src/ con eventuale _<em>init</em>_.py), i test assicurano funzionamento, e config/secrets separati per ambiente permettono deploy consistenti.</p>
+<p>Diciamo che è una buona prassi, non costa nulla e ti fornisce un ordine che è utile sia a te che a chi lavora con te.</p>
 <h3 id="22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</h3>
-<p>Per garantire <strong>qualità del codice e velocità di sviluppo</strong>, adottiamo una serie di strumenti DevOps/MLOps leggeri:</p>
+<p>Per garantire <strong>qualità del codice e velocità di sviluppo</strong>, ogni sviluppatore adotta una serie di strumenti DevOps/MLOps leggeri che vediamo tra un attimo. </p>
+<p>Prima di dare dei consigli a riguardo do delle definizioni che per alcuni sono scontate ma per altri magari no.</p>
+<blockquote>
+<p>Il linting è un controllo automatico del codice sorgente alla ricerca di:</p>
 <ul>
-<li><strong>Linting &amp; Format:</strong> <em>Black</em> per il formato automatico del codice (opinionated, PEP8) e <strong>Ruff</strong> per il linting ultrarapido in Rust. Ruff include centinaia di regole (rimpiazza flake8, isort, ecc.) ed esegue fix di molti problemi in automatico<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=line,by%20Black%20fix%20%3D%20true">[38]</a>. Ha praticamente soppiantato i linters tradizionali in poco tempo grazie alla velocità e copertura<a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=drop,it%20was%20released%20in%202022">[39]</a><a href="https://dublog.net/blog/so-many-python-package-managers/#:~:text=linter%20notes,it%20was%20released%20in%202022">[40]</a>. <strong>Consiglio:</strong> configurare Black e Ruff per non sovrapporre regole (es. disattivare in Ruff le regole che Black già sistema, come lunghezza riga) - ciò si può fare centralizzando la config in pyproject.toml<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311">[41]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a>.</li>
-<li><strong>Type Checking:</strong> utilizzare la <strong>tipizzazione statica</strong> per prevenire bug. <em>Mypy</em> è lo standard per type-checking in Python; in alternativa <em>Pyright</em> (integrato in VSCode/Pylance) offre analisi incrementale molto veloce durante la scrittura. Impostare un livello &quot;strict&quot; (es. warn_unused_configs, disallow_untyped_defs in mypy) aiuta a mantenere il codice robusto<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.mypy%5D%20python_version%20%3D%20,true%20plugins%20%3D">[42]</a>.</li>
-<li><strong>Testing:</strong> <em>Pytest</em> è de facto per test unitari e funzionali in Python. Organizzare i test in tests/ e magari usare plugin utili: ad es. <strong>pytest-snapshot</strong> (o <strong>Syrupy</strong>) per <em>snapshot testing</em> di output complessi (confronta automaticamente output attuale con uno salvato in precedenza)<a href="https://github.com/syrupy-project/syrupy#:~:text=syrupy,assert%20immutability%20of%20computed%20results">[43]</a> - comodo per validare ad es. JSON di risposta API o risultati di analisi raster. Per pipeline geospaziali, potrebbe essere utile generare piccoli dataset sintetici per testare le funzioni (es. creare un raster 100x100 e una geometria nota e verificare che l&#39;overlay produca risultati attesi).</li>
-<li><strong>Pre-commit hooks:</strong> configurare <em>pre-commit</em> (file .pre-commit-config.yaml) per eseguire automaticamente tool di qualità prima di ogni commit. Un set raccomandato di hook: <strong>black</strong>, <strong>ruff</strong>, <strong>mypy</strong>, <em>isort</em> (se non uso ruff per sorting import), <em>end-of-file-fixer</em> e <em>trailing-whitespace</em> (semplici pulizie), eventualmente <strong>nbstripout</strong> o <strong>nbqa</strong> per normalizzare i notebook. Questo garantisce che ogni commit aderisca agli standard di code style e passa i test statici. Ad esempio, un hook ruff/black combinato rende il codice consistente - uno sviluppatore nota <em>&quot;Ruff + Black + isort configurati insieme forniscono qualità senza frizioni&quot;</em> in CI e editor<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=friction%20Python%20code%20quality%20with,commit%2C%20CI%2C%20and%20editor%20tips">[44]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a>.</li>
-<li><strong>CI/CD minimo:</strong> impostare una GitHub Action semplice che su ogni push esegue: lint (ruff/black), type-check (mypy) e test (pytest) su una matrice di ambienti (almeno Python 3.x). Ciò automatizza il controllo qualità. Per progetti ML, si può includere un test su sample data (es. eseguire inferenza su un&#39;immagine piccola) per assicurare che pipeline e modelli funzionino. Un workflow YAML minimo includerebbe step per installare dipendenze (usando poetry/mamba per velocità in CI) e poi pre-commit run --all-files seguito da pytest.</li>
-<li><strong>Notebook e collaborazione:</strong> usare <strong>JupyterLab 4</strong> (moderno, supporta plugin e realtime collaboration) o l&#39;<strong>interfaccia notebook di VSCode</strong> per prototipazione. In contesti condivisi o cloud: <em>Deepnote</em>, <em>Google Colab</em> o JupyterHub offrono ambienti pronti (Colab ad esempio fornisce GPU free limitate). È buona prassi mantenere sincronizzati notebook e codice: si può usare <em>Jupytext</em> (notebook come script paired) per versionarli facilmente. Per visualizzare dati geospaziali nei notebook, strumenti come <strong>folium</strong> (mappe interattive Leaflet) o <strong>ipyleaflet/leafmap</strong> permettono di visualizzare tiles, shapefile e risultati di modelli direttamente (vedi §2.5).</li>
+<li>errori potenziali: variabili non usate, sintassi sospetta, bug comuni</li>
+<li>problemi di stile: formattazione, nomi incoerenti, convenzioni non rispettate.
+“code smell”: pattern che non sono errori, ma possono creare problemi dopo
+In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sistemare, spesso con suggerimenti o correzioni automatiche.</li>
 </ul>
-<p><strong>Consiglio:</strong> configurare tutti questi strumenti fin dall&#39;inizio. Ad esempio, aggiungere al pyproject.toml: black, ruff, isort, mypy con config coerente (stessa line-length, ecc.)<a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311">[41]</a><a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true">[37]</a>. Installare pre-commit e attivarlo (pre-commit install) in modo che ogni git commit lanci i controlli. Queste automazioni rendono lo sviluppo <strong>&quot;no drama&quot;</strong>: il dev può concentrarsi sulla logica AI/Geo, mentre gli strumenti mantengono il codice pulito e funzionante.</p>
+</blockquote>
+<ul>
+<li><strong>Linting &amp; Format:</strong> <em>Black</em> per il formato automatico del codice (opinionated, PEP8) e <strong>Ruff</strong> per il linting ultrarapido in Rust. Ruff include centinaia di regole (rimpiazza flake8, isort, ecc.) ed esegue fix di molti problemi in automatico. Ha praticamente soppiantato i linters tradizionali in poco tempo grazie alla velocità e copertura. <blockquote>
+<p><strong>Consiglio</strong> di configurare Black e Ruff per non sovrapporre regole (es. disattivare in Ruff le regole che Black già sistema, come lunghezza riga) - ciò si può fare <a href="https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac">centralizzando la configurazione</a> in pyproject.toml.</p>
+</blockquote>
+</li>
+<li><strong>Type Checking:</strong> utilizzare la <strong>tipizzazione statica</strong> per prevenire bug. <em>Mypy</em> è lo standard per type-checking in Python; in alternativa <em>Pyright</em> (integrato in VSCode/Pylance) offre analisi incrementale molto veloce durante la scrittura. Impostare un livello &quot;strict&quot; (es. <code>warn_unused_configs</code>, <code>disallow_untyped_defs</code> in mypy) aiuta a mantenere il codice robusto.</li>
+<li><strong>Testing:</strong> <em>Pytest</em> è de facto per test unitari e funzionali in Python. Organizzare i test in tests/ e magari usare plugin utili: ad es. <strong>pytest-snapshot</strong> (o <a href="https://github.com/syrupy-project/syrupy"><strong>Syrupy</strong></a>) per <em>snapshot testing</em> di output complessi (confronta automaticamente output attuale con uno salvato in precedenza). Questo può essere comodo per validare ad es. JSON di risposta API o risultati di analisi raster. Per pipeline geospaziali, potrebbe essere utile generare piccoli dataset sintetici per testare le funzioni (es. creare un raster 100x100 e una geometria nota e verificare che l&#39;overlay produca risultati attesi).</li>
+<li><strong>Pre-commit hooks:</strong> configurare <em>pre-commit</em> (file <code>.pre-commit-config.yaml</code>) per eseguire automaticamente tool di qualità prima di ogni commit. Un set raccomandato di hook: <strong>black</strong>, <strong>ruff</strong>, <strong>mypy</strong>, <em>isort</em> (se non uso ruff per sorting import), <em>end-of-file-fixer</em> e <em>trailing-whitespace</em> (semplici pulizie), eventualmente <strong>nbstripout</strong> o <strong>nbqa</strong> per normalizzare i notebook. Questo garantisce che ogni commit aderisca agli standard di code style e passa i test statici. Ad esempio, un hook ruff/black combinato rende il codice consistente - uno sviluppatore nota <em>&quot;Ruff + Black + isort configurati insieme forniscono qualità senza frizioni&quot;</em> in CI e editor.</li>
+<li><strong>CI/CD minimo:</strong> impostare una GitHub Action semplice che su ogni push esegue: lint (ruff/black), type-check (mypy) e test (pytest) su una matrice di ambienti (almeno Python 3.x). Ciò automatizza il controllo qualità. Per progetti di ML, si può includere un test su sample data (es. eseguire inferenza su un&#39;immagine piccola) per assicurare che pipeline e modelli funzionino. Un workflow YAML minimo includerebbe step per installare dipendenze (usando poetry/mamba per velocità in CI) e poi <code>pre-commit run --all-files</code> seguito da <code>pytest</code>.</li>
+<li><strong>Notebook e collaborazione:</strong> usare <strong>JupyterLab 4</strong> (moderno, supporta plugin e realtime collaboration) o l&#39;<strong>interfaccia notebook di VSCode</strong> per prototipazione. In contesti condivisi o cloud: <em>Deepnote</em>, <em>Google Colab</em> o JupyterHub offrono ambienti pronti (Colab ad esempio fornisce GPU free limitate). È buona prassi mantenere sincronizzati notebook e codice: si può usare <em>Jupytext</em> (notebook come script paired) per versionarli facilmente. Per visualizzare dati geospaziali nei notebook, strumenti come <strong>folium</strong> (mappe interattive Leaflet) o <strong>ipyleaflet/leafmap</strong> permettono di visualizzare tiles, shapefile e risultati di modelli direttamente (questo verrà approfondito tra un paio di sezioni).</li>
+</ul>
+<blockquote>
+<p><strong>Consiglio:</strong> configurare tutti questi strumenti fin dall&#39;inizio. Ad esempio, aggiungere al pyproject.toml: black, ruff, isort, mypy con config coerente (stessa line-length, ecc.). Installare pre-commit e attivarlo (pre-commit install) in modo che ogni git commit lanci i controlli. Queste automazioni rendono lo sviluppo <strong>&quot;no drama&quot;</strong>: il dev può concentrarsi sulla logica AI/Geo, mentre gli strumenti mantengono il codice pulito e funzionante.</p>
+</blockquote>
+<h4 id="ha-senso-tutto-questo-oggi-con-lai">Ha senso tutto questo oggi con l&#39;AI?</h4>
+<p>Negli ultimi anni l&#39;introduzione dell&#39;AI negli strumenti di sviluppo ha rivoluzionato il modo in cui scriviamo, manteniamo e versioniamo il codice. Eppure, questa rivoluzione non ha eliminato la necessità di buone pratiche: ha semplicemente spostato il baricentro di ciò che conta davvero. L&#39;AI accelera, suggerisce, genera, ma non garantisce qualità e coerenza strutturale. Per questo, molti degli strumenti classici non solo restano rilevanti, ma in alcuni casi diventano più importanti di prima.</p>
+<p>Iniziamo da linting e formattazione. Non è più una questione di estetica, ma di avere più sostanza.</p>
+<p>Formatter come <strong>Black</strong> rimangono imprescindibili. Anche se l&#39;AI produce codice già leggibile, un formato coerente è essenziale per avere diff puliti e review senza frizioni. </p>
+<p>Quanto ai linters, strumenti come <strong>Ruff</strong> diventano fondamentali non per la parte estetica (che l&#39;AI già gestisce bene), ma per intercettare errori, import inutilizzati, codice morto o pattern rischiosi. L&#39;obiettivo non è rendere il codice &quot;più bello&quot;, ma evitare bug introdotti da generazioni un po&#39; troppo ottimistiche.</p>
+<p>Passiamo ai guardrails introdotti dal type checking.</p>
+<p>Con l&#39;AI che propone codice complesso o funzioni plausibili ma non sempre corrette, strumenti come <strong>Mypy</strong> o <strong>Pyright</strong> diventano essenziali come rete di sicurezza. La tipizzazione statica non è solo una misura di qualità, ma una guida strutturale che l&#39;AI stessa utilizza per generare soluzioni più precise. In particolare, nei moduli core di un progetto, un profilo di type checking semi-strict riduce enormemente il rischio di errori silenziosi (intendo errori che non si vedono per ora, ma emergono poi).</p>
+<p>Ora analizziamo il punto, secondo me più importante, il <strong>testing</strong>.</p>
+<p>Con test ben strutturati e snapshot test per output complessi, è possibile controllare che ottimizzazioni o refactor guidati dall’AI non modifichino comportamenti, diciamo, delicati. </p>
+<p>Siamo quasi arrivati in fondo, ora tocca al precommit, quello che io definisco la sentinella tra noi e git.</p>
+<p>Gli hook di <strong>pre-commit</strong> continuano a essere utili come ultimo filtro prima di far entrare codice su Git (con Git qui unifico Github e Gitlab). </p>
+<p>Black, Ruff e alcune pulizie leggere come rimozione di whitespace sono spesso sufficienti. Altri tool più pesanti, come Mypy, possono rimanere in CI per evitare rallentamenti locali. In progetti personali si può anche farne a meno, ma in team resta un meccanismo che evita piccoli errori inutili.</p>
+<p>Infine per indipendenza e riproducibilità resta il classico CI/CD</p>
+<p>Con l’AI che facilita generazioni di blocchi di codice interi, cresce la probabilità di modifiche involontariamente distruttive. Una pipeline CI minima, quindi linting, type checking e test, garantisce che ogni push sia valido in un ambiente pulito e controllato. </p>
+<p>Questo è un passaggio fondamentale per evitare che il codice generato dall&#39;AI rompa funzioni a distanza o introduca regressioni difficili da individuare.</p>
+<p>In conclusione, in un mondo in cui l’AI supporta lo sviluppo, gli strumenti di &quot;safety del codice&quot; non spariscono: si riposizionano. Black standardizza, Ruff protegge, Mypy o Pyright guidano, Pytest garantisce stabilità, la CI assicura riproducibilità. </p>
+<p>Quindi l’AI non elimina la necessità di queste pratiche. Anzi, le rende ancora più rilevanti perché aumenta il volume e la velocità del codice prodotto.</p>
+<p>La qualità non è più solo questione di scrittura, ma di ecosistema. E in questo ecosistema, l’AI è un acceleratore potente, ma non un sostituto!</p>
 <h3 id="23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</h3>
 <p>Containerizzare l&#39;app consente di uniformare ambiente (specialmente per librerie native e driver GPU) e facilitare il deploy. Presentiamo due esempi di <strong>Dockerfile</strong> ottimizzati, uno per un servizio LLM/RAG leggero, l&#39;altro per una pipeline geospaziale pesante, e una tabella di immagini base consigliate.</p>
-<p><strong>Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</strong></p>
-<p># Use Python slim base for minimal size<br>FROM python:3.11-slim as base<br><br/># Install system deps (if any minimal, e.g. git)<br>RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; rm -rf /var/lib/apt/lists/*<br><br/># Create non-root user<br>RUN useradd -m appuser<br>WORKDIR /app<br><br/># Install Poetry and dependencies<br>RUN pip install poetry==1.6.1<br>COPY pyproject.toml poetry.lock ./<br>RUN poetry config virtualenvs.create false &amp;&amp; poetry install --no-dev<br><br/># Copy app code<br>COPY src/ ./src/<br>COPY main.py ./<br>USER appuser<br><br/>CMD [&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;]</p>
-<p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
+<h4 id="esempio-1-dockerfile-per-servizio-llmrag-fastapi-cpu">Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</h4>
+<pre><code class="hljs language-docker"><span class="hljs-comment"># Use Python slim base for minimal size  </span>
+<span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim as base  
+<span class="hljs-comment"># Install system deps (if any minimal, e.g. git)  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; <span class="hljs-built_in">rm</span> -rf /var/lib/apt/lists/\*  </span>
+<span class="hljs-comment"># Create non-root user  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> useradd -m appuser  </span>
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app  </span>
+<span class="hljs-comment"># Install Poetry and dependencies  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> pip install poetry==1.6.1  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> pyproject.toml poetry.lock ./  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> poetry config virtualenvs.create <span class="hljs-literal">false</span> &amp;&amp; poetry install --no-dev  </span>
+<span class="hljs-comment"># Copy app code  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> src/ ./src/  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> main.py ./  </span>
+<span class="hljs-keyword">USER</span> appuser  
+<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;uvicorn&quot;</span>, <span class="hljs-string">&quot;main:app&quot;</span>, <span class="hljs-string">&quot;--host&quot;</span>, <span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-string">&quot;--port&quot;</span>, <span class="hljs-string">&quot;8000&quot;</span>\]</span></code></pre><p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
 <p><strong>Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)</strong></p>
-<p># Start from miniconda image for geospatial ease<br>FROM continuumio/miniconda3:4.12.0 as builder<br><br/># Create env with mamba for faster solving<br>RUN conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy<br><br/># Copy environment file and install<br>COPY environment.yaml /tmp/environment.yaml<br>RUN mamba env update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy<br><br/># (Optional) Install additional pip packages if any<br>RUN pip install -U rastervision==0.31.2<br><br/># -- Second stage for final image (slimmer) --<br>FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, se serve<br># (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)<br><br/>COPY --from=builder /opt/conda /opt/conda<br>ENV PATH=&quot;/opt/conda/bin:$PATH&quot;<br>WORKDIR /app<br>COPY src/ ./src/<br>COPY entrypoint.py ./<br><br/>CMD [&quot;python&quot;, &quot;entrypoint.py&quot;]</p>
-<p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
+<pre><code class="hljs language-docker"><span class="hljs-comment"># Start from miniconda image for geospatial ease  </span>
+<span class="hljs-keyword">FROM</span> continuumio/miniconda3:<span class="hljs-number">4.12</span>.<span class="hljs-number">0</span> as builder  
+
+<span class="hljs-comment"># Create env with mamba for faster solving  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy  </span>
+
+<span class="hljs-comment"># Copy environment file and install  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> environment.yaml /tmp/environment.yaml  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> mamba <span class="hljs-built_in">env</span> update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy  </span>
+
+<span class="hljs-comment"># (Optional) Install additional pip packages if any  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> pip install -U rastervision==0.31.2  </span>
+
+<span class="hljs-comment"># -- Second stage for final image (slimmer) --  </span>
+<span class="hljs-keyword">FROM</span> nvidia/cuda:<span class="hljs-number">12.2</span>.<span class="hljs-number">0</span>-runtime-ubuntu22.<span class="hljs-number">04</span> AS production <span class="hljs-comment"># base con driver CUDA per GPU, se serve  </span>
+<span class="hljs-comment"># (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)  </span>
+
+<span class="hljs-keyword">COPY</span><span class="language-bash"> --from=builder /opt/conda /opt/conda  </span>
+<span class="hljs-keyword">ENV</span> PATH=<span class="hljs-string">&quot;/opt/conda/bin:$PATH&quot;</span>  
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> src/ ./src/  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> entrypoint.py ./  </span>
+
+<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;entrypoint.py&quot;</span>\]</span></code></pre><p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
 <p>Di seguito una tabella di <strong>immagini base</strong> comuni per vari scenari:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
@@ -1129,6 +1322,11 @@
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
         : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
@@ -1222,6 +1420,85 @@
           wrapper.dataset.enhanced = 'true';
         });
       }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true') {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">📋</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          pre.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
       const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
@@ -1281,6 +1558,7 @@
         }
       });
       enhanceTables();
+      enhanceCodeBlocks();
       applyTheme(initialTheme);
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {

@@ -43,33 +43,40 @@ Come leggevo in [questo paper](https://arxiv.org/html/2502.18470v5#:~:text=On%20
 
 ![Immagine](../Assets/framework.png)
 
-_Figura 3:_ 
+_Figura 3 – Schema riassuntivo dello stack GeoAI che collega ingestion e analisi geospaziale, modelli CV, componenti RAG/LLM e servizi di deployment orchestrati da agenti._ 
+
 
 ## 2\. Mappa di Strumenti e Risorse (2025)
 
-Di seguito presentiamo le principali opzioni tecnologiche per ciascun aspetto dello stack - gestione ambiente Python, strumenti di sviluppo, container base, dataset geospaziali open e librerie chiave - confrontandone caratteristiche, vantaggi e stato di aggiornamento.
+In questo capitolo vediamo insieme le principali opzioni per ciascun aspetto dello stack: dalla gestione ambiente Python, agli strumenti di sviluppo, passando per le basi sui container, i dataset geospaziali open e le librerie chiave. L'obiettivo non sarà solo conoscere tutto questo, ma anche avere in mente un confronto delle caratteristiche, esponendo i vantaggi di ciascun metodo.
 
 ### 2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)
 
-Una base solida è un **ambiente Python riproducibile** con tutte le dipendenze (inclusi pacchetti per GPU e geospatial). La tabella seguente confronta gli approcci più diffusi nel 2025:
+Una cosa su cui siamo tutti d'accordo: per avere una base solida è necessario un **ambiente Python riproducibile** con tutte le dipendenze inclusi pacchetti per GPU e le librerie geospaziali. 
+
+La tabella seguente confronta gli approcci più diffusi oggi (nel 2025):
 
 | Approccio | Tipo | Vantaggi (pro) | Svantaggi (contro) | Aggiornamento |
 | --- | --- | --- | --- | --- |
-| **pip + venv** | Installer + env isolato | Semplice e nativo; velocità nell'installazione diretta | Risoluzione dipendenze limitata (installazione greedy)[\[13\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20OG%20of%20Python%20package,be%20completely%20decoupled%20from%20a); no lockfile nativo; richiede rimozione manuale sub-deps non usati[\[14\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20of%20the%20key%20faults,that%20are%20no%20longer%20useful) | pip 23.2 (2023) |
-| **conda / mamba** | Gestore pacchetti con solver SAT C++ | Gestisce librerie **non-Python** (es. GDAL, PROJ) in env isolati[\[15\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error)[\[16\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager); risoluzione completa e veloce grazie al solver _libmamba_[\[17\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG)[\[18\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=) | Ambiente base pesante (hundreds MB); manca lockfile out-of-the-box; a volte necessità di mix pip→ possibili conflitti[\[19\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20core%20tradeoff%20with%20,possible%20leading%20to%20a%20potentially) | Conda 23.7 (2024) |
-| **Poetry** | Gestore PyPI con lockfile | Usa standard _pyproject.toml_ unificato[\[20\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=tools%20like%20,to%20build%20and%20publish%20Python); genera **lockfile** multi-piattaforma per piena riproducibilità; gestisce env virtuale automaticamente | Risolutore in Python relativamente lento su grandi req. (DFS backtracking)[\[17\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG); lockfile voluminoso; attenzione a vincoli eccessivi (^version) che possono causare conflitti in team ampi[\[21\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=specify%20upper%20and%20lower%20bounds,intended%20to%20be%20used%20widely) | Poetry 1.6 (2023) |
-| **PDM / Hatch** | Gestori moderni PyPI | **PDM** supporta PEP 582 (ambiente locale senza activate)[\[22\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=pdm); **Hatch** funge anche da build system completo e consente test multi-versione Python[\[23\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Unlike%20the%20other%20tools%20on,on%20multiple%20versions%20of%20python) | Meno diffusi della triade pip/conda/poetry; Hatch ha curva apprendimento più alta e focus packaging (non solo env) | PDM 2.5 (2024), Hatch 1.7 (2023) |
-| **pipenv** _(legacy)_ | Pip + virtualenv unificati | Facile bootstrap con _Pipfile_ e _Pipfile.lock_ (risoluzione iniziale) | Risoluzione non più avanzata di pip (usa pip internamente)[\[24\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20downside%20to%20,%E2%80%9Cidiomatic%E2%80%9D%20in%20the%20long%20run%E2%80%A6); progetto meno attivo; formato Pipfile meno "idiomatico" dopo PEP-621 (pyproject) | Pipenv 2023.9 (2023) |
-| **uv (Astral)** | Tool unificato all-in-one (Rust) | **Estremamente veloce** (10-100× pip) grazie a core in Rust[\[25\]](https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI); rimpiazza pip, pipx, poetry, pyenv con un solo strumento[\[25\]](https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI); supporto lockfile universale e workspace multi-progetto; integrazione trasparente con venv esistenti[\[26\]](https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/#:~:text=updoot%20for%20,Here%20is%20their%20site) (puoi attivare uv, poi usare pip normale se vuoi) | API e CLI ancora instabili (progetto giovane); community emergente (uv è sviluppato da Astral.sh, gli autori del linter Ruff che in passato ha rapidamente soppiantato i predecessori)[\[27\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022)[\[28\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=written%20in%20Rust%20and%20is,rye) | uv 0.5.4 (2024) |
-| **pixi (prefix.dev)** | Package manager conda-like (Rust) | **Velocità** ~3× micromamba, >10× conda (risoluzione + install)[\[29\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=benchmarks%20show%20that%20pixi%20is,on%20a%20M2%20MacBook%20Pro); supporta lockfile cross-platform proprio (risolve uno dei limiti di conda)[\[30\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=dependencies.%20In%20mid%202024%2C%20,for%20reproducibility); integra pacchetti PyPI nel solver con unificati (usa librerie di uv)[\[31\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=In%20comparison%20with%20conda%2C%20pixi,conda%20packages%20for%20real%20reproducibility); niente base env conda da installare (eseguibile standalone)[\[32\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Reason%203%3A%20No%20more%20Miniconda,base%20environment) | Ecosistema nuovo (rilasci <1 anno); meno pacchetti precompilati rispetto a conda-forge (usa comunque i binari conda-forge sotto il cofano); alcuni comandi in evoluzione | pixi 0.3 (2024) |
-| **pyenv** | Gestore versioni Python | Permette installare e switchare versioni Python diverse facilmente per progetto[\[33\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20thing%20to%20note%20about,were%20using%20for%20different%20projects) (utile per test multi-versione o legacy) | Non gestisce i pacchetti; usato in combinazione con venv/poetry; se usato global può creare confusione su versioni attive | pyenv 2.3.24 (2025) |
+| **pip + venv** | Installer + env isolato | Semplice e nativo; velocità nell'installazione diretta | Risolutore [**non più greedy**](https://debuglab.net/2024/01/26/resolving-new-pip-backtracking-runtime-issue/) ma comunque meno potente di solver SAT; no lockfile nativo; richiede [rimozione manuale sub-deps non usati](https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20OG%20of%20Python%20package,be%20completely%20decoupled%20from%20a) | pip 25.3 (2025) |
+| **conda / mamba** | Gestore pacchetti con solver SAT C++ | [Gestisce librerie **non-Python**](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager) (es. GDAL, PROJ) in env isolati; risoluzione completa e veloce grazie al solver _libmamba_ | Ambiente base pesante (hundreds MB); manca lockfile out-of-the-box; a volte necessità di mix pip→ possibili conflitti | Conda 25.9.1 (2025) |
+| **Poetry** | Gestore PyPI con lockfile | Usa standard _pyproject.toml_ unificato; genera **lockfile** multi-piattaforma per riproducibilità; gestisce env virtuale automaticamente | Risolutore in Python relativamente lento su grandi req. (DFS backtracking); lockfile voluminoso; attenzione a vincoli eccessivi (^version) che possono causare conflitti in team ampi. | Poetry 2.1 (2025) |
+| **PDM / Hatch** | Gestori moderni PyPI | **PDM** supporta PEP 582 (ambiente locale senza activate); **Hatch** funge anche da build system completo e consente test multi-versione Python | Meno diffusi della triade pip/conda/poetry; Hatch ha curva apprendimento più alta e focus packaging (non solo env) | PDM 2.26 (2025), Hatch 1.15 (2025) |
+| **uv (Astral)** | Tool unificato all-in-one (Rust) | [**Estremamente veloce**](https://docs.astral.sh/uv/) (10-100× pip) grazie a core in Rust; rimpiazza pip, pipx, poetry, pyenv con un solo strumento; supporto lockfile universale e workspace multi-progetto; integrazione trasparente con venv esistenti (puoi attivare uv, poi usare pip normale se vuoi) | API e CLI ancora instabili (progetto giovane); community emergente | uv 0.9.9 (2025) |
+| **pixi (prefix.dev)** | Package manager conda-like (Rust) | [**Velocità**](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=benchmarks%20show%20that%20pixi%20is,on%20a%20M2%20MacBook%20Pro) ~4× micromamba, >10× conda (risoluzione + install); supporta lockfile cross-platform proprio (risolve uno dei limiti di conda); integra pacchetti PyPI nel solver con unificati ([usa librerie di uv](https://prefix.dev/blog/pixi_a_fast_conda_alternative)); niente base env conda da installare ([eseguibile standalone](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Reason%203%3A%20No%20more%20Miniconda,base%20environment)) | Ecosistema nuovo (rilasci <1 anno); meno pacchetti precompilati rispetto a conda-forge; alcuni comandi sono ancora in evoluzione | pixi 0.59 (2025) |
+| **pyenv** | Gestore versioni Python | Permette installare e switchare versioni Python diverse facilmente per progetto (utile per test multi-versione o legacy) | Non gestisce i pacchetti; usato in combinazione con venv/poetry; se usato global può creare confusione su versioni attive | pyenv 2.6.12 (2025) |
 
-_Tabelle note:_ **mamba** è l'implementazione in C++ di conda - oggi _conda_ stesso incorpora _libmamba_ di default, quindi i due convergono in velocità[\[18\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=). In ambienti data science, conda/mamba rimane popolare per facilità con pacchetti scientifici complicati, mentre in produzione spesso si preferisce pip/poetry per evitare dipendenze extra e avere più controllo[\[34\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict). Strumenti emergenti come uv e pixi mirano a unificare il meglio dei due mondi (velocità e completezza). Ad esempio, **uv** è sviluppato in Rust dai creatori di Ruff e punta a diventare il "Cargo per Python" (un unico tool per gestire versioni Python, dipendenze, virtualenv, publishing)[\[25\]](https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI)[\[27\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022). **Pixi**, creato dal team di mamba, è un sostituto drop-in di conda scritto in Rust: utilizza _uv_ per risolvere pacchetti pip, genera lockfile e rimuove la necessità di un base environment conda, migliorando drasticamente la velocità e l'ergonomia per portare env conda in produzione[\[35\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=At%20prefix%2C%20we%E2%80%99re%20solving%20conda,tasks%20for%20collaboration%2C%20and%20more)[\[36\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Image).
+_Tabelle note:_ **mamba** è l'implementazione in C++ di conda. Oggi _conda_ stesso incorpora _libmamba_ di default, quindi i due convergono in velocità. In ambienti data science, conda/mamba rimane popolare per facilità con pacchetti scientifici complicati, mentre in produzione spesso si [preferisce pip/poetry](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict) per evitare dipendenze extra e avere più controllo. Strumenti emergenti come uv e pixi mirano a unificare il meglio dei due mondi (velocità e completezza). Ad esempio, **uv** è sviluppato in Rust dai creatori di Ruff e punta a diventare il "Cargo per Python" (un unico tool per gestire versioni Python, dipendenze, virtualenv, publishing). **Pixi**, creato dal team di mamba, è un sostituto drop-in di conda scritto in Rust: utilizza _uv_ per risolvere pacchetti pip, genera lockfile e rimuove la necessità di un base environment conda, migliorando drasticamente la velocità e l'ergonomia per portare env conda in produzione.
 
-**Reproducibilità GPU/Geo:** Per un progetto AI/RS su GPU in locale, conda offre spesso la via più semplice (es. conda install pytorch cudatoolkit=... gdal rasterio in un env) perché gestisce i binari compatibili (CUDA, GDAL). In alternativa, in ambienti containerizzati, si può optare per **pip + Docker** usando immagini base con driver appropriati (vedi §2.3). In tutti i casi, è consigliato **fissare le versioni** in un lockfile (es. poetry.lock) o file requirements con hash, e documentare il setup (ad es. fornendo un environment.yml conda + requirements.txt pip per sicurezza).
+#### Reproducibilità GPU/Geo
+
+Per un progetto AI/RS su GPU in locale, conda offre spesso la via più semplice (es. `conda install pytorch cudatoolkit gdal rasterio` in un env) perché gestisce i "binary" compatibili (CUDA, GDAL). In alternativa, in ambienti containerizzati, si può optare per **pip + Docker** usando immagini base con driver appropriati (ne parleremo tra un attimo). 
+
+In tutti i casi, è consigliato **fissare le versioni** in un lockfile (per esempio usando poetry.lock) o file requirements con hash, e documentare il setup (ad es. fornendo un environment.yml conda + requirements.txt pip per sicurezza).
 
 Un layout ideale del progetto prevede una struttura simile a:
 
+```bash
 proj-root/  
 ├── src/ # codice applicativo (package principale)  
 ├── notebooks/ # Jupyter notebook di esplorazione  
@@ -82,49 +89,100 @@ proj-root/
 ├── requirements.txt # dipendenze (se pip)  
 ├── Makefile # comandi utili (setup, run, lint, test, deploy)  
 └── README.md # documentazione progetto
+```
 
-Questa organizzazione segue in parte il modello _Cookiecutter Data Science_ (per separare chiaramente code, data, docs) e facilita il passaggio **dallo sviluppo locale alla produzione**: il codice è impacchettato (in src/ con eventuale \__init_\_.py), i test assicurano funzionamento, e config/secrets separati per ambiente permettono deploy consistenti.
+Questa organizzazione segue in parte il modello [_Cookiecutter Data Science_](https://cookiecutter-data-science.drivendata.org/#directory-structure) (per separare chiaramente code, data, docs) e facilita il passaggio **dallo sviluppo locale alla produzione**: il codice è impacchettato (in src/ con eventuale \__init_\_.py), i test assicurano funzionamento, e config/secrets separati per ambiente permettono deploy consistenti.
+
+Diciamo che è una buona prassi, non costa nulla e ti fornisce un ordine che è utile sia a te che a chi lavora con te.
 
 ### 2.2 Tooling Essenziale da AI Engineer
 
-Per garantire **qualità del codice e velocità di sviluppo**, adottiamo una serie di strumenti DevOps/MLOps leggeri:
+Per garantire **qualità del codice e velocità di sviluppo**, ogni sviluppatore adotta una serie di strumenti DevOps/MLOps leggeri che vediamo tra un attimo. 
 
-- **Linting & Format:** _Black_ per il formato automatico del codice (opinionated, PEP8) e **Ruff** per il linting ultrarapido in Rust. Ruff include centinaia di regole (rimpiazza flake8, isort, ecc.) ed esegue fix di molti problemi in automatico[\[37\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true)[\[38\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=line,by%20Black%20fix%20%3D%20true). Ha praticamente soppiantato i linters tradizionali in poco tempo grazie alla velocità e copertura[\[39\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=drop,it%20was%20released%20in%202022)[\[40\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=linter%20notes,it%20was%20released%20in%202022). **Consiglio:** configurare Black e Ruff per non sovrapporre regole (es. disattivare in Ruff le regole che Black già sistema, come lunghezza riga) - ciò si può fare centralizzando la config in pyproject.toml[\[41\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311)[\[37\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true).
-- **Type Checking:** utilizzare la **tipizzazione statica** per prevenire bug. _Mypy_ è lo standard per type-checking in Python; in alternativa _Pyright_ (integrato in VSCode/Pylance) offre analisi incrementale molto veloce durante la scrittura. Impostare un livello "strict" (es. warn_unused_configs, disallow_untyped_defs in mypy) aiuta a mantenere il codice robusto[\[42\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.mypy%5D%20python_version%20%3D%20,true%20plugins%20%3D).
-- **Testing:** _Pytest_ è de facto per test unitari e funzionali in Python. Organizzare i test in tests/ e magari usare plugin utili: ad es. **pytest-snapshot** (o **Syrupy**) per _snapshot testing_ di output complessi (confronta automaticamente output attuale con uno salvato in precedenza)[\[43\]](https://github.com/syrupy-project/syrupy#:~:text=syrupy,assert%20immutability%20of%20computed%20results) - comodo per validare ad es. JSON di risposta API o risultati di analisi raster. Per pipeline geospaziali, potrebbe essere utile generare piccoli dataset sintetici per testare le funzioni (es. creare un raster 100x100 e una geometria nota e verificare che l'overlay produca risultati attesi).
-- **Pre-commit hooks:** configurare _pre-commit_ (file .pre-commit-config.yaml) per eseguire automaticamente tool di qualità prima di ogni commit. Un set raccomandato di hook: **black**, **ruff**, **mypy**, _isort_ (se non uso ruff per sorting import), _end-of-file-fixer_ e _trailing-whitespace_ (semplici pulizie), eventualmente **nbstripout** o **nbqa** per normalizzare i notebook. Questo garantisce che ogni commit aderisca agli standard di code style e passa i test statici. Ad esempio, un hook ruff/black combinato rende il codice consistente - uno sviluppatore nota _"Ruff + Black + isort configurati insieme forniscono qualità senza frizioni"_ in CI e editor[\[44\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=friction%20Python%20code%20quality%20with,commit%2C%20CI%2C%20and%20editor%20tips)[\[37\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true).
-- **CI/CD minimo:** impostare una GitHub Action semplice che su ogni push esegue: lint (ruff/black), type-check (mypy) e test (pytest) su una matrice di ambienti (almeno Python 3.x). Ciò automatizza il controllo qualità. Per progetti ML, si può includere un test su sample data (es. eseguire inferenza su un'immagine piccola) per assicurare che pipeline e modelli funzionino. Un workflow YAML minimo includerebbe step per installare dipendenze (usando poetry/mamba per velocità in CI) e poi pre-commit run --all-files seguito da pytest.
-- **Notebook e collaborazione:** usare **JupyterLab 4** (moderno, supporta plugin e realtime collaboration) o l'**interfaccia notebook di VSCode** per prototipazione. In contesti condivisi o cloud: _Deepnote_, _Google Colab_ o JupyterHub offrono ambienti pronti (Colab ad esempio fornisce GPU free limitate). È buona prassi mantenere sincronizzati notebook e codice: si può usare _Jupytext_ (notebook come script paired) per versionarli facilmente. Per visualizzare dati geospaziali nei notebook, strumenti come **folium** (mappe interattive Leaflet) o **ipyleaflet/leafmap** permettono di visualizzare tiles, shapefile e risultati di modelli direttamente (vedi §2.5).
+Prima di dare dei consigli a riguardo do delle definizioni che per alcuni sono scontate ma per altri magari no.
 
-**Consiglio:** configurare tutti questi strumenti fin dall'inizio. Ad esempio, aggiungere al pyproject.toml: black, ruff, isort, mypy con config coerente (stessa line-length, ecc.)[\[41\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311)[\[37\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true). Installare pre-commit e attivarlo (pre-commit install) in modo che ogni git commit lanci i controlli. Queste automazioni rendono lo sviluppo **"no drama"**: il dev può concentrarsi sulla logica AI/Geo, mentre gli strumenti mantengono il codice pulito e funzionante.
+> Il linting è un controllo automatico del codice sorgente alla ricerca di:
+> - errori potenziali: variabili non usate, sintassi sospetta, bug comuni
+> - problemi di stile: formattazione, nomi incoerenti, convenzioni non rispettate.
+> “code smell”: pattern che non sono errori, ma possono creare problemi dopo
+> In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sistemare, spesso con suggerimenti o correzioni automatiche.
+
+- **Linting & Format:** _Black_ per il formato automatico del codice (opinionated, PEP8) e **Ruff** per il linting ultrarapido in Rust. Ruff include centinaia di regole (rimpiazza flake8, isort, ecc.) ed esegue fix di molti problemi in automatico. Ha praticamente soppiantato i linters tradizionali in poco tempo grazie alla velocità e copertura. 
+    > **Consiglio** di configurare Black e Ruff per non sovrapporre regole (es. disattivare in Ruff le regole che Black già sistema, come lunghezza riga) - ciò si può fare [centralizzando la configurazione](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac) in pyproject.toml.
+- **Type Checking:** utilizzare la **tipizzazione statica** per prevenire bug. _Mypy_ è lo standard per type-checking in Python; in alternativa _Pyright_ (integrato in VSCode/Pylance) offre analisi incrementale molto veloce durante la scrittura. Impostare un livello "strict" (es. `warn_unused_configs`, `disallow_untyped_defs` in mypy) aiuta a mantenere il codice robusto.
+- **Testing:** _Pytest_ è de facto per test unitari e funzionali in Python. Organizzare i test in tests/ e magari usare plugin utili: ad es. **pytest-snapshot** (o [**Syrupy**](https://github.com/syrupy-project/syrupy)) per _snapshot testing_ di output complessi (confronta automaticamente output attuale con uno salvato in precedenza). Questo può essere comodo per validare ad es. JSON di risposta API o risultati di analisi raster. Per pipeline geospaziali, potrebbe essere utile generare piccoli dataset sintetici per testare le funzioni (es. creare un raster 100x100 e una geometria nota e verificare che l'overlay produca risultati attesi).
+- **Pre-commit hooks:** configurare _pre-commit_ (file `.pre-commit-config.yaml`) per eseguire automaticamente tool di qualità prima di ogni commit. Un set raccomandato di hook: **black**, **ruff**, **mypy**, _isort_ (se non uso ruff per sorting import), _end-of-file-fixer_ e _trailing-whitespace_ (semplici pulizie), eventualmente **nbstripout** o **nbqa** per normalizzare i notebook. Questo garantisce che ogni commit aderisca agli standard di code style e passa i test statici. Ad esempio, un hook ruff/black combinato rende il codice consistente - uno sviluppatore nota _"Ruff + Black + isort configurati insieme forniscono qualità senza frizioni"_ in CI e editor.
+- **CI/CD minimo:** impostare una GitHub Action semplice che su ogni push esegue: lint (ruff/black), type-check (mypy) e test (pytest) su una matrice di ambienti (almeno Python 3.x). Ciò automatizza il controllo qualità. Per progetti di ML, si può includere un test su sample data (es. eseguire inferenza su un'immagine piccola) per assicurare che pipeline e modelli funzionino. Un workflow YAML minimo includerebbe step per installare dipendenze (usando poetry/mamba per velocità in CI) e poi `pre-commit run --all-files` seguito da `pytest`.
+- **Notebook e collaborazione:** usare **JupyterLab 4** (moderno, supporta plugin e realtime collaboration) o l'**interfaccia notebook di VSCode** per prototipazione. In contesti condivisi o cloud: _Deepnote_, _Google Colab_ o JupyterHub offrono ambienti pronti (Colab ad esempio fornisce GPU free limitate). È buona prassi mantenere sincronizzati notebook e codice: si può usare _Jupytext_ (notebook come script paired) per versionarli facilmente. Per visualizzare dati geospaziali nei notebook, strumenti come **folium** (mappe interattive Leaflet) o **ipyleaflet/leafmap** permettono di visualizzare tiles, shapefile e risultati di modelli direttamente (questo verrà approfondito tra un paio di sezioni).
+
+> **Consiglio:** configurare tutti questi strumenti fin dall'inizio. Ad esempio, aggiungere al pyproject.toml: black, ruff, isort, mypy con config coerente (stessa line-length, ecc.). Installare pre-commit e attivarlo (pre-commit install) in modo che ogni git commit lanci i controlli. Queste automazioni rendono lo sviluppo **"no drama"**: il dev può concentrarsi sulla logica AI/Geo, mentre gli strumenti mantengono il codice pulito e funzionante.
+
+#### Ha senso tutto questo oggi con l'AI?
+
+Negli ultimi anni l'introduzione dell'AI negli strumenti di sviluppo ha rivoluzionato il modo in cui scriviamo, manteniamo e versioniamo il codice. Eppure, questa rivoluzione non ha eliminato la necessità di buone pratiche: ha semplicemente spostato il baricentro di ciò che conta davvero. L'AI accelera, suggerisce, genera, ma non garantisce qualità e coerenza strutturale. Per questo, molti degli strumenti classici non solo restano rilevanti, ma in alcuni casi diventano più importanti di prima.
+
+Iniziamo da linting e formattazione. Non è più una questione di estetica, ma di avere più sostanza.
+
+Formatter come **Black** rimangono imprescindibili. Anche se l'AI produce codice già leggibile, un formato coerente è essenziale per avere diff puliti e review senza frizioni. 
+
+Quanto ai linters, strumenti come **Ruff** diventano fondamentali non per la parte estetica (che l'AI già gestisce bene), ma per intercettare errori, import inutilizzati, codice morto o pattern rischiosi. L'obiettivo non è rendere il codice "più bello", ma evitare bug introdotti da generazioni un po' troppo ottimistiche.
+
+Passiamo ai guardrails introdotti dal type checking.
+
+Con l'AI che propone codice complesso o funzioni plausibili ma non sempre corrette, strumenti come **Mypy** o **Pyright** diventano essenziali come rete di sicurezza. La tipizzazione statica non è solo una misura di qualità, ma una guida strutturale che l'AI stessa utilizza per generare soluzioni più precise. In particolare, nei moduli core di un progetto, un profilo di type checking semi-strict riduce enormemente il rischio di errori silenziosi (intendo errori che non si vedono per ora, ma emergono poi).
+
+Ora analizziamo il punto, secondo me più importante, il **testing**.
+
+Con test ben strutturati e snapshot test per output complessi, è possibile controllare che ottimizzazioni o refactor guidati dall’AI non modifichino comportamenti, diciamo, delicati. 
+
+Siamo quasi arrivati in fondo, ora tocca al precommit, quello che io definisco la sentinella tra noi e git.
+
+Gli hook di **pre-commit** continuano a essere utili come ultimo filtro prima di far entrare codice su Git (con Git qui unifico Github e Gitlab). 
+
+Black, Ruff e alcune pulizie leggere come rimozione di whitespace sono spesso sufficienti. Altri tool più pesanti, come Mypy, possono rimanere in CI per evitare rallentamenti locali. In progetti personali si può anche farne a meno, ma in team resta un meccanismo che evita piccoli errori inutili.
+
+Infine per indipendenza e riproducibilità resta il classico CI/CD
+
+Con l’AI che facilita generazioni di blocchi di codice interi, cresce la probabilità di modifiche involontariamente distruttive. Una pipeline CI minima, quindi linting, type checking e test, garantisce che ogni push sia valido in un ambiente pulito e controllato. 
+
+Questo è un passaggio fondamentale per evitare che il codice generato dall'AI rompa funzioni a distanza o introduca regressioni difficili da individuare.
+
+In conclusione, in un mondo in cui l’AI supporta lo sviluppo, gli strumenti di "safety del codice" non spariscono: si riposizionano. Black standardizza, Ruff protegge, Mypy o Pyright guidano, Pytest garantisce stabilità, la CI assicura riproducibilità. 
+
+Quindi l’AI non elimina la necessità di queste pratiche. Anzi, le rende ancora più rilevanti perché aumenta il volume e la velocità del codice prodotto.
+
+La qualità non è più solo questione di scrittura, ma di ecosistema. E in questo ecosistema, l’AI è un acceleratore potente, ma non un sostituto!
+
 
 ### 2.3 Docker e Containerizzazione AI+GEO
 
 Containerizzare l'app consente di uniformare ambiente (specialmente per librerie native e driver GPU) e facilitare il deploy. Presentiamo due esempi di **Dockerfile** ottimizzati, uno per un servizio LLM/RAG leggero, l'altro per una pipeline geospaziale pesante, e una tabella di immagini base consigliate.
 
-**Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)**
-
-\# Use Python slim base for minimal size  
+#### Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)
+```Docker
+# Use Python slim base for minimal size  
 FROM python:3.11-slim as base  
-<br/>\# Install system deps (if any minimal, e.g. git)  
+# Install system deps (if any minimal, e.g. git)  
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/\*  
-<br/>\# Create non-root user  
+# Create non-root user  
 RUN useradd -m appuser  
 WORKDIR /app  
-<br/>\# Install Poetry and dependencies  
+# Install Poetry and dependencies  
 RUN pip install poetry==1.6.1  
 COPY pyproject.toml poetry.lock ./  
 RUN poetry config virtualenvs.create false && poetry install --no-dev  
-<br/>\# Copy app code  
+# Copy app code  
 COPY src/ ./src/  
 COPY main.py ./  
 USER appuser  
-<br/>CMD \["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"\]
+CMD \["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"\]
+```
 
 **Note:** Qui usiamo python:3.11-slim (~50MB) per ridurre l'immagine. L'installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l'app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.
 
 **Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)**
 
+```Docker
 \# Start from miniconda image for geospatial ease  
 FROM continuumio/miniconda3:4.12.0 as builder  
 <br/>\# Create env with mamba for faster solving  
@@ -143,7 +201,7 @@ WORKDIR /app
 COPY src/ ./src/  
 COPY entrypoint.py ./  
 <br/>CMD \["python", "entrypoint.py"\]
-
+```
 **Note:** In questo Dockerfile multi-stage, usiamo come builder l'immagine **Miniconda** con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)[\[15\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error)[\[16\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager). Nella seconda stage production, partiamo da un runtime **CUDA** nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l'installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un'immagine pronta con GPU support e libs geospaziali. **Tip:** assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come **osgeo/gdal** con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.
 
 Di seguito una tabella di **immagini base** comuni per vari scenari:
