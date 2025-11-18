@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css" data-hljs-theme="dark">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-light.min.css" data-hljs-theme="light" disabled>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js" defer data-hljs-script="true"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -374,6 +377,14 @@
       border-radius: 6px;
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.9rem;
+    }
+    .post-body pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
     }
     body[data-theme="light"] .post-body code {
       background: rgba(15, 23, 42, 0.08);
@@ -866,6 +877,8 @@ Per alcuni, l&#39;approccio containerizzato rende più &quot;opaco&quot; il sist
         it: { copy: 'Copia', copied: 'Copiato!' },
         en: { copy: 'Copy', copied: 'Copied!' },
       };
+      const highlightLinks = Array.from(document.querySelectorAll('link[data-hljs-theme]'));
+      const hljsScript = document.querySelector('script[data-hljs-script]');
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
@@ -958,6 +971,29 @@ Per alcuni, l&#39;approccio containerizzato rende più &quot;opaco&quot; il sist
           wrapper.appendChild(expandBtn);
           wrapper.dataset.enhanced = 'true';
         });
+      }
+      function applyHighlightTheme(theme) {
+        if (!highlightLinks.length) {
+          return;
+        }
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        highlightLinks.forEach((link) => {
+          const target = link.getAttribute('data-hljs-theme');
+          if (!target) {
+            return;
+          }
+          link.disabled = target !== resolved;
+        });
+      }
+      function highlightCodeBlocks() {
+        if (window.hljs && typeof window.hljs.highlightAll === 'function') {
+          window.hljs.highlightAll();
+        }
+      }
+      if (window.hljs) {
+        highlightCodeBlocks();
+      } else if (hljsScript) {
+        hljsScript.addEventListener('load', highlightCodeBlocks, { once: true });
       }
       function fallbackCopy(text) {
         const textarea = document.createElement('textarea');
@@ -1052,6 +1088,7 @@ Per alcuni, l&#39;approccio containerizzato rende più &quot;opaco&quot; il sist
         if (themeThumb) {
           themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
         }
+        applyHighlightTheme(resolved);
         localStorage.setItem(BLOG_THEME_KEY, resolved);
       }
       function setActive(link) {
