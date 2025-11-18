@@ -7,9 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css" data-hljs-theme="dark">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-light.min.css" data-hljs-theme="light" disabled>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js" defer data-hljs-script="true"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -380,11 +377,58 @@
     }
     .post-body pre code {
       background: transparent;
-      color: inherit;
       padding: 0;
       display: block;
       font-size: inherit;
       line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    body[data-theme="light"] .hljs {
+      color: #1f2937;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
     }
     body[data-theme="light"] .post-body code {
       background: rgba(15, 23, 42, 0.08);
@@ -835,20 +879,18 @@
 <p>Per un progetto AI/RS su GPU in locale, conda offre spesso la via più semplice (es. <code>conda install pytorch cudatoolkit gdal rasterio</code> in un env) perché gestisce i &quot;binary&quot; compatibili (CUDA, GDAL). In alternativa, in ambienti containerizzati, si può optare per <strong>pip + Docker</strong> usando immagini base con driver appropriati (ne parleremo tra un attimo). </p>
 <p>In tutti i casi, è consigliato <strong>fissare le versioni</strong> in un lockfile (per esempio usando poetry.lock) o file requirements con hash, e documentare il setup (ad es. fornendo un environment.yml conda + requirements.txt pip per sicurezza).</p>
 <p>Un layout ideale del progetto prevede una struttura simile a:</p>
-<pre><code class="language-bash">proj-root/  
-├── src/ # codice applicativo (package principale)  
-├── notebooks/ # Jupyter notebook di esplorazione  
-├── data/ # dati grezzi o di esempio (gitignored se grandi)  
-├── models/ # modelli salvati o pesi  
-├── tests/ # test unità/integrati  
-├── configs/ # config per Hydra/pydantic (es. dev.yaml, prod.yaml)  
-├── Dockerfile # definizione container  
-├── pyproject.toml # specifiche package/dep (poetry/pdm)  
-├── requirements.txt # dipendenze (se pip)  
-├── Makefile # comandi utili (setup, run, lint, test, deploy)  
-└── README.md # documentazione progetto
-</code></pre>
-<p>Questa organizzazione segue in parte il modello <a href="https://cookiecutter-data-science.drivendata.org/#directory-structure"><em>Cookiecutter Data Science</em></a> (per separare chiaramente code, data, docs) e facilita il passaggio <strong>dallo sviluppo locale alla produzione</strong>: il codice è impacchettato (in src/ con eventuale _<em>init</em>_.py), i test assicurano funzionamento, e config/secrets separati per ambiente permettono deploy consistenti.</p>
+<pre><code class="hljs language-bash">proj-root/  
+├── src/ <span class="hljs-comment"># codice applicativo (package principale)  </span>
+├── notebooks/ <span class="hljs-comment"># Jupyter notebook di esplorazione  </span>
+├── data/ <span class="hljs-comment"># dati grezzi o di esempio (gitignored se grandi)  </span>
+├── models/ <span class="hljs-comment"># modelli salvati o pesi  </span>
+├── tests/ <span class="hljs-comment"># test unità/integrati  </span>
+├── configs/ <span class="hljs-comment"># config per Hydra/pydantic (es. dev.yaml, prod.yaml)  </span>
+├── Dockerfile <span class="hljs-comment"># definizione container  </span>
+├── pyproject.toml <span class="hljs-comment"># specifiche package/dep (poetry/pdm)  </span>
+├── requirements.txt <span class="hljs-comment"># dipendenze (se pip)  </span>
+├── Makefile <span class="hljs-comment"># comandi utili (setup, run, lint, test, deploy)  </span>
+└── README.md <span class="hljs-comment"># documentazione progetto</span></code></pre><p>Questa organizzazione segue in parte il modello <a href="https://cookiecutter-data-science.drivendata.org/#directory-structure"><em>Cookiecutter Data Science</em></a> (per separare chiaramente code, data, docs) e facilita il passaggio <strong>dallo sviluppo locale alla produzione</strong>: il codice è impacchettato (in src/ con eventuale _<em>init</em>_.py), i test assicurano funzionamento, e config/secrets separati per ambiente permettono deploy consistenti.</p>
 <p>Diciamo che è una buona prassi, non costa nulla e ti fornisce un ordine che è utile sia a te che a chi lavora con te.</p>
 <h3 id="22-tooling-essenziale-da-ai-engineer">2.2 Tooling Essenziale da AI Engineer</h3>
 <p>Per garantire <strong>qualità del codice e velocità di sviluppo</strong>, ogni sviluppatore adotta una serie di strumenti DevOps/MLOps leggeri che vediamo tra un attimo. </p>
@@ -897,45 +939,41 @@ In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sist
 <h3 id="23-docker-e-containerizzazione-aigeo">2.3 Docker e Containerizzazione AI+GEO</h3>
 <p>Containerizzare l&#39;app consente di uniformare ambiente (specialmente per librerie native e driver GPU) e facilitare il deploy. Presentiamo due esempi di <strong>Dockerfile</strong> ottimizzati, uno per un servizio LLM/RAG leggero, l&#39;altro per una pipeline geospaziale pesante, e una tabella di immagini base consigliate.</p>
 <h4 id="esempio-1-dockerfile-per-servizio-llmrag-fastapi-cpu">Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)</h4>
-<pre><code class="language-Docker"># Use Python slim base for minimal size  
-FROM python:3.11-slim as base  
-# Install system deps (if any minimal, e.g. git)  
-RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; rm -rf /var/lib/apt/lists/\*  
-&lt;br/&gt;\# Create non-root user  
-RUN useradd -m appuser  
-WORKDIR /app  
-&lt;br/&gt;\# Install Poetry and dependencies  
-RUN pip install poetry==1.6.1  
-COPY pyproject.toml poetry.lock ./  
-RUN poetry config virtualenvs.create false &amp;&amp; poetry install --no-dev  
-&lt;br/&gt;\# Copy app code  
-COPY src/ ./src/  
-COPY main.py ./  
-USER appuser  
-&lt;br/&gt;CMD \[&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;\]
-</code></pre>
-<p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
+<pre><code class="hljs language-docker"><span class="hljs-comment"># Use Python slim base for minimal size  </span>
+<span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim as base  
+<span class="hljs-comment"># Install system deps (if any minimal, e.g. git)  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; <span class="hljs-built_in">rm</span> -rf /var/lib/apt/lists/\*  </span>
+&lt;br/&gt;\<span class="hljs-comment"># Create non-root user  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> useradd -m appuser  </span>
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app  </span>
+&lt;br/&gt;\<span class="hljs-comment"># Install Poetry and dependencies  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> pip install poetry==1.6.1  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> pyproject.toml poetry.lock ./  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> poetry config virtualenvs.create <span class="hljs-literal">false</span> &amp;&amp; poetry install --no-dev  </span>
+&lt;br/&gt;\<span class="hljs-comment"># Copy app code  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> src/ ./src/  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> main.py ./  </span>
+<span class="hljs-keyword">USER</span> appuser  
+&lt;br/&gt;<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;uvicorn&quot;</span>, <span class="hljs-string">&quot;main:app&quot;</span>, <span class="hljs-string">&quot;--host&quot;</span>, <span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-string">&quot;--port&quot;</span>, <span class="hljs-string">&quot;8000&quot;</span>\]</span></code></pre><p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
 <p><strong>Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)</strong></p>
-<pre><code class="language-Docker">\# Start from miniconda image for geospatial ease  
-FROM continuumio/miniconda3:4.12.0 as builder  
-&lt;br/&gt;\# Create env with mamba for faster solving  
-RUN conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy  
-&lt;br/&gt;\# Copy environment file and install  
-COPY environment.yaml /tmp/environment.yaml  
-RUN mamba env update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy  
-&lt;br/&gt;\# (Optional) Install additional pip packages if any  
-RUN pip install -U rastervision==0.31.2  
-&lt;br/&gt;\# -- Second stage for final image (slimmer) --  
-FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, se serve  
-\# (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)  
-&lt;br/&gt;COPY --from=builder /opt/conda /opt/conda  
-ENV PATH=&quot;/opt/conda/bin:\$PATH&quot;  
-WORKDIR /app  
-COPY src/ ./src/  
-COPY entrypoint.py ./  
-&lt;br/&gt;CMD \[&quot;python&quot;, &quot;entrypoint.py&quot;\]
-</code></pre>
-<p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
+<pre><code class="hljs language-docker">\<span class="hljs-comment"># Start from miniconda image for geospatial ease  </span>
+<span class="hljs-keyword">FROM</span> continuumio/miniconda3:<span class="hljs-number">4.12</span>.<span class="hljs-number">0</span> as builder  
+&lt;br/&gt;\<span class="hljs-comment"># Create env with mamba for faster solving  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy  </span>
+&lt;br/&gt;\<span class="hljs-comment"># Copy environment file and install  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> environment.yaml /tmp/environment.yaml  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> mamba <span class="hljs-built_in">env</span> update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy  </span>
+&lt;br/&gt;\<span class="hljs-comment"># (Optional) Install additional pip packages if any  </span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> pip install -U rastervision==0.31.2  </span>
+&lt;br/&gt;\<span class="hljs-comment"># -- Second stage for final image (slimmer) --  </span>
+<span class="hljs-keyword">FROM</span> nvidia/cuda:<span class="hljs-number">12.2</span>.<span class="hljs-number">0</span>-runtime-ubuntu22.<span class="hljs-number">04</span> AS production <span class="hljs-comment"># base con driver CUDA per GPU, se serve  </span>
+\<span class="hljs-comment"># (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)  </span>
+&lt;br/&gt;<span class="hljs-keyword">COPY</span><span class="language-bash"> --from=builder /opt/conda /opt/conda  </span>
+<span class="hljs-keyword">ENV</span> PATH=<span class="hljs-string">&quot;/opt/conda/bin:\$PATH&quot;</span>  
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> src/ ./src/  </span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> entrypoint.py ./  </span>
+&lt;br/&gt;<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;entrypoint.py&quot;</span>\]</span></code></pre><p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
 <p>Di seguito una tabella di <strong>immagini base</strong> comuni per vari scenari:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
@@ -1281,8 +1319,6 @@ COPY entrypoint.py ./
         it: { copy: 'Copia', copied: 'Copiato!' },
         en: { copy: 'Copy', copied: 'Copied!' },
       };
-      const highlightLinks = Array.from(document.querySelectorAll('link[data-hljs-theme]'));
-      const hljsScript = document.querySelector('script[data-hljs-script]');
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
@@ -1375,29 +1411,6 @@ COPY entrypoint.py ./
           wrapper.appendChild(expandBtn);
           wrapper.dataset.enhanced = 'true';
         });
-      }
-      function applyHighlightTheme(theme) {
-        if (!highlightLinks.length) {
-          return;
-        }
-        const resolved = theme === 'dark' ? 'dark' : 'light';
-        highlightLinks.forEach((link) => {
-          const target = link.getAttribute('data-hljs-theme');
-          if (!target) {
-            return;
-          }
-          link.disabled = target !== resolved;
-        });
-      }
-      function highlightCodeBlocks() {
-        if (window.hljs && typeof window.hljs.highlightAll === 'function') {
-          window.hljs.highlightAll();
-        }
-      }
-      if (window.hljs) {
-        highlightCodeBlocks();
-      } else if (hljsScript) {
-        hljsScript.addEventListener('load', highlightCodeBlocks, { once: true });
       }
       function fallbackCopy(text) {
         const textarea = document.createElement('textarea');
@@ -1492,7 +1505,6 @@ COPY entrypoint.py ./
         if (themeThumb) {
           themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
         }
-        applyHighlightTheme(resolved);
         localStorage.setItem(BLOG_THEME_KEY, resolved);
       }
       function setActive(link) {

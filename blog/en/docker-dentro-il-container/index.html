@@ -7,9 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css" data-hljs-theme="dark">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-light.min.css" data-hljs-theme="light" disabled>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js" defer data-hljs-script="true"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -380,11 +377,58 @@
     }
     .post-body pre code {
       background: transparent;
-      color: inherit;
       padding: 0;
       display: block;
       font-size: inherit;
       line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    body[data-theme="light"] .hljs {
+      color: #1f2937;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
     }
     body[data-theme="light"] .post-body code {
       background: rgba(15, 23, 42, 0.08);
@@ -750,25 +794,17 @@
 <p>Now that we have understood some definitions, we can start getting hands-on, perhaps by beginning with how to create an image.</p>
 <p><strong>How to create an image (build):</strong> Docker images are typically created with a <em>build</em> process based on a <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies"><strong>Dockerfile</strong></a>, which is a text file containing instructions on how to build the image from a base. Each instruction in the Dockerfile (e.g., FROM, RUN, COPY, etc.) is executed sequentially by the Docker daemon during the build, in turn producing an additional filesystem layer on the image.</p>
 <p>For example, a Dockerfile might start by defining the base Ubuntu image with:</p>
-<pre><code class="language-docker">FROM ubuntu:22.04
-</code></pre>
-<p>then to install Python, creating a new layer with these added files</p>
-<pre><code class="language-docker">RUN apt-get install -y python3
-</code></pre>
-<p>then to copy the application code into the image:</p>
-<pre><code class="language-docker">COPY . /app
-</code></pre>
-<p>and so on. Docker performs the build by going through each of these instructions and &quot;stacking&quot; the results into the final image.</p>
+<pre><code class="hljs language-docker"><span class="hljs-keyword">FROM</span> ubuntu:<span class="hljs-number">22.04</span></code></pre><p>then to install Python, creating a new layer with these added files</p>
+<pre><code class="hljs language-docker"><span class="hljs-keyword">RUN</span><span class="language-bash"> apt-get install -y python3</span></code></pre><p>then to copy the application code into the image:</p>
+<pre><code class="hljs language-docker"><span class="hljs-keyword">COPY</span><span class="language-bash"> . /app</span></code></pre><p>and so on. Docker performs the build by going through each of these instructions and &quot;stacking&quot; the results into the final image.</p>
 <p>This process leverages the cache: if we rebuild an image without modifying certain instructions, Docker will reuse existing layers without recalculating them, making the build very fast. To make the best use of the cache, I&#39;ll directly provide you with <a href="https://docs.docker.com/build/cache/">the official code</a> for leveraging the cache.</p>
-<pre><code class="language-docker"># syntax=docker/dockerfile:1
-FROM ubuntu:latest
+<pre><code class="hljs language-docker"><span class="hljs-comment"># syntax=docker/dockerfile:1</span>
+<span class="hljs-keyword">FROM</span> ubuntu:latest
 
-RUN apt-get update &amp;&amp; apt-get install -y build-essentials
-COPY main.c Makefile /src/
-WORKDIR /src/
-RUN make build
-</code></pre>
-<p>At the end of the build, we obtain an image identified by a <strong>unique ID (a hash)</strong>, which we can run or distribute. We can create our own images from scratch (e.g., starting from scratch, an empty image) or base them on others&#39; images, which encourages the reuse of commonly used components (e.g., a standard Linux base) instead of reinventing everything.</p>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y build-essentials</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> main.c Makefile /src/</span>
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /src/</span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> make build</span></code></pre><p>At the end of the build, we obtain an image identified by a <strong>unique ID (a hash)</strong>, which we can run or distribute. We can create our own images from scratch (e.g., starting from scratch, an empty image) or base them on others&#39; images, which encourages the reuse of commonly used components (e.g., a standard Linux base) instead of reinventing everything.</p>
 <p>We conclude this section by discussing two commands we&#39;ve already partially covered.</p>
 <p><strong>Pull and Run:</strong> Two fundamental commands for working with images are <code>docker pull</code> and <code>docker run</code>.</p>
 <ul>
@@ -824,11 +860,9 @@ RUN make build
 <p>Each layer therefore adds files or makes changes (installations, copies, configurations). In Dockerfile terms, these would correspond respectively to instructions like FROM ubuntu:22.04, RUN apt-get install python3 pip, COPY requirements.txt ., RUN pip install -r requirements.txt, COPY src/ . and so on. During the build, Docker creates a layer for each instruction<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">[2]</a>. <strong>How are they stored?</strong> Internally, Docker saves each layer as a compressed archive (typically a tarball) and identifies it with a unique hash (a SHA256 digest). On the Docker host&#39;s disk (e.g., in /var/lib/docker/overlay2/ for overlay2), each layer is extracted into a distinct directory<a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[29]</a>. Layers are <strong>immutable</strong>: once a layer is created, it is never modified again (any changes occur by creating a new layer on top). This immutable layer approach also means that if we update an image by rebuilding it, Docker can reuse previous layers that haven&#39;t changed and only regenerate the new ones<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a>.</p>
 <p><strong>Caching and Layer Reuse:</strong> One of the key advantages of having layered images is the ability to <strong>reuse</strong> common layers across different images and between successive builds. For example, if two different Docker images both start from ubuntu:22.04, the base Ubuntu layer can be shared: Docker downloads or builds it once and then reuses it for all derived images<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following">[32]</a>. This enormously reduces the space used and download bandwidth required, in addition to accelerating build times. When creating an image via Dockerfile, Docker builds the instructions in order and stores the hash of the content generated at each step. If we rebuild the same image without modifications at a certain step, Docker recognizes that an identical layer already exists in the cache and reuses it without re-executing the commands (we will see messages like &quot;Using cache&quot; in the docker build output). For example, if the Dockerfile does not change between one build and another, Docker will reuse all layers from the cache, producing the image almost instantly. If we modify only the last instructions (e.g., the application code), the initial layers remain cached, and Docker only recalculates the new or modified ones<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a>. In addition to local caching, the layered design facilitates <strong>incremental pulling</strong>: when we <code>docker pull</code> an updated image, Docker only downloads the new layers that are not present and skips those already downloaded in the past (for example, when moving from v1 to v2 of an image that differs only in the last layer, Docker will only download that additional layer). In deployment scenarios, this leads to significant time and bandwidth savings.</p>
 <p><strong>Practical Example of Layers (Dockerfile):</strong> Let&#39;s take a simple Dockerfile to illustrate layers:</p>
-<pre><code>FROM ubuntu:22.04  
-RUN apt-get update &amp;&amp; apt-get install -y nginx  
-COPY index.html /usr/share/nginx/html/index.html
-</code></pre>
-<p>When we build this image, Docker executes:</p>
+<pre><code class="hljs language-pgsql"><span class="hljs-keyword">FROM</span> ubuntu:<span class="hljs-number">22.04</span>  
+RUN apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update</span> &amp;&amp; apt-<span class="hljs-keyword">get</span> install -y nginx  
+<span class="hljs-keyword">COPY</span> <span class="hljs-keyword">index</span>.html /usr/<span class="hljs-keyword">share</span>/nginx/html/<span class="hljs-keyword">index</span>.html</code></pre><p>When we build this image, Docker executes:</p>
 <ul>
 <li>FROM ubuntu:22.04: This instructs Docker to use the Ubuntu 22.04 base image. This base image already consists of several layers (minimal Ubuntu layers). All these layers together become the <strong>initial layers</strong> of our new image.</li>
 <li>RUN apt-get update &amp;&amp; apt-get install -y nginx: Docker starts a temporary container from the base Ubuntu image and executes the commands. The resulting changes (Nginx packages installed, configuration files added) constitute a <strong>new layer</strong> that sits on top of the Ubuntu layers. This layer contains only the differences (files added/modified compared to the base).</li>
@@ -842,9 +876,7 @@ COPY index.html /usr/share/nginx/html/index.html
 <p><strong>Image Signing (security):</strong> In addition to tags and digests, Docker also supports <strong>cryptographic image signing</strong> through a feature called Docker Content Trust (based on an open-source project called Notary). By enabling Content Trust, every image push is digitally signed by the publisher, and every pull verifies the signature, ensuring that the image has not been altered and genuinely originates from the declared publisher<a href="https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust">[42]</a>. In practice, a private/public key system is used: whoever builds the image signs it with their private key; whoever downloads it, if verification is enabled, will use the corresponding public key to check that the image&#39;s digest matches the one signed by the producer. This prevents <em>man-in-the-middle</em> attacks or the unintentional use of tampered images. Docker Hub supports Content Trust, as do other registries (or it can be implemented in internal pipelines). Furthermore, alternative technologies like <strong>Sigstore Cosign</strong> (an open-source CNCF project) have emerged to sign and verify containers in a way that is even more integrated into cloud-native pipelines. The important conceptual aspect to understand is: the digest ensures <strong>integrity</strong> (detects unauthorized modifications to the content, as the hash no longer matches), while the digital signature also adds <strong>authenticity</strong> (guarantees who produced that image, i.e., that the hash corresponds to an image signed by the holder of a trusted private key)<a href="https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker">[43]</a><a href="https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust">[42]</a>. In contexts where supply chain security is critical, verifying image signatures before executing them is highly recommended.</p>
 <h2 id="6-conceptual-demo-what-happens-with-docker-run-nginx">6. Conceptual Demo: What Happens with docker run nginx</h2>
 <p>To consolidate the concepts, let&#39;s do a <strong>step-by-step narration</strong> of what happens when we execute a concrete Docker command. Let&#39;s imagine we launch:</p>
-<pre><code>docker run nginx
-</code></pre>
-<p>What happens &quot;behind the scenes&quot; when we press Enter?</p>
+<pre><code class="hljs language-routeros">docker <span class="hljs-built_in">run</span> nginx</code></pre><p>What happens &quot;behind the scenes&quot; when we press Enter?</p>
 <ul>
 <li><p><strong>Image Resolution:</strong> The Docker client interprets the name nginx as nginx:latest on the default registry (Docker Hub). It then contacts Docker Hub to check if there is an nginx:latest image. Unless an updated copy already exists locally, the Docker daemon proceeds to download the Nginx image<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=1,manually">[9]</a>. On the terminal, we would see the progress of the download of the various Nginx layers (e.g., a Debian base layer, layers with Nginx binaries, etc., each with its ID). After a few seconds, the nginx:latest image is present on our host.</p>
 </li>
@@ -925,8 +957,6 @@ COPY index.html /usr/share/nginx/html/index.html
         it: { copy: 'Copia', copied: 'Copiato!' },
         en: { copy: 'Copy', copied: 'Copied!' },
       };
-      const highlightLinks = Array.from(document.querySelectorAll('link[data-hljs-theme]'));
-      const hljsScript = document.querySelector('script[data-hljs-script]');
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
@@ -1019,29 +1049,6 @@ COPY index.html /usr/share/nginx/html/index.html
           wrapper.appendChild(expandBtn);
           wrapper.dataset.enhanced = 'true';
         });
-      }
-      function applyHighlightTheme(theme) {
-        if (!highlightLinks.length) {
-          return;
-        }
-        const resolved = theme === 'dark' ? 'dark' : 'light';
-        highlightLinks.forEach((link) => {
-          const target = link.getAttribute('data-hljs-theme');
-          if (!target) {
-            return;
-          }
-          link.disabled = target !== resolved;
-        });
-      }
-      function highlightCodeBlocks() {
-        if (window.hljs && typeof window.hljs.highlightAll === 'function') {
-          window.hljs.highlightAll();
-        }
-      }
-      if (window.hljs) {
-        highlightCodeBlocks();
-      } else if (hljsScript) {
-        hljsScript.addEventListener('load', highlightCodeBlocks, { once: true });
       }
       function fallbackCopy(text) {
         const textarea = document.createElement('textarea');
@@ -1136,7 +1143,6 @@ COPY index.html /usr/share/nginx/html/index.html
         if (themeThumb) {
           themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
         }
-        applyHighlightTheme(resolved);
         localStorage.setItem(BLOG_THEME_KEY, resolved);
       }
       function setActive(link) {
