@@ -944,37 +944,47 @@ In pratica vengono analizzati i file senza eseguirli e segnalati i punti da sist
 <span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim as base  
 <span class="hljs-comment"># Install system deps (if any minimal, e.g. git)  </span>
 <span class="hljs-keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y --no-install-recommends git &amp;&amp; <span class="hljs-built_in">rm</span> -rf /var/lib/apt/lists/\*  </span>
-&lt;br/&gt;\<span class="hljs-comment"># Create non-root user  </span>
+
+<span class="hljs-comment"># Create non-root user  </span>
 <span class="hljs-keyword">RUN</span><span class="language-bash"> useradd -m appuser  </span>
 <span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app  </span>
-&lt;br/&gt;\<span class="hljs-comment"># Install Poetry and dependencies  </span>
+
+<span class="hljs-comment"># Install Poetry and dependencies  </span>
 <span class="hljs-keyword">RUN</span><span class="language-bash"> pip install poetry==1.6.1  </span>
 <span class="hljs-keyword">COPY</span><span class="language-bash"> pyproject.toml poetry.lock ./  </span>
 <span class="hljs-keyword">RUN</span><span class="language-bash"> poetry config virtualenvs.create <span class="hljs-literal">false</span> &amp;&amp; poetry install --no-dev  </span>
-&lt;br/&gt;\<span class="hljs-comment"># Copy app code  </span>
+
+<span class="hljs-comment"># Copy app code  </span>
 <span class="hljs-keyword">COPY</span><span class="language-bash"> src/ ./src/  </span>
 <span class="hljs-keyword">COPY</span><span class="language-bash"> main.py ./  </span>
 <span class="hljs-keyword">USER</span> appuser  
-&lt;br/&gt;<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;uvicorn&quot;</span>, <span class="hljs-string">&quot;main:app&quot;</span>, <span class="hljs-string">&quot;--host&quot;</span>, <span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-string">&quot;--port&quot;</span>, <span class="hljs-string">&quot;8000&quot;</span>\]</span></code></pre><p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
+
+<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;uvicorn&quot;</span>, <span class="hljs-string">&quot;main:app&quot;</span>, <span class="hljs-string">&quot;--host&quot;</span>, <span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-string">&quot;--port&quot;</span>, <span class="hljs-string">&quot;8000&quot;</span>\]</span></code></pre><p><strong>Note:</strong> Qui usiamo python:3.11-slim (~50MB) per ridurre l&#39;immagine. L&#39;installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l&#39;app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.</p>
 <p><strong>Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)</strong></p>
-<pre><code class="hljs language-docker">\<span class="hljs-comment"># Start from miniconda image for geospatial ease  </span>
+<pre><code class="hljs language-docker"><span class="hljs-comment"># Start from miniconda image for geospatial ease  </span>
 <span class="hljs-keyword">FROM</span> continuumio/miniconda3:<span class="hljs-number">4.12</span>.<span class="hljs-number">0</span> as builder  
-&lt;br/&gt;\<span class="hljs-comment"># Create env with mamba for faster solving  </span>
+
+<span class="hljs-comment"># Create env with mamba for faster solving  </span>
 <span class="hljs-keyword">RUN</span><span class="language-bash"> conda install -n base -c conda-forge mamba==1.4.2 &amp;&amp; conda clean -afy  </span>
-&lt;br/&gt;\<span class="hljs-comment"># Copy environment file and install  </span>
+
+<span class="hljs-comment"># Copy environment file and install  </span>
 <span class="hljs-keyword">COPY</span><span class="language-bash"> environment.yaml /tmp/environment.yaml  </span>
 <span class="hljs-keyword">RUN</span><span class="language-bash"> mamba <span class="hljs-built_in">env</span> update -n base -f /tmp/environment.yaml &amp;&amp; conda clean -afy  </span>
-&lt;br/&gt;\<span class="hljs-comment"># (Optional) Install additional pip packages if any  </span>
+
+<span class="hljs-comment"># (Optional) Install additional pip packages if any  </span>
 <span class="hljs-keyword">RUN</span><span class="language-bash"> pip install -U rastervision==0.31.2  </span>
-&lt;br/&gt;\<span class="hljs-comment"># -- Second stage for final image (slimmer) --  </span>
+
+<span class="hljs-comment"># -- Second stage for final image (slimmer) --  </span>
 <span class="hljs-keyword">FROM</span> nvidia/cuda:<span class="hljs-number">12.2</span>.<span class="hljs-number">0</span>-runtime-ubuntu22.<span class="hljs-number">04</span> AS production <span class="hljs-comment"># base con driver CUDA per GPU, se serve  </span>
-\<span class="hljs-comment"># (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)  </span>
-&lt;br/&gt;<span class="hljs-keyword">COPY</span><span class="language-bash"> --from=builder /opt/conda /opt/conda  </span>
-<span class="hljs-keyword">ENV</span> PATH=<span class="hljs-string">&quot;/opt/conda/bin:\$PATH&quot;</span>  
+<span class="hljs-comment"># (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)  </span>
+
+<span class="hljs-keyword">COPY</span><span class="language-bash"> --from=builder /opt/conda /opt/conda  </span>
+<span class="hljs-keyword">ENV</span> PATH=<span class="hljs-string">&quot;/opt/conda/bin:$PATH&quot;</span>  
 <span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app  </span>
 <span class="hljs-keyword">COPY</span><span class="language-bash"> src/ ./src/  </span>
 <span class="hljs-keyword">COPY</span><span class="language-bash"> entrypoint.py ./  </span>
-&lt;br/&gt;<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;entrypoint.py&quot;</span>\]</span></code></pre><p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
+
+<span class="hljs-keyword">CMD</span><span class="language-bash"> \[<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;entrypoint.py&quot;</span>\]</span></code></pre><p><strong>Note:</strong> In questo Dockerfile multi-stage, usiamo come builder l&#39;immagine <strong>Miniconda</strong> con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)<a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error">[15]</a><a href="https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager">[16]</a>. Nella seconda stage production, partiamo da un runtime <strong>CUDA</strong> nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l&#39;installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un&#39;immagine pronta con GPU support e libs geospaziali. <strong>Tip:</strong> assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come <strong>osgeo/gdal</strong> con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.</p>
 <p>Di seguito una tabella di <strong>immagini base</strong> comuni per vari scenari:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
