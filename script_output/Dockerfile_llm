@@ -1,0 +1,39 @@
+## Dockerfile per un servizio LLM/RAG basato su FastAPI (versione 2025)
+##
+## Questo Dockerfile costruisce un'immagine leggera per esporre una FastAPI
+## che interagisce con un modello LLM/RAG tramite API esterna o un modello locale
+## di piccole dimensioni. La base è l'immagine ufficiale `python:3.12-slim-bookworm`;
+## utilizziamo Poetry per la gestione delle dipendenze e un utente non-root per
+## migliorare la sicurezza.
+
+### Utilizziamo l'immagine Python ufficiale basata su Debian "bookworm" e la variante "slim".
+FROM python:3.12-slim-bookworm AS base
+
+### Aggiorniamo l'elenco dei pacchetti e installiamo solo git, evitando pacchetti suggeriti;
+### puliamo quindi la cache per ridurre lo spazio occupato dall'immagine finale.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
+### Creiamo un utente non-root per eseguire il servizio e definiamo la cartella di lavoro.
+RUN useradd -m appuser
+WORKDIR /app
+
+### Installiamo Poetry in maniera globale senza cache. Specifichiamo la versione per
+### garantire build riproducibili; la versione 1.8.2 è la release stabile attuale.
+RUN pip install --no-cache-dir poetry==1.8.2
+
+### Copiamo i file di configurazione di Poetry e installiamo le dipendenze di produzione.
+COPY pyproject.toml poetry.lock ./
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-dev
+
+### Copiamo il codice applicativo dentro l'immagine.
+COPY src/ ./src/
+COPY main.py ./
+
+### Impostiamo l'utente non-root per l'esecuzione del comando finale.
+USER appuser
+
+### Comando di avvio: avvia Uvicorn per servire la FastAPI sulla porta 8000.
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

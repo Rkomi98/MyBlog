@@ -163,57 +163,114 @@ Containerizzare l'app consente di uniformare l'ambiente di sviluppo (specialment
 #### Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)
 
 ```Docker
-# Usiamo Python slim base per lo spazio minimo indispensabile
-FROM python:3.12-slim as base  
-# Installiamo le dipendenze di sistema + git, evitando i pacchetti suggeriti e cancella la cache
-RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/\*  
-# Creiamo un nuovo utente e la sua home directory. Infine imposta la directory di lavoro. 
-RUN useradd -m appuser  
-WORKDIR /app  
-# Installa Poetry e le varie dipendenze 
-RUN pip install poetry
-# Copia i file dalla macchina host nella directory corrente dell’immagine
+# Usiamo la versione di Python leggera con Debian 12 "bookworm"
+FROM python:3.12-slim-bookworm as base
+
+# Aggiorniamo e installiamo solo git, senza raccomandati, quindi puliamo la cache
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Creiamo un utente non‑root per eseguire il servizio
+RUN useradd -m appuser
+
+# Impostiamo la cartella di lavoro
+WORKDIR /app
+
+# Installiamo una versione stabile di Poetry e configuriamo l’installazione dei pacchetti
+RUN pip install --no-cache-dir poetry==1.8.2
+
+# Copiamo i file di progetto e sfruttiamo la cache Docker per velocizzare gli aggiornamenti
 COPY pyproject.toml poetry.lock ./
-# NON creare un virtualenv, ma install i pacchetti direttamente nell’ambiente Python “globale” del container.
-# Installa le dipendenze definite escludendo le dipendenze di sviluppo
-RUN poetry config virtualenvs.create false && poetry install --no-dev  
-# Copia file e cartelle nelle opportune cartelle di lavoro
+# Installiamo le dipendenze (solo di produzione) direttamente nel global site‑packages
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-dev
+
+# Copiamo il codice applicativo
 COPY src/ ./src/
 COPY main.py ./
-# Da qui in poi, tutti i comandi (compreso il processo principale) girano con l’utente non-root appuser, aumentando la sicurezza.
-USER appuser  
-# Avvia Uvicorn esponendo l’app main:app
-CMD \["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"\]
+
+# Eseguiamo come utente non root
+USER appuser
+
+# Avviamo Uvicorn esponendo la FastAPI all’esterno
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
 ```
 
-**Note:** Qui usiamo python:3.11-slim (~50MB) per ridurre la dimensione dell'immagine. L'installazione delle dipendenze è fatta in un layer separato copiando solo `pyproject/lock` (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). 
+**Note:** Qui usiamo python:3.12-slim (~50MB) perché è un buon compromesso tra dimensione e funzionalità, dato che evita i problemi derivanti dall’uso di Alpine. 
+Ho deciso di proporvi la versione 3.12 per la massima compatibilità con le altre librerie.
+
+L'installazione delle dipendenze è fatta in un layer separato copiando solo `pyproject/lock` (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). 
 
 Uvicorn serve l'app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere `RUN pip install transformers` o includerlo direttamente in poetry.
 
 #### Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)
 Vediamo ora un esempio più comlesso ma anche più adeguato ad un GeoAI engineer.
-```Docker
-# Partiamo da un'immagine con miniconda per semplicità
-FROM continuumio/miniconda3:4.12.0 as builder  
-# Creiamo ora un ambiente usando Mamba
-RUN conda install -n base -c conda-forge mamba==1.4.2 && conda clean -afy
-# Copiamo il file di environment e installiamo le librerie
-COPY environment.yaml /tmp/environment.yaml  
-RUN mamba env update -n base -f /tmp/environment.yaml && conda clean -afy  
-# (Opzionale) Installa pacchetti aggiuntivi con pip
-RUN pip install -U rastervision==0.31.2  
 
-FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, SOLO se serve (se la GPU non necessaria, usare continuumio/miniconda3 anche qui)
-# Da qui in poi è simile all'esempio precedente
-COPY --from=builder /opt/conda /opt/conda  
-ENV PATH="/opt/conda/bin:\$PATH"  
-WORKDIR /app  
-COPY src/ ./src/  
-COPY entrypoint.py ./  
-CMD \["python", "entrypoint.py"\]
+Per pipeline geospaziali complesse (analisi raster, fotogrammetria, deep
+learning su immagini satellitari) è necessario un ambiente con molte
+librerie native (GDAL, PROJ, Rasterio) e spesso il supporto GPU.
+```Docker
+# Stage 1 – builder con Miniconda e mamba
+FROM continuumio/miniconda3:latest as builder
+
+# L'ultima versione di mamba è la 2.3.3. Poi eliminiamo i file temporanei
+RUN conda install -n base -c conda-forge mamba==2.3.3 \
+    && conda clean -afy
+
+# Copiamo l’environment che elenchiamo i pacchetti geospaziali (Python 3.12, GDAL,
+# Rasterio, Geopandas, ecc.)
+COPY environment.yaml /tmp/environment.yaml
+
+# Aggiorniamo l’ambiente base con le librerie specificate in environment.yaml
+RUN mamba env update -n base -f /tmp/environment.yaml \
+    && conda clean -afy
+
+# Installiamo pacchetti aggiuntivi con pip (ad esempio Raster Vision)
+RUN pip install --no-cache-dir rastervision==0.31.2
+
+# Stage 2 – immagine di produzione con supporto CUDA 13.0.2
+FROM nvidia/cuda:13.0.2-runtime-ubuntu22.04 AS production
+
+# Copiamo l’installazione conda dal builder
+COPY --from=builder /opt/conda /opt/conda
+
+# Aggiorniamo la variabile PATH per includere conda
+ENV PATH="/opt/conda/bin:$PATH"
+
+# Impostiamo la directory di lavoro
+WORKDIR /app
+
+# Copiamo il codice sorgente
+COPY src/ ./src/
+COPY entrypoint.py ./
+
+# Comando di avvio della pipeline
+CMD ["python", "entrypoint.py"]
+
 ```
 
-Abbiamo considerato qui un esempio preso da una [fonte](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application) da cui, ai tempi, anche io ho studiato. 
+Come file di `environment.yaml` si può usare:
+```yaml
+name: geoenv
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - gdal=3.12       # GDAL 3.12 è disponibile tramite i container OSGeo
+  - rasterio
+  - geopandas
+  - numpy
+  - pandas
+  - pyproj
+  - pip
+  - pip:
+      - rastervision==0.31.2
+      - torch==2.7.0
+```
+
+Abbiamo considerato qui un esempio preso da una [fonte](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application) da cui, ai tempi, anche io ho studiato. L'ho cercata di aggiornare in base alle versioni delle librerie aggiornate alla data di questo articolo.
 
 In questo Dockerfile multi-stage, usiamo come builder l'immagine **Miniconda** con mamba per risolvere le dipendenze (in `environment.yaml` specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato). 
 
@@ -228,80 +285,75 @@ Di seguito una tabella di **immagini base** comuni per vari scenari:
 | [**python:3.12-slim**](https://hub.docker.com/layers/library/python/3.12-slim/images/) | Debian slim + Python 3.x | Servizi Python leggeri (API, agent) - minima (<50MB) |
 | [**continuumio/miniconda3**](https://hub.docker.com/r/continuumio/miniconda3) | Miniconda + conda (base env) | Data science/[Geo completo](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error); facile installare pacchetti complessi (es. GDAL) |
 | [**mambaorg/micromamba**](https://micromamba-docker.readthedocs.io/en/latest/) | Micromamba in Alpine/CentOS | Costruire immagini con env conda in maniera snella; ideale in multi-stage (scarica solo i pacchetti richiesti) |
-| [**nvidia/cuda:12.2-runtime**](https://hub.docker.com/r/nvidia/cuda) | Librerie CUDA + runtime base | Aggiungere supporto GPU. Da usare con pip/conda per installare PyTorch/TF con CUDA compatibile. Considerate che siamo alla versione 13.0.2 ora|
-| [**pytorch/pytorch:2.0-cuda11.8**](https://hub.docker.com/r/pytorch/pytorch) | Python + PyTorch 2.0 + CUDA preinstallati | Lavori di training/inference DL su GPU - evita configurazioni manuali di CUDA/cuDNN. Include però anche varie libs (immagine ~>10GB). |
-| [**osgeo/gdal:ubuntu-full**](https://github.com/OSGeo/gdal/pkgs/container/gdal) | Ubuntu + GDAL precompilato (full drivers) | Pipeline GIS/RS intensive. |
+| [**nvidia/cuda:13.0.2-runtime-ubuntu22.04**](https://hub.docker.com/r/nvidia/cuda) | Librerie CUDA + runtime base | Aggiungere supporto GPU. Da usare con pip/conda per installare PyTorch/TF con CUDA compatibile. Considerate che siamo alla versione 13.0.2 ora|
+| [**pytorch/pytorch:2.7.0-cuda12.8-cudnn8-devel-ubuntu20.04**](https://hub.docker.com/r/pytorch/pytorch) | Python + PyTorch 2.0 + CUDA preinstallati | Lavori di training/inference DL su GPU - evita configurazioni manuali di CUDA/cuDNN. Include però anche varie libs (immagine ~>10GB). |
+| [**ghcr.io/osgeo/gdal:ubuntu-full-3.12.0**](https://github.com/OSGeo/gdal/pkgs/container/gdal) | Ubuntu + GDAL precompilato (full drivers) | Pipeline GIS/RS intensive. |
 | [**jupyter/scipy-notebook**](https://hub.docker.com/r/jupyter/scipy-notebook) | Python con Jupyter Notebook + stack SciPy | Ambienti notebook pronti all'uso (CPU). Include numpy, pandas, matplotlib, etc. Utile per sviluppo interattivo, anche su cloud (ad es. Docker Stacks di JupyterHub). |
 
 Non escludo che ci siano 
 
-**Caching & multi-stage:** Per velocizzare il rebuild, sfruttare la cache Docker: ordinare le istruzioni Dockerfile dal meno volatile al più volatile. Esempio: installare prima le dipendenze (che cambiano raramente) e copiare poi il codice. Inoltre, usare multi-stage build consente di copiare solo l'essenziale (es. binari compilati) in produzione, riducendo la taglia. Per immagini AI, è buona norma **pulire cache pip/conda** (come fatto sopra con conda clean) e rimuovere compilatori se installati temporaneamente.
+#### Gestione GPU
 
-**Gestione GPU:** in deployment on-prem, abilitare runtime GPU con --gpus all su Docker run (usando i runtime NVIDIA). In Kubernetes, usare device plugins NVIDIA. Se l'host non ha GPU (es. nostro caso locale), basterà che l'immagine contenga comunque le librerie giuste - potremo eseguire in CPU senza errori, o delegare a Colab per esecuzione GPU.
+In deployment on-prem, abilitare runtime GPU con `--gpus all` su `Docker run` (usando i runtime NVIDIA). In Kubernetes, usare device plugins NVIDIA. Se l'host non ha GPU, basterà che l'immagine contenga comunque le librerie giuste e potremo eseguire in CPU senza errori, o delegare a Colab per esecuzione GPU.
 
-### 2.4 Gestione di Secret e Configurazioni
+### 2.4 Gestione di "password" e configurazioni
 
-Le applicazioni AI/geo spesso richiedono **chiavi API, credenziali o config** per servizi (es. token Mapbox, key OpenAI, URL database). È fondamentale **non hardcodare** questi valori nel codice sorgente, ma usare sistemi di config.
+La parola AI oggi, spesso chiama la parola **API**, e di cnseguenza anche **credenziali (o config)** per servizi (es. token Mapbox, key OpenAI, URL database). È fondamentale **non inserire** questi valori **nel codice sorgente**, ma **usare sistemi di config**.
 
-**Approccio .env (locale):** per sviluppo, semplice e funzionale: mettere le chiavi in un file .env escluso da git, e caricarlo con [python-dotenv](https://pypi.org/project/python-dotenv/). Ad esempio:
+#### Approccio .env (locale)
+L'approccio più semplice e funzionale è sicuramente passare per il classico file `.env`, ovvero mettere le chiavi in un file `.env` escluso dai comandi git, e caricarlo poi con [python-dotenv](https://pypi.org/project/python-dotenv/). 
 
-\# config.py  
+Ad [esempio](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration) il file `config.py` potrebbe essere scritto come:
+
+```python
 from pydantic import BaseSettings  
-<br/>class Settings(BaseSettings):  
-openai_api_key: str  
-db_url: str  
-debug: bool = False  
-<br/>class Config:  
-env_file = ".env" # legge le variabili da .env  
-env_prefix = "MYAPP_" # opzionale: prefisso richiesto nelle env var  
+
+class Settings(BaseSettings):  
+    openai_api_key: str  
+    db_url: str  
+    debug: bool = False  
+class Config:  
+    env_file = ".env" # legge le variabili da .env  
+    env_prefix = "MYAPP_" # opzionale: prefisso richiesto nelle env var  
 settings = Settings()
+```
 
-Questo codice usa **Pydantic BaseSettings**: ad ogni avvio legge le variabili d'ambiente (o dal file .env) e costruisce un oggetto settings. Offre il vantaggio della **validazione e tipi** (ad es. se db_url deve essere una URL, Pydantic può validarla). Si possono definire default e Pydantic converte automaticamente tipi (int, bool ecc) e gestisce nested config. Pydantic è ottimo quando _"la struttura di configurazione è relativamente semplice e basata su env var/.env"_[\[46\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=) - e.g. pochi parametri principali. Inoltre, integrandolo con FastAPI, le settings possono essere utilizzate come dependences.
+Questo codice usa **Pydantic BaseSettings**. Usando questo codice, ad ogni avvio, l'applicazione leggerebbe le variabili d'ambiente (o dal file .env) e costruirebbe un oggetto settings. 
 
-**Approccio file YAML/INI + classi:** In progetti più grandi o con molte configurazioni, usare file YAML o TOML per ambienti diversi può risultare organizzato. Ad esempio, uno schema:
+Questo offre il vantaggio della **validazione dei tipi** (ad es. se db_url deve essere una URL, Pydantic può validarla). Si possono definire default e Pydantic converte automaticamente tipi (int, bool ecc) e gestisce configurazioni innestate. Pydantic è ottimo quando _"la struttura di configurazione è relativamente semplice e basata su env var/.env"_, ovvero con pochi parametri principali. 
 
-config/  
-default.yaml  
-dev.yaml  
-prod.yaml
+Inoltre, integrandolo con FastAPI, le impostazioni possono essere utilizzate come dipendenze.
 
-con _default_ e override specifici. Librerie come **Dynaconf** supportano _multi-layer configuration_ caricando più file e mergeando in base a un _environment key_. Dynaconf permette definire config in diversi formati (YAML, TOML, Python) e distingue contesti _development_ vs _production_, oltre a supportare secrets criptati[\[47\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bproduction%5D%20DATABASE_URL%20%3D%20,Dynaconf%20can%20handle%20encrypted%20secrets)[\[48\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=API_KEY%20%3D%20%22%40STRONGLY_ENCRYPTED%3Aprod_api_key_encrypted_value%22%20,can%20handle%20encrypted%20secrets). È indicato quando _"servono configurazioni complesse, multi-sorgente e con separazione netta tra ambienti"_[\[49\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=). Alternativamente, **Hydra** (di Facebook) permette di comporre configurazioni da file modulari e sovrascriverle via CLI. Hydra è comune in contesti research per gestire molti parametri (es. architettura modelli, hyperparam) e variare esperimenti semplicemente lanciando ad es. python train.py data=bigearthnet model.unet.depth=5. Hydra crea automaticamente directory di output versionate con la config usata.
+#### Approccio file YAML/INI + altre classi
 
-**Consigli pratici config:** Se l'app è relativamente semplice (pochi parametri e segreti), **Pydantic BaseSettings** offre semplicità e robustezza (type-safe). Se cresce in complessità (es. decine di voci, più file), **Dynaconf** potrebbe essere utile per evitare boilerplate e gestire più sorgenti. Hydra è ottima se prevedi di fare molte variazioni di run (tipico nel training di modelli ML), ma per un servizio web forse è overkill.
+In progetti più grandi o con molte configurazioni, usare file YAML o TOML per ambienti diversi può risultare organizzato. Ad esempio, uno schema:
+```
+config/
+|_default.yaml  
+|_dev.yaml  
+|_prod.yaml
+```
+Librerie come **Dynaconf** supportano la *configurazione multi layer* caricando più file e unendoli in base ad una chiave di ambiente. 
 
-**Gestione secret in produzione:** Mai committare credenziali. In ambienti cloud, utilizzare servizi dedicati: AWS Secrets Manager, GCP Secret Manager, Hashicorp Vault. Ad esempio, su AWS si può memorizzare la OPENAI_API_KEY e recuperarla dinamicamente nella container ECS oppure injectarla come variabile d'ambiente tramite il sistema di configurazione (Terraform, etc.). Molti servizi CI/CD (GitHub Actions, GitLab CI) offrono un vault integrato per salvare secret e renderli disponibili come env var durante il deploy. Quindi, il pattern consigliato è: **in locale .env**, in CI/prod **env var** o config criptata.
+[Dynaconf](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration) permette definire config in diversi formati (YAML, TOML, Python) e distingue contesti _development_ vs _production_, oltre a supportare secrets criptati. È indicato quando _"servono configurazioni complesse, multi-sorgente e con separazione netta tra ambienti"_.
 
-**Strutturare config dev/stage/prod:** Mantenere un default comune e solo le differenze per ambiente. Ad esempio:
+ Alternativamente, **Hydra** (di Facebook) permette di comporre configurazioni da file modulari e sovrascriverle via CLI. Hydra è comune in contesti di ricerca per gestire molti parametri (es. architettura modelli, hyperparam) e variare esperimenti semplicemente lanciando. Hydra crea automaticamente directory di output versionate con la config usata.
 
-- config-default.yaml: DEBUG: false, DB_URL: postgres://prod...
-- config-dev.yaml: override: DEBUG: true, DB_URL: sqlite:///dev.db
-- config-stage.yaml: override per staging.
+**Consigli pratici config:** Se l'app è relativamente semplice (pochi parametri e segreti), **Pydantic BaseSettings** offre semplicità e robustezza (type-safe). Se cresce in complessità (es. decine di voci, più file), **Dynaconf** potrebbe essere utile per evitare boilerplate e gestire più sorgenti. **Hydra** è ottima se prevedi di fare molte variazioni di run (tipico nel training di modelli ML), ma per un servizio web forse è overkill.
 
-Con Dynaconf, potresti avere un unico settings.toml con sezioni \[development\], \[production\][\[50\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bdevelopment%5D%20DATABASE_URL%20%3D%20)[\[51\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=DATABASE_URL%20%3D%20). Oppure, semplicemente usare variabili d'ambiente diverse su server (il codice Pydantic di cui sopra legge dall'OS, quindi in prod basta settare MYAPP_DB_URL e co.).
+#### Gestione secret in produzione
 
-**Esempio:** Utilizzando l'approccio .env/Pydantic illustrato, avrai in .env (solo locale dev) le chiavi, es.:
+Mai fare il commit delle credenziali. In ambienti cloud, utilizzare servizi dedicati: AWS Secrets Manager, GCP Secret Manager, Hashicorp Vault. 
 
-MYAPP_OPENAI_API_KEY="sk-...dev"  
-MYAPP_DB_URL="sqlite:///dev.db"  
-MYAPP_DEBUG=true
+Ad esempio, su AWS si può memorizzare la OPENAI_API_KEY e recuperarla dinamicamente nel container ECS oppure inserirla come variabile d'ambiente tramite il sistema di configurazione (come Terraform). 
 
-Sul server di produzione, invece di .env, esporterai direttamente:
+Molti servizi CI/CD (GitHub Actions, GitLab CI) offrono un vault integrato per salvare secret e renderli disponibili come env var durante il deploy. Quindi, il pattern consigliato è: **in locale .env**, in CI/prod **env var** o config criptata.
 
-export MYAPP_OPENAI_API_KEY="sk-...prod"  
-export MYAPP_DB_URL="postgresql://user:pass@host/prod"  
-export MYAPP_DEBUG=false
-
-Il codice rimane uguale e legge i valori appropriati.
-
-In caso di necessità di secret altamente sensibili, una pratica avanzata è usare **Vault**: l'app al boot può interrogare Vault per ottenere ad esempio le credenziali DB runtime (così non risiedono mai su disco). Ciò aggiunge complessità e solitamente è usato in contesti enterprise.
-
-**Log delle config:** È utile, in fase di avvio applicazione, loggare quali config file sono stati caricati e quali environment attiva (ovviamente _non_ loggare i valori dei secret!). Ad esempio, Dynaconf stampa Current Environment: development e da dove legge i valori[\[52\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=)[\[53\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=print%28f,Debug%20Mode%3A%20%7Bsettings.get%28%27DEBUG_MODE). Questo aiuta a evitare confusioni (es. variabile non letta per typo nel nome).
-
-In sintesi, investire tempo in una solida gestione di config/secret garantisce che l'app possa passare da dev a prod senza modifiche manuali al codice, minimizzando rischi di leak (niente chiavi in repo) e facilitando tuning per ambienti diversi.
+In sintesi, investire tempo in una solida gestione di config/secret garantisce che l'app possa passare da dev a prod senza modifiche manuali al codice, minimizzando rischi di leak (niente chiavi in repository mi raccomando).
 
 ### 2.5 Dataset Open e Cataloghi STAC/COG per Disastri
 
-Per progetti di **Disaster Intelligence**, attingere a dataset open aggiornati è cruciale. Fortunatamente 2022-2025 ha visto crescere cataloghi **STAC** (SpatioTemporal Asset Catalog) e dataset specializzati. Ecco una selezione dei dataset e risorse _state-of-the-art_:
+Per progetti di **Disaster Intelligence**, attingere a dataset open aggiornati è cruciale. Fortunatamente tra 2022-2025 sono aumentati i cataloghi **STAC** (SpatioTemporal Asset Catalog) e dataset specializzati. Ecco una selezione dei dataset e risorse _state-of-the-art_:
 
 | Dataset / Catalog | Dati (tipo e risoluzione) | Copertura/Dimensione | Task / Utilizzo | Fonte (link) |
 | --- | --- | --- | --- | --- |

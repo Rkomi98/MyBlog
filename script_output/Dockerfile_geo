@@ -1,0 +1,45 @@
+## Dockerfile per pipeline geospaziale con supporto GPU (versione 2025)
+##
+## Questo Dockerfile multi-stage costruisce un ambiente completo per eseguire
+## pipeline geospaziali e AI su dati raster e vettoriali. La fase builder usa
+## l'immagine `continuumio/miniconda3:latest` per creare un ambiente conda
+## definito da `environment.yaml` e aggiorna Mamba alla versione 2.3.3. La fase
+## finale usa `nvidia/cuda:13.0.2-runtime-ubuntu22.04`, che include il runtime
+## CUDA 13.0.2 (update 2), per offrire supporto GPU alle librerie come PyTorch
+## oppure TensorFlow. L'installazione conda viene copiato nella fase di
+## produzione per ridurre dimensioni e includere solo le librerie necessarie.
+
+#### Stage 1: builder con Miniconda e Mamba
+FROM continuumio/miniconda3:latest AS builder
+
+### Aggiorniamo Mamba alla versione 2.3.3 e rimuoviamo i pacchetti temporanei
+RUN conda install -n base -c conda-forge mamba==2.3.3 \
+    && conda clean -afy
+
+### Copiamo il file environment.yaml e aggiorniamo l'ambiente base con i pacchetti specificati
+COPY environment.yaml /tmp/environment.yaml
+RUN mamba env update -n base -f /tmp/environment.yaml \
+    && conda clean -afy
+
+### Installiamo pacchetti aggiuntivi via pip (ad esempio RasterVision)
+RUN pip install --no-cache-dir rastervision==0.31.2
+
+#### Stage 2: immagine di produzione con supporto CUDA
+FROM nvidia/cuda:13.0.2-runtime-ubuntu22.04 AS production
+
+### Copiamo l'installazione conda dalla fase builder. Questo include Python
+### e tutte le librerie installate con mamba/pip.
+COPY --from=builder /opt/conda /opt/conda
+
+### Aggiorniamo la variabile PATH per poter accedere ai comandi conda/pip
+ENV PATH="/opt/conda/bin:$PATH"
+
+### Definiamo la directory di lavoro all'interno del container
+WORKDIR /app
+
+### Copiamo il codice sorgente
+COPY src/ ./src/
+COPY entrypoint.py ./
+
+### Comando di avvio della pipeline: esegue lo script entrypoint.py
+CMD ["python", "entrypoint.py"]
