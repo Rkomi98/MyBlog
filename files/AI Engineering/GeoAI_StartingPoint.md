@@ -156,65 +156,84 @@ La qualità non è più solo questione di scrittura, ma di ecosistema. E in ques
 
 ### 2.3 Docker e Containerizzazione AI+GEO
 
-Containerizzare l'app consente di uniformare ambiente (specialmente per librerie native e driver GPU) e facilitare il deploy. Presentiamo due esempi di **Dockerfile** ottimizzati, uno per un servizio LLM/RAG leggero, l'altro per una pipeline geospaziale pesante, e una tabella di immagini base consigliate.
+Questa è una parte che mi sta molto a cuore (tanto da voler spendere una serie intera su Docker).
+
+Containerizzare l'app consente di uniformare l'ambiente di sviluppo (specialmente per librerie native e driver GPU) e facilitare quindi la fase di deploy. Presentiamo due esempi di **Dockerfile** ottimizzati, uno per un servizio LLM/RAG leggero, l'altro per una pipeline geospaziale pesante, e una tabella di immagini base consigliate.
 
 #### Esempio 1: Dockerfile per servizio LLM/RAG + FastAPI (CPU)
+
 ```Docker
-# Use Python slim base for minimal size  
-FROM python:3.11-slim as base  
-# Install system deps (if any minimal, e.g. git)  
+# Usiamo Python slim base per lo spazio minimo indispensabile
+FROM python:3.12-slim as base  
+# Installiamo le dipendenze di sistema + git, evitando i pacchetti suggeriti e cancella la cache
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/\*  
-# Create non-root user  
+# Creiamo un nuovo utente e la sua home directory. Infine imposta la directory di lavoro. 
 RUN useradd -m appuser  
 WORKDIR /app  
-# Install Poetry and dependencies  
-RUN pip install poetry==1.6.1  
-COPY pyproject.toml poetry.lock ./  
+# Installa Poetry e le varie dipendenze 
+RUN pip install poetry
+# Copia i file dalla macchina host nella directory corrente dell’immagine
+COPY pyproject.toml poetry.lock ./
+# NON creare un virtualenv, ma install i pacchetti direttamente nell’ambiente Python “globale” del container.
+# Installa le dipendenze definite escludendo le dipendenze di sviluppo
 RUN poetry config virtualenvs.create false && poetry install --no-dev  
-# Copy app code  
-COPY src/ ./src/  
-COPY main.py ./  
+# Copia file e cartelle nelle opportune cartelle di lavoro
+COPY src/ ./src/
+COPY main.py ./
+# Da qui in poi, tutti i comandi (compreso il processo principale) girano con l’utente non-root appuser, aumentando la sicurezza.
 USER appuser  
+# Avvia Uvicorn esponendo l’app main:app
 CMD \["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"\]
 ```
 
-**Note:** Qui usiamo python:3.11-slim (~50MB) per ridurre l'immagine. L'installazione delle dipendenze è fatta in un layer separato copiando solo pyproject/lock (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). Uvicorn serve l'app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere RUN pip install transformers o includerlo in poetry.
+**Note:** Qui usiamo python:3.11-slim (~50MB) per ridurre la dimensione dell'immagine. L'installazione delle dipendenze è fatta in un layer separato copiando solo `pyproject/lock` (per sfruttare la cache Docker: se solo il codice cambia e non le deps, non si reinstallano tutti i pacchetti). 
 
-**Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)**
+Uvicorn serve l'app FastAPI. Questo container è CPU-only (adatto a LLM via API esterna o modelli piccoli). Se volessimo includere un modello locale (es. Transformers), basterebbe aggiungere `RUN pip install transformers` o includerlo direttamente in poetry.
 
+#### Esempio 2: Dockerfile per pipeline geospaziale (con GDAL, opzionale GPU)
+Vediamo ora un esempio più comlesso ma anche più adeguato ad un GeoAI engineer.
 ```Docker
-\# Start from miniconda image for geospatial ease  
+# Partiamo da un'immagine con miniconda per semplicità
 FROM continuumio/miniconda3:4.12.0 as builder  
-<br/>\# Create env with mamba for faster solving  
-RUN conda install -n base -c conda-forge mamba==1.4.2 && conda clean -afy  
-<br/>\# Copy environment file and install  
+# Creiamo ora un ambiente usando Mamba
+RUN conda install -n base -c conda-forge mamba==1.4.2 && conda clean -afy
+# Copiamo il file di environment e installiamo le librerie
 COPY environment.yaml /tmp/environment.yaml  
 RUN mamba env update -n base -f /tmp/environment.yaml && conda clean -afy  
-<br/>\# (Optional) Install additional pip packages if any  
+# (Opzionale) Installa pacchetti aggiuntivi con pip
 RUN pip install -U rastervision==0.31.2  
-<br/>\# -- Second stage for final image (slimmer) --  
-FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, se serve  
-\# (se GPU non necessaria, usare continuumio/miniconda3 anche qui per semplicità)  
-<br/>COPY --from=builder /opt/conda /opt/conda  
+
+FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04 AS production # base con driver CUDA per GPU, SOLO se serve (se la GPU non necessaria, usare continuumio/miniconda3 anche qui)
+# Da qui in poi è simile all'esempio precedente
+COPY --from=builder /opt/conda /opt/conda  
 ENV PATH="/opt/conda/bin:\$PATH"  
 WORKDIR /app  
 COPY src/ ./src/  
 COPY entrypoint.py ./  
-<br/>CMD \["python", "entrypoint.py"\]
+CMD \["python", "entrypoint.py"\]
 ```
-**Note:** In questo Dockerfile multi-stage, usiamo come builder l'immagine **Miniconda** con mamba per risolvere le dipendenze (in environment.yaml specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato)[\[15\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error)[\[16\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager). Nella seconda stage production, partiamo da un runtime **CUDA** nvidia sottile (include i driver necessari per PyTorch Tensor GPU). Copiamo l'installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un'immagine pronta con GPU support e libs geospaziali. **Tip:** assicurarsi di impostare ENV PYTHONUNBUFFERED=1 e altre var di ambiente se servono (es. per PROJ/GDAL path). Si potrebbe anche usare mambaorg/micromamba per creare un env conda da zero in un solo stage, riducendo dimensioni (micromamba è ~50MB vs conda ~300MB). In alternativa, esistono immagini pre-costruite come **osgeo/gdal** con GDAL e PROJ già installati - utili se il focus è manipolare raster/OGR senza reinventare la wheel.
+
+Abbiamo considerato qui un esempio preso da una [fonte](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application) da cui, ai tempi, anche io ho studiato. 
+
+In questo Dockerfile multi-stage, usiamo come builder l'immagine **Miniconda** con mamba per risolvere le dipendenze (in `environment.yaml` specifichiamo ad es: gdal, rasterio, geopandas, pytorch, ecc. con canale conda-forge). Questo approccio gestisce automaticamente librerie native (GEOS, PROJ, etc.) evitando errori di pip (es. pip install gdal fallirebbe senza GDAL dev installato). 
+
+Nella seconda parte, partiamo da un runtime **CUDA** nvidia molto sottile, che include solo i driver necessari per PyTorch Tensor GPU. 
+
+Copiamo l'installazione conda dal builder, evitando di portarsi dietro i layer di compilazione. Il risultato è un'immagine pronta con supporto GPU e libs geospaziali. 
 
 Di seguito una tabella di **immagini base** comuni per vari scenari:
 
 | Immagine base | Contenuto | Uso consigliato |
 | --- | --- | --- |
-| **python:3.11-slim** | Debian slim + Python 3.x | Servizi Python leggeri (API, agent) - minima (50MB) |
-| **continuumio/miniconda3** | Miniconda + conda (base env) | Data science/Geo completo; facile installare pacchetti complessi (es. GDAL)[\[15\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error) ma molto pesante (>\\~1GB)[\[45\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=We%20are%20starting%20from%20Miniconda,of%20dockerfile%20are%20as%20follows) |
-| **mambaorg/micromamba** | Micromamba in Alpine/CentOS | Costruire immagini con env conda in maniera snella; ideale in multi-stage (scarica solo i pacchetti richiesti) |
-| **nvidia/cuda:12.2-runtime** | Librerie CUDA + runtime base | Aggiungere supporto GPU. Da usare con pip/conda per installare PyTorch/TF con CUDA compatibile. |
-| **pytorch/pytorch:2.0-cuda11.8** | Python + PyTorch 2.0 + CUDA preinstallati | Lavori di training/inference DL su GPU - evita configurazioni manuali di CUDA/cuDNN. Include però anche varie libs (immagine ~>10GB). |
-| **osgeo/gdal:ubuntu-full** | Ubuntu + GDAL precompilato (full drivers) | Pipeline GIS/RS intensive: include GDAL, PROJ, GEOS ecc. già configurati. Utile per tool OGR, conversioni, ecc., evitando compilazioni. |
-| **jupyter/scipy-notebook** | Python con JupyterLab + stack SciPy | Ambienti notebook pronti all'uso (CPU). Include numpy, pandas, matplotlib, etc. Utile per sviluppo interattivo, anche su cloud (ad es. Docker Stacks di JupyterHub). |
+| [**python:3.12-slim**](https://hub.docker.com/layers/library/python/3.12-slim/images/) | Debian slim + Python 3.x | Servizi Python leggeri (API, agent) - minima (<50MB) |
+| [**continuumio/miniconda3**](https://hub.docker.com/r/continuumio/miniconda3) | Miniconda + conda (base env) | Data science/[Geo completo](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error); facile installare pacchetti complessi (es. GDAL) |
+| [**mambaorg/micromamba**](https://micromamba-docker.readthedocs.io/en/latest/) | Micromamba in Alpine/CentOS | Costruire immagini con env conda in maniera snella; ideale in multi-stage (scarica solo i pacchetti richiesti) |
+| [**nvidia/cuda:12.2-runtime**](https://hub.docker.com/r/nvidia/cuda) | Librerie CUDA + runtime base | Aggiungere supporto GPU. Da usare con pip/conda per installare PyTorch/TF con CUDA compatibile. Considerate che siamo alla versione 13.0.2 ora|
+| [**pytorch/pytorch:2.0-cuda11.8**](https://hub.docker.com/r/pytorch/pytorch) | Python + PyTorch 2.0 + CUDA preinstallati | Lavori di training/inference DL su GPU - evita configurazioni manuali di CUDA/cuDNN. Include però anche varie libs (immagine ~>10GB). |
+| [**osgeo/gdal:ubuntu-full**](https://github.com/OSGeo/gdal/pkgs/container/gdal) | Ubuntu + GDAL precompilato (full drivers) | Pipeline GIS/RS intensive. |
+| [**jupyter/scipy-notebook**](https://hub.docker.com/r/jupyter/scipy-notebook) | Python con Jupyter Notebook + stack SciPy | Ambienti notebook pronti all'uso (CPU). Include numpy, pandas, matplotlib, etc. Utile per sviluppo interattivo, anche su cloud (ad es. Docker Stacks di JupyterHub). |
+
+Non escludo che ci siano 
 
 **Caching & multi-stage:** Per velocizzare il rebuild, sfruttare la cache Docker: ordinare le istruzioni Dockerfile dal meno volatile al più volatile. Esempio: installare prima le dipendenze (che cambiano raramente) e copiare poi il codice. Inoltre, usare multi-stage build consente di copiare solo l'essenziale (es. binari compilati) in produzione, riducendo la taglia. Per immagini AI, è buona norma **pulire cache pip/conda** (come fatto sopra con conda clean) e rimuovere compilatori se installati temporaneamente.
 
