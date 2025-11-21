@@ -153,6 +153,9 @@ Nei team AI cross-funzionali, è utile chiarire chi è **Responsible (R)**, **Ac
 
 _(Legenda:_ _R_ _\= Responsible (esegue l'attività);_ _A_ _\= Accountable (ha l'ultima responsabilità del risultato);_ _C_ _\= Consulted (viene interpellato attivamente);_ _I_ _\= Informed (tenuto al corrente). Un ruolo può avere più lettere in una fase se svolge più contributi.)_
 
+![Sintesi visiva RACI](../Assets/RACI.png)
+_Figura 1 – Ruoli e responsabilità RACI nelle fasi di un progetto AI Engineering._
+
 ## Glossario dell'AI Engineer
 
 Per fissare bene le tante cose di cui abbiamo parlato, può essere utile un glossario con tutti i concetti imparati oggi.
