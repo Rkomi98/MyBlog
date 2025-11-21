@@ -1123,18 +1123,18 @@ settings = Settings()</code></pre><p>Questo codice usa <strong>Pydantic BaseSett
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>xBD / xView2</strong> (2019)</td>
+<td><strong><a href="https://arxiv.org/abs/1911.09296">xBD</a> / <a href="https://xview2.org/">xView2</a></strong> (2019)</td>
 <td>Immagini satellitari Maxar pre- e post-evento (RGB, ~0.3 m/px, tile 1024×1024); annotazioni edifici + classe danno</td>
-<td>19 eventi in 15 Paesi (terremoti, uragani, incendi); 850k edifici annotati su <del>45k km²[[54]](<a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#">https://www.ibm.com/think/insights/the-xview2-ai-challenge#</a>:</del>:text=The%20data%20used%20for%20the,resolution%20color%20images)<a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world">[55]</a>; 9k coppie immagine pre/post per training</td>
+<td><a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world">19 eventi di 5 tipi diversi</a> (terremoti, uragani, incendi); <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images">850k edifici annotati su ~45k km²</a>; 9k coppie immagine pre/post per training</td>
 <td><strong>Building Damage Assessment</strong> - segmentazione edifici e classificazione danno (nessuno, leggero, moderato, pesante, distrutto)</td>
-<td>DIU xView2 <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images">[54]</a> - [Paper xBD]<a href="https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf#:~:text=Imagery%20openaccess,of%20imagery%20from%2015%20countries">[56]</a></td>
+<td><a href="https://xview2.org/">DIU xView2</a> - <a href="https://arxiv.org/abs/1911.09296">Paper xBD</a>)</td>
 </tr>
 <tr>
-<td><strong>C2SMS Floods</strong> (2022)</td>
-<td>Chips Sentinel-1 (SAR) + Sentinel-2 (Ottico) co-registrati, 256×256 px; maschere binarie acqua (inondazione vs acqua permanente)</td>
-<td><del>900 coppie chip da eventi alluvionali globali (es. Harvey 2017, Kerala 2018)[[57]](<a href="https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#">https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#</a>:</del>:text=The%20C2S,of%20chips%2C%20and%20water%20labels) - totale 1800 immagini</td>
-<td><strong>Flood segmentation (multimodale)</strong> - addestramento modelli a rilevare acqua alluvionale combinando SAR e ottico</td>
-<td>Microsoft/Cloud to Street - [DOI Radiant]<a href="https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf#:~:text=The%20C2S,oz32gz">[58]</a></td>
+<td><strong><a href="https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html">C2SMS Floods</a></strong> (fine nel 2023)</td>
+<td>Sentinel-1 (SAR) + Sentinel-2 (Ottico) co-registrati, 512×512 px; maschere binarie con acqua (inondazione vs acqua permanente)</td>
+<td>~900 coppie chip da 18 eventi alluvionali globali</td>
+<td><strong><a href="https://github.com/microsoft/PlanetaryComputerExamples/blob/main/competitions/s1floods/benchmark_tutorial.ipynb">Flood segmentation (multimodale)</a></strong> - addestramento modelli per rilevare acqua alluvionale combinando SAR e ottico</td>
+<td><a href="https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf#:~:text=The%20C2S,oz32gz">Microsoft/Cloud to Street</a></td>
 </tr>
 <tr>
 <td><strong>Sen1Floods11</strong> (2020)</td>
