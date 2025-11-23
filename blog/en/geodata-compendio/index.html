@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>**Technical Compendium of Earth Observation Systems: Physics, Metrology, and Advanced Satellite Applications**</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+      --code-inline-bg: rgba(6, 11, 19, 0.92);
+      --code-block-bg: #050912;
+      --code-border: rgba(148, 163, 184, 0.35);
+      --code-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      --code-text: #f8fafc;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.15rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .post-toc__item.level-1 {
+      padding-left: 1rem;
+    }
+    .post-toc__item.level-2 {
+      padding-left: 2rem;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--code-text);
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .post-body pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .post-body pre {
+      background: var(--code-block-bg);
+      color: var(--code-text);
+      padding: 1.2rem 1.4rem;
+      padding-right: 3.6rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: var(--code-shadow);
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      position: relative;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      background: rgba(96, 165, 250, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .code-copy-btn__icon {
+      font-size: 0.95rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      background: rgba(248, 250, 252, 0.85);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.92);
+      color: #ffffff;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(37, 99, 235, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem 1.5rem;
+      }
+      main.page {
+        padding: 2.75rem 1.5rem 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🛰️</div>
+        <span class="post-hero__category">GeoAI</span>
+        <h1 class="post-hero__title">**Technical Compendium of Earth Observation Systems: Physics, Metrology, and Advanced Satellite Applications**</h1>
+        <div class="post-hero__meta">
+          <span>📅 November 23, 2025</span>
+          <span>⏱️ 29 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc">
+        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+        <ul class="post-toc__list">
+          <li class="post-toc__item level-0"><a class="post-toc__link" href="#1-introduction-the-evolution-of-satellite-remote-sensing">**1. Introduction: The Evolution of Satellite Remote Sensing**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-gnss-radio-occultation-gnss-ro-precision-atmospheric-sounding">**2. GNSS Radio Occultation (GNSS-RO): Precision Atmospheric Sounding**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-and-mathematical-formulation">**Physical Principle and Mathematical Formulation**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#utility-and-critical-applications">**Utility and Critical Applications**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#reference-missions">**Reference Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-gnss-reflectometry-gnss-r-the-bistatic-radar-of-opportunity">**3. GNSS Reflectometry (GNSS-R): The Bistatic Radar of Opportunity**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-operation-and-formulas">**Physical Operation and Formulas**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#utility-and-applications">**Utility and Applications**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-synthetic-aperture-radar-sar-all-weather-microwave-imaging">**4. Synthetic Aperture Radar (SAR): All-Weather Microwave Imaging**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-1">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-operation-and-formulas-1">**Physical Operation and Formulas**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#utility-and-applications-1">**Utility and Applications**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-1">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-sar-interferometry-insar-geodesy-from-space">**5. SAR Interferometry (InSAR): Geodesy from Space**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-2">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principles-and-formulas">**Physical Principles and Formulas**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#applications">**Applications**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-radar-altimetry-ocean-and-ice-topography">**6. Radar Altimetry: Ocean and Ice Topography**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-3">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principles-and-formulas-1">**Physical Principles and Formulas**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-2">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#7-scatterometry-wind-over-the-sea-surface">**7. Scatterometry: Wind over the Sea Surface**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-4">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principles-and-formulas-2">**Physical Principles and Formulas**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#utility-and-applications-2">**Utility and Applications**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-3">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#8-panchromatic-optical-imaging-extreme-geometric-resolution">**8. Panchromatic Optical Imaging: Extreme Geometric Resolution**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-5">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-operation">**Physical Operation**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#applications-and-pansharpening">**Applications and Pansharpening**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-4">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#9-multispectral-optical-imaging-the-color-of-earth">**9. Multispectral Optical Imaging: The Color of Earth**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-6">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physics-and-spectral-indices">**Physics and Spectral Indices**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#applications-and-missions">**Applications and Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#10-hyperspectral-imaging-spectroscopy-from-space">**10. Hyperspectral Imaging: Spectroscopy from Space**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-7">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-operation-and-spectral-mixing">**Physical Operation and Spectral Mixing**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#utility-and-applications-3">**Utility and Applications**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-5">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#11-thermal-infrared-tir-the-planets-heat">**11. Thermal Infrared (TIR): The Planet&#39;s Heat**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-8">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-and-formulas">**Physical Principle and Formulas**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-6">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#12-passive-microwave-radiometry-surface-imaging">**12. Passive Microwave Radiometry (Surface Imaging)**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-9">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-and-synthetic-interferometry">**Physical Principle and Synthetic Interferometry**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-7">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#13-microwave-radiometry-for-atmospheric-sounding">**13. Microwave Radiometry for Atmospheric Sounding**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-10">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle">**Physical Principle**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#utility">**Utility**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#14-topographic-and-bathymetric-lidar-photon-counting">**14. Topographic and Bathymetric Lidar: Photon Counting**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-11">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-photon-counting">**Physical Principle: Photon Counting**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#applications-and-missions-1">**Applications and Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#15-atmospheric-doppler-lidar-wind-lidar">**15. Atmospheric Doppler Lidar (Wind Lidar)**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-12">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-1">**Physical Principle**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-8">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#16-satellite-gravimetry-weighing-water-from-space">**16. Satellite Gravimetry: Weighing Water from Space**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-13">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-satellite-to-satellite-tracking-sst">**Physical Principle: Satellite-to-Satellite Tracking (SST)**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-and-applications">**Missions and Applications**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#17-satellite-magnetometry">**17. Satellite Magnetometry**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-14">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-fluxgate-and-scalar">**Physical Principle: Fluxgate and Scalar**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missions-9">**Missions**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#18-lightning-mapping-geostationary-glm">**18. Lightning Mapping (Geostationary): GLM**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#what-it-measures-15">**What It Measures**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#physical-principle-2">**Physical Principle**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#applicazioni">**Applicazioni**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#19-segnali-di-opportunit-e-cubesat-radar-la-nuova-frontiera">**19. Segnali di Opportunità e CubeSat Radar: La Nuova Frontiera**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#a-monitoraggio-traffico-ais-e-ads-b-satellitare">**A. Monitoraggio Traffico: AIS e ADS-B Satellitare**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#b-cubesat-radar-raincube">**B. CubeSat Radar: RainCube**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#c-smart-lnb-pioggia-dalle-tv-satellitari">**C. Smart LNB: Pioggia dalle TV Satellitari**</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#tabella-comparativa-sintetica-delle-tecnologie">**Tabella Comparativa Sintetica delle Tecnologie**</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#conclusion">**Conclusion**</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#works-cited">**Works cited**</a></li>
+        </ul>
+      </aside>
+        <div class="post-body">
+          <p>\</p>
+<h2 id="1-introduction-the-evolution-of-satellite-remote-sensing"><strong>1. Introduction: The Evolution of Satellite Remote Sensing</strong></h2>
+<p>Earth Observation (EO) has undergone a radical metamorphosis over the last decade, transitioning from an exclusive domain of large government agencies to a hybrid and dynamic ecosystem, characterized by the convergence of high-precision scientific missions and massive commercial constellations. The ability to monitor the Earth system on a global scale, with unprecedented temporal and spatial resolutions, lies in the diversification of sensor technologies. It is no longer just about acquiring optical images, but about probing the physics of the atmosphere, the chemistry of the oceans, and the dynamics of the Earth&#39;s crust across the entire electromagnetic spectrum and beyond, measuring gravitational and magnetic potential fields.</p>
+<p>This report analyzes in detail nineteen distinct categories of satellite instrumentation. For each, the physical principle of operation is dissected, supported by the mathematical formalism governing the interaction between radiation and matter, and the operational applications that transform raw data into critical geophysical information are examined.<sup>1</sup> The analysis extends from passive sensors that measure reflected solar radiation or terrestrial thermal emission, to active sensors that illuminate the surface with their own pulses, to opportunistic sensors that exploit existing signals to infer environmental properties.</p>
+<hr>
+<h2 id="2-gnss-radio-occultation-gnss-ro-precision-atmospheric-sounding"><strong>2. GNSS Radio Occultation (GNSS-RO): Precision Atmospheric Sounding</strong></h2>
+<p>GNSS Radio Occultation (GNSS-RO) represents one of the most elegant and robust remote sensing techniques, transforming navigation signals, originally conceived for positioning, into high-precision tools for meteorology and climatology.</p>
+<h3 id="physical-principle-and-mathematical-formulation"><strong>Physical Principle and Mathematical Formulation</strong></h3>
+<p>The technique is based on the refraction of radio waves transmitted by GNSS satellites (GPS, Galileo, GLONASS) as they pass through the Earth&#39;s atmosphere to reach a receiver on a low Earth orbit (LEO) satellite setting behind the Earth&#39;s limb. Due to the vertical variation in atmospheric density, the signal path is curved.</p>
+<p>The fundamental parameter measured is the excess phase delay, from which the bending angle ($\alpha$) is derived as a function of the impact parameter ($a$). In a locally spherically symmetric atmosphere, the relationship between the bending angle and the refractive index $n(r)$ is governed by the generalized Snell&#39;s law and can be inverted using the inverse Abel transform <sup>3</sup>:</p>
+<p>$$n(r) = \exp \left( \frac{1}{\pi} \int_{a}^{\infty} \frac{\alpha(x)}{\sqrt{x^2 - a^2}} \, dx \right)$$</p>
+<p>Where $x = n(r) \cdot r$ is the refractive radius. Once the refractive index profile is obtained, the refractivity $N$ is calculated, defined as $N = (n-1) \times 10^6$. The relationship between refractivity and atmospheric thermodynamic variables is described by the Smith-Weintraub equation <sup>3</sup>:</p>
+<p>$$N = 77.6 \frac{P}{T} + 3.73 \times 10^5 \frac{e}{T^2} - 40.3 \frac{n_e}{f^2}$$</p>
+<p>In this equation:</p>
+<ul>
+<li><p>$P$ is the total atmospheric pressure (hPa).</p>
+</li>
+<li><p>$T$ is the temperature (K).</p>
+</li>
+<li><p>$e$ is the partial pressure of water vapor (hPa).</p>
+</li>
+<li><p>$n_e$ is the electron density, which dominates the ionospheric term (significant above 60-80 km).</p>
+</li>
+<li><p>$f$ is the signal frequency.</p>
+</li>
+</ul>
+<h3 id="utility-and-critical-applications"><strong>Utility and Critical Applications</strong></h3>
+<p>The strength of GNSS-RO lies in its &quot;self-calibrating&quot; nature: since it is based on time and frequency measurements (guaranteed by atomic clocks), it does not suffer from instrumental drift, making it ideal for long-term climate monitoring.<sup>6</sup></p>
+<ul>
+<li><p><strong>Operational Meteorology (NWP):</strong> RO profiles are essential for anchoring weather models in the upper troposphere and stratosphere, where other data are scarce, correcting temperature biases.<sup>7</sup></p>
+</li>
+<li><p><strong>Climatology:</strong> Monitoring global temperature trends and the tropopause with absolute precision.</p>
+</li>
+<li><p><strong>Space Weather:</strong> Measurement of Total Electron Content (TEC) and ionospheric scintillations, crucial for the security of satellite communications.<sup>8</sup></p>
+</li>
+</ul>
+<h3 id="reference-missions"><strong>Reference Missions</strong></h3>
+<p>The technique was pioneered by the <strong>GPS/MET</strong> mission and made operational by the <strong>COSMIC-1</strong> constellation (Taiwan/USA). Currently, <strong>COSMIC-2</strong> provides dense coverage in equatorial latitudes, optimized for studying hurricanes and the ionosphere.<sup>6</sup> In parallel, the &quot;NewSpace&quot; commercial sector has revolutionized this field: <strong>Spire Global</strong>, with its constellation of over 100 LEMUR CubeSats, and <strong>PlanetIQ</strong>, provide thousands of daily occultations, integrating institutional data.<sup>9</sup></p>
+<hr>
+<h2 id="3-gnss-reflectometry-gnss-r-the-bistatic-radar-of-opportunity"><strong>3. GNSS Reflectometry (GNSS-R): The Bistatic Radar of Opportunity</strong></h2>
+<p>While Radio Occultation exploits signals transmitted through the atmosphere, GNSS Reflectometry (GNSS-R) analyzes signals reflected from the Earth&#39;s surface, operating as a multi-static bistatic radar.</p>
+<h3 id="what-it-measures"><strong>What It Measures</strong></h3>
+<p>GNSS-R allows for the extraction of geophysical properties from the reflecting surface:</p>
+<ul>
+<li><p><strong>Oceans:</strong> Surface wind speed and Mean Square Slope.</p>
+</li>
+<li><p><strong>Land:</strong> Soil Moisture and vegetation biomass.</p>
+</li>
+<li><p><strong>Cryosphere:</strong> Sea ice extent and thickness.</p>
+</li>
+</ul>
+<h3 id="physical-operation-and-formulas"><strong>Physical Operation and Formulas</strong></h3>
+<p>The receiver measures the power of the reflected signal as a function of time delay and Doppler shift, generating a <em>Delay Doppler Map</em> (DDM). The received power $P_r$ is described by the bistatic radar equation <sup>9</sup>:</p>
+<p>$$ P_r(\tau, f_D) = \frac{P_t G_t \lambda^2}{(4\pi)^3} \iint_A \frac{G_r(\vec{r}) \sigma^0(\vec{r}) \chi^2(\tau, f_D)}{R_t^2(\vec{r}) R_r^2(\vec{r})} , d\vec{r} $$</p>
+<p>Where:</p>
+<ul>
+<li><p>$\sigma^0$ is the bistatic scattering coefficient of the surface.</p>
+</li>
+<li><p>$\chi^2$ is the ambiguity function (Woodward Ambiguity Function) that describes the system&#39;s response.</p>
+</li>
+<li><p>$R_t$ and $R_r$ are the distances from the transmitter and receiver to the specular reflection point.</p>
+</li>
+</ul>
+<p>On calm (specular) surfaces, energy is concentrated at one point in the DDM. On rough surfaces (ocean agitated by wind), energy disperses to form a &quot;horseshoe&quot; shape in the DDM map; the amplitude of this dispersion is directly correlated with wind speed.</p>
+<h3 id="utility-and-applications"><strong>Utility and Applications</strong></h3>
+<p>The &quot;killer&quot; application of GNSS-R is tropical cyclone monitoring. Unlike optical radiometers (blocked by clouds) or Ku-band scatterometers (attenuated by heavy rain), L-band GNSS signals penetrate intense precipitation, allowing for the measurement of wind speed in the eye of the cyclone.<sup>9</sup></p>
+<p>In terrestrial environments, the technique provides high-temporal-resolution soil moisture maps, essential for flood forecasting and agriculture.</p>
+<h3 id="missions"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>CYGNSS (NASA):</strong> A constellation of 8 microsatellites launched to study hurricane intensification, which has also demonstrated surprising capabilities in monitoring tropical wetlands.</p>
+</li>
+<li><p><strong>FSSCat (ESA):</strong> A mission based on two 6U CubeSats (²Cat-5/A and B) that combines GNSS-R with an optical hyperspectral sensor, winner of the Copernicus Masters.<sup>12</sup></p>
+</li>
+<li><p><strong>Spire Global:</strong> Offers commercial reflectometry products for maritime and sea ice monitoring.<sup>9</sup></p>
+</li>
+</ul>
+<hr>
+<h2 id="4-synthetic-aperture-radar-sar-all-weather-microwave-imaging"><strong>4. Synthetic Aperture Radar (SAR): All-Weather Microwave Imaging</strong></h2>
+<p>SAR represents the primary instrument for observing the solid surface in all weather and lighting conditions, thanks to its active nature and microwave wavelength.</p>
+<h3 id="what-it-measures-1"><strong>What It Measures</strong></h3>
+<p>SAR returns complex images where each pixel contains:</p>
+<ul>
+<li><p><strong>Amplitude:</strong> Correlated with surface roughness, dielectric constant (moisture), and local geometry.</p>
+</li>
+<li><p><strong>Phase:</strong> Correlated with the geometric sensor-target distance, fundamental for interferometric applications.</p>
+</li>
+</ul>
+<h3 id="physical-operation-and-formulas-1"><strong>Physical Operation and Formulas</strong></h3>
+<p>To achieve high spatial resolution in the azimuthal direction (along-track) without employing kilometer-long antennas, SAR exploits the satellite&#39;s motion to synthesize a virtual aperture. By coherently processing the phase history of the return echoes (Doppler effect), the theoretical azimuthal resolution $\delta_a$ becomes independent of distance and is equal to half the length of the real antenna $L_a$ <sup>14</sup>:</p>
+<p>$$\delta_a = \frac{L_a}{2}$$</p>
+<p>The range resolution (perpendicular to the track) is determined by the bandwidth $B$ of the transmitted pulse (often a frequency-modulated <em>chirp</em>):</p>
+<p>$$\delta_r = \frac{c}{2B \sin(\theta)}$$</p>
+<p>Where $\theta$ is the incidence angle. The phase equation $\phi$ for a pixel at distance $R$ is given by <sup>15</sup>:</p>
+<p>$$\phi = -\frac{4\pi R}{\lambda} + \phi_{scatt}$$</p>
+<p>The term $4\pi R / \lambda$ indicates that the phase completes a full cycle each time the distance changes by half a wavelength ($\lambda/2$).</p>
+<h3 id="utility-and-applications-1"><strong>Utility and Applications</strong></h3>
+<p>The versatility of SAR is immense:</p>
+<ul>
+<li><p><strong>Maritime Monitoring:</strong> Detection of ships, <em>oil spills</em> (which appear dark due to capillary wave suppression) and sea ice classification.<sup>16</sup></p>
+</li>
+<li><p><strong>Agriculture:</strong> Monitoring crop growth (biomass and structure sensitivity) and soil moisture.</p>
+</li>
+<li><p><strong>Emergency Management:</strong> Rapid flood mapping (calm water appears black due to specular reflection away from the sensor).<sup>16</sup></p>
+</li>
+</ul>
+<h3 id="missions-1"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>Sentinel-1 (ESA/Copernicus):</strong> The reference C-band mission, providing global data with an open access policy, crucial for operational interferometry.<sup>16</sup></p>
+</li>
+<li><p><strong>COSMO-SkyMed (ASI/Italy) &amp; TerraSAR-X (DLR/Germany):</strong> X-band systems with very high resolution for dual civil/military uses.</p>
+</li>
+<li><p><strong>NISAR (NASA/ISRO):</strong> Future L- and S-band mission, focused on biomass and global crustal deformation.</p>
+</li>
+</ul>
+<hr>
+<h2 id="5-sar-interferometry-insar-geodesy-from-space"><strong>5. SAR Interferometry (InSAR): Geodesy from Space</strong></h2>
+<p>InSAR is a SAR-derived technique that exploits the phase difference between two acquisitions to measure topography or millimeter-scale surface deformations.</p>
+<h3 id="what-it-measures-2"><strong>What It Measures</strong></h3>
+<p>It measures the displacement of the Earth&#39;s surface along the Line of Sight (LOS) or generates Digital Elevation Models (DEMs).</p>
+<h3 id="physical-principles-and-formulas"><strong>Physical Principles and Formulas</strong></h3>
+<p>The interferometric phase difference $\Delta \phi$ between two images is composed of several contributions:</p>
+<p>$$ \Delta \phi = \Delta \phi_{geom} + \Delta \phi_{topo} + \Delta \phi_{def} + \Delta \phi_{atm} + \Delta \phi_{noise} $$</p>
+<ul>
+<li><p>$\Delta \phi_{def}$ is the phase due to ground displacement.</p>
+</li>
+<li><p>$\Delta \phi_{topo}$ is related to residual topography.</p>
+</li>
+<li><p>$\Delta \phi_{atm}$ is the atmospheric delay (often the main error term).</p>
+</li>
+</ul>
+<p>The relationship between deformation $d$ and the unwrapped phase is <sup>18</sup>:</p>
+<p>$$d = \frac{\lambda}{4\pi} \Delta \phi_{unwrapped}$$</p>
+<p>For a C-band satellite like Sentinel-1 ($\lambda \approx 5.6$ cm), an interference fringe ($2\pi$) corresponds to a displacement of approximately 2.8 cm.<sup>20</sup></p>
+<h3 id="applications"><strong>Applications</strong></h3>
+<ul>
+<li><p><strong>Tectonics and Volcanology:</strong> Measurement of post-seismic deformation fields and the &quot;breathing&quot; of volcanoes (inflation/deflation of magma chambers).<sup>21</sup></p>
+</li>
+<li><p><strong>Urban Subsidence:</strong> Monitoring the stability of buildings and critical infrastructure with advanced techniques such as Persistent Scatterers (PS-InSAR).<sup>16</sup></p>
+</li>
+</ul>
+<hr>
+<h2 id="6-radar-altimetry-ocean-and-ice-topography"><strong>6. Radar Altimetry: Ocean and Ice Topography</strong></h2>
+<p>Nadir radar altimetry is the fundamental technique for quantifying sea level rise and ocean circulation.</p>
+<h3 id="what-it-measures-3"><strong>What It Measures</strong></h3>
+<p>It measures the vertical distance (range) between the satellite and the surface at nadir. Combining this measurement with precise orbit and geophysical corrections, one obtains:</p>
+<ul>
+<li><p><strong>Sea Surface Height (SSH).</strong></p>
+</li>
+<li><p><strong>Significant Wave Height (SWH).</strong></p>
+</li>
+<li><p><strong>Wind speed</strong> (from backscatter intensity).</p>
+</li>
+</ul>
+<h3 id="physical-principles-and-formulas-1"><strong>Physical Principles and Formulas</strong></h3>
+<p>The altimeter emits a radar pulse and records the return echo. The sea surface height ($SSH$) is calculated as <sup>22</sup>:</p>
+<p>$$SSH = H_{sat} - (R_{obs} + \Delta R_{iono} + \Delta R_{dry} + \Delta R_{wet} + \Delta R_{ssb})$$</p>
+<p>Where $\Delta R_{ssb}$ is the Sea State Bias, due to the fact that wave troughs reflect better than crests. The echo waveform is analytically modeled by the Brown Model, which describes the convolution between the system response, the probability density of wave heights, and the impulsive response of the flat surface.23</p>
+<p>The SAR Altimetry (or Delay-Doppler) technique, introduced by CryoSat-2 and Sentinel-3, improves along-track resolution (~300m) by focusing energy into Doppler cells, allowing precise measurements even among sea ice and in coastal waters.24</p>
+<h3 id="missions-2"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>Sentinel-3 (SRAL):</strong> Operational SAR altimeter for ocean and ice.</p>
+</li>
+<li><p><strong>Jason-3 / Sentinel-6 Michael Freilich:</strong> The reference series for climate continuity of the Global Mean Sea Level (GMSL).</p>
+</li>
+<li><p><strong>SWOT (Surface Water and Ocean Topography):</strong> Wide-swath radar interferometry (Ka-band) to extend altimetry from 1D profile to 2D map.</p>
+</li>
+</ul>
+<hr>
+<h2 id="7-scatterometry-wind-over-the-sea-surface"><strong>7. Scatterometry: Wind over the Sea Surface</strong></h2>
+<p>Scatterometers are active radars designed to measure large-scale ocean surface roughness, providing the global wind vector.</p>
+<h3 id="what-it-measures-4"><strong>What It Measures</strong></h3>
+<p>The normalized radar backscatter coefficient ($\sigma^0$) from different azimuthal angles, from which wind speed and direction at 10m above the surface are inverted.</p>
+<h3 id="physical-principles-and-formulas-2"><strong>Physical Principles and Formulas</strong></h3>
+<p>The relationship between $\sigma^0$ and wind is described by <em>Geophysical Model Functions</em> (GMFs), empirically defined as <sup>26</sup>:</p>
+<p>$$ \sigma^0(\theta, \chi, U) = A_0(U, \theta) [1 + A_1(U, \theta) \cos \chi + A_2(U, \theta) \cos 2\chi] $$</p>
+<p>Where $U$ is the wind speed and $\chi$ is the relative direction with respect to the antenna. By observing the same sea cell from different angles (generally 3 antennas or a rotating antenna), it is possible to resolve directional ambiguity and determine the wind vector.</p>
+<h3 id="utility-and-applications-2"><strong>Utility and Applications</strong></h3>
+<ul>
+<li><p><strong>Marine Meteorology:</strong> Essential data for identifying fronts and extratropical cyclones.</p>
+</li>
+<li><p><strong>Climate:</strong> Study of air-sea interaction and surface stresses that drive ocean currents.</p>
+</li>
+</ul>
+<h3 id="missions-3"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>MetOp (ASCAT):</strong> C-band fixed fan-beam scatterometer (dual swath).</p>
+</li>
+<li><p><strong>CFOSAT:</strong> Franco-Chinese rotating scatterometer designed to jointly measure wind and wave spectra.</p>
+</li>
+</ul>
+<hr>
+<h2 id="8-panchromatic-optical-imaging-extreme-geometric-resolution"><strong>8. Panchromatic Optical Imaging: Extreme Geometric Resolution</strong></h2>
+<p>Panchromatic sensors form the backbone of high spatial resolution observation for intelligence and detailed mapping.</p>
+<h3 id="what-it-measures-5"><strong>What It Measures</strong></h3>
+<p>Radiance integrated over a single very broad spectral band (typically visible + near-infrared, 0.4 - 0.9 $\mu m$).</p>
+<h3 id="physical-operation"><strong>Physical Operation</strong></h3>
+<p>The wide bandwidth allows for the collection of a large number of photons, ensuring a high Signal-to-Noise Ratio (SNR). This enables the reduction of pixel size (IFOV) while maintaining short integration times, necessary to avoid orbital <em>motion blur</em>. Spatial resolution can drop below 30 cm in modern commercial platforms.<sup>27</sup></p>
+<h3 id="applications-and-pansharpening"><strong>Applications and Pansharpening</strong></h3>
+<p>The panchromatic band is often used in synergy with low-resolution multispectral bands through <em>Pansharpening</em> techniques. The resulting image combines the high geometric fidelity of the panchromatic with the chromatic information of the multispectral. A simplified relationship for fusion is <sup>28</sup>:</p>
+<p>$$I_{Pan} \approx \sum_i \alpha_i \cdot I_{MS, i}$$</p>
+<h3 id="missions-4"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>Maxar (WorldView Legion), Airbus (Pléiades Neo):</strong> Market-leading commercial resolutions (30 cm).</p>
+</li>
+<li><p><strong>Landsat 8/9:</strong> 15m panchromatic band to refine 30m spectral bands.<sup>29</sup></p>
+</li>
+</ul>
+<hr>
+<h2 id="9-multispectral-optical-imaging-the-color-of-earth"><strong>9. Multispectral Optical Imaging: The Color of Earth</strong></h2>
+<p>The standard for global environmental monitoring, which acquires images in a discrete number of spectral bands (approximately 4 to 15).</p>
+<h3 id="what-it-measures-6"><strong>What It Measures</strong></h3>
+<p>Surface reflectance in discrete bands in the Visible (VIS), Near-Infrared (NIR), and Shortwave Infrared (SWIR).</p>
+<h3 id="physics-and-spectral-indices"><strong>Physics and Spectral Indices</strong></h3>
+<p>It exploits the distinctive spectral signatures of materials. For example, chlorophyll absorbs in the red and strongly reflects in the NIR. The NDVI (<em>Normalized Difference Vegetation Index</em>) quantifies vegetation health:</p>
+<p>$$NDVI = \frac{\rho_{NIR} - \rho_{RED}}{\rho_{NIR} + \rho_{RED}}$$</p>
+<p>The use of SWIR bands is crucial for discriminating snow from clouds and for monitoring vegetation water stress.</p>
+<h3 id="applications-and-missions"><strong>Applications and Missions</strong></h3>
+<ul>
+<li><p><strong>Sentinel-2 (ESA):</strong> With 13 bands and 10-20m resolution, it is the reference for precision agriculture and land cover monitoring.<sup>16</sup></p>
+</li>
+<li><p><strong>Landsat 8/9 (NASA/USGS):</strong> Ensures continuity of observations since 1972, essential for long-term change studies.</p>
+</li>
+</ul>
+<hr>
+<h2 id="10-hyperspectral-imaging-spectroscopy-from-space"><strong>10. Hyperspectral Imaging: Spectroscopy from Space</strong></h2>
+<p>Hyperspectral imaging (HSI) extends the multispectral concept by acquiring hundreds of contiguous bands, allowing for detailed chemical-physical analysis of each pixel.</p>
+<h3 id="what-it-measures-7"><strong>What It Measures</strong></h3>
+<p>A data &quot;hypercube&quot; $(x, y, \lambda)$ with hundreds of narrow spectral channels (e.g., 5-10 nm), covering the VNIR-SWIR range (400-2500 nm).</p>
+<h3 id="physical-operation-and-spectral-mixing"><strong>Physical Operation and Spectral Mixing</strong></h3>
+<p>Each pixel contains a continuous spectrum that acts as a chemical &quot;fingerprint&quot;. The measured signal $y$ is often modeled as a linear mixture of the pure spectra of the constituent materials (<em>endmembers</em>) $M$ present in the pixel, according to the <em>Linear Mixing Model</em> (LMM) <sup>30</sup>:</p>
+<p>$$y = \sum_{k=1}^{K} a_k m_k + n$$</p>
+<p>Where $a_k$ are the fractional abundances. This allows for the identification of sub-pixel materials or specific minerals.</p>
+<h3 id="utility-and-applications-3"><strong>Utility and Applications</strong></h3>
+<ul>
+<li><p><strong>Mineral Geology:</strong> Identification of hydrothermal alterations and rare earth elements.</p>
+</li>
+<li><p><strong>Water Quality:</strong> Distinction between different algal species and sediments.<sup>32</sup></p>
+</li>
+<li><p><strong>Intelligent CubeSats:</strong> The <strong>FSSCat/$\Phi$-Sat-1</strong> mission demonstrated the use of on-board AI to process hyperspectral data (HyperScout-2) and discard cloudy images directly in orbit, optimizing downlink.<sup>13</sup></p>
+</li>
+</ul>
+<h3 id="missions-5"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>EnMAP (DLR) &amp; PRISMA (ASI):</strong> Operational high-performance scientific missions.<sup>34</sup></p>
+</li>
+<li><p><strong>PACE (NASA):</strong> Launched in 2024, with the OCI (Ocean Color Instrument) extending hyperspectral capabilities to global oceans.<sup>32</sup></p>
+</li>
+</ul>
+<hr>
+<h2 id="11-thermal-infrared-tir-the-planets-heat"><strong>11. Thermal Infrared (TIR): The Planet&#39;s Heat</strong></h2>
+<p>TIR sensors measure the energy emitted by Earth, allowing for the inference of surface temperature.</p>
+<h3 id="what-it-measures-8"><strong>What It Measures</strong></h3>
+<ul>
+<li><p><strong>Land Surface Temperature (LST).</strong></p>
+</li>
+<li><p><strong>Sea Surface Temperature (SST).</strong></p>
+</li>
+<li><p><strong>Thermal Anomalies:</strong> Wildfires and volcanic activity.</p>
+</li>
+</ul>
+<h3 id="physical-principle-and-formulas"><strong>Physical Principle and Formulas</strong></h3>
+<p>The measured radiance $L_{\lambda}$ is converted into brightness temperature $T_b$ by inverting Planck&#39;s Law <sup>36</sup>:</p>
+<p>$$T_b = \frac{h c}{k_B \lambda \ln\left( \frac{2 h c^2}{\lambda^5 L_\lambda} + 1 \right)}$$</p>
+<p>To obtain the actual kinetic temperature ($T_{surf}$), it is necessary to correct for the surface emissivity $\epsilon$ and for the atmospheric contribution (water vapor absorption/emission). <em>Split-Window</em> algorithms use two nearby thermal channels (e.g., 11 $\mu m$ and 12 $\mu m$) to estimate and remove the atmospheric effect.</p>
+<h3 id="missions-6"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>Sentinel-3 (SLSTR):</strong> High precision (&lt;0.3 K) for climatic SST, using a dual view (nadir and oblique) to correct for the atmosphere.</p>
+</li>
+<li><p><strong>Landsat 8/9 (TIRS):</strong> Two thermal bands at 100m resolution.</p>
+</li>
+<li><p><strong>ECOSTRESS (ISS):</strong> Monitoring evapotranspiration and vegetation water stress.</p>
+</li>
+</ul>
+<hr>
+<h2 id="12-passive-microwave-radiometry-surface-imaging"><strong>12. Passive Microwave Radiometry (Surface Imaging)</strong></h2>
+<p>Sensors that observe the natural microwave emission from the Earth&#39;s surface at low frequencies (L, C, X Band).</p>
+<h3 id="what-it-measures-9"><strong>What It Measures</strong></h3>
+<ul>
+<li><p><strong>Soil Moisture:</strong> The dielectric constant of water is very high (<del>80) compared to dry soil (</del>4), drastically influencing emissivity.</p>
+</li>
+<li><p><strong>Ocean Salinity (SSS):</strong> In L-band (1.4 GHz), emissivity depends on salinity.</p>
+</li>
+</ul>
+<h3 id="physical-principle-and-synthetic-interferometry"><strong>Physical Principle and Synthetic Interferometry</strong></h3>
+<p>In microwaves, the Rayleigh-Jeans approximation ($h\nu \ll k_B T$) holds, so radiance is proportional to physical temperature:</p>
+<p>$$T_b \approx \epsilon \cdot T_{phys}$$</p>
+<p>The <strong>SMOS</strong> (ESA) mission introduced a revolutionary technology: the interferometric synthetic aperture radiometer (MIRAS). Instead of a large rotating parabolic antenna (as in SMAP), it uses a static array of 69 Y-shaped antennas. The brightness temperature image is mathematically reconstructed from the inverse Fourier transform of the visibility functions measured between pairs of antennas.<sup>37</sup></p>
+<h3 id="missions-7"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>SMOS (ESA):</strong> Pioneer of interferometric L-band.</p>
+</li>
+<li><p><strong>SMAP (NASA):</strong> Radiometer with a large rotating antenna (6m) for high-precision soil moisture.</p>
+</li>
+<li><p><strong>AMSR-2 (JAXA):</strong> Multifrequency &quot;workhorse&quot; radiometer for precipitable water, ice, and SST.</p>
+</li>
+</ul>
+<hr>
+<h2 id="13-microwave-radiometry-for-atmospheric-sounding"><strong>13. Microwave Radiometry for Atmospheric Sounding</strong></h2>
+<p>These sensors vertically profile the atmosphere by exploiting molecular absorption lines.</p>
+<h3 id="what-it-measures-10"><strong>What It Measures</strong></h3>
+<ul>
+<li><p><strong>Temperature</strong> profiles (O$_2$ absorption band at 50-60 GHz).</p>
+</li>
+<li><p><strong>Humidity</strong> profiles (H$_2$O absorption band at 183 GHz).</p>
+</li>
+</ul>
+<h3 id="physical-principle"><strong>Physical Principle</strong></h3>
+<p>The principle is based on the variation of atmospheric opacity with frequency. Channels centered on absorption lines &quot;see&quot; only the upper layers (emission from below is reabsorbed). Channels on the wings of the line penetrate deeper. The radiative transfer equation is <sup>40</sup>:</p>
+<p>$$T_b(\nu) \approx T_{surf} e^{-\tau_\nu(0, \infty)} + \int_{0}^{\infty} T(z) K_\nu(z) dz$$</p>
+<p>Where $K_\nu(z)$ is the <em>weighting function</em> that determines the peak altitude of the signal for that frequency.</p>
+<h3 id="utility"><strong>Utility</strong></h3>
+<p>These data are the single most impactful input source for the quality of global weather forecasts (NWP).</p>
+<p>New CubeSat constellations like TROPICS (NASA) use miniaturized radiometers to provide revisit times of less than an hour over hurricanes, which is impossible for traditional large polar satellites.</p>
+<hr>
+<h2 id="14-topographic-and-bathymetric-lidar-photon-counting"><strong>14. Topographic and Bathymetric Lidar: Photon Counting</strong></h2>
+<p>Lidar (Light Detection and Ranging) altimeters measure elevation with centimeter precision using laser pulses.</p>
+<h3 id="what-it-measures-11"><strong>What It Measures</strong></h3>
+<ul>
+<li><p>Sea ice thickness and polar ice sheet elevation.</p>
+</li>
+<li><p>Vegetation height (<em>canopy height</em>) and biomass.</p>
+</li>
+</ul>
+<h3 id="physical-principle-photon-counting"><strong>Physical Principle: Photon Counting</strong></h3>
+<p>Unlike classic Lidars that digitize the entire analog waveform, the ATLAS instrument on ICESat-2 uses the Photon Counting technique. It emits green laser pulses (532 nm) at very high frequency (10 kHz) divided into 6 beams. The receiver counts individual returning photons, timing them with picosecond precision.</p>
+<p>The statistical accumulation of photons allows for the reconstruction of the surface, the seabed (up to 40m in clear waters), and the vertical structure of the forest.41</p>
+<h3 id="applications-and-missions-1"><strong>Applications and Missions</strong></h3>
+<ul>
+<li><p><strong>ICESat-2 (NASA):</strong> Fundamental for estimating the cryosphere&#39;s mass balance.<sup>44</sup></p>
+</li>
+<li><p><strong>GEDI (ISS):</strong> Full-waveform lidar optimized for tropical and temperate forest structure.</p>
+</li>
+</ul>
+<hr>
+<h2 id="15-atmospheric-doppler-lidar-wind-lidar"><strong>15. Atmospheric Doppler Lidar (Wind Lidar)</strong></h2>
+<p>Measuring clear-air wind from space has been one of the most arduous technological challenges in EO.</p>
+<h3 id="what-it-measures-12"><strong>What It Measures</strong></h3>
+<p>Vertical profiles of the horizontal wind component along the Line-of-Sight (LOS).</p>
+<h3 id="physical-principle-1"><strong>Physical Principle</strong></h3>
+<p>It is based on the optical Doppler effect. The laser pulse sent into the atmosphere is backscattered by air molecules (<em>Rayleigh scattering</em>) and aerosols/clouds (<em>Mie scattering</em>). The movement of these targets along the line of sight causes a frequency shift $\Delta f$:</p>
+<p>$$\Delta f = \frac{2 v_{LOS}}{\lambda}$$</p>
+<p>The <strong>Aeolus</strong> mission uses an HSRL (<em>High Spectral Resolution Lidar</em>) receiver with two distinct optical channels:</p>
+<ol>
+<li><p>A Fizeau interferometer for the Mie signal (narrow spectrum, aerosols).</p>
+</li>
+<li><p>A Fabry-Pérot interferometer for the Rayleigh signal (spectrum broadened by molecular thermal motion).<sup>45</sup></p>
+</li>
+</ol>
+<h3 id="missions-8"><strong>Missions</strong></h3>
+<ul>
+<li><strong>Aeolus (ESA):</strong> A demonstrator mission that filled a critical gap in the global observation system (winds at altitude over oceans), significantly improving European weather models.<sup>47</sup></li>
+</ul>
+<hr>
+<h2 id="16-satellite-gravimetry-weighing-water-from-space"><strong>16. Satellite Gravimetry: Weighing Water from Space</strong></h2>
+<p>Gravimetry measures variations in the planet&#39;s mass, offering a unique view of the deep water cycle.</p>
+<h3 id="what-it-measures-13"><strong>What It Measures</strong></h3>
+<p>Anomalies in the Earth&#39;s gravitational field and their temporal variations (monthly). These variations are due to the movement of large water masses (glacier melt, aquifer depletion, ocean level variations).</p>
+<h3 id="physical-principle-satellite-to-satellite-tracking-sst"><strong>Physical Principle: Satellite-to-Satellite Tracking (SST)</strong></h3>
+<p>Two identical satellites (as in GRACE and GRACE-FO) fly in the same orbit separated by approximately 220 km. A microwave ranging system (K-band) or a laser interferometer (in GRACE-FO) measures the inter-satellite distance variation with micrometric precision.</p>
+<p>When the leading satellite flies over an excess mass (e.g., a mountain), it is gravitationally accelerated, moving away from the second. By analyzing the variations in relative velocity (Range-Rate $\dot{\rho}$), the global gravitational potential is reconstructed.<sup>48</sup></p>
+<h3 id="missions-and-applications"><strong>Missions and Applications</strong></h3>
+<ul>
+<li><p><strong>GRACE / GRACE-FO (NASA/GFZ):</strong> They quantified for the first time unequivocally the mass loss of polar ice sheets and the excessive abstraction from aquifers in India and California.<sup>50</sup></p>
+</li>
+<li><p><strong>GOCE (ESA):</strong> Used a gradiometer (ultrasensitive accelerometers) to define the static geoid with unprecedented spatial resolution and precision.</p>
+</li>
+</ul>
+<hr>
+<h2 id="17-satellite-magnetometry"><strong>17. Satellite Magnetometry</strong></h2>
+<p>Space magnetometers study the Earth&#39;s magnetic field, a protective shield against the solar wind.</p>
+<h3 id="what-it-measures-14"><strong>What It Measures</strong></h3>
+<p>The total magnetic field vector $\vec{B}$, separating contributions from the core (Core field), the crust (Lithospheric field), and external electric currents (Ionosphere/Magnetosphere).</p>
+<h3 id="physical-principle-fluxgate-and-scalar"><strong>Physical Principle: Fluxgate and Scalar</strong></h3>
+<p>High-precision missions use a combination of instruments:</p>
+<ol>
+<li><p><strong>Fluxgate Magnetometer (Vector):</strong> Measures the three components of the field. It exploits the periodic magnetic saturation of a ferromagnetic core; the second harmonic of the induced signal is proportional to the external field.<sup>51</sup> Requires precise attitude calibration via Star Trackers rigidly attached to the instrument boom.</p>
+</li>
+<li><p><strong>Absolute Scalar Magnetometer:</strong> (e.g., Overhauser or optically pumped helium) Measures the total intensity $|\vec{B}|$ by exploiting nuclear magnetic resonance or atomic transitions (Zeeman effect), providing an absolute reference for calibrating vector instruments.<sup>53</sup></p>
+</li>
+</ol>
+<h3 id="missions-9"><strong>Missions</strong></h3>
+<ul>
+<li><p><strong>Swarm (ESA):</strong> Constellation of 3 satellites that allows separating temporal from spatial variations of the geomagnetic field.</p>
+</li>
+<li><p><strong>DSCOVR (NASA/NOAA):</strong> Positioned at L1, it uses magnetometers to monitor the interplanetary magnetic field (IMF) carried by the solar wind, providing early warning for geomagnetic storms.<sup>54</sup></p>
+</li>
+</ul>
+<hr>
+<h2 id="18-lightning-mapping-geostationary-glm"><strong>18. Lightning Mapping (Geostationary): GLM</strong></h2>
+<p>Geostationary lightning sensors offer continuous monitoring of severe convective phenomena.</p>
+<h3 id="what-it-measures-15"><strong>What It Measures</strong></h3>
+<p>Detects total lightning activity, including intra-cloud (IC) and cloud-to-ground (CG) lightning, day and night over a hemisphere.</p>
+<h3 id="physical-principle-2"><strong>Physical Principle</strong></h3>
+<p>Strumenti come il GLM (Geostationary Lightning Mapper) su GOES-R sono sensori ottici ad alta velocità che operano in una banda stretta nel vicino infrarosso (777.4 nm), corrispondente a una riga di emissione dell&#39;ossigeno atomico nel plasma del fulmine.</p>
+<p>Il sensore rileva variazioni transitorie di luminosità a livello di pixel sottraendo il background in tempo reale (filtro di eventi). Questo permette di vedere il lampo anche sopra nuvole illuminate dal sole pieno.56</p>
+<h3 id="applicazioni"><strong>Applicazioni</strong></h3>
+<p>L&#39;improvviso aumento del tasso di fulminazione (&quot;Lightning Jump&quot;) è un precursore fisico affidabile dell&#39;intensificazione di una tempesta e della possibile genesi di tornado, aumentando il tempo di preavviso (lead time) per gli allarmi meteo.<sup>58</sup></p>
+<hr>
+<h2 id="19-segnali-di-opportunit-e-cubesat-radar-la-nuova-frontiera"><strong>19. Segnali di Opportunità e CubeSat Radar: La Nuova Frontiera</strong></h2>
+<p>Questa categoria unisce due trend emergenti: l&#39;uso di segnali non nativi per l&#39;EO e la miniaturizzazione estrema dei sensori attivi.</p>
+<h3 id="a-monitoraggio-traffico-ais-e-ads-b-satellitare"><strong>A. Monitoraggio Traffico: AIS e ADS-B Satellitare</strong></h3>
+<p>I satelliti captano i messaggi di posizione trasmessi da navi (AIS) e aerei (ADS-B). La sfida principale è la <strong>de-collisione dei pacchetti</strong>: un satellite vede un&#39;area enorme (FOV ~5000 km) contenente migliaia di emettitori che trasmettono negli stessi slot temporali (TDMA).</p>
+<ul>
+<li><p><strong>SOTDMA vs CSTDMA:</strong> Il protocollo SOTDMA (usato dalle grandi navi Classe A) prenota gli slot futuri ed è più facile da decodificare dallo spazio rispetto al CSTDMA (Classe B), che usa un approccio randomico &quot;ascolta prima di parlare&quot;, spesso saturato in orbita.<sup>59</sup></p>
+</li>
+<li><p><strong>Applicazioni:</strong> Fusione con dati SAR per identificare navi &quot;dark&quot; (che non trasmettono AIS) coinvolte in pesca illegale o traffici illeciti.</p>
+</li>
+</ul>
+<h3 id="b-cubesat-radar-raincube"><strong>B. CubeSat Radar: RainCube</strong></h3>
+<p>Fino a poco tempo fa, i radar erano considerati incompatibili con i CubeSat a causa dei requisiti di potenza e dimensioni. La missione <strong>RainCube</strong> (NASA) ha dimostrato un radar meteorologico in banda Ka (35.7 GHz) su un CubeSat 6U.</p>
+<ul>
+<li><strong>Innovazione:</strong> Uso di un&#39;antenna parabolica dispiegabile ultraleggera e di tecniche di compressione dell&#39;impulso. In banda Ka, la pioggia attenua fortemente il segnale; RainCube sfrutta proprio questo principio per profilare la struttura delle tempeste.<sup>61</sup></li>
+</ul>
+<h3 id="c-smart-lnb-pioggia-dalle-tv-satellitari"><strong>C. Smart LNB: Pioggia dalle TV Satellitari</strong></h3>
+<p>Progetti come <strong>NEFOCAST</strong> trasformano i ricevitori TV satellitari domestici (Smart LNB) in pluviometri. Misurano l&#39;attenuazione del segnale di downlink (Ku/Ka band) causata dalla pioggia (<em>Rain Fade</em>).</p>
+<ul>
+<li><strong>Formula:</strong> L&#39;attenuazione specifica $A$ (dB/km) è legata al tasso di precipitazione $R$ (mm/h) dalla legge di potenza $A = k R^\alpha$. Una rete densa di &quot;sensori&quot; domestici fornisce mappe di pioggia in tempo reale con risoluzione capillare.<sup>63</sup></li>
+</ul>
+<hr>
+<h3 id="tabella-comparativa-sintetica-delle-tecnologie"><strong>Tabella Comparativa Sintetica delle Tecnologie</strong></h3>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Category</strong></td>
+<td><strong>Sensor Type</strong></td>
+<td><strong>Primary Measurement</strong></td>
+<td><strong>Exemplary Missions</strong></td>
+<td><strong>Key Application</strong></td>
+</tr>
+<tr>
+<td><strong>GNSS-RO</strong></td>
+<td>Passive (Limb)</td>
+<td>Refractivity ($N$), Temp., Humidity</td>
+<td>COSMIC-2, Spire, MetOp</td>
+<td>Weather (NWP), Climate</td>
+</tr>
+<tr>
+<td><strong>GNSS-R</strong></td>
+<td>Bistatic</td>
+<td>Surface Roughness, Wind, Soil Moisture</td>
+<td>CYGNSS, FSSCat</td>
+<td>Hurricanes, Floods</td>
+</tr>
+<tr>
+<td><strong>SAR</strong></td>
+<td>Active (Microwave)</td>
+<td>Backscatter ($\sigma^0$), Phase</td>
+<td>Sentinel-1, COSMO-SkyMed</td>
+<td>Deformations (InSAR), Ice</td>
+</tr>
+<tr>
+<td><strong>Radar Altimetry</strong></td>
+<td>Active (Nadir)</td>
+<td>SSH, SWH, Wind</td>
+<td>Sentinel-3, Jason-3, SWOT</td>
+<td>Sea Level, Oceanography</td>
+</tr>
+<tr>
+<td><strong>Scatterometry</strong></td>
+<td>Active (Microwave)</td>
+<td>Vector Wind</td>
+<td>MetOp (ASCAT), CFOSAT</td>
+<td>Marine Weather</td>
+</tr>
+<tr>
+<td><strong>Optical Pan</strong></td>
+<td>Passive (Vis/NIR)</td>
+<td>Radiance (High Spatial Res.)</td>
+<td>WorldView, Pléiades, Landsat</td>
+<td>Cartography, Intelligence</td>
+</tr>
+<tr>
+<td><strong>Optical Multi</strong></td>
+<td>Passive (Vis/IR)</td>
+<td>Spectral Reflectance (Bands)</td>
+<td>Sentinel-2, Landsat</td>
+<td>Agriculture, Land Cover</td>
+</tr>
+<tr>
+<td><strong>Hyperspectral</strong></td>
+<td>Passive (Vis/SWIR)</td>
+<td>Continuous Spectrum ($&gt;100$ bands)</td>
+<td>EnMAP, PRISMA, PACE</td>
+<td>Geology, Water Quality</td>
+</tr>
+<tr>
+<td><strong>Thermal (TIR)</strong></td>
+<td>Passive (Emission)</td>
+<td>Brightness Temperature ($T_b$)</td>
+<td>Landsat, Sentinel-3, ECOSTRESS</td>
+<td>SST, LST, Fires</td>
+</tr>
+<tr>
+<td><strong>Radiometry (Ground)</strong></td>
+<td>Passive (Microwave)</td>
+<td>$T_b$ (L/C/X Band)</td>
+<td>SMOS, SMAP</td>
+<td>Soil Moisture, Salinity</td>
+</tr>
+<tr>
+<td><strong>Atm. Sounding</strong></td>
+<td>Passive (Microwave)</td>
+<td>T/Humidity Profiles (O$_2$, H$_2$O)</td>
+<td>AMSU/MHS, TROPICS</td>
+<td>Global Weather Input</td>
+</tr>
+<tr>
+<td><strong>Lidar Altimetry</strong></td>
+<td>Active (Laser)</td>
+<td>Elevation, Ice Thickness</td>
+<td>ICESat-2, GEDI</td>
+<td>Ice Mass Balance</td>
+</tr>
+<tr>
+<td><strong>Lidar Wind</strong></td>
+<td>Active (Doppler)</td>
+<td>LOS Wind (Doppler Shift)</td>
+<td>Aeolus</td>
+<td>Clear-air Wind</td>
+</tr>
+<tr>
+<td><strong>Gravimetry</strong></td>
+<td>Active (SST)</td>
+<td>Gravity Anomalies (Mass)</td>
+<td>GRACE-FO, GOCE</td>
+<td>Groundwater, Glaciers</td>
+</tr>
+<tr>
+<td><strong>Magnetometry</strong></td>
+<td>Passive (In-situ)</td>
+<td>Magnetic Field Vector</td>
+<td>Swarm, DSCOVR</td>
+<td>Geomagnetic Models</td>
+</tr>
+<tr>
+<td><strong>Lightning (GLM)</strong></td>
+<td>Passive (Optical)</td>
+<td>Lightning Events</td>
+<td>GOES-R, MTG</td>
+<td>Storm Nowcasting</td>
+</tr>
+<tr>
+<td><strong>AIS / ADS-B</strong></td>
+<td>Passive (RF)</td>
+<td>Ship/Aircraft Position</td>
+<td>Spire, Aireon</td>
+<td>Global Tracking</td>
+</tr>
+<tr>
+<td><strong>CubeSat Radar</strong></td>
+<td>Active (Ka-band)</td>
+<td>Rain Profile</td>
+<td>RainCube</td>
+<td>Technology Demonstrator</td>
+</tr>
+<tr>
+<td><strong>Smart LNB</strong></td>
+<td>Opportunity</td>
+<td>Rain Attenuation</td>
+<td>NEFOCAST</td>
+<td>Distributed Rainfall</td>
+</tr>
+</tbody></table>
+</div></figure><h2 id="conclusion"><strong>Conclusion</strong></h2>
+<p>The analysis of these nineteen categories reveals an increasingly interconnected and multi-physical Earth observation system. The dominant trend is data fusion (<em>Data Fusion</em>): the vertical precision of Lidar and Radar is extended horizontally by optical and radiometric constellations. Furthermore, the integration of traditional scientific sensors with commercial opportunity data (GNSS-R, Smart LNB, AIS) is creating a true &quot;Digital Twin&quot; of the planet, capable of quantifying not only the state of the natural environment but also anthropogenic impact in real-time.</p>
+<h4 id="works-cited"><strong>Works cited</strong></h4>
+<ol>
+<li><p>Parametric Sizing Equations for Earth Observation Satellites | Request PDF - ResearchGate, accessed November 23, 2025, <a href="https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites">https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites</a></p>
+</li>
+<li><p>perspective on Gaussian processes for Earth observation | National Science Review, accessed November 23, 2025, <a href="https://academic.oup.com/nsr/article/6/4/616/5369430">https://academic.oup.com/nsr/article/6/4/616/5369430</a></p>
+</li>
+<li><p>GNSS radio occultation (GNSS-RO): Lecture 1 – Principles and NWP use - ECMWF Events (Indico), accessed November 23, 2025, <a href="https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf">https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf</a></p>
+</li>
+<li><p>A variational regularization of Abel transform for GPS radio occultation - AMT, accessed November 23, 2025, <a href="https://amt.copernicus.org/articles/11/1947/">https://amt.copernicus.org/articles/11/1947/</a></p>
+</li>
+<li><p>GNSS radio occultation excess-phase processing for climate applications including uncertainty estimation - AMT, accessed November 23, 2025, <a href="https://amt.copernicus.org/articles/16/5217/">https://amt.copernicus.org/articles/16/5217/</a></p>
+</li>
+<li><p>GNSS Radio Occultation | Constellation Observing System for Meteorology Ionosphere and Climate - ucar cosmic, accessed November 23, 2025, <a href="https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation">https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation</a></p>
+</li>
+<li><p>Using the Commercial GNSS RO Spire Data in the Neutral Atmosphere for Climate and Weather Prediction Studies - the NOAA Institutional Repository, accessed November 23, 2025, <a href="https://repository.library.noaa.gov/view/noaa/58772/noaa_58772_DS1.pdf">https://repository.library.noaa.gov/view/noaa/58772/noaa_58772_DS1.pdf</a></p>
+</li>
+<li><p>Sensing the ionosphere with the Spire radio occultation constellation | Journal of Space Weather and Space Climate, accessed November 23, 2025, <a href="https://www.swsc-journal.org/articles/swsc/full_html/2021/01/swsc210051/swsc210051.html">https://www.swsc-journal.org/articles/swsc/full_html/2021/01/swsc210051/swsc210051.html</a></p>
+</li>
+<li><p>Reconnaissance satellite constellations: For enhanced global awareness - Spire, accessed November 23, 2025, <a href="https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/">https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/</a></p>
+</li>
+<li><p>Space Weather Data from Commercial GNSS RO, accessed November 23, 2025, <a href="https://www.swpc.noaa.gov/sites/default/files/images/u4/07%20Rob%20Kursinski.pdf">https://www.swpc.noaa.gov/sites/default/files/images/u4/07%20Rob%20Kursinski.pdf</a></p>
+</li>
+<li><p>RainCube Demonstrates Miniature Radar Technology to Measure Storms - NASA Science, accessed November 23, 2025, <a href="https://science.nasa.gov/science-research/science-enabling-technology/technology-highlights/raincube-demonstrates-miniature-radar-technology-to-measure-storms/">https://science.nasa.gov/science-research/science-enabling-technology/technology-highlights/raincube-demonstrates-miniature-radar-technology-to-measure-storms/</a></p>
+</li>
+<li><p>FSSCat Overview - ESA Earth Online, accessed November 23, 2025, <a href="https://earth.esa.int/eogateway/missions/fsscat/description">https://earth.esa.int/eogateway/missions/fsscat/description</a></p>
+</li>
+<li><p>FSSCat - Earth Online, accessed November 23, 2025, <a href="https://earth.esa.int/eogateway/missions/fsscat">https://earth.esa.int/eogateway/missions/fsscat</a></p>
+</li>
+<li><p>Synthetic-aperture radar - Wikipedia, accessed November 23, 2025, <a href="https://en.wikipedia.org/wiki/Synthetic-aperture_radar">https://en.wikipedia.org/wiki/Synthetic-aperture_radar</a></p>
+</li>
+<li><p>Synthetic Aperture Radar (SAR): Principles and Applications - eo4society, accessed November 23, 2025, <a href="https://eo4society.esa.int/wp-content/uploads/2021/02/D1T2a_LTC2015_Younis.pdf">https://eo4society.esa.int/wp-content/uploads/2021/02/D1T2a_LTC2015_Younis.pdf</a></p>
+</li>
+<li><p>S1 Applications - SentiWiki - Copernicus, accessed November 23, 2025, <a href="https://sentiwiki.copernicus.eu/web/s1-applications">https://sentiwiki.copernicus.eu/web/s1-applications</a></p>
+</li>
+<li><p>Create an Interferogram Using ESA&#39;s Sentinel-1 Toolbox | NASA Earthdata, accessed November 23, 2025, <a href="https://www.earthdata.nasa.gov/learn/data-recipes/create-interferogram-using-esas-sentinel-1-toolbox">https://www.earthdata.nasa.gov/learn/data-recipes/create-interferogram-using-esas-sentinel-1-toolbox</a></p>
+</li>
+<li><p>InSAR Phase Unwrapping Error Correction for Rapid Repeat Measurements of Water Level Change in Wetlands - LaCoast.gov, accessed November 23, 2025, <a href="https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf">https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf</a></p>
+</li>
+<li><p>Unwrapped Interferograms: Creating a Deformation Map | NASA Earthdata, accessed November 23, 2025, <a href="https://www.earthdata.nasa.gov/learn/data-recipes/unwrapped-interferograms-creating-deformation-map">https://www.earthdata.nasa.gov/learn/data-recipes/unwrapped-interferograms-creating-deformation-map</a></p>
+</li>
+<li><p>Sentinel-1 InSAR Product Guide - HyP3, accessed November 23, 2025, <a href="https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/">https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/</a></p>
+</li>
+<li><p>Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, accessed November 23, 2025, <a href="https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf">https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf</a></p>
+</li>
+<li><p>Radar Altimetry Principle and Data Processing by M.-H. Rio, accessed November 23, 2025, <a href="https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf">https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf</a></p>
+</li>
+<li><p>Radar Altimetry for remote sensing of the oceans and their impact on climate - ESA Earth Online, accessed November 23, 2025, <a href="https://earth.esa.int/eogateway/documents/20142/0/01_Tuesday_OCT2013_Cipollini_Altimetry_1.pdf">https://earth.esa.int/eogateway/documents/20142/0/01_Tuesday_OCT2013_Cipollini_Altimetry_1.pdf</a></p>
+</li>
+<li><p>Using Altimetry service data - EUMETSAT - User Portal, accessed November 23, 2025, <a href="https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service">https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service</a></p>
+</li>
+<li><p>Altimetry Applications - SentiWiki - Copernicus, accessed November 23, 2025, <a href="https://sentiwiki.copernicus.eu/web/altimetry-applications">https://sentiwiki.copernicus.eu/web/altimetry-applications</a></p>
+</li>
+<li><p>Backscatter LIDAR, accessed November 23, 2025, <a href="https://reef.atmos.colostate.edu/~odell/at652/lecture_2013/lecture8b.pdf">https://reef.atmos.colostate.edu/~odell/at652/lecture_2013/lecture8b.pdf</a></p>
+</li>
+<li><p>Panchromatic Images Explained | Satellite Bands, Specs &amp; Uses - XrTech Group, accessed November 23, 2025, <a href="https://xrtechgroup.com/panchromatic-imaging-bands-uses/">https://xrtechgroup.com/panchromatic-imaging-bands-uses/</a></p>
+</li>
+<li><p>Image Fusion for High-Resolution Optical Satellites Based on Panchromatic Spectral Decomposition - PMC, accessed November 23, 2025, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/">https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/</a></p>
+</li>
+<li><p>Panchromatic Imagery And Its Band Combinations In Use - EOS Data Analytics, accessed November 23, 2025, <a href="https://eos.com/make-an-analysis/panchromatic/">https://eos.com/make-an-analysis/panchromatic/</a></p>
+</li>
+<li><p>Hyperspectral Imaging - arXiv, accessed November 23, 2025, <a href="https://arxiv.org/html/2508.08107v1">https://arxiv.org/html/2508.08107v1</a></p>
+</li>
+<li><p>Full article: Hyperspectral and multispectral image fusion addressing spectral variability by an augmented linear mixing model - Taylor &amp; Francis Online, accessed November 23, 2025, <a href="https://www.tandfonline.com/doi/full/10.1080/01431161.2022.2041762">https://www.tandfonline.com/doi/full/10.1080/01431161.2022.2041762</a></p>
+</li>
+<li><p>Introduction to PACE Hyperspectral Observations for Water Quality Monitoring - NASA Applied Sciences, accessed November 23, 2025, <a href="https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf">https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf</a></p>
+</li>
+<li><p>SSC19-V-05 - DigitalCommons@USU, accessed November 23, 2025, <a href="https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=4391&context=smallsat">https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=4391&amp;context=smallsat</a></p>
+</li>
+<li><p>EnMAP, accessed November 23, 2025, <a href="https://www.enmap.org/">https://www.enmap.org/</a></p>
+</li>
+<li><p>Mission - EnMAP, accessed November 23, 2025, <a href="https://www.enmap.org/mission/">https://www.enmap.org/mission/</a></p>
+</li>
+<li><p>Passive Microwave, accessed November 23, 2025, <a href="https://topex.ucsd.edu/rs/Passive_Microwave.pdf">https://topex.ucsd.edu/rs/Passive_Microwave.pdf</a></p>
+</li>
+<li><p>SMOS - ESA Earth Online - European Space Agency, accessed November 23, 2025, <a href="https://earth.esa.int/eogateway/missions/smos">https://earth.esa.int/eogateway/missions/smos</a></p>
+</li>
+<li><p>AMSR2 Overview NESDIS Operational Soil Moisture Products - Office of Satellite and Product Operations - NOAA OSPO, accessed November 23, 2025, <a href="https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html">https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html</a></p>
+</li>
+<li><p>SMOS (Soil Moisture and Ocean Salinity) Mission - eoPortal, accessed November 23, 2025, <a href="https://www.eoportal.org/satellite-missions/smos">https://www.eoportal.org/satellite-missions/smos</a></p>
+</li>
+<li><p>Microwave radiometer to retrieve temperature profiles - AMT, accessed November 23, 2025, <a href="https://amt.copernicus.org/preprints/6/2857/2013/amtd-6-2857-2013.pdf">https://amt.copernicus.org/preprints/6/2857/2013/amtd-6-2857-2013.pdf</a></p>
+</li>
+<li><p>ICESat-2: Home, accessed November 23, 2025, <a href="https://icesat-2.gsfc.nasa.gov/">https://icesat-2.gsfc.nasa.gov/</a></p>
+</li>
+<li><p>Counting on NASA&#39;s ICESat-2, accessed November 23, 2025, <a href="https://icesat-2.gsfc.nasa.gov/articles/counting-nasas-icesat-2">https://icesat-2.gsfc.nasa.gov/articles/counting-nasas-icesat-2</a></p>
+</li>
+<li><p>IceSat 2 ATLAS photon-counting receiver - initial on-orbit performance - NASA Technical Reports Server, accessed November 23, 2025, <a href="https://ntrs.nasa.gov/api/citations/20200001212/downloads/20200001212.pdf">https://ntrs.nasa.gov/api/citations/20200001212/downloads/20200001212.pdf</a></p>
+</li>
+<li><p>Signal Photon Extraction Method for ICESat-2 Data Using Slope and Elevation Information Provided by Stereo Images - PubMed Central, accessed November 23, 2025, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10649317/">https://pmc.ncbi.nlm.nih.gov/articles/PMC10649317/</a></p>
+</li>
+<li><p>Aeolus Objectives - ESA Earth Online, accessed November 23, 2025, <a href="https://earth.esa.int/eogateway/missions/aeolus/objectives">https://earth.esa.int/eogateway/missions/aeolus/objectives</a></p>
+</li>
+<li><p>First validation of Aeolus wind observations by airborne Doppler wind lidar measurements, accessed November 23, 2025, <a href="https://amt.copernicus.org/articles/13/2381/2020/">https://amt.copernicus.org/articles/13/2381/2020/</a></p>
+</li>
+<li><p>The ESA ADM-Aeolus Doppler Wind Lidar Mission – Status and validation strategy - ECMWF, accessed November 23, 2025, <a href="https://www.ecmwf.int/sites/default/files/elibrary/2016/16851-esa-adm-aeolus-doppler-wind-lidar-mission-status-and-validation-strategy.pdf">https://www.ecmwf.int/sites/default/files/elibrary/2016/16851-esa-adm-aeolus-doppler-wind-lidar-mission-status-and-validation-strategy.pdf</a></p>
+</li>
+<li><p>Gravity Recovery and Climate Experiment (GRACE) - NASA Sea Level Change Portal, accessed November 23, 2025, <a href="https://sealevel.nasa.gov/missions/grace">https://sealevel.nasa.gov/missions/grace</a></p>
+</li>
+<li><p>GRACE-FO - Gravity Recovery and Climate Experiment Follow-On - Center for Space Research, accessed November 23, 2025, <a href="https://www2.csr.utexas.edu/grace/RL061LRI.html">https://www2.csr.utexas.edu/grace/RL061LRI.html</a></p>
+</li>
+<li><p>Satellite Gravimetry – Measuring Earth&#39;s Gravity Field from Space - IAG - Geodesy, accessed November 23, 2025, <a href="https://geodesy.science/item/satellite-gravimetry/">https://geodesy.science/item/satellite-gravimetry/</a></p>
+</li>
+<li><p>In-flight calibration of the fluxgate magnetometer on Macau Science Satellite-1, accessed November 23, 2025, <a href="https://www.eppcgs.org/article/doi/10.26464/epp2025067">https://www.eppcgs.org/article/doi/10.26464/epp2025067</a></p>
+</li>
+<li><p>A miniature two-axis fluxgate magnetometer - NASA Technical Reports Server, accessed November 23, 2025, <a href="https://ntrs.nasa.gov/api/citations/19700008650/downloads/19700008650.pdf">https://ntrs.nasa.gov/api/citations/19700008650/downloads/19700008650.pdf</a></p>
+</li>
+<li><p>Types of magnetometers, uses and characteristics | AV3 AEROVISUAL, accessed November 23, 2025, <a href="https://av3aerovisual.com/en/types-of-magnetometers-uses-and-characteristics/">https://av3aerovisual.com/en/types-of-magnetometers-uses-and-characteristics/</a></p>
+</li>
+<li><p>Deep Space Climate Observatory (DSCOVR) - National Centers for Environmental Information - NOAA, accessed November 23, 2025, <a href="https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr">https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr</a></p>
+</li>
+<li><p>It&#39;s all systems go for NOAA&#39;s first space weather satellite, accessed November 23, 2025, <a href="https://www.noaa.gov/its-all-systems-go-noaas-first-space-weather-satellite">https://www.noaa.gov/its-all-systems-go-noaas-first-space-weather-satellite</a></p>
+</li>
+<li><p>GOES-R Post Launch Test | NASA Earthdata, accessed November 23, 2025, <a href="https://www.earthdata.nasa.gov/data/projects/goes-r-plt">https://www.earthdata.nasa.gov/data/projects/goes-r-plt</a></p>
+</li>
+<li><p>GOES-R Terrestrial Weather (ABI/GLM) - National Centers for Environmental Information, accessed November 23, 2025, <a href="https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm">https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm</a></p>
+</li>
+<li><p>GOES-R Series Data Book, accessed November 23, 2025, <a href="https://www.goes-r.gov/downloads/resources/documents/GOES-RSeriesDataBook.pdf">https://www.goes-r.gov/downloads/resources/documents/GOES-RSeriesDataBook.pdf</a></p>
+</li>
+<li><p>Sotdma vs cstdma: understanding key differences for maritime communication - BytePlus, accessed November 23, 2025, <a href="https://www.byteplus.com/en/topic/560464">https://www.byteplus.com/en/topic/560464</a></p>
+</li>
+<li><p>AIS Know-How: Data transfer (SOTDMA vs. CSTDMA), accessed November 23, 2025, <a href="https://defender.com/assets/pdf/simrad/sotdma_cstdma_comparison.pdf">https://defender.com/assets/pdf/simrad/sotdma_cstdma_comparison.pdf</a></p>
+</li>
+<li><p>RainCube: the first ever radar measurements from a CubeSat in space - SPIE Digital Library, accessed November 23, 2025, <a href="https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full">https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full</a></p>
+</li>
+<li><p>RainCube - NASA ESTO, accessed November 23, 2025, <a href="https://esto.nasa.gov/wp-content/uploads/2020/07/RainCube.pdf">https://esto.nasa.gov/wp-content/uploads/2020/07/RainCube.pdf</a></p>
+</li>
+<li><p>Real-Time Rain Rate Evaluation via Satellite Downlink Signal Attenuation Measurement - PubMed Central, accessed November 23, 2025, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/">https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/</a></p>
+</li>
+<li><p>SmartLNB for weather forecasting - Nefocast, accessed November 23, 2025, <a href="http://www.nefocast.it/news/smartlnb-for-weather-forecasting/">http://www.nefocast.it/news/smartlnb-for-weather-forecasting/</a></p>
+</li>
+</ol>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
+      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/geodata-compendio/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true') {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">📋</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          pre.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
+      enhanceCodeBlocks();
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>
