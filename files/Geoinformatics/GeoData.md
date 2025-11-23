@@ -1,28 +1,47 @@
 # Che dati registrano i satelliti?
 
-## 1. Introduzione: l'evoluzione del telerilevamento satellitare
+## Introduzione
 
-L'osservazione della Terra (Earth Observation, EO) ha subito una metamorfosi radicale nel corso dell'ultimo decennio, transitando da un dominio esclusivo delle grandi agenzie governative a un ecosistema ibrido e dinamico, caratterizzato dalla convergenza tra missioni scientifiche ad alta precisione e costellazioni commerciali massive. La capacità di monitorare il sistema Terra su scala globale, con risoluzioni temporali e spaziali senza precedenti, risiede nella diversificazione delle tecnologie sensoristiche. Non si tratta più soltanto di acquisire immagini ottiche, ma di sondare la fisica dell'atmosfera, la chimica degli oceani e la dinamica della crosta terrestre attraverso l'intero spettro elettromagnetico e oltre, misurando campi di potenziale gravitazionale e magnetico.
+Negli ultimi decenni i satelliti sono diventati una delle infrastrutture più strategiche per comprendere, monitorare e gestire il nostro pianeta. Ogni giorno, centinaia di missioni in orbita raccolgono una quantità impressionante di informazioni: immagini ad altissima risoluzione, dati atmosferici, misurazioni sulle superfici terrestri e marine, segnali di navigazione, profili verticali dell’atmosfera, variazioni del campo gravitazionale e magnetico. Non si tratta più soltanto di “foto dallo spazio”, ma di un ecosistema complesso di tecnologie complementari che, insieme, costruiscono la più completa rappresentazione operativa della Terra mai ottenuta nella storia dell’umanità.
 
-Il presente rapporto analizza in dettaglio diciannove categorie distinte di strumentazione satellitare. Per ciascuna, si disseziona il principio fisico di funzionamento, supportato dal formalismo matematico che governa l'interazione tra la radiazione e la materia, e si esaminano le applicazioni operative che trasformano il dato grezzo in informazione geofisica critica.<sup>1</sup> L'analisi si estende dai sensori passivi che misurano la radiazione solare riflessa o l'emissione termica terrestre, ai sensori attivi che illuminano la superficie con impulsi propri, fino ai sensori di opportunità che sfruttano segnali esistenti per inferire proprietà ambientali.
+In questo articolo analizzeremo tutte le principali fonti di dati satellitari, ordinandole dal più noto al meno conosciuto. Per ogni categoria vedremo cosa misura, a cosa serve, quali applicazioni reali abilita, quali sono le missioni più rappresentative e infine come funziona il sensore che la rende possibile. L’obiettivo è offrire una panoramica chiara ma approfondita, utile sia ai professionisti del settore che a chi desidera comprendere meglio le tecnologie che stanno rivoluzionando il modo in cui osserviamo la Terra.
+
+In questo rapporto analizziamo in dettaglio diciannove categorie distinte di strumentazione satellitare. Per ciascuna, vedremo nel dettaglio il principio fisico di funzionamento, supportato dal formalismo matematico che governa l'interazione tra la radiazione e la materia, ed esamineremo le applicazioni operative che trasformano il dato grezzo in informazione geofisica critica. 
+
+In quest'analisi parleremo dei sensori passivi che misurano la radiazione solare riflessa o l'emissione termica terrestre, dei sensori attivi che illuminano la superficie con impulsi propri, come anche dei sensori di opportunità che sfruttano segnali esistenti per inferire proprietà ambientali.
 
 ***
 
+## 1. GNSS – Sistemi Globali di Navigazione Satellitare
+I dati GNSS sono nati in ambito bellico, ma si sono rivelati fondamentali in molti campi quoditiani. Consentono posizionamento e navigazione autonoma su scala globale e forniscono un riferimento temporale standard. 
 
-## 2. Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione
+I sistemi GNSS (come GPS, Galileo, GLONASS, BeiDou) trasmettono segnali a radiofrequenza contenenti informazioni orbitale e temporale dagli orologi atomici a bordo. Misurando il tempo impiegato dal segnale a raggiungere un ricevitore a Terra, si calcola la distanza e quindi la posizione dell’utente tramite trilaterazione con almeno 4 satelliti visibili. GNSS fornisce quindi misure di posizionamento (latitudine, longitudine, quota) e tempo assoluto estremamente precise.
+
+Sono usati in **geodesia** (reti di stazioni GNSS monitorano il movimento tettonico e definiscono i riferimenti globali), in **agricoltura di precisione**, **mappatura** e **GIS**, **trasporti** terrestri, aerei e navali, e sincronizzazione di reti elettriche e telecomunicazioni. Ad esempio, l’uso combinato dei vari sistemi GNSS consente oggi ricevitori multi-costellazione con copertura globale e maggiore affidabilità.
+
+### 1.1 Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione
 
 La Radio Occultazione GNSS (GNSS-RO) rappresenta una delle tecniche di telerilevamento più eleganti e robuste, trasformando i segnali di navigazione, originariamente concepiti per il posizionamento, in strumenti di alta precisione per la meteorologia e la climatologia.
 
+#### Principio fisico e formulazione matematica
 
-### Principio fisico e formulazione matematica
+Un ricevitore GNSS capta i segnali codificati trasmessi dai satelliti, che includono il tempo di trasmissione. 
 
-La tecnica si basa sulla rifrazione delle onde radio trasmesse dai satelliti GNSS (GPS, Galileo, GLONASS) mentre attraversano l'atmosfera terrestre per raggiungere un ricevitore posto su un satellite in orbita bassa (LEO) che tramonta dietro il limbo terrestre. A causa della variazione verticale della densità dell'atmosfera, il percorso del segnale viene incurvato.
+Dal confronto con il tempo locale (dopo sincronizzazione) si ottiene la distanza satellitare (pseudo-range). Intersecando le sfere di distanza di 4 o più satelliti si risolve la posizione tridimensionale e la differenza di tempo del ricevitore. Il principio fisico è la misura del tempo di volo del segnale ($t$) e la relazione 
+$$d = c \cdot t,$$ 
+dove $c$ è la velocità della luce. 
+
+**Correzioni relativistiche** e **atmosferiche** (ionosfera e troposfera) vanno applicate per ottenere accuratezze al livello del metro o inferiori. 
+
+Sistemi differenziali e tecniche come **RTK (Real-Time Kinematic)** consentono di raggiungere precisione al centimetro correggendo gli errori residui tramite stazioni di riferimento. In sintesi, GNSS misura con precisione posizione e tempo su scala globale, costituendo un’infrastruttura invisibile ma cruciale per la moderna società.
+
+> Ti avverto, ora mi tolgo il cappello da divulgatore e indosso quello da matematico :)
 
 Il parametro fondamentale misurato è il ritardo di fase in eccesso, da cui si deriva l'angolo di curvatura ($\alpha$) in funzione del parametro d'impatto ($a$). In un'atmosfera a simmetria sferica locale, la relazione tra l'angolo di curvatura e l'indice di rifrazione $n(r)$ è governata dalla legge di Snell generalizzata e può essere invertita tramite la trasformata di Abel inversa <sup>3</sup>:
 
-$$n(r) = \exp \left( \frac{1}{\pi} \int\_{a}^{\infty} \frac{\alpha(x)}{\sqrt{x^2 - a^2}} \\, dx \right)$$
+$$n(r) = \exp \left( \frac{1}{\pi} \int_x^\infty \frac{\alpha(x)}{\sqrt{x^2 - a^2}} \\, dx \right)$$
 
-Dove $x = n(r) \cdot r$ è il raggio rifrattivo. Una volta ottenuto il profilo dell'indice di rifrazione, si calcola la rifrattività $N$, definita come $N = (n-1) \times 10^6$. La relazione tra la rifrattività e le variabili termodinamiche atmosferiche è descritta dall'equazione di Smith-Weintraub <sup>3</sup>:
+Dove $x = n(r) \cdot r$ è il raggio rifrattivo e $\alpha(x)$ è il Bending angle corretto. Una volta ottenuto il profilo dell'indice di rifrazione, si calcola la rifrattività $N$, definita come $N = (n-1) \times 10^6$. La relazione tra la rifrattività e le variabili termodinamiche atmosferiche è descritta dall'equazione di [Smith-Weintraub](https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf):
 
 $$N = 77.6 \frac{P}{T} + 3.73 \times 10^5 \frac{e}{T^2} - 40.3 \frac{n\_e}{f^2}$$
 
@@ -39,7 +58,7 @@ In questa equazione:
 - $f$ è la frequenza del segnale.
 
 
-### Utilità e applicazioni critiche
+#### Utilità e applicazioni critiche
 
 La forza della GNSS-RO risiede nella sua natura di misura "autocalibrante": poiché si basa su misurazioni di tempo e frequenza (garantite da orologi atomici), non soffre di deriva strumentale, rendendola ideale per il monitoraggio climatico a lungo termine.<sup>6</sup>
 
@@ -50,14 +69,13 @@ La forza della GNSS-RO risiede nella sua natura di misura "autocalibrante": poic
 - **Space Weather:** Misurazione del Contenuto Totale di Elettroni (TEC) e delle scintillazioni ionosferiche, cruciali per la sicurezza delle comunicazioni satellitari.<sup>8</sup>
 
 
-### Missioni di riferimento
+#### Missioni di riferimento
 
-La tecnica è stata pionierizzata dalla missione **GPS/MET** e resa operativa dalla costellazione **COSMIC-1** (Taiwan/USA). Attualmente, **COSMIC-2** fornisce una copertura densa nelle latitudini equatoriali, ottimizzata per lo studio degli uragani e della ionosfera.<sup>6</sup> Parallelamente, il settore commerciale "NewSpace" ha rivoluzionato questo campo: **Spire Global**, con la sua costellazione di oltre 100 CubeSat LEMUR, e **PlanetIQ**, forniscono migliaia di occultazioni giornaliere, integrando i dati istituzionali.<sup>9</sup>
+La tecnica è stata pionierizzata dalla missione **GPS/MET** e resa operativa dalla costellazione **COSMIC-1** (Taiwan/USA). Attualmente, **COSMIC-2** fornisce una copertura densa nelle latitudini equatoriali, ottimizzata per lo studio degli uragani e della ionosfera.<sup>6</sup> Parallelamente, il settore commerciale "NewSpace" ha rivoluzionato questo campo: **Spire Global**, con la sua costellazione di oltre 100 CubeSat LEMUR, e **PlanetIQ**, forniscono migliaia di misurazioni giornaliere, integrando i dati istituzionali.<sup>9</sup>
 
 ***
 
-
-## 3. Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità
+### 1.2. Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità
 
 Mentre la Radio Occultazione sfrutta i segnali trasmessi attraverso l'atmosfera, la Riflettometria GNSS (GNSS-R) analizza i segnali riflessi dalla superficie terrestre, operando come un radar bistatico multi-statico.
 
@@ -75,9 +93,9 @@ La GNSS-R permette di estrarre proprietà geofisiche dalla superficie riflettent
 
 ### Funzionamento fisico e formule
 
-Il ricevitore misura la potenza del segnale riflesso in funzione del ritardo temporale (delay) e dello spostamento Doppler, generando una _Delay Doppler Map_ (DDM). La potenza ricevuta $P\_r$ è descritta dall'equazione radar bistatica <sup>9</sup>:
+Il ricevitore misura la potenza del segnale riflesso in funzione del ritardo temporale (delay) e dello spostamento Doppler, generando una _Delay Doppler Map_ (DDM). La potenza ricevuta $P_r$ è descritta dall'equazione radar bistatica <sup>9</sup>:
 
-$$ P\_r(\tau, f\_D) = \frac{P\_t G\_t \lambda^2}{(4\pi)^3} \iint\_A \frac{G\_r(\vec{r}) \sigma^0(\vec{r}) \chi^2(\tau, f\_D)}{R\_t^2(\vec{r}) R\_r^2(\vec{r})} , d\vec{r} $$
+$$ P_r(\tau, f_D) = \frac{P_t G_t \lambda^2}{(4\pi)^3} \iint_A \frac{G_r(\vec{r}) \sigma^0(\vec{r}) \chi^2(\tau, f_D)}{R_t^2(\vec{r}) R_r^2(\vec{r})} , d\vec{r} $$
 
 Dove:
 
@@ -85,7 +103,7 @@ Dove:
 
 - $\chi^2$ è la funzione di ambiguità (Woodward Ambiguity Function) che descrive la risposta del sistema.
 
-- $R\_t$ e $R\_r$ sono le distanze dal trasmettitore e dal ricevitore al punto di riflessione speculare.
+- $R_t$ e $R_r$ sono le distanze dal trasmettitore e dal ricevitore al punto di riflessione speculare.
 
 Su superfici calme (speculari), l'energia è concentrata in un punto della DDM. Su superfici rugose (oceano agitato dal vento), l'energia si disperde a formare un "ferro di cavallo" nella mappa DDM; l'ampiezza di questa dispersione è direttamente correlata alla velocità del vento.
 
@@ -124,9 +142,9 @@ Il SAR restituisce immagini complesse dove ogni pixel contiene:
 
 ### Funzionamento fisico e formule
 
-Per ottenere un'alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un'apertura virtuale. Elaborando coerentemente la storia di fase degli echi di ritorno (effetto Doppler), la risoluzione azimutale teorica $\delta\_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell'antenna reale $L\_a$ <sup>14</sup>:
+Per ottenere un'alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un'apertura virtuale. Elaborando coerentemente la storia di fase degli echi di ritorno (effetto Doppler), la risoluzione azimutale teorica $\delta_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell'antenna reale $L_a$ <sup>14</sup>:
 
-$$\delta\_a = \frac{L\_a}{2}$$
+$$\delta_a = \frac{L_a}{2}$$
 
 La risoluzione in range (perpendicolare alla traccia) è determinata dalla larghezza di banda $B$ dell'impulso trasmesso (spesso un _chirp_ modulato in frequenza):
 
