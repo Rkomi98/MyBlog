@@ -1,10 +1,6 @@
 # Che dati registrano i satelliti?
 
-\
-
-
-
-## **1. Introduzione: l'evoluzione del telerilevamento satellitare**
+## 1. Introduzione: l'evoluzione del telerilevamento satellitare
 
 L'osservazione della Terra (Earth Observation, EO) ha subito una metamorfosi radicale nel corso dell'ultimo decennio, transitando da un dominio esclusivo delle grandi agenzie governative a un ecosistema ibrido e dinamico, caratterizzato dalla convergenza tra missioni scientifiche ad alta precisione e costellazioni commerciali massive. La capacità di monitorare il sistema Terra su scala globale, con risoluzioni temporali e spaziali senza precedenti, risiede nella diversificazione delle tecnologie sensoristiche. Non si tratta più soltanto di acquisire immagini ottiche, ma di sondare la fisica dell'atmosfera, la chimica degli oceani e la dinamica della crosta terrestre attraverso l'intero spettro elettromagnetico e oltre, misurando campi di potenziale gravitazionale e magnetico.
 
@@ -13,12 +9,12 @@ Il presente rapporto analizza in dettaglio diciannove categorie distinte di stru
 ***
 
 
-## **2. Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione**
+## 2. Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione
 
 La Radio Occultazione GNSS (GNSS-RO) rappresenta una delle tecniche di telerilevamento più eleganti e robuste, trasformando i segnali di navigazione, originariamente concepiti per il posizionamento, in strumenti di alta precisione per la meteorologia e la climatologia.
 
 
-### **Principio fisico e formulazione matematica**
+### Principio fisico e formulazione matematica
 
 La tecnica si basa sulla rifrazione delle onde radio trasmesse dai satelliti GNSS (GPS, Galileo, GLONASS) mentre attraversano l'atmosfera terrestre per raggiungere un ricevitore posto su un satellite in orbita bassa (LEO) che tramonta dietro il limbo terrestre. A causa della variazione verticale della densità dell'atmosfera, il percorso del segnale viene incurvato.
 
@@ -43,7 +39,7 @@ In questa equazione:
 - $f$ è la frequenza del segnale.
 
 
-### **Utilità e applicazioni critiche**
+### Utilità e applicazioni critiche
 
 La forza della GNSS-RO risiede nella sua natura di misura "autocalibrante": poiché si basa su misurazioni di tempo e frequenza (garantite da orologi atomici), non soffre di deriva strumentale, rendendola ideale per il monitoraggio climatico a lungo termine.<sup>6</sup>
 
@@ -54,19 +50,19 @@ La forza della GNSS-RO risiede nella sua natura di misura "autocalibrante": poic
 - **Space Weather:** Misurazione del Contenuto Totale di Elettroni (TEC) e delle scintillazioni ionosferiche, cruciali per la sicurezza delle comunicazioni satellitari.<sup>8</sup>
 
 
-### **Missioni di riferimento**
+### Missioni di riferimento
 
 La tecnica è stata pionierizzata dalla missione **GPS/MET** e resa operativa dalla costellazione **COSMIC-1** (Taiwan/USA). Attualmente, **COSMIC-2** fornisce una copertura densa nelle latitudini equatoriali, ottimizzata per lo studio degli uragani e della ionosfera.<sup>6</sup> Parallelamente, il settore commerciale "NewSpace" ha rivoluzionato questo campo: **Spire Global**, con la sua costellazione di oltre 100 CubeSat LEMUR, e **PlanetIQ**, forniscono migliaia di occultazioni giornaliere, integrando i dati istituzionali.<sup>9</sup>
 
 ***
 
 
-## **3. Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità**
+## 3. Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità
 
 Mentre la Radio Occultazione sfrutta i segnali trasmessi attraverso l'atmosfera, la Riflettometria GNSS (GNSS-R) analizza i segnali riflessi dalla superficie terrestre, operando come un radar bistatico multi-statico.
 
 
-### **Cosa misura**
+### Cosa misura
 
 La GNSS-R permette di estrarre proprietà geofisiche dalla superficie riflettente:
 
@@ -77,7 +73,7 @@ La GNSS-R permette di estrarre proprietà geofisiche dalla superficie riflettent
 - **Criosfera:** Estensione e spessore del ghiaccio marino.
 
 
-### **Funzionamento fisico e formule**
+### Funzionamento fisico e formule
 
 Il ricevitore misura la potenza del segnale riflesso in funzione del ritardo temporale (delay) e dello spostamento Doppler, generando una _Delay Doppler Map_ (DDM). La potenza ricevuta $P\_r$ è descritta dall'equazione radar bistatica <sup>9</sup>:
 
@@ -94,14 +90,14 @@ Dove:
 Su superfici calme (speculari), l'energia è concentrata in un punto della DDM. Su superfici rugose (oceano agitato dal vento), l'energia si disperde a formare un "ferro di cavallo" nella mappa DDM; l'ampiezza di questa dispersione è direttamente correlata alla velocità del vento.
 
 
-### **Utilità e applicazioni**
+### Utilità e applicazioni
 
 L'applicazione "killer" della GNSS-R è il monitoraggio dei cicloni tropicali. A differenza dei radiometri ottici (bloccati dalle nubi) o degli scatterometri in banda Ku (attenuati dalla pioggia intensa), i segnali GNSS in banda L penetrano le precipitazioni intense, permettendo di misurare la velocità del vento nell'occhio del ciclone.9
 
 In ambito terrestre, la tecnica fornisce mappe di umidità del suolo ad alta risoluzione temporale, essenziali per la previsione delle piene e l'agricoltura.
 
 
-### **Missioni**
+### Missioni
 
 - **CYGNSS (NASA):** Una costellazione di 8 microsatelliti lanciata per studiare l'intensificazione degli uragani, che ha dimostrato capacità sorprendenti anche nel monitoraggio delle zone umide tropicali.
 
@@ -112,12 +108,12 @@ In ambito terrestre, la tecnica fornisce mappe di umidità del suolo ad alta ris
 ***
 
 
-## **4. Radar ad apertura sintetica (SAR): imaging a microonde ognitempo**
+## 4. Radar ad apertura sintetica (SAR): imaging a microonde ognitempo
 
 Il SAR rappresenta lo strumento principe per l'osservazione della superficie solida in ogni condizione meteorologica e di illuminazione, grazie alla sua natura attiva e alla lunghezza d'onda delle microonde.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Il SAR restituisce immagini complesse dove ogni pixel contiene:
 
@@ -126,7 +122,7 @@ Il SAR restituisce immagini complesse dove ogni pixel contiene:
 - **Fase:** Correlata alla distanza geometrica sensore-bersaglio, fondamentale per le applicazioni interferometriche.
 
 
-### **Funzionamento fisico e formule**
+### Funzionamento fisico e formule
 
 Per ottenere un'alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un'apertura virtuale. Elaborando coerentemente la storia di fase degli echi di ritorno (effetto Doppler), la risoluzione azimutale teorica $\delta\_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell'antenna reale $L\_a$ <sup>14</sup>:
 
@@ -143,7 +139,7 @@ $$\phi = -\frac{4\pi R}{\lambda} + \phi\_{scatt}$$
 Il termine $4\pi R / \lambda$ indica che la fase compie un ciclo completo ogni volta che la distanza cambia di mezza lunghezza d'onda ($\lambda/2$).
 
 
-### **Utilità e applicazioni**
+### Utilità e applicazioni
 
 La versatilità del SAR è immensa:
 
@@ -154,7 +150,7 @@ La versatilità del SAR è immensa:
 - **Gestione Emergenze:** Mappatura rapida delle inondazioni (l'acqua calma appare nera per riflessione speculare lontano dal sensore).<sup>16</sup>
 
 
-### **Missioni**
+### Missioni
 
 - **Sentinel-1 (ESA/Copernicus):** La missione di riferimento in banda C, che fornisce dati globali con politica open access, cruciale per l'interferometria operativa.<sup>16</sup>
 
@@ -165,17 +161,17 @@ La versatilità del SAR è immensa:
 ***
 
 
-## **5. Interferometria SAR (InSAR): la geodesia dallo spazio**
+## 5. Interferometria SAR (InSAR): la geodesia dallo spazio
 
 L'InSAR è una tecnica derivata dal SAR che sfrutta la differenza di fase tra due acquisizioni per misurare la topografia o le deformazioni millimetriche della superficie.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Misura lo spostamento della superficie terrestre lungo la linea di vista (Line of Sight - LOS) o genera Modelli Digitali di Elevazione (DEM).
 
 
-### **Funzionamento fisico e formule**
+### Funzionamento fisico e formule
 
 La differenza di fase interferometrica $\Delta \phi$ tra due immagini è composta da diversi contributi:
 
@@ -194,7 +190,7 @@ $$d = \frac{\lambda}{4\pi} \Delta \phi\_{unwrapped}$$
 Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una frangia di interferenza ($2\pi$) corrisponde a uno spostamento di circa 2.8 cm.<sup>20</sup>
 
 
-### **Applicazioni**
+### Applicazioni
 
 - **Tettonica e Vulcanologia:** Misurazione dei campi di deformazione post-sismica e del "respiro" dei vulcani (inflazione/deflazione delle camere magmatiche).<sup>21</sup>
 
@@ -348,12 +344,12 @@ Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una fran
 ***
 
 
-## **6. Radar altimetria: topografia degli oceani e dei ghiacci**
+## 6. Radar altimetria: topografia degli oceani e dei ghiacci
 
 L'altimetria radar nadirale è la tecnica fondamentale per quantificare l'innalzamento del livello del mare e la circolazione oceanica.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Misura la distanza verticale (range) tra il satellite e la superficie al nadir. Combinando questa misura con l'orbita precisa e le correzioni geofisiche, si ottiene:
 
@@ -364,7 +360,7 @@ Misura la distanza verticale (range) tra il satellite e la superficie al nadir. 
 - **Velocità del vento** (dall'intensità del backscatter).
 
 
-### **Funzionamento fisico e formule**
+### Funzionamento fisico e formule
 
 L'altimetro emette un impulso radar e registra l'eco di ritorno. L'altezza della superficie del mare ($SSH$) è calcolata come <sup>22</sup>:
 
@@ -375,7 +371,7 @@ Dove $\Delta R\_{ssb}$ è il Sea State Bias, dovuto al fatto che le valli delle 
 La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3, migliora la risoluzione lungo traccia (\~300m) focalizzando l'energia in celle Doppler, permettendo di misurare con precisione anche tra i ghiacci marini e nelle acque costiere.24
 
 
-### **Missioni**
+### Missioni
 
 - **Sentinel-3 (SRAL):** Altimetro SAR operativo per oceano e ghiacci.
 
@@ -386,17 +382,17 @@ La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3
 ***
 
 
-## **7. Scatterometria: il vento sulla superficie del mare**
+## 7. Scatterometria: il vento sulla superficie del mare
 
 Gli scatterometri sono radar attivi progettati per misurare la rugosità superficiale dell'oceano su larga scala, fornendo il vettore vento globale.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Il coefficiente di retrodiffusione radar normalizzato ($\sigma^0$) da diverse angolazioni azimutali, da cui si invertono velocità e direzione del vento a 10m dalla superficie.
 
 
-### **Funzionamento fisico e formule**
+### Funzionamento fisico e formule
 
 La relazione tra $\sigma^0$ e il vento è descritta dalle _Geophysical Model Functions_ (GMF), empiricamente definite come <sup>26</sup>:
 
@@ -405,14 +401,14 @@ $$ \sigma^0(\theta, \chi, U) = A\_0(U, \theta) \[1 + A\_1(U, \theta) \cos \chi +
 Dove $U$ è la velocità del vento e $\chi$ è la direzione relativa rispetto all'antenna. Osservando la stessa cella di mare da diverse angolazioni (generalmente 3 antenne o un'antenna rotante), è possibile risolvere l'ambiguità direzionale e determinare il vettore vento.
 
 
-### **Utilità e applicazioni**
+### Utilità e applicazioni
 
 - **Meteorologia Marina:** Dati essenziali per l'identificazione di fronti e cicloni extratropicali.
 
 - **Clima:** Studio dell'interazione aria-mare e degli stress superficiali che guidano le correnti oceaniche.
 
 
-### **Missioni**
+### Missioni
 
 - **MetOp (ASCAT):** Scatterometro a ventaglio fisso in banda C (doppio swath).
 
@@ -421,29 +417,29 @@ Dove $U$ è la velocità del vento e $\chi$ è la direzione relativa rispetto al
 ***
 
 
-## **8. Imaging ottico pancromatico: risoluzione geometrica estrema**
+## 8. Imaging ottico pancromatico: risoluzione geometrica estrema
 
 I sensori pancromatici costituiscono la spina dorsale dell'osservazione ad alta risoluzione spaziale per l'intelligence e la cartografia di dettaglio.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Radianza integrata su un'unica banda spettrale molto ampia (tipicamente visibile + vicino infrarosso, 0.4 - 0.9 $\mu m$).
 
 
-### **Funzionamento fisico**
+### Funzionamento fisico
 
 L'ampia larghezza di banda permette di raccogliere un elevato numero di fotoni, garantendo un alto Rapporto Segnale-Rumore (SNR). Questo consente di ridurre la dimensione del pixel (IFOV) mantenendo tempi di integrazione brevi, necessari per evitare il _motion blur_ orbitale. La risoluzione spaziale può scendere sotto i 30 cm nelle piattaforme commerciali moderne.<sup>27</sup>
 
 
-### **Applicazioni e pansharpening**
+### Applicazioni e pansharpening
 
 La banda pancromatica è spesso usata in sinergia con bande multispettrali a bassa risoluzione tramite tecniche di _Pansharpening_. L'immagine risultante combina l'alta fedeltà geometrica del pancromatico con l'informazione cromatica del multispettrale. Una relazione semplificata per la fusione è <sup>28</sup>:
 
 $$I\_{Pan} \approx \sum\_i \alpha\_i \cdot I\_{MS, i}$$
 
 
-### **Missioni**
+### Missioni
 
 - **Maxar (WorldView Legion), Airbus (Pléiades Neo):** Risoluzioni commerciali leader di mercato (30 cm).
 
@@ -452,17 +448,17 @@ $$I\_{Pan} \approx \sum\_i \alpha\_i \cdot I\_{MS, i}$$
 ***
 
 
-## **9. Imaging ottico multispettrale: il colore della terra**
+## 9. Imaging ottico multispettrale: il colore della terra
 
 Lo standard per il monitoraggio ambientale globale, che acquisisce immagini in un numero discreto di bande spettrali (da 4 a 15 circa).
 
 
-### **Cosa misura**
+### Cosa misura
 
 Riflettanza superficiale in bande discrete nel Visibile (VIS), Vicino Infrarosso (NIR) e Infrarosso a Onda Corta (SWIR).
 
 
-### **Fisica e indici spettrali**
+### Fisica e indici spettrali
 
 Sfrutta le firme spettrali distintive dei materiali. Ad esempio, la clorofilla assorbe nel rosso e riflette fortemente nel NIR. L'indice NDVI (_Normalized Difference Vegetation Index_) quantifica la salute vegetale:
 
@@ -471,7 +467,7 @@ $$NDVI = \frac{\rho\_{NIR} - \rho\_{RED}}{\rho\_{NIR} + \rho\_{RED}}$$
 L'uso di bande nello SWIR è fondamentale per discriminare la neve dalle nuvole e per monitorare lo stress idrico della vegetazione.
 
 
-### **Applicazioni e missioni**
+### Applicazioni e missioni
 
 - **Sentinel-2 (ESA):** Con 13 bande e risoluzione 10-20m, è il riferimento per l'agricoltura di precisione e il monitoraggio land cover.<sup>16</sup>
 
@@ -480,17 +476,17 @@ L'uso di bande nello SWIR è fondamentale per discriminare la neve dalle nuvole 
 ***
 
 
-## **10. Imaging iperspettrale: la spettroscopia dallo spazio**
+## 10. Imaging iperspettrale: la spettroscopia dallo spazio
 
 L'imaging iperspettrale (HSI) estende il concetto multispettrale acquisendo centinaia di bande contigue, permettendo un'analisi chimico-fisica dettagliata di ogni pixel.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Un "ipercubo" di dati $(x, y, \lambda)$ con centinaia di canali spettrali stretti (es. 5-10 nm), coprendo il range VNIR-SWIR (400-2500 nm).
 
 
-### **Funzionamento fisico e spectral mixing**
+### Funzionamento fisico e spectral mixing
 
 Ogni pixel contiene uno spettro continuo che funge da "impronta digitale" chimica. Il segnale misurato $y$ è spesso modellato come una mistura lineare degli spettri puri dei materiali costituenti (_endmembers_) $M$ presenti nel pixel, secondo il _Linear Mixing Model_ (LMM) <sup>30</sup>:
 
@@ -499,7 +495,7 @@ $$y = \sum\_{k=1}^{K} a\_k m\_k + n$$
 Dove $a\_k$ sono le abbondanze frazionarie. Questo permette di identificare materiali sub-pixel o minerali specifici.
 
 
-### **Utilità e applicazioni**
+### Utilità e applicazioni
 
 - **Geologia Mineraria:** Identificazione di alterazioni idrotermali e terre rare.
 
@@ -508,7 +504,7 @@ Dove $a\_k$ sono le abbondanze frazionarie. Questo permette di identificare mate
 - **CubeSat Intelligenti:** La missione **FSSCat/$\Phi$-Sat-1** ha dimostrato l'uso di AI a bordo per processare dati iperspettrali (HyperScout-2) e scartare immagini nuvolose direttamente in orbita, ottimizzando il downlink.<sup>13</sup>
 
 
-### **Missioni**
+### Missioni
 
 - **EnMAP (DLR) & PRISMA (ASI):** Missioni scientifiche operative ad alte prestazioni.<sup>34</sup>
 
@@ -517,12 +513,12 @@ Dove $a\_k$ sono le abbondanze frazionarie. Questo permette di identificare mate
 ***
 
 
-## **11. Infrarosso termico (TIR): il calore del pianeta**
+## 11. Infrarosso termico (TIR): il calore del pianeta
 
 I sensori TIR misurano l'energia emessa dalla Terra, permettendo di inferire la temperatura superficiale.
 
 
-### **Cosa misura**
+### Cosa misura
 
 - **Land Surface Temperature (LST).**
 
@@ -531,7 +527,7 @@ I sensori TIR misurano l'energia emessa dalla Terra, permettendo di inferire la 
 - **Anomalie Termiche:** Incendi boschivi e attività vulcanica.
 
 
-### **Funzionamento fisico e formule**
+### Funzionamento fisico e formule
 
 La radianza misurata $L\_{\lambda}$ viene convertita in temperatura di brillanza $T\_b$ invertendo la legge di Planck <sup>36</sup>:
 
@@ -540,7 +536,7 @@ $$T\_b = \frac{h c}{k\_B \lambda \ln\left( \frac{2 h c^2}{\lambda^5 L\_\lambda} 
 Per ottenere la temperatura cinetica reale ($T\_{surf}$), è necessario correggere per l'emissività $\epsilon$ della superficie e per il contributo atmosferico (assorbimento/emissione vapore acqueo). Algoritmi di _Split-Window_ utilizzano due canali termici vicini (es. 11 $\mu m$ e 12 $\mu m$) per stimare e rimuovere l'effetto atmosferico.
 
 
-### **Missioni**
+### Missioni
 
 - **Sentinel-3 (SLSTR):** Alta precisione (<0.3 K) per SST climatica, usando una doppia vista (nadir e obliqua) per correggere l'atmosfera.
 
@@ -551,19 +547,19 @@ Per ottenere la temperatura cinetica reale ($T\_{surf}$), è necessario corregge
 ***
 
 
-## **12. Radiometria a microonde passiva (surface imaging)**
+## 12. Radiometria a microonde passiva (surface imaging)
 
 Sensori che osservano l'emissione naturale a microonde della superficie terrestre a basse frequenze (Banda L, C, X).
 
 
-### **Cosa misura**
+### Cosa misura
 
 - **Umidità del Suolo (Soil Moisture):** La costante dielettrica dell'acqua è molto alta (\~80) rispetto al suolo secco (\~4), influenzando drasticamente l'emissività.
 
 - **Salinità Oceanica (SSS):** In banda L (1.4 GHz), l'emissività dipende dalla salinità.
 
 
-### **Funzionamento fisico e interferometria sintetica**
+### Funzionamento fisico e interferometria sintetica
 
 Nelle microonde vale l'approssimazione di Rayleigh-Jeans ($h\nu \ll k\_B T$), quindi la radianza è proporzionale alla temperatura fisica:
 
@@ -572,7 +568,7 @@ $$T\_b \approx \epsilon \cdot T\_{phys}$$
 La missione **SMOS** (ESA) ha introdotto una tecnologia rivoluzionaria: il radiometro a sintesi d'apertura interferometrica (MIRAS). Invece di una grande antenna parabolica rotante (come in SMAP), usa un array statico di 69 antenne a forma di Y. L'immagine di temperatura di brillanza è ricostruita matematicamente dalla trasformata di Fourier inversa delle funzioni di visibilità misurate tra coppie di antenne.<sup>37</sup>
 
 
-### **Missioni**
+### Missioni
 
 - **SMOS (ESA):** Pioniere della banda L interferometrica.
 
@@ -583,19 +579,19 @@ La missione **SMOS** (ESA) ha introdotto una tecnologia rivoluzionaria: il radio
 ***
 
 
-## **13. Radiometria a microonde per sondaggio atmosferico**
+## 13. Radiometria a microonde per sondaggio atmosferico
 
 Questi sensori profilano verticalmente l'atmosfera sfruttando le righe di assorbimento molecolare.
 
 
-### **Cosa misura**
+### Cosa misura
 
 - Profili di **Temperatura** (banda assorbimento O$\_2$ a 50-60 GHz).
 
 - Profili di **Umidità** (banda assorbimento H$\_2$O a 183 GHz).
 
 
-### **Funzionamento fisico**
+### Funzionamento fisico
 
 Il principio si basa sulla variazione dell'opacità atmosferica con la frequenza. Canali centrati sulle righe di assorbimento "vedono" solo gli strati alti (l'emissione dal basso è riassorbita). Canali sulle ali della riga penetrano più in profondità. L'equazione del trasferimento radiativo è <sup>40</sup>:
 
@@ -604,7 +600,7 @@ $$T\_b(\nu) \approx T\_{surf} e^{-\tau\_\nu(0, \infty)} + \int\_{0}^{\infty} T(z
 Dove $K\_\nu(z)$ è la funzione peso (_weighting function_) che determina l'altitudine di picco del segnale per quella frequenza.
 
 
-### **Utilità**
+### Utilità
 
 Questi dati sono la singola fonte di input più impattante per la qualità delle previsioni meteorologiche globali (NWP).
 
@@ -613,26 +609,26 @@ Le nuove costellazioni di CubeSat come TROPICS (NASA) utilizzano radiometri mini
 ***
 
 
-## **14. Lidar topografico e batimetrico: il conteggio dei fotoni**
+## 14. Lidar topografico e batimetrico: il conteggio dei fotoni
 
 I Lidar (Light Detection and Ranging) altimetrici misurano l'elevazione con precisione centimetrica usando impulsi laser.
 
 
-### **Cosa misura**
+### Cosa misura
 
 - Spessore dei ghiacci marini e elevazione delle calotte polari.
 
 - Altezza della vegetazione (_canopy height_) e biomassa.
 
 
-### **Funzionamento fisico: photon counting**
+### Funzionamento fisico: photon counting
 
 A differenza dei Lidar classici che digitalizzano l'intera forma d'onda analogica, lo strumento ATLAS su ICESat-2 utilizza la tecnica del Photon Counting. Emette impulsi laser verdi (532 nm) ad altissima frequenza (10 kHz) divisi in 6 fasci. Il ricevitore conta i singoli fotoni di ritorno cronometrandoli con precisione al picosecondo.
 
 L'accumulo statistico dei fotoni permette di ricostruire la superficie, il fondale marino (fino a 40m in acque chiare) e la struttura verticale della foresta.41
 
 
-### **Applicazioni e missioni**
+### Applicazioni e missioni
 
 - **ICESat-2 (NASA):** Fondamentale per stimare il bilancio di massa della criosfera.<sup>44</sup>
 
@@ -641,17 +637,17 @@ L'accumulo statistico dei fotoni permette di ricostruire la superficie, il fonda
 ***
 
 
-## **15. Lidar doppler atmosferico (wind lidar)**
+## 15. Lidar doppler atmosferico (wind lidar)
 
 Misurare il vento in aria chiara dallo spazio è stata una delle sfide tecnologiche più ardue dell'EO.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Profili verticali della componente orizzontale del vento lungo la linea di vista (Line-of-Sight, LOS).
 
 
-### **Funzionamento fisico**
+### Funzionamento fisico
 
 Si basa sull'effetto Doppler ottico. L'impulso laser inviato nell'atmosfera viene retrodiffuso dalle molecole d'aria (_Rayleigh scattering_) e dagli aerosol/nubi (_Mie scattering_). Il movimento di questi bersagli lungo la linea di vista causa uno spostamento in frequenza $\Delta f$:
 
@@ -664,31 +660,31 @@ La missione **Aeolus** utilizza un ricevitore HSRL (_High Spectral Resolution Li
 2. Un interferometro Fabry-Pérot per il segnale Rayleigh (spettro allargato dal moto termico molecolare).<sup>45</sup>
 
 
-### **Missioni**
+### Missioni
 
 - **Aeolus (ESA):** Missione dimostrativa che ha colmato una lacuna critica nel sistema di osservazione globale (venti in quota sugli oceani), migliorando significativamente i modelli meteo europei.<sup>47</sup>
 
 ***
 
 
-## **16. Gravimetria satellitare: pesare l'acqua dallo spazio**
+## 16. Gravimetria satellitare: pesare l'acqua dallo spazio
 
 La gravimetria misura le variazioni di massa del pianeta, offrendo una visione unica del ciclo dell'acqua profondo.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Anomalie del campo gravitazionale terrestre e le loro variazioni temporali (mensili). Queste variazioni sono dovute al movimento di grandi masse d'acqua (fusione ghiacciai, esaurimento falde acquifere, variazioni livello oceano).
 
 
-### **Funzionamento fisico: satellite-to-satellite tracking (SST)**
+### Funzionamento fisico: satellite-to-satellite tracking (SST)
 
 Due satelliti identici (come in GRACE e GRACE-FO) volano sulla stessa orbita separati da circa 220 km. Un sistema di ranging a microonde (banda K) o un interferometro laser (in GRACE-FO) misura la variazione di distanza inter-satellitare con precisione micrometrica.
 
 Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), viene accelerato gravitazionalmente, allontanandosi dal secondo. Analizzando le variazioni di velocità relativa (Range-Rate $\dot{\rho}$), si ricostruisce il potenziale gravitazionale globale.48
 
 
-### **Missioni e applicazioni**
+### Missioni e applicazioni
 
 - **GRACE / GRACE-FO (NASA/GFZ):** Hanno quantificato per la prima volta in modo inequivocabile la perdita di massa delle calotte polari e l'eccessivo prelievo dalle falde acquifere in India e California.<sup>50</sup>
 
@@ -697,17 +693,17 @@ Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), vie
 ***
 
 
-## **17. Magnetometria satellitare**
+## 17. Magnetometria satellitare
 
 I magnetometri spaziali studiano il campo magnetico terrestre, scudo protettivo contro il vento solare.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Il vettore campo magnetico totale $\vec{B}$, separando i contributi del nucleo (Core field), della crosta (Lithospheric field) e delle correnti elettriche esterne (Ionosfera/Magnetosfera).
 
 
-### **Funzionamento fisico: fluxgate e scalari**
+### Funzionamento fisico: fluxgate e scalari
 
 Le missioni di alta precisione utilizzano una combinazione di strumenti:
 
@@ -716,7 +712,7 @@ Le missioni di alta precisione utilizzano una combinazione di strumenti:
 2. **Magnetometro Scalare Assoluto:** (es. Overhauser o elio otticamente pompato) Misura l'intensità totale $|\vec{B}|$ sfruttando la risonanza magnetica nucleare o transizioni atomiche (effetto Zeeman), fornendo un riferimento assoluto per calibrare i vettoriali.<sup>53</sup>
 
 
-### **Missioni**
+### Missioni
 
 - **Swarm (ESA):** Costellazione di 3 satelliti che permette di separare le variazioni temporali da quelle spaziali del campo geomagnetico.
 
@@ -725,36 +721,36 @@ Le missioni di alta precisione utilizzano una combinazione di strumenti:
 ***
 
 
-## **18. Mappatura dei fulmini (geostazionaria): GLM**
+## 18. Mappatura dei fulmini (geostazionaria): GLM
 
 I sensori di fulminazione geostazionari offrono un monitoraggio continuo dei fenomeni convettivi severi.
 
 
-### **Cosa misura**
+### Cosa misura
 
 Rileva l'attività totale dei fulmini (Total Lightning), inclusi quelli intra-cloud (IC) e cloud-to-ground (CG), giorno e notte su un emisfero.
 
 
-### **Funzionamento fisico**
+### Funzionamento fisico
 
 Strumenti come il GLM (Geostationary Lightning Mapper) su GOES-R sono sensori ottici ad alta velocità che operano in una banda stretta nel vicino infrarosso (777.4 nm), corrispondente a una riga di emissione dell'ossigeno atomico nel plasma del fulmine.
 
 Il sensore rileva variazioni transitorie di luminosità a livello di pixel sottraendo il background in tempo reale (filtro di eventi). Questo permette di vedere il lampo anche sopra nuvole illuminate dal sole pieno.56
 
 
-### **Applicazioni**
+### Applicazioni
 
 L'improvviso aumento del tasso di fulminazione ("Lightning Jump") è un precursore fisico affidabile dell'intensificazione di una tempesta e della possibile genesi di tornado, aumentando il tempo di preavviso (lead time) per gli allarmi meteo.<sup>58</sup>
 
 ***
 
 
-## **19. Segnali di opportunità e CubeSat radar: la nuova frontiera**
+## 19. Segnali di opportunità e CubeSat radar: la nuova frontiera
 
 Questa categoria unisce due trend emergenti: l'uso di segnali non nativi per l'EO e la miniaturizzazione estrema dei sensori attivi.
 
 
-### **A. Monitoraggio traffico: AIS e ADS-B satellitare**
+### A. Monitoraggio traffico: AIS e ADS-B satellitare
 
 I satelliti captano i messaggi di posizione trasmessi da navi (AIS) e aerei (ADS-B). La sfida principale è la **de-collisione dei pacchetti**: un satellite vede un'area enorme (FOV \~5000 km) contenente migliaia di emettitori che trasmettono negli stessi slot temporali (TDMA).
 
@@ -763,14 +759,14 @@ I satelliti captano i messaggi di posizione trasmessi da navi (AIS) e aerei (ADS
 - **Applicazioni:** Fusione con dati SAR per identificare navi "dark" (che non trasmettono AIS) coinvolte in pesca illegale o traffici illeciti.
 
 
-### **B. CubeSat radar: RainCube**
+### B. CubeSat radar: RainCube
 
 Fino a poco tempo fa, i radar erano considerati incompatibili con i CubeSat a causa dei requisiti di potenza e dimensioni. La missione **RainCube** (NASA) ha dimostrato un radar meteorologico in banda Ka (35.7 GHz) su un CubeSat 6U.
 
 - **Innovazione:** Uso di un'antenna parabolica dispiegabile ultraleggera e di tecniche di compressione dell'impulso. In banda Ka, la pioggia attenua fortemente il segnale; RainCube sfrutta proprio questo principio per profilare la struttura delle tempeste.<sup>61</sup>
 
 
-### **C. Smart LNB: pioggia dalle TV satellitari**
+### C. Smart LNB: pioggia dalle TV satellitari
 
 Progetti come **NEFOCAST** trasformano i ricevitori TV satellitari domestici (Smart LNB) in pluviometri. Misurano l'attenuazione del segnale di downlink (Ku/Ka band) causata dalla pioggia (_Rain Fade_).
 
@@ -779,7 +775,7 @@ Progetti come **NEFOCAST** trasformano i ricevitori TV satellitari domestici (Sm
 ***
 
 
-### **Tabella comparativa sintetica delle tecnologie**
+### Tabella comparativa sintetica delle tecnologie
 
 |                         |                     |                                        |                                |                               |
 | ----------------------- | ------------------- | -------------------------------------- | ------------------------------ | ----------------------------- |
@@ -805,12 +801,12 @@ Progetti come **NEFOCAST** trasformano i ricevitori TV satellitari domestici (Sm
 | **Smart LNB**           | Opportunità         | Attenuazione Pioggia                   | NEFOCAST                       | Pluviometria Distribuita      |
 
 
-## **Conclusione**
+## Conclusione
 
 L'analisi di queste diciannove categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (_Data Fusion_): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l'integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio "Digital Twin" del pianeta, capace di quantificare non solo lo stato dell'ambiente naturale, ma anche l'impatto antropico in tempo reale.
 
 
-#### **Works cited**
+#### Works cited
 
 1. Parametric Sizing Equations for Earth Observation Satellites | Request PDF - ResearchGate, accessed November 23, 2025, <https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites>
 
