@@ -95,7 +95,7 @@ La GNSS-R permette di estrarre proprietà geofisiche dalla superficie riflettent
 
 Il ricevitore misura la potenza del segnale riflesso in funzione del ritardo temporale (delay) e dello spostamento Doppler, generando una _Delay Doppler Map_ (DDM). La potenza ricevuta $P_r$ è descritta dall'equazione radar bistatica <sup>9</sup>:
 
-$$ P_r(\tau, f_D) = \frac{P_t G_t \lambda^2}{(4\pi)^3} \iint_A \frac{G_r(\vec{r}) \sigma^0(\vec{r}) \chi^2(\tau, f_D)}{R_t^2(\vec{r}) R_r^2(\vec{r})} , d\vec{r} $$
+$$ P_r(\tau, f_D) = \frac{P_t G_t \lambda^2}{(4\pi)^3} \iint_A \frac{G_r(\vec{r}) \sigma^0(\vec{r}) \chi^2(\tau, f_D)}{R_t^2(\vec{r}) R_r^2(\vec{r})} d\vec{r} $$
 
 Dove:
 
@@ -106,6 +106,18 @@ Dove:
 - $R_t$ e $R_r$ sono le distanze dal trasmettitore e dal ricevitore al punto di riflessione speculare.
 
 Su superfici calme (speculari), l'energia è concentrata in un punto della DDM. Su superfici rugose (oceano agitato dal vento), l'energia si disperde a formare un "ferro di cavallo" nella mappa DDM; l'ampiezza di questa dispersione è direttamente correlata alla velocità del vento.
+
+#### Alcune note sull'integrale di superficie
+
+Nel GNSS-R, il segnale non si riflette da un singolo punto (come in un radar monostatico con un obiettivo puntiforme), ma si diffonde (scattera) su un'ampia area ellittica sulla superficie del mare, nota come zona di Fresnel o area di diffusione illuminata.
+
+Ogni piccolo elemento di superficie all'interno di quest'area contribuisce alla potenza totale ricevuta dal satellite.
+
+Per trovare la potenza totale ($P_r$​) che arriva al ricevitore, dobbiamo sommare (integrare) i contributi di potenza di tutti questi piccoli elementi di superficie.
+
+La superficie di diffusione ($A$) è definita da due coordinate ortogonali (che possono essere spaziali o legate al segnale) che giacciono sul piano di diffusione.
+
+L'elemento differenziale $\mathrm{d} \vec{r}$ in questo contesto rappresenta $\mathrm{d} S$ o $\mathrm{d} A$ (elemento differenziale di superficie).
 
 
 ### Utilità e applicazioni
