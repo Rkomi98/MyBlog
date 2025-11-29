@@ -80,7 +80,7 @@ La tecnica è stata pionierizzata dalla missione **GPS/MET** e resa operativa da
 Mentre la Radio Occultazione sfrutta i segnali trasmessi attraverso l'atmosfera, la Riflettometria GNSS (GNSS-R) analizza i segnali riflessi dalla superficie terrestre, operando come un radar bistatico multi-statico.
 
 
-### Cosa misura
+### Cosa misura?
 
 La GNSS-R permette di estrarre proprietà geofisiche dalla superficie riflettente:
 

@@ -117,16 +117,15 @@ export function renderBlogIndex({ posts, relativeRoot }) {
   <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
   <link rel="canonical" href="${canonicalUrl}">
 
-  <!-- Google Analytics (GA4) - Uncomment and replace G-XXXXXXXXXX with your Measurement ID
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-9EVQ8G9W48');
   </script>
-  -->
   
   <!-- Open Graph -->
   <meta property="og:type" content="blog">
@@ -841,16 +840,15 @@ export function renderBlogDetail({
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
 
-  <!-- Google Analytics (GA4) - Uncomment and replace G-XXXXXXXXXX with your Measurement ID
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-9EVQ8G9W48');
   </script>
-  -->
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
