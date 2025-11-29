@@ -80,7 +80,7 @@ La tecnica è stata pionierizzata dalla missione **GPS/MET** e resa operativa da
 Mentre la Radio Occultazione sfrutta i segnali trasmessi attraverso l'atmosfera, la Riflettometria GNSS (GNSS-R) analizza i segnali riflessi dalla superficie terrestre, operando come un radar bistatico multi-statico.
 
 
-### Cosa misura?
+#### Cosa misura?
 
 La GNSS-R permette di estrarre proprietà geofisiche dalla superficie riflettente:
 
@@ -91,7 +91,7 @@ La GNSS-R permette di estrarre proprietà geofisiche dalla superficie riflettent
 - **Criosfera:** Estensione e spessore del ghiaccio marino.
 
 
-### Funzionamento fisico e formule
+#### Funzionamento fisico e formule
 
 Il ricevitore misura la potenza del segnale riflesso in funzione del ritardo temporale (delay) e dello spostamento Doppler, generando una _Delay Doppler Map_ (DDM). La potenza ricevuta $P_r$ è descritta dall'equazione radar bistatica <sup>9</sup>:
 
@@ -107,7 +107,23 @@ Dove:
 
 Su superfici calme (speculari), l'energia è concentrata in un punto della DDM. Su superfici rugose (oceano agitato dal vento), l'energia si disperde a formare un "ferro di cavallo" nella mappa DDM; l'ampiezza di questa dispersione è direttamente correlata alla velocità del vento.
 
-#### Alcune note sull'integrale di superficie
+> 🎮 **Simulazione interattiva.** Vuoi vedere come cambiano le Delay Doppler Map al variare di vento, quota e angolo di incidenza? Prova la [simulazione DDM GNSS-R](Assets/simulations/ddm/index.html) basata sul modello qui descritto.
+
+<iframe
+  src="../../../Assets/simulations/ddm/index.html"
+  title="Simulazione Delay Doppler Map GNSS-R"
+  loading="lazy"
+  style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
+></iframe>
+
+> Il grafico mostra la distribuzione di potenza del segnale riflesso nello spazio delay-Doppler. In condizioni di mare mosso (vento ~10-15 m/s), l'energia si disperde dalla posizione speculare (delay=0, Doppler=0) formando la caratteristica "horseshoe shape" (ferro di cavallo) in un grafico 2D. In questo caso abbiamo
+> - **Asse X** (Doppler): Spostamento in frequenza dovuto al moto relativo satellite-superficie
+> - **Asse Y** (Delay): Ritardo temporale rispetto al percorso speculare diretto
+> - **Asse Z** (Power): Intensità del segnale riflesso
+
+I picchi multipli lungo l'asse Doppler indicano che la rugosità superficiale (onde) genera scattering da un'ampia glistening zone, con contributi da punti a diverse velocità relative. Più il mare è agitato, più la DDM si "apre" lateralmente e il picco centrale si attenua.
+
+##### Alcune note sull'integrale di superficie
 
 Nel GNSS-R, il segnale non si riflette da un singolo punto (come in un radar monostatico con un obiettivo puntiforme), ma si diffonde (scattera) su un'ampia area ellittica sulla superficie del mare, nota come zona di Fresnel o area di diffusione illuminata.
 
@@ -120,67 +136,84 @@ La superficie di diffusione ($A$) è definita da due coordinate ortogonali (che 
 L'elemento differenziale $\mathrm{d} \vec{r}$ in questo contesto rappresenta $\mathrm{d} S$ o $\mathrm{d} A$ (elemento differenziale di superficie).
 
 
-### Utilità e applicazioni
+#### Utilità e applicazioni
 
-L'applicazione "killer" della GNSS-R è il monitoraggio dei cicloni tropicali. A differenza dei radiometri ottici (bloccati dalle nubi) o degli scatterometri in banda Ku (attenuati dalla pioggia intensa), i segnali GNSS in banda L penetrano le precipitazioni intense, permettendo di misurare la velocità del vento nell'occhio del ciclone.9
+L'applicazione "killer" della GNSS-R è il monitoraggio dei cicloni tropicali<sup>65</sup>. A differenza dei radiometri ottici (bloccati dalle nubi) o degli scatterometri in banda Ku (attenuati dalla pioggia intensa), i segnali GNSS in banda L penetrano le precipitazioni intense<sup>66</sup>, permettendo di misurare la velocità del vento nell'occhio del ciclone.
 
 In ambito terrestre, la tecnica fornisce mappe di umidità del suolo ad alta risoluzione temporale, essenziali per la previsione delle piene e l'agricoltura.
 
 
-### Missioni
+#### Missioni
+Ovviamente tra le missioni non posso non citare quella da cui ho preso gran parte di queste informazioni, ovvero CYGNSS della Nasa, ma non è l'unica.
 
 - **CYGNSS (NASA):** Una costellazione di 8 microsatelliti lanciata per studiare l'intensificazione degli uragani, che ha dimostrato capacità sorprendenti anche nel monitoraggio delle zone umide tropicali.
 
-- **FSSCat (ESA):** Missione basata su due CubeSat 6U (²Cat-5/A e B) che combina GNSS-R con un sensore iperspettrale ottico, vincitrice del Copernicus Masters.<sup>12</sup>
+- **FSSCat (ESA):** Missione basata su due CubeSat 6U che combinava GNSS-R con un sensore iperspettrale ottico, vincitrice del Copernicus Masters. La missione è durata circa un anno. <sup>12</sup>
 
-- **Spire Global:** Offre prodotti commerciali di riflettometria per il monitoraggio marittimo e del ghiaccio marino.<sup>9</sup>
+- **Spire Global:** Offre prodotti commerciali di riflettometria per il monitoraggio marittimo e del ghiaccio marino, ma non solo.<sup>9</sup>
 
 ***
 
 
-## 4. Radar ad apertura sintetica (SAR): imaging a microonde ognitempo
+## 2. Synthetic Aperture Radar: SAR
 
-Il SAR rappresenta lo strumento principe per l'osservazione della superficie solida in ogni condizione meteorologica e di illuminazione, grazie alla sua natura attiva e alla lunghezza d'onda delle microonde.
+### 2.1 Radar ad apertura sintetica (SAR): imaging a microonde ognitempo
+
+SAR rappresenta lo strumento principale per l'osservazione della superficie solida in ogni condizione meteorologica e di illuminazione, grazie alla sua natura attiva e alla lunghezza d'onda delle microonde.
 
 
-### Cosa misura
+#### Cosa misura?
 
-Il SAR restituisce immagini complesse dove ogni pixel contiene:
+I radar ad apertura sintetica inviano attivamente onde elettromagnetiche (microonde) verso la superficie terrestre e ne misurano l’eco retrodiffusa, registrandone l’intensità e la fase al ritorno. A differenza dei sensori ottici, un SAR illumina la scena con impulsi propri (tipicamente nelle bande centimetriche: L, C, X, ecc.) e cattura le microonde riflesse dagli oggetti al suolo. Ciò fornisce immagini in cui la “luminosità” di ogni pixel è legata al coefficiente di retro-diffusione radar (**backscatter**), che dipende dalla rugosità, dalla struttura e dal contenuto d’acqua del bersaglio. Ad esempio, superfici lisce (acque calme) riflettono poca energia verso il radar apparendo scure, mentre aree rugose o con spigoli (come edifici, rocce fratturate, vegetazione fitta) appaiono brillanti.
+
+Misurando anche la fase della microonda retrodiffusa, i sistemi SAR possono rilevare con estrema sensibilità differenze di distanza nell’ordine dei millimetri, aprendo la strada all’interferometria (InSAR, vedi sezione successiva). I radar SAR operano in varie polarizzazioni (HH, VV, HV, VH), misurando componenti diverse del vettore campo elettromagnetico, il che aggiunge informazioni sulla geometria dei bersagli e sulla presenza di vegetazione.
+
+Il SAR restituisce immagini complesse (nel senso matematico del termine) dove ogni pixel contiene:
 
 - **Ampiezza:** Correlata alla rugosità superficiale, alla costante dielettrica (umidità) e alla geometria locale.
 
 - **Fase:** Correlata alla distanza geometrica sensore-bersaglio, fondamentale per le applicazioni interferometriche.
 
 
-### Funzionamento fisico e formule
+#### Funzionamento fisico e formule
 
-Per ottenere un'alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un'apertura virtuale. Elaborando coerentemente la storia di fase degli echi di ritorno (effetto Doppler), la risoluzione azimutale teorica $\delta_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell'antenna reale $L_a$ <sup>14</sup>:
+Per ottenere un'alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un'apertura virtuale<sup>14</sup>. 
+
+Elaborando coerentemente la storia di fase degli echi di ritorno (**effetto Doppler**), la risoluzione azimutale teorica $\delta_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell'antenna reale $L_a$<sup>15</sup>:
 
 $$\delta_a = \frac{L_a}{2}$$
 
-La risoluzione in range (perpendicolare alla traccia) è determinata dalla larghezza di banda $B$ dell'impulso trasmesso (spesso un _chirp_ modulato in frequenza):
+La risoluzione in range (perpendicolare alla traccia) è determinata dalla larghezza di banda $B$ dell'impulso trasmesso (spesso un _chirp_ modulato in frequenza, dove il _chirp_ è un segnale la cui frequenza varia nel tempo):
 
-$$\delta\_r = \frac{c}{2B \sin(\theta)}$$
+$$\delta_r = \frac{c}{2B \sin(\theta)}$$
 
-Dove $\theta$ è l'angolo di incidenza. L'equazione di fase $\phi$ per un pixel a distanza $R$ è data da <sup>15</sup>:
+Dove $\theta$ è l'angolo di incidenza. L'equazione di fase $\phi$ per un pixel a distanza $R$ è data da:
 
-$$\phi = -\frac{4\pi R}{\lambda} + \phi\_{scatt}$$
+$$\phi = -\frac{4\pi R}{\lambda} + \phi_{scatt}$$
 
-Il termine $4\pi R / \lambda$ indica che la fase compie un ciclo completo ogni volta che la distanza cambia di mezza lunghezza d'onda ($\lambda/2$).
+La frazione $4\pi R / \lambda$ indica che la fase compie un ciclo completo ogni volta che la distanza cambia di mezza lunghezza d'onda ($\lambda/2$).
 
 
-### Utilità e applicazioni
+#### Utilità e applicazioni
 
-La versatilità del SAR è immensa:
+Il vantaggio principale del SAR è la sua capacità di osservare la Terra **con ogni condizione di illuminazione** e **meteorologica**: essendo attivo, non dipende dal Sole né è ostacolato dalle nubi (le microonde attraversano la copertura nuvolosa). Questo rende i SAR ideali per monitorare regioni frequentemente coperte da nubi (zone tropicali) o per sorvegliare aree polari durante la lunga notte invernale. 
 
-- **Monitoraggio Marittimo:** Rilevamento di navi, _oil spills_ (che appaiono scuri per soppressione delle onde capillari) e classificazione del ghiaccio marino.<sup>16</sup>
+Le immagini SAR trovano impiego in cartografia di suoli umidi e alluvionati (il segnale penetra un po’ la vegetazione e riflette fortemente da terreni saturi d’acqua, utilissimo in caso di inondazioni), in agricoltura (stima dell’umidità del suolo e fase fenologica delle colture: la dispersione del segnale varia con la struttura del fogliame), nella sorveglianza marittima (rilevazione di navi e di chiazze di petrolio: il petrolio calma il mare e appare scuro sul SAR, facilitando l’individuazione di sversamenti). 
+
+In geologia e gestione del territorio, i SAR mappano deformazioni del terreno e frane tramite InSAR (si veda oltre), mentre in forestry la polarimetria SAR aiuta a stimare la biomassa forestale (missioni P-band come BIOMASS). Inoltre, i SAR permettono di rilevare cambiamenti improvvisi: grazie a passaggi frequenti, individuano il disboscamento illegale, il movimento di ghiacciai, i nuovi edifici o i danni da disastri confrontando immagini prima/dopo (change detection). In ambito militare e di intelligence, l’osservazione radar è cruciale perché fornisce immagini giorno/notte e all-weather, rivelando installazioni camuffate e movimenti.
+
+In conclusione la versatilità dei sistemi SAR è immensa<sup>16</sup>:
+
+- **Monitoraggio Marittimo:** Rilevamento di navi, _oil spills_ (che appaiono scuri per soppressione delle onde capillari) e classificazione del ghiaccio marino.
 
 - **Agricoltura:** Monitoraggio della crescita delle colture (sensibilità alla biomassa e struttura) e dell'umidità del suolo.
 
-- **Gestione Emergenze:** Mappatura rapida delle inondazioni (l'acqua calma appare nera per riflessione speculare lontano dal sensore).<sup>16</sup>
+- **Gestione Emergenze:** Mappatura rapida delle inondazioni (l'acqua calma appare nera per riflessione speculare lontano dal sensore).
 
 
-### Missioni
+#### Missioni
+
+Le principali missioni sono:
 
 - **Sentinel-1 (ESA/Copernicus):** La missione di riferimento in banda C, che fornisce dati globali con politica open access, cruciale per l'interferometria operativa.<sup>16</sup>
 
@@ -191,27 +224,34 @@ La versatilità del SAR è immensa:
 ***
 
 
-## 5. Interferometria SAR (InSAR): la geodesia dallo spazio
+### 2.2 Interferometria SAR (InSAR): la geodesia dallo spazio
 
 L'InSAR è una tecnica derivata dal SAR che sfrutta la differenza di fase tra due acquisizioni per misurare la topografia o le deformazioni millimetriche della superficie.
 
 
-### Cosa misura
+#### Cosa misura
 
-Misura lo spostamento della superficie terrestre lungo la linea di vista (Line of Sight - LOS) o genera Modelli Digitali di Elevazione (DEM).
+L’Interferometria SAR sfrutta la fase del segnale radar registrato da due immagini SAR acquisite da orbite leggermente diverse (Interferometria spaziale) o a tempi diversi (Interferometria differenziale temporale) per misurare minime differenze di distanza e quindi variazioni di quota o di spostamento della superficie terrestre. 
 
+In pratica, combinando due immagini SAR della stessa area, la differenza di fase tra i pixel genera frange d’interferenza proporzionali alla differenza di percorso ottico dell’onda radar.
+
+Nel caso di InSAR topografica (es. missione SRTM o TanDEM-X), due antenne (o satelliti in formazione) osservano simultaneamente la superficie: la fase differenziale dipende dall’altitudine del suolo e consente di derivare modelli digitali di elevazione (DEM) ad alta risoluzione. 
+
+Nell’InSAR differenziale (DInSAR), si usano due passaggi successivi sullo stesso orbita a distanza di tempo $\Delta t$: se la superficie nel frattempo è deformata (abbassata o sollevata) di pochi millimetri o centimetri, tale differenza appare come variazione di fase tra le due immagini. Si generano così **interferogrammi a falsi colori** con frange concentriche, ognuna corrispondente tipicamente a uno spostamento line-of-sight di mezza lunghezza d’onda ($≈2.8$ cm per Sentinel-1 in banda C). 
+
+Misurando il numero e spaziatura delle frange, si ottiene il campo di deformazione 2D della superficie proiettato sulla linea di vista del radar. L’InSAR è quindi in grado di misurare microscopici movimenti del terreno (ordine mm) su ampie aree, rilevando fenomeni lenti e progressivi invisibili ad occhio nudo. Anche spostamenti co-sismici repentini (terremoti) o rapide deformazioni vulcaniche generano pattern interferometrici caratteristici (frange circolari attorno all’epicentro o al cratere).
 
 ### Funzionamento fisico e formule
 
 La differenza di fase interferometrica $\Delta \phi$ tra due immagini è composta da diversi contributi:
 
-$$ \Delta \phi = \Delta \phi\_{geom} + \Delta \phi\_{topo} + \Delta \phi\_{def} + \Delta \phi\_{atm} + \Delta \phi\_{noise} $$
+$$ \Delta \phi = \Delta \phi_{geom} + \Delta \phi_{topo} + \Delta \phi_{def} + \Delta \phi_{atm} + \Delta \phi_{noise} $$
 
-- $\Delta \phi\_{def}$ è la fase dovuta allo spostamento del suolo.
+- $\Delta \phi_{def}$ è la fase dovuta allo spostamento del suolo.
 
-- $\Delta \phi\_{topo}$ è legata alla topografia residua.
+- $\Delta \phi_{topo}$ è legata alla topografia residua.
 
-- $\Delta \phi\_{atm}$ è il ritardo atmosferico (spesso il principale termine di errore).
+- $\Delta \phi_{atm}$ è il ritardo atmosferico (spesso il principale termine di errore).
 
 La relazione tra la deformazione $d$ e la fase "srotolata" (unwrapped) è <sup>18</sup>:
 
@@ -965,3 +1005,7 @@ L'analisi di queste diciannove categorie rivela un sistema di osservazione della
 63. Real-Time Rain Rate Evaluation via Satellite Downlink Signal Attenuation Measurement - PubMed Central, accessed November 23, 2025, <https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/>
 
 64. SmartLNB for weather forecasting - Nefocast, accessed November 23, 2025, <http://www.nefocast.it/news/smartlnb-for-weather-forecasting/>
+
+65. Improving Analysis and Prediction of Tropical Cyclones by Assimilating Radar and GNSS-R Wind Observations: Ensemble Data Assimilation and Observing System Simulation Experiments Using a Coupled Atmosphere–Ocean Model, <https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml>
+
+66. NASA/University of Michigan - CYGNSS Handbook <https://cygnss.engin.umich.edu/wp-content/uploads/sites/534/2021/07/148-0138-ATBD-L2-Wind-Speed-Retrieval-R6_release.pdf>

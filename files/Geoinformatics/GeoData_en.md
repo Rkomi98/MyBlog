@@ -90,6 +90,15 @@ Where:
 
 On calm (specular) surfaces, energy is concentrated at one point in the DDM. On rough surfaces (ocean agitated by wind), energy disperses to form a "horseshoe" shape in the DDM map; the amplitude of this dispersion is directly correlated with wind speed.
 
+> 🎮 **Interactive simulation.** Want to see how the Delay Doppler Map responds to wind, receiver altitude, and incidence angle? Try the [GNSS-R DDM simulation](Assets/simulations/ddm/index.html) built on the model described here.
+
+<iframe
+  src="../../../Assets/simulations/ddm/index.html"
+  title="GNSS-R Delay Doppler Map simulation"
+  loading="lazy"
+  style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
+></iframe>
+
 ### **Utility and Applications**
 
 The "killer" application of GNSS-R is tropical cyclone monitoring. Unlike optical radiometers (blocked by clouds) or Ku-band scatterometers (attenuated by heavy rain), L-band GNSS signals penetrate intense precipitation, allowing for the measurement of wind speed in the eye of the cyclone.<sup>9</sup>
