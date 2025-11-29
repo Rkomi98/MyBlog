@@ -116,6 +116,17 @@ export function renderBlogIndex({ posts, relativeRoot }) {
   <title>Blog | Mirko Calcaterra</title>
   <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
   <link rel="canonical" href="${canonicalUrl}">
+
+  <!-- Google Analytics (GA4) - Uncomment and replace G-XXXXXXXXXX with your Measurement ID
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  -->
   
   <!-- Open Graph -->
   <meta property="og:type" content="blog">
@@ -829,6 +840,17 @@ export function renderBlogDetail({
   <meta name="description" content="${escapeHtml(summary)}">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google Analytics (GA4) - Uncomment and replace G-XXXXXXXXXX with your Measurement ID
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  -->
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
