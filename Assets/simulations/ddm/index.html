@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delay Doppler Map | GNSS-R Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --card-strong: #0f141c;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-2: #f778ba;
+      --accent-3: #e3b341;
+      --shadow: 0 24px 50px -32px rgba(0, 0, 0, 0.65);
+      color-scheme: dark;
+      font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(88, 166, 255, 0.16), transparent 60%), var(--bg);
+      color: var(--text);
+      position: relative;
+      overflow-x: hidden;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(88, 166, 255, 0.45);
+    }
+    a:hover {
+      color: #7cc4ff;
+      border-bottom-color: transparent;
+    }
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(88, 166, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88, 166, 255, 0.05) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .page {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 42px 22px 64px;
+      z-index: 1;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(88, 166, 255, 0.12);
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border: 1px solid rgba(88, 166, 255, 0.35);
+    }
+    .hero h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2.2rem, 4vw, 3.1rem);
+      letter-spacing: -0.02em;
+    }
+    .hero .lede {
+      color: var(--muted);
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+    .badge-row {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .badge {
+      padding: 6px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(22, 27, 34, 0.85);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(88, 166, 255, 0.05), rgba(247, 120, 186, 0.05)), var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+    .equation {
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .equation::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(88, 166, 255, 0.08), rgba(247, 120, 186, 0.08));
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .equation__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 12px;
+      background: rgba(22, 27, 34, 0.85);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .equation__body {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--card-strong);
+      border: 1px solid rgba(88, 166, 255, 0.25);
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: #cdd9e5;
+      overflow-x: auto;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .controls__title {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 6px;
+    }
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .preset-btn {
+      flex: 1 1 90px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      color: var(--muted);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .preset-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .preset-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .control {
+      margin-top: 6px;
+    }
+    .control__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .control__label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .control__value {
+      padding: 4px 10px;
+      border-radius: 10px;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    input[type="range"] {
+      width: 100%;
+      appearance: none;
+      height: 8px;
+      border-radius: 999px;
+      background: #1c2129;
+      outline: none;
+      transition: background 0.2s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid var(--border);
+      box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    input[type="range"]:active::-webkit-slider-thumb {
+      transform: scale(1.05);
+    }
+    .status {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+    }
+    .status__title {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+    .status__state {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .status__dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(88, 166, 255, 0.75);
+      background: var(--accent);
+    }
+    .status__metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+    }
+    .metric span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .metric strong {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: #3fb950;
+    }
+    .viz {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .viz__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .view-toggle {
+      display: inline-flex;
+      gap: 6px;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+    }
+    .view-btn {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .view-btn.is-active {
+      background: var(--accent);
+      color: #0d1117;
+    }
+    .plot {
+      width: 100%;
+      height: 470px;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .legend__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend__swatch {
+      width: 14px;
+      height: 6px;
+      border-radius: 999px;
+    }
+    .physics {
+      margin-top: 6px;
+    }
+    .physics__title {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .physics__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .physics-card {
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+      min-height: 140px;
+    }
+    .physics-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+    .physics-card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+    .physics-card code {
+      display: block;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      background: var(--card);
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      color: #cdd9e5;
+      font-size: 0.9rem;
+    }
+    footer {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+    @media (max-width: 760px) {
+      .page {
+        padding: 28px 16px 52px;
+      }
+      .plot {
+        height: 380px;
+      }
+      .legend {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">GNSS-R</div>
+      <h1>Delay Doppler Map</h1>
+      <p class="lede">
+        Manipola vento, quota del ricevitore e angolo di incidenza per vedere come cambia la Delay Doppler Map generata
+        dal modello bistatico. Il calcolo normalizza la potenza ricevuta e mostra la forma della zona brillante in funzione
+        della rugosità superficiale (MSS).
+      </p>
+      <div class="badge-row">
+        <span class="badge">Plotly Surface</span>
+        <span class="badge">Real-time physics</span>
+        <span class="badge">GNSS-R ocean</span>
+      </div>
+    </header>
+
+    <section class="card equation">
+      <div class="equation__label">Equazione radar bistatica</div>
+      <div class="equation__body">
+        P_r(τ, f_D) = (P_t G_t λ²) / (4π)³ ∬ [G_r(r) σ⁰(r) |χ(Δτ, Δf_D)|²] / [R_t² R_r²] dA
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="card controls">
+        <div class="controls__title">Parametri</div>
+        <div class="preset-row">
+          <button class="preset-btn" data-wind="0">Calma</button>
+          <button class="preset-btn" data-wind="5">Brezza</button>
+          <button class="preset-btn" data-wind="10">Moderato</button>
+          <button class="preset-btn" data-wind="15">Forte</button>
+          <button class="preset-btn" data-wind="20">Tempesta</button>
+        </div>
+
+        <div class="control">
+          <div class="control__header">
+            <span class="control__label">Wind speed (U10)</span>
+            <span class="control__value" id="windValue">0.0 m/s</span>
+          </div>
+          <input id="windSlider" type="range" min="0" max="20" step="0.5" value="0" data-color="#58a6ff">
+        </div>
+
+        <div class="control">
+          <div class="control__header">
+            <span class="control__label">Receiver altitude</span>
+            <span class="control__value" id="altitudeValue">500 km</span>
+          </div>
+          <input id="altitudeSlider" type="range" min="300" max="800" step="50" value="500" data-color="#f778ba">
+        </div>
+
+        <div class="control">
+          <div class="control__header">
+            <span class="control__label">Incidence angle</span>
+            <span class="control__value" id="incidenceValue">30°</span>
+          </div>
+          <input id="incidenceSlider" type="range" min="5" max="60" step="5" value="30" data-color="#e3b341">
+        </div>
+
+        <div class="status" id="statusCard">
+          <div class="status__title">Stato mare</div>
+          <div class="status__state">
+            <span class="status__dot" id="statusDot"></span>
+            <span id="seaState">Specular reflection</span>
+          </div>
+          <div class="status__metrics">
+            <div class="metric">
+              <span>σ² (MSS)</span>
+              <strong id="mssValue">0.0000</strong>
+            </div>
+            <div class="metric">
+              <span>Zona brillante</span>
+              <strong id="gzValue">0 km</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card viz">
+        <div class="viz__header">
+          <span>3D visualization</span>
+          <div class="view-toggle" role="group" aria-label="Angolo di visualizzazione">
+            <button class="view-btn is-active" data-view="3d">3D</button>
+            <button class="view-btn" data-view="top">Top</button>
+            <button class="view-btn" data-view="side">Side</button>
+          </div>
+        </div>
+        <div class="plot" id="ddmPlot"></div>
+        <div class="legend">
+          <span class="legend__item"><span class="legend__swatch" style="background:#f778ba"></span>Doppler (Hz)</span>
+          <span class="legend__item"><span class="legend__swatch" style="background:#58a6ff"></span>Delay (chips)</span>
+          <span class="legend__item"><span class="legend__swatch" style="background:#e3b341"></span>Power</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card physics">
+      <div class="physics__title">Modello fisico</div>
+      <div class="physics__grid">
+        <div class="physics-card">
+          <h3>Cox-Munk</h3>
+          <p>Variance delle pendenze superficiali stimata dal vento a 10 m.</p>
+          <code>σ² = 0.003 + 0.00512 · U₁₀</code>
+        </div>
+        <div class="physics-card">
+          <h3>Woodward AF</h3>
+          <p>Funzione di ambiguità che controlla la risoluzione delay-Doppler.</p>
+          <code>χ² = sinc²(Δτ) × sinc²(Δf · T)</code>
+        </div>
+        <div class="physics-card">
+          <h3>Iso-delay</h3>
+          <p>Le curve a ritardo costante sono ellissi centrate sul punto speculare.</p>
+          <code>R_t + R_r = costante</code>
+        </div>
+        <div class="physics-card">
+          <h3>Iso-Doppler</h3>
+          <p>Linee a Doppler costante formano iperboli legate alla geometria.</p>
+          <code>f_D = (v · r̂) / λ</code>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      GNSS-R DDM - modello ispirato a Zavorotny &amp; Voronovich (2000)
+    </footer>
+  </main>
+
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script type="module" src="./ddm.js"></script>
+</body>
+</html>
