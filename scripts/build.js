@@ -134,6 +134,38 @@ async function writeManifest(posts, outputDir) {
   await fs.writeJson(path.join(outputDir, 'posts.json'), manifest, { spaces: 2 });
 }
 
+async function generateSitemap(posts, distDir) {
+  const baseUrl = 'https://rkomi98.github.io/MyBlog';
+  const urls = [
+    { loc: `${baseUrl}/`, priority: '1.0', changefreq: 'weekly' },
+    { loc: `${baseUrl}/blog/index.html`, priority: '0.8', changefreq: 'weekly' },
+  ];
+
+  for (const post of posts) {
+    for (const lang of Object.keys(post.languages)) {
+      urls.push({
+        loc: `${baseUrl}/blog/${lang}/${post.slug}/`,
+        priority: '0.6',
+        changefreq: 'monthly',
+        lastmod: (post.languages[lang].modifiedTime || post.updatedAt).toISOString().split('T')[0]
+      });
+    }
+  }
+
+  const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(url => `  <url>
+    <loc>${url.loc}</loc>
+    ${url.lastmod ? `<lastmod>${url.lastmod}</lastmod>` : ''}
+    <changefreq>${url.changefreq}</changefreq>
+    <priority>${url.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+
+  await fs.writeFile(path.join(distDir, 'sitemap.xml'), sitemapContent, 'utf8');
+  console.log(`✔️  Generated sitemap.xml with ${urls.length} URLs`);
+}
+
 async function syncDocsDirectory(distDir, rootDir) {
   const docsDir = path.join(rootDir, 'docs');
   await fs.ensureDir(docsDir);
@@ -187,6 +219,8 @@ async function build() {
   }
 
   await writeManifest(posts, blogDir);
+
+  await generateSitemap(posts, distDir);
 
   await syncDocsDirectory(distDir, rootDir);
 

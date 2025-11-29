@@ -105,6 +105,8 @@ export function renderBlogIndex({ posts, relativeRoot }) {
   const serializedPosts = serializeForScript(postsPayload);
   const homeLink = joinUrl(relativeRoot, 'index.html');
   const currentYear = new Date().getFullYear();
+  const baseUrl = 'https://rkomi98.github.io/MyBlog';
+  const canonicalUrl = `${baseUrl}/blog/index.html`;
 
   return `<!DOCTYPE html>
 <html lang="it">
@@ -112,6 +114,36 @@ export function renderBlogIndex({ posts, relativeRoot }) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Blog | Mirko Calcaterra</title>
+  <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
+  <link rel="canonical" href="${canonicalUrl}">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="blog">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="Blog | Mirko Calcaterra">
+  <meta property="og:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
+  <meta property="og:image" content="${baseUrl}/Assets/Logo.png">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary">
+  <meta property="twitter:title" content="Blog | Mirko Calcaterra">
+  <meta property="twitter:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
+  <meta property="twitter:image" content="${baseUrl}/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Mirko Calcaterra Blog",
+    "url": "${canonicalUrl}",
+    "description": "Blog tecnico su AI e Geoinformatica",
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -780,13 +812,61 @@ export function renderBlogDetail({
   const iconHtml = escapeHtml(icon);
   const currentYear = new Date().getFullYear();
   const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
+  
+  const baseUrl = 'https://rkomi98.github.io/MyBlog';
+  // Construct the absolute URL for the current page
+  // We assume the structure: blog/{lang}/{slug}/index.html
+  const pageUrl = `${baseUrl}/blog/${language}/${post.slug}/`;
+  const summary = langData.summary || `Articolo su ${formattedCategory} di Mirko Calcaterra.`;
+  const imageUrl = post.meta?.image ? (post.meta.image.startsWith('http') ? post.meta.image : `${baseUrl}/${post.meta.image}`) : `${baseUrl}/Assets/Logo.png`;
 
   return `<!DOCTYPE html>
 <html lang="${language}" ${language === 'en' ? '' : 'translate="no"'}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle}</title>
+  <title>${pageTitle} | Mirko Calcaterra</title>
+  <meta name="description" content="${escapeHtml(summary)}">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${pageUrl}">
+  <meta property="og:title" content="${pageTitle}">
+  <meta property="og:description" content="${escapeHtml(summary)}">
+  <meta property="og:image" content="${imageUrl}">
+  <meta property="article:published_time" content="${publishedAt.toISOString()}">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="${formattedCategory}">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="${pageTitle}">
+  <meta property="twitter:description" content="${escapeHtml(summary)}">
+  <meta property="twitter:image" content="${imageUrl}">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "${pageTitle}",
+    "image": "${imageUrl}",
+    "datePublished": "${publishedAt.toISOString()}",
+    "dateModified": "${(langData.modifiedTime || publishedAt).toISOString()}",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "${baseUrl}/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "${escapeHtml(summary)}"
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
