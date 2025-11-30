@@ -241,7 +241,7 @@ Nell’InSAR differenziale (DInSAR), si usano due passaggi successivi sullo stes
 
 Misurando il numero e spaziatura delle frange, si ottiene il campo di deformazione 2D della superficie proiettato sulla linea di vista del radar. L’InSAR è quindi in grado di misurare microscopici movimenti del terreno (ordine mm) su ampie aree, rilevando fenomeni lenti e progressivi invisibili ad occhio nudo. Anche spostamenti co-sismici repentini (terremoti) o rapide deformazioni vulcaniche generano pattern interferometrici caratteristici (frange circolari attorno all’epicentro o al cratere).
 
-### Funzionamento fisico e formule
+#### Funzionamento fisico e formule
 
 La differenza di fase interferometrica $\Delta \phi$ tra due immagini è composta da diversi contributi:
 
@@ -260,22 +260,9 @@ $$d = \frac{\lambda}{4\pi} \Delta \phi\_{unwrapped}$$
 Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una frangia di interferenza ($2\pi$) corrisponde a uno spostamento di circa 2.8 cm.<sup>20</sup>
 
 
-### Applicazioni
+#### Applicazioni
 
 - **Tettonica e Vulcanologia:** Misurazione dei campi di deformazione post-sismica e del "respiro" dei vulcani (inflazione/deflazione delle camere magmatiche).<sup>21</sup>
-
-## Infografica: matrice di confronto
-
-<!-- Infografica Page (NEW) -->
-<div id="infografica" class="content-page hidden">
-  <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di Confronto</h1>
-  <p class="text-lg text-gray-700 mb-6">Questa tabella riassume le capacità operative di tutte le tecnologie analizzate. Usa questa legenda per orientarti:</p>
-
-  <div class="flex flex-wrap gap-4 mb-6 text-sm">
-    <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold border border-yellow-200">☀️ Passivo (Richiede Sole/Emissione)</span>
-    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200">📡 Attivo (Emette segnale proprio)</span>
-    <span class="px-3 py-1 rounded-full bg-green-100 text-green-800 font-semibold border border-green-200">☁️ Vede attraverso le nuvole</span>
-  </div>
 
   <figure class="table-wrapper" data-enhanced-table>
     <div class="table-wrapper__scroll">
@@ -876,135 +863,150 @@ Progetti come **NEFOCAST** trasformano i ricevitori TV satellitari domestici (Sm
 L'analisi di queste diciannove categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (_Data Fusion_): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l'integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio "Digital Twin" del pianeta, capace di quantificare non solo lo stato dell'ambiente naturale, ma anche l'impatto antropico in tempo reale.
 
 
+## Infografica: matrice di confronto
+
+<!-- Infografica Page (NEW) -->
+<div id="infografica" class="content-page hidden">
+  <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di Confronto</h1>
+  <p class="text-lg text-gray-700 mb-6">Questa tabella riassume le capacità operative di tutte le tecnologie analizzate. Usa questa legenda per orientarti:</p>
+
+  <div class="flex flex-wrap gap-4 mb-6 text-sm">
+    <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold border border-yellow-200">☀️ Passivo (Richiede Sole/Emissione)</span>
+    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200">📡 Attivo (Emette segnale proprio)</span>
+    <span class="px-3 py-1 rounded-full bg-green-100 text-green-800 font-semibold border border-green-200">☁️ Vede attraverso le nuvole</span>
+  </div>
+
+
+
 #### Works cited
 
-1. Parametric Sizing Equations for Earth Observation Satellites | Request PDF - ResearchGate, accessed November 23, 2025, <https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites>
+1. Parametric Sizing Equations for Earth Observation Satellites | Request PDF - ResearchGate, <https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites>
 
-2. perspective on Gaussian processes for Earth observation | National Science Review, accessed November 23, 2025, <https://academic.oup.com/nsr/article/6/4/616/5369430>
+2. perspective on Gaussian processes for Earth observation | National Science Review, <https://academic.oup.com/nsr/article/6/4/616/5369430>
 
-3. GNSS radio occultation (GNSS-RO): Lecture 1 – Principles and NWP use - ECMWF Events (Indico), accessed November 23, 2025, <https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf>
+3. GNSS radio occultation (GNSS-RO): Lecture 1 – Principles and NWP use - ECMWF Events (Indico), <https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf>
 
-4. A variational regularization of Abel transform for GPS radio occultation - AMT, accessed November 23, 2025, <https://amt.copernicus.org/articles/11/1947/>
+4. A variational regularization of Abel transform for GPS radio occultation - AMT, <https://amt.copernicus.org/articles/11/1947/>
 
-5. GNSS radio occultation excess-phase processing for climate applications including uncertainty estimation - AMT, accessed November 23, 2025, <https://amt.copernicus.org/articles/16/5217/>
+5. GNSS radio occultation excess-phase processing for climate applications including uncertainty estimation - AMT, <https://amt.copernicus.org/articles/16/5217/>
 
-6. GNSS Radio Occultation | Constellation Observing System for Meteorology Ionosphere and Climate - ucar cosmic, accessed November 23, 2025, <https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation>
+6. GNSS Radio Occultation | Constellation Observing System for Meteorology Ionosphere and Climate - ucar cosmic, <https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation>
 
-7. Using the Commercial GNSS RO Spire Data in the Neutral Atmosphere for Climate and Weather Prediction Studies - the NOAA Institutional Repository, accessed November 23, 2025, <https://repository.library.noaa.gov/view/noaa/58772/noaa_58772_DS1.pdf>
+7. Using the Commercial GNSS RO Spire Data in the Neutral Atmosphere for Climate and Weather Prediction Studies - the NOAA Institutional Repository, <https://repository.library.noaa.gov/view/noaa/58772/noaa_58772_DS1.pdf>
 
-8. Sensing the ionosphere with the Spire radio occultation constellation | Journal of Space Weather and Space Climate, accessed November 23, 2025, <https://www.swsc-journal.org/articles/swsc/full_html/2021/01/swsc210051/swsc210051.html>
+8. Sensing the ionosphere with the Spire radio occultation constellation | Journal of Space Weather and Space Climate, <https://www.swsc-journal.org/articles/swsc/full_html/2021/01/swsc210051/swsc210051.html>
 
-9. Reconnaissance satellite constellations: For enhanced global awareness - Spire, accessed November 23, 2025, <https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/>
+9. Reconnaissance satellite constellations: For enhanced global awareness - Spire, <https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/>
 
-10. Space Weather Data from Commercial GNSS RO, accessed November 23, 2025, <https://www.swpc.noaa.gov/sites/default/files/images/u4/07%20Rob%20Kursinski.pdf>
+10. Space Weather Data from Commercial GNSS RO, <https://www.swpc.noaa.gov/sites/default/files/images/u4/07%20Rob%20Kursinski.pdf>
 
-11. RainCube Demonstrates Miniature Radar Technology to Measure Storms - NASA Science, accessed November 23, 2025, <https://science.nasa.gov/science-research/science-enabling-technology/technology-highlights/raincube-demonstrates-miniature-radar-technology-to-measure-storms/>
+11. RainCube Demonstrates Miniature Radar Technology to Measure Storms - NASA Science, <https://science.nasa.gov/science-research/science-enabling-technology/technology-highlights/raincube-demonstrates-miniature-radar-technology-to-measure-storms/>
 
-12. FSSCat Overview - ESA Earth Online, accessed November 23, 2025, <https://earth.esa.int/eogateway/missions/fsscat/description>
+12. FSSCat Overview - ESA Earth Online, <https://earth.esa.int/eogateway/missions/fsscat/description>
 
-13. FSSCat - Earth Online, accessed November 23, 2025, <https://earth.esa.int/eogateway/missions/fsscat>
+13. FSSCat - Earth Online, <https://earth.esa.int/eogateway/missions/fsscat>
 
-14. Synthetic-aperture radar - Wikipedia, accessed November 23, 2025, <https://en.wikipedia.org/wiki/Synthetic-aperture_radar>
+14. Synthetic-aperture radar - Wikipedia, <https://en.wikipedia.org/wiki/Synthetic-aperture_radar>
 
-15. Synthetic Aperture Radar (SAR): Principles and Applications - eo4society, accessed November 23, 2025, <https://eo4society.esa.int/wp-content/uploads/2021/02/D1T2a_LTC2015_Younis.pdf>
+15. Synthetic Aperture Radar (SAR): Principles and Applications - eo4society, <https://eo4society.esa.int/wp-content/uploads/2021/02/D1T2a_LTC2015_Younis.pdf>
 
-16. S1 Applications - SentiWiki - Copernicus, accessed November 23, 2025, <https://sentiwiki.copernicus.eu/web/s1-applications>
+16. S1 Applications - SentiWiki - Copernicus, <https://sentiwiki.copernicus.eu/web/s1-applications>
 
-17. Create an Interferogram Using ESA's Sentinel-1 Toolbox | NASA Earthdata, accessed November 23, 2025, <https://www.earthdata.nasa.gov/learn/data-recipes/create-interferogram-using-esas-sentinel-1-toolbox>
+17. Create an Interferogram Using ESA's Sentinel-1 Toolbox | NASA Earthdata, <https://www.earthdata.nasa.gov/learn/data-recipes/create-interferogram-using-esas-sentinel-1-toolbox>
 
-18. InSAR Phase Unwrapping Error Correction for Rapid Repeat Measurements of Water Level Change in Wetlands - LaCoast.gov, accessed November 23, 2025, <https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf>
+18. InSAR Phase Unwrapping Error Correction for Rapid Repeat Measurements of Water Level Change in Wetlands - LaCoast.gov, <https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf>
 
-19. Unwrapped Interferograms: Creating a Deformation Map | NASA Earthdata, accessed November 23, 2025, <https://www.earthdata.nasa.gov/learn/data-recipes/unwrapped-interferograms-creating-deformation-map>
+19. Unwrapped Interferograms: Creating a Deformation Map | NASA Earthdata, <https://www.earthdata.nasa.gov/learn/data-recipes/unwrapped-interferograms-creating-deformation-map>
 
-20. Sentinel-1 InSAR Product Guide - HyP3, accessed November 23, 2025, <https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/>
+20. Sentinel-1 InSAR Product Guide - HyP3, <https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/>
 
-21. Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, accessed November 23, 2025, <https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf>
+21. Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, <https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf>
 
-22. Radar Altimetry Principle and Data Processing by M.-H. Rio, accessed November 23, 2025, <https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf>
+22. Radar Altimetry Principle and Data Processing by M.-H. Rio, <https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf>
 
-23. Radar Altimetry for remote sensing of the oceans and their impact on climate - ESA Earth Online, accessed November 23, 2025, <https://earth.esa.int/eogateway/documents/20142/0/01_Tuesday_OCT2013_Cipollini_Altimetry_1.pdf>
+23. Radar Altimetry for remote sensing of the oceans and their impact on climate - ESA Earth Online, <https://earth.esa.int/eogateway/documents/20142/0/01_Tuesday_OCT2013_Cipollini_Altimetry_1.pdf>
 
-24. Using Altimetry service data - EUMETSAT - User Portal, accessed November 23, 2025, <https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service>
+24. Using Altimetry service data - EUMETSAT - User Portal, <https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service>
 
-25. Altimetry Applications - SentiWiki - Copernicus, accessed November 23, 2025, <https://sentiwiki.copernicus.eu/web/altimetry-applications>
+25. Altimetry Applications - SentiWiki - Copernicus, <https://sentiwiki.copernicus.eu/web/altimetry-applications>
 
-26. Backscatter LIDAR, accessed November 23, 2025, <https://reef.atmos.colostate.edu/~odell/at652/lecture_2013/lecture8b.pdf>
+26. Backscatter LIDAR, <https://reef.atmos.colostate.edu/~odell/at652/lecture_2013/lecture8b.pdf>
 
-27. Panchromatic Images Explained | Satellite Bands, Specs & Uses - XrTech Group, accessed November 23, 2025, <https://xrtechgroup.com/panchromatic-imaging-bands-uses/>
+27. Panchromatic Images Explained | Satellite Bands, Specs & Uses - XrTech Group, <https://xrtechgroup.com/panchromatic-imaging-bands-uses/>
 
-28. Image Fusion for High-Resolution Optical Satellites Based on Panchromatic Spectral Decomposition - PMC, accessed November 23, 2025, <https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/>
+28. Image Fusion for High-Resolution Optical Satellites Based on Panchromatic Spectral Decomposition - PMC, <https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/>
 
-29. Panchromatic Imagery And Its Band Combinations In Use - EOS Data Analytics, accessed November 23, 2025, <https://eos.com/make-an-analysis/panchromatic/>
+29. Panchromatic Imagery And Its Band Combinations In Use - EOS Data Analytics, <https://eos.com/make-an-analysis/panchromatic/>
 
-30. Hyperspectral Imaging - arXiv, accessed November 23, 2025, <https://arxiv.org/html/2508.08107v1>
+30. Hyperspectral Imaging - arXiv, <https://arxiv.org/html/2508.08107v1>
 
-31. Full article: Hyperspectral and multispectral image fusion addressing spectral variability by an augmented linear mixing model - Taylor & Francis Online, accessed November 23, 2025, <https://www.tandfonline.com/doi/full/10.1080/01431161.2022.2041762>
+31. Full article: Hyperspectral and multispectral image fusion addressing spectral variability by an augmented linear mixing model - Taylor & Francis Online, <https://www.tandfonline.com/doi/full/10.1080/01431161.2022.2041762>
 
-32. Introduction to PACE Hyperspectral Observations for Water Quality Monitoring - NASA Applied Sciences, accessed November 23, 2025, <https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf>
+32. Introduction to PACE Hyperspectral Observations for Water Quality Monitoring - NASA Applied Sciences, <https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf>
 
-33. SSC19-V-05 - DigitalCommons\@USU, accessed November 23, 2025, <https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=4391&context=smallsat>
+33. SSC19-V-05 - DigitalCommons\@USU, <https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=4391&context=smallsat>
 
-34. EnMAP, accessed November 23, 2025, <https://www.enmap.org/>
+34. EnMAP, <https://www.enmap.org/>
 
-35. Mission - EnMAP, accessed November 23, 2025, <https://www.enmap.org/mission/>
+35. Mission - EnMAP, <https://www.enmap.org/mission/>
 
-36. Passive Microwave, accessed November 23, 2025, <https://topex.ucsd.edu/rs/Passive_Microwave.pdf>
+36. Passive Microwave, <https://topex.ucsd.edu/rs/Passive_Microwave.pdf>
 
-37. SMOS - ESA Earth Online - European Space Agency, accessed November 23, 2025, <https://earth.esa.int/eogateway/missions/smos>
+37. SMOS - ESA Earth Online - European Space Agency, <https://earth.esa.int/eogateway/missions/smos>
 
-38. AMSR2 Overview NESDIS Operational Soil Moisture Products - Office of Satellite and Product Operations - NOAA OSPO, accessed November 23, 2025, <https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html>
+38. AMSR2 Overview NESDIS Operational Soil Moisture Products - Office of Satellite and Product Operations - NOAA OSPO, <https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html>
 
-39. SMOS (Soil Moisture and Ocean Salinity) Mission - eoPortal, accessed November 23, 2025, <https://www.eoportal.org/satellite-missions/smos>
+39. SMOS (Soil Moisture and Ocean Salinity) Mission - eoPortal, <https://www.eoportal.org/satellite-missions/smos>
 
-40. Microwave radiometer to retrieve temperature profiles - AMT, accessed November 23, 2025, <https://amt.copernicus.org/preprints/6/2857/2013/amtd-6-2857-2013.pdf>
+40. Microwave radiometer to retrieve temperature profiles - AMT, <https://amt.copernicus.org/preprints/6/2857/2013/amtd-6-2857-2013.pdf>
 
-41. ICESat-2: Home, accessed November 23, 2025, <https://icesat-2.gsfc.nasa.gov/>
+41. ICESat-2: Home, <https://icesat-2.gsfc.nasa.gov/>
 
-42. Counting on NASA's ICESat-2, accessed November 23, 2025, <https://icesat-2.gsfc.nasa.gov/articles/counting-nasas-icesat-2>
+42. Counting on NASA's ICESat-2, <https://icesat-2.gsfc.nasa.gov/articles/counting-nasas-icesat-2>
 
-43. IceSat 2 ATLAS photon-counting receiver - initial on-orbit performance - NASA Technical Reports Server, accessed November 23, 2025, <https://ntrs.nasa.gov/api/citations/20200001212/downloads/20200001212.pdf>
+43. IceSat 2 ATLAS photon-counting receiver - initial on-orbit performance - NASA Technical Reports Server, <https://ntrs.nasa.gov/api/citations/20200001212/downloads/20200001212.pdf>
 
-44. Signal Photon Extraction Method for ICESat-2 Data Using Slope and Elevation Information Provided by Stereo Images - PubMed Central, accessed November 23, 2025, <https://pmc.ncbi.nlm.nih.gov/articles/PMC10649317/>
+44. Signal Photon Extraction Method for ICESat-2 Data Using Slope and Elevation Information Provided by Stereo Images - PubMed Central, <https://pmc.ncbi.nlm.nih.gov/articles/PMC10649317/>
 
-45. Aeolus Objectives - ESA Earth Online, accessed November 23, 2025, <https://earth.esa.int/eogateway/missions/aeolus/objectives>
+45. Aeolus Objectives - ESA Earth Online, <https://earth.esa.int/eogateway/missions/aeolus/objectives>
 
-46. First validation of Aeolus wind observations by airborne Doppler wind lidar measurements, accessed November 23, 2025, <https://amt.copernicus.org/articles/13/2381/2020/>
+46. First validation of Aeolus wind observations by airborne Doppler wind lidar measurements, <https://amt.copernicus.org/articles/13/2381/2020/>
 
-47. The ESA ADM-Aeolus Doppler Wind Lidar Mission – Status and validation strategy - ECMWF, accessed November 23, 2025, <https://www.ecmwf.int/sites/default/files/elibrary/2016/16851-esa-adm-aeolus-doppler-wind-lidar-mission-status-and-validation-strategy.pdf>
+47. The ESA ADM-Aeolus Doppler Wind Lidar Mission – Status and validation strategy - ECMWF, <https://www.ecmwf.int/sites/default/files/elibrary/2016/16851-esa-adm-aeolus-doppler-wind-lidar-mission-status-and-validation-strategy.pdf>
 
-48. Gravity Recovery and Climate Experiment (GRACE) - NASA Sea Level Change Portal, accessed November 23, 2025, <https://sealevel.nasa.gov/missions/grace>
+48. Gravity Recovery and Climate Experiment (GRACE) - NASA Sea Level Change Portal, <https://sealevel.nasa.gov/missions/grace>
 
-49. GRACE-FO - Gravity Recovery and Climate Experiment Follow-On - Center for Space Research, accessed November 23, 2025, <https://www2.csr.utexas.edu/grace/RL061LRI.html>
+49. GRACE-FO - Gravity Recovery and Climate Experiment Follow-On - Center for Space Research, <https://www2.csr.utexas.edu/grace/RL061LRI.html>
 
-50. Satellite Gravimetry – Measuring Earth's Gravity Field from Space - IAG - Geodesy, accessed November 23, 2025, <https://geodesy.science/item/satellite-gravimetry/>
+50. Satellite Gravimetry – Measuring Earth's Gravity Field from Space - IAG - Geodesy, <https://geodesy.science/item/satellite-gravimetry/>
 
-51. In-flight calibration of the fluxgate magnetometer on Macau Science Satellite-1, accessed November 23, 2025, <https://www.eppcgs.org/article/doi/10.26464/epp2025067>
+51. In-flight calibration of the fluxgate magnetometer on Macau Science Satellite-1, <https://www.eppcgs.org/article/doi/10.26464/epp2025067>
 
-52. A miniature two-axis fluxgate magnetometer - NASA Technical Reports Server, accessed November 23, 2025, <https://ntrs.nasa.gov/api/citations/19700008650/downloads/19700008650.pdf>
+52. A miniature two-axis fluxgate magnetometer - NASA Technical Reports Server, <https://ntrs.nasa.gov/api/citations/19700008650/downloads/19700008650.pdf>
 
-53. Types of magnetometers, uses and characteristics | AV3 AEROVISUAL, accessed November 23, 2025, <https://av3aerovisual.com/en/types-of-magnetometers-uses-and-characteristics/>
+53. Types of magnetometers, uses and characteristics | AV3 AEROVISUAL, <https://av3aerovisual.com/en/types-of-magnetometers-uses-and-characteristics/>
 
-54. Deep Space Climate Observatory (DSCOVR) - National Centers for Environmental Information - NOAA, accessed November 23, 2025, <https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr>
+54. Deep Space Climate Observatory (DSCOVR) - National Centers for Environmental Information - NOAA, <https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr>
 
-55. It's all systems go for NOAA's first space weather satellite, accessed November 23, 2025, <https://www.noaa.gov/its-all-systems-go-noaas-first-space-weather-satellite>
+55. It's all systems go for NOAA's first space weather satellite, <https://www.noaa.gov/its-all-systems-go-noaas-first-space-weather-satellite>
 
-56. GOES-R Post Launch Test | NASA Earthdata, accessed November 23, 2025, <https://www.earthdata.nasa.gov/data/projects/goes-r-plt>
+56. GOES-R Post Launch Test | NASA Earthdata, <https://www.earthdata.nasa.gov/data/projects/goes-r-plt>
 
-57. GOES-R Terrestrial Weather (ABI/GLM) - National Centers for Environmental Information, accessed November 23, 2025, <https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm>
+57. GOES-R Terrestrial Weather (ABI/GLM) - National Centers for Environmental Information, <https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm>
 
-58. GOES-R Series Data Book, accessed November 23, 2025, <https://www.goes-r.gov/downloads/resources/documents/GOES-RSeriesDataBook.pdf>
+58. GOES-R Series Data Book, <https://www.goes-r.gov/downloads/resources/documents/GOES-RSeriesDataBook.pdf>
 
-59. Sotdma vs cstdma: understanding key differences for maritime communication - BytePlus, accessed November 23, 2025, <https://www.byteplus.com/en/topic/560464>
+59. Sotdma vs cstdma: understanding key differences for maritime communication - BytePlus, <https://www.byteplus.com/en/topic/560464>
 
-60. AIS Know-How: Data transfer (SOTDMA vs. CSTDMA), accessed November 23, 2025, <https://defender.com/assets/pdf/simrad/sotdma_cstdma_comparison.pdf>
+60. AIS Know-How: Data transfer (SOTDMA vs. CSTDMA), <https://defender.com/assets/pdf/simrad/sotdma_cstdma_comparison.pdf>
 
-61. RainCube: the first ever radar measurements from a CubeSat in space - SPIE Digital Library, accessed November 23, 2025, <https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full>
+61. RainCube: the first ever radar measurements from a CubeSat in space - SPIE Digital Library, <https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full>
 
-62. RainCube - NASA ESTO, accessed November 23, 2025, <https://esto.nasa.gov/wp-content/uploads/2020/07/RainCube.pdf>
+62. RainCube - NASA ESTO, <https://esto.nasa.gov/wp-content/uploads/2020/07/RainCube.pdf>
 
-63. Real-Time Rain Rate Evaluation via Satellite Downlink Signal Attenuation Measurement - PubMed Central, accessed November 23, 2025, <https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/>
+63. Real-Time Rain Rate Evaluation via Satellite Downlink Signal Attenuation Measurement - PubMed Central, <https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/>
 
-64. SmartLNB for weather forecasting - Nefocast, accessed November 23, 2025, <http://www.nefocast.it/news/smartlnb-for-weather-forecasting/>
+64. SmartLNB for weather forecasting - Nefocast, <http://www.nefocast.it/news/smartlnb-for-weather-forecasting/>
 
 65. Improving Analysis and Prediction of Tropical Cyclones by Assimilating Radar and GNSS-R Wind Observations: Ensemble Data Assimilation and Observing System Simulation Experiments Using a Coupled Atmosphere–Ocean Model, <https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml>
 
