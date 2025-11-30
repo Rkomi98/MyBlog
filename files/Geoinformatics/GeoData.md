@@ -237,7 +237,9 @@ In pratica, combinando due immagini SAR della stessa area, la differenza di fase
 
 Nel caso di InSAR topografica (es. missione SRTM o TanDEM-X), due antenne (o satelliti in formazione) osservano simultaneamente la superficie: la fase differenziale dipende dall’altitudine del suolo e consente di derivare modelli digitali di elevazione (DEM) ad alta risoluzione. 
 
-Nell’InSAR differenziale (DInSAR), si usano due passaggi successivi sullo stesso orbita a distanza di tempo $\Delta t$: se la superficie nel frattempo è deformata (abbassata o sollevata) di pochi millimetri o centimetri, tale differenza appare come variazione di fase tra le due immagini. Si generano così **interferogrammi a falsi colori** con frange concentriche, ognuna corrispondente tipicamente a uno spostamento line-of-sight di mezza lunghezza d’onda ($≈2.8$ cm per Sentinel-1 in banda C). 
+Nell’InSAR differenziale (DInSAR), si usano due passaggi successivi a distanza di tempo $\Delta t$: se la superficie nel frattempo è deformata (abbassata o sollevata) di pochi millimetri o centimetri, tale differenza appare come variazione di fase tra le due immagini.
+
+Si generano così **interferogrammi a falsi colori** con frange concentriche, ognuna corrispondente tipicamente a uno spostamento line-of-sight di mezza lunghezza d’onda ($≈2.8$ cm per Sentinel-1 in banda C). 
 
 Misurando il numero e spaziatura delle frange, si ottiene il campo di deformazione 2D della superficie proiettato sulla linea di vista del radar. L’InSAR è quindi in grado di misurare microscopici movimenti del terreno (ordine mm) su ampie aree, rilevando fenomeni lenti e progressivi invisibili ad occhio nudo. Anche spostamenti co-sismici repentini (terremoti) o rapide deformazioni vulcaniche generano pattern interferometrici caratteristici (frange circolari attorno all’epicentro o al cratere).
 
@@ -259,144 +261,20 @@ $$d = \frac{\lambda}{4\pi} \Delta \phi\_{unwrapped}$$
 
 Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una frangia di interferenza ($2\pi$) corrisponde a uno spostamento di circa 2.8 cm.<sup>20</sup>
 
+![Frange interferometriche e deformazione misurata](../../Assets/phase_diff.png "Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.")
+_Figura 01: Frange interferometriche e deformazione misurata: esempio di interferogramma. Le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar_
+
 
 #### Applicazioni
-
+Le principali sono:
 - **Tettonica e Vulcanologia:** Misurazione dei campi di deformazione post-sismica e del "respiro" dei vulcani (inflazione/deflazione delle camere magmatiche).<sup>21</sup>
 
-  <figure class="table-wrapper" data-enhanced-table>
-    <div class="table-wrapper__scroll">
-      <table class="min-w-full text-sm text-left text-gray-600">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
-          <tr>
-            <th class="px-6 py-3">Tecnologia</th>
-            <th class="px-6 py-3">Tipo</th>
-            <th class="px-6 py-3">Sorgente fisica</th>
-            <th class="px-6 py-3 text-center">Meteo / notte</th>
-            <th class="px-6 py-3">Output principale</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- 1. GNSS -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">1. GNSS</td>
-            <td class="px-6 py-4"><span class="text-blue-600 font-semibold">Ricezione</span></td>
-            <td class="px-6 py-4">Onde radio (L-band)</td>
-            <td class="px-6 py-4 text-center text-xl" title="Ognitempo">☁️ 🌙</td>
-            <td class="px-6 py-4">Posizione (XYZ), tempo (T)</td>
-          </tr>
-          <!-- 2. Ottico -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">2. Ottico</td>
-            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
-            <td class="px-6 py-4">Luce visibile / IR</td>
-            <td class="px-6 py-4 text-center text-xl" title="Solo giorno, no nuvole">☀️ ❌</td>
-            <td class="px-6 py-4">Immagini (foto)</td>
-          </tr>
-          <!-- 3. SAR -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">3. SAR</td>
-            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
-            <td class="px-6 py-4">Microonde (radar)</td>
-            <td class="px-6 py-4 text-center text-xl" title="Ognitempo, giorno e notte">☁️ 🌙</td>
-            <td class="px-6 py-4">Immagini (riflettività)</td>
-          </tr>
-          <!-- 4. InSAR -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">4. InSAR</td>
-            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
-            <td class="px-6 py-4">Fase radar</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
-            <td class="px-6 py-4">Spostamenti mm / topografia</td>
-          </tr>
-          <!-- 5. Altimetria -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">5. Altimetria</td>
-            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
-            <td class="px-6 py-4">Impulso radar (nadir)</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
-            <td class="px-6 py-4">Altezza superficie (cm)</td>
-          </tr>
-          <!-- 6. Radiometri -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">6. Radiometri MO</td>
-            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
-            <td class="px-6 py-4">Emissione termica</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
-            <td class="px-6 py-4">Temperatura, umidità</td>
-          </tr>
-          <!-- 7. Iperspettrale -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">7. Iperspettrale</td>
-            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
-            <td class="px-6 py-4">Spettro visibile/IR</td>
-            <td class="px-6 py-4 text-center text-xl">☀️ ❌</td>
-            <td class="px-6 py-4">Firma chimica materiali</td>
-          </tr>
-          <!-- 8. LIDAR -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">8. LIDAR</td>
-            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
-            <td class="px-6 py-4">Laser (luce)</td>
-            <td class="px-6 py-4 text-center text-xl" title="No nuvole">❌ 🌙</td>
-            <td class="px-6 py-4">Profili 3D / altezze</td>
-          </tr>
-          <!-- 9. Gravimetria -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">9. Gravimetria</td>
-            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Fisica</span></td>
-            <td class="px-6 py-4">Campo gravitazionale</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
-            <td class="px-6 py-4">Mappa di massa/acqua</td>
-          </tr>
-          <!-- 10. Magnetometria -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">10. Magnetometria</td>
-            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Fisica</span></td>
-            <td class="px-6 py-4">Campo magnetico</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
-            <td class="px-6 py-4">Mappa campo magnetico</td>
-          </tr>
-          <!-- 11. Radio-Occ -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">11. Radio-Occ.</td>
-            <td class="px-6 py-4"><span class="text-blue-600 font-semibold">Passivo (RX)</span></td>
-            <td class="px-6 py-4">Rifrazione segnale GNSS</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
-            <td class="px-6 py-4">Profili atmosferici</td>
-          </tr>
-          <!-- 12. Meteo GEO -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">12. Meteo GEO</td>
-            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
-            <td class="px-6 py-4">Visibile + termico</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙 (termico)</td>
-            <td class="px-6 py-4">Video/img a disco intero</td>
-          </tr>
-          <!-- 13. Space Wx -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">13. Space Wx</td>
-            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Fisica</span></td>
-            <td class="px-6 py-4">Particelle / raggi X</td>
-            <td class="px-6 py-4 text-center text-xl">N/A (spazio)</td>
-            <td class="px-6 py-4">Conteggio particelle</td>
-          </tr>
-          <!-- 14. AIS -->
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">14. AIS</td>
-            <td class="px-6 py-4"><span class="text-blue-600 font-semibold">Ricezione</span></td>
-            <td class="px-6 py-4">Radio VHF (navi)</td>
-            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
-            <td class="px-6 py-4">ID e posizione navi</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </figure>
-  <p class="mt-4 text-sm text-gray-500 text-right">* Nota: ☁️ = Penetra le nuvole | 🌙 = Funziona di notte | ❌ = Bloccato/Non disponibile</p>
-</div>
-
 - **Subsidenza Urbana:** Monitoraggio della stabilità di edifici e infrastrutture critiche con tecniche avanzate come i Persistent Scatterers (PS-InSAR).<sup>16</sup>
+
+<https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499>
+
+_Figure 1: Monitoraggio dell'ESA di Venezia, Italy con Sentinel-1._
+
 
 ***
 
@@ -877,6 +755,139 @@ L'analisi di queste diciannove categorie rivela un sistema di osservazione della
   </div>
 
 
+
+
+  <figure class="table-wrapper" data-enhanced-table>
+    <div class="table-wrapper__scroll">
+      <table class="min-w-full text-sm text-left text-gray-600">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+          <tr>
+            <th class="px-6 py-3">Tecnologia</th>
+            <th class="px-6 py-3">Tipo</th>
+            <th class="px-6 py-3">Sorgente fisica</th>
+            <th class="px-6 py-3 text-center">Meteo / notte</th>
+            <th class="px-6 py-3">Output principale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 1. GNSS -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">1. GNSS</td>
+            <td class="px-6 py-4"><span class="text-blue-600 font-semibold">Ricezione</span></td>
+            <td class="px-6 py-4">Onde radio (L-band)</td>
+            <td class="px-6 py-4 text-center text-xl" title="Ognitempo">☁️ 🌙</td>
+            <td class="px-6 py-4">Posizione (XYZ), tempo (T)</td>
+          </tr>
+          <!-- 2. Ottico -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">2. Ottico</td>
+            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
+            <td class="px-6 py-4">Luce visibile / IR</td>
+            <td class="px-6 py-4 text-center text-xl" title="Solo giorno, no nuvole">☀️ ❌</td>
+            <td class="px-6 py-4">Immagini (foto)</td>
+          </tr>
+          <!-- 3. SAR -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">3. SAR</td>
+            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
+            <td class="px-6 py-4">Microonde (radar)</td>
+            <td class="px-6 py-4 text-center text-xl" title="Ognitempo, giorno e notte">☁️ 🌙</td>
+            <td class="px-6 py-4">Immagini (riflettività)</td>
+          </tr>
+          <!-- 4. InSAR -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">4. InSAR</td>
+            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
+            <td class="px-6 py-4">Fase radar</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
+            <td class="px-6 py-4">Spostamenti mm / topografia</td>
+          </tr>
+          <!-- 5. Altimetria -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">5. Altimetria</td>
+            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
+            <td class="px-6 py-4">Impulso radar (nadir)</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
+            <td class="px-6 py-4">Altezza superficie (cm)</td>
+          </tr>
+          <!-- 6. Radiometri -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">6. Radiometri MO</td>
+            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
+            <td class="px-6 py-4">Emissione termica</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
+            <td class="px-6 py-4">Temperatura, umidità</td>
+          </tr>
+          <!-- 7. Iperspettrale -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">7. Iperspettrale</td>
+            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
+            <td class="px-6 py-4">Spettro visibile/IR</td>
+            <td class="px-6 py-4 text-center text-xl">☀️ ❌</td>
+            <td class="px-6 py-4">Firma chimica materiali</td>
+          </tr>
+          <!-- 8. LIDAR -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">8. LIDAR</td>
+            <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Attivo</span></td>
+            <td class="px-6 py-4">Laser (luce)</td>
+            <td class="px-6 py-4 text-center text-xl" title="No nuvole">❌ 🌙</td>
+            <td class="px-6 py-4">Profili 3D / altezze</td>
+          </tr>
+          <!-- 9. Gravimetria -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">9. Gravimetria</td>
+            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Fisica</span></td>
+            <td class="px-6 py-4">Campo gravitazionale</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
+            <td class="px-6 py-4">Mappa di massa/acqua</td>
+          </tr>
+          <!-- 10. Magnetometria -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">10. Magnetometria</td>
+            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Fisica</span></td>
+            <td class="px-6 py-4">Campo magnetico</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
+            <td class="px-6 py-4">Mappa campo magnetico</td>
+          </tr>
+          <!-- 11. Radio-Occ -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">11. Radio-Occ.</td>
+            <td class="px-6 py-4"><span class="text-blue-600 font-semibold">Passivo (RX)</span></td>
+            <td class="px-6 py-4">Rifrazione segnale GNSS</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
+            <td class="px-6 py-4">Profili atmosferici</td>
+          </tr>
+          <!-- 12. Meteo GEO -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">12. Meteo GEO</td>
+            <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passivo</span></td>
+            <td class="px-6 py-4">Visibile + termico</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙 (termico)</td>
+            <td class="px-6 py-4">Video/img a disco intero</td>
+          </tr>
+          <!-- 13. Space Wx -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">13. Space Wx</td>
+            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Fisica</span></td>
+            <td class="px-6 py-4">Particelle / raggi X</td>
+            <td class="px-6 py-4 text-center text-xl">N/A (spazio)</td>
+            <td class="px-6 py-4">Conteggio particelle</td>
+          </tr>
+          <!-- 14. AIS -->
+          <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-bold text-gray-900">14. AIS</td>
+            <td class="px-6 py-4"><span class="text-blue-600 font-semibold">Ricezione</span></td>
+            <td class="px-6 py-4">Radio VHF (navi)</td>
+            <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
+            <td class="px-6 py-4">ID e posizione navi</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </figure>
+  <p class="mt-4 text-sm text-gray-500 text-right">* Nota: ☁️ = Penetra le nuvole | 🌙 = Funziona di notte | ❌ = Bloccato/Non disponibile</p>
+</div>
 
 #### Works cited
 
