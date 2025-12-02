@@ -285,7 +285,7 @@ Le principali sono:
 L'altimetria radar nadirale è la tecnica fondamentale per quantificare l'innalzamento del livello del mare e la circolazione oceanica.
 
 
-### Cosa misura
+#### Cosa misura?
 
 Misura la distanza verticale (range) tra il satellite e la superficie al nadir. Combinando questa misura con l'orbita precisa e le correzioni geofisiche, si ottiene:
 
@@ -296,18 +296,18 @@ Misura la distanza verticale (range) tra il satellite e la superficie al nadir. 
 - **Velocità del vento** (dall'intensità del backscatter).
 
 
-### Funzionamento fisico e formule
+#### Funzionamento fisico e formule
 
 L'altimetro emette un impulso radar e registra l'eco di ritorno. L'altezza della superficie del mare ($SSH$) è calcolata come <sup>22</sup>:
 
 $$SSH = H\_{sat} - (R\_{obs} + \Delta R\_{iono} + \Delta R\_{dry} + \Delta R\_{wet} + \Delta R\_{ssb})$$
 
-Dove $\Delta R\_{ssb}$ è il Sea State Bias, dovuto al fatto che le valli delle onde riflettono meglio delle creste. La forma d'onda dell'eco (waveform) è modellata analiticamente dal Modello di Brown, che descrive la convoluzione tra la risposta del sistema, la densità di probabilità delle altezze delle onde e la risposta impulsiva della superficie piatta.23
+Dove $\Delta R\_{ssb}$ è il Sea State Bias, dovuto al fatto che le valli delle onde riflettono meglio delle creste. La forma d'onda dell'eco (waveform) è modellata analiticamente dal Modello di Brown, che descrive la convoluzione tra la risposta del sistema, la densità di probabilità delle altezze delle onde e la risposta impulsiva della superficie piatta.<sup>23</sup>
 
-La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3, migliora la risoluzione lungo traccia (\~300m) focalizzando l'energia in celle Doppler, permettendo di misurare con precisione anche tra i ghiacci marini e nelle acque costiere.24
+La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3, migliora la risoluzione lungo traccia (\~300m) focalizzando l'energia in celle Doppler, permettendo di misurare con precisione anche tra i ghiacci marini e nelle acque costiere.<sup>24</sup>
 
 
-### Missioni
+#### Missioni
 
 - **Sentinel-3 (SRAL):** Altimetro SAR operativo per oceano e ghiacci.
 
@@ -318,7 +318,7 @@ La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3
 ***
 
 
-## 7. Scatterometria: il vento sulla superficie del mare
+## 3. Scatterometria: il vento sulla superficie del mare
 
 Gli scatterometri sono radar attivi progettati per misurare la rugosità superficiale dell'oceano su larga scala, fornendo il vettore vento globale.
 
