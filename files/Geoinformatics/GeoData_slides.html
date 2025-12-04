@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Che dati registrano i satelliti? - Datapizza</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Lato', Arial, sans-serif; background: #F1F5F9; }
+    h1, h2, h3 { font-family: 'Poppins', Arial, sans-serif; }
+    
+    .slide-container {
+      max-width: 960px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .slide {
+      width: 960px;
+      min-height: 540px;
+      padding: 30px;
+      position: relative;
+      background: #FFFFFF;
+    }
+    
+    .slide-number {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      background: #C12A22;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 600;
+    }
+    
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .logo img { height: 38px; width: auto; display: block; }
+    
+    .watermark {
+      position: absolute;
+      bottom: -40px;
+      right: -40px;
+      opacity: 0.05;
+    }
+    
+    .title-section {
+      padding-top: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .title-section h2 {
+      font-size: 24px;
+      color: #1E293B;
+      font-weight: 700;
+    }
+    
+    .title-section .subtitle {
+      font-size: 13px;
+      color: #64748B;
+      margin-top: 4px;
+    }
+    
+    .content { display: flex; gap: 25px; }
+    .col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    
+    .card {
+      background: #F8FAFC;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    
+    .card-accent {
+      background: #FEF2F2;
+      border-left: 4px solid #C12A22;
+    }
+    
+    .card-title {
+      font-size: 11px;
+      color: #C12A22;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    
+    .card-title.gray { color: #64748B; }
+    .card-title.blue { color: #1D4ED8; }
+    .card-title.green { color: #059669; }
+    
+    .card p, .card li {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.5;
+    }
+    
+    .card strong { color: #1E293B; }
+    
+    .formula-box {
+      background: white;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 8px;
+      text-align: center;
+      border: 1px solid #E2E8F0;
+    }
+    
+    .formula-box.red { border-color: #FEE2E2; }
+    
+    .formula-note {
+      font-size: 10px;
+      color: #94A3B8;
+      margin-top: 6px;
+    }
+    
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      background: #F1F5F9;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #1E293B;
+      margin: 2px;
+    }
+    
+    .tag.red { background: #FEF2F2; color: #C12A22; }
+    .tag.blue { background: #EFF6FF; color: #1D4ED8; }
+    .tag.green { background: #ECFDF5; color: #059669; }
+    .tag.yellow { background: #FEF3C7; color: #B45309; }
+    
+    .source {
+      position: absolute;
+      bottom: 8px;
+      left: 30px;
+      font-size: 9px;
+      color: #94A3B8;
+      font-style: italic;
+    }
+    
+    ul { padding-left: 20px; }
+    li { margin: 4px 0; font-size: 12px; color: #475569; }
+    
+    /* Cover slide */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 540px;
+    }
+    
+    .cover h1 {
+      font-size: 42px;
+      color: #C12A22;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    
+    .cover .subtitle {
+      font-size: 18px;
+      color: #475569;
+      margin-top: 20px;
+      max-width: 700px;
+    }
+    
+    .cover .line {
+      width: 120px;
+      height: 4px;
+      background: #C12A22;
+      margin-top: 30px;
+      border-radius: 2px;
+    }
+    
+    .cover .logo-circle {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+    }
+    
+    .cover .logo-circle img {
+      width: 90px;
+      height: auto;
+      display: block;
+    }
+    
+    /* Q&A slide */
+    .qa h1 {
+      font-size: 48px;
+      color: #C12A22;
+    }
+    
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+    
+    table th {
+      background: #1E293B;
+      color: white;
+      padding: 8px;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    
+    table tr:nth-child(even) { background: #FAFAFA; }
+    
+    /* KaTeX */
+    .katex { font-size: 1em; }
+    .katex-display { margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Cover -->
+<div class="slide-container">
+  <div class="slide cover">
+    <div class="logo-circle">
+      <img src="datapizza.png" alt="Datapizza">
+    </div>
+    <h1>Che dati registrano i satelliti?</h1>
+    <p class="subtitle">Una panoramica completa sulle tecnologie di osservazione della Terra dallo spazio</p>
+    <div class="line"></div>
+    <p style="position: absolute; bottom: 30px; font-size: 12px; color: #94A3B8;">Presentazione a cura di Datapizza</p>
+  </div>
+</div>
+
+<!-- SLIDE 2: Introduzione -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">01</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Introduzione</h2>
+      <p class="subtitle">L'ecosistema dei dati satellitari</p>
+    </div>
+    <p style="font-size: 14px; color: #475569; line-height: 1.7; margin-bottom: 20px;">
+      Ogni giorno, <strong style="color: #1E293B;">centinaia di missioni satellitari</strong> raccolgono una quantità impressionante di informazioni: immagini ad altissima risoluzione, dati atmosferici, misurazioni sulle superfici terrestri e marine, segnali di navigazione e molto altro.
+    </p>
+    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+      <div style="flex: 1; background: linear-gradient(135deg, #FEF2F2 0%, #FFFFFF 100%); border-radius: 10px; padding: 18px; border: 1px solid #FEE2E2;">
+        <p style="font-size: 32px; color: #C12A22; font-weight: 700; font-family: 'Poppins', Arial;">19</p>
+        <p style="font-size: 13px; color: #1E293B; font-weight: 600;">Categorie di sensori</p>
+      </div>
+      <div style="flex: 1; background: linear-gradient(135deg, #F1F5F9 0%, #FFFFFF 100%); border-radius: 10px; padding: 18px; border: 1px solid #E2E8F0;">
+        <p style="font-size: 32px; color: #1E293B; font-weight: 700; font-family: 'Poppins', Arial;">3</p>
+        <p style="font-size: 13px; color: #1E293B; font-weight: 600;">Tipologie principali</p>
+      </div>
+      <div style="flex: 1; background: linear-gradient(135deg, #F1F5F9 0%, #FFFFFF 100%); border-radius: 10px; padding: 18px; border: 1px solid #E2E8F0;">
+        <p style="font-size: 32px; color: #1E293B; font-weight: 700; font-family: 'Poppins', Arial;">24/7</p>
+        <p style="font-size: 13px; color: #1E293B; font-weight: 600;">Monitoraggio continuo</p>
+      </div>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <span class="tag red">☀️ Sensori Passivi</span>
+      <span class="tag blue">📡 Sensori Attivi</span>
+      <span class="tag green">🎯 Sensori di Opportunità</span>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: GNSS -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">02</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>GNSS – Sistemi globali di navigazione satellitare</h2>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Cosa misurano</p>
+          <p><strong>Posizionamento</strong> (latitudine, longitudine, quota) e <strong>tempo assoluto</strong> tramite trilaterazione con almeno 4 satelliti visibili.</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Principio fisico</p>
+          <p>I satelliti trasmettono segnali radio (banda L) con informazioni orbitali e temporali da orologi atomici. La distanza si calcola con:</p>
+          <div class="formula-box">
+            $$d = c \cdot t$$
+          </div>
+          <p class="formula-note">dove c = velocità della luce, t = tempo di volo</p>
+        </div>
+      </div>
+      <div class="col">
+        <p class="card-title gray">Principali sistemi</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+          <span class="tag">🇺🇸 GPS</span>
+          <span class="tag">🇪🇺 Galileo</span>
+          <span class="tag">🇷🇺 GLONASS</span>
+          <span class="tag">🇨🇳 BeiDou</span>
+        </div>
+        <p class="card-title gray">Applicazioni</p>
+        <ul>
+          <li><strong>Geodesia:</strong> monitoraggio movimento tettonico</li>
+          <li><strong>Agricoltura:</strong> guida di precisione</li>
+          <li><strong>Trasporti:</strong> navigazione terrestre, aerea, navale</li>
+          <li><strong>Reti:</strong> sincronizzazione telecomunicazioni</li>
+        </ul>
+        <div class="card" style="background: #ECFDF5; margin-top: auto;">
+          <p style="font-size: 11px; color: #059669;">💡 <strong>RTK</strong> (Real-Time Kinematic) raggiunge precisione al <strong>centimetro</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: GNSS-RO -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">03</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Radio occultazione GNSS (GNSS-RO)</h2>
+      <p class="subtitle">Sondaggio atmosferico di precisione</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <p style="font-size: 13px; color: #475569; line-height: 1.6;">Una tecnica elegante che trasforma i segnali di navigazione in strumenti per <strong style="color: #1E293B;">meteorologia e climatologia</strong>.</p>
+        <div class="card">
+          <p class="card-title gray">Trasformata di Abel inversa</p>
+          <div class="formula-box">
+            $$n(r) = \exp \left( \frac{1}{\pi} \int_x^\infty \frac{\alpha(x)}{\sqrt{x^2 - a^2}} dx \right)$$
+          </div>
+          <p class="formula-note">dove α(x) = bending angle, a = parametro d'impatto</p>
+        </div>
+        <div class="card card-accent">
+          <p class="card-title">Equazione Smith-Weintraub</p>
+          <div class="formula-box red">
+            $$N = 77.6 \frac{P}{T} + 3.73 \times 10^5 \frac{e}{T^2} - 40.3 \frac{n_e}{f^2}$$
+          </div>
+          <p class="formula-note">P = pressione (hPa), T = temperatura (K), e = vapore acqueo, n<sub>e</sub> = densità elettronica</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #ECFDF5;">
+          <p class="card-title green">✓ Vantaggio chiave</p>
+          <p>Misura <em>autocalibrante</em>: basata su tempo/frequenza da orologi atomici, <strong>non soffre di deriva strumentale</strong>.</p>
+        </div>
+        <p class="card-title gray">Applicazioni</p>
+        <ul>
+          <li><strong>NWP:</strong> ancoraggio modelli meteo</li>
+          <li><strong>Clima:</strong> trend temperatura globale</li>
+          <li><strong>Space Weather:</strong> TEC ionosferico</li>
+        </ul>
+        <p class="card-title gray">Missioni</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="tag">COSMIC-2</span>
+          <span class="tag">Spire Global</span>
+          <span class="tag">GPS/MET</span>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: ECMWF, UCAR COSMIC</p>
+  </div>
+</div>
+
+<!-- SLIDE 5: GNSS-R -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">04</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Riflettometria GNSS (GNSS-R)</h2>
+      <p class="subtitle">Il radar bistatico di opportunità</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Cosa misura</p>
+          <p>🌊 <strong>Oceani:</strong> velocità vento, rugosità<br>
+          🌿 <strong>Suolo:</strong> umidità, biomassa<br>
+          ❄️ <strong>Criosfera:</strong> ghiaccio marino</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Equazione radar bistatica</p>
+          <div class="formula-box">
+            $$P_r(\tau, f_D) = \frac{P_t G_t \lambda^2}{(4\pi)^3} \iint_A \frac{G_r \cdot \sigma^0 \cdot \chi^2}{R_t^2 \cdot R_r^2} dA$$
+          </div>
+          <p class="formula-note">σ⁰ = coefficiente scattering bistatico, χ² = funzione ambiguità</p>
+        </div>
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">📊 Delay Doppler Map (DDM)</p>
+          <p>Su superfici calme: energia concentrata. Su mare agitato: dispersione a <em>"ferro di cavallo"</em> correlata alla velocità del vento.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #FEF3C7;">
+          <p class="card-title" style="color: #B45309;">⚡ Applicazione killer</p>
+          <p><strong>Monitoraggio cicloni tropicali:</strong> i segnali in banda L penetrano le precipitazioni intense, permettendo di misurare il vento nell'occhio del ciclone.</p>
+        </div>
+        <p class="card-title gray">Missioni principali</p>
+        <div class="card">
+          <p><strong>🛰️ CYGNSS (NASA)</strong> - 8 microsatelliti per studio uragani</p>
+        </div>
+        <div class="card">
+          <p><strong>🇪🇺 FSSCat (ESA)</strong> - 2 CubeSat 6U con iperspettrale</p>
+        </div>
+        <div class="card">
+          <p><strong>🌐 Spire Global</strong> - Prodotti commerciali marittimi</p>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: NASA CYGNSS, ESA FSSCat</p>
+  </div>
+</div>
+
+<!-- SLIDE 6: SAR -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">05</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Synthetic Aperture Radar (SAR)</h2>
+      <p class="subtitle">Imaging a microonde in ogni condizione meteo</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Cosa misura</p>
+          <p>Immagini complesse con <strong>ampiezza</strong> (rugosità, umidità, geometria) e <strong>fase</strong> (distanza sensore-bersaglio).</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Principio fisico</p>
+          <p>Sfrutta il movimento del satellite per sintetizzare un'apertura virtuale. Risoluzione azimutale:</p>
+          <div class="formula-box">
+            $$\delta_a = \frac{L_a}{2}$$
+          </div>
+          <p class="formula-note">L<sub>a</sub> = lunghezza antenna reale</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Equazione di fase</p>
+          <div class="formula-box">
+            $$\phi = -\frac{4\pi R}{\lambda} + \phi_{scatt}$$
+          </div>
+          <p class="formula-note">Un ciclo completo ogni λ/2 di distanza</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #ECFDF5;">
+          <p class="card-title green">✓ Vantaggio principale</p>
+          <p>Osserva la Terra <strong>giorno/notte</strong> e <strong>in ogni condizione meteo</strong>: le microonde attraversano le nubi.</p>
+        </div>
+        <p class="card-title gray">Applicazioni</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+          <span class="tag blue">Inondazioni</span>
+          <span class="tag blue">Oil spills</span>
+          <span class="tag blue">Agricoltura</span>
+          <span class="tag blue">Ghiacci</span>
+        </div>
+        <p class="card-title gray">Missioni principali</p>
+        <div class="card"><p><strong>Sentinel-1</strong> (ESA) - Banda C, open access</p></div>
+        <div class="card"><p><strong>COSMO-SkyMed</strong> (ASI) - Banda X, alta ris.</p></div>
+        <div class="card"><p><strong>NISAR</strong> (NASA/ISRO) - Banda L+S, futuro</p></div>
+      </div>
+    </div>
+    <p class="source">Source: ESA SentiWiki, Copernicus</p>
+  </div>
+</div>
+
+<!-- SLIDE 7: InSAR -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">06</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Interferometria SAR (InSAR)</h2>
+      <p class="subtitle">La geodesia dallo spazio – deformazioni millimetriche</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <p style="font-size: 12px; color: #475569; line-height: 1.6; margin-bottom: 12px;">Sfrutta la <strong style="color: #1E293B;">differenza di fase</strong> tra due acquisizioni SAR per misurare topografia o deformazioni del suolo con precisione millimetrica.</p>
+        <div class="card">
+          <p class="card-title gray">Componenti della fase interferometrica</p>
+          <div class="formula-box">
+            $$\Delta \phi = \Delta \phi_{geom} + \Delta \phi_{topo} + \Delta \phi_{def} + \Delta \phi_{atm} + \Delta \phi_{noise}$$
+          </div>
+          <p class="formula-note">φ<sub>def</sub> = spostamento suolo, φ<sub>atm</sub> = ritardo atmosferico</p>
+        </div>
+        <div class="card card-accent">
+          <p class="card-title">Relazione deformazione-fase</p>
+          <div class="formula-box red">
+            $$d = \frac{\lambda}{4\pi} \Delta \phi_{unwrapped}$$
+          </div>
+          <p class="formula-note">Sentinel-1: 1 frangia (2π) ≈ <strong>2.8 cm</strong> di spostamento</p>
+        </div>
+      </div>
+      <div class="col">
+        <p class="card-title gray">Tipologie</p>
+        <div class="card" style="background: #EFF6FF;"><p><strong style="color: #1D4ED8;">InSAR Topografica</strong><br>Due antenne simultanee → DEM (es. SRTM, TanDEM-X)</p></div>
+        <div class="card" style="background: #FEF3C7;"><p><strong style="color: #B45309;">DInSAR (Differenziale)</strong><br>Due passaggi temporali → deformazioni</p></div>
+        <div class="card" style="background: #ECFDF5;"><p><strong style="color: #059669;">PS-InSAR</strong><br>Persistent Scatterers per subsidenza urbana</p></div>
+        <p class="card-title gray">Applicazioni</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="tag red">Terremoti</span>
+          <span class="tag red">Vulcani</span>
+          <span class="tag red">Subsidenza</span>
+          <span class="tag red">Frane</span>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: NASA Earthdata, ESA SentiWiki</p>
+  </div>
+</div>
+
+<!-- SLIDE 8: Altimetria -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">07</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Radar altimetria</h2>
+      <p class="subtitle">Topografia degli oceani e dei ghiacci</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Cosa misura</p>
+          <p>🌊 <strong>SSH</strong> - Sea Surface Height (livello mare)<br>
+          🌊 <strong>SWH</strong> - Altezza significativa onde<br>
+          💨 <strong>Vento</strong> - dall'intensità backscatter</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Formula SSH</p>
+          <div class="formula-box">
+            $$SSH = H_{sat} - (R_{obs} + \Delta R_{iono} + \Delta R_{dry} + \Delta R_{wet} + \Delta R_{ssb})$$
+          </div>
+          <p class="formula-note">ΔR<sub>ssb</sub> = Sea State Bias (valli riflettono meglio delle creste)</p>
+        </div>
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">📏 Modello di Brown</p>
+          <p>La forma d'onda dell'eco (waveform) è modellata dalla convoluzione tra risposta sistema e distribuzione altezze onde.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #ECFDF5;">
+          <p class="card-title green">✓ SAR Altimetry</p>
+          <p>Introdotta da CryoSat-2: risoluzione ~300m, misure tra ghiacci e in acque costiere.</p>
+        </div>
+        <p class="card-title gray">Missioni principali</p>
+        <div class="card"><p><strong>Sentinel-3 (SRAL)</strong> - Altimetro SAR per oceano e ghiacci</p></div>
+        <div class="card"><p><strong>Jason-3 / Sentinel-6</strong> - Continuità GMSL (livello medio mare)</p></div>
+        <div class="card" style="background: #FEF3C7;"><p><strong>🆕 SWOT</strong> - Interferometria Ka-band per mappa 2D</p></div>
+        <div class="card" style="margin-top: auto;">
+          <p>💡 <strong style="color: #1E293B;">Tecnica fondamentale</strong> per quantificare l'innalzamento del livello del mare globale.</p>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: ESA, EUMETSAT</p>
+  </div>
+</div>
+
+<!-- SLIDE 9: Scatterometria -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">08</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Scatterometria</h2>
+      <p class="subtitle">Il vento sulla superficie del mare</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Cosa misura</p>
+          <p>Coefficiente di retrodiffusione <strong>σ⁰</strong> da diverse angolazioni → <strong>velocità e direzione del vento</strong> a 10m dalla superficie.</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Geophysical Model Function (GMF)</p>
+          <div class="formula-box">
+            $$\sigma^0(\theta, \chi, U) = A_0(U, \theta) \left[1 + A_1 \cos \chi + A_2 \cos 2\chi\right]$$
+          </div>
+          <p class="formula-note">U = velocità vento, χ = direzione relativa all'antenna</p>
+        </div>
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">📡 Risoluzione ambiguità</p>
+          <p>Osservando la stessa cella da 3+ angolazioni si determina il <strong>vettore vento completo</strong>.</p>
+        </div>
+      </div>
+      <div class="col">
+        <p class="card-title gray">Applicazioni</p>
+        <div class="card" style="background: #ECFDF5;">
+          <p><strong style="color: #059669;">🌊 Meteorologia marina</strong><br>Identificazione fronti e cicloni extratropicali</p>
+        </div>
+        <div class="card" style="background: #FEF3C7;">
+          <p><strong style="color: #B45309;">🌍 Climatologia</strong><br>Studio interazione aria-mare e stress superficiali</p>
+        </div>
+        <p class="card-title gray">Missioni</p>
+        <div class="card"><p><strong>MetOp (ASCAT)</strong> - Banda C, doppio swath</p></div>
+        <div class="card"><p><strong>CFOSAT</strong> - Franco-cinese, vento + spettri onde</p></div>
+      </div>
+    </div>
+    <p class="source">Source: EUMETSAT, CNES</p>
+  </div>
+</div>
+
+<!-- SLIDE 10: Imaging Ottico -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">09</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Imaging ottico</h2>
+      <p class="subtitle">Pancromatico e multispettrale</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card">
+          <p class="card-title" style="color: #1E293B;">📷 Pancromatico</p>
+          <p>Radianza integrata su banda ampia (0.4-0.9 μm). <strong>Alta risoluzione spaziale</strong> fino a 30 cm.</p>
+          <div class="formula-box">
+            $$I_{Pan} \approx \sum_i \alpha_i \cdot I_{MS,i}$$
+          </div>
+          <p class="formula-note">Pansharpening: fusione con multispettrale</p>
+        </div>
+        <div class="card card-accent">
+          <p class="card-title">🌈 Multispettrale</p>
+          <p>Riflettanza in <strong>4-15 bande</strong> discrete (VIS, NIR, SWIR). Standard per monitoraggio ambientale.</p>
+          <div class="formula-box red">
+            $$NDVI = \frac{\rho_{NIR} - \rho_{RED}}{\rho_{NIR} + \rho_{RED}}$$
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <p class="card-title gray">Missioni Pancromatiche</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+          <span class="tag"><strong>Maxar</strong> 30cm</span>
+          <span class="tag"><strong>Pléiades Neo</strong> 30cm</span>
+          <span class="tag"><strong>Landsat</strong> 15m</span>
+        </div>
+        <p class="card-title gray">Missioni Multispettrali</p>
+        <div class="card" style="background: #ECFDF5;">
+          <p><strong style="color: #059669;">Sentinel-2 (ESA)</strong><br>13 bande, 10-20m, agricoltura e land cover</p>
+        </div>
+        <div class="card" style="background: #EFF6FF;">
+          <p><strong style="color: #1D4ED8;">Landsat 8/9 (NASA/USGS)</strong><br>Continuità dal 1972, studi lungo termine</p>
+        </div>
+        <p class="card-title gray" style="margin-top: 8px;">Applicazioni SWIR</p>
+        <p style="font-size: 11px; color: #475569;">Discriminare neve/nuvole, stress idrico vegetazione</p>
+      </div>
+    </div>
+    <p class="source">Source: ESA Copernicus, NASA/USGS</p>
+  </div>
+</div>
+
+<!-- SLIDE 11: Iperspettrale -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">10</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Imaging iperspettrale</h2>
+      <p class="subtitle">La spettroscopia dallo spazio</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Cosa misura</p>
+          <p><strong>Ipercubo</strong> di dati (x, y, λ) con <strong>centinaia di canali</strong> spettrali stretti (5-10 nm) nel range 400-2500 nm.</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Linear Mixing Model (LMM)</p>
+          <div class="formula-box">
+            $$y = \sum_{k=1}^{K} a_k \cdot m_k + n$$
+          </div>
+          <p class="formula-note">a<sub>k</sub> = abbondanze frazionarie, m<sub>k</sub> = endmembers (spettri puri)</p>
+        </div>
+        <div class="card" style="background: #ECFDF5;">
+          <p class="card-title green">🔬 Impronta digitale chimica</p>
+          <p>Ogni pixel contiene uno spettro continuo che permette di identificare materiali <strong>sub-pixel</strong> o minerali specifici.</p>
+        </div>
+      </div>
+      <div class="col">
+        <p class="card-title gray">Applicazioni</p>
+        <div class="card" style="background: #FEF3C7;"><p><strong style="color: #B45309;">⛏️ Geologia mineraria</strong><br>Alterazioni idrotermali, terre rare</p></div>
+        <div class="card" style="background: #EFF6FF;"><p><strong style="color: #1D4ED8;">💧 Qualità dell'acqua</strong><br>Distinzione specie algali e sedimenti</p></div>
+        <div class="card" style="background: #F0FDF4;"><p><strong style="color: #16A34A;">🤖 AI a bordo (FSSCat/Φ-Sat-1)</strong><br>Scarto immagini nuvolose in orbita</p></div>
+        <p class="card-title gray">Missioni</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="tag"><strong>EnMAP</strong> (DLR)</span>
+          <span class="tag"><strong>PRISMA</strong> (ASI)</span>
+          <span class="tag red"><strong>PACE</strong> (NASA 2024)</span>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: DLR EnMAP, ASI PRISMA, NASA PACE</p>
+  </div>
+</div>
+
+<!-- SLIDE 12: TIR -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">11</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Infrarosso termico (TIR)</h2>
+      <p class="subtitle">Il calore del pianeta</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Cosa misura</p>
+          <p>🌍 <strong>LST</strong> - Land Surface Temperature<br>
+          🌊 <strong>SST</strong> - Sea Surface Temperature<br>
+          🔥 Anomalie termiche (incendi, vulcani)</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Inversione legge di Planck</p>
+          <div class="formula-box">
+            $$T_b = \frac{hc}{k_B \lambda \ln\left( \frac{2hc^2}{\lambda^5 L_\lambda} + 1 \right)}$$
+          </div>
+          <p class="formula-note">T<sub>b</sub> = temperatura di brillanza</p>
+        </div>
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">📊 Split-Window</p>
+          <p>Due canali (11 μm + 12 μm) per stimare e rimuovere l'effetto atmosferico (vapore acqueo).</p>
+        </div>
+      </div>
+      <div class="col">
+        <p class="card-title gray">Correzioni necessarie</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+          <span class="tag yellow">Emissività ε</span>
+          <span class="tag yellow">Atmosfera</span>
+          <span class="tag yellow">Vapore acqueo</span>
+        </div>
+        <p class="card-title gray">Missioni</p>
+        <div class="card" style="background: #ECFDF5;"><p><strong style="color: #059669;">Sentinel-3 (SLSTR)</strong><br>Precisione &lt;0.3 K, doppia vista nadir/obliqua</p></div>
+        <div class="card"><p><strong>Landsat 8/9 (TIRS)</strong><br>2 bande termiche @ 100m risoluzione</p></div>
+        <div class="card"><p><strong>ECOSTRESS (ISS)</strong><br>Evapotraspirazione, stress idrico</p></div>
+      </div>
+    </div>
+    <p class="source">Source: ESA, NASA</p>
+  </div>
+</div>
+
+<!-- SLIDE 13: Radiometria -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">12</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Radiometria a microonde passiva</h2>
+      <p class="subtitle">Superficie e sondaggio atmosferico</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">Superficie (Banda L/C/X)</p>
+          <p>💧 <strong>Umidità suolo</strong> - ε<sub>acqua</sub> ≈ 80 vs ε<sub>secco</sub> ≈ 4<br>
+          🧂 <strong>Salinità</strong> - banda L (1.4 GHz)</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Rayleigh-Jeans</p>
+          <div class="formula-box">
+            $$T_b \approx \epsilon \cdot T_{phys}$$
+          </div>
+        </div>
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">🌍 SMOS (ESA) - Innovazione</p>
+          <p>Radiometro <strong>interferometrico</strong> (MIRAS): 69 antenne a Y, immagine ricostruita via FFT.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #FEF3C7;">
+          <p class="card-title" style="color: #B45309;">🌡️ Sondaggio atmosferico (50-183 GHz)</p>
+          <p>O₂ (50-60 GHz) → <strong>Profili temperatura</strong><br>
+          H₂O (183 GHz) → <strong>Profili umidità</strong></p>
+          <div class="formula-box" style="font-size: 11px;">
+            $$T_b(\nu) \approx T_{surf} e^{-\tau} + \int_{0}^{\infty} T(z) K_\nu(z) dz$$
+          </div>
+        </div>
+        <p class="card-title gray">Missioni</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+          <span class="tag"><strong>SMOS</strong></span>
+          <span class="tag"><strong>SMAP</strong></span>
+          <span class="tag"><strong>AMSR-2</strong></span>
+          <span class="tag green"><strong>TROPICS</strong></span>
+        </div>
+        <div class="card" style="background: #ECFDF5;">
+          <p><strong style="color: #059669;">💡 Input più impattante</strong> per la qualità delle previsioni meteo globali (NWP)</p>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: ESA SMOS, NASA SMAP, JAXA AMSR-2</p>
+  </div>
+</div>
+
+<!-- SLIDE 14: Lidar -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">13</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Lidar satellitare</h2>
+      <p class="subtitle">Topografico/batimetrico e Doppler atmosferico</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">🛰️ Lidar topografico</p>
+          <p>❄️ Spessore ghiacci, elevazione calotte<br>
+          🌲 Altezza vegetazione (canopy height)<br>
+          🌊 Batimetria fino a 40m</p>
+        </div>
+        <div class="card" style="background: #ECFDF5;">
+          <p class="card-title green">📊 Photon Counting (ICESat-2)</p>
+          <p>Impulsi laser verdi (532 nm) @ 10 kHz, 6 fasci. <strong>Conta singoli fotoni</strong> con precisione al picosecondo.</p>
+        </div>
+        <p class="card-title gray">Missioni topografiche</p>
+        <div style="display: flex; gap: 8px;">
+          <span class="tag"><strong>ICESat-2</strong> (NASA)</span>
+          <span class="tag"><strong>GEDI</strong> (ISS)</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">💨 Lidar Doppler (Wind Lidar)</p>
+          <p>Misura <strong>profili vento in aria chiara</strong> tramite effetto Doppler ottico.</p>
+          <div class="formula-box">
+            $$\Delta f = \frac{2 v_{LOS}}{\lambda}$$
+          </div>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Aeolus (ESA) - HSRL</p>
+          <p>📡 <strong>Fizeau</strong> → segnale Mie (aerosol)<br>
+          📡 <strong>Fabry-Pérot</strong> → segnale Rayleigh (molecole)</p>
+        </div>
+        <div class="card" style="background: #FEF3C7; margin-top: auto;">
+          <p><strong style="color: #B45309;">🎯 Lacuna colmata</strong><br>Venti in quota sugli oceani - miglioramento significativo modelli meteo</p>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: NASA ICESat-2, ESA Aeolus</p>
+  </div>
+</div>
+
+<!-- SLIDE 15: Gravimetria e Magnetometria -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">14</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Gravimetria e magnetometria satellitare</h2>
+      <p class="subtitle">Misure dei campi fisici terrestri</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card card-accent">
+          <p class="card-title">⚖️ Gravimetria</p>
+          <p>Misura <strong>variazioni massa</strong> del pianeta: fusione ghiacciai, falde acquifere, livello oceani.</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Satellite-to-Satellite Tracking (SST)</p>
+          <p>Due satelliti (GRACE) separati ~220 km. Ranging K-band o laser misura variazione distanza con <strong>precisione micrometrica</strong>.</p>
+        </div>
+        <p class="card-title gray">Missioni gravimetriche</p>
+        <div class="card" style="background: #ECFDF5;"><p><strong>GRACE-FO</strong> - perdita massa calotte polari</p></div>
+        <div class="card"><p><strong>GOCE</strong> - geoide statico alta risoluzione</p></div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">🧲 Magnetometria</p>
+          <p>Vettore campo magnetico <strong>B</strong>: contributi nucleo, crosta, ionosfera/magnetosfera.</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Strumentazione</p>
+          <p>📊 <strong>Fluxgate</strong> (vettoriale) - saturazione magnetica<br>
+          📊 <strong>Scalare</strong> (Overhauser) - risonanza magnetica</p>
+        </div>
+        <p class="card-title gray">Missioni magnetometriche</p>
+        <div class="card"><p><strong>Swarm</strong> (ESA) - 3 satelliti, separazione spazio/tempo</p></div>
+        <div class="card" style="background: #FEF3C7;"><p><strong>DSCOVR</strong> (L1) - allerta tempeste geomagnetiche</p></div>
+      </div>
+    </div>
+    <p class="source">Source: NASA GRACE-FO, ESA Swarm, NOAA DSCOVR</p>
+  </div>
+</div>
+
+<!-- SLIDE 16: GLM e Nuove frontiere -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">15</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Mappatura fulmini e nuove frontiere</h2>
+      <p class="subtitle">GLM, AIS, CubeSat radar e sensori di opportunità</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div class="card" style="background: #FEF3C7;">
+          <p class="card-title" style="color: #B45309;">⚡ GLM - Geostationary Lightning Mapper</p>
+          <p>Sensore ottico @ 777.4 nm (O atomico). Rileva fulmini IC e CG <strong>giorno/notte</strong>.</p>
+          <p style="font-size: 10px; color: #64748B; margin-top: 4px;">💡 <em>"Lightning Jump"</em> = precursore tornado</p>
+        </div>
+        <div class="card" style="background: #EFF6FF;">
+          <p class="card-title blue">🚢 AIS / ADS-B satellitare</p>
+          <p>Ricezione messaggi posizione navi (AIS) e aerei (ADS-B). Sfida: <strong>de-collisione pacchetti</strong> in FOV ~5000 km.</p>
+          <p style="font-size: 10px; color: #64748B; margin-top: 4px;">Fusione con SAR → navi "dark" (pesca illegale)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="background: #F0FDF4;">
+          <p class="card-title green">📡 CubeSat radar - RainCube</p>
+          <p>Radar meteo Ka-band (35.7 GHz) su CubeSat 6U. Antenna parabolica dispiegabile. Sfrutta attenuazione pioggia per profilare tempeste.</p>
+        </div>
+        <div class="card card-accent">
+          <p class="card-title">📺 Smart LNB - NEFOCAST</p>
+          <p>Ricevitori TV domestici come <strong>pluviometri</strong>. Misurano rain fade (Ku/Ka).</p>
+          <div class="formula-box red">
+            $$A = k \cdot R^\alpha$$
+          </div>
+          <p class="formula-note">A = attenuazione (dB/km), R = pioggia (mm/h)</p>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+          <span class="tag">GOES-R</span>
+          <span class="tag">Spire</span>
+          <span class="tag">Aireon</span>
+        </div>
+      </div>
+    </div>
+    <p class="source">Source: NOAA GOES-R, NASA RainCube, NEFOCAST</p>
+  </div>
+</div>
+
+<!-- SLIDE 17: Tabella comparativa -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">16</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Matrice di confronto tecnologie</h2>
+    </div>
+    <div style="display: flex; gap: 12px; margin-bottom: 10px;">
+      <span class="tag yellow">☀️ Passivo</span>
+      <span class="tag blue">📡 Attivo</span>
+      <span class="tag green">☁️ Penetra nubi</span>
+      <span class="tag">🌙 Notte</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Tecnologia</th>
+          <th>Tipo</th>
+          <th>Sorgente</th>
+          <th style="text-align: center;">Cond.</th>
+          <th>Output principale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>GNSS</strong></td><td style="color: #1D4ED8;">Ricezione</td><td>Radio L-band</td><td style="text-align: center;">☁️🌙</td><td>Posizione, tempo</td></tr>
+        <tr><td><strong>SAR</strong></td><td style="color: #4F46E5;">Attivo</td><td>Microonde</td><td style="text-align: center;">☁️🌙</td><td>Backscatter, fase</td></tr>
+        <tr><td><strong>InSAR</strong></td><td style="color: #4F46E5;">Attivo</td><td>Fase radar</td><td style="text-align: center;">☁️🌙</td><td>Deformazioni mm</td></tr>
+        <tr><td><strong>Altimetria</strong></td><td style="color: #4F46E5;">Attivo</td><td>Radar nadir</td><td style="text-align: center;">☁️🌙</td><td>SSH, SWH</td></tr>
+        <tr><td><strong>Ottico</strong></td><td style="color: #B45309;">Passivo</td><td>Luce VIS/IR</td><td style="text-align: center;">☀️❌</td><td>Immagini</td></tr>
+        <tr><td><strong>Iperspettrale</strong></td><td style="color: #B45309;">Passivo</td><td>Spettro VIS/IR</td><td style="text-align: center;">☀️❌</td><td>Firma chimica</td></tr>
+        <tr><td><strong>Radiometri MO</strong></td><td style="color: #B45309;">Passivo</td><td>Emissione term.</td><td style="text-align: center;">☁️🌙</td><td>T, umidità</td></tr>
+        <tr><td><strong>Lidar</strong></td><td style="color: #4F46E5;">Attivo</td><td>Laser</td><td style="text-align: center;">❌🌙</td><td>Profili 3D</td></tr>
+        <tr><td><strong>Gravimetria</strong></td><td style="color: #7C3AED;">Fisica</td><td>Campo gravit.</td><td style="text-align: center;">☁️🌙</td><td>Variazioni massa</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 18: Conclusioni -->
+<div class="slide-container">
+  <div class="slide">
+    <div class="slide-number">17</div>
+    <div class="logo">
+      <img src="datapizzaLogo.png" alt="Datapizza">
+    </div>
+    <div class="title-section">
+      <h2>Conclusioni</h2>
+      <p class="subtitle">Il futuro dell'osservazione della Terra</p>
+    </div>
+    <div class="content">
+      <div class="col">
+        <div style="background: linear-gradient(135deg, #FEF2F2 0%, #FFFFFF 100%); border-radius: 10px; padding: 16px; border: 1px solid #FEE2E2;">
+          <p style="font-size: 13px; color: #C12A22; font-weight: 700;">🔗 DATA FUSION</p>
+          <p style="font-size: 12px; color: #475569; margin-top: 8px; line-height: 1.6;">La tendenza dominante è la <strong style="color: #1E293B;">fusione dei dati</strong>: precisione verticale di Lidar e Radar estesa orizzontalmente dalle costellazioni ottiche e radiometriche.</p>
+        </div>
+        <div style="background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%); border-radius: 10px; padding: 16px; border: 1px solid #DBEAFE;">
+          <p style="font-size: 13px; color: #1D4ED8; font-weight: 700;">🌍 DIGITAL TWIN</p>
+          <p style="font-size: 12px; color: #475569; margin-top: 8px; line-height: 1.6;">L'integrazione di sensori scientifici con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) crea un vero <strong style="color: #1E293B;">"Digital Twin" del pianeta</strong>.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div style="background: linear-gradient(135deg, #ECFDF5 0%, #FFFFFF 100%); border-radius: 10px; padding: 16px; border: 1px solid #D1FAE5;">
+          <p style="font-size: 13px; color: #059669; font-weight: 700;">📊 CAPACITÀ MULTI-FISICA</p>
+          <p style="font-size: 12px; color: #475569; margin-top: 8px; line-height: 1.6;">Un sistema sempre più <strong style="color: #1E293B;">interconnesso</strong> che quantifica stato dell'ambiente naturale e impatto antropico in tempo reale.</p>
+        </div>
+        <div class="card">
+          <p class="card-title gray">Tecnologie analizzate</p>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;">
+            <span class="tag">GNSS/RO/R</span>
+            <span class="tag">SAR/InSAR</span>
+            <span class="tag">Altimetria</span>
+            <span class="tag">Ottico</span>
+            <span class="tag">Iperspettrale</span>
+            <span class="tag">TIR</span>
+            <span class="tag">Radiometria</span>
+            <span class="tag">Lidar</span>
+            <span class="tag">Gravimetria</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 19: Q&A -->
+<div class="slide-container">
+  <div class="slide cover qa">
+    <div class="logo-circle">
+      <img src="datapizza.png" alt="Datapizza">
+    </div>
+    <h1>Q&A</h1>
+    <p class="subtitle">Domande e risposte</p>
+    <div class="line"></div>
+    <p style="position: absolute; bottom: 30px; font-size: 13px; color: #94A3B8;">Grazie per l'attenzione!</p>
+  </div>
+</div>
+
+</body>
+</html>
