@@ -17,6 +17,25 @@ async function copyIfExists(src, dest) {
   }
 }
 
+async function copyStaticBlogPages(rootDir, blogDir) {
+  const sourceDir = path.join(rootDir, 'blog');
+  let entries = [];
+  try {
+    entries = await fs.readdir(sourceDir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+
+  for (const entry of entries) {
+    if (!entry.isFile()) continue;
+    if (!entry.name.endsWith('.html')) continue;
+    if (entry.name === 'index.html') continue;
+    const src = path.join(sourceDir, entry.name);
+    const dest = path.join(blogDir, entry.name);
+    await fs.copy(src, dest, { overwrite: true });
+  }
+}
+
 function computeReadTime(markdown) {
   if (!markdown || typeof markdown !== 'string') {
     return 1;
@@ -219,6 +238,7 @@ async function build() {
   }
 
   await writeManifest(posts, blogDir);
+  await copyStaticBlogPages(rootDir, blogDir);
 
   await generateSitemap(posts, distDir);
 
