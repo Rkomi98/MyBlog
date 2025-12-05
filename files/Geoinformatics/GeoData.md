@@ -282,12 +282,14 @@ Le principali sono:
 
 ### 2.3. Radar altimetria: topografia degli oceani e dei ghiacci
 
+I radar altimetri misurano con precisione la distanza verticale tra il satellite e la superficie sottostante, calcolata dal tempo di andata e ritorno di impulsi radar inviati perpendicolarmente al suolo (nadir).
+
 L'altimetria radar nadirale è la tecnica fondamentale per quantificare l'innalzamento del livello del mare e la circolazione oceanica.
 
 
 #### Cosa misura?
 
-Misura la distanza verticale (range) tra il satellite e la superficie al nadir. Combinando questa misura con l'orbita precisa e le correzioni geofisiche, si ottiene:
+Come ho già accennato prima, misura la distanza verticale (range) tra il satellite e la superficie al nadir. Combinando questa misura con l'orbita precisa e le correzioni geofisiche, si ottiene:
 
 - **Livello del Mare (Sea Surface Height - SSH).**
 
@@ -295,14 +297,20 @@ Misura la distanza verticale (range) tra il satellite e la superficie al nadir. 
 
 - **Velocità del vento** (dall'intensità del backscatter).
 
+L'obiettivo da misurare è la quota della superficie (oceano, terra, ghiaccio) rispetto ad un ellissoide di riferimento. In ambito oceanografico, questa misura, sottratta dell’orbita del satellite nota in un sistema geodetico, fornisce l’altezza della superficie del mare (Sea Surface Height, SSH) rispetto al geoide. Sull’oceano aperto, variazioni di SSH di pochi centimetri riflettono correnti marine, maree e l’innalzamento medio del livello del mare. 
+
+Gli altimetri misurano anche parametri secondari: analizzando la forma e potenza dell’eco radar (lo waveform), si ricava la rugosità della superficie e quindi l’altezza significativa delle onde e la velocità del vento sul mare.
+
+Su superfici continentali, l’altimetro può misurare l’altezza dei laghi e dei grandi fiumi, nonché la topografia media dei terreni (anche se con risoluzione spaziale limitata dall’ampio footprint radar, tipicamente è di qualche km). 
+
+Sulle calotte glaciali, radar altimetri specializzati (es. CryoSat-2) misurano la quota della neve/ghiaccio e rilevano variazioni nel tempo dello spessore dei ghiacci. Nei nuovi altimetri “a apertura sintetica” (SAR altimetry) l’uso di elaborazione Doppler migliora la risoluzione spaziale lungo traccia (∼300 m) permettendo misure più accurate in prossimità di coste e su corpi idrici più piccoli.
+
 
 #### Funzionamento fisico e formule
 
-L'altimetro emette un impulso radar e registra l'eco di ritorno. L'altezza della superficie del mare ($SSH$) è calcolata come <sup>22</sup>:
+L'altimetro emette un impulso radar e registra l'eco di ritorno. 
 
-$$SSH = H\_{sat} - (R\_{obs} + \Delta R\_{iono} + \Delta R\_{dry} + \Delta R\_{wet} + \Delta R\_{ssb})$$
-
-Dove $\Delta R\_{ssb}$ è il Sea State Bias, dovuto al fatto che le valli delle onde riflettono meglio delle creste. La forma d'onda dell'eco (waveform) è modellata analiticamente dal Modello di Brown, che descrive la convoluzione tra la risposta del sistema, la densità di probabilità delle altezze delle onde e la risposta impulsiva della superficie piatta.<sup>23</sup>
+La forma d'onda dell'eco (waveform) è modellata analiticamente dal Modello di Brown, che descrive la convoluzione tra la risposta del sistema, la densità di probabilità delle altezze delle onde e la risposta impulsiva della superficie piatta.<sup>22</sup>
 
 La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3, migliora la risoluzione lungo traccia (\~300m) focalizzando l'energia in celle Doppler, permettendo di misurare con precisione anche tra i ghiacci marini e nelle acque costiere.<sup>24</sup>
 
@@ -317,121 +325,115 @@ La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3
 
 ***
 
+## 3. Sensori passivi e ottici 
+Ora cambiamo radicalmente argomento, parliamo di sensori passivi, quelli più simili alle classiche macchinette fotografiche o alle fotocamere dei nostri smartphone.
 
-## 3. Scatterometria: il vento sulla superficie del mare
+I sensori ottici passivi a bordo dei satelliti catturano la radiazione elettromagnetica solare riflessa dalla superficie terrestre (nelle bande del visibile, infrarosso vicino e infrarosso a onde corte) e, in alcuni casi, l’emissione termica nell’infrarosso termico. 
 
-Gli scatterometri sono radar attivi progettati per misurare la rugosità superficiale dell'oceano su larga scala, fornendo il vettore vento globale.
+Essi forniscono dunque misure di radianza riflessa o riflettanza della superficie per ciascuna banda spettrale. Nel caso di bande termiche (tipicamente presenti su satelliti come Landsat o Sentinel-3), misurano la radianza termica emessa legata alla temperatura superficiale.
 
-
-### Cosa misura
-
-Il coefficiente di retrodiffusione radar normalizzato ($\sigma^0$) da diverse angolazioni azimutali, da cui si invertono velocità e direzione del vento a 10m dalla superficie.
-
-
-### Funzionamento fisico e formule
-
-La relazione tra $\sigma^0$ e il vento è descritta dalle _Geophysical Model Functions_ (GMF), empiricamente definite come <sup>26</sup>:
-
-$$ \sigma^0(\theta, \chi, U) = A\_0(U, \theta) \[1 + A\_1(U, \theta) \cos \chi + A\_2(U, \theta) \cos 2\chi] $$
-
-Dove $U$ è la velocità del vento e $\chi$ è la direzione relativa rispetto all'antenna. Osservando la stessa cella di mare da diverse angolazioni (generalmente 3 antenne o un'antenna rotante), è possibile risolvere l'ambiguità direzionale e determinare il vettore vento.
+### 3.1 Immagini pancromatiche: risoluzione geometrica estrema
 
 
-### Utilità e applicazioni
+Le immagini ottiche sono intuitive e ricche di informazioni, trovando impiego in mappatura ambientale, gestione del territorio, agricoltura e monitoraggio forestale, pianificazione urbana e sorveglianza di emergenze.
 
-- **Meteorologia Marina:** Dati essenziali per l'identificazione di fronti e cicloni extratropicali.
+#### Cosa misura
 
-- **Clima:** Studio dell'interazione aria-mare e degli stress superficiali che guidano le correnti oceaniche.
+In modalità pancromatica viene registrata l’intensità integrata su un ampio intervallo spettrale (ad es. 0,5–0,8 μm, come WorldView-3), producendo immagini in bianco e nero ad alta risoluzione spaziale. 
 
+In pratica, viene registrata la **radianza integrata** su un'unica banda spettrale molto ampia (tipicamente visibile + vicino infrarosso, 0.4 - 0.9 $\mu m$ Landsat 7).
 
-### Missioni
-
-- **MetOp (ASCAT):** Scatterometro a ventaglio fisso in banda C (doppio swath).
-
-- **CFOSAT:** Scatterometro rotante franco-cinese progettato per misurare congiuntamente vento e spettri d'onda.
-
-***
+> Landsat 8 ha un range ristretto 0.50-0.68 $\mu m$ per evitare lo scattering atmosferico.
 
 
-## 8. Imaging ottico pancromatico: risoluzione geometrica estrema
+#### Funzionamento fisico
 
-I sensori pancromatici costituiscono la spina dorsale dell'osservazione ad alta risoluzione spaziale per l'intelligence e la cartografia di dettaglio.
-
-
-### Cosa misura
-
-Radianza integrata su un'unica banda spettrale molto ampia (tipicamente visibile + vicino infrarosso, 0.4 - 0.9 $\mu m$).
+L'ampia larghezza di banda permette di raccogliere un elevato numero di fotoni, garantendo un alto Rapporto Segnale-Rumore (SNR). Questo consente di ridurre la dimensione del pixel (IFOV) mantenendo tempi di integrazione brevi, necessari per evitare il _motion blur_ orbitale. La risoluzione spaziale può scendere sotto i 30 cm nelle piattaforme commerciali moderne, come Superview Neo-1.<sup>27</sup>
 
 
-### Funzionamento fisico
-
-L'ampia larghezza di banda permette di raccogliere un elevato numero di fotoni, garantendo un alto Rapporto Segnale-Rumore (SNR). Questo consente di ridurre la dimensione del pixel (IFOV) mantenendo tempi di integrazione brevi, necessari per evitare il _motion blur_ orbitale. La risoluzione spaziale può scendere sotto i 30 cm nelle piattaforme commerciali moderne.<sup>27</sup>
-
-
-### Applicazioni e pansharpening
+#### Applicazioni e pansharpening
 
 La banda pancromatica è spesso usata in sinergia con bande multispettrali a bassa risoluzione tramite tecniche di _Pansharpening_. L'immagine risultante combina l'alta fedeltà geometrica del pancromatico con l'informazione cromatica del multispettrale. Una relazione semplificata per la fusione è <sup>28</sup>:
 
-$$I\_{Pan} \approx \sum\_i \alpha\_i \cdot I\_{MS, i}$$
+$$I_{Pan} \approx \sum_i \alpha_i \cdot I_{MS, i}$$
+
+Questa è la condizione fisica di partenza ed esprime il fatto che l'energia registrata dal sensore pancromatico (a banda larga) dovrebbe idealmente corrispondere alla somma pesata delle energie registrate dalle bande multispettrali (a banda stretta) che ricadono nel suo intervallo spettrale.
+
+I  coefficienti $\alpha_i$  rappresentano i pesi spettrali. Poiché il sensore pancromatico non ha una sensibilità piatta (cioè non "vede" tutti i colori con la stessa efficienza), ogni banda multispettrale contribuisce al segnale Pan in modo diverso. Ad esempio, se il sensore Pan è molto sensibile al rosso e poco al blu, il peso $\alpha_i$ del canale rosso sarà maggiore.
+
+Di seguito un [esempio di applicazione](https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/) del pansharpening.
+
+<img src="../../../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
+Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la risoluzione geometrica estrema consente di distinguere singoli edifici e infrastrutture urbane._
 
 
-### Missioni
+#### Missioni
 
-- **Maxar (WorldView Legion), Airbus (Pléiades Neo):** Risoluzioni commerciali leader di mercato (30 cm).
+- **Maxar (WorldView Legion), Airbus (Pléiades Neo) e Superview Neo-1:** Risoluzioni commerciali leader di mercato (fino a 30 cm).
 
 - **Landsat 8/9:** Banda pancromatica a 15m per affinare le bande spettrali a 30m.<sup>29</sup>
 
 ***
 
 
-## 9. Imaging ottico multispettrale: il colore della terra
+### 3.2. Imaging multispettrale: il colore della terra
+
+Le immagini ottiche servono a identificare tipologie di suolo e uso del suolo (coltivazioni, foreste, aree urbane), a monitorare bacini idrici, ghiacciai e neve, e a documentare eventi come incendi, alluvioni o frane. 
 
 Lo standard per il monitoraggio ambientale globale, che acquisisce immagini in un numero discreto di bande spettrali (da 4 a 15 circa).
 
+Le immagini multispettrali permettono ad esempio di distinguere vegetazione sana da quella malata attraverso indici come NDVI (Normalized Difference Vegetation Index). L’NDVI si calcola dalle riflettanze nel vicino infrarosso (NIR) e rosso (R): 
+$$NDVI = \frac{NIR - R}{NIR + R},$$ 
+ed è ampiamente utilizzato per quantificare la densità e il vigore della copertura vegetale. 
 
-### Cosa misura
+
+#### Cosa misura
+
+In modalità multispettrale, il sensore dispone di alcuni canali separati (tipicamente 3–10 bande) più stretti (ad es. bande blu, verde, rossa, infrarosso vicino, ecc.), fornendo informazioni sul colore e la composizione della superficie. 
 
 Riflettanza superficiale in bande discrete nel Visibile (VIS), Vicino Infrarosso (NIR) e Infrarosso a Onda Corta (SWIR).
 
 
-### Fisica e indici spettrali
+#### Fisica e indici spettrali
 
-Sfrutta le firme spettrali distintive dei materiali. Ad esempio, la clorofilla assorbe nel rosso e riflette fortemente nel NIR. L'indice NDVI (_Normalized Difference Vegetation Index_) quantifica la salute vegetale:
-
-$$NDVI = \frac{\rho\_{NIR} - \rho\_{RED}}{\rho\_{NIR} + \rho\_{RED}}$$
+Sfrutta le firme spettrali distintive dei materiali. Ad esempio, la clorofilla assorbe nel rosso e riflette fortemente nel NIR. 
 
 L'uso di bande nello SWIR è fondamentale per discriminare la neve dalle nuvole e per monitorare lo stress idrico della vegetazione.
 
+<img src="../../../Assets/PanvsMulti.png" alt="Confronto tra immagine pancromatica e multispettrale su uno stesso quartiere urbano" title="Differenze tra banda pancromatica e composito multispettrale">
+_Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il relativo composito multispettrale: il pancromatico cattura il dettaglio geometrico, mentre il multispettrale preserva la variazione cromatica utile per indici come NDVI e SWIR per discriminare materiali._
 
-### Applicazioni e missioni
 
-- **Sentinel-2 (ESA):** Con 13 bande e risoluzione 10-20m, è il riferimento per l'agricoltura di precisione e il monitoraggio land cover.<sup>16</sup>
+#### Applicazioni e missioni
 
-- **Landsat 8/9 (NASA/USGS):** Garantisce la continuità delle osservazioni dal 1972, essenziale per studi di cambiamento a lungo termine.
+- **Sentinel-2 (ESA):** Con 13 bande e [risoluzione](https://sentiwiki.copernicus.eu/web/s2-products) 10-20m o 60 m, è il riferimento per l'agricoltura di precisione e il monitoraggio land cover.<sup>16</sup>
+
+- **Landsat 8/9 (NASA/USGS):** Garantisce la continuità delle osservazioni dal 1972, essenziale per studi di cambiamento a lungo termine. La risoluzione, in base alla banda scelta va dai 30 m ai 100 m.
 
 ***
 
 
-## 10. Imaging iperspettrale: la spettroscopia dallo spazio
+### 3.3 Imaging iperspettrale
 
 L'imaging iperspettrale (HSI) estende il concetto multispettrale acquisendo centinaia di bande contigue, permettendo un'analisi chimico-fisica dettagliata di ogni pixel.
 
 
-### Cosa misura
+#### Cosa misura
+I sensori iperspettrali si spingono oltre quelli multispettrali, acquisendo decine o centinaia di bande strettissime (dell’ordine di 10 nm) contigue, coprendo in dettaglio il continuo spettrale visibile/SWIR: ogni pixel contiene una sorta di "firma spettrale” continua dell’oggetto osservato. Ciò permette di misurare sottili differenze di riflettanza legate alla composizione chimica e fisica dei materiali (vegetazione, minerali, acque).
 
-Un "ipercubo" di dati $(x, y, \lambda)$ con centinaia di canali spettrali stretti (es. 5-10 nm), coprendo il range VNIR-SWIR (400-2500 nm).
+Quello che si studia non è altro che un "ipercubo" di dati $(x, y, \lambda)$ con centinaia di canali spettrali stretti (es. $5-10 nm$), coprendo il range VNIR-SWIR ($400-2500 nm$).
 
 
-### Funzionamento fisico e spectral mixing
+#### Funzionamento fisico e spectral mixing
 
 Ogni pixel contiene uno spettro continuo che funge da "impronta digitale" chimica. Il segnale misurato $y$ è spesso modellato come una mistura lineare degli spettri puri dei materiali costituenti (_endmembers_) $M$ presenti nel pixel, secondo il _Linear Mixing Model_ (LMM) <sup>30</sup>:
 
-$$y = \sum\_{k=1}^{K} a\_k m\_k + n$$
+$$y = \sum_{k=1}^{K} a_k m_k + n$$
 
-Dove $a\_k$ sono le abbondanze frazionarie. Questo permette di identificare materiali sub-pixel o minerali specifici.
+Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare materiali sub-pixel o minerali specifici.
 
 
-### Utilità e applicazioni
+#### Utilità e applicazioni
 
 - **Geologia Mineraria:** Identificazione di alterazioni idrotermali e terre rare.
 
@@ -440,7 +442,7 @@ Dove $a\_k$ sono le abbondanze frazionarie. Questo permette di identificare mate
 - **CubeSat Intelligenti:** La missione **FSSCat/$\Phi$-Sat-1** ha dimostrato l'uso di AI a bordo per processare dati iperspettrali (HyperScout-2) e scartare immagini nuvolose direttamente in orbita, ottimizzando il downlink.<sup>13</sup>
 
 
-### Missioni
+#### Missioni
 
 - **EnMAP (DLR) & PRISMA (ASI):** Missioni scientifiche operative ad alte prestazioni.<sup>34</sup>
 
