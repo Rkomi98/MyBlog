@@ -417,6 +417,8 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 
 L'imaging iperspettrale (HSI) estende il concetto multispettrale acquisendo centinaia di bande contigue, permettendo un'analisi chimico-fisica dettagliata di ogni pixel.
 
+Infatti, le bande strette e contigue dell'HSI permettono di rilevare le feature di assorbimento (picchi e valli stretti nella curva spettrale). Queste feature sono univoche per specifici legami chimici (es. legami O-H nei minerali argillosi, o specifici pigmenti nella vegetazione), permettendo di identificare quale materiale è presente, non solo di distinguerne il colore. La definirei una sorta di spettroscopia da remoto.
+
 
 #### Cosa misura
 I sensori iperspettrali si spingono oltre quelli multispettrali, acquisendo decine o centinaia di bande strettissime (dell’ordine di 10 nm) contigue, coprendo in dettaglio il continuo spettrale visibile/SWIR: ogni pixel contiene una sorta di "firma spettrale” continua dell’oggetto osservato. Ciò permette di misurare sottili differenze di riflettanza legate alla composizione chimica e fisica dei materiali (vegetazione, minerali, acque).
@@ -426,11 +428,12 @@ Quello che si studia non è altro che un "ipercubo" di dati $(x, y, \lambda)$ co
 
 #### Funzionamento fisico e spectral mixing
 
-Ogni pixel contiene uno spettro continuo che funge da "impronta digitale" chimica. Il segnale misurato $y$ è spesso modellato come una mistura lineare degli spettri puri dei materiali costituenti (_endmembers_) $M$ presenti nel pixel, secondo il _Linear Mixing Model_ (LMM) <sup>30</sup>:
+Ogni pixel contiene uno spettro continuo che funge da "impronta digitale" chimica. Il segnale misurato $y$ è spesso modellato come una [mistura lineare](https://ieeexplore.ieee.org/document/974727) degli spettri puri dei materiali costituenti (_endmembers_) $M$ presenti nel pixel, secondo il _Linear Mixing_ (o _Mixture_) _Model_ (**LMM**) <sup>30</sup>:
 
 $$y = \sum_{k=1}^{K} a_k m_k + n$$
 
 Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare materiali sub-pixel o minerali specifici.
+> In mineralogia, un "endmember" è un minerale puro al 100% (es. quarzo puro) che, miscelato con altri, forma la roccia osservata nel pixel.
 
 
 #### Utilità e applicazioni
@@ -439,24 +442,34 @@ Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare mater
 
 - **Qualità dell'Acqua:** Distinzione tra diverse specie algali e sedimenti.<sup>32</sup>
 
+
+<figure>
+  <img src="../../../Assets/Sea.png" alt="Colori dell'oceano determinati dai costituenti in acqua" title="Colori dell'oceano determinati dai costituenti in acqua">
+  <figcaption>
+    Il colore dell'oceano è una funzione della luce che viene assorbita o diffusa in presenza dei costituenti disciolti o sospesi nell'acqua. <sup>32</sup>
+  </figcaption>
+</figure>
+
+
 - **CubeSat Intelligenti:** La missione **FSSCat/$\Phi$-Sat-1** ha dimostrato l'uso di AI a bordo per processare dati iperspettrali (HyperScout-2) e scartare immagini nuvolose direttamente in orbita, ottimizzando il downlink.<sup>13</sup>
 
 
 #### Missioni
 
-- **EnMAP (DLR) & PRISMA (ASI):** Missioni scientifiche operative ad alte prestazioni.<sup>34</sup>
+- **EnMAP (DLR) & PRISMA (ASI):** Missioni scientifiche operative rispettivamente tedesca e italiana.<sup>34</sup>
 
 - **PACE (NASA):** Lanciata nel 2024, con lo strumento OCI (Ocean Color Instrument) che estende l'iperspettrale agli oceani globali.<sup>32</sup>
 
 ***
 
 
-## 11. Infrarosso termico (TIR): il calore del pianeta
+### 3.4. Infrarosso termico (TIR): misurare il calore del pianeta
 
 I sensori TIR misurano l'energia emessa dalla Terra, permettendo di inferire la temperatura superficiale.
 
 
-### Cosa misura
+#### Cosa misura
+In base al soggetto misurato esistono:
 
 - **Land Surface Temperature (LST).**
 
@@ -465,13 +478,13 @@ I sensori TIR misurano l'energia emessa dalla Terra, permettendo di inferire la 
 - **Anomalie Termiche:** Incendi boschivi e attività vulcanica.
 
 
-### Funzionamento fisico e formule
+#### Funzionamento fisico e formule
 
-La radianza misurata $L\_{\lambda}$ viene convertita in temperatura di brillanza $T\_b$ invertendo la legge di Planck <sup>36</sup>:
+La radianza misurata $L_{\lambda}$ viene convertita in temperatura di brillanza $T_b$ invertendo la legge di Planck <sup>36</sup>:
 
-$$T\_b = \frac{h c}{k\_B \lambda \ln\left( \frac{2 h c^2}{\lambda^5 L\_\lambda} + 1 \right)}$$
+$$T_b = \frac{h c}{k_B \lambda \ln\left( \frac{2 h c^2}{\lambda^5 L_\lambda} + 1 \right)}$$
 
-Per ottenere la temperatura cinetica reale ($T\_{surf}$), è necessario correggere per l'emissività $\epsilon$ della superficie e per il contributo atmosferico (assorbimento/emissione vapore acqueo). Algoritmi di _Split-Window_ utilizzano due canali termici vicini (es. 11 $\mu m$ e 12 $\mu m$) per stimare e rimuovere l'effetto atmosferico.
+Per ottenere la temperatura cinetica reale ($T_{surf}$), è necessario correggere per l'emissività $\epsilon$ della superficie e per il contributo atmosferico (assorbimento/emissione vapore acqueo). Algoritmi di _Split-Window_ utilizzano due canali termici vicini (es. 11 $\mu m$ e 12 $\mu m$) per stimare e rimuovere l'effetto atmosferico.
 
 
 ### Missioni
@@ -485,7 +498,7 @@ Per ottenere la temperatura cinetica reale ($T\_{surf}$), è necessario corregge
 ***
 
 
-## 12. Radiometria a microonde passiva (surface imaging)
+## 4. Radiometria a microonde passiva (surface imaging)
 
 Sensori che osservano l'emissione naturale a microonde della superficie terrestre a basse frequenze (Banda L, C, X).
 
@@ -517,95 +530,7 @@ La missione **SMOS** (ESA) ha introdotto una tecnologia rivoluzionaria: il radio
 ***
 
 
-## 13. Radiometria a microonde per sondaggio atmosferico
-
-Questi sensori profilano verticalmente l'atmosfera sfruttando le righe di assorbimento molecolare.
-
-
-### Cosa misura
-
-- Profili di **Temperatura** (banda assorbimento O$\_2$ a 50-60 GHz).
-
-- Profili di **Umidità** (banda assorbimento H$\_2$O a 183 GHz).
-
-
-### Funzionamento fisico
-
-Il principio si basa sulla variazione dell'opacità atmosferica con la frequenza. Canali centrati sulle righe di assorbimento "vedono" solo gli strati alti (l'emissione dal basso è riassorbita). Canali sulle ali della riga penetrano più in profondità. L'equazione del trasferimento radiativo è <sup>40</sup>:
-
-$$T\_b(\nu) \approx T\_{surf} e^{-\tau\_\nu(0, \infty)} + \int\_{0}^{\infty} T(z) K\_\nu(z) dz$$
-
-Dove $K\_\nu(z)$ è la funzione peso (_weighting function_) che determina l'altitudine di picco del segnale per quella frequenza.
-
-
-### Utilità
-
-Questi dati sono la singola fonte di input più impattante per la qualità delle previsioni meteorologiche globali (NWP).
-
-Le nuove costellazioni di CubeSat come TROPICS (NASA) utilizzano radiometri miniaturizzati per fornire revisit time inferiori all'ora sugli uragani, impossibile per i grossi satelliti polari tradizionali.
-
-***
-
-
-## 14. Lidar topografico e batimetrico: il conteggio dei fotoni
-
-I Lidar (Light Detection and Ranging) altimetrici misurano l'elevazione con precisione centimetrica usando impulsi laser.
-
-
-### Cosa misura
-
-- Spessore dei ghiacci marini e elevazione delle calotte polari.
-
-- Altezza della vegetazione (_canopy height_) e biomassa.
-
-
-### Funzionamento fisico: photon counting
-
-A differenza dei Lidar classici che digitalizzano l'intera forma d'onda analogica, lo strumento ATLAS su ICESat-2 utilizza la tecnica del Photon Counting. Emette impulsi laser verdi (532 nm) ad altissima frequenza (10 kHz) divisi in 6 fasci. Il ricevitore conta i singoli fotoni di ritorno cronometrandoli con precisione al picosecondo.
-
-L'accumulo statistico dei fotoni permette di ricostruire la superficie, il fondale marino (fino a 40m in acque chiare) e la struttura verticale della foresta.41
-
-
-### Applicazioni e missioni
-
-- **ICESat-2 (NASA):** Fondamentale per stimare il bilancio di massa della criosfera.<sup>44</sup>
-
-- **GEDI (ISS):** Lidar full-waveform ottimizzato per la struttura delle foreste tropicali e temperate.
-
-***
-
-
-## 15. Lidar doppler atmosferico (wind lidar)
-
-Misurare il vento in aria chiara dallo spazio è stata una delle sfide tecnologiche più ardue dell'EO.
-
-
-### Cosa misura
-
-Profili verticali della componente orizzontale del vento lungo la linea di vista (Line-of-Sight, LOS).
-
-
-### Funzionamento fisico
-
-Si basa sull'effetto Doppler ottico. L'impulso laser inviato nell'atmosfera viene retrodiffuso dalle molecole d'aria (_Rayleigh scattering_) e dagli aerosol/nubi (_Mie scattering_). Il movimento di questi bersagli lungo la linea di vista causa uno spostamento in frequenza $\Delta f$:
-
-$$\Delta f = \frac{2 v\_{LOS}}{\lambda}$$
-
-La missione **Aeolus** utilizza un ricevitore HSRL (_High Spectral Resolution Lidar_) con due canali ottici distinti:
-
-1. Un interferometro Fizeau per il segnale Mie (spettro stretto, aerosol).
-
-2. Un interferometro Fabry-Pérot per il segnale Rayleigh (spettro allargato dal moto termico molecolare).<sup>45</sup>
-
-
-### Missioni
-
-- **Aeolus (ESA):** Missione dimostrativa che ha colmato una lacuna critica nel sistema di osservazione globale (venti in quota sugli oceani), migliorando significativamente i modelli meteo europei.<sup>47</sup>
-
-***
-
-
-## 16. Gravimetria satellitare: pesare l'acqua dallo spazio
+## 5. Gravimetria satellitare: pesare l'acqua dallo spazio
 
 La gravimetria misura le variazioni di massa del pianeta, offrendo una visione unica del ciclo dell'acqua profondo.
 
@@ -631,7 +556,7 @@ Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), vie
 ***
 
 
-## 17. Magnetometria satellitare
+## 6. Magnetometria satellitare
 
 I magnetometri spaziali studiano il campo magnetico terrestre, scudo protettivo contro il vento solare.
 
@@ -658,32 +583,7 @@ Le missioni di alta precisione utilizzano una combinazione di strumenti:
 
 ***
 
-
-## 18. Mappatura dei fulmini (geostazionaria): GLM
-
-I sensori di fulminazione geostazionari offrono un monitoraggio continuo dei fenomeni convettivi severi.
-
-
-### Cosa misura
-
-Rileva l'attività totale dei fulmini (Total Lightning), inclusi quelli intra-cloud (IC) e cloud-to-ground (CG), giorno e notte su un emisfero.
-
-
-### Funzionamento fisico
-
-Strumenti come il GLM (Geostationary Lightning Mapper) su GOES-R sono sensori ottici ad alta velocità che operano in una banda stretta nel vicino infrarosso (777.4 nm), corrispondente a una riga di emissione dell'ossigeno atomico nel plasma del fulmine.
-
-Il sensore rileva variazioni transitorie di luminosità a livello di pixel sottraendo il background in tempo reale (filtro di eventi). Questo permette di vedere il lampo anche sopra nuvole illuminate dal sole pieno.56
-
-
-### Applicazioni
-
-L'improvviso aumento del tasso di fulminazione ("Lightning Jump") è un precursore fisico affidabile dell'intensificazione di una tempesta e della possibile genesi di tornado, aumentando il tempo di preavviso (lead time) per gli allarmi meteo.<sup>58</sup>
-
-***
-
-
-## 19. Segnali di opportunità e CubeSat radar: la nuova frontiera
+## 7. Segnali di opportunità e CubeSat radar: la nuova frontiera
 
 Questa categoria unisce due trend emergenti: l'uso di segnali non nativi per l'EO e la miniaturizzazione estrema dei sensori attivi.
 
