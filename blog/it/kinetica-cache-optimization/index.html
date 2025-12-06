@@ -453,6 +453,44 @@
     .post-body p {
       margin-bottom: 1.4rem;
     }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
     .post-body ul,
     .post-body ol {
       margin: 1.4rem 0 1.4rem 1.4rem;
