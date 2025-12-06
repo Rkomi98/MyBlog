@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Che dati registrano i satelliti? | Mirko Calcaterra</title>
-  <meta name="description" content="Che dati registrano i satelliti? Introduzione Negli ultimi decenni i satelliti sono diventati una delle infrastrutture più strategiche per comprendere, monitorare e gestire il nostro pianeta. Ogni giorno, centinaia di missioni in orbita raccolgono una quantit…">
+  <meta name="description" content="Che dati registrano i satelliti? &lt;details style=&quot;backgroundcolor:fff3cd;border:1px solid ffeeba;borderradius:8px;padding:1rem;&quot; &lt;summary&lt;strong⚠️ Articolo in revisione&lt;/strong (clicca per aprire)&lt;/summary Questo articolo è ancora in lavorazione e sta subendo…">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="https://rkomi98.github.io/MyBlog/blog/it/geodata/">
 
@@ -22,7 +22,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/geodata/">
   <meta property="og:title" content="Che dati registrano i satelliti?">
-  <meta property="og:description" content="Che dati registrano i satelliti? Introduzione Negli ultimi decenni i satelliti sono diventati una delle infrastrutture più strategiche per comprendere, monitorare e gestire il nostro pianeta. Ogni giorno, centinaia di missioni in orbita raccolgono una quantit…">
+  <meta property="og:description" content="Che dati registrano i satelliti? &lt;details style=&quot;backgroundcolor:fff3cd;border:1px solid ffeeba;borderradius:8px;padding:1rem;&quot; &lt;summary&lt;strong⚠️ Articolo in revisione&lt;/strong (clicca per aprire)&lt;/summary Questo articolo è ancora in lavorazione e sta subendo…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2025-11-23T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -31,7 +31,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Che dati registrano i satelliti?">
-  <meta property="twitter:description" content="Che dati registrano i satelliti? Introduzione Negli ultimi decenni i satelliti sono diventati una delle infrastrutture più strategiche per comprendere, monitorare e gestire il nostro pianeta. Ogni giorno, centinaia di missioni in orbita raccolgono una quantit…">
+  <meta property="twitter:description" content="Che dati registrano i satelliti? &lt;details style=&quot;backgroundcolor:fff3cd;border:1px solid ffeeba;borderradius:8px;padding:1rem;&quot; &lt;summary&lt;strong⚠️ Articolo in revisione&lt;/strong (clicca per aprire)&lt;/summary Questo articolo è ancora in lavorazione e sta subendo…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -41,7 +41,7 @@
     "headline": "Che dati registrano i satelliti?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2025-12-06T14:58:27.231Z",
+    "dateModified": "2025-12-06T17:12:20.834Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -51,7 +51,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Che dati registrano i satelliti? Introduzione Negli ultimi decenni i satelliti sono diventati una delle infrastrutture più strategiche per comprendere, monitorare e gestire il nostro pianeta. Ogni giorno, centinaia di missioni in orbita raccolgono una quantit…"
+    "description": "Che dati registrano i satelliti? &lt;details style=&quot;backgroundcolor:fff3cd;border:1px solid ffeeba;borderradius:8px;padding:1rem;&quot; &lt;summary&lt;strong⚠️ Articolo in revisione&lt;/strong (clicca per aprire)&lt;/summary Questo articolo è ancora in lavorazione e sta subendo…"
   }
   </script>
 
@@ -317,12 +317,21 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 22px;
-      padding: 1.8rem 1.6rem;
+      padding: 1.5rem 1.6rem 1.8rem;
       box-shadow: var(--shadow-lg);
       position: sticky;
       top: 120px;
       max-height: calc(100vh - 160px);
-      overflow-y: auto;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     .post-toc__title {
       text-transform: uppercase;
@@ -330,7 +339,38 @@
       letter-spacing: 0.18em;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 1.2rem;
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
     }
     .post-toc__list {
       list-style: none;
@@ -338,21 +378,25 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.45rem;
     }
-    .post-toc__item.level-1 {
-      padding-left: 1rem;
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
     }
-    .post-toc__item.level-2 {
-      padding-left: 2rem;
+    .post-toc__item {
+      margin: 0;
     }
     .post-toc__link {
       color: var(--text-secondary);
       font-size: 0.95rem;
-      line-height: 1.4;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
       border-bottom: 1px dashed transparent;
       transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
     }
@@ -364,6 +408,18 @@
     .post-toc__link--active {
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
     }
     .post-body {
       background: var(--bg-card-strong);
@@ -739,6 +795,15 @@
         position: static;
         max-height: none;
         margin-bottom: 2rem;
+        padding: 1.25rem 1.35rem 1.5rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
       }
     }
     @media (max-width: 720px) {
@@ -823,14 +888,446 @@
         </div>
       </section>
       <section class="post-layout">
-        <aside class="post-toc">
-        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
-        <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#introduzione">Introduzione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-gnss-sistemi-globali-di-navigazione-satellitare">1. GNSS – Sistemi Globali di Navigazione Satellitare</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#11-radio-occultazione-gnss-gnss-ro-sondaggio-atmosferico-di-precisione">1.1 Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#principio-fisico-e-formulazione-matematica">Principio fisico e formulazione matematica</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#utilit-e-applicazioni-critiche">Utilità e applicazioni critiche</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#missioni-di-riferimento">Missioni di riferimento</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#12-riflettometria-gnss-gnss-r-il-radar-bistatico-di-opportunit">1.2. Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura">Cosa misura?</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#funzionamento-fisico-e-formule">Funzionamento fisico e formule</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#utilit-e-applicazioni">Utilità e applicazioni</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#missioni">Missioni</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-synthetic-aperture-radar-sar">2. Synthetic Aperture Radar: SAR</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#21-radar-ad-apertura-sintetica-sar-imaging-a-microonde-ognitempo">2.1 Radar ad apertura sintetica (SAR): imaging a microonde ognitempo</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura-1">Cosa misura?</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#funzionamento-fisico-e-formule-1">Funzionamento fisico e formule</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#utilit-e-applicazioni-1">Utilità e applicazioni</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#missioni-1">Missioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#22-interferometria-sar-insar-la-geodesia-dallo-spazio">2.2 Interferometria SAR (InSAR): la geodesia dallo spazio</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura-2">Cosa misura</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#funzionamento-fisico-e-formule-2">Funzionamento fisico e formule</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#applicazioni">Applicazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#23-radar-altimetria-topografia-degli-oceani-e-dei-ghiacci">2.3. Radar altimetria: topografia degli oceani e dei ghiacci</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura-3">Cosa misura?</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#funzionamento-fisico-e-formule-3">Funzionamento fisico e formule</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#missioni-2">Missioni</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-sensori-passivi-e-ottici">3. Sensori passivi e ottici</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#31-immagini-pancromatiche-risoluzione-geometrica-estrema">3.1 Immagini pancromatiche: risoluzione geometrica estrema</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura-4">Cosa misura</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#funzionamento-fisico">Funzionamento fisico</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#applicazioni-e-pansharpening">Applicazioni e pansharpening</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#missioni-3">Missioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#32-imaging-multispettrale-il-colore-della-terra">3.2. Imaging multispettrale: il colore della terra</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura-5">Cosa misura</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#fisica-e-indici-spettrali">Fisica e indici spettrali</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#applicazioni-e-missioni">Applicazioni e missioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#33-imaging-iperspettrale">3.3 Imaging iperspettrale</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura-6">Cosa misura</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#funzionamento-fisico-e-spectral-mixing">Funzionamento fisico e spectral mixing</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#utilit-e-applicazioni-2">Utilità e applicazioni</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#missioni-4">Missioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#34-infrarosso-termico-tir-misurare-il-calore-del-pianeta">3.4. Infrarosso termico (TIR): misurare il calore del pianeta</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#cosa-misura-7">Cosa misura</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#funzionamento-fisico-e-formule-4">Funzionamento fisico e formule</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missioni-5">Missioni</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-radiometria-a-microonde-passiva-surface-imaging">4. Radiometria a microonde passiva (surface imaging)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#cosa-misura-8">Cosa misura</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#funzionamento-fisico-e-interferometria-sintetica">Funzionamento fisico e interferometria sintetica</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missioni-6">Missioni</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-gravimetria-satellitare-pesare-lacqua-dallo-spazio">5. Gravimetria satellitare: pesare l&#39;acqua dallo spazio</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#cosa-misura-9">Cosa misura</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#funzionamento-fisico-satellite-to-satellite-tracking-sst">Funzionamento fisico: satellite-to-satellite tracking (SST)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missioni-e-applicazioni">Missioni e applicazioni</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-magnetometria-satellitare">6. Magnetometria satellitare</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#cosa-misura-10">Cosa misura</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#funzionamento-fisico-fluxgate-e-scalari">Funzionamento fisico: fluxgate e scalari</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#missioni-7">Missioni</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#7-segnali-di-opportunit-e-cubesat-radar-la-nuova-frontiera">7. Segnali di opportunità e CubeSat radar: la nuova frontiera</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#a-monitoraggio-traffico-ais-e-ads-b-satellitare">A. Monitoraggio traffico: AIS e ADS-B satellitare</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#b-cubesat-radar-raincube">B. CubeSat radar: RainCube</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#c-smart-lnb-pioggia-dalle-tv-satellitari">C. Smart LNB: pioggia dalle TV satellitari</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#tabella-comparativa-sintetica-delle-tecnologie">Tabella comparativa sintetica delle tecnologie</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#conclusione">Conclusione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#infografica-matrice-di-confronto">Infografica: matrice di confronto</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#works-cited">Works cited</a></li>
-        </ul>
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#introduzione">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Introduzione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#1-gnss-sistemi-globali-di-navigazione-satellitare">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">1. GNSS – Sistemi Globali di Navigazione Satellitare</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#11-radio-occultazione-gnss-gnss-ro-sondaggio-atmosferico-di-precisione">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">1.1 Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#principio-fisico-e-formulazione-matematica">
+            <span class="post-toc__number">2.1.1</span>
+            <span class="post-toc__text">Principio fisico e formulazione matematica</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#utilit-e-applicazioni-critiche">
+            <span class="post-toc__number">2.1.2</span>
+            <span class="post-toc__text">Utilità e applicazioni critiche</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#missioni-di-riferimento">
+            <span class="post-toc__number">2.1.3</span>
+            <span class="post-toc__text">Missioni di riferimento</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#12-riflettometria-gnss-gnss-r-il-radar-bistatico-di-opportunit">
+            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__text">1.2. Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura">
+            <span class="post-toc__number">2.2.1</span>
+            <span class="post-toc__text">Cosa misura?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#funzionamento-fisico-e-formule">
+            <span class="post-toc__number">2.2.2</span>
+            <span class="post-toc__text">Funzionamento fisico e formule</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#utilit-e-applicazioni">
+            <span class="post-toc__number">2.2.3</span>
+            <span class="post-toc__text">Utilità e applicazioni</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#missioni">
+            <span class="post-toc__number">2.2.4</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#2-synthetic-aperture-radar-sar">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">2. Synthetic Aperture Radar: SAR</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#21-radar-ad-apertura-sintetica-sar-imaging-a-microonde-ognitempo">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">2.1 Radar ad apertura sintetica (SAR): imaging a microonde ognitempo</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura-1">
+            <span class="post-toc__number">3.1.1</span>
+            <span class="post-toc__text">Cosa misura?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#funzionamento-fisico-e-formule-1">
+            <span class="post-toc__number">3.1.2</span>
+            <span class="post-toc__text">Funzionamento fisico e formule</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#utilit-e-applicazioni-1">
+            <span class="post-toc__number">3.1.3</span>
+            <span class="post-toc__text">Utilità e applicazioni</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#missioni-1">
+            <span class="post-toc__number">3.1.4</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#22-interferometria-sar-insar-la-geodesia-dallo-spazio">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">2.2 Interferometria SAR (InSAR): la geodesia dallo spazio</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura-2">
+            <span class="post-toc__number">3.2.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#funzionamento-fisico-e-formule-2">
+            <span class="post-toc__number">3.2.2</span>
+            <span class="post-toc__text">Funzionamento fisico e formule</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#applicazioni">
+            <span class="post-toc__number">3.2.3</span>
+            <span class="post-toc__text">Applicazioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#23-radar-altimetria-topografia-degli-oceani-e-dei-ghiacci">
+            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__text">2.3. Radar altimetria: topografia degli oceani e dei ghiacci</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura-3">
+            <span class="post-toc__number">3.3.1</span>
+            <span class="post-toc__text">Cosa misura?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#funzionamento-fisico-e-formule-3">
+            <span class="post-toc__number">3.3.2</span>
+            <span class="post-toc__text">Funzionamento fisico e formule</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#missioni-2">
+            <span class="post-toc__number">3.3.3</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#3-sensori-passivi-e-ottici">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">3. Sensori passivi e ottici</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#31-immagini-pancromatiche-risoluzione-geometrica-estrema">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">3.1 Immagini pancromatiche: risoluzione geometrica estrema</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura-4">
+            <span class="post-toc__number">4.1.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#funzionamento-fisico">
+            <span class="post-toc__number">4.1.2</span>
+            <span class="post-toc__text">Funzionamento fisico</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#applicazioni-e-pansharpening">
+            <span class="post-toc__number">4.1.3</span>
+            <span class="post-toc__text">Applicazioni e pansharpening</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#missioni-3">
+            <span class="post-toc__number">4.1.4</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#32-imaging-multispettrale-il-colore-della-terra">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">3.2. Imaging multispettrale: il colore della terra</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura-5">
+            <span class="post-toc__number">4.2.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#fisica-e-indici-spettrali">
+            <span class="post-toc__number">4.2.2</span>
+            <span class="post-toc__text">Fisica e indici spettrali</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#applicazioni-e-missioni">
+            <span class="post-toc__number">4.2.3</span>
+            <span class="post-toc__text">Applicazioni e missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#33-imaging-iperspettrale">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">3.3 Imaging iperspettrale</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura-6">
+            <span class="post-toc__number">4.3.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#funzionamento-fisico-e-spectral-mixing">
+            <span class="post-toc__number">4.3.2</span>
+            <span class="post-toc__text">Funzionamento fisico e spectral mixing</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#utilit-e-applicazioni-2">
+            <span class="post-toc__number">4.3.3</span>
+            <span class="post-toc__text">Utilità e applicazioni</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#missioni-4">
+            <span class="post-toc__number">4.3.4</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#34-infrarosso-termico-tir-misurare-il-calore-del-pianeta">
+            <span class="post-toc__number">4.4</span>
+            <span class="post-toc__text">3.4. Infrarosso termico (TIR): misurare il calore del pianeta</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cosa-misura-7">
+            <span class="post-toc__number">4.4.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#funzionamento-fisico-e-formule-4">
+            <span class="post-toc__number">4.4.2</span>
+            <span class="post-toc__text">Funzionamento fisico e formule</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#missioni-5">
+            <span class="post-toc__number">4.5</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#4-radiometria-a-microonde-passiva-surface-imaging">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">4. Radiometria a microonde passiva (surface imaging)</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#cosa-misura-8">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#funzionamento-fisico-e-interferometria-sintetica">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">Funzionamento fisico e interferometria sintetica</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#missioni-6">
+            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#5-gravimetria-satellitare-pesare-lacqua-dallo-spazio">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">5. Gravimetria satellitare: pesare l&#39;acqua dallo spazio</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#cosa-misura-9">
+            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#funzionamento-fisico-satellite-to-satellite-tracking-sst">
+            <span class="post-toc__number">6.2</span>
+            <span class="post-toc__text">Funzionamento fisico: satellite-to-satellite tracking (SST)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#missioni-e-applicazioni">
+            <span class="post-toc__number">6.3</span>
+            <span class="post-toc__text">Missioni e applicazioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#6-magnetometria-satellitare">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">6. Magnetometria satellitare</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#cosa-misura-10">
+            <span class="post-toc__number">7.1</span>
+            <span class="post-toc__text">Cosa misura</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#funzionamento-fisico-fluxgate-e-scalari">
+            <span class="post-toc__number">7.2</span>
+            <span class="post-toc__text">Funzionamento fisico: fluxgate e scalari</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#missioni-7">
+            <span class="post-toc__number">7.3</span>
+            <span class="post-toc__text">Missioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#7-segnali-di-opportunit-e-cubesat-radar-la-nuova-frontiera">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">7. Segnali di opportunità e CubeSat radar: la nuova frontiera</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#a-monitoraggio-traffico-ais-e-ads-b-satellitare">
+            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__text">A. Monitoraggio traffico: AIS e ADS-B satellitare</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#b-cubesat-radar-raincube">
+            <span class="post-toc__number">8.2</span>
+            <span class="post-toc__text">B. CubeSat radar: RainCube</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#c-smart-lnb-pioggia-dalle-tv-satellitari">
+            <span class="post-toc__number">8.3</span>
+            <span class="post-toc__text">C. Smart LNB: pioggia dalle TV satellitari</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tabella-comparativa-sintetica-delle-tecnologie">
+            <span class="post-toc__number">8.4</span>
+            <span class="post-toc__text">Tabella comparativa sintetica delle tecnologie</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#conclusione">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">Conclusione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#infografica-matrice-di-confronto">
+            <span class="post-toc__number">10</span>
+            <span class="post-toc__text">Infografica: matrice di confronto</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#works-cited">
+            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__text">Works cited</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
       </aside>
         <div class="post-body">
-          <h2 id="introduzione">Introduzione</h2>
+          <details style="background-color:#fff3cd;border:1px solid #ffeeba;border-radius:8px;padding:1rem;">
+<summary><strong>⚠️ Articolo in revisione</strong> (clicca per aprire)</summary>
+
+<p>Questo articolo è ancora in lavorazione e sta subendo una revisione completa. Alcune sezioni potrebbero essere incomplete o cambiare significativamente nelle prossime versioni.</p>
+</details>
+
+<h2 id="introduzione">Introduzione</h2>
 <p>Negli ultimi decenni i satelliti sono diventati una delle infrastrutture più strategiche per comprendere, monitorare e gestire il nostro pianeta. Ogni giorno, centinaia di missioni in orbita raccolgono una quantità impressionante di informazioni: immagini ad altissima risoluzione, dati atmosferici, misurazioni sulle superfici terrestri e marine, segnali di navigazione, profili verticali dell’atmosfera, variazioni del campo gravitazionale e magnetico. Non si tratta più soltanto di “foto dallo spazio”, ma di un ecosistema complesso di tecnologie complementari che, insieme, costruiscono la più completa rappresentazione operativa della Terra mai ottenuta nella storia dell’umanità.</p>
 <p>In questo articolo analizzeremo tutte le principali fonti di dati satellitari, ordinandole dal più noto al meno conosciuto. Per ogni categoria vedremo cosa misura, a cosa serve, quali applicazioni reali abilita, quali sono le missioni più rappresentative e infine come funziona il sensore che la rende possibile. L’obiettivo è offrire una panoramica chiara ma approfondita, utile sia ai professionisti del settore che a chi desidera comprendere meglio le tecnologie che stanno rivoluzionando il modo in cui osserviamo la Terra.</p>
 <p>In questo rapporto analizziamo in dettaglio diciannove categorie distinte di strumentazione satellitare. Per ciascuna, vedremo nel dettaglio il principio fisico di funzionamento, supportato dal formalismo matematico che governa l&#39;interazione tra la radiazione e la materia, ed esamineremo le applicazioni operative che trasformano il dato grezzo in informazione geofisica critica. </p>
@@ -1722,7 +2219,11 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
       const themeToggle = document.querySelector('.theme-toggle');
       const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
       const langBtn = document.querySelector('.lang-btn');
-      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
       const headingEntries = tocLinks
         .map((link) => {
           const id = link.getAttribute('href').slice(1);
@@ -1730,6 +2231,9 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
           return target ? { link, target } : null;
         })
         .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
       const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
@@ -1742,6 +2246,15 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
       function ensureTableOverlay() {
         if (tableOverlay) {
           return;
@@ -1911,6 +2424,47 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
           pre.dataset.copyEnhanced = 'true';
         });
       }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
       const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
@@ -1971,6 +2525,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
       });
       enhanceTables();
       enhanceCodeBlocks();
+      initToc();
       applyTheme(initialTheme);
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {

@@ -317,12 +317,21 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 22px;
-      padding: 1.8rem 1.6rem;
+      padding: 1.5rem 1.6rem 1.8rem;
       box-shadow: var(--shadow-lg);
       position: sticky;
       top: 120px;
       max-height: calc(100vh - 160px);
-      overflow-y: auto;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     .post-toc__title {
       text-transform: uppercase;
@@ -330,7 +339,38 @@
       letter-spacing: 0.18em;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 1.2rem;
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
     }
     .post-toc__list {
       list-style: none;
@@ -338,21 +378,25 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.45rem;
     }
-    .post-toc__item.level-1 {
-      padding-left: 1rem;
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
     }
-    .post-toc__item.level-2 {
-      padding-left: 2rem;
+    .post-toc__item {
+      margin: 0;
     }
     .post-toc__link {
       color: var(--text-secondary);
       font-size: 0.95rem;
-      line-height: 1.4;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
       border-bottom: 1px dashed transparent;
       transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
     }
@@ -364,6 +408,18 @@
     .post-toc__link--active {
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
     }
     .post-body {
       background: var(--bg-card-strong);
@@ -739,6 +795,15 @@
         position: static;
         max-height: none;
         margin-bottom: 2rem;
+        padding: 1.25rem 1.35rem 1.5rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
       }
     }
     @media (max-width: 720px) {
@@ -823,11 +888,357 @@
         </div>
       </section>
       <section class="post-layout">
-        <aside class="post-toc">
-        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
-        <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#cambridge-analytica-cos-successo">Cambridge Analytica: cos&#39;è successo?</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#i-dati-raccolti">I dati raccolti</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#caratteristiche-psicometriche-modello-ocean">Caratteristiche psicometriche (modello OCEAN)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#modelli-predittivi-e-ml-impiegati">Modelli predittivi e ML impiegati</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#canali-di-delivery-e-sperimentazione-ab">Canali di delivery e sperimentazione A/B</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#integrazione-con-dati-esterni">Integrazione con dati esterni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#esiti-e-implicazioni">Esiti e implicazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#i-chatbot-di-oggi-collezionano-dati">I chatbot di oggi collezionano dati?</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#chatbot-e-llm-dati-raccolti-utilizzi-e-confronto-tra-piattaforme-2023-2025">Chatbot e LLM: dati raccolti, utilizzi e confronto tra piattaforme (2023-2025)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#openai---chatgpt">OpenAI - ChatGPT</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#dati-raccolti">Dati raccolti</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#finalit-e-base-legale">Finalità e base legale</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#uso-ai-fini-di-training-modelli">Uso ai fini di training modelli</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#conservazione-dei-dati-retention">Conservazione dei dati (retention)</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#revisione-umana-dei-dati">Revisione umana dei dati</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#gemini---google">Gemini - Google</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#dati-raccolti-1">Dati raccolti</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#finalit-duso">Finalità d&#39;uso:</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#uso-per-training-e-miglioramento-modelli">Uso per training e miglioramento modelli</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#differenze-consumer-vs-enterprise">Differenze consumer vs enterprise</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#revisione-umana-e-sicurezza">Revisione umana e sicurezza</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#controlli-utente-e-impostazioni">Controlli utente e impostazioni</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#claude---anthropic">Claude - Anthropic</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#dati-raccolti-2">Dati raccolti</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#finalit-dichiarate">Finalità dichiarate</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#uso-per-training-modelli---evoluzione-delle-policy">Uso per training modelli - evoluzione delle policy</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#revisione-umana">Revisione umana</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#microsoft---copilot">Microsoft - Copilot</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#dati-raccolti-3">Dati raccolti</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#uso-per-training-dei-modelli">Uso per training dei modelli</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#conservazione-e-controlli-enterprise">Conservazione e controlli enterprise</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#meta---llama">Meta - Llama</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#dati-raccolti-4">Dati raccolti:</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#conservazione-e-protezione">Conservazione e protezione</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#revisione-umana-1">Revisione umana</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#controlli-utente">Controlli utente</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#deepseek-il-primo-chatbot-made-in-china">DeepSeek: il primo chatbot Made in China</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#finalit-duso-1">Finalità d&#39;uso</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#uso-per-training-modelli">Uso per training modelli</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#retention-e-archiviazione">Retention e archiviazione</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#controlli-utente-1">Controlli utente</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#conclsuione">Conclsuione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#confronto-sintetico-tra-piattaforme-llm-principali">Confronto sintetico tra piattaforme LLM principali</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#osservazioni-dalla-tabella">Osservazioni dalla tabella</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#trasparenza-governance-e-protezioni-tendenze-attuali">Trasparenza, governance e protezioni: tendenze attuali</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#controlli-per-lutente-finale">Controlli per l&#39;utente finale</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#strumenti-per-amministratori-e-aziende">Strumenti per amministratori e aziende:</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#audit-e-verifiche-indipendenti">Audit e verifiche indipendenti</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#differenze-geografiche">Differenze geografiche</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#sicurezza-dei-dati">Sicurezza dei dati</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#conclusione">Conclusione</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#bibliografia-annotata">Bibliografia annotata</a></li>
-        </ul>
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#abstract">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Abstract</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#cambridge-analytica-cos-successo">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Cambridge Analytica: cos&#39;è successo?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#i-dati-raccolti">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">I dati raccolti</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#caratteristiche-psicometriche-modello-ocean">
+            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__text">Caratteristiche psicometriche (modello OCEAN)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#modelli-predittivi-e-ml-impiegati">
+            <span class="post-toc__number">2.3</span>
+            <span class="post-toc__text">Modelli predittivi e ML impiegati</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#canali-di-delivery-e-sperimentazione-ab">
+            <span class="post-toc__number">2.4</span>
+            <span class="post-toc__text">Canali di delivery e sperimentazione A/B</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#integrazione-con-dati-esterni">
+            <span class="post-toc__number">2.5</span>
+            <span class="post-toc__text">Integrazione con dati esterni</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#esiti-e-implicazioni">
+            <span class="post-toc__number">2.6</span>
+            <span class="post-toc__text">Esiti e implicazioni</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#i-chatbot-di-oggi-collezionano-dati">
+            <span class="post-toc__number">2.7</span>
+            <span class="post-toc__text">I chatbot di oggi collezionano dati?</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#chatbot-e-llm-dati-raccolti-utilizzi-e-confronto-tra-piattaforme-2023-2025">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Chatbot e LLM: dati raccolti, utilizzi e confronto tra piattaforme (2023-2025)</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#openai---chatgpt">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">OpenAI - ChatGPT</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#dati-raccolti">
+            <span class="post-toc__number">3.1.1</span>
+            <span class="post-toc__text">Dati raccolti</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#finalit-e-base-legale">
+            <span class="post-toc__number">3.1.2</span>
+            <span class="post-toc__text">Finalità e base legale</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#uso-ai-fini-di-training-modelli">
+            <span class="post-toc__number">3.1.3</span>
+            <span class="post-toc__text">Uso ai fini di training modelli</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#conservazione-dei-dati-retention">
+            <span class="post-toc__number">3.1.4</span>
+            <span class="post-toc__text">Conservazione dei dati (retention)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#revisione-umana-dei-dati">
+            <span class="post-toc__number">3.1.5</span>
+            <span class="post-toc__text">Revisione umana dei dati</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#gemini---google">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Gemini - Google</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#dati-raccolti-1">
+            <span class="post-toc__number">3.2.1</span>
+            <span class="post-toc__text">Dati raccolti</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#finalit-duso">
+            <span class="post-toc__number">3.2.2</span>
+            <span class="post-toc__text">Finalità d&#39;uso:</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#uso-per-training-e-miglioramento-modelli">
+            <span class="post-toc__number">3.2.3</span>
+            <span class="post-toc__text">Uso per training e miglioramento modelli</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#differenze-consumer-vs-enterprise">
+            <span class="post-toc__number">3.2.4</span>
+            <span class="post-toc__text">Differenze consumer vs enterprise</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#revisione-umana-e-sicurezza">
+            <span class="post-toc__number">3.2.5</span>
+            <span class="post-toc__text">Revisione umana e sicurezza</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#controlli-utente-e-impostazioni">
+            <span class="post-toc__number">3.2.6</span>
+            <span class="post-toc__text">Controlli utente e impostazioni</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#claude---anthropic">
+            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__text">Claude - Anthropic</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#dati-raccolti-2">
+            <span class="post-toc__number">3.3.1</span>
+            <span class="post-toc__text">Dati raccolti</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#finalit-dichiarate">
+            <span class="post-toc__number">3.3.2</span>
+            <span class="post-toc__text">Finalità dichiarate</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#uso-per-training-modelli---evoluzione-delle-policy">
+            <span class="post-toc__number">3.3.3</span>
+            <span class="post-toc__text">Uso per training modelli - evoluzione delle policy</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#revisione-umana">
+            <span class="post-toc__number">3.3.4</span>
+            <span class="post-toc__text">Revisione umana</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#microsoft---copilot">
+            <span class="post-toc__number">3.4</span>
+            <span class="post-toc__text">Microsoft - Copilot</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#dati-raccolti-3">
+            <span class="post-toc__number">3.4.1</span>
+            <span class="post-toc__text">Dati raccolti</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#uso-per-training-dei-modelli">
+            <span class="post-toc__number">3.4.2</span>
+            <span class="post-toc__text">Uso per training dei modelli</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#conservazione-e-controlli-enterprise">
+            <span class="post-toc__number">3.4.3</span>
+            <span class="post-toc__text">Conservazione e controlli enterprise</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#meta---llama">
+            <span class="post-toc__number">3.5</span>
+            <span class="post-toc__text">Meta - Llama</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#dati-raccolti-4">
+            <span class="post-toc__number">3.5.1</span>
+            <span class="post-toc__text">Dati raccolti:</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#conservazione-e-protezione">
+            <span class="post-toc__number">3.5.2</span>
+            <span class="post-toc__text">Conservazione e protezione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#revisione-umana-1">
+            <span class="post-toc__number">3.5.3</span>
+            <span class="post-toc__text">Revisione umana</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#controlli-utente">
+            <span class="post-toc__number">3.5.4</span>
+            <span class="post-toc__text">Controlli utente</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#deepseek-il-primo-chatbot-made-in-china">
+            <span class="post-toc__number">3.6</span>
+            <span class="post-toc__text">DeepSeek: il primo chatbot Made in China</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#finalit-duso-1">
+            <span class="post-toc__number">3.6.1</span>
+            <span class="post-toc__text">Finalità d&#39;uso</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#uso-per-training-modelli">
+            <span class="post-toc__number">3.6.2</span>
+            <span class="post-toc__text">Uso per training modelli</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#retention-e-archiviazione">
+            <span class="post-toc__number">3.6.3</span>
+            <span class="post-toc__text">Retention e archiviazione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#controlli-utente-1">
+            <span class="post-toc__number">3.6.4</span>
+            <span class="post-toc__text">Controlli utente</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#conclsuione">
+            <span class="post-toc__number">3.6.5</span>
+            <span class="post-toc__text">Conclsuione</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#confronto-sintetico-tra-piattaforme-llm-principali">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Confronto sintetico tra piattaforme LLM principali</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#osservazioni-dalla-tabella">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Osservazioni dalla tabella</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#trasparenza-governance-e-protezioni-tendenze-attuali">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Trasparenza, governance e protezioni: tendenze attuali</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#controlli-per-lutente-finale">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Controlli per l&#39;utente finale</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#strumenti-per-amministratori-e-aziende">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">Strumenti per amministratori e aziende:</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#audit-e-verifiche-indipendenti">
+            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__text">Audit e verifiche indipendenti</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#differenze-geografiche">
+            <span class="post-toc__number">5.4</span>
+            <span class="post-toc__text">Differenze geografiche</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#sicurezza-dei-dati">
+            <span class="post-toc__number">5.5</span>
+            <span class="post-toc__text">Sicurezza dei dati</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#conclusione">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">Conclusione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#bibliografia-annotata">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">Bibliografia annotata</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
       </aside>
         <div class="post-body">
           <h2 id="abstract">Abstract</h2>
@@ -1409,7 +1820,11 @@ I prompt e chat degli utenti servono a <em>trainare</em> i modelli (parte di &qu
       const themeToggle = document.querySelector('.theme-toggle');
       const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
       const langBtn = document.querySelector('.lang-btn');
-      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
       const headingEntries = tocLinks
         .map((link) => {
           const id = link.getAttribute('href').slice(1);
@@ -1417,6 +1832,9 @@ I prompt e chat degli utenti servono a <em>trainare</em> i modelli (parte di &qu
           return target ? { link, target } : null;
         })
         .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
       const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
@@ -1429,6 +1847,15 @@ I prompt e chat degli utenti servono a <em>trainare</em> i modelli (parte di &qu
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
       function ensureTableOverlay() {
         if (tableOverlay) {
           return;
@@ -1598,6 +2025,47 @@ I prompt e chat degli utenti servono a <em>trainare</em> i modelli (parte di &qu
           pre.dataset.copyEnhanced = 'true';
         });
       }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
       const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
@@ -1658,6 +2126,7 @@ I prompt e chat degli utenti servono a <em>trainare</em> i modelli (parte di &qu
       });
       enhanceTables();
       enhanceCodeBlocks();
+      initToc();
       applyTheme(initialTheme);
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {
