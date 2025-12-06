@@ -41,7 +41,7 @@
     "headline": "Che dati registrano i satelliti?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2025-12-05T22:49:55.878Z",
+    "dateModified": "2025-12-06T14:41:22.511Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1123,11 +1123,12 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <hr>
 <h3 id="33-imaging-iperspettrale">3.3 Imaging iperspettrale</h3>
 <p>L&#39;imaging iperspettrale (HSI) estende il concetto multispettrale acquisendo centinaia di bande contigue, permettendo un&#39;analisi chimico-fisica dettagliata di ogni pixel.</p>
+<p>Infatti, le bande strette e contigue dell&#39;HSI permettono di rilevare le feature di assorbimento (picchi e valli stretti nella curva spettrale). Queste feature sono univoche per specifici legami chimici (es. legami O-H nei minerali argillosi, o specifici pigmenti nella vegetazione), permettendo di identificare quale materiale è presente, non solo di distinguerne il colore. La definirei una sorta di spettroscopia da remoto.</p>
 <h4 id="cosa-misura-6">Cosa misura</h4>
 <p>I sensori iperspettrali si spingono oltre quelli multispettrali, acquisendo decine o centinaia di bande strettissime (dell’ordine di 10 nm) contigue, coprendo in dettaglio il continuo spettrale visibile/SWIR: ogni pixel contiene una sorta di &quot;firma spettrale” continua dell’oggetto osservato. Ciò permette di misurare sottili differenze di riflettanza legate alla composizione chimica e fisica dei materiali (vegetazione, minerali, acque).</p>
 <p>Quello che si studia non è altro che un &quot;ipercubo&quot; di dati $(x, y, \lambda)$ con centinaia di canali spettrali stretti (es. $5-10 nm$), coprendo il range VNIR-SWIR ($400-2500 nm$).</p>
 <h4 id="funzionamento-fisico-e-spectral-mixing">Funzionamento fisico e spectral mixing</h4>
-<p>Ogni pixel contiene uno spettro continuo che funge da &quot;impronta digitale&quot; chimica. Il segnale misurato $y$ è spesso modellato come una mistura lineare degli spettri puri dei materiali costituenti (<em>endmembers</em>) $M$ presenti nel pixel, secondo il <em>Linear Mixing Model</em> (LMM) <sup>30</sup>:</p>
+<p>Ogni pixel contiene uno spettro continuo che funge da &quot;impronta digitale&quot; chimica. Il segnale misurato $y$ è spesso modellato come una mistura lineare degli spettri puri dei materiali costituenti (<em>endmembers</em>) $M$ presenti nel pixel, secondo il <em>Linear Mixing</em> (o <em>Mixture</em>) <em>Model</em> (<strong>LMM</strong>) <sup>30</sup>:</p>
 <p>$$y = \sum_{k=1}^{K} a_k m_k + n$$</p>
 <p>Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare materiali sub-pixel o minerali specifici.</p>
 <h4 id="utilit-e-applicazioni-2">Utilità e applicazioni</h4>
@@ -1136,8 +1137,17 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 </li>
 <li><p><strong>Qualità dell&#39;Acqua:</strong> Distinzione tra diverse specie algali e sedimenti.<sup>32</sup></p>
 </li>
-<li><p><strong>CubeSat Intelligenti:</strong> La missione <strong>FSSCat/$\Phi$-Sat-1</strong> ha dimostrato l&#39;uso di AI a bordo per processare dati iperspettrali (HyperScout-2) e scartare immagini nuvolose direttamente in orbita, ottimizzando il downlink.<sup>13</sup></p>
-</li>
+</ul>
+<figure>
+  <img src="../../../Assets/Sea.png" alt="Colori dell'oceano determinati dai costituenti in acqua" title="Colori dell'oceano determinati dai costituenti in acqua">
+  <figcaption>
+    Il colore dell'oceano è una funzione della luce che viene assorbita o diffusa in presenza dei costituenti disciolti o sospesi nell'acqua. <sup>32</sup>
+  </figcaption>
+</figure>
+
+
+<ul>
+<li><strong>CubeSat Intelligenti:</strong> La missione <strong>FSSCat/$\Phi$-Sat-1</strong> ha dimostrato l&#39;uso di AI a bordo per processare dati iperspettrali (HyperScout-2) e scartare immagini nuvolose direttamente in orbita, ottimizzando il downlink.<sup>13</sup></li>
 </ul>
 <h4 id="missioni-4">Missioni</h4>
 <ul>
