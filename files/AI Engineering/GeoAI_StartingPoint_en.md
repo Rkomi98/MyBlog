@@ -1,5 +1,12 @@
 # Main Title
 
+<details class="post-warning">
+<summary><strong>Article under review</strong> (click to expand)</summary>
+
+This article is still being prepared and reviewed. Sections may be incomplete or updated heavily as the draft evolves.
+
+</details>
+
 This is an introductory paragraph of text. It contains **bold text** and *italic text*.
 
 ## Subtitle 1

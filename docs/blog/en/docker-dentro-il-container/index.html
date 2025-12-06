@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Docker Deep Dive: Inside the Container | Mirko Calcaterra</title>
-  <meta name="description" content="Deep dive in Docker Abstract Welcome to the second episode of the &quot;Docker for Developers&quot; series. Since the first article was wellreceived, I&#39;d say we can go deep this time, analyzing Docker&#39;s key concepts in a way that&#39;s accessible to everyone. Let&#39;s try to…">
+  <meta name="description" content="Deep dive in Docker &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to expand)&lt;/summary This article is still being drafted and reviewed. Portions of the text may be incomplete or change significantly as revisions progress. &lt;/d…">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="https://rkomi98.github.io/MyBlog/blog/en/docker-dentro-il-container/">
 
@@ -22,7 +22,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/docker-dentro-il-container/">
   <meta property="og:title" content="Docker Deep Dive: Inside the Container">
-  <meta property="og:description" content="Deep dive in Docker Abstract Welcome to the second episode of the &quot;Docker for Developers&quot; series. Since the first article was wellreceived, I&#39;d say we can go deep this time, analyzing Docker&#39;s key concepts in a way that&#39;s accessible to everyone. Let&#39;s try to…">
+  <meta property="og:description" content="Deep dive in Docker &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to expand)&lt;/summary This article is still being drafted and reviewed. Portions of the text may be incomplete or change significantly as revisions progress. &lt;/d…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2025-10-30T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -31,7 +31,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Docker Deep Dive: Inside the Container">
-  <meta property="twitter:description" content="Deep dive in Docker Abstract Welcome to the second episode of the &quot;Docker for Developers&quot; series. Since the first article was wellreceived, I&#39;d say we can go deep this time, analyzing Docker&#39;s key concepts in a way that&#39;s accessible to everyone. Let&#39;s try to…">
+  <meta property="twitter:description" content="Deep dive in Docker &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to expand)&lt;/summary This article is still being drafted and reviewed. Portions of the text may be incomplete or change significantly as revisions progress. &lt;/d…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -41,7 +41,7 @@
     "headline": "Docker Deep Dive: Inside the Container",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-10-30T00:00:00.000Z",
-    "dateModified": "2025-11-11T09:47:53.692Z",
+    "dateModified": "2025-12-06T17:43:31.019Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -51,7 +51,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Deep dive in Docker Abstract Welcome to the second episode of the &quot;Docker for Developers&quot; series. Since the first article was wellreceived, I&#39;d say we can go deep this time, analyzing Docker&#39;s key concepts in a way that&#39;s accessible to everyone. Let&#39;s try to…"
+    "description": "Deep dive in Docker &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to expand)&lt;/summary This article is still being drafted and reviewed. Portions of the text may be incomplete or change significantly as revisions progress. &lt;/d…"
   }
   </script>
 
@@ -317,12 +317,21 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 22px;
-      padding: 1.8rem 1.6rem;
+      padding: 1.5rem 1.6rem 1.8rem;
       box-shadow: var(--shadow-lg);
       position: sticky;
       top: 120px;
       max-height: calc(100vh - 160px);
-      overflow-y: auto;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     .post-toc__title {
       text-transform: uppercase;
@@ -330,7 +339,38 @@
       letter-spacing: 0.18em;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 1.2rem;
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
     }
     .post-toc__list {
       list-style: none;
@@ -338,21 +378,25 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.45rem;
     }
-    .post-toc__item.level-1 {
-      padding-left: 1rem;
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
     }
-    .post-toc__item.level-2 {
-      padding-left: 2rem;
+    .post-toc__item {
+      margin: 0;
     }
     .post-toc__link {
       color: var(--text-secondary);
       font-size: 0.95rem;
-      line-height: 1.4;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
       border-bottom: 1px dashed transparent;
       transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
     }
@@ -364,6 +408,18 @@
     .post-toc__link--active {
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
     }
     .post-body {
       background: var(--bg-card-strong);
@@ -396,6 +452,44 @@
     }
     .post-body p {
       margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
     }
     .post-body ul,
     .post-body ol {
@@ -739,6 +833,15 @@
         position: static;
         max-height: none;
         margin-bottom: 2rem;
+        padding: 1.25rem 1.35rem 1.5rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
       }
     }
     @media (max-width: 720px) {
@@ -823,14 +926,92 @@
         </div>
       </section>
       <section class="post-layout">
-        <aside class="post-toc">
-        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
-        <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#1-fundamental-concepts">1. Fundamental Concepts</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#2-container-lifecycle">2\. Container Lifecycle</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#from-build-to-execution-behind-docker-run">From build to execution (behind `docker run`):</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#copy-on-write-and-container-filesystems">Copy-on-write and container filesystems</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#3-internal-architecture">3\. Internal Architecture</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#isolation-with-namespaces-and-cgroups-linux-kernel">Isolation with namespaces and cgroups (Linux kernel)</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#4-docker-images-as-layers">4. Docker Images as Layers</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#5-registries-and-distribution">5\. Registries and Distribution</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#6-conceptual-demo-what-happens-with-docker-run-nginx">6\. Conceptual Demo: What Happens with docker run nginx</a></li>
-        </ul>
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#abstract">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Abstract</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#1-fundamental-concepts">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">1. Fundamental Concepts</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#2-container-lifecycle">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">2\. Container Lifecycle</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#from-build-to-execution-behind-docker-run">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">From build to execution (behind `docker run`):</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#copy-on-write-and-container-filesystems">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Copy-on-write and container filesystems</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#3-internal-architecture">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">3\. Internal Architecture</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#isolation-with-namespaces-and-cgroups-linux-kernel">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Isolation with namespaces and cgroups (Linux kernel)</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#4-docker-images-as-layers">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">4. Docker Images as Layers</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#5-registries-and-distribution">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">5\. Registries and Distribution</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#6-conceptual-demo-what-happens-with-docker-run-nginx">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">6\. Conceptual Demo: What Happens with docker run nginx</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
       </aside>
         <div class="post-body">
-          <h2 id="abstract">Abstract</h2>
+          <details class="post-warning">
+<summary><strong>Article under review</strong> (click to expand)</summary>
+
+<p>This article is still being drafted and reviewed. Portions of the text may be incomplete or change significantly as revisions progress.</p>
+</details>
+
+<h2 id="abstract">Abstract</h2>
 <p>Welcome to the second episode of the &quot;Docker for Developers&quot; series. Since the first article was well-received, I&#39;d say we can go deep this time, analyzing Docker&#39;s key concepts in a way that&#39;s accessible to everyone. Let&#39;s try to understand what Docker does conceptually, without yet writing code or configuring anything.</p>
 <h2 id="1-fundamental-concepts">1. Fundamental Concepts</h2>
 <p><img src="../../../Assets/Docker.png" alt="Image"></p>
@@ -999,7 +1180,11 @@ RUN apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update<
       const themeToggle = document.querySelector('.theme-toggle');
       const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
       const langBtn = document.querySelector('.lang-btn');
-      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
       const headingEntries = tocLinks
         .map((link) => {
           const id = link.getAttribute('href').slice(1);
@@ -1007,6 +1192,9 @@ RUN apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update<
           return target ? { link, target } : null;
         })
         .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
       const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
@@ -1019,6 +1207,15 @@ RUN apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update<
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
       function ensureTableOverlay() {
         if (tableOverlay) {
           return;
@@ -1188,6 +1385,47 @@ RUN apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update<
           pre.dataset.copyEnhanced = 'true';
         });
       }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
       const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
@@ -1248,6 +1486,7 @@ RUN apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update<
       });
       enhanceTables();
       enhanceCodeBlocks();
+      initToc();
       applyTheme(initialTheme);
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {

@@ -1,7 +1,13 @@
 # **Technical Compendium of Earth Observation Systems: Physics, Metrology, and Advanced Satellite Applications**
 
-\
+<details class="post-warning">
+<summary><strong>Article under review</strong> (click to expand)</summary>
 
+This article is still being written and actively reviewed. Sections may be incomplete or change substantially in upcoming updates.
+
+</details>
+
+\
 
 
 ## **1. Introduction: The Evolution of Satellite Remote Sensing**

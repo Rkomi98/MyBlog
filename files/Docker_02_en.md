@@ -1,5 +1,12 @@
 # Deep dive in Docker
 
+<details class="post-warning">
+<summary><strong>Article under review</strong> (click to expand)</summary>
+
+This article is still being drafted and reviewed. Portions of the text may be incomplete or change significantly as revisions progress.
+
+</details>
+
 ## Abstract
 Welcome to the second episode of the "Docker for Developers" series. Since the first article was well-received, I'd say we can go deep this time, analyzing Docker's key concepts in a way that's accessible to everyone. Let's try to understand what Docker does conceptually, without yet writing code or configuring anything.
 

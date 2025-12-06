@@ -317,12 +317,21 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 22px;
-      padding: 1.8rem 1.6rem;
+      padding: 1.5rem 1.6rem 1.8rem;
       box-shadow: var(--shadow-lg);
       position: sticky;
       top: 120px;
       max-height: calc(100vh - 160px);
-      overflow-y: auto;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     .post-toc__title {
       text-transform: uppercase;
@@ -330,7 +339,38 @@
       letter-spacing: 0.18em;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 1.2rem;
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
     }
     .post-toc__list {
       list-style: none;
@@ -338,21 +378,25 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.45rem;
     }
-    .post-toc__item.level-1 {
-      padding-left: 1rem;
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
     }
-    .post-toc__item.level-2 {
-      padding-left: 2rem;
+    .post-toc__item {
+      margin: 0;
     }
     .post-toc__link {
       color: var(--text-secondary);
       font-size: 0.95rem;
-      line-height: 1.4;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
       border-bottom: 1px dashed transparent;
       transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
     }
@@ -364,6 +408,18 @@
     .post-toc__link--active {
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
     }
     .post-body {
       background: var(--bg-card-strong);
@@ -396,6 +452,44 @@
     }
     .post-body p {
       margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
     }
     .post-body ul,
     .post-body ol {
@@ -739,6 +833,15 @@
         position: static;
         max-height: none;
         margin-bottom: 2rem;
+        padding: 1.25rem 1.35rem 1.5rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
       }
     }
     @media (max-width: 720px) {
@@ -823,11 +926,325 @@
         </div>
       </section>
       <section class="post-layout">
-        <aside class="post-toc">
-        <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
-        <ul class="post-toc__list">
-          <li class="post-toc__item level-0"><a class="post-toc__link" href="#abstract">Abstract</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#cambridge-analytica-what-happened">Cambridge Analytica: What Happened?</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#data-collected">Data Collected</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#predictive-models-and-ml-employed">Predictive Models and ML Employed</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#delivery-channels-and-ab-experimentation">Delivery Channels and A/B Experimentation</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#integration-with-external-data">Integration with external data</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#outcomes-and-implications">Outcomes and implications</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#do-todays-chatbots-collect-data">Do today&#39;s chatbots collect data?</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#chatbots-and-llms-data-collected-uses-and-platform-comparison-2023-2025">Chatbots and LLMs: data collected, uses, and platform comparison (2023-2025)</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#openai---chatgpt">OpenAI - ChatGPT</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#data-collected-1">Data collected</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#purposes-and-legal-basis">Purposes and legal basis</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#use-for-model-training-purposes">Use for model training purposes</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#data-retention">Data retention</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#human-review-of-data">Human Review of Data</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#gemini---google">Gemini - Google</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#data-collected-2">Data Collected</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#purposes-of-use">Purposes of Use:</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#use-for-model-training-and-improvement">Use for Model Training and Improvement</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#consumer-vs-enterprise-differences">Consumer vs. Enterprise Differences</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#human-review-and-security">Human Review and Security</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#user-controls-and-settings">User Controls and Settings</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#claude---anthropic">Claude - Anthropic</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#data-collected-3">Data Collected</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#declared-purposes">Declared Purposes</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#use-for-model-training---policy-evolution">Use for Model Training - Policy Evolution</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#enterprise-retention-and-controls">Enterprise Retention and Controls</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#meta---llama">Meta - Llama</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#data-collected-4">Data Collected:</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#retention-and-protection">Retention and Protection</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#human-review">Human Review</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#user-controls">User Controls</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#deepseek-the-first-made-in-china-chatbot">DeepSeek: the first Made in China chatbot</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#purposes-of-use-1">Purposes of Use</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#use-for-model-training">Use for Model Training</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#retention-and-storage">Retention and Storage</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#user-controls-1">User Controls</a></li><li class="post-toc__item level-2"><a class="post-toc__link" href="#conclusion">Conclusion</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#synthetic-comparison-of-main-llm-platforms">Synthetic Comparison of Main LLM Platforms</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#observations-from-the-table">Observations from the table</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#transparency-governance-and-protections-current-trends">Transparency, governance, and protections: current trends</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#controls-for-the-end-user">Controls for the end-user</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#tools-for-administrators-and-businesses">Tools for administrators and businesses:</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#audits-and-independent-verifications">Audits and independent verifications</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#geographical-differences">Geographical Differences</a></li><li class="post-toc__item level-1"><a class="post-toc__link" href="#data-security">Data Security</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#conclusion-1">Conclusion</a></li><li class="post-toc__item level-0"><a class="post-toc__link" href="#annotated-bibliography">Annotated Bibliography</a></li>
-        </ul>
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#abstract">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Abstract</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#cambridge-analytica-what-happened">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Cambridge Analytica: What Happened?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#data-collected">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">Data Collected</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#predictive-models-and-ml-employed">
+            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__text">Predictive Models and ML Employed</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#delivery-channels-and-ab-experimentation">
+            <span class="post-toc__number">2.3</span>
+            <span class="post-toc__text">Delivery Channels and A/B Experimentation</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#integration-with-external-data">
+            <span class="post-toc__number">2.4</span>
+            <span class="post-toc__text">Integration with external data</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#outcomes-and-implications">
+            <span class="post-toc__number">2.5</span>
+            <span class="post-toc__text">Outcomes and implications</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#do-todays-chatbots-collect-data">
+            <span class="post-toc__number">2.6</span>
+            <span class="post-toc__text">Do today&#39;s chatbots collect data?</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#chatbots-and-llms-data-collected-uses-and-platform-comparison-2023-2025">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Chatbots and LLMs: data collected, uses, and platform comparison (2023-2025)</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#openai---chatgpt">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">OpenAI - ChatGPT</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#data-collected-1">
+            <span class="post-toc__number">3.1.1</span>
+            <span class="post-toc__text">Data collected</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#purposes-and-legal-basis">
+            <span class="post-toc__number">3.1.2</span>
+            <span class="post-toc__text">Purposes and legal basis</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#use-for-model-training-purposes">
+            <span class="post-toc__number">3.1.3</span>
+            <span class="post-toc__text">Use for model training purposes</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#data-retention">
+            <span class="post-toc__number">3.1.4</span>
+            <span class="post-toc__text">Data retention</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#human-review-of-data">
+            <span class="post-toc__number">3.1.5</span>
+            <span class="post-toc__text">Human Review of Data</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#gemini---google">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Gemini - Google</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#data-collected-2">
+            <span class="post-toc__number">3.2.1</span>
+            <span class="post-toc__text">Data Collected</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#purposes-of-use">
+            <span class="post-toc__number">3.2.2</span>
+            <span class="post-toc__text">Purposes of Use:</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#use-for-model-training-and-improvement">
+            <span class="post-toc__number">3.2.3</span>
+            <span class="post-toc__text">Use for Model Training and Improvement</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#consumer-vs-enterprise-differences">
+            <span class="post-toc__number">3.2.4</span>
+            <span class="post-toc__text">Consumer vs. Enterprise Differences</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#human-review-and-security">
+            <span class="post-toc__number">3.2.5</span>
+            <span class="post-toc__text">Human Review and Security</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#user-controls-and-settings">
+            <span class="post-toc__number">3.2.6</span>
+            <span class="post-toc__text">User Controls and Settings</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#claude---anthropic">
+            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__text">Claude - Anthropic</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#data-collected-3">
+            <span class="post-toc__number">3.3.1</span>
+            <span class="post-toc__text">Data Collected</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#declared-purposes">
+            <span class="post-toc__number">3.3.2</span>
+            <span class="post-toc__text">Declared Purposes</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#use-for-model-training---policy-evolution">
+            <span class="post-toc__number">3.3.3</span>
+            <span class="post-toc__text">Use for Model Training - Policy Evolution</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#enterprise-retention-and-controls">
+            <span class="post-toc__number">3.3.4</span>
+            <span class="post-toc__text">Enterprise Retention and Controls</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#meta---llama">
+            <span class="post-toc__number">3.4</span>
+            <span class="post-toc__text">Meta - Llama</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#data-collected-4">
+            <span class="post-toc__number">3.4.1</span>
+            <span class="post-toc__text">Data Collected:</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#retention-and-protection">
+            <span class="post-toc__number">3.4.2</span>
+            <span class="post-toc__text">Retention and Protection</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#human-review">
+            <span class="post-toc__number">3.4.3</span>
+            <span class="post-toc__text">Human Review</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#user-controls">
+            <span class="post-toc__number">3.4.4</span>
+            <span class="post-toc__text">User Controls</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#deepseek-the-first-made-in-china-chatbot">
+            <span class="post-toc__number">3.5</span>
+            <span class="post-toc__text">DeepSeek: the first Made in China chatbot</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#purposes-of-use-1">
+            <span class="post-toc__number">3.5.1</span>
+            <span class="post-toc__text">Purposes of Use</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#use-for-model-training">
+            <span class="post-toc__number">3.5.2</span>
+            <span class="post-toc__text">Use for Model Training</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#retention-and-storage">
+            <span class="post-toc__number">3.5.3</span>
+            <span class="post-toc__text">Retention and Storage</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#user-controls-1">
+            <span class="post-toc__number">3.5.4</span>
+            <span class="post-toc__text">User Controls</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#conclusion">
+            <span class="post-toc__number">3.5.5</span>
+            <span class="post-toc__text">Conclusion</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#synthetic-comparison-of-main-llm-platforms">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Synthetic Comparison of Main LLM Platforms</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#observations-from-the-table">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Observations from the table</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#transparency-governance-and-protections-current-trends">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Transparency, governance, and protections: current trends</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#controls-for-the-end-user">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Controls for the end-user</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tools-for-administrators-and-businesses">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">Tools for administrators and businesses:</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#audits-and-independent-verifications">
+            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__text">Audits and independent verifications</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#geographical-differences">
+            <span class="post-toc__number">5.4</span>
+            <span class="post-toc__text">Geographical Differences</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#data-security">
+            <span class="post-toc__number">5.5</span>
+            <span class="post-toc__text">Data Security</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#conclusion-1">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">Conclusion</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#annotated-bibliography">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">Annotated Bibliography</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
       </aside>
         <div class="post-body">
           <h2 id="abstract">Abstract</h2>
@@ -1399,7 +1816,11 @@ User prompts and chats serve to <em>train</em> the models (part of &quot;maintai
       const themeToggle = document.querySelector('.theme-toggle');
       const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
       const langBtn = document.querySelector('.lang-btn');
-      const tocLinks = Array.from(document.querySelectorAll('.post-toc__link'));
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
       const headingEntries = tocLinks
         .map((link) => {
           const id = link.getAttribute('href').slice(1);
@@ -1407,6 +1828,9 @@ User prompts and chats serve to <em>train</em> the models (part of &quot;maintai
           return target ? { link, target } : null;
         })
         .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
       const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
@@ -1419,6 +1843,15 @@ User prompts and chats serve to <em>train</em> the models (part of &quot;maintai
       let tableOverlay = null;
       let tableOverlayScroll = null;
       let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
       function ensureTableOverlay() {
         if (tableOverlay) {
           return;
@@ -1588,6 +2021,47 @@ User prompts and chats serve to <em>train</em> the models (part of &quot;maintai
           pre.dataset.copyEnhanced = 'true';
         });
       }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
       const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
@@ -1648,6 +2122,7 @@ User prompts and chats serve to <em>train</em> the models (part of &quot;maintai
       });
       enhanceTables();
       enhanceCodeBlocks();
+      initToc();
       applyTheme(initialTheme);
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {

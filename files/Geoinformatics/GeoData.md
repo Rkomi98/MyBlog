@@ -1,5 +1,12 @@
 # Che dati registrano i satelliti?
 
+<details class="post-warning">
+<summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
+
+Questo articolo è ancora in lavorazione e sta subendo una revisione completa. Alcune sezioni potrebbero essere incomplete o cambiare significativamente nelle prossime versioni.
+
+</details>
+
 ## Introduzione
 
 Negli ultimi decenni i satelliti sono diventati una delle infrastrutture più strategiche per comprendere, monitorare e gestire il nostro pianeta. Ogni giorno, centinaia di missioni in orbita raccolgono una quantità impressionante di informazioni: immagini ad altissima risoluzione, dati atmosferici, misurazioni sulle superfici terrestri e marine, segnali di navigazione, profili verticali dell’atmosfera, variazioni del campo gravitazionale e magnetico. Non si tratta più soltanto di “foto dallo spazio”, ma di un ecosistema complesso di tecnologie complementari che, insieme, costruiscono la più completa rappresentazione operativa della Terra mai ottenuta nella storia dell’umanità.

@@ -1,5 +1,12 @@
 # GeoAI Stack: Una guida per il 2025
 
+<details class="post-warning">
+<summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
+
+Questo articolo è ancora in fase di scrittura e sotto revisione tecnica. Alcuni contenuti potrebbero risultare incompleti oppure essere modificati con breve preavviso.
+
+</details>
+
 Seconda puntata del nostro lungo cammino diventare GeoAI engineer. La scorsa volta abbiamo descritto molto in generale cosa fa un AI engineer e cosa lo differenzia. 
 
 Ora capiamo cosa serve ad un aspirante GeoAI engineer per iniziare, ovvero gli strumenti, i dataset e il setup necessario.
@@ -44,7 +51,6 @@ Come leggevo in [questo paper](https://arxiv.org/html/2502.18470v5#:~:text=On%20
 ![Immagine](../Assets/framework.png)
 
 _Figura 3 – Schema riassuntivo dello stack GeoAI che collega ingestion e analisi geospaziale, modelli CV, componenti RAG/LLM e servizi di deployment orchestrati da agenti._ 
-
 
 ## 2\. Mappa di Strumenti e Risorse (2025)
 

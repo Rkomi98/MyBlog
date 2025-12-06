@@ -1,5 +1,12 @@
 # Deep dive in Docker
 
+<details class="post-warning">
+<summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
+
+Questo articolo è ancora in lavorazione e sotto revisione editoriale. Alcuni paragrafi potrebbero risultare incompleti o cambiare in modo significativo nelle prossime settimane.
+
+</details>
+
 ## Abstract
 Eccoci arrivati al secondo episodio della serie "Docker per sviluppatori". Dato che il primo articolo è stato apprezzato, direi che possiamo andare deep questa volta analizzando i concetti chiave di Docker in modo accessibile a tutti. Cerchiamo di capire cosa fa Docker concettualmente, senza ancora scrivere codice o configurare nulla.
 
