@@ -59,7 +59,7 @@ const ImageIcon = (props = {}) => html`
   </svg>
 `;
 
-const MapIcon = (props = {}) => html`
+const Map = (props = {}) => html`
   <svg ...${iconProps(props)}>
     <path d="M3 6l6-2 6 2 6-2v13l-6 2-6-2-6 2z" />
     <line x1="9" y1="4" x2="9" y2="18" />
@@ -296,7 +296,7 @@ const SpectralSensors = () => {
           </div>
           <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
             <h3 className="text-slate-400 font-mono text-sm mb-4 flex items-center gap-2 uppercase">
-              ${html`<${MapIcon} size=${14} />`}
+              ${html`<${Map} size=${14} />`}
               Simulazione Vista Satellitare
             </h3>
             ${html`<${SatelliteView} mode=${mode} />`}

@@ -467,6 +467,17 @@ Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare mater
 
 - **PACE (NASA):** Lanciata nel 2024, con lo strumento OCI (Ocean Color Instrument) che estende l'iperspettrale agli oceani globali.<sup>32</sup>
 
+> 🎮 **Simulazione spettrale.** Metti a confronto visivamente le modalità pancromatica, multispettrale e iperspettrale e osserva come cambiano risoluzione spaziale, spettro campionato e informazioni tematiche. Puoi aprirla a schermo intero dalla [pagina dedicata](Assets/simulations/spectral/index.html).
+
+<iframe
+  src="../../../Assets/simulations/spectral/index.html"
+  title="Simulazione Sensori Spettrali"
+  loading="lazy"
+  style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
+></iframe>
+
+> Il widget mostra (a sinistra) il campionamento del segnale con le diverse bande e (a destra) la resa visiva sul terreno: il pancromatico punta alla massima risoluzione spaziale, il multispettrale introduce il colore ma perde dettaglio, mentre l'iperspettrale scende di risoluzione per recuperare informazione chimico-fisica (stress vegetativo, materiali, ecc.).
+
 ***
 
 
