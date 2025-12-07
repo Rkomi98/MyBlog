@@ -483,11 +483,11 @@ Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare mater
 
 ### 3.4. Infrarosso termico (TIR): misurare il calore del pianeta
 
-I sensori TIR misurano l'energia emessa dalla Terra, permettendo di inferire la temperatura superficiale.
+I sensori TIR misurano l'energia emessa dalla Terra, permettendo di stimare e studiare la temperatura superficiale.
 
 
 #### Cosa misura
-In base al soggetto misurato esistono:
+In base al soggetto che si vuole misurare esistono:
 
 - **Land Surface Temperature (LST).**
 
