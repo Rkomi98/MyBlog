@@ -41,7 +41,7 @@
     "headline": "Docker: Dentro il Container",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-10-30T00:00:00.000Z",
-    "dateModified": "2025-12-06T17:43:24.819Z",
+    "dateModified": "2025-12-10T17:51:30.515Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1003,11 +1003,25 @@
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#4-immagini-docker-come-strati-layers">
+          <a class="post-toc__link" href="#4-immagini-docker-come-strati-i-layers">
             <span class="post-toc__number">5</span>
-            <span class="post-toc__text">4\. Immagini Docker come strati (layers)</span>
+            <span class="post-toc__text">4\. Immagini Docker come strati: i layers</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#layer-cos-e-come-viene-memorizzato">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Layer: cos&#39;è e come viene memorizzato</span>
           </a>
           
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#come-vengono-memorizzati">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">Come vengono memorizzati?</span>
+          </a>
+          
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#5-registri-e-distribuzione">
             <span class="post-toc__number">6</span>
@@ -1127,8 +1141,9 @@ Un&#39;altra cosa <strong>importante</strong>: un&#39;immagine di per sé è <st
 Quando eseguiamo un container da tale immagine, Docker <a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,%20top%20of%20the%20image%20layers">crea una nuova dir</a> per il layer superiore del container e poi monta un overlay FS: il risultato è una cartella merged che rappresenta la vista unificata di Ubuntu base + modifiche. </p>
 <p><strong>OverlayFS</strong> è molto efficiente in quanto evita duplicazione di dati tra container multipli e rende immediato l&#39;avvio di nuovi container (basta aggiungere un nuovo layer in scrittura sopra i layer esistenti). </p>
 <p>L&#39;uso di un filesystem a strati è un concetto cruciale: è ciò che rende le immagini Docker composte da <strong>layer riutilizzabili</strong> e i container istanze leggere che sfruttano quei layer condivisi.</p>
-<h2 id="4-immagini-docker-come-strati-layers">4. Immagini Docker come strati (layers)</h2>
-<p><strong>Layer: cos&#39;è e come viene memorizzato:</strong> Un&#39;immagine Docker non è un singolo blob monolitico, ma è costituita da una <strong>serie ordinata di strati</strong> impilati. Ogni <em>layer</em> rappresenta un insieme di <strong>modifiche al filesystem</strong> rispetto al layer sottostante<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a>. Ad esempio, immaginiamo di creare un&#39;immagine per una applicazione Python. I layer potrebbero essere così strutturati<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">[28]</a>:</p>
+<h2 id="4-immagini-docker-come-strati-i-layers">4. Immagini Docker come strati: i layers</h2>
+<h3 id="layer-cos-e-come-viene-memorizzato">Layer: cos&#39;è e come viene memorizzato</h3>
+<p>Un&#39;immagine Docker non è un singolo blob monolitico, ma è costituita da una <strong>serie ordinata di strati</strong> impilati. Come ben descritto sul <a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">nella documentazione ufficiale</a>, ogni <em>layer</em> rappresenta un insieme di <strong>modifiche al filesystem</strong> rispetto al layer sottostante. Ad <a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image">esempio</a>, immaginiamo di creare un&#39;immagine per una applicazione Python. I layer potrebbero essere così strutturati:</p>
 <ul>
 <li><strong>Layer 1:</strong> sistema base minimal (es. comandi di base e package manager apt su Ubuntu).</li>
 <li><strong>Layer 2:</strong> installazione dell&#39;interprete Python e di pip.</li>
@@ -1136,7 +1151,23 @@ Quando eseguiamo un container da tale immagine, Docker <a href="https://www.adal
 <li><strong>Layer 4:</strong> installazione dei pacchetti Python specifici dell&#39;app (dipendenze listate in requirements.txt).</li>
 <li><strong>Layer 5:</strong> copia del codice sorgente dell&#39;applicazione nella destinazione prevista.</li>
 </ul>
-<p>Ogni layer aggiunge dunque file o apporta modifiche (installazioni, copie, configurazioni). In termini di Dockerfile, queste corrisponderebbero rispettivamente a istruzioni come FROM ubuntu:22.04, RUN apt-get install python3 pip, COPY requirements.txt ., RUN pip install -r requirements.txt, COPY src/ . e così via. Docker durante il build crea un layer per ciascuna istruzione<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">[2]</a>. <strong>Come vengono memorizzati?</strong> Internamente, Docker salva ciascun layer come un archivio compresso (tipicamente una tarball) e lo identifica con un hash univoco (un digest SHA256). Sul disco del Docker host (es. in /var/lib/docker/overlay2/ per overlay2) ogni layer viene estratto in una directory distinta<a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[29]</a>. I layer sono <strong>immutabili</strong>: una volta creato un layer, non viene più modificato (qualsiasi cambiamento avviene creando un nuovo layer sopra). Questo approccio dei layers immutabili significa anche che se aggiorniamo un&#39;immagine ricostruendola, Docker può riutilizzare i layer precedenti che non sono cambiati e solo rigenerare i nuovi<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a>.</p>
+<pre><code class="hljs language-sml">graph <span class="hljs-type">TD</span>
+    <span class="hljs-type">L1</span>[<span class="hljs-string">&quot;Layer 1\nSistema base minimal\n(es. Ubuntu + apt)&quot;</span>]
+    <span class="hljs-type">L2</span>[<span class="hljs-string">&quot;Layer 2\nInstalla Python + pip&quot;</span>]
+    <span class="hljs-type">L3</span>[<span class="hljs-string">&quot;Layer 3\nAggiunge requirements.txt&quot;</span>]
+    <span class="hljs-type">L4</span>[<span class="hljs-string">&quot;Layer 4\nInstalla dipendenze da requirements.txt&quot;</span>]
+    <span class="hljs-type">L5</span>[<span class="hljs-string">&quot;Layer 5\nCopia il codice dell&#x27;app&quot;</span>]
+
+    <span class="hljs-type">L1</span> --&gt; <span class="hljs-type">L2</span> --&gt; <span class="hljs-type">L3</span> --&gt; <span class="hljs-type">L4</span> --&gt; <span class="hljs-type">L5</span>
+    subgraph <span class="hljs-type">Note</span>
+        direction <span class="hljs-type">TB</span>
+        <span class="hljs-type">C1</span>[<span class="hljs-type">Ogni</span> layer aggiunge/modifica file]
+        <span class="hljs-type">C2</span>[<span class="hljs-type">I</span> layer restano read-only e riusabili]
+        <span class="hljs-type">C3</span>[<span class="hljs-type">Il</span> build procede dall&#x27;OS fino al codice]
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-type">L5</span> -. descrive .-&gt; <span class="hljs-type">Note</span></code></pre><p>Ogni layer aggiunge dunque file o apporta modifiche (installazioni, copie, configurazioni). In termini di Dockerfile, queste corrisponderebbero rispettivamente a istruzioni come <code>FROM ubuntu:22.04</code>, <code>RUN apt-get install python3 pip</code>, <code>COPY requirements.txt .</code>, <code>RUN pip install -r requirements.txt</code>, <code>COPY src/</code> . e così via. Docker durante il build <a href="https://docs.docker.com/get-started/docker-overview/#:~:text=You%20might%20create%20your%20own,compared%20to%20other%20virtualization%20technologies">crea un layer per ciascuna istruzione</a>. </p>
+<h3 id="come-vengono-memorizzati">Come vengono memorizzati?</h3>
+<p>Internamente, Docker salva ciascun layer come un archivio compresso (tipicamente una tarball) e lo identifica con un hash univoco (un digest SHA256). Sul disco del Docker host (es. in /var/lib/docker/overlay2/ per overlay2) ogni layer viene estratto in una directory distinta<a href="https://www.adaltas.com/en/2021/06/03/linux-overlay-filesystem-docker/#:~:text=Docker%20uses%20the%20overlay%20filesystem,top%20of%20the%20image%20layers">[29]</a>. I layer sono <strong>immutabili</strong>: una volta creato un layer, non viene più modificato (qualsiasi cambiamento avviene creando un nuovo layer sopra). Questo approccio dei layers immutabili significa anche che se aggiorniamo un&#39;immagine ricostruendola, Docker può riutilizzare i layer precedenti che non sono cambiati e solo rigenerare i nuovi<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a>.</p>
 <p><strong>Caching e riuso dei layer:</strong> Uno dei vantaggi chiave di avere immagini a strati è la possibilità di <strong>riusare</strong> layer comuni tra immagini diverse e tra build successivi. Ad esempio, se due diverse immagini Docker entrambe partono da ubuntu:22.04, il layer di base di Ubuntu può essere condiviso: Docker lo scarica o costruisce una volta e poi lo riutilizza per tutte le immagini derivate<a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following">[32]</a>. Questo riduce enormemente lo spazio utilizzato e banda di download necessaria, oltre ad accelerare i tempi di build. Durante la creazione di un&#39;immagine tramite Dockerfile, Docker costruisce in ordine le istruzioni e memorizza l&#39;hash del contenuto generato ad ogni passo. Se ricostruiamo la stessa immagine senza modifiche a un certo passo, Docker riconosce che esiste già un layer identico in cache e lo riutilizza senza rieseguire i comandi (vedremo messaggi tipo &quot;Using cache&quot; nel output di docker build). Ad esempio, se il Dockerfile non cambia tra un build e l&#39;altro, Docker riuserà tutti i layer dalla cache, producendo l&#39;immagine quasi istantaneamente. Se modifichiamo solo le ultime istruzioni (es. il codice applicativo), gli strati iniziali rimangono cacheati e Docker ricalcola solo quelli nuovi o modificati<a href="https://docs.docker.com/get-started/docker-overview/#:~:text=with%20a%20simple%20syntax%20for,compared%20to%20other%20virtualization%20technologies">[30]</a><a href="https://docs.docker.com/get-started/docker-overview/#:~:text=it,compared%20to%20other%20virtualization%20technologies">[31]</a>. Oltre al caching locale, il design a layer facilita il <strong>pull incrementale</strong>: quando facciamo docker pull di un&#39;immagine aggiornata, Docker scarica solo i nuovi layer non presenti e salta quelli già scaricati in passato (ad esempio passando da v1 a v2 di un&#39;immagine che differisce solo nell&#39;ultimo layer, Docker scaricherà solo quel layer aggiuntivo). In scenari di distribuzione, questo comporta notevoli risparmi di tempo e larghezza di banda.</p>
 <p><strong>Esempio pratico di layer (Dockerfile):</strong> Prendiamo un Dockerfile semplice per illustrare i layer:</p>
 <p>FROM ubuntu:22.04<br>RUN apt-get update &amp;&amp; apt-get install -y nginx<br>COPY index.html /usr/share/nginx/html/index.html</p>
