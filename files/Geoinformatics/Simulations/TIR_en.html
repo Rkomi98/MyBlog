@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TIR → Radiance → Temperature (Tb) → Tsurf</title>
+  <style>
+    :root{
+      --bg:#0b0f17;
+      --muted:#93a4b8;
+      --text:#e8eef6;
+      --accent:#7dd3fc;
+      --accent2:#a7f3d0;
+      --warn:#fca5a5;
+      --shadow: 0 14px 35px rgba(0,0,0,.35);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{margin:0}
+
+    /* Embed-safe root: prevents blog CSS from breaking contrast */
+    .tirviz-root{
+      font-family: var(--sans);
+      background: radial-gradient(1200px 800px at 20% 0%, #15203a 0%, var(--bg) 55%), var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding: 28px 18px 60px;
+    }
+
+    .wrap{max-width:1100px;margin:0 auto;padding:0}
+
+    header{
+      display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    header h1{font-size:clamp(22px,3vw,34px);letter-spacing:-0.02em;margin:0}
+    header p{margin:0;color:var(--muted);max-width:70ch}
+
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:start}
+    @media (max-width: 960px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .card .hd h2{font-size:16px;margin:0;letter-spacing:-0.01em}
+    .pill{font-size:12px;color:var(--muted);border:1px solid rgba(255,255,255,.14);padding:6px 10px;border-radius:999px}
+    .card .bd{padding:16px 18px}
+
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width: 520px){.controls{grid-template-columns:1fr}}
+
+    .ctrl{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .ctrl label{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted)}
+    .ctrl input[type=range]{width:100%}
+    .ctrl .val{font-family:var(--mono);color:var(--text)}
+
+    .canvasWrap{position:relative}
+    canvas{width:100%;height:auto;display:block;border-radius:16px;border:1px solid rgba(255,255,255,.10);background: rgba(0,0,0,.2)}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:12px}
+    .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+
+    .numbers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    @media (max-width: 520px){.numbers{grid-template-columns:1fr}}
+    .num{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .num .k{font-size:12px;color:var(--muted)}
+    .num .v{font-family:var(--mono);font-size:15px;margin-top:6px}
+
+    .note{color:var(--muted);font-size:13px;margin-top:10px}
+
+    /* Pipeline */
+    .pipelineGrid{display:grid;grid-template-columns:1fr;gap:10px}
+    @media (min-width: 860px){
+      .pipelineGrid{grid-template-columns:1fr 1fr;align-items:start}
+    }
+
+    .pipelineSteps{display:flex;flex-direction:column;gap:10px}
+    .step{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 12px;
+      position:relative;
+      cursor:pointer;
+      user-select:none;
+      transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+    }
+    .step:hover{transform: translateY(-1px)}
+    .step .t{font-weight:600;font-size:13px}
+    .step .s{font-size:12px;color:var(--muted);margin-top:4px}
+    .step.active{border-color: rgba(125, 211, 252, .55); box-shadow: 0 0 0 3px rgba(125, 211, 252, .10) inset;}
+
+    .pipelineDetail{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 140px;
+    }
+    .pipelineDetail .h{font-weight:700;font-size:13px}
+    .pipelineDetail .p{font-size:12px;color:var(--muted);margin-top:6px}
+    .pipelineDetail .eq{font-family:var(--mono);font-size:12px;color:rgba(232,238,246,0.88);margin-top:10px;white-space:pre-wrap}
+
+    /* SVG figure */
+    .viz2{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding:10px;
+    }
+
+    .footer{
+      margin-top:18px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,.18);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tirviz-root a{color:var(--accent)}
+    .tirviz-root code{font-family:var(--mono)}
+  </style>
+</head>
+<body>
+  <div class="tirviz-root">
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>TIR Sensors → Radiance → Temperature</h1>
+          <p>In TIR the source is not the Sun, it is the surface itself. Measuring <b>radiance</b> means measuring the <b>thermal state</b>… but Planck inversion yields a <b>brightness temperature</b> <code>Tb</code> if you ignore emissivity and atmosphere.</p>
+        </div>
+        <div class="pill">Embed‑ready • Vanilla HTML/CSS/JS</div>
+      </header>
+
+      <div class="grid">
+        <!-- Left column: interactive plot -->
+        <section class="card">
+          <div class="hd">
+            <h2>Interactive: from true T to Tb (and correction)</h2>
+            <span class="pill">8–14 µm</span>
+          </div>
+          <div class="bd">
+            <div class="controls">
+              <div class="ctrl">
+                <label>
+                  <span>True temperature <code>Treal</code> (K)</span>
+                  <span class="val" id="TrealVal">300</span>
+                </label>
+                <input id="Treal" type="range" min="240" max="330" step="1" value="300" />
+                <div class="note">Tip: 300K ≈ 27°C</div>
+              </div>
+              <div class="ctrl">
+                <label>
+                  <span>Emissivity <code>ε</code></span>
+                  <span class="val" id="epsVal">0.93</span>
+                </label>
+                <input id="eps" type="range" min="0.85" max="1" step="0.01" value="0.93" />
+                <div class="note">Water ≈ 0.98–0.99 • bare soil ≈ 0.90–0.95</div>
+              </div>
+              <div class="ctrl">
+                <label>
+                  <span>Atmospheric transmissivity <code>τ</code></span>
+                  <span class="val" id="tauVal">0.85</span>
+                </label>
+                <input id="tau" type="range" min="0.60" max="1" step="0.01" value="0.85" />
+                <div class="note">(Conceptual model) τ↓ = more absorption/emission (H₂O)</div>
+              </div>
+              <div class="ctrl">
+                <label>
+                  <span>Atmospheric temperature <code>Tatm</code> (K)</span>
+                  <span class="val" id="TatmVal">280</span>
+                </label>
+                <input id="Tatm" type="range" min="240" max="310" step="1" value="280" />
+                <div class="note">Used for “path radiance” (atmospheric emission)</div>
+              </div>
+            </div>
+
+            <div class="canvasWrap" style="margin-top:14px">
+              <canvas id="plot" width="980" height="520" aria-label="Grafico Planck e punto misurato"></canvas>
+            </div>
+
+            <div class="legend">
+              <span><span class="dot" style="background: var(--accent)"></span>Blackbody at <code>Treal</code> (Planck)</span>
+              <span><span class="dot" style="background: var(--accent2)"></span>Surface radiance <code>ε · Lbb</code></span>
+              <span><span class="dot" style="background: var(--warn)"></span>Radiance at sensor <code>Lsens</code> (with τ + atmosphere)</span>
+            </div>
+
+            <div class="numbers">
+              <div class="num">
+                <div class="k">Radiance at 11 µm (blackbody)</div>
+                <div class="v" id="Lbb11">—</div>
+              </div>
+              <div class="num">
+                <div class="k">Radiance at sensor <code>Lsens</code> at 11 µm</div>
+                <div class="v" id="Lsens11">—</div>
+              </div>
+              <div class="num">
+                <div class="k">Brightness temperature (naïve inversion) <code>Tb</code></div>
+                <div class="v" id="Tb">—</div>
+              </div>
+              <div class="num">
+                <div class="k">Corrected temperature (using model ε and τ) <code>Tsurf</code></div>
+                <div class="v" id="Tsurf">—</div>
+              </div>
+            </div>
+
+            <div class="footer">
+              <b>Note</b>: this demo is intentionally <i>didactic</i>.
+              The atmospheric model is simplified: <code>Lsens = τ·(ε·Lbb(Treal)) + (1−τ)·Lbb(Tatm)</code>.
+              In reality you use atmospheric profiles and/or Split‑Window algorithms with calibrated regressions/coefficients.
+            </div>
+          </div>
+        </section>
+
+        <!-- Right column: visible vs TIR + pipeline -->
+        <aside class="card">
+          <div class="hd">
+            <h2>To understand “why the inversion”</h2>
+            <span class="pill">visible vs TIR</span>
+          </div>
+          <div class="bd">
+            <svg class="viz2" viewBox="0 0 560 280" role="img" aria-label="Visibile vs TIR">
+              <defs>
+                <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="4" result="b" />
+                  <feMerge>
+                    <feMergeNode in="b" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <rect x="10" y="10" width="260" height="260" rx="18" fill="rgba(0,0,0,.18)" stroke="rgba(255,255,255,.10)"/>
+              <rect x="290" y="10" width="260" height="260" rx="18" fill="rgba(0,0,0,.18)" stroke="rgba(255,255,255,.10)"/>
+
+              <text x="28" y="38" fill="#e8eef6" font-size="14" font-weight="700">Visibile (RGB)</text>
+              <text x="28" y="58" fill="#93a4b8" font-size="12">Source: Sun → reflected light</text>
+
+              <circle cx="70" cy="95" r="22" fill="#ffd84d" />
+              <text x="102" y="100" fill="#93a4b8" font-size="12">Sun</text>
+
+              <circle cx="165" cy="175" r="44" fill="#2563eb" opacity="0.95" />
+              <circle cx="150" cy="168" r="14" fill="#22c55e" opacity="0.85" />
+              <circle cx="180" cy="186" r="11" fill="#16a34a" opacity="0.85" />
+              <text x="128" y="235" fill="#93a4b8" font-size="12">Earth</text>
+
+              <path d="M88 110 L140 150" stroke="#ffd84d" stroke-width="6" stroke-linecap="round" />
+              <path d="M182 175 L238 150" stroke="#e8eef6" stroke-width="6" stroke-linecap="round" opacity="0.7" />
+              <text x="196" y="146" fill="#93a4b8" font-size="12">reflected</text>
+
+              <text x="308" y="38" fill="#e8eef6" font-size="14" font-weight="700">TIR (8–14 µm)</text>
+              <text x="308" y="58" fill="#93a4b8" font-size="12">Source: object → emitted energy</text>
+
+              <circle cx="385" cy="175" r="44" fill="#2563eb" opacity="0.95" />
+              <circle cx="370" cy="168" r="14" fill="#22c55e" opacity="0.85" />
+              <circle cx="400" cy="186" r="11" fill="#16a34a" opacity="0.85" />
+
+              <rect x="470" y="92" width="62" height="44" rx="12" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)" />
+              <text x="481" y="112" fill="#e8eef6" font-size="12" font-weight="700">Sensor</text>
+              <text x="488" y="128" fill="#93a4b8" font-size="11">TIR</text>
+
+              <path d="M430 164 C442 152, 454 176, 468 164 C482 152, 494 176, 508 164" stroke="#fb7185" stroke-width="5" fill="none" filter="url(#glow)" />
+              <path d="M430 182 C442 170, 454 194, 468 182 C482 170, 494 194, 508 182" stroke="#fb7185" stroke-width="5" fill="none" opacity="0.8" />
+
+              <text x="308" y="248" fill="#93a4b8" font-size="12">In TIR: measure radiance → estimate temperature</text>
+            </svg>
+
+            <div style="height:12px"></div>
+
+            <div class="hd" style="padding:0;border:none;gap:10px;align-items:flex-start">
+              <h2 style="margin:0;font-size:14px">Pipeline (press Play)</h2>
+              <div class="row" style="margin-left:auto">
+                <button id="play" style="all:unset;cursor:pointer;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18);font-size:13px">▶ Play</button>
+                <button id="stop" style="all:unset;cursor:pointer;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18);font-size:13px">⏹ Stop</button>
+              </div>
+            </div>
+
+            <div class="pipelineGrid" style="margin-top:10px">
+              <div class="pipelineSteps" id="pipelineSteps">
+                <div class="step" data-step="0"><div class="t">TIR photons</div><div class="s">energy emitted by the surface</div></div>
+                <div class="step" data-step="1"><div class="t">Detector</div><div class="s">HgCdTe cryo‑cooled</div></div>
+                <div class="step" data-step="2"><div class="t">Current</div><div class="s">photons → electrons</div></div>
+                <div class="step" data-step="3"><div class="t">DN</div><div class="s">digital number</div></div>
+                <div class="step" data-step="4"><div class="t">Gain & Offset</div><div class="s">radiometric calibration</div></div>
+                <div class="step" data-step="5"><div class="t">Lsens</div><div class="s">radiance at sensor</div></div>
+                <div class="step" data-step="6"><div class="t">Planck inversion</div><div class="s">compute Tb</div></div>
+                <div class="step" data-step="7"><div class="t">Corrections</div><div class="s">ε + atmosphere → Tsurf</div></div>
+              </div>
+
+              <div class="pipelineDetail" id="pipelineDetail" aria-live="polite">
+                <div class="h">Click Play (or a step)</div>
+                <div class="p">Each step will be explained here and why inversion is needed.</div>
+                <div class="eq">Tip: on mobile the panel sits below the list.</div>
+              </div>
+            </div>
+
+            <div class="footer" style="margin-top:14px">
+              <b>Why “brightness temperature”?</b><br/>
+              <span style="color:var(--muted)">Because the inversion assumes <code>ε=1</code> (blackbody). If <code>ε&lt;1</code>, less radiance arrives for the same <code>Treal</code> → the naïve inversion returns a lower <code>Tb</code>.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+<script>
+  'use strict';
+
+  // ------------------------------
+  // Physics: Planck + inversion (brightness temperature)
+  // ------------------------------
+  const H  = 6.62607015e-34;     // J*s
+  const C  = 2.99792458e8;       // m/s
+  const KB = 1.380649e-23;       // J/K
+
+  function planckLambda(lam_m, T){
+    // L_lambda [W sr^-1 m^-3]
+    const a = 2 * H * C * C;
+    const b = (H * C) / (lam_m * KB * T);
+    return a / (Math.pow(lam_m, 5) * (Math.exp(b) - 1));
+  }
+
+  function invertPlanckLambda(L, lam_m){
+    const num = H * C;
+    const den = KB * lam_m * Math.log((2 * H * C * C) / (Math.pow(lam_m, 5) * L) + 1);
+    return num / den;
+  }
+
+  function fmtW(x){
+    const p = x.toExponential(3);
+    return p.replace('e', '×10^');
+  }
+
+  // ------------------------------
+  // Minimal self-tests (console)
+  // ------------------------------
+  function runSelfTests(){
+    const approx = (a,b,tol)=>Math.abs(a-b) <= tol;
+
+    // Test 1: inversion(Planck(T)) ≈ T at 11µm
+    {
+      const lam = 11e-6;
+      const T = 300;
+      const L = planckLambda(lam, T);
+      const Tb = invertPlanckLambda(L, lam);
+      console.assert(approx(Tb, T, 1e-6), `Test1 failed: Tb=${Tb} vs T=${T}`);
+    }
+
+    // Test 2: forward + reverse simple atmosphere returns ~T
+    {
+      const lam = 11e-6;
+      const Treal = 300;
+      const Tatm = 280;
+      const eps = 0.93;
+      const tau = 0.85;
+      const Lbb = planckLambda(lam, Treal);
+      const Latm = planckLambda(lam, Tatm);
+      const Lsens = tau * (eps * Lbb) + (1 - tau) * Latm;
+
+      const Lsurf_est = (Lsens - (1 - tau) * Latm) / tau;
+      const Lbb_est = Lsurf_est / eps;
+      const Tsurf = invertPlanckLambda(Lbb_est, lam);
+
+      console.assert(approx(Tsurf, Treal, 1e-6), `Test2 failed: Tsurf=${Tsurf} vs Treal=${Treal}`);
+    }
+  }
+
+  // ------------------------------
+  // UI wiring
+  // ------------------------------
+  const el = (id)=>document.getElementById(id);
+  const sliders = {
+    Treal: el('Treal'),
+    eps: el('eps'),
+    tau: el('tau'),
+    Tatm: el('Tatm'),
+  };
+  const outputs = {
+    TrealVal: el('TrealVal'),
+    epsVal: el('epsVal'),
+    tauVal: el('tauVal'),
+    TatmVal: el('TatmVal'),
+    Lbb11: el('Lbb11'),
+    Lsens11: el('Lsens11'),
+    Tb: el('Tb'),
+    Tsurf: el('Tsurf'),
+  };
+
+  // ------------------------------
+  // Pipeline animation + detail panel
+  // ------------------------------
+  const steps = Array.from(document.querySelectorAll('.step[data-step]'));
+  const detail = document.getElementById('pipelineDetail');
+
+  const PIPE = [
+    {
+      h: 'TIR photons',
+      p: 'The surface (T > 0 K) emits thermal radiation. In TIR the source is the object, not the Sun.',
+      eq: 'Idea: measure Lλ ⇒ thermal state of the surface.'
+    },
+    {
+      h: 'Detector (HgCdTe)',
+      p: 'An infrared photodiode, often HgCdTe, often cooled to reduce noise.',
+      eq: 'IR photons → electrons (cooling → less noise)'
+    },
+    {
+      h: 'Electrical current',
+      p: 'Photons generate charge carriers → a current proportional to incoming flux/radiance.',
+      eq: 'photons → e⁻ → I(t)'
+    },
+    {
+      h: 'DN (Digital Number)',
+      p: 'L’elettronica converte il segnale in un digital number (DN). È ancora “strumentale”, non fisico.',
+      eq: 'ADC: analog signal → DN'
+    },
+    {
+      h: 'Gain & Offset',
+      p: 'Radiometric calibration: DN is converted to radiance at sensor via calibration parameters.',
+      eq: 'Lsens = Gain · DN + Offset'
+    },
+    {
+      h: 'Radiance at sensor (Lsens)',
+      p: 'Radiance seen by the sensor: includes surface emissivity + atmospheric contributions (absorption/emission).',
+      eq: 'Didactic example: Lsens = τ·(ε·Lbb) + (1−τ)·Latm'
+    },
+    {
+      h: 'Inversione di Planck → Tb',
+      p: 'The sensor does not “know” temperature. We invert Planck: which blackbody T produces the measured L?',
+      eq: 'Tb = hc / [kB·λ·ln( (2hc²)/(λ⁵Lλ) + 1 )]'
+    },
+    {
+      h: 'Corrections → Tsurf',
+      p: 'Tb assumes ε=1 (blackbody). To get true T we must correct for emissivity and atmosphere (e.g., split‑window).',
+      eq: 'Tsurf = f(Tb, ε, atmosphere)'
+    }
+  ];
+
+  let timer = null;
+
+  function clearActive(){
+    steps.forEach(s=>s.classList.remove('active'));
+  }
+
+  function setDetail(i){
+    const d = PIPE[i] || PIPE[0];
+    detail.innerHTML = `
+      <div class="h">${d.h}</div>
+      <div class="p">${d.p}</div>
+      <div class="eq">${d.eq}</div>
+    `;
+  }
+
+  function activate(i){
+    clearActive();
+    const s = document.querySelector(`.step[data-step="${i}"]`);
+    if(s) s.classList.add('active');
+    setDetail(i);
+  }
+
+  steps.forEach(s=>{
+    s.addEventListener('click', ()=>{
+      const i = Number(s.getAttribute('data-step'));
+      if(timer){
+        clearInterval(timer);
+        timer = null;
+      }
+      activate(i);
+    });
+  });
+
+  el('play').addEventListener('click', ()=>{
+    if(timer) return;
+    let i = 0;
+    activate(i);
+    timer = setInterval(()=>{
+      i = (i + 1) % PIPE.length;
+      activate(i);
+    }, 850);
+  });
+
+  el('stop').addEventListener('click', ()=>{
+    if(timer){
+      clearInterval(timer);
+      timer = null;
+    }
+    clearActive();
+  });
+
+  // ------------------------------
+  // Plot
+  // ------------------------------
+  const canvas = el('plot');
+  const ctx = canvas.getContext('2d');
+
+  function draw(){
+    const Treal = Number(sliders.Treal.value);
+    const eps   = Number(sliders.eps.value);
+    const tau   = Number(sliders.tau.value);
+    const Tatm  = Number(sliders.Tatm.value);
+
+    outputs.TrealVal.textContent = String(Treal);
+    outputs.epsVal.textContent   = eps.toFixed(2);
+    outputs.tauVal.textContent   = tau.toFixed(2);
+    outputs.TatmVal.textContent  = String(Tatm);
+
+    const lamMinUm = 8.0, lamMaxUm = 14.0;
+    const N = 420;
+    const lamUm = new Array(N);
+    const Lbb = new Array(N);
+    const Lsurf = new Array(N);
+    const Lsens = new Array(N);
+
+    let Lmax = 0;
+    for(let i=0;i<N;i++){
+      const u = i/(N-1);
+      const lam = lamMinUm + u*(lamMaxUm - lamMinUm);
+      const lm = lam*1e-6;
+      const L = planckLambda(lm, Treal);
+      const Latm = planckLambda(lm, Tatm);
+      const L_surf = eps * L;
+      const L_sens = tau * L_surf + (1 - tau) * Latm;
+
+      lamUm[i]=lam;
+      Lbb[i]=L;
+      Lsurf[i]=L_surf;
+      Lsens[i]=L_sens;
+
+      Lmax = Math.max(Lmax, L, L_surf, L_sens);
+    }
+
+    // point at 11 µm
+    const lamMeas = 11.0;
+    const lamMeasM = lamMeas * 1e-6;
+    const Lbb11 = planckLambda(lamMeasM, Treal);
+    const Latm11 = planckLambda(lamMeasM, Tatm);
+    const Lsens11 = tau * (eps * Lbb11) + (1 - tau) * Latm11;
+
+    // brightness temperature (naive)
+    const Tb = invertPlanckLambda(Math.max(Lsens11, 1e-30), lamMeasM);
+
+    // corrected (invert our didactic atmosphere)
+    const Lsurf_est = (Lsens11 - (1 - tau) * Latm11) / Math.max(tau, 1e-6);
+    const Lbb_est = Lsurf_est / Math.max(eps, 1e-6);
+    const Tsurf = invertPlanckLambda(Math.max(Lbb_est, 1e-30), lamMeasM);
+
+    outputs.Lbb11.textContent = fmtW(Lbb11) + " W·sr⁻¹·m⁻³";
+    outputs.Lsens11.textContent = fmtW(Lsens11) + " W·sr⁻¹·m⁻³";
+    outputs.Tb.textContent = Tb.toFixed(2) + " K";
+    outputs.Tsurf.textContent = Tsurf.toFixed(2) + " K";
+
+    const W = canvas.width, Hh = canvas.height;
+    ctx.clearRect(0,0,W,Hh);
+
+    const m = {l:70, r:18, t:18, b:54};
+    const pw = W - m.l - m.r;
+    const ph = Hh - m.t - m.b;
+
+    // grid
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 1;
+    for(let g=0; g<=5; g++){
+      const y = m.t + ph * (g/5);
+      ctx.beginPath(); ctx.moveTo(m.l, y); ctx.lineTo(W-m.r, y); ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(m.l, m.t+ph);
+    ctx.lineTo(W-m.r, m.t+ph);
+    ctx.stroke();
+
+    // labels
+    ctx.fillStyle = 'rgba(232,238,246,0.85)';
+    ctx.font = '12px ' + getComputedStyle(document.documentElement).getPropertyValue('--mono');
+    ctx.fillText('λ (µm)', W-70, Hh-18);
+    ctx.save();
+    ctx.translate(18, m.t+ph/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText('Lλ (normalizzata)', 0, 0);
+    ctx.restore();
+
+    // ticks
+    for(let x=8; x<=14; x++){
+      const px = m.l + (x-lamMinUm)/(lamMaxUm-lamMinUm) * pw;
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.fillText(String(x), px-4, Hh-30);
+      ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+      ctx.beginPath(); ctx.moveTo(px, m.t+ph); ctx.lineTo(px, m.t+ph+6); ctx.stroke();
+    }
+    ctx.restore();
+
+    const X = (lam)=> m.l + (lam-lamMinUm)/(lamMaxUm-lamMinUm) * pw;
+    const Y = (L)=> m.t + (1 - (L/Lmax)) * ph;
+
+    function drawCurve(arr, stroke, width, alpha){
+      ctx.save();
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = width;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      for(let i=0;i<N;i++){
+        const x = X(lamUm[i]);
+        const y = Y(arr[i]);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    const css = getComputedStyle(document.documentElement);
+    const accent  = css.getPropertyValue('--accent').trim();
+    const accent2 = css.getPropertyValue('--accent2').trim();
+    const warn    = css.getPropertyValue('--warn').trim();
+
+    drawCurve(Lbb,   accent,  3.5, 0.90);
+    drawCurve(Lsurf, accent2, 3.0, 0.85);
+    drawCurve(Lsens, warn,    3.2, 0.90);
+
+    // vertical @ 11µm
+    const x11 = X(lamMeas);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.setLineDash([6,6]);
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x11, m.t); ctx.lineTo(x11, m.t+ph); ctx.stroke();
+    ctx.restore();
+
+    // measured point
+    const y11 = Y(Lsens11);
+    ctx.save();
+    ctx.fillStyle = warn;
+    ctx.beginPath(); ctx.arc(x11, y11, 6, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 0.85;
+    ctx.fillStyle = 'rgba(232,238,246,0.85)';
+    ctx.font = '12px ' + getComputedStyle(document.documentElement).getPropertyValue('--mono');
+    ctx.fillText('measurement @ 11µm', x11+10, y11-10);
+    ctx.restore();
+
+    // callout
+    const boxW = 310, boxH = 78;
+    const bx = W - boxW - 18;
+    const by = 22;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, bx, by, boxW, boxH, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(232,238,246,0.92)';
+    ctx.font = '600 13px ' + getComputedStyle(document.documentElement).getPropertyValue('--sans');
+    ctx.fillText('Planck inversion (naïve)', bx+14, by+24);
+
+    ctx.font = '12px ' + getComputedStyle(document.documentElement).getPropertyValue('--mono');
+    ctx.fillStyle = 'rgba(232,238,246,0.86)';
+    ctx.fillText(`Treal = ${Treal.toFixed(0)} K`, bx+14, by+46);
+    ctx.fillText(`Tb   = ${Tb.toFixed(2)} K`, bx+14, by+64);
+
+    const mismatch = Tb - Treal;
+    ctx.fillStyle = mismatch < -0.2 ? 'rgba(252,165,165,0.95)' : 'rgba(167,243,208,0.92)';
+    ctx.fillText(`Δ = ${mismatch.toFixed(2)} K`, bx+170, by+64);
+
+    ctx.restore();
+
+    function roundRect(ctx, x, y, w, h, r){
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y, x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x, y+h, r);
+      ctx.arcTo(x, y+h, x, y, r);
+      ctx.arcTo(x, y, x+w, y, r);
+      ctx.closePath();
+    }
+  }
+
+  // init
+  runSelfTests();
+  Object.values(sliders).forEach(s=>s.addEventListener('input', draw));
+  draw();
+</script>
+</body>
+</html>

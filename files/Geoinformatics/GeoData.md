@@ -503,8 +503,8 @@ Prima di spiegare il funzionamento fisico e soprattutto le formule, penso sia im
   - Nel visibile (es. Sentinel-2 bande RGB) il sensore misura la luce solare riflessa. Qui la temperatura dell'oggetto non c'entra quasi nulla con la quantità di luce che arriva al sensore.
 
   - Nell'Infrarosso Termico (TIR) la sorgente di energia non è il Sole, ma l'oggetto stesso. Ogni corpo con temperatura sopra lo zero assoluto emette radiazione elettromagnetica per agitazione termica.
-
-        Quindi: Nel TIR, misurare l'energia (Radianza) equivale a misurare lo stato termico dell'oggetto.
+  
+  > Quindi: Nel TIR, misurare l'energia (Radianza) equivale a misurare lo stato termico dell'oggetto.
 
 La fisica ci dice (Legge di Planck) che esiste una relazione rigida tra la Temperatura $T$ di un corpo nero e la Radianza $L_\lambda$ che esso emette a una specifica lunghezza d'onda  $\lambda$.
 
@@ -544,26 +544,46 @@ Tra le missioni che secondo me ha senso menzionare sicuramente ci sono:
 
 ***
 
+> 🎮 **Simulazione TIR interattiva.** Ripercorri la pipeline completa (fotoni → DN → radianza → inversione di Planck) e osserva come emissività e atmosfera spostano la temperatura di brillanza rispetto alla temperatura reale.
+
+<iframe
+  src="../../../Assets/simulations/tir/index.html"
+  title="Simulazione TIR: radianza e temperatura"
+  loading="lazy"
+  style="width: 100%; min-height: 960px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
+></iframe>
+
 
 ## 4. Radiometria a microonde passiva (surface imaging)
 
-Sensori che osservano l'emissione naturale a microonde della superficie terrestre a basse frequenze (Banda L, C, X).
-
+Ogni materiale emette radiazione termica in base alla sua temperatura fisica e alla sua emissività: i radiometri registrano la temperatura di brillanza $T_B$ in determinate bande spettrali a microonde, la quale è proporzionale (per approssimazione di Rayleigh-Jeans) all’emissione termica dell’oggetto. 
 
 ### Cosa misura
 
-- **Umidità del Suolo (Soil Moisture):** La costante dielettrica dell'acqua è molto alta (\~80) rispetto al suolo secco (\~4), influenzando drasticamente l'emissività.
+I radiometri a microonde sono sensori passivi che misurano la **brillanza elettromagnetica naturale** emessa dalla Terra alle lunghezze d’onda millimetriche-centimetriche (0,3–30 GHz tipicamente).
 
-- **Salinità Oceanica (SSS):** In banda L (1.4 GHz), l'emissività dipende dalla salinità.
+Atmosfera, suolo, vegetazione, oceani e ghiaccio hanno emissività differenti alle microonde, per cui dalla misura di $T_B$ su diverse frequenze e polarizzazioni si inferiscono parametri geofisici. 
 
+Ad esempio, l’acqua liquida ha bassa emissività in banda microwaves, quindi l’oceano freddo appare “scuro” (basso $T_B$) rispetto a terra; il contrasto tra polarizzazioni $H$ e $V$ su un suolo varia con l’umidità (suolo bagnato = maggiore emissività e minore differenza). I radiometri multispettrali a microonde tipicamente misurano a frequenze come 6.9 GHz, 10 GHz, 18 GHz, 23 GHz, 36 GHz, 89 GHz (alcuni fino a 166 GHz), spesso con due polarizzazioni ($H$ e $V$) per ciascuna.
+
+Frequenze basse ($L-$band ~1.4 GHz) penetrano più in profondità nel suolo, utili per umidità; frequenze alte ($K/Ka-$band) son più sensibili a vapore e pioggia. Nelle bande attorno a righe di assorbimento atmosferico (es. 22 GHz vapore acqueo, 60 GHz ossigeno) si può dedurre la temperatura e il contenuto di gas per strati atmosferici (sondaggio a microonde). 
+
+
+
+<figure>
+  <img src="../../../Assets/Passive.png" alt="Schema di radiometria passiva in microonde" title="Schema di radiometria passiva in microonde">
+  <figcaption>
+    Sensore passivo in banda microonde: misura l'emissione naturale, modulata da emissività, temperatura e atmosfera.
+  </figcaption>
+</figure>
 
 ### Funzionamento fisico e interferometria sintetica
 
-Nelle microonde vale l'approssimazione di Rayleigh-Jeans ($h\nu \ll k\_B T$), quindi la radianza è proporzionale alla temperatura fisica:
+Nelle microonde vale l'approssimazione di Rayleigh-Jeans ($h\nu \ll k_B T$), quindi la radianza è proporzionale alla temperatura fisica:
 
-$$T\_b \approx \epsilon \cdot T\_{phys}$$
+$$T_b \approx \epsilon \cdot T_{phys}$$
 
-La missione **SMOS** (ESA) ha introdotto una tecnologia rivoluzionaria: il radiometro a sintesi d'apertura interferometrica (MIRAS). Invece di una grande antenna parabolica rotante (come in SMAP), usa un array statico di 69 antenne a forma di Y. L'immagine di temperatura di brillanza è ricostruita matematicamente dalla trasformata di Fourier inversa delle funzioni di visibilità misurate tra coppie di antenne.<sup>37</sup>
+La missione **SMOS** (ESA) ha introdotto una tecnologia rivoluzionaria: il radiometro a sintesi d'apertura interferometrica (MIRAS). Invece di una grande antenna parabolica rotante (come in SMAP), usa un array statico di 69 ricevitori LICEF (Lightweight Cost-Effective Front-end) a forma di Y. L'immagine di temperatura di brillanza è ricostruita matematicamente dalla trasformata di Fourier inversa delle funzioni di visibilità misurate tra coppie di antenne.<sup>37</sup>
 
 
 ### Missioni
@@ -913,7 +933,7 @@ L'analisi di queste diciannove categorie rivela un sistema di osservazione della
 
 36. Passive Microwave, <https://topex.ucsd.edu/rs/Passive_Microwave.pdf>
 
-37. SMOS - ESA Earth Online - European Space Agency, <https://earth.esa.int/eogateway/missions/smos>
+37. MIRAS - ESA Earth Online - European Space Agency, <https://earth.esa.int/eogateway/instruments/miras>
 
 38. AMSR2 Overview NESDIS Operational Soil Moisture Products - Office of Satellite and Product Operations - NOAA OSPO, <https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html>
 
