@@ -1,0 +1,111 @@
+<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  
+            <!-- DEFINITIONS -->
+            <defs>
+              <!-- Background Gradient -->
+              <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#0b1224;stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:#101a36;stop-opacity:1"></stop>
+              </linearGradient>
+          
+              <!-- Cyan Stroke Gradient -->
+              <linearGradient id="cyanStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1"></stop>
+              </linearGradient>
+
+              <!-- Pyramid Glow Gradient (Background Triangle) -->
+              <linearGradient id="pyramidGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                 <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:0.1"></stop>
+                 <stop offset="100%" style="stop-color:#38bdf8;stop-opacity:0.0"></stop>
+              </linearGradient>
+
+              <!-- Drop Shadow -->
+              <filter id="boxShadow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.5"></feDropShadow>
+              </filter>
+              
+              <!-- Connection Arrow (Upward) -->
+              <marker id="arrowUp" markerWidth="10" markerHeight="10" refX="5" refY="2.5" orient="auto">
+                <path d="M0,5 L5,0 L10,5" fill="none" stroke="#38bdf8" stroke-width="1.5"></path>
+              </marker>
+            </defs>
+          
+            <!-- BACKGROUND -->
+            <rect width="1000" height="800" rx="28" fill="url(#bgGrad)"></rect>
+            
+            <!-- BACKGROUND TRIANGLE (Visual Guide) -->
+            <path d="M500,120 L850,700 L150,700 Z" fill="url(#pyramidGrad)"></path>
+
+            <!-- TITLE SECTION -->
+            <text x="500" y="60" text-anchor="middle" fill="#e2e8f0" font-family="'Segoe UI', sans-serif" font-size="32" font-weight="600" letter-spacing="1">DOCKER BUILD PYRAMID</text>
+            <text x="500" y="90" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', sans-serif" font-size="16">Gerarchia dei layer: dalla base al codice sorgente</text>
+          
+            <!-- === PYRAMID STACK (Centered at x=500) === -->
+            <!-- Heights are constant: 90px. Gap: 20px. -->
+            
+            <!-- LAYER 5 (TOP) -->
+            <!-- Width: 300px -->
+            <g transform="translate(350, 150)">
+                <rect width="300" height="90" rx="16" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                <!-- Centered Text (x=150) -->
+                <text x="150" y="35" text-anchor="middle" fill="#f8fafc" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600">Layer 5</text>
+                <text x="150" y="60" text-anchor="middle" fill="#cbd5f5" font-family="'Segoe UI', sans-serif" font-size="14">Sorgente App</text>
+                <text x="150" y="78" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', sans-serif" font-size="12">COPY . .</text>
+            </g>
+
+            <!-- LAYER 4 -->
+            <!-- Width: 400px (+100px) -->
+            <g transform="translate(300, 260)">
+                <rect width="400" height="90" rx="16" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                <text x="200" y="35" text-anchor="middle" fill="#f8fafc" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600">Layer 4</text>
+                <text x="200" y="60" text-anchor="middle" fill="#cbd5f5" font-family="'Segoe UI', sans-serif" font-size="14">Dipendenze Specifiche</text>
+                <text x="200" y="78" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', sans-serif" font-size="12">pip install -r requirements.txt</text>
+                
+                <!-- Connector to upper layer -->
+                <line x1="200" y1="0" x2="200" y2="-20" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"></line>
+            </g>
+
+            <!-- LAYER 3 -->
+            <!-- Width: 500px (+100px) -->
+            <g transform="translate(250, 370)">
+                <rect width="500" height="90" rx="16" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                <text x="250" y="35" text-anchor="middle" fill="#f8fafc" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600">Layer 3</text>
+                <text x="250" y="60" text-anchor="middle" fill="#cbd5f5" font-family="'Segoe UI', sans-serif" font-size="14">Configurazione Dipendenze</text>
+                <text x="250" y="78" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', sans-serif" font-size="12">COPY requirements.txt</text>
+
+                <!-- Connector -->
+                <line x1="250" y1="0" x2="250" y2="-20" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"></line>
+            </g>
+
+            <!-- LAYER 2 -->
+            <!-- Width: 600px (+100px) -->
+            <g transform="translate(200, 480)">
+                <rect width="600" height="90" rx="16" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                <text x="300" y="35" text-anchor="middle" fill="#f8fafc" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600">Layer 2</text>
+                <text x="300" y="60" text-anchor="middle" fill="#cbd5f5" font-family="'Segoe UI', sans-serif" font-size="14">Runtime Environment</text>
+                <text x="300" y="78" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', sans-serif" font-size="12">Python Interpreter &amp; Pip</text>
+
+                <!-- Connector -->
+                <line x1="300" y1="0" x2="300" y2="-20" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"></line>
+            </g>
+
+            <!-- LAYER 1 (BASE) -->
+            <!-- Width: 700px (+100px) -->
+            <g transform="translate(150, 590)">
+                <rect width="700" height="90" rx="16" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                <text x="350" y="35" text-anchor="middle" fill="#f8fafc" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600">Layer 1</text>
+                <text x="350" y="60" text-anchor="middle" fill="#cbd5f5" font-family="'Segoe UI', sans-serif" font-size="14">Base System Image</text>
+                <text x="350" y="78" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', sans-serif" font-size="12">Ubuntu / apt package manager</text>
+
+                <!-- Connector -->
+                <line x1="350" y1="0" x2="350" y2="-20" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"></line>
+            </g>
+            
+            <!-- Side Labels (Optional indicators for frequency of change) -->
+            <text x="900" y="635" text-anchor="middle" fill="#94a3b8" font-size="12" writing-mode="tb" letter-spacing="2">STABLE</text>
+            <text x="900" y="195" text-anchor="middle" fill="#38bdf8" font-size="12" writing-mode="tb" letter-spacing="2">VOLATILE</text>
+            <line x1="880" y1="650" x2="880" y2="180" stroke="url(#cyanStroke)" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"></line>
+            <path d="M875,185 L880,175 L885,185" fill="#38bdf8" opacity="0.5"></path>
+
+        </svg>

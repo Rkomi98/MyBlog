@@ -41,7 +41,7 @@
     "headline": "Che dati registrano i satelliti?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2025-12-07T11:25:52.362Z",
+    "dateModified": "2025-12-12T15:02:27.108Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1214,6 +1214,12 @@
             <span class="post-toc__text">Funzionamento fisico e formule</span>
           </a>
           
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#perch-si-chiama-temperatura-di-brillanza-e-non-temperatura-reale">
+            <span class="post-toc__number">4.4.3</span>
+            <span class="post-toc__text">Perché si chiama &quot;Temperatura di Brillanza&quot; e non &quot;Temperatura Reale&quot;?</span>
+          </a>
+          
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="1">
@@ -1721,10 +1727,32 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 </li>
 </ul>
 <h4 id="funzionamento-fisico-e-formule-4">Funzionamento fisico e formule</h4>
-<p>La radianza misurata $L_{\lambda}$ viene convertita in temperatura di brillanza $T_b$ invertendo la legge di Planck <sup>36</sup>:</p>
+<p>Prima di spiegare il funzionamento fisico e soprattutto le formule, penso sia importante capire perché l&#39;inversione è cruciale. Per questo bisogna distinguere due regimi:</p>
+<ul>
+<li><p>Nel visibile (es. Sentinel-2 bande RGB) il sensore misura la luce solare riflessa. Qui la temperatura dell&#39;oggetto non c&#39;entra quasi nulla con la quantità di luce che arriva al sensore.</p>
+</li>
+<li><p>Nell&#39;Infrarosso Termico (TIR) la sorgente di energia non è il Sole, ma l&#39;oggetto stesso. Ogni corpo con temperatura sopra lo zero assoluto emette radiazione elettromagnetica per agitazione termica.</p>
+<pre><code class="hljs language-vbnet"><span class="hljs-symbol">Quindi:</span> Nel TIR, misurare l<span class="hljs-comment">&#x27;energia (Radianza) equivale a misurare lo stato termico dell&#x27;oggetto.</span></code></pre></li>
+</ul>
+<p>La fisica ci dice (Legge di Planck) che esiste una relazione rigida tra la Temperatura $T$ di un corpo nero e la Radianza $L_\lambda$ che esso emette a una specifica lunghezza d&#39;onda  $\lambda$.</p>
+<p>La radianza misurata $L_{\lambda}$ viene convertita in temperatura di brillanza $T_b$ invertendo la legge di Planck (almeno questa te la risparmio). In partica, se l&#39;oggetto è a temperatura $T$, allora sparerà fuori $L_\lambda$ quantità di energia.</p>
+<p>Il sensore però funziona al contrario. Il rivelatore è un fotodiodo sensibile all&#39;infrarosso (in italiano ammetto essere molto cacofonico), spesso in Mercurio-Cadmio-Tellururo, raffreddato criogenicamente e viene colpito dai fotoni. I fotoni generano elettroni e quindi corrente elettrica che viene convertita in un numero digitale (DN).</p>
+<p>Attraverso la calibrazione radiometrica (Gain &amp; Offset), il DN viene riconvertito in Radianza al Sensore ($L_{Sensore}$).</p>
+<p>Poiché il sensore &quot;non sa&quot; quale sia la temperatura, dobbiamo chiedercelo noi matematicamente:
+&quot;Quale temperatura $T$ deve avere un corpo nero teorico per produrre la radianza $L$ che ho appena misurato?&quot;</p>
+<p>Ecco perché si fa l&#39;inversione. Si risolve l&#39;equazione di Planck per $T$:</p>
 <p>$$T_b = \frac{h c}{k_B \lambda \ln\left( \frac{2 h c^2}{\lambda^5 L_\lambda} + 1 \right)}$$</p>
-<p>Per ottenere la temperatura cinetica reale ($T_{surf}$), è necessario correggere per l&#39;emissività $\epsilon$ della superficie e per il contributo atmosferico (assorbimento/emissione vapore acqueo). Algoritmi di <em>Split-Window</em> utilizzano due canali termici vicini (es. 11 $\mu m$ e 12 $\mu m$) per stimare e rimuovere l&#39;effetto atmosferico.</p>
+<p>Per ottenere la temperatura cinetica reale ($T_{surf}$), è necessario correggere per l&#39;emissività $\epsilon$ della superficie e per il contributo atmosferico (assorbimento/ emissione vapore acqueo). Algoritmi di <em>Split-Window</em> utilizzano due canali termici vicini (es. 11 $\mu m$ e 12 $\mu m$) per stimare e rimuovere l&#39;effetto atmosferico.</p>
+<h4 id="perch-si-chiama-temperatura-di-brillanza-e-non-temperatura-reale">Perché si chiama &quot;Temperatura di Brillanza&quot; e non &quot;Temperatura Reale&quot;?</h4>
+<p>Questa è la parte più sottile e importante. L&#39;inversione assume che l&#39;oggetto sia un Corpo Nero (Emissività $\varepsilon = 1$), cioè un emettitore perfetto. Tuttavia, nella realtà:</p>
+<ul>
+<li>L&#39;acqua ha emissività che oscilla tra 0.98 e 0.99 (quasi un corpo nero).</li>
+<li>Il suolo nudo o la sabbia possono avere un&#39;emissività tra 0.90 e 0.95.</li>
+</ul>
+<p>Se un sensore punta su una roccia calda a 300K (27 °C), ma con bassa emissività, la roccia emetterà meno energia di quanto viene predetto dalla legge di Planck pura. Se invertiamo la formula senza correggere, il satellite calcolerà una temperatura più bassa della realtà (es. 295K invece di 300K).</p>
+<p>Quella temperatura &quot;fittizia&quot; (più bassa) è la <strong>temperatura di brillanza</strong>. È la temperatura che l&#39;oggetto avrebbe se fosse un corpo nero perfetto che emette quella quantità di luce.</p>
 <h3 id="missioni-5">Missioni</h3>
+<p>Tra le missioni che secondo me ha senso menzionare sicuramente ci sono: </p>
 <ul>
 <li><p><strong>Sentinel-3 (SLSTR):</strong> Alta precisione (&lt;0.3 K) per SST climatica, usando una doppia vista (nadir e obliqua) per correggere l&#39;atmosfera.</p>
 </li>

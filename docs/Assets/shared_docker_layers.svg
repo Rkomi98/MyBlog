@@ -1,0 +1,142 @@
+<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  
+            <!-- DEFINITIONS -->
+            <defs>
+              <!-- Background Gradient -->
+              <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#0b1224;stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:#101a36;stop-opacity:1"></stop>
+              </linearGradient>
+          
+              <!-- Cyan Stroke Gradient -->
+              <linearGradient id="cyanStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1"></stop>
+              </linearGradient>
+
+              <!-- Shared Layers Glow (Violet/Blue for Base) -->
+              <linearGradient id="sharedGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                 <stop offset="0%" style="stop-color:#818cf8;stop-opacity:0.1"></stop>
+                 <stop offset="100%" style="stop-color:#818cf8;stop-opacity:0.0"></stop>
+              </linearGradient>
+
+              <!-- Drop Shadow -->
+              <filter id="boxShadow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.5"></feDropShadow>
+              </filter>
+              
+              <!-- Arrow Marker (Standard Right Pointing for Auto-Orientation) -->
+              <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#38bdf8" opacity="0.9"></path>
+              </marker>
+            </defs>
+          
+            <!-- BACKGROUND -->
+            <rect width="1000" height="800" rx="28" fill="url(#bgGrad)"></rect>
+            
+            <!-- VISUAL GUIDE: SHARED AREA BACKDROP (Bottom Triangle) -->
+            <path d="M200,750 L800,750 L500,450 Z" fill="url(#sharedGlow)"></path>
+
+            <!-- TITLE SECTION -->
+            <text x="500" y="50" text-anchor="middle" fill="#e2e8f0" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="600" letter-spacing="0.5">SHARED LAYER ARCHITECTURE</text>
+            <text x="500" y="75" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', sans-serif" font-size="15">Ottimizzazione Multi-App su Base Comune</text>
+
+            <!-- ================= LEFT BRANCH (APP 1) ================= -->
+            <g transform="translate(150, 120)">
+                <!-- App 1 Source -->
+                <g>
+                    <rect width="260" height="70" rx="12" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                    <text x="130" y="30" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="600">App 1 Source</text>
+                    <text x="130" y="50" text-anchor="middle" fill="#cbd5f5" font-size="12">Codice Applicativo Specifico</text>
+                </g>
+
+                <!-- Arrow Down (Ends exactly at Y=100) -->
+                <line x1="130" y1="70" x2="130" y2="100" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.8"></line>
+
+                <!-- App 1 Dependencies -->
+                <g transform="translate(0, 100)">
+                    <rect width="260" height="70" rx="12" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                    <text x="130" y="30" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="600">App 1 Dependencies</text>
+                    <text x="130" y="50" text-anchor="middle" fill="#cbd5f5" font-size="12">Librerie dedicate</text>
+                </g>
+
+                <!-- Arrow Down (Ends exactly at Y=200) -->
+                <line x1="130" y1="170" x2="130" y2="200" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.8"></line>
+
+                <!-- App 1 Requirements -->
+                <g transform="translate(0, 200)">
+                    <rect width="260" height="70" rx="12" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                    <text x="130" y="30" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="600">App 1 Requirements</text>
+                    <text x="130" y="50" text-anchor="middle" fill="#cbd5f5" font-size="12">requirements.txt</text>
+                </g>
+            </g>
+
+
+            <!-- ================= RIGHT BRANCH (APP 2) ================= -->
+            <g transform="translate(590, 120)">
+                <!-- App 2 Source -->
+                <g>
+                    <rect width="260" height="70" rx="12" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                    <text x="130" y="30" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="600">App 2 Source</text>
+                    <text x="130" y="50" text-anchor="middle" fill="#cbd5f5" font-size="12">Codice Applicativo Specifico</text>
+                </g>
+
+                <!-- Arrow Down (Ends exactly at Y=100) -->
+                <line x1="130" y1="70" x2="130" y2="100" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.8"></line>
+
+                <!-- App 2 Dependencies -->
+                <g transform="translate(0, 100)">
+                    <rect width="260" height="70" rx="12" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                    <text x="130" y="30" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="600">App 2 Dependencies</text>
+                    <text x="130" y="50" text-anchor="middle" fill="#cbd5f5" font-size="12">Librerie dedicate</text>
+                </g>
+
+                <!-- Arrow Down (Ends exactly at Y=200) -->
+                <line x1="130" y1="170" x2="130" y2="200" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.8"></line>
+
+                <!-- App 2 Requirements -->
+                <g transform="translate(0, 200)">
+                    <rect width="260" height="70" rx="12" fill="#1e293b" stroke="url(#cyanStroke)" stroke-width="2" filter="url(#boxShadow)"></rect>
+                    <text x="130" y="30" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="600">App 2 Requirements</text>
+                    <text x="130" y="50" text-anchor="middle" fill="#cbd5f5" font-size="12">requirements.txt</text>
+                </g>
+            </g>
+
+
+            <!-- ================= SHARED TRUNK (CENTER) ================= -->
+            
+            <!-- Connection Curves (The Y Merge) -->
+            <!-- Adjusted end points to Y=450 (Top of Python box) -->
+            
+            <!-- Left Branch (App 1 Reqs) to Python -->
+            <!-- Start: (280, 390). End: (490, 450) -->
+            <path d="M280,390 C280,430 480,420 490,450" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.8"></path>
+            
+            <!-- Right Branch (App 2 Reqs) to Python -->
+            <!-- Start: (720, 390). End: (510, 450) -->
+            <path d="M720,390 C720,430 520,420 510,450" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.8"></path>
+
+
+            <!-- Shared Runtime (Python & Pip) -->
+            <g transform="translate(350, 450)">
+                <rect width="300" height="80" rx="16" fill="#1e293b" stroke="#818cf8" stroke-width="2" filter="url(#boxShadow)"></rect>
+                <text x="150" y="35" text-anchor="middle" fill="#e2e8f0" font-size="18" font-weight="600">Python and pip</text>
+                <text x="150" y="58" text-anchor="middle" fill="#94a3b8" font-size="13">Runtime Condiviso (Interprete)</text>
+            </g>
+
+            <!-- Arrow Down Center (Ends exactly at Y=580) -->
+            <line x1="500" y1="530" x2="500" y2="580" stroke="#818cf8" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.8"></line>
+
+            <!-- Shared Base (Debian) -->
+            <g transform="translate(300, 580)">
+                <rect width="400" height="90" rx="16" fill="#1e293b" stroke="#818cf8" stroke-width="2" filter="url(#boxShadow)"></rect>
+                <text x="200" y="35" text-anchor="middle" fill="#e2e8f0" font-size="20" font-weight="600">Debian Base</text>
+                <text x="200" y="60" text-anchor="middle" fill="#94a3b8" font-size="14">Immagine Sistema Operativo</text>
+                <text x="200" y="78" text-anchor="middle" fill="#6366f1" font-size="11">CACHED LAYER (SHARED)</text>
+            </g>
+
+            <!-- Labels for Branches -->
+            <text x="280" y="100" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="600" opacity="0.6" letter-spacing="1">BRANCH A</text>
+            <text x="720" y="100" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="600" opacity="0.6" letter-spacing="1">BRANCH B</text>
+
+        </svg>
