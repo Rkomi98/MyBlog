@@ -19,14 +19,14 @@ In quest'analisi parleremo dei sensori passivi che misurano la radiazione solare
 
 ***
 
-## 1. GNSS – Sistemi Globali di Navigazione Satellitare
+## GNSS – Sistemi Globali di Navigazione Satellitare
 I dati GNSS sono nati in ambito bellico, ma si sono rivelati fondamentali in molti campi quoditiani. Consentono posizionamento e navigazione autonoma su scala globale e forniscono un riferimento temporale standard. 
 
 I sistemi GNSS (come GPS, Galileo, GLONASS, BeiDou) trasmettono segnali a radiofrequenza contenenti informazioni orbitale e temporale dagli orologi atomici a bordo. Misurando il tempo impiegato dal segnale a raggiungere un ricevitore a Terra, si calcola la distanza e quindi la posizione dell’utente tramite trilaterazione con almeno 4 satelliti visibili. GNSS fornisce quindi misure di posizionamento (latitudine, longitudine, quota) e tempo assoluto estremamente precise.
 
 Sono usati in **geodesia** (reti di stazioni GNSS monitorano il movimento tettonico e definiscono i riferimenti globali), in **agricoltura di precisione**, **mappatura** e **GIS**, **trasporti** terrestri, aerei e navali, e sincronizzazione di reti elettriche e telecomunicazioni. Ad esempio, l’uso combinato dei vari sistemi GNSS consente oggi ricevitori multi-costellazione con copertura globale e maggiore affidabilità.
 
-### 1.1 Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione
+### Radio occultazione GNSS (GNSS-RO): sondaggio atmosferico di precisione
 
 La Radio Occultazione GNSS (GNSS-RO) rappresenta una delle tecniche di telerilevamento più eleganti e robuste, trasformando i segnali di navigazione, originariamente concepiti per il posizionamento, in strumenti di alta precisione per la meteorologia e la climatologia.
 
@@ -82,7 +82,7 @@ La tecnica è stata pionierizzata dalla missione **GPS/MET** e resa operativa da
 
 ***
 
-### 1.2. Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità
+### Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità
 
 Mentre la Radio Occultazione sfrutta i segnali trasmessi attraverso l'atmosfera, la Riflettometria GNSS (GNSS-R) analizza i segnali riflessi dalla superficie terrestre, operando come un radar bistatico multi-statico.
 
@@ -162,9 +162,9 @@ Ovviamente tra le missioni non posso non citare quella da cui ho preso gran part
 ***
 
 
-## 2. Synthetic Aperture Radar: SAR
+## Synthetic Aperture Radar: SAR
 
-### 2.1 Radar ad apertura sintetica (SAR): imaging a microonde ognitempo
+### Radar ad apertura sintetica (SAR): imaging a microonde ognitempo
 
 SAR rappresenta lo strumento principale per l'osservazione della superficie solida in ogni condizione meteorologica e di illuminazione, grazie alla sua natura attiva e alla lunghezza d'onda delle microonde.
 
@@ -231,7 +231,7 @@ Le principali missioni sono:
 ***
 
 
-### 2.2 Interferometria SAR (InSAR): la geodesia dallo spazio
+### Interferometria SAR (InSAR): la geodesia dallo spazio
 
 L'InSAR è una tecnica derivata dal SAR che sfrutta la differenza di fase tra due acquisizioni per misurare la topografia o le deformazioni millimetriche della superficie.
 
@@ -287,7 +287,7 @@ Le principali sono:
 ***
 
 
-### 2.3. Radar altimetria: topografia degli oceani e dei ghiacci
+### Radar altimetria: topografia degli oceani e dei ghiacci
 
 I radar altimetri misurano con precisione la distanza verticale tra il satellite e la superficie sottostante, calcolata dal tempo di andata e ritorno di impulsi radar inviati perpendicolarmente al suolo (nadir).
 
@@ -332,14 +332,14 @@ La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3
 
 ***
 
-## 3. Sensori passivi e ottici 
+## Sensori passivi e ottici 
 Ora cambiamo radicalmente argomento, parliamo di sensori passivi, quelli più simili alle classiche macchinette fotografiche o alle fotocamere dei nostri smartphone.
 
 I sensori ottici passivi a bordo dei satelliti catturano la radiazione elettromagnetica solare riflessa dalla superficie terrestre (nelle bande del visibile, infrarosso vicino e infrarosso a onde corte) e, in alcuni casi, l’emissione termica nell’infrarosso termico. 
 
 Essi forniscono dunque misure di radianza riflessa o riflettanza della superficie per ciascuna banda spettrale. Nel caso di bande termiche (tipicamente presenti su satelliti come Landsat o Sentinel-3), misurano la radianza termica emessa legata alla temperatura superficiale.
 
-### 3.1 Immagini pancromatiche: risoluzione geometrica estrema
+### Immagini pancromatiche: risoluzione geometrica estrema
 
 
 Le immagini ottiche sono intuitive e ricche di informazioni, trovando impiego in mappatura ambientale, gestione del territorio, agricoltura e monitoraggio forestale, pianificazione urbana e sorveglianza di emergenze.
@@ -383,7 +383,7 @@ Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la ri
 ***
 
 
-### 3.2. Imaging multispettrale: il colore della terra
+### Imaging multispettrale: il colore della terra
 
 Le immagini ottiche servono a identificare tipologie di suolo e uso del suolo (coltivazioni, foreste, aree urbane), a monitorare bacini idrici, ghiacciai e neve, e a documentare eventi come incendi, alluvioni o frane. 
 
@@ -420,7 +420,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 ***
 
 
-### 3.3 Imaging iperspettrale
+### Imaging iperspettrale
 
 L'imaging iperspettrale (HSI) estende il concetto multispettrale acquisendo centinaia di bande contigue, permettendo un'analisi chimico-fisica dettagliata di ogni pixel.
 
@@ -481,7 +481,7 @@ Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare mater
 ***
 
 
-### 3.4. Infrarosso termico (TIR): misurare il calore del pianeta
+### Infrarosso termico (TIR): misurare il calore del pianeta
 
 I sensori TIR misurano l'energia emessa dalla Terra, permettendo di stimare e studiare la temperatura superficiale.
 
@@ -554,7 +554,7 @@ Tra le missioni che secondo me ha senso menzionare sicuramente ci sono:
 ></iframe>
 
 
-## 4. Radiometria a microonde passiva (surface imaging)
+## Radiometria a microonde passiva (surface imaging)
 
 Ogni materiale emette radiazione termica in base alla sua temperatura fisica e alla sua emissività: i radiometri registrano la temperatura di brillanza $T_B$ in determinate bande spettrali a microonde, la quale è proporzionale (per approssimazione di Rayleigh-Jeans) all’emissione termica dell’oggetto. 
 
@@ -597,21 +597,40 @@ La missione **SMOS** (ESA) ha introdotto una tecnologia rivoluzionaria: il radio
 ***
 
 
-## 5. Gravimetria satellitare: pesare l'acqua dallo spazio
+## Gravimetria satellitare: pesare l'acqua dallo spazio
 
-La gravimetria misura le variazioni di massa del pianeta, offrendo una visione unica del ciclo dell'acqua profondo.
+La gravimetria satellitare ha due grandi applicazioni: 
+1) la realizzazione di un modello globale preciso del geoide e del campo gravitazionale statico;
 
+2) il monitoraggio delle variazioni di massa redistribuite sul pianeta (acqua, ghiaccio). 
+
+Il geoide è fondamentale per la geodesia: definisce la superficie di riferimento altimetrico “a livello del mare” su cui riportare le quote misurate dai satelliti e a terra. Missioni come GOCE (ESA, 2009-2013) hanno fornito un geoide ad alta risoluzione (fino a 100 km) con precisione di 1–2 cm, migliorando i riferimenti verticali tra continenti. Questo ha impatto su mappe [altimetriche oceaniche](https://geodesy.science/item/satellite-altimetry/): sottraendo il geoide dalla superficie marina misurata dagli altimetri, emergono le correnti oceaniche stazionarie (topografia dinamica). 
+
+Anche in geodesia pura, conoscere l’anomalia di gravità sulla crosta informa sulla struttura geologica e la densità (utili in esplorazione mineraria e petrolifera). 
+
+Riguardo il punto 2, i satelliti gravimetrici time-variable (GRACE e successore GRACE-FO) hanno aperto un nuovo campo nel monitorare il [ciclo idrologico globale](https://gracefo.jpl.nasa.gov/resources/72/tracking-water-from-space/) e la criosfera su base mensile. In oceanografia, le misure GRACE di pressione sul fondo oceanico completano gli altimetri isolando la componente di massa negli aumenti di livello (distinguendola dall’espansione termica). Queste osservazioni di “bilancio idrico” sono cruciali per capire gli impatti climatici e per gestione risorse idriche. Inoltre, la gravimetria è servita a evidenziare variazioni di massa nel mantello post-terremoti (es. il sisma di Tōhoku 2011 ha provocato una minuscola ma rilevabile variazione locale del campo di gravità).
 
 ### Cosa misura
 
-Anomalie del campo gravitazionale terrestre e le loro variazioni temporali (mensili). Queste variazioni sono dovute al movimento di grandi masse d'acqua (fusione ghiacciai, esaurimento falde acquifere, variazioni livello oceano).
+Le missioni di gravimetria satellitare misurano le piccolissime variazioni del campo gravitazionale terrestre nello spazio e nel tempo. In termini pratici, osservano come cambia l’accelerazione gravitazionale $g$ (o il potenziale gravitazionale) da luogo a luogo e da un’epoca all’altra, a causa della distribuzione di massa all’interno e sulla superficie della Terra. Un satellite in orbita ne risente: dove la gravità locale è leggermente più forte (es. sopra una catena montuosa sottomarina o un’area di maggiore densità del mantello), il satellite accelera un po’ di più; dove è più debole (es. sopra una depressione oceanica o un manto meno denso) accelera di meno.
+
+Le missioni gravimetriche misurano queste differenze tramite tracciamento di precisione: ad esempio, la [celebre missione GRACE](https://sealevel.nasa.gov/missions/grace#:~:text=GRACE%20measured%20gravity%20by%20relating,or%20between%2C%20the%20satellite%20pair) consisteva in due satelliti gemelli che seguono la stessa orbita a 220 km di distanza e misurano la variazione della loro mutua distanza con precisione microscopica. Quando il primo satellite passa sopra un’anomalia gravitazionale, accelera (aumentando la distanza dal secondo); poi anche il secondo accelera e la distanza torna nominale: dall’entità e fase di questa variazione si deduce l’anomalia di gravità.
+
+> GRACE quindi misura gravity anomalies e, ripetendo mese dopo mese, può rilevare variazioni temporali del campo gravitazionale
+
+Un’altra tecnica è il **gravimetro a gradiometro** (usato da GOCE): sensori accelerometrici misurano direttamente il gradiente del campo lungo direzioni diverse. In breve, le missioni misurano parametri come: combinazioni lineari delle seconde derivate del potenziale gravitazionale (gradiometria), distanza inter-satellitare (GRACE) o perturbazioni orbitali (dalle quali si invertiscono armoniche sferiche del campo di gravità). I risultati finali sono modelli del geoide (superficie equipotenziale media) e mappe di anomalie gravitazionali (in mGal) statiche e tempo-varianti, o serie temporali di masse equivalenti variabili (come spessore di acqua).
+
+<img src="../../../Assets/geoid.jpg" alt="Modello del geoide terrestre derivato dalle missioni GOCE e GRACE" title="Il geoide terrestre, superficie equipotenziale media ottenuta dalle missioni di gravimetria come GOCE e GRACE">
+_Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la distribuzione spaziale delle anomalie gravitazionali che questi satelliti misurano e monitorano nel tempo_
+
+
 
 
 ### Funzionamento fisico: satellite-to-satellite tracking (SST)
 
-Due satelliti identici (come in GRACE e GRACE-FO) volano sulla stessa orbita separati da circa 220 km. Un sistema di ranging a microonde (banda K) o un interferometro laser (in GRACE-FO) misura la variazione di distanza inter-satellitare con precisione micrometrica.
+Due satelliti identici (come in GRACE e GRACE-FO) volano sulla stessa orbita separati da circa 220 km. Un sistema di ranging a microonde (banda $K$) o un interferometro laser (in GRACE-FO) misura la variazione di distanza inter-satellitare con precisione micrometrica.<sup>48</sup>
 
-Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), viene accelerato gravitazionalmente, allontanandosi dal secondo. Analizzando le variazioni di velocità relativa (Range-Rate $\dot{\rho}$), si ricostruisce il potenziale gravitazionale globale.48
+Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), viene accelerato gravitazionalmente, allontanandosi dal secondo. Analizzando le variazioni di velocità relativa (Range-Rate $\dot{\rho}$), si ricostruisce il potenziale gravitazionale globale.
 
 
 ### Missioni e applicazioni
@@ -623,7 +642,7 @@ Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), vie
 ***
 
 
-## 6. Magnetometria satellitare
+## Magnetometria satellitare
 
 I magnetometri spaziali studiano il campo magnetico terrestre, scudo protettivo contro il vento solare.
 
@@ -650,7 +669,7 @@ Le missioni di alta precisione utilizzano una combinazione di strumenti:
 
 ***
 
-## 7. Segnali di opportunità e CubeSat radar: la nuova frontiera
+## Segnali di opportunità e CubeSat radar: la nuova frontiera
 
 Questa categoria unisce due trend emergenti: l'uso di segnali non nativi per l'EO e la miniaturizzazione estrema dei sensori attivi.
 
@@ -959,7 +978,7 @@ L'analisi di queste diciannove categorie rivela un sistema di osservazione della
 
 49. GRACE-FO - Gravity Recovery and Climate Experiment Follow-On - Center for Space Research, <https://www2.csr.utexas.edu/grace/RL061LRI.html>
 
-50. Satellite Gravimetry – Measuring Earth's Gravity Field from Space - IAG - Geodesy, <https://geodesy.science/item/satellite-gravimetry/>
+50. Satellite-based estimates of groundwater depletion in India <https://www.nature.com/articles/nature08238/>
 
 51. In-flight calibration of the fluxgate magnetometer on Macau Science Satellite-1, <https://www.eppcgs.org/article/doi/10.26464/epp2025067>
 
