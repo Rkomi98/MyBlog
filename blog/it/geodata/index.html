@@ -41,7 +41,7 @@
     "headline": "Che dati registrano i satelliti?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2025-12-14T19:17:44.773Z",
+    "dateModified": "2025-12-18T16:04:34.906Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1295,9 +1295,9 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#funzionamento-fisico-fluxgate-e-scalari">
+          <a class="post-toc__link" href="#a-cosa-serve">
             <span class="post-toc__number">7.2</span>
-            <span class="post-toc__text">Funzionamento fisico: fluxgate e scalari</span>
+            <span class="post-toc__text">A cosa serve?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
@@ -1315,26 +1315,20 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#a-monitoraggio-traffico-ais-e-ads-b-satellitare">
+          <a class="post-toc__link" href="#a-cubesat-radar-raincube">
             <span class="post-toc__number">8.1</span>
-            <span class="post-toc__text">A. Monitoraggio traffico: AIS e ADS-B satellitare</span>
+            <span class="post-toc__text">A. CubeSat radar: RainCube</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#b-cubesat-radar-raincube">
+          <a class="post-toc__link" href="#b-smart-lnb-pioggia-dalle-tv-satellitari">
             <span class="post-toc__number">8.2</span>
-            <span class="post-toc__text">B. CubeSat radar: RainCube</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#c-smart-lnb-pioggia-dalle-tv-satellitari">
-            <span class="post-toc__number">8.3</span>
-            <span class="post-toc__text">C. Smart LNB: pioggia dalle TV satellitari</span>
+            <span class="post-toc__text">B. Smart LNB: pioggia dalle TV satellitari</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#tabella-comparativa-sintetica-delle-tecnologie">
-            <span class="post-toc__number">8.4</span>
+            <span class="post-toc__number">8.3</span>
             <span class="post-toc__text">Tabella comparativa sintetica delle tecnologie</span>
           </a>
           
@@ -1345,16 +1339,10 @@
             <span class="post-toc__number">9</span>
             <span class="post-toc__text">Conclusione</span>
           </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#infografica-matrice-di-confronto">
-            <span class="post-toc__number">10</span>
-            <span class="post-toc__text">Infografica: matrice di confronto</span>
-          </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#works-cited">
-            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__number">9.1</span>
             <span class="post-toc__text">Works cited</span>
           </a>
           
@@ -1393,9 +1381,9 @@ dove $c$ è la velocità della luce. </p>
 <blockquote>
 <p>Ti avverto, ora mi tolgo il cappello da divulgatore e indosso quello da matematico :)</p>
 </blockquote>
-<p>Il parametro fondamentale misurato è il ritardo di fase in eccesso, da cui si deriva l&#39;angolo di curvatura ($\alpha$) in funzione del parametro d&#39;impatto ($a$). In un&#39;atmosfera a simmetria sferica locale, la relazione tra l&#39;angolo di curvatura e l&#39;indice di rifrazione $n(r)$ è governata dalla legge di Snell generalizzata e può essere invertita tramite la trasformata di Abel inversa <sup>3</sup>:</p>
+<p>Il parametro fondamentale misurato è il ritardo di fase in eccesso, da cui si deriva l&#39;angolo di curvatura ($\alpha$) in funzione del parametro d&#39;impatto ($a$). In un&#39;atmosfera a simmetria sferica locale, la relazione tra l&#39;angolo di curvatura e l&#39;indice di rifrazione $n(r)$ è governata dalla legge di Snell generalizzata e può essere invertita tramite la trasformata di Abel inversa <sup>1</sup>:</p>
 <p>$$n(r) = \exp \left( \frac{1}{\pi} \int_x^\infty \frac{\alpha(x)}{\sqrt{x^2 - a^2}} \, dx \right)$$</p>
-<p>Dove $x = n(r) \cdot r$ è il raggio rifrattivo e $\alpha(x)$ è il Bending angle corretto. Una volta ottenuto il profilo dell&#39;indice di rifrazione, si calcola la rifrattività $N$, definita come $N = (n-1) \times 10^6$. La relazione tra la rifrattività e le variabili termodinamiche atmosferiche è descritta dall&#39;equazione di <a href="https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf">Smith-Weintraub</a>:</p>
+<p>Dove $x = n(r) \cdot r$ è il raggio rifrattivo e $\alpha(x)$ è il Bending angle corretto. Una volta ottenuto il profilo dell&#39;indice di rifrazione, si calcola la rifrattività $N$, definita come $N = (n-1) \times 10^6$. La relazione tra la rifrattività e le variabili termodinamiche atmosferiche è descritta dall&#39;equazione di <a href="https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf">Smith-Weintraub</a><sup>2</sup>:</p>
 <p>$$N = 77.6 \frac{P}{T} + 3.73 \times 10^5 \frac{e}{T^2} - 40.3 \frac{n_e}{f^2}$$</p>
 <p>In questa equazione:</p>
 <ul>
@@ -1411,17 +1399,17 @@ dove $c$ è la velocità della luce. </p>
 </li>
 </ul>
 <h4 id="utilit-e-applicazioni-critiche">Utilità e applicazioni critiche</h4>
-<p>La forza della GNSS-RO risiede nella sua natura di misura &quot;autocalibrante&quot;: poiché si basa su misurazioni di tempo e frequenza (garantite da orologi atomici), non soffre di deriva strumentale, rendendola ideale per il monitoraggio climatico a lungo termine.<sup>6</sup></p>
+<p>La forza della GNSS-RO risiede nella sua natura di misura &quot;autocalibrante&quot;: poiché si basa su misurazioni di tempo e frequenza (garantite da orologi atomici), non soffre di deriva strumentale, rendendola ideale per il monitoraggio climatico a lungo termine.<sup>3</sup></p>
 <ul>
-<li><p><strong>Meteorologia Operativa (NWP):</strong> I profili RO sono essenziali per ancorare i modelli meteorologici nella troposfera superiore e nella stratosfera, dove altri dati sono scarsi, correggendo i bias di temperatura.<sup>7</sup></p>
+<li><p><strong>Meteorologia Operativa (NWP):</strong> I profili RO sono essenziali per ancorare i modelli meteorologici nella troposfera superiore e nella stratosfera, dove altri dati sono scarsi, correggendo i bias di temperatura.<sup>4</sup></p>
 </li>
 <li><p><strong>Climatologia:</strong> Monitoraggio dei trend di temperatura globale e della tropopausa con precisione assoluta.</p>
 </li>
-<li><p><strong>Space Weather:</strong> Misurazione del Contenuto Totale di Elettroni (TEC) e delle scintillazioni ionosferiche, cruciali per la sicurezza delle comunicazioni satellitari.<sup>8</sup></p>
+<li><p><strong>Space Weather:</strong> Misurazione del Contenuto Totale di Elettroni (TEC) e delle scintillazioni ionosferiche, cruciali per la sicurezza delle comunicazioni satellitari.<sup>5</sup></p>
 </li>
 </ul>
 <h4 id="missioni-di-riferimento">Missioni di riferimento</h4>
-<p>La tecnica è stata pionierizzata dalla missione <strong>GPS/MET</strong> e resa operativa dalla costellazione <strong>COSMIC-1</strong> (Taiwan/USA). Attualmente, <strong>COSMIC-2</strong> fornisce una copertura densa nelle latitudini equatoriali, ottimizzata per lo studio degli uragani e della ionosfera.<sup>6</sup> Parallelamente, il settore commerciale &quot;NewSpace&quot; ha rivoluzionato questo campo: <strong>Spire Global</strong>, con la sua costellazione di oltre 100 CubeSat LEMUR, e <strong>PlanetIQ</strong>, forniscono migliaia di misurazioni giornaliere, integrando i dati istituzionali.<sup>9</sup></p>
+<p>La tecnica è stata pionierizzata dalla missione <strong>GPS/MET</strong> e resa operativa dalla costellazione <strong>COSMIC-1</strong> (Taiwan/USA). Attualmente, <strong>COSMIC-2</strong> fornisce una copertura densa nelle latitudini equatoriali, ottimizzata per lo studio degli uragani e della ionosfera.<sup>3</sup> Parallelamente, il settore commerciale &quot;NewSpace&quot; ha rivoluzionato questo campo: <strong>Spire Global</strong>, con la sua costellazione di oltre 100 CubeSat LEMUR, e <strong>PlanetIQ</strong>, forniscono migliaia di misurazioni giornaliere, integrando i dati istituzionali.<sup>6</sup></p>
 <hr>
 <h3 id="riflettometria-gnss-gnss-r-il-radar-bistatico-di-opportunit">Riflettometria GNSS (GNSS-R): il radar bistatico di opportunità</h3>
 <p>Mentre la Radio Occultazione sfrutta i segnali trasmessi attraverso l&#39;atmosfera, la Riflettometria GNSS (GNSS-R) analizza i segnali riflessi dalla superficie terrestre, operando come un radar bistatico multi-statico.</p>
@@ -1436,7 +1424,7 @@ dove $c$ è la velocità della luce. </p>
 </li>
 </ul>
 <h4 id="funzionamento-fisico-e-formule">Funzionamento fisico e formule</h4>
-<p>Il ricevitore misura la potenza del segnale riflesso in funzione del ritardo temporale (delay) e dello spostamento Doppler, generando una <em>Delay Doppler Map</em> (DDM). La potenza ricevuta $P_r$ è descritta dall&#39;equazione radar bistatica <sup>9</sup>:</p>
+<p>Il ricevitore misura la potenza del segnale riflesso in funzione del ritardo temporale (delay) e dello spostamento Doppler, generando una <em>Delay Doppler Map</em> (DDM). La potenza ricevuta $P_r$ è descritta dall&#39;equazione radar bistatica <sup>6</sup>:</p>
 <p>$$ P_r(\tau, f_D) = \frac{P_t G_t \lambda^2}{(4\pi)^3} \iint_A \frac{G_r(\vec{r}) \sigma^0(\vec{r}) \chi^2(\tau, f_D)}{R_t^2(\vec{r}) R_r^2(\vec{r})} d\vec{r} $$</p>
 <p>Dove:</p>
 <ul>
@@ -1474,16 +1462,16 @@ dove $c$ è la velocità della luce. </p>
 <p>La superficie di diffusione ($A$) è definita da due coordinate ortogonali (che possono essere spaziali o legate al segnale) che giacciono sul piano di diffusione.</p>
 <p>L&#39;elemento differenziale $\mathrm{d} \vec{r}$ in questo contesto rappresenta $\mathrm{d} S$ o $\mathrm{d} A$ (elemento differenziale di superficie).</p>
 <h4 id="utilit-e-applicazioni">Utilità e applicazioni</h4>
-<p>L&#39;applicazione &quot;killer&quot; della GNSS-R è il monitoraggio dei cicloni tropicali<sup>65</sup>. A differenza dei radiometri ottici (bloccati dalle nubi) o degli scatterometri in banda Ku (attenuati dalla pioggia intensa), i segnali GNSS in banda L penetrano le precipitazioni intense<sup>66</sup>, permettendo di misurare la velocità del vento nell&#39;occhio del ciclone.</p>
+<p>L&#39;applicazione &quot;killer&quot; della GNSS-R è il monitoraggio dei cicloni tropicali<sup>7</sup>. A differenza dei radiometri ottici (bloccati dalle nubi) o degli scatterometri in banda Ku (attenuati dalla pioggia intensa), i segnali GNSS in banda L penetrano le precipitazioni intense<sup>8</sup>, permettendo di misurare la velocità del vento nell&#39;occhio del ciclone.</p>
 <p>In ambito terrestre, la tecnica fornisce mappe di umidità del suolo ad alta risoluzione temporale, essenziali per la previsione delle piene e l&#39;agricoltura.</p>
 <h4 id="missioni">Missioni</h4>
 <p>Ovviamente tra le missioni non posso non citare quella da cui ho preso gran parte di queste informazioni, ovvero CYGNSS della Nasa, ma non è l&#39;unica.</p>
 <ul>
 <li><p><strong>CYGNSS (NASA):</strong> Una costellazione di 8 microsatelliti lanciata per studiare l&#39;intensificazione degli uragani, che ha dimostrato capacità sorprendenti anche nel monitoraggio delle zone umide tropicali.</p>
 </li>
-<li><p><strong>FSSCat (ESA):</strong> Missione basata su due CubeSat 6U che combinava GNSS-R con un sensore iperspettrale ottico, vincitrice del Copernicus Masters. La missione è durata circa un anno. <sup>12</sup></p>
+<li><p><strong>FSSCat (ESA):</strong> Missione basata su due CubeSat 6U che combinava GNSS-R con un sensore iperspettrale ottico, vincitrice del Copernicus Masters. La missione è durata circa un anno. <sup>9</sup></p>
 </li>
-<li><p><strong>Spire Global:</strong> Offre prodotti commerciali di riflettometria per il monitoraggio marittimo e del ghiaccio marino, ma non solo.<sup>9</sup></p>
+<li><p><strong>Spire Global:</strong> Offre prodotti commerciali di riflettometria per il monitoraggio marittimo e del ghiaccio marino, ma non solo.<sup>6</sup></p>
 </li>
 </ul>
 <hr>
@@ -1501,8 +1489,8 @@ dove $c$ è la velocità della luce. </p>
 </li>
 </ul>
 <h4 id="funzionamento-fisico-e-formule-1">Funzionamento fisico e formule</h4>
-<p>Per ottenere un&#39;alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un&#39;apertura virtuale<sup>14</sup>. </p>
-<p>Elaborando coerentemente la storia di fase degli echi di ritorno (<strong>effetto Doppler</strong>), la risoluzione azimutale teorica $\delta_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell&#39;antenna reale $L_a$<sup>15</sup>:</p>
+<p>Per ottenere un&#39;alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un&#39;apertura virtuale<sup>10</sup>. </p>
+<p>Elaborando coerentemente la storia di fase degli echi di ritorno (<strong>effetto Doppler</strong>), la risoluzione azimutale teorica $\delta_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell&#39;antenna reale $L_a$<sup>11</sup>:</p>
 <p>$$\delta_a = \frac{L_a}{2}$$</p>
 <p>La risoluzione in range (perpendicolare alla traccia) è determinata dalla larghezza di banda $B$ dell&#39;impulso trasmesso (spesso un <em>chirp</em> modulato in frequenza, dove il <em>chirp</em> è un segnale la cui frequenza varia nel tempo):</p>
 <p>$$\delta_r = \frac{c}{2B \sin(\theta)}$$</p>
@@ -1513,7 +1501,7 @@ dove $c$ è la velocità della luce. </p>
 <p>Il vantaggio principale del SAR è la sua capacità di osservare la Terra <strong>con ogni condizione di illuminazione</strong> e <strong>meteorologica</strong>: essendo attivo, non dipende dal Sole né è ostacolato dalle nubi (le microonde attraversano la copertura nuvolosa). Questo rende i SAR ideali per monitorare regioni frequentemente coperte da nubi (zone tropicali) o per sorvegliare aree polari durante la lunga notte invernale. </p>
 <p>Le immagini SAR trovano impiego in cartografia di suoli umidi e alluvionati (il segnale penetra un po’ la vegetazione e riflette fortemente da terreni saturi d’acqua, utilissimo in caso di inondazioni), in agricoltura (stima dell’umidità del suolo e fase fenologica delle colture: la dispersione del segnale varia con la struttura del fogliame), nella sorveglianza marittima (rilevazione di navi e di chiazze di petrolio: il petrolio calma il mare e appare scuro sul SAR, facilitando l’individuazione di sversamenti). </p>
 <p>In geologia e gestione del territorio, i SAR mappano deformazioni del terreno e frane tramite InSAR (si veda oltre), mentre in forestry la polarimetria SAR aiuta a stimare la biomassa forestale (missioni P-band come BIOMASS). Inoltre, i SAR permettono di rilevare cambiamenti improvvisi: grazie a passaggi frequenti, individuano il disboscamento illegale, il movimento di ghiacciai, i nuovi edifici o i danni da disastri confrontando immagini prima/dopo (change detection). In ambito militare e di intelligence, l’osservazione radar è cruciale perché fornisce immagini giorno/notte e all-weather, rivelando installazioni camuffate e movimenti.</p>
-<p>In conclusione la versatilità dei sistemi SAR è immensa<sup>16</sup>:</p>
+<p>In conclusione la versatilità dei sistemi SAR è immensa<sup>12</sup>:</p>
 <ul>
 <li><p><strong>Monitoraggio Marittimo:</strong> Rilevamento di navi, <em>oil spills</em> (che appaiono scuri per soppressione delle onde capillari) e classificazione del ghiaccio marino.</p>
 </li>
@@ -1525,7 +1513,7 @@ dove $c$ è la velocità della luce. </p>
 <h4 id="missioni-1">Missioni</h4>
 <p>Le principali missioni sono:</p>
 <ul>
-<li><p><strong>Sentinel-1 (ESA/Copernicus):</strong> La missione di riferimento in banda C, che fornisce dati globali con politica open access, cruciale per l&#39;interferometria operativa.<sup>16</sup></p>
+<li><p><strong>Sentinel-1 (ESA/Copernicus):</strong> La missione di riferimento in banda C, che fornisce dati globali con politica open access, cruciale per l&#39;interferometria operativa.<sup>12</sup></p>
 </li>
 <li><p><strong>COSMO-SkyMed (ASI/Italia) &amp; TerraSAR-X (DLR/Germania):</strong> Sistemi in banda X ad altissima risoluzione per usi duali civili/militari.</p>
 </li>
@@ -1553,9 +1541,9 @@ dove $c$ è la velocità della luce. </p>
 <li><p>$\Delta \phi_{atm}$ è il ritardo atmosferico (spesso il principale termine di errore).</p>
 </li>
 </ul>
-<p>La relazione tra la deformazione $d$ e la fase &quot;srotolata&quot; (unwrapped) è <sup>18</sup>:</p>
+<p>La relazione tra la deformazione $d$ e la fase &quot;srotolata&quot; (unwrapped) è <sup>13</sup>:</p>
 <p>$$d = \frac{\lambda}{4\pi} \Delta \phi_{unwrapped}$$</p>
-<p>Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una frangia di interferenza ($2\pi$) corrisponde a uno spostamento di circa 2.8 cm.<sup>20</sup></p>
+<p>Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una frangia di interferenza ($2\pi$) corrisponde a uno spostamento di circa 2.8 cm.<sup>14</sup></p>
 <img src="../../../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
 _Figura 01: Frange interferometriche e deformazione misurata: esempio di interferogramma. Le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar_
 
@@ -1563,14 +1551,14 @@ _Figura 01: Frange interferometriche e deformazione misurata: esempio di interfe
 <h4 id="applicazioni">Applicazioni</h4>
 <p>Le principali sono:</p>
 <ul>
-<li><p><strong>Tettonica e Vulcanologia:</strong> Misurazione dei campi di deformazione post-sismica e del &quot;respiro&quot; dei vulcani (inflazione/deflazione delle camere magmatiche).<sup>21</sup></p>
+<li><p><strong>Tettonica e Vulcanologia:</strong> Misurazione dei campi di deformazione post-sismica e del &quot;respiro&quot; dei vulcani (inflazione/deflazione delle camere magmatiche).<sup>15</sup></p>
 </li>
-<li><p><strong>Subsidenza Urbana:</strong> Monitoraggio della stabilità di edifici e infrastrutture critiche con tecniche avanzate come i Persistent Scatterers (PS-InSAR).<sup>16</sup></p>
+<li><p><strong>Subsidenza Urbana:</strong> Monitoraggio della stabilità di edifici e infrastrutture critiche con tecniche avanzate come i Persistent Scatterers (PS-InSAR).<sup>12</sup></p>
 </li>
 </ul>
 <figure>
   <video controls src="https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499" style="max-width: 100%; height: auto;"></video>
-  <figcaption>Video 01: Monitoraggio di Venezia (Italia) con Sentinel-1 che consente il monitoraggio continuo dei movimenti del suolo con un'accuratezza dell'ordine di pochi millimetri all'anno.</figcaption>
+  <figcaption>Video 01: Monitoraggio di Venezia (Italia) con Sentinel-1 che consente il monitoraggio continuo dei movimenti del suolo con un'accuratezza dell'ordine di pochi millimetri all'anno.<sup>16</sup></figcaption>
 </figure>
 
 
@@ -1594,8 +1582,8 @@ _Figura 01: Frange interferometriche e deformazione misurata: esempio di interfe
 <p>Sulle calotte glaciali, radar altimetri specializzati (es. CryoSat-2) misurano la quota della neve/ghiaccio e rilevano variazioni nel tempo dello spessore dei ghiacci. Nei nuovi altimetri “a apertura sintetica” (SAR altimetry) l’uso di elaborazione Doppler migliora la risoluzione spaziale lungo traccia (∼300 m) permettendo misure più accurate in prossimità di coste e su corpi idrici più piccoli.</p>
 <h4 id="funzionamento-fisico-e-formule-3">Funzionamento fisico e formule</h4>
 <p>L&#39;altimetro emette un impulso radar e registra l&#39;eco di ritorno. </p>
-<p>La forma d&#39;onda dell&#39;eco (waveform) è modellata analiticamente dal Modello di Brown, che descrive la convoluzione tra la risposta del sistema, la densità di probabilità delle altezze delle onde e la risposta impulsiva della superficie piatta.<sup>22</sup></p>
-<p>La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3, migliora la risoluzione lungo traccia (~300m) focalizzando l&#39;energia in celle Doppler, permettendo di misurare con precisione anche tra i ghiacci marini e nelle acque costiere.<sup>24</sup></p>
+<p>La forma d&#39;onda dell&#39;eco (waveform) è modellata analiticamente dal Modello di Brown, che descrive la convoluzione tra la risposta del sistema, la densità di probabilità delle altezze delle onde e la risposta impulsiva della superficie piatta.<sup>17</sup></p>
+<p>La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3, migliora la risoluzione lungo traccia (~300m) focalizzando l&#39;energia in celle Doppler, permettendo di misurare con precisione anche tra i ghiacci marini e nelle acque costiere.<sup>18</sup></p>
 <h4 id="missioni-2">Missioni</h4>
 <ul>
 <li><p><strong>Sentinel-3 (SRAL):</strong> Altimetro SAR operativo per oceano e ghiacci.</p>
@@ -1619,13 +1607,13 @@ _Figura 01: Frange interferometriche e deformazione misurata: esempio di interfe
 <p>Landsat 8 ha un range ristretto 0.50-0.68 $\mu m$ per evitare lo scattering atmosferico.</p>
 </blockquote>
 <h4 id="funzionamento-fisico">Funzionamento fisico</h4>
-<p>L&#39;ampia larghezza di banda permette di raccogliere un elevato numero di fotoni, garantendo un alto Rapporto Segnale-Rumore (SNR). Questo consente di ridurre la dimensione del pixel (IFOV) mantenendo tempi di integrazione brevi, necessari per evitare il <em>motion blur</em> orbitale. La risoluzione spaziale può scendere sotto i 30 cm nelle piattaforme commerciali moderne, come Superview Neo-1.<sup>27</sup></p>
+<p>L&#39;ampia larghezza di banda permette di raccogliere un elevato numero di fotoni, garantendo un alto Rapporto Segnale-Rumore (SNR). Questo consente di ridurre la dimensione del pixel (IFOV) mantenendo tempi di integrazione brevi, necessari per evitare il <em>motion blur</em> orbitale. La risoluzione spaziale può scendere sotto i 30 cm nelle piattaforme commerciali moderne, come Superview Neo-1.<sup>19</sup></p>
 <h4 id="applicazioni-e-pansharpening">Applicazioni e pansharpening</h4>
-<p>La banda pancromatica è spesso usata in sinergia con bande multispettrali a bassa risoluzione tramite tecniche di <em>Pansharpening</em>. L&#39;immagine risultante combina l&#39;alta fedeltà geometrica del pancromatico con l&#39;informazione cromatica del multispettrale. Una relazione semplificata per la fusione è <sup>28</sup>:</p>
+<p>La banda pancromatica è spesso usata in sinergia con bande multispettrali a bassa risoluzione tramite tecniche di <em>Pansharpening</em>. L&#39;immagine risultante combina l&#39;alta fedeltà geometrica del pancromatico con l&#39;informazione cromatica del multispettrale. Una relazione semplificata per la fusione è <sup>20</sup>:</p>
 <p>$$I_{Pan} \approx \sum_i \alpha_i \cdot I_{MS, i}$$</p>
 <p>Questa è la condizione fisica di partenza ed esprime il fatto che l&#39;energia registrata dal sensore pancromatico (a banda larga) dovrebbe idealmente corrispondere alla somma pesata delle energie registrate dalle bande multispettrali (a banda stretta) che ricadono nel suo intervallo spettrale.</p>
 <p>I  coefficienti $\alpha_i$  rappresentano i pesi spettrali. Poiché il sensore pancromatico non ha una sensibilità piatta (cioè non &quot;vede&quot; tutti i colori con la stessa efficienza), ogni banda multispettrale contribuisce al segnale Pan in modo diverso. Ad esempio, se il sensore Pan è molto sensibile al rosso e poco al blu, il peso $\alpha_i$ del canale rosso sarà maggiore.</p>
-<p>Di seguito un <a href="https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/">esempio di applicazione</a> del pansharpening.</p>
+<p>Di seguito un <a href="https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/">esempio di applicazione</a> del pansharpening.<sup>21</sup></p>
 <img src="../../../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
 Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la risoluzione geometrica estrema consente di distinguere singoli edifici e infrastrutture urbane._
 
@@ -1634,7 +1622,7 @@ Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la ri
 <ul>
 <li><p><strong>Maxar (WorldView Legion), Airbus (Pléiades Neo) e Superview Neo-1:</strong> Risoluzioni commerciali leader di mercato (fino a 30 cm).</p>
 </li>
-<li><p><strong>Landsat 8/9:</strong> Banda pancromatica a 15m per affinare le bande spettrali a 30m.<sup>29</sup></p>
+<li><p><strong>Landsat 8/9:</strong> Banda pancromatica a 15m per affinare le bande spettrali a 30m.<sup>22</sup></p>
 </li>
 </ul>
 <hr>
@@ -1656,7 +1644,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 
 <h4 id="applicazioni-e-missioni">Applicazioni e missioni</h4>
 <ul>
-<li><p><strong>Sentinel-2 (ESA):</strong> Con 13 bande e <a href="https://sentiwiki.copernicus.eu/web/s2-products">risoluzione</a> 10-20m o 60 m, è il riferimento per l&#39;agricoltura di precisione e il monitoraggio land cover.<sup>16</sup></p>
+<li><p><strong>Sentinel-2 (ESA):</strong> Con 13 bande e <a href="https://sentiwiki.copernicus.eu/web/s2-products">risoluzione</a><sup>23</sup> 10-20m o 60 m, è il riferimento per l&#39;agricoltura di precisione e il monitoraggio land cover.<sup>12</sup></p>
 </li>
 <li><p><strong>Landsat 8/9 (NASA/USGS):</strong> Garantisce la continuità delle osservazioni dal 1972, essenziale per studi di cambiamento a lungo termine. La risoluzione, in base alla banda scelta va dai 30 m ai 100 m.</p>
 </li>
@@ -1669,7 +1657,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <p>I sensori iperspettrali si spingono oltre quelli multispettrali, acquisendo decine o centinaia di bande strettissime (dell’ordine di 10 nm) contigue, coprendo in dettaglio il continuo spettrale visibile/SWIR: ogni pixel contiene una sorta di &quot;firma spettrale” continua dell’oggetto osservato. Ciò permette di misurare sottili differenze di riflettanza legate alla composizione chimica e fisica dei materiali (vegetazione, minerali, acque).</p>
 <p>Quello che si studia non è altro che un &quot;ipercubo&quot; di dati $(x, y, \lambda)$ con centinaia di canali spettrali stretti (es. $5-10 nm$), coprendo il range VNIR-SWIR ($400-2500 nm$).</p>
 <h4 id="funzionamento-fisico-e-spectral-mixing">Funzionamento fisico e spectral mixing</h4>
-<p>Ogni pixel contiene uno spettro continuo che funge da &quot;impronta digitale&quot; chimica. Il segnale misurato $y$ è spesso modellato come una <a href="https://ieeexplore.ieee.org/document/974727">mistura lineare</a> degli spettri puri dei materiali costituenti (<em>endmembers</em>) $M$ presenti nel pixel, secondo il <em>Linear Mixing</em> (o <em>Mixture</em>) <em>Model</em> (<strong>LMM</strong>) <sup>30</sup>:</p>
+<p>Ogni pixel contiene uno spettro continuo che funge da &quot;impronta digitale&quot; chimica. Il segnale misurato $y$ è spesso modellato come una <a href="https://ieeexplore.ieee.org/document/974727">mistura lineare</a><sup>24</sup> degli spettri puri dei materiali costituenti (<em>endmembers</em>) $M$ presenti nel pixel, secondo il <em>Linear Mixing</em> (o <em>Mixture</em>) <em>Model</em> (<strong>LMM</strong>) <sup>25</sup>:</p>
 <p>$$y = \sum_{k=1}^{K} a_k m_k + n$$</p>
 <p>Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare materiali sub-pixel o minerali specifici.</p>
 <blockquote>
@@ -1679,25 +1667,25 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <ul>
 <li><p><strong>Geologia Mineraria:</strong> Identificazione di alterazioni idrotermali e terre rare.</p>
 </li>
-<li><p><strong>Qualità dell&#39;Acqua:</strong> Distinzione tra diverse specie algali e sedimenti.<sup>32</sup></p>
+<li><p><strong>Qualità dell&#39;Acqua:</strong> Distinzione tra diverse specie algali e sedimenti.<sup>26</sup></p>
 </li>
 </ul>
 <figure>
   <img src="../../../Assets/Sea.png" alt="Colori dell'oceano determinati dai costituenti in acqua" title="Colori dell'oceano determinati dai costituenti in acqua">
   <figcaption>
-    Il colore dell'oceano è una funzione della luce che viene assorbita o diffusa in presenza dei costituenti disciolti o sospesi nell'acqua. <sup>32</sup>
+    Il colore dell'oceano è una funzione della luce che viene assorbita o diffusa in presenza dei costituenti disciolti o sospesi nell'acqua. <sup>26</sup>
   </figcaption>
 </figure>
 
 
 <ul>
-<li><strong>CubeSat Intelligenti:</strong> La missione <strong>FSSCat/$\Phi$-Sat-1</strong> ha dimostrato l&#39;uso di AI a bordo per processare dati iperspettrali (HyperScout-2) e scartare immagini nuvolose direttamente in orbita, ottimizzando il downlink.<sup>13</sup></li>
+<li><strong>CubeSat Intelligenti:</strong> La missione <strong>FSSCat/$\Phi$-Sat-1</strong> ha dimostrato l&#39;uso di AI a bordo per processare dati iperspettrali (HyperScout-2) e scartare immagini nuvolose direttamente in orbita, ottimizzando il downlink.<sup>27</sup></li>
 </ul>
 <h4 id="missioni-4">Missioni</h4>
 <ul>
-<li><p><strong>EnMAP (DLR) &amp; PRISMA (ASI):</strong> Missioni scientifiche operative rispettivamente tedesca e italiana.<sup>34</sup></p>
+<li><p><strong>EnMAP (DLR) &amp; PRISMA (ASI):</strong> Missioni scientifiche operative rispettivamente tedesca e italiana.<sup>28</sup></p>
 </li>
-<li><p><strong>PACE (NASA):</strong> Lanciata nel 2024, con lo strumento OCI (Ocean Color Instrument) che estende l&#39;iperspettrale agli oceani globali.<sup>32</sup></p>
+<li><p><strong>PACE (NASA):</strong> Lanciata nel 2024, con lo strumento OCI (Ocean Color Instrument) che estende l&#39;iperspettrale agli oceani globali.<sup>26</sup></p>
 </li>
 </ul>
 <blockquote>
@@ -1793,7 +1781,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <h3 id="funzionamento-fisico-e-interferometria-sintetica">Funzionamento fisico e interferometria sintetica</h3>
 <p>Nelle microonde vale l&#39;approssimazione di Rayleigh-Jeans ($h\nu \ll k_B T$), quindi la radianza è proporzionale alla temperatura fisica:</p>
 <p>$$T_b \approx \epsilon \cdot T_{phys}$$</p>
-<p>La missione <strong>SMOS</strong> (ESA) ha introdotto una tecnologia rivoluzionaria: il radiometro a sintesi d&#39;apertura interferometrica (MIRAS). Invece di una grande antenna parabolica rotante (come in SMAP), usa un array statico di 69 ricevitori LICEF (Lightweight Cost-Effective Front-end) a forma di Y. L&#39;immagine di temperatura di brillanza è ricostruita matematicamente dalla trasformata di Fourier inversa delle funzioni di visibilità misurate tra coppie di antenne.<sup>37</sup></p>
+<p>La missione <strong>SMOS</strong> (ESA) ha introdotto una tecnologia rivoluzionaria: il radiometro a sintesi d&#39;apertura interferometrica (MIRAS). Invece di una grande antenna parabolica rotante (come in SMAP), usa un array statico di 69 ricevitori LICEF (Lightweight Cost-Effective Front-end) a forma di Y. L&#39;immagine di temperatura di brillanza è ricostruita matematicamente dalla trasformata di Fourier inversa delle funzioni di visibilità misurate tra coppie di antenne.<sup>29</sup></p>
 <h3 id="missioni-6">Missioni</h3>
 <ul>
 <li><p><strong>SMOS (ESA):</strong> Pioniere della banda L interferometrica.</p>
@@ -1812,9 +1800,9 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <li><p>il monitoraggio delle variazioni di massa redistribuite sul pianeta (acqua, ghiaccio).</p>
 </li>
 </ol>
-<p>Il geoide è fondamentale per la geodesia: definisce la superficie di riferimento altimetrico “a livello del mare” su cui riportare le quote misurate dai satelliti e a terra. Missioni come GOCE (ESA, 2009-2013) hanno fornito un geoide ad alta risoluzione (fino a 100 km) con precisione di 1–2 cm, migliorando i riferimenti verticali tra continenti. Questo ha impatto su mappe <a href="https://geodesy.science/item/satellite-altimetry/">altimetriche oceaniche</a>: sottraendo il geoide dalla superficie marina misurata dagli altimetri, emergono le correnti oceaniche stazionarie (topografia dinamica). </p>
+<p>Il geoide è fondamentale per la geodesia: definisce la superficie di riferimento altimetrico “a livello del mare” su cui riportare le quote misurate dai satelliti e a terra. Missioni come GOCE (ESA, 2009-2013) hanno fornito un geoide ad alta risoluzione (fino a 100 km) con precisione di 1–2 cm, migliorando i riferimenti verticali tra continenti. Questo ha impatto su mappe <a href="https://geodesy.science/item/satellite-altimetry/">altimetriche oceaniche</a><sup>30</sup>: sottraendo il geoide dalla superficie marina misurata dagli altimetri, emergono le correnti oceaniche stazionarie (topografia dinamica). </p>
 <p>Anche in geodesia pura, conoscere l’anomalia di gravità sulla crosta informa sulla struttura geologica e la densità (utili in esplorazione mineraria e petrolifera). </p>
-<p>Riguardo il punto 2, i satelliti gravimetrici time-variable (GRACE e successore GRACE-FO) hanno aperto un nuovo campo nel monitorare il <a href="https://gracefo.jpl.nasa.gov/resources/72/tracking-water-from-space/">ciclo idrologico globale</a> e la criosfera su base mensile. In oceanografia, le misure GRACE di pressione sul fondo oceanico completano gli altimetri isolando la componente di massa negli aumenti di livello (distinguendola dall’espansione termica). Queste osservazioni di “bilancio idrico” sono cruciali per capire gli impatti climatici e per gestione risorse idriche. Inoltre, la gravimetria è servita a evidenziare variazioni di massa nel mantello post-terremoti (es. il sisma di Tōhoku 2011 ha provocato una minuscola ma rilevabile variazione locale del campo di gravità).</p>
+<p>Riguardo il punto 2, i satelliti gravimetrici time-variable (GRACE e successore GRACE-FO) hanno aperto un nuovo campo nel monitorare il <a href="https://gracefo.jpl.nasa.gov/resources/72/tracking-water-from-space/">ciclo idrologico globale</a><sup>31</sup> e la criosfera su base mensile. In oceanografia, le misure GRACE di pressione sul fondo oceanico completano gli altimetri isolando la componente di massa negli aumenti di livello (distinguendola dall’espansione termica). Queste osservazioni di “bilancio idrico” sono cruciali per capire gli impatti climatici e per gestione risorse idriche. Inoltre, la gravimetria è servita a evidenziare variazioni di massa nel mantello post-terremoti (es. il sisma di Tōhoku 2011 ha provocato una minuscola ma rilevabile variazione locale del campo di gravità).</p>
 <h3 id="cosa-misura-9">Cosa misura</h3>
 <p>Le missioni di gravimetria satellitare misurano le piccolissime variazioni del campo gravitazionale terrestre nello spazio e nel tempo. In termini pratici, osservano come cambia l’accelerazione gravitazionale $g$ (o il potenziale gravitazionale) da luogo a luogo e da un’epoca all’altra, a causa della distribuzione di massa all’interno e sulla superficie della Terra. Un satellite in orbita ne risente: dove la gravità locale è leggermente più forte (es. sopra una catena montuosa sottomarina o un’area di maggiore densità del mantello), il satellite accelera un po’ di più; dove è più debole (es. sopra una depressione oceanica o un manto meno denso) accelera di meno.</p>
 <p>Le missioni gravimetriche misurano queste differenze tramite tracciamento di precisione: ad esempio, la <a href="https://sealevel.nasa.gov/missions/grace#:~:text=GRACE%20measured%20gravity%20by%20relating,or%20between%2C%20the%20satellite%20pair">celebre missione GRACE</a> consisteva in due satelliti gemelli che seguono la stessa orbita a 220 km di distanza e misurano la variazione della loro mutua distanza con precisione microscopica. Quando il primo satellite passa sopra un’anomalia gravitazionale, accelera (aumentando la distanza dal secondo); poi anche il secondo accelera e la distanza torna nominale: dall’entità e fase di questa variazione si deduce l’anomalia di gravità.</p>
@@ -1829,55 +1817,62 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
 
 
 <h3 id="funzionamento-fisico-satellite-to-satellite-tracking-sst">Funzionamento fisico: satellite-to-satellite tracking (SST)</h3>
-<p>Due satelliti identici (come in GRACE e GRACE-FO) volano sulla stessa orbita separati da circa 220 km. Un sistema di ranging a microonde (banda $K$) o un interferometro laser (in GRACE-FO) misura la variazione di distanza inter-satellitare con precisione micrometrica.<sup>48</sup></p>
+<p>Due satelliti identici (come in GRACE e GRACE-FO) volano sulla stessa orbita separati da circa 220 km. Un sistema di ranging a microonde (banda $K$) o un interferometro laser (in GRACE-FO) misura la variazione di distanza inter-satellitare con precisione micrometrica.<sup>32</sup></p>
 <p>Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), viene accelerato gravitazionalmente, allontanandosi dal secondo. Analizzando le variazioni di velocità relativa (Range-Rate $\dot{\rho}$), si ricostruisce il potenziale gravitazionale globale.</p>
 <h3 id="missioni-e-applicazioni">Missioni e applicazioni</h3>
+<p>Le prinicpali missioni di cui sono a conoscenza, riguardano i due giganti atlantici in ambito space, NASA e ESA</p>
 <ul>
-<li><p><strong>GRACE / GRACE-FO (NASA/GFZ):</strong> Hanno quantificato per la prima volta in modo inequivocabile la perdita di massa delle calotte polari e l&#39;eccessivo prelievo dalle falde acquifere in India e California.<sup>50</sup></p>
+<li><p><strong>GRACE / GRACE-FO (NASA/GFZ):</strong> Hanno quantificato per la prima volta in modo inequivocabile la perdita di massa delle calotte polari e l&#39;eccessivo prelievo dalle falde acquifere in India e California.<sup>33</sup></p>
 </li>
-<li><p><strong>GOCE (ESA):</strong> Ha utilizzato un gradiometro (accelerometri ultrasensibili) per definire il geoide statico con risoluzione spaziale e precisione mai raggiunte prima.</p>
+<li><p><strong>GOCE (ESA):</strong> Ha utilizzato un gradiometro (accelerometro ultrasensibile) per definire il geoide statico con risoluzione spaziale e precisione mai raggiunte prima.</p>
 </li>
 </ul>
 <hr>
 <h2 id="magnetometria-satellitare">Magnetometria satellitare</h2>
-<p>I magnetometri spaziali studiano il campo magnetico terrestre, scudo protettivo contro il vento solare.</p>
+<p>I satelliti magnetometrici misurano l’intensità e la direzione del campo magnetico terrestre nello spazio circumterrestre. Il campo magnetico terrestre è generato principalmente dal nucleo esterno fluido (dinamo geodinamica), con contributi della crosta (dovuta alla magnetizzazione delle rocce) e correnti elettriche nello spazio e nell’alta atmosfera dovute all&#39;interazione con il vento solare. </p>
 <h3 id="cosa-misura-10">Cosa misura</h3>
-<p>Il vettore campo magnetico totale $\vec{B}$, separando i contributi del nucleo (Core field), della crosta (Lithospheric field) e delle correnti elettriche esterne (Ionosfera/Magnetosfera).</p>
-<h3 id="funzionamento-fisico-fluxgate-e-scalari">Funzionamento fisico: fluxgate e scalari</h3>
-<p>Le missioni di alta precisione utilizzano una combinazione di strumenti:</p>
-<ol>
-<li><p><strong>Magnetometro Fluxgate (Vettoriale):</strong> Misura le tre componenti del campo. Sfrutta la saturazione magnetica periodica di un nucleo ferromagnetico; la seconda armonica del segnale indotto è proporzionale al campo esterno.<sup>51</sup> Richiede una calibrazione precisa dell&#39;assetto tramite Star Trackers solidali al braccio (boom) dello strumento.</p>
-</li>
-<li><p><strong>Magnetometro Scalare Assoluto:</strong> (es. Overhauser o elio otticamente pompato) Misura l&#39;intensità totale $|\vec{B}|$ sfruttando la risonanza magnetica nucleare o transizioni atomiche (effetto Zeeman), fornendo un riferimento assoluto per calibrare i vettoriali.<sup>53</sup></p>
-</li>
-</ol>
+<p>Un satellite dotato di magnetometro vettoriale registra in ogni punto le tre componenti del campo magnetico ($B_x, B_y, B_z$) misurate in nanotesla, nT e come questi variano spostandosi sulla Terra. </p>
+<p>Le missioni dedicano grande cura alla <strong>calibrazione</strong>. I sensori magnetici (spesso di tipo fluxgate o Overhauser scalar) sono montati su <a href="https://link.springer.com/article/10.1007/s11214-025-01238-7">bracci estensibili</a><sup>34</sup> per evitare interferenze della strumentazione di bordo, e vengono accompagnati da star tracker ad alta precisione per conoscere l’orientazione e ricavare così i vettori di campo in un riferimento terrestre inerziale:</p>
+<ul>
+<li>Un <strong>Magnetometro vettoriale (VFM)</strong> (spesso Fluxgate) montato su un braccio estensibile (boom) serve a misurare la direzione delle linee di campo senza l&#39;interferenza magnetica del satellite.</li>
+<li>Un <strong>Magnetometro scalare (ASM)</strong> (es. Overhauser o a vapori di elio) per misurare l&#39;intensità assoluta con altissima precisione, usata per calibrare il vettoriale.</li>
+</ul>
+<p>Misurando l’intero globo su orbite polari ripetute, i satelliti magnetici producono modelli globali del campo geomagnetico, suddivisi in componenti: il campo principale (originato dal nucleo, con dipolo dominante), il campo crosta (anomalie locali da rocce magnetizzate), e campi esterni variabili (correnti ionosferiche e magnetosferiche). </p>
+<p>Inoltre, misurando nel tempo, si traccia la variazione secolare del campo principale (deriva dei poli magnetici, variazioni decennali di intensità dovute ai moti del nucleo).</p>
+<figure>
+  <video controls src="https://dlmultimedia.esa.int/download/public/videos/2013/10/038/1310_038_BR_009.mp4"></video>
+  <figcaption>Video ESA: misura del campo magnetico terrestre dallo spazio.<sup>35</sup></figcaption>
+</figure>
+
+<h3 id="a-cosa-serve">A cosa serve?</h3>
+<p>Una mappa accurata del campo geomagnetico ha molte applicazioni scientifiche e pratiche. Vediamo quelle principali:</p>
+<ul>
+<li><strong>Geofisica del nucleo</strong>: la variazione temporale del campo (variazione secolare) fornisce informazioni sui moti fluidi nel nucleo terrestre <a href="https://phys.org/news/2016-05-strength-earth-magnetic-field.html#:~:text=The%20magnetic%20field%20is%20thought,the%20continuously%20changing%20electromagnetic%20field">a ~3000 km di profondità</a><sup>36</sup>, migliorando la comprensione del meccanismo di dinamo terrestre (terrestrial bicycle dinamo) e permettendo di modellare evoluzione e possibili inversioni del campo. </li>
+<li><strong>Magnetismo crostale</strong>: le anomalie magnetiche mappate dai satelliti (filtrando via il campo principale) rivelano strutture geologiche: ad esempio, l’aggregato dei dati CHAMP e Swarm ha prodotto mappe dell’anomalia di Baghdad, evidenziando zone sepolte. Questo è stato utile per ricerche minerarie e tettoniche. </li>
+<li><strong>Space weather e correnti ionosferiche</strong>: i satelliti come Swarm misurano i currents elettrici in alta atmosfera (es. correnti di Birkeland e anello equatoriale) tramite le perturbazioni magnetiche caratteristiche (differenze tra tracciati di diversi satelliti e modelli di campo interno). Ciò aiuta a monitorare le tempeste geomagnetiche e l’accoppiamento magnetosfera-ionosfera. </li>
+<li><strong>Rischi per infrastrutture</strong>: dalla misura di rapidi cambi del campo (pulsazioni, espulsioni di massa coronale) si deduce l’induzione di correnti geomagneticamente indotte che possono danneggiare reti elettriche. </li>
+<li><strong>Ricerca in archeologia e paleomagnetismo</strong>: sebbene i satelliti misurino l’attuale campo, confronti con modelli storici e simulazioni aiutano a capire variazioni passate impresse in rocce e manufatti (archeomagnetismo). </li>
+<li><strong>Fauna migratoria</strong>: il campo magnetico terrestre è utilizzato da animali migratori (uccelli, tartarughe) per orientamento: modelli di campo aggiornati da dati satellitari vengono usati in studi di ecologia per capire percorsi migratori (es. le mappe di intensità e inclinazione magnetica spiegano certe rotte).</li>
+</ul>
 <h3 id="missioni-7">Missioni</h3>
 <ul>
-<li><p><strong>Swarm (ESA):</strong> Costellazione di 3 satelliti che permette di separare le variazioni temporali da quelle spaziali del campo geomagnetico.</p>
+<li><p><a href="https://earth.esa.int/eogateway/missions/swarm"><strong>Swarm (ESA):</strong></a> Costellazione di 3 satelliti che permette di separare le variazioni temporali da quelle spaziali del campo geomagnetico.<sup>37</sup></p>
 </li>
-<li><p><strong>DSCOVR (NASA/NOAA):</strong> Posizionato in L1, usa magnetometri per monitorare il campo magnetico interplanetario (IMF) trasportato dal vento solare, fornendo allerta precoce per tempeste geomagnetiche.<sup>54</sup></p>
+<li><p><strong>DSCOVR (NASA/NOAA):</strong> Posizionato in L1, usa magnetometri per monitorare il campo magnetico interplanetario (IMF) trasportato dal vento solare, fornendo allerta precoce per tempeste geomagnetiche.<sup>38</sup></p>
 </li>
 </ul>
 <hr>
 <h2 id="segnali-di-opportunit-e-cubesat-radar-la-nuova-frontiera">Segnali di opportunità e CubeSat radar: la nuova frontiera</h2>
 <p>Questa categoria unisce due trend emergenti: l&#39;uso di segnali non nativi per l&#39;EO e la miniaturizzazione estrema dei sensori attivi.</p>
-<h3 id="a-monitoraggio-traffico-ais-e-ads-b-satellitare">A. Monitoraggio traffico: AIS e ADS-B satellitare</h3>
-<p>I satelliti captano i messaggi di posizione trasmessi da navi (AIS) e aerei (ADS-B). La sfida principale è la <strong>de-collisione dei pacchetti</strong>: un satellite vede un&#39;area enorme (FOV ~5000 km) contenente migliaia di emettitori che trasmettono negli stessi slot temporali (TDMA).</p>
-<ul>
-<li><p><strong>SOTDMA vs CSTDMA:</strong> Il protocollo SOTDMA (usato dalle grandi navi Classe A) prenota gli slot futuri ed è più facile da decodificare dallo spazio rispetto al CSTDMA (Classe B), che usa un approccio randomico &quot;ascolta prima di parlare&quot;, spesso saturato in orbita.<sup>59</sup></p>
-</li>
-<li><p><strong>Applicazioni:</strong> Fusione con dati SAR per identificare navi &quot;dark&quot; (che non trasmettono AIS) coinvolte in pesca illegale o traffici illeciti.</p>
-</li>
-</ul>
-<h3 id="b-cubesat-radar-raincube">B. CubeSat radar: RainCube</h3>
+<h3 id="a-cubesat-radar-raincube">A. CubeSat radar: RainCube</h3>
 <p>Fino a poco tempo fa, i radar erano considerati incompatibili con i CubeSat a causa dei requisiti di potenza e dimensioni. La missione <strong>RainCube</strong> (NASA) ha dimostrato un radar meteorologico in banda Ka (35.7 GHz) su un CubeSat 6U.</p>
 <ul>
-<li><strong>Innovazione:</strong> Uso di un&#39;antenna parabolica dispiegabile ultraleggera e di tecniche di compressione dell&#39;impulso. In banda Ka, la pioggia attenua fortemente il segnale; RainCube sfrutta proprio questo principio per profilare la struttura delle tempeste.<sup>61</sup></li>
+<li><strong>Innovazione:</strong> Uso di un&#39;antenna parabolica dispiegabile ultraleggera e di tecniche di compressione dell&#39;impulso. In banda Ka, la pioggia attenua fortemente il segnale; RainCube sfrutta proprio questo principio per profilare la struttura delle tempeste.<sup>39</sup></li>
 </ul>
-<h3 id="c-smart-lnb-pioggia-dalle-tv-satellitari">C. Smart LNB: pioggia dalle TV satellitari</h3>
+<h3 id="b-smart-lnb-pioggia-dalle-tv-satellitari">B. Smart LNB: pioggia dalle TV satellitari</h3>
 <p>Progetti come <strong>NEFOCAST</strong> trasformano i ricevitori TV satellitari domestici (Smart LNB) in pluviometri. Misurano l&#39;attenuazione del segnale di downlink (Ku/Ka band) causata dalla pioggia (<em>Rain Fade</em>).</p>
 <ul>
-<li><strong>Formula:</strong> L&#39;attenuazione specifica $A$ (dB/km) è legata al tasso di precipitazione $R$ (mm/h) dalla legge di potenza $A = k R^\alpha$. Una rete densa di &quot;sensori&quot; domestici fornisce mappe di pioggia in tempo reale con risoluzione capillare.<sup>63</sup></li>
+<li><strong>Formula:</strong> L&#39;attenuazione specifica $A$ (dB/km) è legata al tasso di precipitazione $R$ (mm/h) dalla legge di potenza $A = k R^\alpha$. Una rete densa di &quot;sensori&quot; domestici fornisce mappe di pioggia in tempo reale con risoluzione capillare.<sup>40</sup></li>
 </ul>
 <hr>
 <h3 id="tabella-comparativa-sintetica-delle-tecnologie">Tabella comparativa sintetica delle tecnologie</h3>
@@ -2032,12 +2027,9 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
 <td>Pluviometria Distribuita</td>
 </tr>
 </tbody></table>
-</div></figure><h2 id="conclusione">Conclusione</h2>
-<p>L&#39;analisi di queste diciannove categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (<em>Data Fusion</em>): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l&#39;integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio &quot;Digital Twin&quot; del pianeta, capace di quantificare non solo lo stato dell&#39;ambiente naturale, ma anche l&#39;impatto antropico in tempo reale.</p>
-<h2 id="infografica-matrice-di-confronto">Infografica: matrice di confronto</h2>
-<!-- Infografica Page (NEW) -->
+</div></figure><!-- Infografica Page (NEW) -->
 <div id="infografica" class="content-page hidden">
-  <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di Confronto</h1>
+  <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di confronto</h1>
   <p class="text-lg text-gray-700 mb-6">Questa tabella riassume le capacità operative di tutte le tecnologie analizzate. Usa questa legenda per orientarti:</p>
 
   <div class="flex flex-wrap gap-4 mb-6 text-sm">
@@ -2181,17 +2173,13 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
   <p class="mt-4 text-sm text-gray-500 text-right">* Nota: ☁️ = Penetra le nuvole | 🌙 = Funziona di notte | ❌ = Bloccato/Non disponibile</p>
 </div>
 
+<h2 id="conclusione">Conclusione</h2>
+<p>L&#39;analisi di queste categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (<em>Data Fusion</em>): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l&#39;integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio &quot;Digital Twin&quot; del pianeta, capace di quantificare non solo lo stato dell&#39;ambiente naturale, ma anche l&#39;impatto antropico in tempo reale.</p>
 <h4 id="works-cited">Works cited</h4>
 <ol>
-<li><p>Parametric Sizing Equations for Earth Observation Satellites | Request PDF - ResearchGate, <a href="https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites">https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites</a></p>
-</li>
-<li><p>perspective on Gaussian processes for Earth observation | National Science Review, <a href="https://academic.oup.com/nsr/article/6/4/616/5369430">https://academic.oup.com/nsr/article/6/4/616/5369430</a></p>
-</li>
 <li><p>GNSS radio occultation (GNSS-RO): Lecture 1 – Principles and NWP use - ECMWF Events (Indico), <a href="https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf">https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf</a></p>
 </li>
-<li><p>A variational regularization of Abel transform for GPS radio occultation - AMT, <a href="https://amt.copernicus.org/articles/11/1947/">https://amt.copernicus.org/articles/11/1947/</a></p>
-</li>
-<li><p>GNSS radio occultation excess-phase processing for climate applications including uncertainty estimation - AMT, <a href="https://amt.copernicus.org/articles/16/5217/">https://amt.copernicus.org/articles/16/5217/</a></p>
+<li><p>Smith-Weintraub equation (atmospheric refractivity) - NIST JRES, <a href="https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf">https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf</a></p>
 </li>
 <li><p>GNSS Radio Occultation | Constellation Observing System for Meteorology Ionosphere and Climate - ucar cosmic, <a href="https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation">https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation</a></p>
 </li>
@@ -2201,13 +2189,11 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
 </li>
 <li><p>Reconnaissance satellite constellations: For enhanced global awareness - Spire, <a href="https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/">https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/</a></p>
 </li>
-<li><p>Space Weather Data from Commercial GNSS RO, <a href="https://www.swpc.noaa.gov/sites/default/files/images/u4/07%20Rob%20Kursinski.pdf">https://www.swpc.noaa.gov/sites/default/files/images/u4/07%20Rob%20Kursinski.pdf</a></p>
+<li><p>Improving Analysis and Prediction of Tropical Cyclones by Assimilating Radar and GNSS-R Wind Observations: Ensemble Data Assimilation and Observing System Simulation Experiments Using a Coupled Atmosphere–Ocean Model, <a href="https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml">https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml</a></p>
 </li>
-<li><p>RainCube Demonstrates Miniature Radar Technology to Measure Storms - NASA Science, <a href="https://science.nasa.gov/science-research/science-enabling-technology/technology-highlights/raincube-demonstrates-miniature-radar-technology-to-measure-storms/">https://science.nasa.gov/science-research/science-enabling-technology/technology-highlights/raincube-demonstrates-miniature-radar-technology-to-measure-storms/</a></p>
+<li><p>NASA/University of Michigan - CYGNSS Handbook <a href="https://cygnss.engin.umich.edu/wp-content/uploads/sites/534/2021/07/148-0138-ATBD-L2-Wind-Speed-Retrieval-R6_release.pdf">https://cygnss.engin.umich.edu/wp-content/uploads/sites/534/2021/07/148-0138-ATBD-L2-Wind-Speed-Retrieval-R6_release.pdf</a></p>
 </li>
 <li><p>FSSCat Overview - ESA Earth Online, <a href="https://earth.esa.int/eogateway/missions/fsscat/description">https://earth.esa.int/eogateway/missions/fsscat/description</a></p>
-</li>
-<li><p>FSSCat - Earth Online, <a href="https://earth.esa.int/eogateway/missions/fsscat">https://earth.esa.int/eogateway/missions/fsscat</a></p>
 </li>
 <li><p>Synthetic-aperture radar - Wikipedia, <a href="https://en.wikipedia.org/wiki/Synthetic-aperture_radar">https://en.wikipedia.org/wiki/Synthetic-aperture_radar</a></p>
 </li>
@@ -2215,105 +2201,61 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
 </li>
 <li><p>S1 Applications - SentiWiki - Copernicus, <a href="https://sentiwiki.copernicus.eu/web/s1-applications">https://sentiwiki.copernicus.eu/web/s1-applications</a></p>
 </li>
-<li><p>Create an Interferogram Using ESA&#39;s Sentinel-1 Toolbox | NASA Earthdata, <a href="https://www.earthdata.nasa.gov/learn/data-recipes/create-interferogram-using-esas-sentinel-1-toolbox">https://www.earthdata.nasa.gov/learn/data-recipes/create-interferogram-using-esas-sentinel-1-toolbox</a></p>
-</li>
 <li><p>InSAR Phase Unwrapping Error Correction for Rapid Repeat Measurements of Water Level Change in Wetlands - LaCoast.gov, <a href="https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf">https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf</a></p>
-</li>
-<li><p>Unwrapped Interferograms: Creating a Deformation Map | NASA Earthdata, <a href="https://www.earthdata.nasa.gov/learn/data-recipes/unwrapped-interferograms-creating-deformation-map">https://www.earthdata.nasa.gov/learn/data-recipes/unwrapped-interferograms-creating-deformation-map</a></p>
 </li>
 <li><p>Sentinel-1 InSAR Product Guide - HyP3, <a href="https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/">https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/</a></p>
 </li>
 <li><p>Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, <a href="https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf">https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf</a></p>
 </li>
+<li><p>Sentinel-1 InSAR (Venezia) video - SentiWiki, <a href="https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499">https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499</a></p>
+</li>
 <li><p>Radar Altimetry Principle and Data Processing by M.-H. Rio, <a href="https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf">https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf</a></p>
 </li>
-<li><p>Radar Altimetry for remote sensing of the oceans and their impact on climate - ESA Earth Online, <a href="https://earth.esa.int/eogateway/documents/20142/0/01_Tuesday_OCT2013_Cipollini_Altimetry_1.pdf">https://earth.esa.int/eogateway/documents/20142/0/01_Tuesday_OCT2013_Cipollini_Altimetry_1.pdf</a></p>
-</li>
 <li><p>Using Altimetry service data - EUMETSAT - User Portal, <a href="https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service">https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service</a></p>
-</li>
-<li><p>Altimetry Applications - SentiWiki - Copernicus, <a href="https://sentiwiki.copernicus.eu/web/altimetry-applications">https://sentiwiki.copernicus.eu/web/altimetry-applications</a></p>
-</li>
-<li><p>Backscatter LIDAR, <a href="https://reef.atmos.colostate.edu/~odell/at652/lecture_2013/lecture8b.pdf">https://reef.atmos.colostate.edu/~odell/at652/lecture_2013/lecture8b.pdf</a></p>
 </li>
 <li><p>Panchromatic Images Explained | Satellite Bands, Specs &amp; Uses - XrTech Group, <a href="https://xrtechgroup.com/panchromatic-imaging-bands-uses/">https://xrtechgroup.com/panchromatic-imaging-bands-uses/</a></p>
 </li>
 <li><p>Image Fusion for High-Resolution Optical Satellites Based on Panchromatic Spectral Decomposition - PMC, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/">https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/</a></p>
 </li>
+<li><p>SuperView Neo satellite constellation (pansharpening example) - Satellite Imaging Corp, <a href="https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/">https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/</a></p>
+</li>
 <li><p>Panchromatic Imagery And Its Band Combinations In Use - EOS Data Analytics, <a href="https://eos.com/make-an-analysis/panchromatic/">https://eos.com/make-an-analysis/panchromatic/</a></p>
+</li>
+<li><p>Sentinel-2 products and resolutions - SentiWiki, <a href="https://sentiwiki.copernicus.eu/web/s2-products">https://sentiwiki.copernicus.eu/web/s2-products</a></p>
+</li>
+<li><p>Linear mixture model / spectral mixing - IEEE Xplore, <a href="https://ieeexplore.ieee.org/document/974727">https://ieeexplore.ieee.org/document/974727</a></p>
 </li>
 <li><p>Hyperspectral Imaging - arXiv, <a href="https://arxiv.org/html/2508.08107v1">https://arxiv.org/html/2508.08107v1</a></p>
 </li>
-<li><p>Full article: Hyperspectral and multispectral image fusion addressing spectral variability by an augmented linear mixing model - Taylor &amp; Francis Online, <a href="https://www.tandfonline.com/doi/full/10.1080/01431161.2022.2041762">https://www.tandfonline.com/doi/full/10.1080/01431161.2022.2041762</a></p>
-</li>
 <li><p>Introduction to PACE Hyperspectral Observations for Water Quality Monitoring - NASA Applied Sciences, <a href="https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf">https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf</a></p>
 </li>
-<li><p>SSC19-V-05 - DigitalCommons@USU, <a href="https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=4391&context=smallsat">https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=4391&amp;context=smallsat</a></p>
+<li><p>FSSCat - Earth Online, <a href="https://earth.esa.int/eogateway/missions/fsscat">https://earth.esa.int/eogateway/missions/fsscat</a></p>
 </li>
 <li><p>EnMAP, <a href="https://www.enmap.org/">https://www.enmap.org/</a></p>
 </li>
-<li><p>Mission - EnMAP, <a href="https://www.enmap.org/mission/">https://www.enmap.org/mission/</a></p>
-</li>
-<li><p>Passive Microwave, <a href="https://topex.ucsd.edu/rs/Passive_Microwave.pdf">https://topex.ucsd.edu/rs/Passive_Microwave.pdf</a></p>
-</li>
 <li><p>MIRAS - ESA Earth Online - European Space Agency, <a href="https://earth.esa.int/eogateway/instruments/miras">https://earth.esa.int/eogateway/instruments/miras</a></p>
 </li>
-<li><p>AMSR2 Overview NESDIS Operational Soil Moisture Products - Office of Satellite and Product Operations - NOAA OSPO, <a href="https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html">https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html</a></p>
+<li><p>Satellite altimetry overview - Geodesy Science, <a href="https://geodesy.science/item/satellite-altimetry/">https://geodesy.science/item/satellite-altimetry/</a></p>
 </li>
-<li><p>SMOS (Soil Moisture and Ocean Salinity) Mission - eoPortal, <a href="https://www.eoportal.org/satellite-missions/smos">https://www.eoportal.org/satellite-missions/smos</a></p>
-</li>
-<li><p>Microwave radiometer to retrieve temperature profiles - AMT, <a href="https://amt.copernicus.org/preprints/6/2857/2013/amtd-6-2857-2013.pdf">https://amt.copernicus.org/preprints/6/2857/2013/amtd-6-2857-2013.pdf</a></p>
-</li>
-<li><p>ICESat-2: Home, <a href="https://icesat-2.gsfc.nasa.gov/">https://icesat-2.gsfc.nasa.gov/</a></p>
-</li>
-<li><p>Counting on NASA&#39;s ICESat-2, <a href="https://icesat-2.gsfc.nasa.gov/articles/counting-nasas-icesat-2">https://icesat-2.gsfc.nasa.gov/articles/counting-nasas-icesat-2</a></p>
-</li>
-<li><p>IceSat 2 ATLAS photon-counting receiver - initial on-orbit performance - NASA Technical Reports Server, <a href="https://ntrs.nasa.gov/api/citations/20200001212/downloads/20200001212.pdf">https://ntrs.nasa.gov/api/citations/20200001212/downloads/20200001212.pdf</a></p>
-</li>
-<li><p>Signal Photon Extraction Method for ICESat-2 Data Using Slope and Elevation Information Provided by Stereo Images - PubMed Central, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10649317/">https://pmc.ncbi.nlm.nih.gov/articles/PMC10649317/</a></p>
-</li>
-<li><p>Aeolus Objectives - ESA Earth Online, <a href="https://earth.esa.int/eogateway/missions/aeolus/objectives">https://earth.esa.int/eogateway/missions/aeolus/objectives</a></p>
-</li>
-<li><p>First validation of Aeolus wind observations by airborne Doppler wind lidar measurements, <a href="https://amt.copernicus.org/articles/13/2381/2020/">https://amt.copernicus.org/articles/13/2381/2020/</a></p>
-</li>
-<li><p>The ESA ADM-Aeolus Doppler Wind Lidar Mission – Status and validation strategy - ECMWF, <a href="https://www.ecmwf.int/sites/default/files/elibrary/2016/16851-esa-adm-aeolus-doppler-wind-lidar-mission-status-and-validation-strategy.pdf">https://www.ecmwf.int/sites/default/files/elibrary/2016/16851-esa-adm-aeolus-doppler-wind-lidar-mission-status-and-validation-strategy.pdf</a></p>
+<li><p>Tracking water from space (GRACE/GRACE-FO) - JPL, <a href="https://gracefo.jpl.nasa.gov/resources/72/tracking-water-from-space/">https://gracefo.jpl.nasa.gov/resources/72/tracking-water-from-space/</a></p>
 </li>
 <li><p>Gravity Recovery and Climate Experiment (GRACE) - NASA Sea Level Change Portal, <a href="https://sealevel.nasa.gov/missions/grace">https://sealevel.nasa.gov/missions/grace</a></p>
 </li>
-<li><p>GRACE-FO - Gravity Recovery and Climate Experiment Follow-On - Center for Space Research, <a href="https://www2.csr.utexas.edu/grace/RL061LRI.html">https://www2.csr.utexas.edu/grace/RL061LRI.html</a></p>
-</li>
 <li><p>Satellite-based estimates of groundwater depletion in India <a href="https://www.nature.com/articles/nature08238/">https://www.nature.com/articles/nature08238/</a></p>
 </li>
-<li><p>In-flight calibration of the fluxgate magnetometer on Macau Science Satellite-1, <a href="https://www.eppcgs.org/article/doi/10.26464/epp2025067">https://www.eppcgs.org/article/doi/10.26464/epp2025067</a></p>
+<li><p>Satellite magnetometer booms and calibration - Springer, <a href="https://link.springer.com/article/10.1007/s11214-025-01238-7">https://link.springer.com/article/10.1007/s11214-025-01238-7</a></p>
 </li>
-<li><p>A miniature two-axis fluxgate magnetometer - NASA Technical Reports Server, <a href="https://ntrs.nasa.gov/api/citations/19700008650/downloads/19700008650.pdf">https://ntrs.nasa.gov/api/citations/19700008650/downloads/19700008650.pdf</a></p>
+<li><p>Earth&#39;s magnetic field (video) - ESA Multimedia, <a href="https://dlmultimedia.esa.int/download/public/videos/2013/10/038/1310_038_BR_009.mp4">https://dlmultimedia.esa.int/download/public/videos/2013/10/038/1310_038_BR_009.mp4</a></p>
 </li>
-<li><p>Types of magnetometers, uses and characteristics | AV3 AEROVISUAL, <a href="https://av3aerovisual.com/en/types-of-magnetometers-uses-and-characteristics/">https://av3aerovisual.com/en/types-of-magnetometers-uses-and-characteristics/</a></p>
+<li><p>Earth&#39;s magnetic field generated in the core (depth reference) - Phys.org, <a href="https://phys.org/news/2016-05-strength-earth-magnetic-field.html">https://phys.org/news/2016-05-strength-earth-magnetic-field.html</a></p>
+</li>
+<li><p>Swarm mission overview - ESA Earth Online, <a href="https://earth.esa.int/eogateway/missions/swarm">https://earth.esa.int/eogateway/missions/swarm</a></p>
 </li>
 <li><p>Deep Space Climate Observatory (DSCOVR) - National Centers for Environmental Information - NOAA, <a href="https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr">https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr</a></p>
 </li>
-<li><p>It&#39;s all systems go for NOAA&#39;s first space weather satellite, <a href="https://www.noaa.gov/its-all-systems-go-noaas-first-space-weather-satellite">https://www.noaa.gov/its-all-systems-go-noaas-first-space-weather-satellite</a></p>
-</li>
-<li><p>GOES-R Post Launch Test | NASA Earthdata, <a href="https://www.earthdata.nasa.gov/data/projects/goes-r-plt">https://www.earthdata.nasa.gov/data/projects/goes-r-plt</a></p>
-</li>
-<li><p>GOES-R Terrestrial Weather (ABI/GLM) - National Centers for Environmental Information, <a href="https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm">https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm</a></p>
-</li>
-<li><p>GOES-R Series Data Book, <a href="https://www.goes-r.gov/downloads/resources/documents/GOES-RSeriesDataBook.pdf">https://www.goes-r.gov/downloads/resources/documents/GOES-RSeriesDataBook.pdf</a></p>
-</li>
-<li><p>Sotdma vs cstdma: understanding key differences for maritime communication - BytePlus, <a href="https://www.byteplus.com/en/topic/560464">https://www.byteplus.com/en/topic/560464</a></p>
-</li>
-<li><p>AIS Know-How: Data transfer (SOTDMA vs. CSTDMA), <a href="https://defender.com/assets/pdf/simrad/sotdma_cstdma_comparison.pdf">https://defender.com/assets/pdf/simrad/sotdma_cstdma_comparison.pdf</a></p>
-</li>
 <li><p>RainCube: the first ever radar measurements from a CubeSat in space - SPIE Digital Library, <a href="https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full">https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full</a></p>
 </li>
-<li><p>RainCube - NASA ESTO, <a href="https://esto.nasa.gov/wp-content/uploads/2020/07/RainCube.pdf">https://esto.nasa.gov/wp-content/uploads/2020/07/RainCube.pdf</a></p>
-</li>
 <li><p>Real-Time Rain Rate Evaluation via Satellite Downlink Signal Attenuation Measurement - PubMed Central, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/">https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/</a></p>
-</li>
-<li><p>SmartLNB for weather forecasting - Nefocast, <a href="http://www.nefocast.it/news/smartlnb-for-weather-forecasting/">http://www.nefocast.it/news/smartlnb-for-weather-forecasting/</a></p>
-</li>
-<li><p>Improving Analysis and Prediction of Tropical Cyclones by Assimilating Radar and GNSS-R Wind Observations: Ensemble Data Assimilation and Observing System Simulation Experiments Using a Coupled Atmosphere–Ocean Model, <a href="https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml">https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml</a></p>
-</li>
-<li><p>NASA/University of Michigan - CYGNSS Handbook <a href="https://cygnss.engin.umich.edu/wp-content/uploads/sites/534/2021/07/148-0138-ATBD-L2-Wind-Speed-Retrieval-R6_release.pdf">https://cygnss.engin.umich.edu/wp-content/uploads/sites/534/2021/07/148-0138-ATBD-L2-Wind-Speed-Retrieval-R6_release.pdf</a></p>
 </li>
 </ol>
         </div>
