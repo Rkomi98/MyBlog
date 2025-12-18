@@ -1,17 +1,10 @@
 # What Data Do Satellites Record?
 
-<details class="post-warning">
-<summary><strong>Article under review</strong> (click to open)</summary>
-
-This article is still a work in progress and is undergoing a complete revision. Some sections may be incomplete or change significantly in future versions.
-
-</details>
-
 ## Introduction
 
-In recent decades, satellites have become one of the most strategic infrastructures for understanding, monitoring, and managing our planet. Every day, hundreds of orbiting missions collect an impressive amount of information: ultra-high-resolution images, atmospheric data, measurements of land and sea surfaces, navigation signals, vertical atmospheric profiles, and variations in the gravitational and magnetic fields. It's no longer just about "photos from space," but a complex ecosystem of complementary technologies that, together, build the most complete operational representation of Earth ever obtained in human history.
+In recent decades, satellites have become one of the most strategic infrastructures for understanding, monitoring, and managing our planet. Every day, hundreds of missions in orbit collect an impressive amount of information: ultra-high-resolution images, atmospheric data, measurements of land and sea surfaces, navigation signals, vertical atmospheric profiles, and variations in the gravitational and magnetic fields. It's no longer just about "photos from space," but a complex ecosystem of complementary technologies that, together, build the most complete operational representation of Earth ever obtained in human history.
 
-In this article, we will analyze all the main sources of satellite data, ordering them from the most known to the least known. For each category, we will see what it measures, what it's used for, what real-world applications it enables, what the most representative missions are, and finally how the sensor that makes it possible works. The goal is to offer a clear yet in-depth overview, useful for both industry professionals and those who wish to better understand the technologies that are revolutionizing the way we observe Earth.
+In this article, we will analyze all the main sources of satellite data, ordering them from the most well-known to the least. For each category, we will see what it measures, what it's used for, what real-world applications it enables, what the most representative missions are, and finally, how the sensor that makes it possible works. The goal is to offer a clear yet in-depth overview, useful for both industry professionals and those who wish to better understand the technologies that are revolutionizing the way we observe Earth.
 
 In this report, we analyze in detail nineteen distinct categories of satellite instrumentation. For each, we will examine in detail the physical principle of operation, supported by the mathematical formalism governing the interaction between radiation and matter, and we will explore the operational applications that transform raw data into critical geophysical information.
 
@@ -19,14 +12,14 @@ In this analysis, we will discuss passive sensors that measure reflected solar r
 
 ***
 
-## 1. GNSS – Global Navigation Satellite Systems
-GNSS data originated in military contexts but have proven fundamental in many everyday fields. They enable global-scale autonomous positioning and navigation and provide a standard time reference.
+## GNSS – Global Navigation Satellite Systems
+GNSS data originated in the military domain but have proven fundamental in many everyday fields. They enable global-scale autonomous positioning and navigation and provide a standard time reference.
 
 GNSS systems (such as GPS, Galileo, GLONASS, BeiDou) transmit radiofrequency signals containing orbital and temporal information from onboard atomic clocks. By measuring the time it takes for the signal to reach a receiver on Earth, the distance and thus the user's position are calculated via trilateration with at least 4 visible satellites. GNSS therefore provides extremely precise measurements of positioning (latitude, longitude, altitude) and absolute time.
 
-They are used in **geodesy** (GNSS station networks monitor tectonic movement and define global references), **precision agriculture**, **mapping** and **GIS**, terrestrial, aerial, and naval **transport**, and synchronization of electrical and telecommunication networks. For example, the combined use of various GNSS systems now allows for multi-constellation receivers with global coverage and greater reliability.
+They are used in **geodesy** (GNSS station networks monitor tectonic movement and define global references), **precision agriculture**, **mapping** and **GIS**, terrestrial, aerial, and naval **transport**, and synchronization of power grids and telecommunications. For example, the combined use of various GNSS systems now allows for multi-constellation receivers with global coverage and greater reliability.
 
-### 1.1 GNSS Radio Occultation (GNSS-RO): Precision Atmospheric Sounding
+### GNSS Radio Occultation (GNSS-RO): Precision Atmospheric Sounding
 
 GNSS Radio Occultation (GNSS-RO) represents one of the most elegant and robust remote sensing techniques, transforming navigation signals, originally conceived for positioning, into high-precision tools for meteorology and climatology.
 
@@ -34,21 +27,21 @@ GNSS Radio Occultation (GNSS-RO) represents one of the most elegant and robust r
 
 A GNSS receiver captures coded signals transmitted by satellites, which include the transmission time.
 
-By comparing with local time (after synchronization), the satellite distance (pseudo-range) is obtained. Intersecting the distance spheres of 4 or more satellites resolves the three-dimensional position and the receiver's time difference. The physical principle is the measurement of the signal's time of flight ($t$) and the relation
+By comparing it with the local time (after synchronization), the satellite distance (pseudo-range) is obtained. By intersecting the distance spheres of 4 or more satellites, the three-dimensional position and the receiver's time difference are resolved. The physical principle is the measurement of the signal's time of flight ($t$) and the relationship
 $$d = c \cdot t,$$
 where $c$ is the speed of light.
 
 **Relativistic** and **atmospheric corrections** (ionosphere and troposphere) must be applied to achieve accuracies at the meter level or below.
 
-Differential systems and techniques such as **RTK (Real-Time Kinematic)** allow for centimeter-level precision by correcting residual errors using reference stations. In summary, GNSS precisely measures position and time on a global scale, constituting an invisible but crucial infrastructure for modern society.
+Differential systems and techniques like **RTK (Real-Time Kinematic)** allow for centimeter-level precision by correcting residual errors via reference stations. In summary, GNSS precisely measures position and time on a global scale, constituting an invisible but crucial infrastructure for modern society.
 
-> I warn you, I'm taking off my popularizer hat now and putting on my mathematician hat :)
+> I warn you, I'm now taking off my popularizer hat and putting on my mathematician hat :)
 
-The fundamental parameter measured is the excess phase delay, from which the bending angle ($\alpha$) is derived as a function of the impact parameter ($a$). In a locally spherically symmetric atmosphere, the relationship between the bending angle and the refractive index $n(r)$ is governed by the generalized Snell's law and can be inverted using the inverse Abel transform <sup>3</sup>:
+The fundamental parameter measured is the excess phase delay, from which the bending angle ($\alpha$) is derived as a function of the impact parameter ($a$). In a locally spherically symmetric atmosphere, the relationship between the bending angle and the refractive index $n(r)$ is governed by the generalized Snell's law and can be inverted using the inverse Abel transform <sup>1</sup>:
 
 $$n(r) = \exp \left( \frac{1}{\pi} \int_x^\infty \frac{\alpha(x)}{\sqrt{x^2 - a^2}} \\, dx \right)$$
 
-Where $x = n(r) \cdot r$ is the refractive radius and $\alpha(x)$ is the corrected bending angle. Once the refractive index profile is obtained, refractivity $N$ is calculated, defined as $N = (n-1) \times 10^6$. The relationship between refractivity and atmospheric thermodynamic variables is described by the [Smith-Weintraub](https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf) equation:
+Where $x = n(r) \cdot r$ is the refractive radius and $\alpha(x)$ is the corrected bending angle. Once the refractive index profile is obtained, refractivity $N$ is calculated, defined as $N = (n-1) \times 10^6$. The relationship between refractivity and atmospheric thermodynamic variables is described by the [Smith-Weintraub](https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf) equation<sup>2</sup>:
 
 $$N = 77.6 \frac{P}{T} + 3.73 \times 10^5 \frac{e}{T^2} - 40.3 \frac{n\_e}{f^2}$$
 
@@ -58,7 +51,7 @@ In this equation:
 
 - $T$ is the temperature (K).
 
-- $e$ is the partial pressure of water vapor (hPa).
+- $e$ is the water vapor partial pressure (hPa).
 
 - $n\_e$ is the electron density, which dominates the ionospheric term (significant above 60-80 km).
 
@@ -67,40 +60,40 @@ In this equation:
 
 #### Utility and Critical Applications
 
-The strength of GNSS-RO lies in its "self-calibrating" nature: since it relies on time and frequency measurements (guaranteed by atomic clocks), it does not suffer from instrumental drift, making it ideal for long-term climate monitoring.<sup>6</sup>
+The strength of GNSS-RO lies in its "self-calibrating" measurement nature: since it is based on time and frequency measurements (guaranteed by atomic clocks), it does not suffer from instrumental drift, making it ideal for long-term climate monitoring.<sup>3</sup>
 
-- **Operational Meteorology (NWP):** RO profiles are essential for anchoring weather models in the upper troposphere and stratosphere, where other data are scarce, correcting temperature biases.<sup>7</sup>
+- **Operational Meteorology (NWP):** RO profiles are essential for anchoring meteorological models in the upper troposphere and stratosphere, where other data are scarce, correcting temperature biases.<sup>4</sup>
 
-- **Climatology:** Monitoring global temperature and tropopause trends with absolute precision.
+- **Climatology:** Monitoring global temperature trends and the tropopause with absolute precision.
 
-- **Space Weather:** Measurement of Total Electron Content (TEC) and ionospheric scintillations, crucial for the security of satellite communications.<sup>8</sup>
+- **Space Weather:** Measuring Total Electron Content (TEC) and ionospheric scintillations, crucial for satellite communication security.<sup>5</sup>
 
 
 #### Reference Missions
 
-The technique was pioneered by the **GPS/MET** mission and made operational by the **COSMIC-1** constellation (Taiwan/USA). Currently, **COSMIC-2** provides dense coverage in equatorial latitudes, optimized for hurricane and ionosphere studies.<sup>6</sup> In parallel, the commercial "NewSpace" sector has revolutionized this field: **Spire Global**, with its constellation of over 100 LEMUR CubeSats, and **PlanetIQ**, provide thousands of daily measurements, integrating institutional data.<sup>9</sup>
+The technique was pioneered by the **GPS/MET** mission and made operational by the **COSMIC-1** constellation (Taiwan/USA). Currently, **COSMIC-2** provides dense coverage in equatorial latitudes, optimized for the study of hurricanes and the ionosphere.<sup>3</sup> In parallel, the "NewSpace" commercial sector has revolutionized this field: **Spire Global**, with its constellation of over 100 LEMUR CubeSats, and **PlanetIQ**, provide thousands of daily measurements, complementing institutional data.<sup>6</sup>
 
 ***
 
-### 1.2. GNSS Reflectometry (GNSS-R): The Bistatic Radar of Opportunity
+### GNSS Reflectometry (GNSS-R): The Bistatic Radar of Opportunity
 
 While Radio Occultation exploits signals transmitted through the atmosphere, GNSS Reflectometry (GNSS-R) analyzes signals reflected from the Earth's surface, operating as a multi-static bistatic radar.
 
 
-#### What Does It Measure?
+#### What does it measure?
 
 GNSS-R allows the extraction of geophysical properties from the reflecting surface:
 
-- **Oceans:** Surface wind speed and mean square slope.
+- **Oceans:** Surface wind speed and mean roughness (Mean Square Slope).
 
-- **Soil:** Soil moisture and vegetation biomass.
+- **Land:** Soil Moisture and vegetation biomass.
 
 - **Cryosphere:** Sea ice extent and thickness.
 
 
 #### Physical Operation and Formulas
 
-The receiver measures the power of the reflected signal as a function of time delay and Doppler shift, generating a _Delay Doppler Map_ (DDM). The received power $P_r$ is described by the bistatic radar equation <sup>9</sup>:
+The receiver measures the power of the reflected signal as a function of time delay (delay) and Doppler shift, generating a _Delay Doppler Map_ (DDM). The received power $P_r$ is described by the bistatic radar equation <sup>6</sup>:
 
 $$ P_r(\tau, f_D) = \frac{P_t G_t \lambda^2}{(4\pi)^3} \iint_A \frac{G_r(\vec{r}) \sigma^0(\vec{r}) \chi^2(\tau, f_D)}{R_t^2(\vec{r}) R_r^2(\vec{r})} d\vec{r} $$
 
@@ -112,7 +105,7 @@ Where:
 
 - $R_t$ and $R_r$ are the distances from the transmitter and receiver to the specular reflection point.
 
-On calm (specular) surfaces, energy is concentrated at one point in the DDM. On rough surfaces (ocean agitated by wind), energy disperses to form a "horseshoe" shape in the DDM map; the amplitude of this dispersion is directly correlated with wind speed.
+On calm (specular) surfaces, the energy is concentrated at one point in the DDM. On rough surfaces (ocean agitated by wind), the energy disperses to form a "horseshoe" in the DDM map; the amplitude of this dispersion is directly correlated with wind speed.
 
 > 🎮 **Interactive Simulation.** Do you want to see how Delay Doppler Maps change with varying wind, altitude, and incidence angle? Try the [GNSS-R DDM simulation](Assets/simulations/ddm/index.html) based on the model described here.
 
@@ -124,7 +117,7 @@ On calm (specular) surfaces, energy is concentrated at one point in the DDM. On 
 ></iframe>
 
 The graph shows the power distribution of the reflected signal in delay-Doppler space. In rough sea conditions (wind ~10-15 m/s), energy disperses from the specular position (delay=0, Doppler=0) forming the characteristic "horseshoe shape" in a 2D graph. In this case, we have
-- **X-axis** (Doppler): Frequency shift due to the relative motion of satellite-surface
+- **X-axis** (Doppler): Frequency shift due to relative satellite-surface motion
 - **Y-axis** (Delay): Time delay relative to the direct specular path
 - **Z-axis** (Power): Intensity of the reflected signal
 
@@ -136,7 +129,7 @@ In GNSS-R, the signal does not reflect from a single point (as in a monostatic r
 
 Each small surface element within this area contributes to the total power received by the satellite.
 
-To find the total power ($P_r$​) arriving at the receiver, we must sum (integrate) the power contributions from all these small surface elements.
+To find the total power ($P_r$) that reaches the receiver, we must sum (integrate) the power contributions of all these small surface elements.
 
 The scattering surface ($A$) is defined by two orthogonal coordinates (which can be spatial or signal-related) lying on the scattering plane.
 
@@ -144,108 +137,108 @@ The differential element $\mathrm{d} \vec{r}$ in this context represents $\mathr
 
 #### Utility and applications
 
-The "killer" application of GNSS-R is tropical cyclone monitoring<sup>65</sup>. Unlike optical radiometers (blocked by clouds) or Ku-band scatterometers (attenuated by heavy rain), L-band GNSS signals penetrate intense precipitation<sup>66</sup>, allowing for the measurement of wind speed in the eye of the cyclone.
+The "killer" application of GNSS-R is tropical cyclone monitoring<sup>7</sup>. Unlike optical radiometers (blocked by clouds) or Ku-band scatterometers (attenuated by heavy rain), L-band GNSS signals penetrate intense precipitation<sup>8</sup>, allowing wind speed to be measured in the eye of the cyclone.
 
 In terrestrial environments, the technique provides high-temporal-resolution soil moisture maps, essential for flood forecasting and agriculture.
 
 #### Missions
-Of course, among the missions, I must mention the one from which I took much of this information, namely NASA's CYGNSS, but it is not the only one.
+Of course, among the missions, I must mention the one from which I took most of this information, namely NASA's CYGNSS, but it is not the only one.
 
 - **CYGNSS (NASA):** A constellation of 8 microsatellites launched to study hurricane intensification, which has also demonstrated surprising capabilities in monitoring tropical wetlands.
 
-- **FSSCat (ESA):** A mission based on two 6U CubeSats that combined GNSS-R with an optical hyperspectral sensor, winner of the Copernicus Masters. The mission lasted approximately one year. <sup>12</sup>
+- **FSSCat (ESA):** A mission based on two 6U CubeSats that combined GNSS-R with an optical hyperspectral sensor, winner of the Copernicus Masters. The mission lasted about a year.<sup>9</sup>
 
-- **Spire Global:** Offers commercial reflectometry products for maritime and sea ice monitoring, and more.<sup>9</sup>
+- **Spire Global:** Offers commercial reflectometry products for maritime and sea ice monitoring, but not only.<sup>6</sup>
 
 ***
 
-## 2. Synthetic Aperture Radar: SAR
+## Synthetic Aperture Radar: SAR
 
-### 2.1 Synthetic Aperture Radar (SAR): all-weather microwave imaging
+### Synthetic Aperture Radar (SAR): all-weather microwave imaging
 
-SAR represents the primary instrument for observing the solid surface in all weather and lighting conditions, thanks to its active nature and microwave wavelength.
+SAR represents the primary tool for observing the solid surface in all weather and lighting conditions, thanks to its active nature and microwave wavelength.
 
 #### What does it measure?
 
-Synthetic aperture radars actively send electromagnetic waves (microwaves) towards the Earth's surface and measure the backscattered echo, recording its intensity and phase upon return. Unlike optical sensors, a SAR illuminates the scene with its own pulses (typically in centimetric bands: L, C, X, etc.) and captures microwaves reflected from objects on the ground. This provides images where the “brightness” of each pixel is related to the radar backscattering coefficient (**backscatter**), which depends on the roughness, structure, and water content of the target. For example, smooth surfaces (calm waters) reflect little energy back to the radar, appearing dark, while rough areas or those with edges (such as buildings, fractured rocks, dense vegetation) appear bright.
+Synthetic aperture radars actively send electromagnetic waves (microwaves) towards the Earth's surface and measure the backscattered echo, recording its intensity and phase upon return. Unlike optical sensors, a SAR illuminates the scene with its own pulses (typically in centimetric bands: L, C, X, etc.) and captures microwaves reflected from objects on the ground. This provides images where the "brightness" of each pixel is related to the radar backscatter coefficient, which depends on the roughness, structure, and water content of the target. For example, smooth surfaces (calm waters) reflect little energy back to the radar, appearing dark, while rough areas or areas with edges (such as buildings, fractured rocks, dense vegetation) appear bright.
 
-By also measuring the phase of the backscattered microwave, SAR systems can detect distance differences on the order of millimeters with extreme sensitivity, paving the way for interferometry (InSAR, see next section). SAR radars operate in various polarizations (HH, VV, HV, VH), measuring different components of the electromagnetic field vector, which adds information about target geometry and the presence of vegetation.
+By also measuring the phase of the backscattered microwave, SAR systems can detect distance differences in the millimeter range with extreme sensitivity, paving the way for interferometry (InSAR, see next section). SAR radars operate in various polarizations (HH, VV, HV, VH), measuring different components of the electromagnetic field vector, which adds information about target geometry and the presence of vegetation.
 
 SAR returns complex images (in the mathematical sense of the term) where each pixel contains:
 
 - **Amplitude:** Correlated with surface roughness, dielectric constant (moisture), and local geometry.
 
-- **Phase:** Correlated with the geometric distance between sensor and target, fundamental for interferometric applications.
+- **Phase:** Correlated with the geometric sensor-target distance, fundamental for interferometric applications.
 
 #### Physical operation and formulas
 
-Per ottenere un'alta risoluzione spaziale in direzione azimutale (lungo la traccia) senza impiegare antenne chilometriche, il SAR sfrutta il movimento del satellite per sintetizzare un'apertura virtuale<sup>14</sup>. 
+To achieve high spatial resolution in the azimuthal direction (along-track) without employing kilometer-long antennas, SAR exploits the satellite's motion to synthesize a virtual aperture<sup>10</sup>.
 
-Elaborando coerentemente la storia di fase degli echi di ritorno (**effetto Doppler**), la risoluzione azimutale teorica $\delta_a$ diventa indipendente dalla distanza ed è pari a metà della lunghezza dell'antenna reale $L_a$<sup>15</sup>:
+By coherently processing the phase history of the return echoes (**Doppler effect**), the theoretical azimuthal resolution $\delta_a$ becomes independent of distance and is equal to half the length of the real antenna $L_a$<sup>11</sup>:
 
 $$\delta_a = \frac{L_a}{2}$$
 
-La risoluzione in range (perpendicolare alla traccia) è determinata dalla larghezza di banda $B$ dell'impulso trasmesso (spesso un _chirp_ modulato in frequenza, dove il _chirp_ è un segnale la cui frequenza varia nel tempo):
+The range resolution (perpendicular to the track) is determined by the bandwidth $B$ of the transmitted pulse (often a frequency-modulated _chirp_, where a _chirp_ is a signal whose frequency varies over time):
 
 $$\delta_r = \frac{c}{2B \sin(\theta)}$$
 
-Dove $\theta$ è l'angolo di incidenza. L'equazione di fase $\phi$ per un pixel a distanza $R$ è data da:
+Where $\theta$ is the incidence angle. The phase equation $\phi$ for a pixel at distance $R$ is given by:
 
 $$\phi = -\frac{4\pi R}{\lambda} + \phi_{scatt}$$
 
-La frazione $4\pi R / \lambda$ indica che la fase compie un ciclo completo ogni volta che la distanza cambia di mezza lunghezza d'onda ($\lambda/2$).
+The fraction $4\pi R / \lambda$ indicates that the phase completes a full cycle every time the distance changes by half a wavelength ($\lambda/2$).
 
 
-#### Utilità e applicazioni
+#### Utility and Applications
 
-Il vantaggio principale del SAR è la sua capacità di osservare la Terra **con ogni condizione di illuminazione** e **meteorologica**: essendo attivo, non dipende dal Sole né è ostacolato dalle nubi (le microonde attraversano la copertura nuvolosa). Questo rende i SAR ideali per monitorare regioni frequentemente coperte da nubi (zone tropicali) o per sorvegliare aree polari durante la lunga notte invernale. 
+The main advantage of SAR is its ability to observe the Earth **under all illumination** and **weather conditions**: being active, it does not depend on the Sun nor is it hindered by clouds (microwaves penetrate cloud cover). This makes SAR ideal for monitoring regions frequently covered by clouds (tropical areas) or for surveying polar areas during the long winter night.
 
-Le immagini SAR trovano impiego in cartografia di suoli umidi e alluvionati (il segnale penetra un po’ la vegetazione e riflette fortemente da terreni saturi d’acqua, utilissimo in caso di inondazioni), in agricoltura (stima dell’umidità del suolo e fase fenologica delle colture: la dispersione del segnale varia con la struttura del fogliame), nella sorveglianza marittima (rilevazione di navi e di chiazze di petrolio: il petrolio calma il mare e appare scuro sul SAR, facilitando l’individuazione di sversamenti). 
+SAR images are used in mapping wet and flooded soils (the signal penetrates vegetation somewhat and reflects strongly from water-saturated ground, very useful in case of floods), in agriculture (estimation of soil moisture and crop phenological stage: signal scattering varies with foliage structure), in maritime surveillance (detection of ships and oil spills: oil calms the sea and appears dark on SAR, facilitating the identification of spills).
 
-In geologia e gestione del territorio, i SAR mappano deformazioni del terreno e frane tramite InSAR (si veda oltre), mentre in forestry la polarimetria SAR aiuta a stimare la biomassa forestale (missioni P-band come BIOMASS). Inoltre, i SAR permettono di rilevare cambiamenti improvvisi: grazie a passaggi frequenti, individuano il disboscamento illegale, il movimento di ghiacciai, i nuovi edifici o i danni da disastri confrontando immagini prima/dopo (change detection). In ambito militare e di intelligence, l’osservazione radar è cruciale perché fornisce immagini giorno/notte e all-weather, rivelando installazioni camuffate e movimenti.
+In geology and land management, SAR maps ground deformations and landslides using InSAR (see below), while in forestry, SAR polarimetry helps estimate forest biomass (P-band missions like BIOMASS). Furthermore, SAR allows the detection of sudden changes: thanks to frequent passes, it identifies illegal deforestation, glacier movement, new buildings, or disaster damage by comparing before/after images (change detection). In military and intelligence contexts, radar observation is crucial because it provides day/night and all-weather images, revealing camouflaged installations and movements.
 
-In conclusione la versatilità dei sistemi SAR è immensa<sup>16</sup>:
+In conclusion, the versatility of SAR systems is immense<sup>12</sup>:
 
-- **Monitoraggio Marittimo:** Rilevamento di navi, _oil spills_ (che appaiono scuri per soppressione delle onde capillari) e classificazione del ghiaccio marino.
+- **Maritime Monitoring:** Detection of ships, _oil spills_ (which appear dark due to capillary wave suppression), and sea ice classification.
 
-- **Agricoltura:** Monitoraggio della crescita delle colture (sensibilità alla biomassa e struttura) e dell'umidità del suolo.
+- **Agriculture:** Monitoring crop growth (sensitivity to biomass and structure) and soil moisture.
 
-- **Gestione Emergenze:** Mappatura rapida delle inondazioni (l'acqua calma appare nera per riflessione speculare lontano dal sensore).
+- **Emergency Management:** Rapid mapping of floods (calm water appears black due to specular reflection away from the sensor).
 
 
-#### Missioni
+#### Missions
 
-Le principali missioni sono:
+The main missions are:
 
-- **Sentinel-1 (ESA/Copernicus):** La missione di riferimento in banda C, che fornisce dati globali con politica open access, cruciale per l'interferometria operativa.<sup>16</sup>
+- **Sentinel-1 (ESA/Copernicus):** The reference C-band mission, providing global data with an open access policy, crucial for operational interferometry.<sup>12</sup>
 
-- **COSMO-SkyMed (ASI/Italia) & TerraSAR-X (DLR/Germania):** Sistemi in banda X ad altissima risoluzione per usi duali civili/militari.
+- **COSMO-SkyMed (ASI/Italy) & TerraSAR-X (DLR/Germany):** Very high-resolution X-band systems for dual civil/military uses.
 
-- **NISAR (NASA/ISRO):** Missione futura in banda L ed S, focalizzata sulla biomassa e sulla deformazione crostale globale.
+- **NISAR (NASA/ISRO):** Future L- and S-band mission, focused on biomass and global crustal deformation.
 
 ***
 
 
-### 2.2 Interferometria SAR (InSAR): la geodesia dallo spazio
+### SAR Interferometry (InSAR): geodesy from space
 
-L'InSAR è una tecnica derivata dal SAR che sfrutta la differenza di fase tra due acquisizioni per misurare la topografia o le deformazioni millimetriche della superficie.
+InSAR is a technique derived from SAR that exploits the phase difference between two acquisitions to measure topography or millimeter-scale surface deformations.
 
 
-#### Cosa misura
+#### What it measures
 
-L’Interferometria SAR sfrutta la fase del segnale radar registrato da due immagini SAR acquisite da orbite leggermente diverse (Interferometria spaziale) o a tempi diversi (Interferometria differenziale temporale) per misurare minime differenze di distanza e quindi variazioni di quota o di spostamento della superficie terrestre. 
+SAR Interferometry exploits the phase of the radar signal recorded by two SAR images acquired from slightly different orbits (Spatial Interferometry) or at different times (Temporal Differential Interferometry) to measure minimal distance differences and thus variations in elevation or displacement of the Earth's surface.
 
-In pratica, combinando due immagini SAR della stessa area, la differenza di fase tra i pixel genera frange d’interferenza proporzionali alla differenza di percorso ottico dell’onda radar.
+In practice, by combining two SAR images of the same area, the phase difference between pixels generates interference fringes proportional to the difference in the radar wave's optical path.
 
-Nel caso di InSAR topografica (es. missione SRTM o TanDEM-X), due antenne (o satelliti in formazione) osservano simultaneamente la superficie: la fase differenziale dipende dall’altitudine del suolo e consente di derivare modelli digitali di elevazione (DEM) ad alta risoluzione. 
+In the case of topographic InSAR (e.g., SRTM or TanDEM-X missions), two antennas (or satellites in formation) simultaneously observe the surface: the differential phase depends on the ground altitude and allows the derivation of high-resolution digital elevation models (DEMs).
 
-Nell’InSAR differenziale (DInSAR), si usano due passaggi successivi a distanza di tempo $\Delta t$: se la superficie nel frattempo è deformata (abbassata o sollevata) di pochi millimetri o centimetri, tale differenza appare come variazione di fase tra le due immagini.
+In differential InSAR (DInSAR), two successive passes are used with a time interval $\Delta t$: if the surface has deformed in the meantime (subsidence or uplift) by a few millimeters or centimeters, this difference appears as a phase variation between the two images.
 
-This generates **false-color interferograms** with concentric fringes, each typically corresponding to a line-of-sight displacement of half a wavelength ($≈2.8$ cm for Sentinel-1 in C-band).
+Si generano così **false-color interferograms** with concentric fringes, each typically corresponding to a line-of-sight displacement of half a wavelength ($≈2.8$ cm for Sentinel-1 in C-band).
 
-By measuring the number and spacing of the fringes, the 2D surface deformation field projected onto the radar's line of sight is obtained. InSAR is therefore capable of measuring microscopic ground movements (mm order) over large areas, detecting slow and progressive phenomena invisible to the naked eye. Sudden co-seismic displacements (earthquakes) or rapid volcanic deformations also generate characteristic interferometric patterns (circular fringes around the epicenter or crater).
+By measuring the number and spacing of the fringes, the 2D deformation field of the surface projected onto the radar's line of sight is obtained. InSAR is therefore able to measure microscopic ground movements (mm order) over large areas, detecting slow and progressive phenomena invisible to the naked eye. Even sudden co-seismic displacements (earthquakes) or rapid volcanic deformations generate characteristic interferometric patterns (circular fringes around the epicenter or crater).
 
-#### Physical Operation and Formulas
+#### Physical operation and formulas
 
 The interferometric phase difference $\Delta \phi$ between two images is composed of several contributions:
 
@@ -257,37 +250,41 @@ $$ \Delta \phi = \Delta \phi_{geom} + \Delta \phi_{topo} + \Delta \phi_{def} + \
 
 - $\Delta \phi_{atm}$ is the atmospheric delay (often the main error term).
 
-The relationship between deformation $d$ and the "unwrapped" phase is <sup>18</sup>:
+The relationship between deformation $d$ and the "unwrapped" phase is <sup>13</sup>:
 
 $$d = \frac{\lambda}{4\pi} \Delta \phi\_{unwrapped}$$
 
-For a C-band satellite like Sentinel-1 ($\lambda \approx 5.6$ cm), an interference fringe ($2\pi$) corresponds to a displacement of approximately 2.8 cm.<sup>20</sup>
+For a C-band satellite like Sentinel-1 ($\lambda \approx 5.6$ cm), an interference fringe ($2\pi$) corresponds to a displacement of approximately 2.8 cm.<sup>14</sup>
 
-<img src="../../../Assets/phase_diff.png" alt="Interferometric fringes and measured deformation" title="Example of an interferogram: colored phase fringes represent millimetric surface displacements relative to the radar's line of sight.">
-_Figure 01: Interferometric fringes and measured deformation: example of an interferogram. Colored phase fringes represent millimetric surface displacements relative to the radar's line of sight_
+<img src="../../../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
+_Figure 01: Interferometric fringes and measured deformation: example of an interferogram. The colored phase fringes represent millimeter-scale displacements of the surface relative to the radar's line of sight_
+
 
 #### Applications
 The main ones are:
-- **Tectonics and Volcanology:** Measurement of post-seismic deformation fields and the "breathing" of volcanoes (inflation/deflation of magma chambers).<sup>21</sup>
+- **Tectonics and Volcanology:** Measurement of post-seismic deformation fields and the "breathing" of volcanoes (inflation/deflation of magma chambers).<sup>15</sup>
 
-- **Urban Subsidence:** Monitoring the stability of critical buildings and infrastructure with advanced techniques such as Persistent Scatterers (PS-InSAR).<sup>16</sup>
+- **Urban Subsidence:** Monitoring the stability of critical buildings and infrastructure with advanced techniques such as Persistent Scatterers (PS-InSAR).<sup>12</sup>
 
 <figure>
   <video controls src="https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499" style="max-width: 100%; height: auto;"></video>
-  <figcaption>Video 01: Monitoring of Venice (Italy) with Sentinel-1, which allows continuous monitoring of ground movements with an accuracy of a few millimeters per year.</figcaption>
+  <figcaption>Video 01: Monitoring of Venice (Italy) with Sentinel-1, which allows continuous monitoring of ground movements with an accuracy of a few millimeters per year.<sup>16</sup></figcaption>
 </figure>
+
 
 ***
 
-### 2.3. Radar Altimetry: Ocean and Ice Topography
+
+### Radar altimetry: ocean and ice topography
 
 Radar altimeters precisely measure the vertical distance between the satellite and the underlying surface, calculated from the round-trip time of radar pulses sent perpendicularly to the ground (nadir).
 
 Nadir radar altimetry is the fundamental technique for quantifying sea level rise and ocean circulation.
 
-#### What Does It Measure?
 
-As I mentioned before, it measures the vertical distance (range) between the satellite and the surface at nadir. Combining this measurement with the precise orbit and geophysical corrections, we obtain:
+#### What does it measure?
+
+As I mentioned before, it measures the vertical distance (range) between the satellite and the surface at nadir. By combining this measurement with the precise orbit and geophysical corrections, the following are obtained:
 
 - **Sea Surface Height (SSH).**
 
@@ -295,88 +292,88 @@ As I mentioned before, it measures the vertical distance (range) between the sat
 
 - **Wind speed** (from backscatter intensity).
 
-The objective to measure is the surface elevation (ocean, land, ice) relative to a reference ellipsoid. In oceanography, this measurement, subtracted from the satellite's orbit known in a geodetic system, provides the sea surface height (SSH) relative to the geoid. Over the open ocean, SSH variations of a few centimeters reflect ocean currents, tides, and the mean sea level rise.
+The objective is to measure the height of the surface (ocean, land, ice) relative to a reference ellipsoid. In oceanography, this measurement, subtracted from the satellite's orbit known in a geodetic system, provides the Sea Surface Height (SSH) relative to the geoid. Over the open ocean, SSH variations of a few centimeters reflect ocean currents, tides, and the mean sea level rise.
 
-Altimeters also measure secondary parameters: by analyzing the shape and power of the radar echo (the waveform), surface roughness, and thus significant wave height and wind speed over the sea, are derived.
+Altimeters also measure secondary parameters: by analyzing the shape and power of the radar echo (the waveform), the surface roughness, and thus the significant wave height and wind speed over the sea, are derived.
 
 Over continental surfaces, the altimeter can measure the height of lakes and large rivers, as well as the average terrain topography (although with spatial resolution limited by the large radar footprint, typically a few km).
 
 Over ice sheets, specialized radar altimeters (e.g., CryoSat-2) measure snow/ice elevation and detect temporal variations in ice thickness. In new "synthetic aperture" altimeters (SAR altimetry), the use of Doppler processing improves along-track spatial resolution (∼300 m), allowing more accurate measurements near coasts and over smaller water bodies.
 
-#### Physical Operation and Formulas
 
-The altimeter emits a radar pulse and records the returning echo.
+#### Physical operation and formulas
 
-The echo waveform is analytically modeled by the Brown Model, which describes the convolution between the system response, the probability density of wave heights, and the flat surface impulse response.<sup>22</sup>
+L'altimetro emette un impulso radar e registra l'eco di ritorno.
 
-The SAR Altimetry (or Delay-Doppler) technique, introduced by CryoSat-2 and Sentinel-3, improves along-track resolution (\~300m) by focusing energy into Doppler cells, allowing precise measurements even among sea ice and in coastal waters.<sup>24</sup>
+La forma d'onda dell'eco (waveform) è modellata analiticamente dal Modello di Brown, che descrive la convoluzione tra la risposta del sistema, la densità di probabilità delle altezze delle onde e la risposta impulsiva della superficie piatta.<sup>17</sup>
 
-#### Missions
+La tecnica SAR Altimetry (o Delay-Doppler), introdotta da CryoSat-2 e Sentinel-3, migliora la risoluzione lungo traccia (\~300m) focalizzando l'energia in celle Doppler, permettendo di misurare con precisione anche tra i ghiacci marini e nelle acque costiere.<sup>18</sup>
 
-- **Sentinel-3 (SRAL):** Operational SAR altimeter for ocean and ice.
+#### Missioni
 
-- **Jason-3 / Sentinel-6 Michael Freilich:** The reference series for climate continuity of global mean sea level (GMSL).
+- **Sentinel-3 (SRAL):** Altimetro SAR operativo per oceano e ghiacci.
 
-- **SWOT (Surface Water and Ocean Topography):** Wide-swath radar interferometry (Ka-band) to extend altimetry from 1D profile to 2D map.
+- **Jason-3 / Sentinel-6 Michael Freilich:** La serie di riferimento per la continuità climatica del livello medio del mare (GMSL).
+
+- **SWOT (Surface Water and Ocean Topography):** Interferometria radar ad ampio swath (Ka-band) per estendere l'altimetria dal profilo 1D alla mappa 2D.
 
 ***
 
-## 3. Passive and optical sensors
-Now we radically change topic, discussing passive sensors, those most similar to classic cameras or the cameras on our smartphones.
+## Sensori passivi e ottici
+Ora cambiamo radicalmente argomento, parliamo di sensori passivi, quelli più simili alle classiche macchinette fotografiche o alle fotocamere dei nostri smartphone.
 
-Passive optical sensors aboard satellites capture solar electromagnetic radiation reflected from the Earth's surface (in the visible, near-infrared, and shortwave infrared bands) and, in some cases, thermal emission in the thermal infrared.
+I sensori ottici passivi a bordo dei satelliti catturano la radiazione elettromagnetica solare riflessa dalla superficie terrestre (nelle bande del visibile, infrarosso vicino e infrarosso a onde corte) e, in alcuni casi, l’emissione termica nell’infrarosso termico.
 
-They therefore provide measurements of reflected radiance or surface reflectance for each spectral band. In the case of thermal bands (typically present on satellites like Landsat or Sentinel-3), they measure emitted thermal radiance related to surface temperature.
+Essi forniscono dunque misure di radianza riflessa o riflettanza della superficie per ciascuna banda spettrale. Nel caso di bande termiche (tipicamente presenti su satelliti come Landsat o Sentinel-3), misurano la radianza termica emessa legata alla temperatura superficiale.
 
-### 3.1 Panchromatic images: extreme geometric resolution
+### Immagini pancromatiche: risoluzione geometrica estrema
 
-Optical images are intuitive and rich in information, finding application in environmental mapping, land management, agriculture and forest monitoring, urban planning, and emergency surveillance.
+Le immagini ottiche sono intuitive e ricche di informazioni, trovando impiego in mappatura ambientale, gestione del territorio, agricoltura e monitoraggio forestale, pianificazione urbana e sorveglianza di emergenze.
 
-#### What it measures
+#### Cosa misura
 
-In panchromatic mode, the integrated intensity over a wide spectral range (e.g., 0.5–0.8 μm, like WorldView-3) is recorded, producing high-spatial-resolution black and white images.
+In modalità pancromatica viene registrata l’intensità integrata su un ampio intervallo spettrale (ad es. 0,5–0,8 μm, come WorldView-3), producendo immagini in bianco e nero ad alta risoluzione spaziale.
 
-In practice, the **integrated radiance** is recorded over a single very wide spectral band (typically visible + near-infrared, 0.4 - 0.9 $\mu m$ Landsat 7).
+In pratica, viene registrata la **radianza integrata** su un'unica banda spettrale molto ampia (tipicamente visibile + vicino infrarosso, 0.4 - 0.9 $\mu m$ Landsat 7).
 
-> Landsat 8 has a restricted range of 0.50-0.68 $\mu m$ to avoid atmospheric scattering.
+> Landsat 8 ha un range ristretto 0.50-0.68 $\mu m$ per evitare lo scattering atmosferico.
 
-#### Physical operation
+#### Funzionamento fisico
 
-The wide bandwidth allows for collecting a high number of photons, ensuring a high Signal-to-Noise Ratio (SNR). This enables reducing pixel size (IFOV) while maintaining short integration times, necessary to avoid orbital _motion blur_. Spatial resolution can drop below 30 cm in modern commercial platforms, such as Superview Neo-1.<sup>27</sup>
+L'ampia larghezza di banda permette di raccogliere un elevato numero di fotoni, garantendo un alto Rapporto Segnale-Rumore (SNR). Questo consente di ridurre la dimensione del pixel (IFOV) mantenendo tempi di integrazione brevi, necessari per evitare il _motion blur_ orbitale. La risoluzione spaziale può scendere sotto i 30 cm nelle piattaforme commerciali moderne, come Superview Neo-1.<sup>19</sup>
 
-#### Applications and pansharpening
+#### Applicazioni e pansharpening
 
-The panchromatic band is often used in synergy with low-resolution multispectral bands through _Pansharpening_ techniques. The resulting image combines the high geometric fidelity of the panchromatic with the chromatic information of the multispectral. A simplified relationship for fusion is <sup>28</sup>:
+La banda pancromatica è spesso usata in sinergia con bande multispettrali a bassa risoluzione tramite tecniche di _Pansharpening_. L'immagine risultante combina l'alta fedeltà geometrica del pancromatico con l'informazione cromatica del multispettrale. Una relazione semplificata per la fusione è <sup>20</sup>:
 
 $$I_{Pan} \approx \sum_i \alpha_i \cdot I_{MS, i}$$
 
-This is the initial physical condition and expresses the fact that the energy recorded by the panchromatic sensor (wideband) should ideally correspond to the weighted sum of the energies recorded by the multispectral bands (narrowband) that fall within its spectral range.
+Questa è la condizione fisica di partenza ed esprime il fatto che l'energia registrata dal sensore pancromatico (a banda larga) dovrebbe idealmente corrispondere alla somma pesata delle energie registrate dalle bande multispettrali (a banda stretta) che ricadono nel suo intervallo spettrale.
 
-The coefficients $\alpha_i$ represent the spectral weights. Since the panchromatic sensor does not have a flat sensitivity (i.e., it does not "see" all colors with the same efficiency), each multispectral band contributes to the Pan signal differently. For example, if the Pan sensor is very sensitive to red and less to blue, the weight $\alpha_i$ of the red channel will be greater.
+I coefficienti $\alpha_i$ rappresentano i pesi spettrali. Poiché il sensore pancromatico non ha una sensibilità piatta (cioè non "vede" tutti i colori con la stessa efficienza), ogni banda multispettrale contribuisce al segnale Pan in modo diverso. Ad esempio, se il sensore Pan è molto sensibile al rosso e poco al blu, il peso $\alpha_i$ del canale rosso sarà maggiore.
 
-Below is an [example of pansharpening application](https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/).
+Di seguito un [esempio di applicazione](https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/) del pansharpening.<sup>21</sup>
 
-<img src="../../../Assets/Doha.jpg" alt="Satellite panchromatic image of Doha skyline" title="Example of ultra-high resolution panchromatic image of Doha">
-Figure 02: _Doha skyline captured from a sub-metric panchromatic scene: the extreme geometric resolution allows distinguishing individual buildings and urban infrastructure._
+<img src="../../../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
+Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la risoluzione geometrica estrema consente di distinguere singoli edifici e infrastrutture urbane._
 
-#### Missions
+#### Missioni
 
-- **Maxar (WorldView Legion), Airbus (Pléiades Neo), and Superview Neo-1:** Market-leading commercial resolutions (up to 30 cm).
+- **Maxar (WorldView Legion), Airbus (Pléiades Neo) e Superview Neo-1:** Risoluzioni commerciali leader di mercato (fino a 30 cm).
 
-- **Landsat 8/9:** 15m panchromatic band to refine 30m spectral bands.<sup>29</sup>
+- **Landsat 8/9:** Banda pancromatica a 15m per affinare le bande spettrali a 30m.<sup>22</sup>
 
 ***
 
-### 3.2. Multispectral imaging: the color of the Earth
+### Imaging multispettrale: il colore della terra
 
-Optical images are used to identify soil types and land use (crops, forests, urban areas), to monitor water bodies, glaciers and snow, and to document events such as fires, floods, or landslides.
+Optical images are used to identify soil types and land use (crops, forests, urban areas), to monitor water bodies, glaciers and snow, and to document events such as fires, floods or landslides.
 
 The standard for global environmental monitoring, which acquires images in a discrete number of spectral bands (approximately 4 to 15).
 
-Multispectral images allow, for example, to distinguish healthy vegetation from diseased vegetation through indices like NDVI (Normalized Difference Vegetation Index). NDVI is calculated from reflectances in the Near-Infrared (NIR) and Red (R):
+Multispectral images allow, for example, to distinguish healthy vegetation from diseased vegetation through indices such as NDVI (Normalized Difference Vegetation Index). NDVI is calculated from reflectances in the near-infrared (NIR) and red (R):
 $$NDVI = \frac{NIR - R}{NIR + R},$$
 and is widely used to quantify the density and vigor of vegetation cover.
-
 
 #### What it measures
 
@@ -384,89 +381,82 @@ In multispectral mode, the sensor has several separate (typically 3–10) narrow
 
 Surface reflectance in discrete bands in the Visible (VIS), Near-Infrared (NIR), and Shortwave Infrared (SWIR).
 
-
 #### Physics and spectral indices
 
 It exploits the distinctive spectral signatures of materials. For example, chlorophyll absorbs in the red and strongly reflects in the NIR.
 
 The use of SWIR bands is fundamental for discriminating snow from clouds and for monitoring vegetation water stress.
 
-<img src="../../../Assets/PanvsMulti.png" alt="Comparison between panchromatic and multispectral image over the same urban neighborhood" title="Differences between panchromatic band and multispectral composite">
+<img src="../../../Assets/PanvsMulti.png" alt="Comparison between panchromatic and multispectral image of the same urban neighborhood" title="Differences between panchromatic band and multispectral composite">
 _Figure 03: Visual comparison between a high-resolution panchromatic band and its multispectral composite: the panchromatic captures geometric detail, while the multispectral preserves chromatic variation useful for indices like NDVI and SWIR to discriminate materials._
-
 
 #### Applications and missions
 
-- **Sentinel-2 (ESA):** With 13 bands and [resolution](https://sentiwiki.copernicus.eu/web/s2-products) 10-20m or 60m, it is the reference for precision agriculture and land cover monitoring.<sup>16</sup>
+- **Sentinel-2 (ESA):** With 13 bands and [resolution](https://sentiwiki.copernicus.eu/web/s2-products)<sup>23</sup> 10-20m or 60m, it is the reference for precision agriculture and land cover monitoring.<sup>12</sup>
 
 - **Landsat 8/9 (NASA/USGS):** Ensures continuity of observations since 1972, essential for long-term change studies. The resolution, depending on the chosen band, ranges from 30m to 100m.
 
 ***
 
+### Hyperspectral imaging
 
-### 3.3 Hyperspectral Imaging
+Hyperspectral imaging (HSI) extends the multispectral concept by acquiring hundreds of contiguous bands, allowing for detailed chemical-physical analysis of each pixel.
 
-Hyperspectral Imaging (HSI) extends the multispectral concept by acquiring hundreds of contiguous bands, allowing for detailed chemical-physical analysis of each pixel.
-
-Indeed, the narrow and contiguous bands of HSI allow for the detection of absorption features (narrow peaks and valleys in the spectral curve). These features are unique to specific chemical bonds (e.g., O-H bonds in clay minerals, or specific pigments in vegetation), making it possible to identify which material is present, not just distinguish its color. I would define it as a kind of remote spectroscopy.
-
+Indeed, HSI's narrow and contiguous bands allow for the detection of absorption features (narrow peaks and valleys in the spectral curve). These features are unique to specific chemical bonds (e.g., O-H bonds in clay minerals, or specific pigments in vegetation), allowing for the identification of which material is present, not just distinguishing its color. I would define it as a kind of remote spectroscopy.
 
 #### What it measures
 Hyperspectral sensors go beyond multispectral ones, acquiring tens or hundreds of very narrow (on the order of 10 nm) contiguous bands, covering the visible/SWIR spectral continuum in detail: each pixel contains a kind of continuous "spectral signature" of the observed object. This allows for the measurement of subtle reflectance differences related to the chemical and physical composition of materials (vegetation, minerals, water).
 
 What is studied is nothing more than a data "hypercube" $(x, y, \lambda)$ with hundreds of narrow spectral channels (e.g., $5-10 nm$), covering the VNIR-SWIR range ($400-2500 nm$).
 
-
 #### Physical operation and spectral mixing
 
-Each pixel contains a continuous spectrum that acts as a chemical "fingerprint." The measured signal $y$ is often modeled as a [linear mixture](https://ieeexplore.ieee.org/document/974727) of the pure spectra of the constituent materials (_endmembers_) $M$ present in the pixel, according to the _Linear Mixing_ (or _Mixture_) _Model_ (**LMM**) <sup>30</sup>:
+Each pixel contains a continuous spectrum that acts as a chemical "fingerprint." The measured signal $y$ is often modeled as a [linear mixture](https://ieeexplore.ieee.org/document/974727)<sup>24</sup> of the pure spectra of the constituent materials (_endmembers_) $M$ present in the pixel, according to the _Linear Mixing_ (or _Mixture_) _Model_ (**LMM**) <sup>25</sup>:
 
 $$y = \sum_{k=1}^{K} a_k m_k + n$$
 
 Where $a_k$ are the fractional abundances. This allows for the identification of sub-pixel materials or specific minerals.
 > In mineralogy, an "endmember" is a 100% pure mineral (e.g., pure quartz) which, when mixed with others, forms the rock observed in the pixel.
 
-
 #### Utility and applications
 
 - **Mineral Geology:** Identification of hydrothermal alterations and rare earth elements.
 
-- **Water Quality:** Distinction between different algal species and sediments.<sup>32</sup>
-
+- **Water Quality:** Distinction between different algal species and sediments.<sup>26</sup>
 
 <figure>
   <img src="../../../Assets/Sea.png" alt="Ocean colors determined by constituents in water" title="Ocean colors determined by constituents in water">
   <figcaption>
-    The color of the ocean is a function of the light that is absorbed or scattered in the presence of dissolved or suspended constituents in the water. <sup>32</sup>
+    The color of the ocean is a function of the light that is absorbed or scattered in the presence of dissolved or suspended constituents in the water. <sup>26</sup>
   </figcaption>
 </figure>
 
-- **Smart CubeSats:** The **FSSCat/$\Phi$-Sat-1** mission demonstrated the use of on-board AI to process hyperspectral data (HyperScout-2) and discard cloudy images directly in orbit, optimizing downlink.<sup>13</sup>
+- **Smart CubeSats:** The **FSSCat/$\Phi$-Sat-1** mission demonstrated the use of on-board AI to process hyperspectral data (HyperScout-2) and discard cloudy images directly in orbit, optimizing downlink.<sup>27</sup>
 
 
 #### Missions
 
-- **EnMAP (DLR) & PRISMA (ASI):** Operative scientific missions, German and Italian respectively.<sup>34</sup>
+- **EnMAP (DLR) & PRISMA (ASI):** Operational German and Italian scientific missions, respectively.<sup>28</sup>
 
-- **PACE (NASA):** Launched in 2024, with the OCI (Ocean Color Instrument) extending hyperspectral capabilities to global oceans.<sup>32</sup>
+- **PACE (NASA):** Launched in 2024, with the OCI (Ocean Color Instrument) extending hyperspectral capabilities to global oceans.<sup>26</sup>
 
-> 🎮 **Spectral Simulation.** Visually compare panchromatic, multispectral, and hyperspectral modes and observe how spatial resolution, sampled spectrum, and thematic information change. You can open it full screen from the [dedicated page](Assets/simulations/spectral/index_en.html).
+> 🎮 **Spectral simulation.** Visually compare panchromatic, multispectral, and hyperspectral modes and observe how spatial resolution, sampled spectrum, and thematic information change. You can open it full screen from the [dedicated page](Assets/simulations/spectral/index.html).
 
 <iframe
-  src="../../../Assets/simulations/spectral/index_en.html"
+  src="../../../Assets/simulations/spectral/index.html"
   title="Spectral Sensor Simulation"
   loading="lazy"
   style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
 ></iframe>
 
-> The widget shows (on the left) the signal sampling with different bands and (on the right) the visual rendering on the ground: panchromatic aims for maximum spatial resolution, multispectral introduces color but loses detail, while hyperspectral decreases resolution to recover chemical-physical information (vegetative stress, materials, etc.).
+> The widget shows (left) the signal sampling with different bands and (right) the visual rendering on the ground: panchromatic aims for maximum spatial resolution, multispectral introduces color but loses detail, while hyperspectral decreases resolution to recover chemical-physical information (vegetative stress, materials, etc.).
 
 ***
 
 
-### 3.4. Thermal Infrared (TIR): measuring the planet's heat
+### Thermal Infrared (TIR): measuring the planet's heat
 
-TIR sensors measure the energy emitted by Earth, allowing for the estimation and study of surface temperature.
+TIR sensors measure the energy emitted by the Earth, allowing for the estimation and study of surface temperature.
 
 
 #### What it measures
@@ -483,41 +473,41 @@ Based on the subject to be measured, there are:
 
 Before explaining the physical operation and especially the formulas, I think it's important to understand why inversion is crucial. For this, we need to distinguish two regimes:
 
-  - In the visible (e.g., Sentinel-2 RGB bands), the sensor measures reflected sunlight. Here, the object's temperature has almost nothing to do with the amount of light reaching the sensor.
+  - In the visible spectrum (e.g., Sentinel-2 RGB bands), the sensor measures reflected sunlight. Here, the object's temperature has almost nothing to do with the amount of light reaching the sensor.
 
   - In Thermal Infrared (TIR), the energy source is not the Sun, but the object itself. Every body with a temperature above absolute zero emits electromagnetic radiation due to thermal agitation.
-
-        Therefore: In TIR, measuring energy (Radiance) is equivalent to measuring the object's thermal state.
+  
+  > Therefore: In TIR, measuring energy (Radiance) is equivalent to measuring the thermal state of the object.
 
 Physics tells us (Planck's Law) that there is a rigid relationship between the Temperature $T$ of a black body and the Radiance $L_\lambda$ it emits at a specific wavelength $\lambda$.
 
 The measured radiance $L_{\lambda}$ is converted into brightness temperature $T_b$ by inverting Planck's law (at least I'll spare you that one). In practice, if the object is at temperature $T$, it will emit $L_\lambda$ amount of energy.
 
-However, the sensor works in reverse. The detector is an infrared-sensitive photodiode (I admit it sounds very cacophonous in Italian), often made of Mercury-Cadmium-Telluride, cryogenically cooled, and struck by photons. Photons generate electrons and thus electric current, which is converted into a digital number (DN).
+However, the sensor works in reverse. The detector is an infrared-sensitive photodiode (which I admit sounds very cacophonous in Italian), often made of Mercury-Cadmium-Telluride, cryogenically cooled, and struck by photons. Photons generate electrons and thus electric current, which is converted into a digital number (DN).
 
 Through radiometric calibration (Gain & Offset), the DN is converted back into Radiance at the Sensor ($L_{Sensor}$).
 
 Since the sensor "doesn't know" what the temperature is, we must ask ourselves mathematically:
-"What temperature $T$ must a theoretical black body have to produce the radiance $L$ I have just measured?"
+"What temperature $T$ must a theoretical black body have to produce the radiance $L$ that I have just measured?"
 
 This is why inversion is performed. Planck's equation is solved for $T$:
 
 $$T_b = \frac{h c}{k_B \lambda \ln\left( \frac{2 h c^2}{\lambda^5 L_\lambda} + 1 \right)}$$
 
-To obtain the real kinetic temperature ($T_{surf}$), it is necessary to correct for the surface emissivity $\epsilon$ and for the atmospheric contribution (water vapor absorption/emission). _Split-Window_ algorithms use two nearby thermal channels (e.g., 11 $\mu m$ and 12 $\mu m$) to estimate and remove the atmospheric effect.
+To obtain the actual kinetic temperature ($T_{surf}$), it is necessary to correct for the surface emissivity $\epsilon$ and for the atmospheric contribution (water vapor absorption/emission). _Split-Window_ algorithms use two nearby thermal channels (e.g., 11 $\mu m$ and 12 $\mu m$) to estimate and remove the atmospheric effect.
 
 #### Why is it called "Brightness Temperature" and not "Real Temperature"?
 This is the most subtle and important part. The inversion assumes that the object is a Black Body (Emissivity $\varepsilon = 1$), i.e., a perfect emitter. However, in reality:
 
-- Water has emissivity ranging between 0.98 and 0.99 (almost a black body).
+- Water has an emissivity that oscillates between 0.98 and 0.99 (almost a black body).
 - Bare soil or sand can have an emissivity between 0.90 and 0.95.
 
-If a sensor points at a warm rock at 300K (27 °C), but with low emissivity, the rock will emit less energy than predicted by the pure Planck's law. If we invert the formula without correction, the satellite will calculate a temperature lower than reality (e.g., 295K instead of 300K).
+If a sensor points at a hot rock at 300K (27 °C), but with low emissivity, the rock will emit less energy than predicted by the pure Planck's law. If we invert the formula without correction, the satellite will calculate a temperature lower than the actual one (e.g., 295K instead of 300K).
 
 That "fictitious" (lower) temperature is the **brightness temperature**. It is the temperature the object would have if it were a perfect black body emitting that amount of light.
 
 ### Missions
-Among the missions that I believe are worth mentioning are:
+Among the missions that I think are definitely worth mentioning are:
 
 - **Sentinel-3 (SLSTR):** High precision (<0.3 K) for climatic SST, using a dual view (nadir and oblique) to correct for the atmosphere.
 
@@ -527,162 +517,193 @@ Among the missions that I believe are worth mentioning are:
 
 ***
 
-> 🎮 **Interactive TIR simulation.** Follow the complete pipeline (photons → DN → radiance → Planck inversion) and observe how emissivity and atmosphere shift the brightness temperature relative to the actual temperature.
+> 🎮 **Interactive TIR Simulation.** Follow the complete pipeline (photons → DN → radiance → Planck inversion) and observe how emissivity and atmosphere shift the brightness temperature relative to the real temperature.
 
 <iframe
-  src="../../../Assets/simulations/tir/index_en.html"
-  title="TIR simulation: radiance and temperature"
+  src="../../../Assets/simulations/tir/index.html"
+  title="Simulazione TIR: radianza e temperatura"
   loading="lazy"
   style="width: 100%; min-height: 960px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
 ></iframe>
 
-## 4. Passive microwave radiometry (surface imaging)
 
-Sensors that observe the natural microwave emission from the Earth's surface at low frequencies (L, C, X Band).
+## Passive Microwave Radiometry (surface imaging)
+
+Every material emits thermal radiation based on its physical temperature and emissivity: radiometers record the brightness temperature $T_B$ in specific microwave spectral bands, which is proportional (by Rayleigh-Jeans approximation) to the object's thermal emission.
 
 ### What it measures
 
-- **Soil Moisture:** The dielectric constant of water is very high (~80) compared to dry soil (~4), drastically influencing emissivity.
+Microwave radiometers are passive sensors that measure the **natural electromagnetic brightness** emitted by the Earth at millimeter-centimeter wavelengths (typically 0.3–30 GHz).
 
-- **Ocean Salinity (SSS):** In L-band (1.4 GHz), emissivity depends on salinity.
+Atmosphere, soil, vegetation, oceans, and ice have different emissivities at microwave frequencies, so geophysical parameters are inferred from the measurement of $T_B$ at different frequencies and polarizations.
+
+For example, liquid water has low emissivity in the microwave band, so the cold ocean appears “dark” (low $T_B$) compared to land; the contrast between H and V polarizations over soil varies with humidity (wet soil = higher emissivity and smaller difference). Multispectral microwave radiometers typically measure at frequencies such as 6.9 GHz, 10 GHz, 18 GHz, 23 GHz, 36 GHz, 89 GHz (some up to 166 GHz), often with two polarizations (H and V) for each.
+
+Low frequencies ($L-$band ~1.4 GHz) penetrate deeper into the soil, useful for humidity; high frequencies ($K/Ka-$band) are more sensitive to vapor and rain. In bands around atmospheric absorption lines (e.g., 22 GHz water vapor, 60 GHz oxygen), temperature and gas content for atmospheric layers can be deduced (microwave sounding).
+
+<figure>
+  <img src="../../../Assets/Passive.png" alt="Passive microwave radiometry diagram" title="Passive microwave radiometry diagram">
+  <figcaption>
+    Passive microwave band sensor: measures natural emission, modulated by emissivity, temperature, and atmosphere.
+  </figcaption>
+</figure>
 
 ### Physical operation and synthetic interferometry
 
-In microwaves, the Rayleigh-Jeans approximation ($h\nu \ll k\_B T$) holds, so radiance is proportional to the physical temperature:
+In microwaves, the Rayleigh-Jeans approximation ($h\nu \ll k_B T$) holds, so radiance is proportional to physical temperature:
 
-$$T\_b \approx \epsilon \cdot T\_{phys}$$
+$$T_b \approx \epsilon \cdot T_{phys}$$
 
-The **SMOS** (ESA) mission introduced a revolutionary technology: the interferometric synthetic aperture radiometer (MIRAS). Instead of a large rotating parabolic antenna (as in SMAP), it uses a static Y-shaped array of 69 antennas. The brightness temperature image is mathematically reconstructed from the inverse Fourier transform of the visibility functions measured between pairs of antennas.<sup>37</sup>
+The **SMOS** (ESA) mission introduced a revolutionary technology: the interferometric synthetic aperture radiometer (MIRAS). Instead of a large rotating parabolic antenna (as in SMAP), it uses a static array of 69 Y-shaped LICEF (Lightweight Cost-Effective Front-end) receivers. The brightness temperature image is mathematically reconstructed from the inverse Fourier transform of the visibility functions measured between pairs of antennas.<sup>29</sup>
 
 ### Missions
 
 - **SMOS (ESA):** Pioneer of interferometric L-band.
 
-- **SMAP (NASA):** Radiometer with a large rotating antenna (6m) for high-precision soil moisture.
+- **SMAP (NASA):** Radiometer with large rotating antenna (6m) for high-precision soil moisture.
 
 - **AMSR-2 (JAXA):** Multifrequency "workhorse" radiometer for precipitable water, ice, and SST.
 
 ***
 
-## 5. Satellite gravimetry: weighing water from space
+## Satellite Gravimetry: Weighing Water from Space
 
-Gravimetry measures variations in the planet's mass, offering a unique view of the deep water cycle.
+Satellite gravimetry has two major applications:
+1) the creation of a precise global model of the geoid and the static gravitational field;
 
-### What it measures
+2) the monitoring of mass variations redistributed across the planet (water, ice).
 
-Anomalies in the Earth's gravitational field and their temporal variations (monthly). These variations are due to the movement of large water masses (glacier melt, aquifer depletion, ocean level variations).
+The geoid is fundamental for geodesy: it defines the altimetric reference surface “at sea level” to which heights measured by satellites and on the ground are referred. Missions like GOCE (ESA, 2009-2013) have provided a high-resolution geoid (up to 100 km) with 1–2 cm precision, improving vertical references between continents. This impacts [ocean altimetric maps](https://geodesy.science/item/satellite-altimetry/)<sup>30</sup>: by subtracting the geoid from the sea surface measured by altimeters, stationary ocean currents (dynamic topography) emerge.
 
-### Physical operation: satellite-to-satellite tracking (SST)
+Anche in geodesia pura, conoscere l’anomalia di gravità sulla crosta informa sulla struttura geologica e la densità (utili in esplorazione mineraria e petrolifera).
 
-Two identical satellites (as in GRACE and GRACE-FO) fly in the same orbit separated by approximately 220 km. A microwave ranging system (K-band) or a laser interferometer (in GRACE-FO) measures the variation in inter-satellite distance with micrometric precision.
+Riguardo il punto 2, i satelliti gravimetrici time-variable (GRACE e successore GRACE-FO) hanno aperto un nuovo campo nel monitorare il [ciclo idrologico globale](https://gracefo.jpl.nasa.gov/resources/72/tracking-water-from-space/)<sup>31</sup> e la criosfera su base mensile. In oceanografia, le misure GRACE di pressione sul fondo oceanico completano gli altimetri isolando la componente di massa negli aumenti di livello (distinguendola dall’espansione termica). Queste osservazioni di “bilancio idrico” sono cruciali per capire gli impatti climatici e per gestione risorse idriche. Inoltre, la gravimetria è servita a evidenziare variazioni di massa nel mantello post-terremoti (es. il sisma di Tōhoku 2011 ha provocato una minuscola ma rilevabile variazione locale del campo di gravità).
 
-When the leading satellite flies over an excessive mass (e.g., a mountain), it is gravitationally accelerated, moving away from the second. By analyzing the variations in relative velocity (Range-Rate $\dot{\rho}$), the global gravitational potential is reconstructed.<sup>48</sup>
+### What it Measures
 
-### Missions and applications
+Satellite gravimetry missions measure the tiny variations of the Earth's gravitational field in space and time. In practical terms, they observe how gravitational acceleration $g$ (or gravitational potential) changes from place to place and from one epoch to another, due to the distribution of mass within and on the Earth's surface. An orbiting satellite is affected by this: where local gravity is slightly stronger (e.g., above a submarine mountain range or an area of higher mantle density), the satellite accelerates a little more; where it is weaker (e.g., above an oceanic depression or a less dense mantle) it accelerates less.
 
-- **GRACE / GRACE-FO (NASA/GFZ):** For the first time, they unequivocally quantified the mass loss of polar ice sheets and the excessive withdrawal from aquifers in India and California.<sup>50</sup>
+Gravimetric missions measure these differences through precision tracking: for example, the [renowned GRACE mission](https://sealevel.nasa.gov/missions/grace#:~:text=GRACE%20measured%20gravity%20by%20relating,or%20between%2C%20the%20satellite%20pair) consisted of two twin satellites following the same orbit 220 km apart and measuring the variation in their mutual distance with microscopic precision. When the first satellite passes over a gravitational anomaly, it accelerates (increasing the distance from the second); then the second also accelerates and the distance returns to nominal: the gravity anomaly is deduced from the magnitude and phase of this variation.
 
-- **GOCE (ESA):** Used a gradiometer (ultrasensitive accelerometers) to define the static geoid with unprecedented spatial resolution and precision.
+> GRACE therefore measures gravity anomalies and, by repeating month after month, can detect temporal variations in the gravitational field
+
+Another technique is the **gradiometer gravimeter** (used by GOCE): accelerometric sensors directly measure the field gradient along different directions. In short, missions measure parameters such as: linear combinations of the second derivatives of the gravitational potential (gradiometry), inter-satellite distance (GRACE), or orbital perturbations (from which spherical harmonics of the gravity field are inverted). The final results are geoid models (mean equipotential surface) and maps of static and time-varying gravitational anomalies (in mGal), or time series of variable equivalent masses (such as water thickness).
+
+<img src="../../../Assets/geoid.jpg" alt="Earth geoid model derived from GOCE and GRACE missions" title="The Earth's geoid, mean equipotential surface obtained from gravimetry missions like GOCE and GRACE">
+_Figure 05: The Earth's geoid (combining GOCE/GRACE data) visualizes the spatial distribution of gravitational anomalies that these satellites measure and monitor over time_
+
+### Physical Operation: Satellite-to-Satellite Tracking (SST)
+
+Two identical satellites (as in GRACE and GRACE-FO) fly in the same orbit separated by approximately 220 km. A microwave ranging system ($K$-band) or a laser interferometer (in GRACE-FO) measures the variation in inter-satellite distance with micrometric precision.<sup>32</sup>
+
+When the leading satellite flies over an excessive mass (e.g., a mountain), it is gravitationally accelerated, moving away from the second. By analyzing the variations in relative velocity (Range-Rate $\dot{\rho}$), the global gravitational potential is reconstructed.
+
+### Missions and Applications
+The main missions I am aware of involve the two Atlantic giants in the space sector, NASA and ESA
+
+- **GRACE / GRACE-FO (NASA/GFZ):** They quantified for the first time unequivocally the mass loss of polar ice sheets and excessive groundwater depletion in India and California.<sup>33</sup>
+
+- **GOCE (ESA):** It used a gradiometer (ultrasensitive accelerometer) to define the static geoid with unprecedented spatial resolution and precision.
 
 ***
 
-## 6. Satellite magnetometry
+## Satellite Magnetometry
 
-Space magnetometers study the Earth's magnetic field, a protective shield against solar wind.
+I satelliti magnetometrici misurano l’intensità e la direzione del campo magnetico terrestre nello spazio circumterrestre. Il campo magnetico terrestre è generato principalmente dal nucleo esterno fluido (dinamo geodinamica), con contributi della crosta (dovuta alla magnetizzazione delle rocce) e correnti elettriche nello spazio e nell’alta atmosfera dovute all'interazione con il vento solare.
 
 ### What it measures
 
-The total magnetic field vector $\vec{B}$, separating contributions from the core (Core field), the crust (Lithospheric field), and external electric currents (Ionosphere/Magnetosphere).
+A satellite equipped with a vector magnetometer records at each point the three components of the magnetic field ($B_x, B_y, B_z$) measured in nanotesla, nT, and how these vary as it moves across the Earth.
 
-### Physical operation: fluxgate and scalar
+Missions dedicate great care to **calibration**. Magnetic sensors (often fluxgate or Overhauser scalar type) are mounted on [extendable booms](https://link.springer.com/article/10.1007/s11214-025-01238-7)<sup>34</sup> to avoid interference from onboard instrumentation, and are accompanied by high-precision star trackers to determine orientation and thus derive field vectors in an Earth-fixed inertial reference frame:
+- A **Vector Field Magnetometer (VFM)** (often Fluxgate) mounted on an extendable boom is used to measure the direction of field lines without the satellite's magnetic interference.
+- An **Absolute Scalar Magnetometer (ASM)** (e.g., Overhauser or helium vapor) to measure absolute intensity with very high precision, used to calibrate the vector magnetometer.
 
-High-precision missions use a combination of instruments:
+By measuring the entire globe on repeated polar orbits, magnetic satellites produce global models of the geomagnetic field, subdivided into components: the main field (originating from the core, with a dominant dipole), the crustal field (local anomalies from magnetized rocks), and variable external fields (ionospheric and magnetospheric currents).
 
-1. **Fluxgate Magnetometer (Vector):** Measures the three components of the field. It exploits the periodic magnetic saturation of a ferromagnetic core; the second harmonic of the induced signal is proportional to the external field.<sup>51</sup> It requires precise attitude calibration using Star Trackers rigidly attached to the instrument boom.
+Furthermore, by measuring over time, the secular variation of the main field is tracked (magnetic pole drift, decadal intensity variations due to core motions).
 
-2. **Absolute Scalar Magnetometer:** (e.g., Overhauser or optically pumped helium) Measures the total intensity $|\vec{B}|$ by exploiting nuclear magnetic resonance or atomic transitions (Zeeman effect), providing an absolute reference for calibrating vector magnetometers.<sup>53</sup>
+<figure>
+  <video controls src="https://dlmultimedia.esa.int/download/public/videos/2013/10/038/1310_038_BR_009.mp4"></video>
+  <figcaption>ESA Video: measuring Earth's magnetic field from space.<sup>35</sup></figcaption>
+</figure>
 
+### What is it used for?
+An accurate map of the geomagnetic field has many scientific and practical applications. Let's look at the main ones:
+
+- **Core Geophysics**: The temporal variation of the field (secular variation) provides information on fluid motions in the Earth's core [at ~3000 km depth](https://phys.org/news/2016-05-strength-earth-magnetic-field.html#:~:text=The%20magnetic%20field%20is%20thought,the%20continuously%20changing%20electromagnetic%20field)<sup>36</sup>, improving the understanding of the terrestrial dynamo mechanism (terrestrial bicycle dinamo) and allowing for modeling of the field's evolution and possible reversals.
+- **Crustal Magnetism**: Magnetic anomalies mapped by satellites (by filtering out the main field) reveal geological structures: for example, the aggregation of CHAMP and Swarm data has produced maps of the Baghdad anomaly, highlighting buried areas. This has been useful for mineral and tectonic research.
+- **Space Weather and Ionospheric Currents**: Satellites like Swarm measure electric currents in the upper atmosphere (e.g., Birkeland currents and equatorial ring current) through characteristic magnetic perturbations (differences between tracks of different satellites and internal field models). This helps monitor geomagnetic storms and magnetosphere-ionosphere coupling.
+- **Risks to Infrastructure**: From the measurement of rapid field changes (pulsations, coronal mass ejections), the induction of geomagnetically induced currents that can damage power grids is deduced.
+- **Research in Archaeology and Paleomagnetism**: Although satellites measure the current field, comparisons with historical models and simulations help understand past variations imprinted in rocks and artifacts (archeomagnetism).
+- **Migratory Fauna**: The Earth's magnetic field is used by migratory animals (birds, turtles) for orientation: field models updated by satellite data are used in ecological studies to understand migratory paths (e.g., maps of magnetic intensity and inclination explain certain routes).
 
 ### Missions
 
-- **Swarm (ESA):** A constellation of 3 satellites that allows for separating temporal from spatial variations of the geomagnetic field.
+- [**Swarm (ESA):**](https://earth.esa.int/eogateway/missions/swarm) A constellation of 3 satellites that allows for the separation of temporal from spatial variations of the geomagnetic field.<sup>37</sup>
 
-- **DSCOVR (NASA/NOAA):** Positioned at L1, it uses magnetometers to monitor the interplanetary magnetic field (IMF) carried by the solar wind, providing early warning for geomagnetic storms.<sup>54</sup>
+- **DSCOVR (NASA/NOAA):** Positioned at L1, it uses magnetometers to monitor the interplanetary magnetic field (IMF) carried by the solar wind, providing early warning for geomagnetic storms.<sup>38</sup>
 
 ***
 
-## 7. Signals of Opportunity and CubeSat Radars: The New Frontier
+## Signals of Opportunity and CubeSat Radar: The New Frontier
 
 This category combines two emerging trends: the use of non-native signals for EO and the extreme miniaturization of active sensors.
 
-
-### A. Traffic Monitoring: Satellite AIS and ADS-B
-
-Satellites capture position messages transmitted by ships (AIS) and aircraft (ADS-B). The main challenge is **packet de-collision**: a satellite sees an enormous area (FOV ~5000 km) containing thousands of emitters transmitting in the same time slots (TDMA).
-
-- **SOTDMA vs CSTDMA:** The SOTDMA protocol (used by large Class A vessels) reserves future slots and is easier to decode from space compared to CSTDMA (Class B), which uses a random "listen before talk" approach, often saturated in orbit.<sup>59</sup>
-
-- **Applications:** Fusion with SAR data to identify "dark" vessels (those not transmitting AIS) involved in illegal fishing or illicit trafficking.
-
-
-### B. CubeSat Radar: RainCube
+### A. CubeSat Radar: RainCube
 
 Until recently, radars were considered incompatible with CubeSats due to power and size requirements. The **RainCube** mission (NASA) demonstrated a Ka-band (35.7 GHz) weather radar on a 6U CubeSat.
 
-- **Innovation:** Use of an ultralight deployable parabolic antenna and pulse compression techniques. In Ka-band, rain strongly attenuates the signal; RainCube exploits this very principle to profile storm structures.<sup>61</sup>
+- **Innovation:** Use of an ultralight deployable parabolic antenna and pulse compression techniques. In Ka-band, rain strongly attenuates the signal; RainCube exploits this very principle to profile storm structures.<sup>39</sup>
 
-
-### C. Smart LNB: Rain from Satellite TVs
+### B. Smart LNB: Rain from Satellite TVs
 
 Projects like **NEFOCAST** transform domestic satellite TV receivers (Smart LNBs) into rain gauges. They measure the attenuation of the downlink signal (Ku/Ka band) caused by rain (_Rain Fade_).
 
-- **Formula:** The specific attenuation $A$ (dB/km) is related to the precipitation rate $R$ (mm/h) by the power law $A = k R^\alpha$. A dense network of domestic "sensors" provides real-time rain maps with capillary resolution.<sup>63</sup>
+- **Formula:** The specific attenuation $A$ (dB/km) is related to the precipitation rate $R$ (mm/h) by the power law $A = k R^\alpha$. A dense network of domestic "sensors" provides real-time rain maps with capillary resolution.<sup>40</sup>
 
 ***
 
-
 ### Synthetic Comparative Table of Technologies
 
-| **Category**           | **Sensor Type**     | **Primary Measurement**                | **Exemplary Missions**         | **Key Application**           |
-| :--------------------- | :------------------ | :------------------------------------- | :----------------------------- | :---------------------------- |
-| **GNSS-RO**            | Passive (Limb)      | Refractivity ($N$), Temp., Humidity    | COSMIC-2, Spire, MetOp         | Weather (NWP), Climate        |
-| **GNSS-R**             | Bistatic            | Surface Roughness, Wind, Soil Moisture | CYGNSS, FSSCat                 | Hurricanes, Floods            |
-| **SAR**                | Active (Microwave)  | Backscatter ($\sigma^0$), Phase        | Sentinel-1, COSMO-SkyMed       | Deformations (InSAR), Ice     |
-| **Radar Altimetry**    | Active (Nadir)      | SSH, SWH, Wind                         | Sentinel-3, Jason-3, SWOT      | Sea Level, Oceanography       |
-| **Scatterometry**      | Active (Microwave)  | Vector Wind                            | MetOp (ASCAT), CFOSAT          | Marine Weather                |
-| **Optical Pan**        | Passive (Vis/NIR)   | Radiance (High Spatial Res.)           | WorldView, Pléiades, Landsat   | Cartography, Intelligence     |
-| **Optical Multi**      | Passive (Vis/IR)    | Spectral Reflectance (Bands)           | Sentinel-2, Landsat            | Agriculture, Land Cover       |
-| **Hyperspectral**      | Passive (Vis/SWIR)  | Continuous Spectrum ($>100$ bands)     | EnMAP, PRISMA, PACE            | Geology, Water Quality        |
-| **Thermal (TIR)**      | Passive (Emission)  | Brightness Temperature ($T\_b$)        | Landsat, Sentinel-3, ECOSTRESS | SST, LST, Fires               |
-| **Radiometry (Surface)** | Passive (Microwave) | $T\_b$ (L/C/X Band)                    | SMOS, SMAP                     | Soil Moisture, Salinity       |
-| **Atm. Sounding**      | Passive (Microwave) | T/Humidity Profiles (O$\_2$, H$\_2$O)  | AMSU/MHS, TROPICS              | Global Weather Input          |
-| **Lidar Altimetry**    | Active (Laser)      | Elevation, Ice Thickness               | ICESat-2, GEDI                 | Ice Mass Balance              |
-| **Wind Lidar**         | Active (Doppler)    | LOS Wind (Doppler Shift)               | Aeolus                         | Clear-Air Wind                |
-| **Gravimetry**         | Active (SST)        | Gravity Anomalies (Mass)               | GRACE-FO, GOCE                 | Groundwater, Glaciers         |
-| **Magnetometry**       | Passive (In-situ)   | Magnetic Field Vector                  | Swarm, DSCOVR                  | Geomagnetic Models            |
-| **Lightning (GLM)**    | Passive (Optical)   | Lightning Events                       | GOES-R, MTG                    | Storm Nowcasting              |
-| **AIS / ADS-B**        | Passive (RF)        | Ship/Aircraft Position                 | Spire, Aireon                  | Global Tracking               |
-| **CubeSat Radar**      | Active (Ka-band)    | Rain Profile                           | RainCube                       | Technology Demonstrator       |
-| **Smart LNB**          | Opportunity         | Rain Attenuation                       | NEFOCAST                       | Distributed Rainfall Measurement |
-
-## Conclusion
-
-The analysis of these nineteen categories reveals an increasingly interconnected and multi-physical Earth observation system. The dominant trend is data fusion (_Data Fusion_): the vertical precision of Lidar and Radar is extended horizontally by optical and radiometric constellations. Furthermore, the integration of traditional scientific sensors with commercial opportunity data (GNSS-R, Smart LNB, AIS) is creating a true "Digital Twin" of the planet, capable of quantifying not only the state of the natural environment but also anthropogenic impact in real-time.
-
-## Infographic: Comparison Matrix
+|                         |                     |                                        |                                |                               |
+| ----------------------- | ------------------- | -------------------------------------- | ------------------------------ | ----------------------------- |
+| **Category**            | **Sensor Type**     | **Primary Measurement**                | **Exemplary Missions**         | **Key Application**           |
+| **GNSS-RO**             | Passive (Limb)      | Refractivity ($N$), Temp., Humidity    | COSMIC-2, Spire, MetOp         | Weather (NWP), Climate        |
+| **GNSS-R**              | Bistatic            | Surface Roughness, Wind, Soil Moisture | CYGNSS, FSSCat                 | Hurricanes, Floods            |
+| **SAR**                 | Active (Microwave)  | Backscatter ($\sigma^0$), Phase        | Sentinel-1, COSMO-SkyMed       | Deformations (InSAR), Ice     |
+| **Radar Altimetry**     | Active (Nadir)      | SSH, SWH, Wind                         | Sentinel-3, Jason-3, SWOT      | Sea Level, Oceanography       |
+| **Scatterometry**       | Active (Microwave)  | Vector Wind                            | MetOp (ASCAT), CFOSAT          | Marine Weather                |
+| **Optical Pan**         | Passive (Vis/NIR)   | Radiance (High Spatial Res.)           | WorldView, Pléiades, Landsat   | Cartography, Intelligence     |
+| **Optical Multi**       | Passive (Vis/IR)    | Spectral Reflectance (Bands)           | Sentinel-2, Landsat            | Agriculture, Land Cover       |
+| **Hyperspectral**       | Passive (Vis/SWIR)  | Continuous Spectrum ($>100$ bands)     | EnMAP, PRISMA, PACE            | Geology, Water Quality        |
+| **Thermal (TIR)**       | Passive (Emission)  | Brightness Temperature ($T\_b$)        | Landsat, Sentinel-3, ECOSTRESS | SST, LST, Fires               |
+| **Radiometry (Soil)**   | Passive (Microwave) | $T\_b$ (L/C/X Band)                    | SMOS, SMAP                     | Soil Moisture, Salinity       |
+| **Atm. Sounding**       | Passive (Microwave) | T/Humidity Profiles (O$\_2$, H$\_2$O)  | AMSU/MHS, TROPICS              | Global Weather Input          |
+| **Lidar Altimetry**     | Active (Laser)      | Elevation, Ice Thickness               | ICESat-2, GEDI                 | Ice Mass Balance              |
+| **Wind Lidar**          | Active (Doppler)    | LOS Wind (Doppler Shift)               | Aeolus                         | Clear-Air Wind                |
+| **Gravimetry**          | Active (SST)        | Gravity Anomalies (Mass)               | GRACE-FO, GOCE                 | Groundwater, Glaciers         |
+| **Magnetometry**        | Passive (In-situ)   | Magnetic Field Vector                  | Swarm, DSCOVR                  | Geomagnetic Models            |
+| **Lightning (GLM)**     | Passive (Optical)   | Lightning Events                       | GOES-R, MTG                    | Storm Nowcasting              |
+| **AIS / ADS-B**         | Passive (RF)        | Ship/Aircraft Position                 | Spire, Aireon                  | Global Tracking               |
+| **CubeSat Radar**       | Active (Ka-band)    | Rain Profile                           | RainCube                       | Technology Demonstrator       |
+| **Smart LNB**           | Opportunistic       | Rain Attenuation                       | NEFOCAST                       | Distributed Rain Gauging      |
 
 <!-- Infografica Page (NEW) -->
 <div id="infografica" class="content-page hidden">
-  <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infographic: Comparison Matrix</h1>
+  <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infographic: Comparison Matrix</h1>
   <p class="text-lg text-gray-700 mb-6">This table summarizes the operational capabilities of all analyzed technologies. Use this legend to guide you:</p>
 
-  <div class="flex flex-wrap gap-4 mb-6 text-sm">
+<div class="flex flex-wrap gap-4 mb-6 text-sm">
     <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold border border-yellow-200">☀️ Passive (Requires Sun/Emission)</span>
     <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200">📡 Active (Emits its own signal)</span>
     <span class="px-3 py-1 rounded-full bg-green-100 text-green-800 font-semibold border border-green-200">☁️ Sees through clouds</span>
   </div>
 
-<figure class="table-wrapper" data-enhanced-table>
+
+
+
+  <figure class="table-wrapper" data-enhanced-table>
     <div class="table-wrapper__scroll">
       <table class="min-w-full text-sm text-left text-gray-600">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
@@ -703,7 +724,7 @@ The analysis of these nineteen categories reveals an increasingly interconnected
             <td class="px-6 py-4 text-center text-xl" title="All-weather">☁️ 🌙</td>
             <td class="px-6 py-4">Position (XYZ), time (T)</td>
           </tr>
-          <!-- 2. Ottico -->
+          <!-- 2. Optical -->
           <tr class="bg-white border-b hover:bg-gray-50">
             <td class="px-6 py-4 font-bold text-gray-900">2. Optical</td>
             <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passive</span></td>
@@ -727,7 +748,7 @@ The analysis of these nineteen categories reveals an increasingly interconnected
             <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
             <td class="px-6 py-4">mm displacements / topography</td>
           </tr>
-          <!-- 5. Altimetria -->
+          <!-- 5. Altimetry -->
           <tr class="bg-white border-b hover:bg-gray-50">
             <td class="px-6 py-4 font-bold text-gray-900">5. Altimetry</td>
             <td class="px-6 py-4"><span class="text-indigo-600 font-semibold">Active</span></td>
@@ -735,15 +756,15 @@ The analysis of these nineteen categories reveals an increasingly interconnected
             <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
             <td class="px-6 py-4">Surface height (cm)</td>
           </tr>
-          <!-- 6. Radiometri -->
+          <!-- 6. Radiometers -->
           <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">6. Microwave Radiometers</td>
+            <td class="px-6 py-4 font-bold text-gray-900">6. MO Radiometers</td>
             <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passive</span></td>
             <td class="px-6 py-4">Thermal emission</td>
             <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
             <td class="px-6 py-4">Temperature, humidity</td>
           </tr>
-          <!-- 7. Iperspettrale -->
+          <!-- 7. Hyperspectral -->
           <tr class="bg-white border-b hover:bg-gray-50">
             <td class="px-6 py-4 font-bold text-gray-900">7. Hyperspectral</td>
             <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passive</span></td>
@@ -759,19 +780,19 @@ The analysis of these nineteen categories reveals an increasingly interconnected
             <td class="px-6 py-4 text-center text-xl" title="No clouds">❌ 🌙</td>
             <td class="px-6 py-4">3D profiles / heights</td>
           </tr>
-          <!-- 9. Gravimetria -->
+          <!-- 9. Gravimetry -->
           <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">9. Gravimetry</td>
-            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Physical</span></td>
+
+<td class="px-6 py-4 font-bold text-gray-900">9. Gravimetry</td>
+            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Physics</span></td>
             <td class="px-6 py-4">Gravitational field</td>
             <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
             <td class="px-6 py-4">Mass/water map</td>
           </tr>
-          <!-- 10. Magnetometria -->
+          <!-- 10. Magnetometry -->
           <tr class="bg-white border-b hover:bg-gray-50">
             <td class="px-6 py-4 font-bold text-gray-900">10. Magnetometry</td>
-
-<td class="px-6 py-4"><span class="text-purple-600 font-semibold">Physics</span></td>
+            <td class="px-6 py-4"><span class="text-purple-600 font-semibold">Physics</span></td>
             <td class="px-6 py-4">Magnetic field</td>
             <td class="px-6 py-4 text-center text-xl">☁️ 🌙</td>
             <td class="px-6 py-4">Magnetic field map</td>
@@ -786,7 +807,7 @@ The analysis of these nineteen categories reveals an increasingly interconnected
           </tr>
           <!-- 12. Meteo GEO -->
           <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-bold text-gray-900">12. Geo Weather</td>
+            <td class="px-6 py-4 font-bold text-gray-900">12. GEO Weather</td>
             <td class="px-6 py-4"><span class="text-yellow-600 font-semibold">Passive</span></td>
             <td class="px-6 py-4">Visible + thermal</td>
             <td class="px-6 py-4 text-center text-xl">☁️ 🌙 (thermal)</td>
@@ -812,139 +833,91 @@ The analysis of these nineteen categories reveals an increasingly interconnected
       </table>
     </div>
   </figure>
-  <p class="mt-4 text-sm text-gray-500 text-right">* Note: ☁️ = Penetrates clouds | 🌙 = Works at night | ❌ = Blocked/Not available</p>
+  <p class="mt-4 text-sm text-gray-500 text-right">* Note: ☁️ = Penetrates clouds | 🌙 = Works at night | ❌ = Blocked/Unavailable</p>
 </div>
+
+## Conclusion
+
+The analysis of these categories reveals an increasingly interconnected and multi-physical Earth observation system. The dominant trend is data fusion (_Data Fusion_): the vertical precision of Lidar and Radar is extended horizontally by optical and radiometric constellations. Furthermore, the integration of traditional scientific sensors with commercial opportunity data (GNSS-R, Smart LNB, AIS) is creating a true "Digital Twin" of the planet, capable of quantifying not only the state of the natural environment but also anthropogenic impact in real-time.
 
 #### Works cited
 
-1. Parametric Sizing Equations for Earth Observation Satellites | Request PDF - ResearchGate, <https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites>
+1. GNSS radio occultation (GNSS-RO): Lecture 1 – Principles and NWP use - ECMWF Events (Indico), <https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf>
 
-2. perspective on Gaussian processes for Earth observation | National Science Review, <https://academic.oup.com/nsr/article/6/4/616/5369430>
+2. Smith-Weintraub equation (atmospheric refractivity) - NIST JRES, <https://nvlpubs.nist.gov/nistpubs/jres/50/jresv50n1p39_A1b.pdf>
 
-3. GNSS radio occultation (GNSS-RO): Lecture 1 – Principles and NWP use - ECMWF Events (Indico), <https://events.ecmwf.int/event/375/contributions/4253/attachments/2310/4039/gnssro_lecture_KL_2024.pdf>
+3. GNSS Radio Occultation | Constellation Observing System for Meteorology Ionosphere and Climate - ucar cosmic, <https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation>
 
-4. A variational regularization of Abel transform for GPS radio occultation - AMT, <https://amt.copernicus.org/articles/11/1947/>
+4. Using the Commercial GNSS RO Spire Data in the Neutral Atmosphere for Climate and Weather Prediction Studies - the NOAA Institutional Repository, <https://repository.library.noaa.gov/view/noaa/58772/noaa_58772_DS1.pdf>
 
-5. GNSS radio occultation excess-phase processing for climate applications including uncertainty estimation - AMT, <https://amt.copernicus.org/articles/16/5217/>
+5. Sensing the ionosphere with the Spire radio occultation constellation | Journal of Space Weather and Space Climate, <https://www.swsc-journal.org/articles/swsc/full_html/2021/01/swsc210051/swsc210051.html>
 
-6. GNSS Radio Occultation | Constellation Observing System for Meteorology Ionosphere and Climate - ucar cosmic, <https://www.cosmic.ucar.edu/what-we-do/gnss-radio-occultation>
+6. Reconnaissance satellite constellations: For enhanced global awareness - Spire, <https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/>
 
-7. Using the Commercial GNSS RO Spire Data in the Neutral Atmosphere for Climate and Weather Prediction Studies - the NOAA Institutional Repository, <https://repository.library.noaa.gov/view/noaa/58772/noaa_58772_DS1.pdf>
+7. Improving Analysis and Prediction of Tropical Cyclones by Assimilating Radar and GNSS-R Wind Observations: Ensemble Data Assimilation and Observing System Simulation Experiments Using a Coupled Atmosphere–Ocean Model, <https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml>
 
-8. Sensing the ionosphere with the Spire radio occultation constellation | Journal of Space Weather and Space Climate, <https://www.swsc-journal.org/articles/swsc/full_html/2021/01/swsc210051/swsc210051.html>
+8. NASA/University of Michigan - CYGNSS Handbook <https://cygnss.engin.umich.edu/wp-content/uploads/sites/534/2021/07/148-0138-ATBD-L2-Wind-Speed-Retrieval-R6_release.pdf>
 
-9. Reconnaissance satellite constellations: For enhanced global awareness - Spire, <https://spire.com/blog/space-reconnaissance/reconnaissance-satellite-constellations-for-enhanced-global-awareness/>
+9. FSSCat Overview - ESA Earth Online, <https://earth.esa.int/eogateway/missions/fsscat/description>
 
-10. Space Weather Data from Commercial GNSS RO, <https://www.swpc.noaa.gov/sites/default/files/images/u4/07%20Rob%20Kursinski.pdf>
+10. Synthetic-aperture radar - Wikipedia, <https://en.wikipedia.org/wiki/Synthetic-aperture_radar>
 
-11. RainCube Demonstrates Miniature Radar Technology to Measure Storms - NASA Science, <https://science.nasa.gov/science-research/science-enabling-technology/technology-highlights/raincube-demonstrates-miniature-radar-technology-to-measure-storms/>
+11. Synthetic Aperture Radar (SAR): Principles and Applications - eo4society, <https://eo4society.esa.int/wp-content/uploads/2021/02/D1T2a_LTC2015_Younis.pdf>
 
-12. FSSCat Overview - ESA Earth Online, <https://earth.esa.int/eogateway/missions/fsscat/description>
+12. S1 Applications - SentiWiki - Copernicus, <https://sentiwiki.copernicus.eu/web/s1-applications>
 
-13. FSSCat - Earth Online, <https://earth.esa.int/eogateway/missions/fsscat>
+13. InSAR Phase Unwrapping Error Correction for Rapid Repeat Measurements of Water Level Change in Wetlands - LaCoast.gov, <https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf>
 
-14. Synthetic-aperture radar - Wikipedia, <https://en.wikipedia.org/wiki/Synthetic-aperture_radar>
+14. Sentinel-1 InSAR Product Guide - HyP3, <https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/>
 
-15. Synthetic Aperture Radar (SAR): Principles and Applications - eo4society, <https://eo4society.esa.int/wp-content/uploads/2021/02/D1T2a_LTC2015_Younis.pdf>
+15. Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, <https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf>
 
-16. S1 Applications - SentiWiki - Copernicus, <https://sentiwiki.copernicus.eu/web/s1-applications>
+16. Sentinel-1 InSAR (Venice) video - SentiWiki, <https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499>
 
-17. Create an Interferogram Using ESA's Sentinel-1 Toolbox | NASA Earthdata, <https://www.earthdata.nasa.gov/learn/data-recipes/create-interferogram-using-esas-sentinel-1-toolbox>
+17. Radar Altimetry Principle and Data Processing by M.-H. Rio, <https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf>
 
-18. InSAR Phase Unwrapping Error Correction for Rapid Repeat Measurements of Water Level Change in Wetlands - LaCoast.gov, <https://www.lacoast.gov/crms/crms_public_data/publications/Oliver-Cabrera%20et%20al%202021.pdf>
+18. Using Altimetry service data - EUMETSAT - User Portal, <https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service>
 
-19. Unwrapped Interferograms: Creating a Deformation Map | NASA Earthdata, <https://www.earthdata.nasa.gov/learn/data-recipes/unwrapped-interferograms-creating-deformation-map>
+19. Panchromatic Images Explained | Satellite Bands, Specs & Uses - XrTech Group, <https://xrtechgroup.com/panchromatic-imaging-bands-uses/>
 
-20. Sentinel-1 InSAR Product Guide - HyP3, <https://hyp3-docs.asf.alaska.edu/guides/insar_product_guide/>
+20. Image Fusion for High-Resolution Optical Satellites Based on Panchromatic Spectral Decomposition - PMC, <https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/>
 
-21. Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, <https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf>
+21. SuperView Neo satellite constellation (pansharpening example) - Satellite Imaging Corp, <https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/>
 
-22. Radar Altimetry Principle and Data Processing by M.-H. Rio, <https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf>
+22. Panchromatic Imagery And Its Band Combinations In Use - EOS Data Analytics, <https://eos.com/make-an-analysis/panchromatic/>
 
-23. Radar Altimetry for remote sensing of the oceans and their impact on climate - ESA Earth Online, <https://earth.esa.int/eogateway/documents/20142/0/01_Tuesday_OCT2013_Cipollini_Altimetry_1.pdf>
+23. Sentinel-2 products and resolutions - SentiWiki, <https://sentiwiki.copernicus.eu/web/s2-products>
 
-24. Using Altimetry service data - EUMETSAT - User Portal, <https://user.eumetsat.int/data/satellites/sentinel-3/altimetry-service>
+24. Linear mixture model / spectral mixing - IEEE Xplore, <https://ieeexplore.ieee.org/document/974727>
 
-25. Altimetry Applications - SentiWiki - Copernicus, <https://sentiwiki.copernicus.eu/web/altimetry-applications>
+25. Hyperspectral Imaging - arXiv, <https://arxiv.org/html/2508.08107v1>
 
-26. Backscatter LIDAR, <https://reef.atmos.colostate.edu/~odell/at652/lecture_2013/lecture8b.pdf>
+26. Introduction to PACE Hyperspectral Observations for Water Quality Monitoring - NASA Applied Sciences, <https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf>
 
-27. Panchromatic Images Explained | Satellite Bands, Specs & Uses - XrTech Group, <https://xrtechgroup.com/panchromatic-imaging-bands-uses/>
+27. FSSCat - Earth Online, <https://earth.esa.int/eogateway/missions/fsscat>
 
-28. Image Fusion for High-Resolution Optical Satellites Based on Panchromatic Spectral Decomposition - PMC, <https://pmc.ncbi.nlm.nih.gov/articles/PMC6603526/>
+28. EnMAP, <https://www.enmap.org/>
 
-29. Panchromatic Imagery And Its Band Combinations In Use - EOS Data Analytics, <https://eos.com/make-an-analysis/panchromatic/>
+29. MIRAS - ESA Earth Online - European Space Agency, <https://earth.esa.int/eogateway/instruments/miras>
 
-30. Hyperspectral Imaging - arXiv, <https://arxiv.org/html/2508.08107v1>
+30. Satellite altimetry overview - Geodesy Science, <https://geodesy.science/item/satellite-altimetry/>
 
-31. Full article: Hyperspectral and multispectral image fusion addressing spectral variability by an augmented linear mixing model - Taylor & Francis Online, <https://www.tandfonline.com/doi/full/10.1080/01431161.2022.2041762>
+31. Tracking water from space (GRACE/GRACE-FO) - JPL, <https://gracefo.jpl.nasa.gov/resources/72/tracking-water-from-space/>
 
-32. Introduction to PACE Hyperspectral Observations for Water Quality Monitoring - NASA Applied Sciences, <https://appliedsciences.nasa.gov/sites/default/files/2024-09/PACE_Part1_Final.pdf>
+32. Gravity Recovery and Climate Experiment (GRACE) - NASA Sea Level Change Portal, <https://sealevel.nasa.gov/missions/grace>
 
-33. SSC19-V-05 - DigitalCommons@USU, <https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=4391&context=smallsat>
+33. Satellite-based estimates of groundwater depletion in India <https://www.nature.com/articles/nature08238/>
 
-34. EnMAP, <https://www.enmap.org/>
+34. Satellite magnetometer booms and calibration - Springer, <https://link.springer.com/article/10.1007/s11214-025-01238-7>
 
-35. Mission - EnMAP, <https://www.enmap.org/mission/>
+35. Earth's magnetic field (video) - ESA Multimedia, <https://dlmultimedia.esa.int/download/public/videos/2013/10/038/1310_038_BR_009.mp4>
 
-36. Passive Microwave, <https://topex.ucsd.edu/rs/Passive_Microwave.pdf>
+36. Earth's magnetic field generated in the core (depth reference) - Phys.org, <https://phys.org/news/2016-05/strength-earth-magnetic-field.html>
 
-37. SMOS - ESA Earth Online - European Space Agency, <https://earth.esa.int/eogateway/missions/smos>
+37. Swarm mission overview - ESA Earth Online, <https://earth.esa.int/eogateway/missions/swarm>
 
-38. AMSR2 Overview NESDIS Operational Soil Moisture Products - Office of Satellite and Product Operations - NOAA OSPO, <https://www.ospo.noaa.gov/products/land/smops/sensors_AMSR2.html>
+38. Deep Space Climate Observatory (DSCOVR) - National Centers for Environmental Information - NOAA, <https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr>
 
-39. SMOS (Soil Moisture and Ocean Salinity) Mission - eoPortal, <https://www.eoportal.org/satellite-missions/smos>
+39. RainCube: the first ever radar measurements from a CubeSat in space - SPIE Digital Library, <https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full>
 
-40. Microwave radiometer to retrieve temperature profiles - AMT, <https://amt.copernicus.org/preprints/6/2857/2013/amtd-6-2857-2013.pdf>
-
-41. ICESat-2: Home, <https://icesat-2.gsfc.nasa.gov/>
-
-42. Counting on NASA's ICESat-2, <https://icesat-2.gsfc.nasa.gov/articles/counting-nasas-icesat-2>
-
-43. IceSat 2 ATLAS photon-counting receiver - initial on-orbit performance - NASA Technical Reports Server, <https://ntrs.nasa.gov/api/citations/20200001212/downloads/20200001212.pdf>
-
-44. Signal Photon Extraction Method for ICESat-2 Data Using Slope and Elevation Information Provided by Stereo Images - PubMed Central, <https://pmc.ncbi.nlm.nih.gov/articles/PMC10649317/>
-
-45. Aeolus Objectives - ESA Earth Online, <https://earth.esa.int/eogateway/missions/aeolus/objectives>
-
-46. First validation of Aeolus wind observations by airborne Doppler wind lidar measurements, <https://amt.copernicus.org/articles/13/2381/2020/>
-
-47. The ESA ADM-Aeolus Doppler Wind Lidar Mission – Status and validation strategy - ECMWF, <https://www.ecmwf.int/sites/default/files/elibrary/2016/16851-esa-adm-aeolus-doppler-wind-lidar-mission-status-and-validation-strategy.pdf>
-
-48. Gravity Recovery and Climate Experiment (GRACE) - NASA Sea Level Change Portal, <https://sealevel.nasa.gov/missions/grace>
-
-49. GRACE-FO - Gravity Recovery and Climate Experiment Follow-On - Center for Space Research, <https://www2.csr.utexas.edu/grace/RL061LRI.html>
-
-50. Satellite Gravimetry – Measuring Earth's Gravity Field from Space - IAG - Geodesy, <https://geodesy.science/item/satellite-gravimetry/>
-
-51. In-flight calibration of the fluxgate magnetometer on Macau Science Satellite-1, <https://www.eppcgs.org/article/doi/10.26464/epp2025067>
-
-52. A miniature two-axis fluxgate magnetometer - NASA Technical Reports Server, <https://ntrs.nasa.gov/api/citations/19700008650/downloads/19700008650.pdf>
-
-53. Types of magnetometers, uses and characteristics | AV3 AEROVISUAL, <https://av3aerovisual.com/en/types-of-magnetometers-uses-and-characteristics/>
-
-54. Deep Space Climate Observatory (DSCOVR) - National Centers for Environmental Information - NOAA, <https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.stp.swx:satellite-systems_dscovr>
-
-55. It's all systems go for NOAA's first space weather satellite, <https://www.noaa.gov/its-all-systems-go-noaas-first-space-weather-satellite>
-
-56. GOES-R Post Launch Test | NASA Earthdata, <https://www.earthdata.nasa.gov/data/projects/goes-r-plt>
-
-57. GOES-R Terrestrial Weather (ABI/GLM) - National Centers for Environmental Information, <https://www.ncei.noaa.gov/products/goes-terrestrial-weather-abi-glm>
-
-58. GOES-R Series Data Book, <https://www.goes-r.gov/downloads/resources/documents/GOES-RSeriesDataBook.pdf>
-
-59. Sotdma vs cstdma: understanding key differences for maritime communication - BytePlus, <https://www.byteplus.com/en/topic/560464>
-
-60. AIS Know-How: Data transfer (SOTDMA vs. CSTDMA), <https://defender.com/assets/pdf/simrad/sotdma_cstdma_comparison.pdf>
-
-61. RainCube: the first ever radar measurements from a CubeSat in space - SPIE Digital Library, <https://www.spiedigitallibrary.org/journals/journal-of-applied-remote-sensing/volume-13/issue-3/032504/RainCube--the-first-ever-radar-measurements-from-a-CubeSat/10.1117/1.JRS.13.032504.full>
-
-62. RainCube - NASA ESTO, <https://esto.nasa.gov/wp-content/uploads/2020/07/RainCube.pdf>
-
-63. Real-Time Rain Rate Evaluation via Satellite Downlink Signal Attenuation Measurement - PubMed Central, <https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/>
-
-64. SmartLNB for weather forecasting - Nefocast, <http://www.nefocast.it/news/smartlnb-for-weather-forecasting/>
-
-65. Improving Analysis and Prediction of Tropical Cyclones by Assimilating Radar and GNSS-R Wind Observations: Ensemble Data Assimilation and Observing System Simulation Experiments Using a Coupled Atmosphere–Ocean Model, <https://journals.ametsoc.org/view/journals/wefo/37/9/WAF-D-21-0202.1.xml>
-
-66. NASA/University of Michigan - CYGNSS Handbook <https://cygnss.engin.umich.edu/wp-content/uploads/sites/534/2021/07/148-0138-ATBD-L2-Wind-Speed-Retrieval-R6_release.pdf>
+40. Real-Time Rain Rate Evaluation via Satellite Downlink Signal Attenuation Measurement - PubMed Central, <https://pmc.ncbi.nlm.nih.gov/articles/PMC5580102/>
