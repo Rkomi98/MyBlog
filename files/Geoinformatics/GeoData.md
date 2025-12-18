@@ -634,36 +634,50 @@ Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), vie
 
 
 ### Missioni e applicazioni
+Le prinicpali missioni di cui sono a conoscenza, riguardano i due giganti atlantici in ambito space, NASA e ESA
 
 - **GRACE / GRACE-FO (NASA/GFZ):** Hanno quantificato per la prima volta in modo inequivocabile la perdita di massa delle calotte polari e l'eccessivo prelievo dalle falde acquifere in India e California.<sup>50</sup>
 
-- **GOCE (ESA):** Ha utilizzato un gradiometro (accelerometri ultrasensibili) per definire il geoide statico con risoluzione spaziale e precisione mai raggiunte prima.
+- **GOCE (ESA):** Ha utilizzato un gradiometro (accelerometro ultrasensibile) per definire il geoide statico con risoluzione spaziale e precisione mai raggiunte prima.
 
 ***
 
 
 ## Magnetometria satellitare
 
-I magnetometri spaziali studiano il campo magnetico terrestre, scudo protettivo contro il vento solare.
-
+I satelliti magnetometrici misurano l’intensità e la direzione del campo magnetico terrestre nello spazio circumterrestre. Il campo magnetico terrestre è generato principalmente dal nucleo esterno fluido (dinamo geodinamica), con contributi della crosta (dovuta alla magnetizzazione delle rocce) e correnti elettriche nello spazio e nell’alta atmosfera dovute all'interazione con il vento solare. 
 
 ### Cosa misura
 
-Il vettore campo magnetico totale $\vec{B}$, separando i contributi del nucleo (Core field), della crosta (Lithospheric field) e delle correnti elettriche esterne (Ionosfera/Magnetosfera).
+Un satellite dotato di magnetometro vettoriale registra in ogni punto le tre componenti del campo magnetico ($B_x, B_y, B_z$) misurate in nanotesla, nT e come questi variano spostandosi sulla Terra. 
 
+Le missioni dedicano grande cura alla **calibrazione**. I sensori magnetici (spesso di tipo fluxgate o Overhauser scalar) sono montati su [bracci estensibili](https://link.springer.com/article/10.1007/s11214-025-01238-7) per evitare interferenze della strumentazione di bordo, e vengono accompagnati da star tracker ad alta precisione per conoscere l’orientazione e ricavare così i vettori di campo in un riferimento terrestre inerziale:
+- Un **Magnetometro vettoriale (VFM)** (spesso Fluxgate) montato su un braccio estensibile (boom) serve a misurare la direzione delle linee di campo senza l'interferenza magnetica del satellite.
+- Un **Magnetometro scalare (ASM)** (es. Overhauser o a vapori di elio) per misurare l'intensità assoluta con altissima precisione, usata per calibrare il vettoriale.
 
-### Funzionamento fisico: fluxgate e scalari
+Misurando l’intero globo su orbite polari ripetute, i satelliti magnetici producono modelli globali del campo geomagnetico, suddivisi in componenti: il campo principale (originato dal nucleo, con dipolo dominante), il campo crosta (anomalie locali da rocce magnetizzate), e campi esterni variabili (correnti ionosferiche e magnetosferiche). 
 
-Le missioni di alta precisione utilizzano una combinazione di strumenti:
+Inoltre, misurando nel tempo, si traccia la variazione secolare del campo principale (deriva dei poli magnetici, variazioni decennali di intensità dovute ai moti del nucleo).
 
-1. **Magnetometro Fluxgate (Vettoriale):** Misura le tre componenti del campo. Sfrutta la saturazione magnetica periodica di un nucleo ferromagnetico; la seconda armonica del segnale indotto è proporzionale al campo esterno.<sup>51</sup> Richiede una calibrazione precisa dell'assetto tramite Star Trackers solidali al braccio (boom) dello strumento.
+<figure>
+  <video controls src="https://dlmultimedia.esa.int/download/public/videos/2013/10/038/1310_038_BR_009.mp4"></video>
+  <figcaption>Video ESA: misura del campo magnetico terrestre dallo spazio.</figcaption>
+</figure>
 
-2. **Magnetometro Scalare Assoluto:** (es. Overhauser o elio otticamente pompato) Misura l'intensità totale $|\vec{B}|$ sfruttando la risonanza magnetica nucleare o transizioni atomiche (effetto Zeeman), fornendo un riferimento assoluto per calibrare i vettoriali.<sup>53</sup>
+### A cosa serve?
+Una mappa accurata del campo geomagnetico ha molte applicazioni scientifiche e pratiche. Vediamo quelle principali:
+
+- **Geofisica del nucleo**: la variazione temporale del campo (variazione secolare) fornisce informazioni sui moti fluidi nel nucleo terrestre [a ~3000 km di profondità](https://phys.org/news/2016-05-strength-earth-magnetic-field.html#:~:text=The%20magnetic%20field%20is%20thought,the%20continuously%20changing%20electromagnetic%20field), migliorando la comprensione del meccanismo di dinamo terrestre (terrestrial bicycle dinamo) e permettendo di modellare evoluzione e possibili inversioni del campo. 
+- **Magnetismo crostale**: le anomalie magnetiche mappate dai satelliti (filtrando via il campo principale) rivelano strutture geologiche: ad esempio, l’aggregato dei dati CHAMP e Swarm ha prodotto mappe dell’anomalia di Baghdad, evidenziando zone sepolte. Questo è stato utile per ricerche minerarie e tettoniche. 
+- **Space weather e correnti ionosferiche**: i satelliti come Swarm misurano i currents elettrici in alta atmosfera (es. correnti di Birkeland e anello equatoriale) tramite le perturbazioni magnetiche caratteristiche (differenze tra tracciati di diversi satelliti e modelli di campo interno). Ciò aiuta a monitorare le tempeste geomagnetiche e l’accoppiamento magnetosfera-ionosfera. 
+- **Rischi per infrastrutture**: dalla misura di rapidi cambi del campo (pulsazioni, espulsioni di massa coronale) si deduce l’induzione di correnti geomagneticamente indotte che possono danneggiare reti elettriche. 
+- **Ricerca in archeologia e paleomagnetismo**: sebbene i satelliti misurino l’attuale campo, confronti con modelli storici e simulazioni aiutano a capire variazioni passate impresse in rocce e manufatti (archeomagnetismo). 
+- **Fauna migratoria**: il campo magnetico terrestre è utilizzato da animali migratori (uccelli, tartarughe) per orientamento: modelli di campo aggiornati da dati satellitari vengono usati in studi di ecologia per capire percorsi migratori (es. le mappe di intensità e inclinazione magnetica spiegano certe rotte).
 
 
 ### Missioni
 
-- **Swarm (ESA):** Costellazione di 3 satelliti che permette di separare le variazioni temporali da quelle spaziali del campo geomagnetico.
+- [**Swarm (ESA):**](https://earth.esa.int/eogateway/missions/swarm) Costellazione di 3 satelliti che permette di separare le variazioni temporali da quelle spaziali del campo geomagnetico.
 
 - **DSCOVR (NASA/NOAA):** Posizionato in L1, usa magnetometri per monitorare il campo magnetico interplanetario (IMF) trasportato dal vento solare, fornendo allerta precoce per tempeste geomagnetiche.<sup>54</sup>
 
@@ -673,24 +687,14 @@ Le missioni di alta precisione utilizzano una combinazione di strumenti:
 
 Questa categoria unisce due trend emergenti: l'uso di segnali non nativi per l'EO e la miniaturizzazione estrema dei sensori attivi.
 
-
-### A. Monitoraggio traffico: AIS e ADS-B satellitare
-
-I satelliti captano i messaggi di posizione trasmessi da navi (AIS) e aerei (ADS-B). La sfida principale è la **de-collisione dei pacchetti**: un satellite vede un'area enorme (FOV \~5000 km) contenente migliaia di emettitori che trasmettono negli stessi slot temporali (TDMA).
-
-- **SOTDMA vs CSTDMA:** Il protocollo SOTDMA (usato dalle grandi navi Classe A) prenota gli slot futuri ed è più facile da decodificare dallo spazio rispetto al CSTDMA (Classe B), che usa un approccio randomico "ascolta prima di parlare", spesso saturato in orbita.<sup>59</sup>
-
-- **Applicazioni:** Fusione con dati SAR per identificare navi "dark" (che non trasmettono AIS) coinvolte in pesca illegale o traffici illeciti.
-
-
-### B. CubeSat radar: RainCube
+### A. CubeSat radar: RainCube
 
 Fino a poco tempo fa, i radar erano considerati incompatibili con i CubeSat a causa dei requisiti di potenza e dimensioni. La missione **RainCube** (NASA) ha dimostrato un radar meteorologico in banda Ka (35.7 GHz) su un CubeSat 6U.
 
 - **Innovazione:** Uso di un'antenna parabolica dispiegabile ultraleggera e di tecniche di compressione dell'impulso. In banda Ka, la pioggia attenua fortemente il segnale; RainCube sfrutta proprio questo principio per profilare la struttura delle tempeste.<sup>61</sup>
 
 
-### C. Smart LNB: pioggia dalle TV satellitari
+### B. Smart LNB: pioggia dalle TV satellitari
 
 Progetti come **NEFOCAST** trasformano i ricevitori TV satellitari domestici (Smart LNB) in pluviometri. Misurano l'attenuazione del segnale di downlink (Ku/Ka band) causata dalla pioggia (_Rain Fade_).
 
@@ -724,17 +728,9 @@ Progetti come **NEFOCAST** trasformano i ricevitori TV satellitari domestici (Sm
 | **CubeSat Radar**       | Attivo (Ka-band)    | Profilo Pioggia                        | RainCube                       | Dimostratore Tecnologico      |
 | **Smart LNB**           | Opportunità         | Attenuazione Pioggia                   | NEFOCAST                       | Pluviometria Distribuita      |
 
-
-## Conclusione
-
-L'analisi di queste diciannove categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (_Data Fusion_): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l'integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio "Digital Twin" del pianeta, capace di quantificare non solo lo stato dell'ambiente naturale, ma anche l'impatto antropico in tempo reale.
-
-
-## Infografica: matrice di confronto
-
 <!-- Infografica Page (NEW) -->
 <div id="infografica" class="content-page hidden">
-  <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di Confronto</h1>
+  <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di confronto</h1>
   <p class="text-lg text-gray-700 mb-6">Questa tabella riassume le capacità operative di tutte le tecnologie analizzate. Usa questa legenda per orientarti:</p>
 
   <div class="flex flex-wrap gap-4 mb-6 text-sm">
@@ -877,6 +873,10 @@ L'analisi di queste diciannove categorie rivela un sistema di osservazione della
   </figure>
   <p class="mt-4 text-sm text-gray-500 text-right">* Nota: ☁️ = Penetra le nuvole | 🌙 = Funziona di notte | ❌ = Bloccato/Non disponibile</p>
 </div>
+
+## Conclusione
+
+L'analisi di queste categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (_Data Fusion_): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l'integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio "Digital Twin" del pianeta, capace di quantificare non solo lo stato dell'ambiente naturale, ma anche l'impatto antropico in tempo reale.
 
 #### Works cited
 

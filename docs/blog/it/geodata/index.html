@@ -41,7 +41,7 @@
     "headline": "Che dati registrano i satelliti?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2025-12-14T19:17:44.773Z",
+    "dateModified": "2025-12-18T15:46:52.235Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1295,9 +1295,9 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#funzionamento-fisico-fluxgate-e-scalari">
+          <a class="post-toc__link" href="#a-cosa-serve">
             <span class="post-toc__number">7.2</span>
-            <span class="post-toc__text">Funzionamento fisico: fluxgate e scalari</span>
+            <span class="post-toc__text">A cosa serve?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
@@ -1315,26 +1315,20 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#a-monitoraggio-traffico-ais-e-ads-b-satellitare">
+          <a class="post-toc__link" href="#a-cubesat-radar-raincube">
             <span class="post-toc__number">8.1</span>
-            <span class="post-toc__text">A. Monitoraggio traffico: AIS e ADS-B satellitare</span>
+            <span class="post-toc__text">A. CubeSat radar: RainCube</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#b-cubesat-radar-raincube">
+          <a class="post-toc__link" href="#b-smart-lnb-pioggia-dalle-tv-satellitari">
             <span class="post-toc__number">8.2</span>
-            <span class="post-toc__text">B. CubeSat radar: RainCube</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#c-smart-lnb-pioggia-dalle-tv-satellitari">
-            <span class="post-toc__number">8.3</span>
-            <span class="post-toc__text">C. Smart LNB: pioggia dalle TV satellitari</span>
+            <span class="post-toc__text">B. Smart LNB: pioggia dalle TV satellitari</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#tabella-comparativa-sintetica-delle-tecnologie">
-            <span class="post-toc__number">8.4</span>
+            <span class="post-toc__number">8.3</span>
             <span class="post-toc__text">Tabella comparativa sintetica delle tecnologie</span>
           </a>
           
@@ -1345,16 +1339,10 @@
             <span class="post-toc__number">9</span>
             <span class="post-toc__text">Conclusione</span>
           </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#infografica-matrice-di-confronto">
-            <span class="post-toc__number">10</span>
-            <span class="post-toc__text">Infografica: matrice di confronto</span>
-          </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#works-cited">
-            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__number">9.1</span>
             <span class="post-toc__text">Works cited</span>
           </a>
           
@@ -1832,28 +1820,43 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
 <p>Due satelliti identici (come in GRACE e GRACE-FO) volano sulla stessa orbita separati da circa 220 km. Un sistema di ranging a microonde (banda $K$) o un interferometro laser (in GRACE-FO) misura la variazione di distanza inter-satellitare con precisione micrometrica.<sup>48</sup></p>
 <p>Quando il satellite di testa sorvola una massa eccessiva (es. una montagna), viene accelerato gravitazionalmente, allontanandosi dal secondo. Analizzando le variazioni di velocità relativa (Range-Rate $\dot{\rho}$), si ricostruisce il potenziale gravitazionale globale.</p>
 <h3 id="missioni-e-applicazioni">Missioni e applicazioni</h3>
+<p>Le prinicpali missioni di cui sono a conoscenza, riguardano i due giganti atlantici in ambito space, NASA e ESA</p>
 <ul>
 <li><p><strong>GRACE / GRACE-FO (NASA/GFZ):</strong> Hanno quantificato per la prima volta in modo inequivocabile la perdita di massa delle calotte polari e l&#39;eccessivo prelievo dalle falde acquifere in India e California.<sup>50</sup></p>
 </li>
-<li><p><strong>GOCE (ESA):</strong> Ha utilizzato un gradiometro (accelerometri ultrasensibili) per definire il geoide statico con risoluzione spaziale e precisione mai raggiunte prima.</p>
+<li><p><strong>GOCE (ESA):</strong> Ha utilizzato un gradiometro (accelerometro ultrasensibile) per definire il geoide statico con risoluzione spaziale e precisione mai raggiunte prima.</p>
 </li>
 </ul>
 <hr>
 <h2 id="magnetometria-satellitare">Magnetometria satellitare</h2>
-<p>I magnetometri spaziali studiano il campo magnetico terrestre, scudo protettivo contro il vento solare.</p>
+<p>I satelliti magnetometrici misurano l’intensità e la direzione del campo magnetico terrestre nello spazio circumterrestre. Il campo magnetico terrestre è generato principalmente dal nucleo esterno fluido (dinamo geodinamica), con contributi della crosta (dovuta alla magnetizzazione delle rocce) e correnti elettriche nello spazio e nell’alta atmosfera dovute all&#39;interazione con il vento solare. </p>
 <h3 id="cosa-misura-10">Cosa misura</h3>
-<p>Il vettore campo magnetico totale $\vec{B}$, separando i contributi del nucleo (Core field), della crosta (Lithospheric field) e delle correnti elettriche esterne (Ionosfera/Magnetosfera).</p>
-<h3 id="funzionamento-fisico-fluxgate-e-scalari">Funzionamento fisico: fluxgate e scalari</h3>
-<p>Le missioni di alta precisione utilizzano una combinazione di strumenti:</p>
-<ol>
-<li><p><strong>Magnetometro Fluxgate (Vettoriale):</strong> Misura le tre componenti del campo. Sfrutta la saturazione magnetica periodica di un nucleo ferromagnetico; la seconda armonica del segnale indotto è proporzionale al campo esterno.<sup>51</sup> Richiede una calibrazione precisa dell&#39;assetto tramite Star Trackers solidali al braccio (boom) dello strumento.</p>
-</li>
-<li><p><strong>Magnetometro Scalare Assoluto:</strong> (es. Overhauser o elio otticamente pompato) Misura l&#39;intensità totale $|\vec{B}|$ sfruttando la risonanza magnetica nucleare o transizioni atomiche (effetto Zeeman), fornendo un riferimento assoluto per calibrare i vettoriali.<sup>53</sup></p>
-</li>
-</ol>
+<p>Un satellite dotato di magnetometro vettoriale registra in ogni punto le tre componenti del campo magnetico ($B_x, B_y, B_z$) misurate in nanotesla, nT e come questi variano spostandosi sulla Terra. </p>
+<p>Le missioni dedicano grande cura alla <strong>calibrazione</strong>. I sensori magnetici (spesso di tipo fluxgate o Overhauser scalar) sono montati su <a href="https://link.springer.com/article/10.1007/s11214-025-01238-7">bracci estensibili</a> per evitare interferenze della strumentazione di bordo, e vengono accompagnati da star tracker ad alta precisione per conoscere l’orientazione e ricavare così i vettori di campo in un riferimento terrestre inerziale:</p>
+<ul>
+<li>Un <strong>Magnetometro vettoriale (VFM)</strong> (spesso Fluxgate) montato su un braccio estensibile (boom) serve a misurare la direzione delle linee di campo senza l&#39;interferenza magnetica del satellite.</li>
+<li>Un <strong>Magnetometro scalare (ASM)</strong> (es. Overhauser o a vapori di elio) per misurare l&#39;intensità assoluta con altissima precisione, usata per calibrare il vettoriale.</li>
+</ul>
+<p>Misurando l’intero globo su orbite polari ripetute, i satelliti magnetici producono modelli globali del campo geomagnetico, suddivisi in componenti: il campo principale (originato dal nucleo, con dipolo dominante), il campo crosta (anomalie locali da rocce magnetizzate), e campi esterni variabili (correnti ionosferiche e magnetosferiche). </p>
+<p>Inoltre, misurando nel tempo, si traccia la variazione secolare del campo principale (deriva dei poli magnetici, variazioni decennali di intensità dovute ai moti del nucleo).</p>
+<figure>
+  <video controls src="https://dlmultimedia.esa.int/download/public/videos/2013/10/038/1310_038_BR_009.mp4"></video>
+  <figcaption>Video ESA: misura del campo magnetico terrestre dallo spazio.</figcaption>
+</figure>
+
+<h3 id="a-cosa-serve">A cosa serve?</h3>
+<p>Una mappa accurata del campo geomagnetico ha molte applicazioni scientifiche e pratiche. Vediamo quelle principali:</p>
+<ul>
+<li><strong>Geofisica del nucleo</strong>: la variazione temporale del campo (variazione secolare) fornisce informazioni sui moti fluidi nel nucleo terrestre <a href="https://phys.org/news/2016-05-strength-earth-magnetic-field.html#:~:text=The%20magnetic%20field%20is%20thought,the%20continuously%20changing%20electromagnetic%20field">a ~3000 km di profondità</a>, migliorando la comprensione del meccanismo di dinamo terrestre (terrestrial bicycle dinamo) e permettendo di modellare evoluzione e possibili inversioni del campo. </li>
+<li><strong>Magnetismo crostale</strong>: le anomalie magnetiche mappate dai satelliti (filtrando via il campo principale) rivelano strutture geologiche: ad esempio, l’aggregato dei dati CHAMP e Swarm ha prodotto mappe dell’anomalia di Baghdad, evidenziando zone sepolte. Questo è stato utile per ricerche minerarie e tettoniche. </li>
+<li><strong>Space weather e correnti ionosferiche</strong>: i satelliti come Swarm misurano i currents elettrici in alta atmosfera (es. correnti di Birkeland e anello equatoriale) tramite le perturbazioni magnetiche caratteristiche (differenze tra tracciati di diversi satelliti e modelli di campo interno). Ciò aiuta a monitorare le tempeste geomagnetiche e l’accoppiamento magnetosfera-ionosfera. </li>
+<li><strong>Rischi per infrastrutture</strong>: dalla misura di rapidi cambi del campo (pulsazioni, espulsioni di massa coronale) si deduce l’induzione di correnti geomagneticamente indotte che possono danneggiare reti elettriche. </li>
+<li><strong>Ricerca in archeologia e paleomagnetismo</strong>: sebbene i satelliti misurino l’attuale campo, confronti con modelli storici e simulazioni aiutano a capire variazioni passate impresse in rocce e manufatti (archeomagnetismo). </li>
+<li><strong>Fauna migratoria</strong>: il campo magnetico terrestre è utilizzato da animali migratori (uccelli, tartarughe) per orientamento: modelli di campo aggiornati da dati satellitari vengono usati in studi di ecologia per capire percorsi migratori (es. le mappe di intensità e inclinazione magnetica spiegano certe rotte).</li>
+</ul>
 <h3 id="missioni-7">Missioni</h3>
 <ul>
-<li><p><strong>Swarm (ESA):</strong> Costellazione di 3 satelliti che permette di separare le variazioni temporali da quelle spaziali del campo geomagnetico.</p>
+<li><p><a href="https://earth.esa.int/eogateway/missions/swarm"><strong>Swarm (ESA):</strong></a> Costellazione di 3 satelliti che permette di separare le variazioni temporali da quelle spaziali del campo geomagnetico.</p>
 </li>
 <li><p><strong>DSCOVR (NASA/NOAA):</strong> Posizionato in L1, usa magnetometri per monitorare il campo magnetico interplanetario (IMF) trasportato dal vento solare, fornendo allerta precoce per tempeste geomagnetiche.<sup>54</sup></p>
 </li>
@@ -1861,20 +1864,12 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
 <hr>
 <h2 id="segnali-di-opportunit-e-cubesat-radar-la-nuova-frontiera">Segnali di opportunità e CubeSat radar: la nuova frontiera</h2>
 <p>Questa categoria unisce due trend emergenti: l&#39;uso di segnali non nativi per l&#39;EO e la miniaturizzazione estrema dei sensori attivi.</p>
-<h3 id="a-monitoraggio-traffico-ais-e-ads-b-satellitare">A. Monitoraggio traffico: AIS e ADS-B satellitare</h3>
-<p>I satelliti captano i messaggi di posizione trasmessi da navi (AIS) e aerei (ADS-B). La sfida principale è la <strong>de-collisione dei pacchetti</strong>: un satellite vede un&#39;area enorme (FOV ~5000 km) contenente migliaia di emettitori che trasmettono negli stessi slot temporali (TDMA).</p>
-<ul>
-<li><p><strong>SOTDMA vs CSTDMA:</strong> Il protocollo SOTDMA (usato dalle grandi navi Classe A) prenota gli slot futuri ed è più facile da decodificare dallo spazio rispetto al CSTDMA (Classe B), che usa un approccio randomico &quot;ascolta prima di parlare&quot;, spesso saturato in orbita.<sup>59</sup></p>
-</li>
-<li><p><strong>Applicazioni:</strong> Fusione con dati SAR per identificare navi &quot;dark&quot; (che non trasmettono AIS) coinvolte in pesca illegale o traffici illeciti.</p>
-</li>
-</ul>
-<h3 id="b-cubesat-radar-raincube">B. CubeSat radar: RainCube</h3>
+<h3 id="a-cubesat-radar-raincube">A. CubeSat radar: RainCube</h3>
 <p>Fino a poco tempo fa, i radar erano considerati incompatibili con i CubeSat a causa dei requisiti di potenza e dimensioni. La missione <strong>RainCube</strong> (NASA) ha dimostrato un radar meteorologico in banda Ka (35.7 GHz) su un CubeSat 6U.</p>
 <ul>
 <li><strong>Innovazione:</strong> Uso di un&#39;antenna parabolica dispiegabile ultraleggera e di tecniche di compressione dell&#39;impulso. In banda Ka, la pioggia attenua fortemente il segnale; RainCube sfrutta proprio questo principio per profilare la struttura delle tempeste.<sup>61</sup></li>
 </ul>
-<h3 id="c-smart-lnb-pioggia-dalle-tv-satellitari">C. Smart LNB: pioggia dalle TV satellitari</h3>
+<h3 id="b-smart-lnb-pioggia-dalle-tv-satellitari">B. Smart LNB: pioggia dalle TV satellitari</h3>
 <p>Progetti come <strong>NEFOCAST</strong> trasformano i ricevitori TV satellitari domestici (Smart LNB) in pluviometri. Misurano l&#39;attenuazione del segnale di downlink (Ku/Ka band) causata dalla pioggia (<em>Rain Fade</em>).</p>
 <ul>
 <li><strong>Formula:</strong> L&#39;attenuazione specifica $A$ (dB/km) è legata al tasso di precipitazione $R$ (mm/h) dalla legge di potenza $A = k R^\alpha$. Una rete densa di &quot;sensori&quot; domestici fornisce mappe di pioggia in tempo reale con risoluzione capillare.<sup>63</sup></li>
@@ -2032,12 +2027,9 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
 <td>Pluviometria Distribuita</td>
 </tr>
 </tbody></table>
-</div></figure><h2 id="conclusione">Conclusione</h2>
-<p>L&#39;analisi di queste diciannove categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (<em>Data Fusion</em>): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l&#39;integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio &quot;Digital Twin&quot; del pianeta, capace di quantificare non solo lo stato dell&#39;ambiente naturale, ma anche l&#39;impatto antropico in tempo reale.</p>
-<h2 id="infografica-matrice-di-confronto">Infografica: matrice di confronto</h2>
-<!-- Infografica Page (NEW) -->
+</div></figure><!-- Infografica Page (NEW) -->
 <div id="infografica" class="content-page hidden">
-  <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di Confronto</h1>
+  <h3 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Infografica: Matrice di confronto</h1>
   <p class="text-lg text-gray-700 mb-6">Questa tabella riassume le capacità operative di tutte le tecnologie analizzate. Usa questa legenda per orientarti:</p>
 
   <div class="flex flex-wrap gap-4 mb-6 text-sm">
@@ -2181,6 +2173,8 @@ _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la dis
   <p class="mt-4 text-sm text-gray-500 text-right">* Nota: ☁️ = Penetra le nuvole | 🌙 = Funziona di notte | ❌ = Bloccato/Non disponibile</p>
 </div>
 
+<h2 id="conclusione">Conclusione</h2>
+<p>L&#39;analisi di queste categorie rivela un sistema di osservazione della Terra sempre più interconnesso e multi-fisico. La tendenza dominante è la fusione dei dati (<em>Data Fusion</em>): la precisione verticale dei Lidar e dei Radar viene estesa orizzontalmente dalle costellazioni ottiche e radiometriche. Inoltre, l&#39;integrazione di sensori scientifici tradizionali con dati di opportunità commerciali (GNSS-R, Smart LNB, AIS) sta creando un vero e proprio &quot;Digital Twin&quot; del pianeta, capace di quantificare non solo lo stato dell&#39;ambiente naturale, ma anche l&#39;impatto antropico in tempo reale.</p>
 <h4 id="works-cited">Works cited</h4>
 <ol>
 <li><p>Parametric Sizing Equations for Earth Observation Satellites | Request PDF - ResearchGate, <a href="https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites">https://www.researchgate.net/publication/328159562_Parametric_Sizing_Equations_for_Earth_Observation_Satellites</a></p>
