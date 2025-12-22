@@ -293,7 +293,7 @@ Nel 2025 l’Europa tende a muoversi con un approccio più “ingegneristico”:
 Nel 2025 si è visto un pattern ricorrente (vale in tutti i settori):
 1) **Pilot eterno**: PoC belli, ma nessuno li porta in produzione. I PoC devono essere in primis fattibili e utili a chi poi li userà. Ultimo ma non meno importante deve essere chiaro il come utilizzarli. L'adoption diventa chiave in tal senso.
 2) **Dati disordinati**: un problema vecchio come il cucco. I dati non possono essere duplicati, o confusi, e i processi devono essere standardizzati per essere adatti a trasformarli con l'AI.
-3) **Qualità non misurata**: senza metriche (errori, tempi, risparmi, rischi) l’adozione resta emotiva e poi si spegne.
+3) **Qualità non misurata**: senza metriche (errori, tempi, risparmi, rischi) l’adozione resta emotiva e poi si spegne. Resta fondamentale un monitoraggio nel tempo per capire l'impatto e non tutti lo stanno facendo
 4) **Governance vaga**: chi può usare cosa? con quali dati? chi firma l’output? se nessuno decide, nessuno scala.
 
 La differenza tra chi ha vinto e chi ha perso nel 2025 è stata quasi sempre qui: **processi + dati + responsabilità**, più che “il modello più nuovo”.
@@ -304,30 +304,32 @@ La differenza tra chi ha vinto e chi ha perso nel 2025 è stata quasi sempre qui
 
 > **Come leggo il voto (0–10):** utilità concreta, qualità, velocità di miglioramento, distribuzione, chiarezza di prodotto.
 
-### OpenAI — **9.6/10**
-**La storia dell’anno:** da assistente “che risponde” a collega “che porta a termine”.
-- Punti forti: Deep Research, o‑series pratiche, GPT‑5/5.2, browser operativo.
-- Rischi: governance (accessi/dati), audit delle azioni nel browser.
+### OpenAI — **9+/10**
+**La storia dell’anno:** prima della classe, ma ha toppato l’esame in cui tutti la guardavano: GPT‑5, annuncio lungo e un po’ fuffoso. Codex le ha permesso di recuperare sul coding; Google la raggiunge e OpenAI scatta in avanti in zona Cesarini.
+- Punti forti: Agent e Deep Research come perle dell’anno; Codex sul coding.
+- Rischi: Sora ancora non disponibile in Europa. Modelli di immagini ancora non affidabili al 100%.
 
-### Google / DeepMind — **9.3/10**
-**La storia dell’anno:** una famiglia con ruoli diversi (Pro / Flash / open) e una distribuzione enorme.
-- Punti forti: Search + modelli + tool per dev; strategia chiara su velocità e potenza.
-- Rischi: frammentazione (troppe varianti, rollout non uniformi).
+### Google / DeepMind — **9.5/10**
+**La storia dell’anno:** recupera tantissimo terreno, supera OpenAI a inizio dicembre, poi a fine anno vince ancora OpenAI ma di poco. Con l’ecosistema alle spalle e NotebookLM, vince a mani basse.
+- Punti forti: ecosistema e distribuzione; NotebookLM fa la differenza.
+- Rischi: alcune cose tolte (es. controllo schermo su AI Studio); AI Mode non troppo affidabile e soggetto ad allucinazioni. Capiamo.
 
-### Anthropic — **9.1/10**
-**La storia dell’anno:** affidabilità sui compiti lunghi (soprattutto per chi programma).
-- Punti forti: qualità e tenuta; posizionamento “da lavoro”.
-- Rischi: presenza consumer più piccola.
+### Anthropic — **9/10**
+**La storia dell’anno:** il modello di coding. Fa poco ma lo fa bene, e lo fa via codice.
+- Punti forti: se vuoi presentazioni, documenti, tabelle o vettoriali, scrive codice per farlo; quando ho un problema di coding scelgo lui.
+- Rischi: molto, molto caro.
 
-### Cursor / Anysphere — **9.0/10**
-**La storia dell’anno:** l’editor diventa un collega.
-- Punti forti: ritmo di sviluppo più veloce.
-- Rischi: controlli enterprise (audit, sicurezza, standard).
+### Cursor / Anysphere — **10/10**
+**La storia dell’anno:** progetto di sviluppo pazzesco. Mi ha fatto ridere quando GPT‑5 è uscito prima lì che su ChatGPT.
+- Punti forti: IDE di riferimento per il coding, crescita enorme nell’ultimo anno. Figo avere più modelli gratuiti, come anche quello di Grok
+- Rischi: Per ora nessuno, ma se ne avete ditemelo.
+
+Ad Maiora.
 
 ### Lovable e “creatori di app” — **8.5/10**
-**La storia dell’anno:** più persone (anche non dev) costruiscono prototipi e tool.
-- Punti forti: dall’idea alla demo in ore.
-- Rischi: manutenzione e qualità “da produzione”.
+**La storia dell’anno:** il sito per fare vibe coding online per eccellenza.
+- Punti forti: mock collegati a un piccolo DB su Supabase sono molto fighi.
+- Rischi: c’è ancora da lavorare, soprattutto a livello di backend per creare soluzioni solide in produzione. Sono sulla strada giusta. 
 
 ### DeepSeek — **8.3/10**
 **La storia dell’anno:** qualità alta a costi più bassi cambia l’economia dell’adozione.
