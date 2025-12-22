@@ -41,7 +41,7 @@
     "headline": "GeoAI Stack: Una guida per il 2025",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2025-12-06T17:43:01.792Z",
+    "dateModified": "2025-12-19T16:34:30.156Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1424,6 +1424,11 @@ settings = Settings()</code></pre><p>Questo codice usa <strong>Pydantic BaseSett
 <p>Molti servizi CI/CD (GitHub Actions, GitLab CI) offrono un vault integrato per salvare secret e renderli disponibili come env var durante il deploy. Quindi, il pattern consigliato è: <strong>in locale .env</strong>, in CI/prod <strong>env var</strong> o config criptata.</p>
 <p>In sintesi, investire tempo in una solida gestione di config/secret garantisce che l&#39;app possa passare da dev a prod senza modifiche manuali al codice, minimizzando rischi di leak (niente chiavi in repository mi raccomando).</p>
 <h3 id="25-dataset-open-e-cataloghi-staccog-per-disastri">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</h3>
+<p>Prima di far vedere i dataset vorrei chiarire alcuni punti e dare un paio di definizioni:</p>
+<blockquote>
+<p>“Chip” = ritaglio/tessera (“patch/tile”) estratta da una scena satellitare grande. In pratica: invece di usare un’intera immagine satellitare, la si spezza in tanti quadrati più piccoli, ognuno usato come esempio di training.
+Poi per maggiori info sui satelliti, ti rimando all&#39;articolo <a href="../../../blog/it/geodata/">Che dati registrano i satelliti?</a>, in cui ho fatto un bell&#39;approfondimento sulle tipologie di dati satellitari.</p>
+</blockquote>
 <p>Per progetti di <strong>Disaster Intelligence</strong>, attingere a dataset open aggiornati è cruciale. Fortunatamente tra 2022-2025 sono aumentati i cataloghi <strong>STAC</strong> (SpatioTemporal Asset Catalog) e dataset specializzati. Ecco una selezione dei dataset e risorse <em>state-of-the-art</em>:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
@@ -1450,39 +1455,39 @@ settings = Settings()</code></pre><p>Questo codice usa <strong>Pydantic BaseSett
 <td><a href="https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf#:~:text=The%20C2S,oz32gz">Microsoft/Cloud to Street</a></td>
 </tr>
 <tr>
-<td><strong>Sen1Floods11</strong> (2020)</td>
+<td><a href="https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1"><strong>Sen1Floods11</strong></a> (2020)</td>
 <td>Chip Sentinel-1 GRD (SAR) 512×512 px; maschera acqua binaria</td>
-<td>4.831 chip da 11 eventi alluvionali in 5 continenti<a href="https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1#:~:text=,to%20train%20and%20evaluate">[59]</a><a href="https://eod-grss-ieee.com/dataset-detail/ekFTRmNnWmtGOE52LzgrVUE4Ykd4dz09#:~:text=Sen1Floods11%20is%20a%20surface%20water,consists%20of%204%2C831%20512">[60]</a> (inclusi Tsunami Giappone 2011, Harvey 2017, etc.)</td>
-<td><strong>Flood segmentation (SAR)</strong> - benchmarking su solo radar (robusto anche con nubi)</td>
-<td>Cloud to Street - [Paper IEEE]<a href="https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.pdf#:~:text=,ter%20data%20set">[61]</a> (HuggingFace Datasets disponibile)</td>
+<td>4.831 chip da 11 eventi alluvionali in 5 continenti (inclusi Tsunami Giappone 2011, Harvey 2017, etc.)</td>
+<td><strong>Flood segmentation (SAR)</strong> - benchmarking su solo radar (quindi robusto anche se ci sono nubi)</td>
+<td>Cloud to Street - <a href="https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1">Paper IEEE</a> o <a href="https://github.com/cloudtostreet/Sen1Floods11">Github</a></td>
 </tr>
 <tr>
-<td><strong>NASA/UN Flood Extents</strong> (2023)</td>
-<td>Raster Sentinel-1 (sigma0 backscatter, ~10 m) con poligoni vettoriali flood delineation</td>
-<td>Eventi recenti globali (es. Pakistan 2022, cicloni 2023) - dati rilasciati via UNOSAT o NASA. Dimensione varia (es. Pakistan ~1000 raster)</td>
+<td><strong>UN Flood Extents</strong> (2023)</td>
+<td>Raster Sentinel-1 ($\sigma_0$ backscatter, ~10 m) con poligoni vettoriali flood delineation</td>
+<td>Eventi recenti globali - dati rilasciati via <a href="https://unosat.org/">UNOSAT</a>. Il numero di rasters varia</td>
 <td><strong>Flood mapping rapido</strong> - segmentazione acqua tramite pipeline automatizzate (Google, UN)</td>
-<td>UNOSAT / NASA (HRC) - es. dataset interni condivisi su Radiant MLHub</td>
+<td>UNOSAT</td>
 </tr>
 <tr>
-<td><strong>Maxar Open Data</strong> (2017-2025)</td>
+<td><a href="https://xpress.maxar.com/?lat=0&lon=0&zoom=3.0"><strong>Maxar Open Data</strong></a> (2017-today)</td>
 <td>Immagini satellitari ottiche ad alta risoluzione (30-50 cm) pre e post-disastro (GeoTIFF)</td>
-<td>&gt;100 eventi globali (Terremoto Nepal 2015, Explosion Beirut 2020, Alluvione Libia 2023, ecc.) - copertura varia per evento (decine di immagini ciascuno)<a href="https://gee-community-catalog.org/projects/maxar_opendata/#:~:text=MAXAR%20Open%20Data%20Events%20,events%20like%20earthquakes%20and">[62]</a></td>
+<td>$&gt;100$ eventi globali (Terremoto Nepal 2015, Explosion Beirut 2020, Alluvione Libia 2023, ecc.) - copertura varia per evento (decine di immagini ciascuno)</td>
 <td><strong>Damage mapping visivo</strong> - fornisce rapidamente immagini post-evento CC BY 4.0 per usi umanitari, ad es. mappatura edifici crollati</td>
-<td>Maxar Open Data Program (AWS OpenData)<a href="https://www.reddit.com/r/AirlinerAbduction2014/comments/17190ge/maxar_technologies_open_data_list_of_the_last/#:~:text=Maxar%20Technologies%20Open%20Data%20List,some%20of%20these%20datasets">[63]</a> (include index STAC su registry.opendata.aws)</td>
+<td>Maxar Open Data Program (AWS OpenData) (include index STAC su registry.opendata.aws)</td>
 </tr>
 <tr>
-<td><strong>Copernicus EMS</strong> (2015-)</td>
+<td><a href="https://emergency.copernicus.eu/"><strong>Copernicus EMS</strong></a> (2015-today)</td>
 <td>Prodotti <em>analyst-derived</em> da immagini (GeoTIFF e shapefile): es. poligoni di edifici distrutti, estensione alluvioni, mappe grado di danno (EMS-98)</td>
-<td>Attivazioni emergenza in Europa e mondo (migliaia di mappe per terremoti, inondazioni, incendi) - risoluzione dipende da immagini (Sentinel-2 10 m, Pléiades 0.5 m, etc.)</td>
+<td>Attivazioni emergenza non solo in Europa ma in tutto il mondo (migliaia di mappe per terremoti, inondazioni, incendi) - risoluzione dipende da immagini (Sentinel-2 10 m, Pléiades 0.5 m, etc.)</td>
 <td><strong>Rapid Mapping</strong> - risultati ufficiali da analisti in poche ore/giorni (ground truth utile per training o verifica modelli)</td>
-<td>Copernicus Emergency Mgt Service (public downloads per attivazione)</td>
+<td><a href="https://mapping.emergency.copernicus.eu/">Copernicus Emergency Mgt Service</a> (public downloads per attivazione)</td>
 </tr>
 <tr>
-<td><strong>Landslide4Sense / GDCLD</strong> (2024)</td>
+<td><a href="https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These"><strong>Landslide4Sense / GDCLD</strong></a> (2024)</td>
 <td>Immagini multi-sorgente HR (PlanetScope ~3 m, Gaofen-6 2 m, UAV ~0.1 m) con maschere frane (poligoni pixel)</td>
-<td>9 eventi sismici globali (Nepal 2015, Amatrice 2016, ecc.) con contesti geologici vari<a href="https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These">[64]</a>; ~60.000 frane etichettate. + Test su 1 evento da piogge.</td>
+<td>9 eventi sismici globali (Nepal 2015, Amatrice 2016, ecc.) con contesti geologici vari; ~60.000 frane etichettate. + Test su 1 evento da piogge.</td>
 <td><strong>Landslide detection</strong> - segmentazione frane in contesti montuosi. Consente addestrare modelli robusti a dataset globali.</td>
-<td><em>Globally Distributed Coseismic Landslide Dataset</em> - [DOI Zenodo]<a href="https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These">[64]</a> (Fang et al, ESSD 2024)</td>
+<td><em>Globally Distributed Coseismic Landslide Dataset</em> - [DOI Zenodo] <a href="https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These">(Fang et al, ESSD 2024)</a></td>
 </tr>
 <tr>
 <td><strong>Planetary Computer STAC</strong> (ongoing)</td>

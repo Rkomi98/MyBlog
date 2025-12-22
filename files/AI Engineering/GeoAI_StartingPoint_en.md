@@ -357,6 +357,8 @@ In summary, investing time in robust config/secret management ensures that the a
 
 ### 2.5 Open Datasets and STAC/COG Catalogs for Disasters
 
+For more on satellite sensors and data types, see the article [What Data Do Satellites Record?](../blog/en/geodata/).
+
 For **Disaster Intelligence** projects, drawing on updated open datasets is crucial. Fortunately, between 2022-2025, **STAC** (SpatioTemporal Asset Catalog) catalogs and specialized datasets have increased. Here is a selection of _state-of-the-art_ datasets and resources:
 
 | Dataset / Catalog | Data (type and resolution) | Coverage/Size | Task / Use | Source (link) |
