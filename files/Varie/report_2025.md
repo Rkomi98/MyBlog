@@ -304,87 +304,287 @@ La differenza tra chi ha vinto e chi ha perso nel 2025 è stata quasi sempre qui
 
 > **Come leggo il voto (0–10):** utilità concreta, qualità, velocità di miglioramento, distribuzione, chiarezza di prodotto.
 
-### OpenAI — **9+/10**
-**La storia dell’anno:** prima della classe, ma ha toppato l’esame in cui tutti la guardavano: GPT‑5, annuncio lungo e un po’ fuffoso. Codex le ha permesso di recuperare sul coding; Google la raggiunge e OpenAI scatta in avanti in zona Cesarini.
-- Punti forti: Agent e Deep Research come perle dell’anno; Codex sul coding.
-- Rischi: Sora ancora non disponibile in Europa. Modelli di immagini ancora non affidabili al 100%.
+### OpenAI — 9+
+
+**La storia dell’anno:** prima della classe, ma ha toppato l’esame che guardavano tutti: GPT‑5.
+
+**Cosa ha fatto bene**
+
+Le due perle dell’anno: Deep Research e Agent/Operator. Una ti fa il report (con fonti), l’altra si mette lì e fa le cose (clic, form, ricerche, raccolta info). Queste due, per me, sono state davvero “wow” perché ti fanno risparmiare ore.
+Sul coding: Codex è quello che le ha rimesso benzina. Quando devi lavorare sul repo vero e non su 10 righe buttate in chat, lì OpenAI ha recuperato terreno.
+La toppata: GPT‑5. Annuncio lungo, un po’ fuffoso, e la sensazione generale che “ok… e quindi?”. Poi si è ripresa alla fine con il colpo di reni.
+Nota personale: i modelli di ragionamento sono stati un'altra figata, ma sono una notizia dell'anno scorso. 
+
+**Dove ha toppato (secondo la mia percezione)**
+
+* **GPT‑5** è stato l’esame in cui tutti guardavano: aspettative enormi, annuncio lungo, e la sensazione per molti di “tanto rumore e poca sostanza”. Bello abbassare le allucinazioni ma i fatti hanno detto altro.
+
+**Perché un 9+**
+
+* Perché, nonostante lo scivolone, a fine anno ha rimesso la testa davanti con sprint finale. In generale quando ti serve chiudere roba, spesso è ancora la scelta più completa.
+
+---
 
 ### Google / DeepMind — **9.5/10**
-**La storia dell’anno:** recupera tantissimo terreno, supera OpenAI a inizio dicembre, poi a fine anno vince ancora OpenAI ma di poco. Con l’ecosistema alle spalle e NotebookLM, vince a mani basse.
-- Punti forti: ecosistema e distribuzione; NotebookLM fa la differenza.
-- Rischi: alcune cose tolte (es. controllo schermo su AI Studio); AI Mode non troppo affidabile e soggetto ad allucinazioni. Capiamo.
 
-### Anthropic — **9/10**
-**La storia dell’anno:** il modello di coding. Fa poco ma lo fa bene, e lo fa via codice.
-- Punti forti: se vuoi presentazioni, documenti, tabelle o vettoriali, scrive codice per farlo; quando ho un problema di coding scelgo lui.
-- Rischi: molto, molto caro.
+**La storia dell’anno:** recupera tantissimo terreno e, a inizio dicembre, dà davvero l’impressione di superare OpenAI. Poi OpenAI scatta in avanti in zona Cesarini, ma “la distanza” ormai è minima.
 
-### Cursor / Anysphere — **10/10**
-**La storia dell’anno:** progetto di sviluppo pazzesco. Mi ha fatto ridere quando GPT‑5 è uscito prima lì che su ChatGPT.
-- Punti forti: IDE di riferimento per il coding, crescita enorme nell’ultimo anno. Figo avere più modelli gratuiti, come anche quello di Grok
-- Rischi: Per ora nessuno, ma se ne avete ditemelo.
+**Cosa ha fatto benissimo**
 
-Ad Maiora.
+* Ha vinto con l’**ecosistema**: se consideri Search, Workspace, Android, YouTube e la distribuzione, quando Google muove un bottone lo senti dappertutto.
+* **NotebookLM** è stato il colpo più sottovalutato e più potente: ha reso lo studio e l’onboarding più leggeri (audio, riassunti guidati, infografiche slides ecc).
+* La strategia “famiglia di strumenti” è chiara: quando serve profondità vai di **Pro**, per la vita quotidiana vai di **Flash**, e se vuoi controllo e local‑first guardi a **Gemma**.
 
-### Lovable e “creatori di app” — **8.5/10**
-**La storia dell’anno:** il sito per fare vibe coding online per eccellenza.
-- Punti forti: mock collegati a un piccolo DB su Supabase sono molto fighi.
-- Rischi: c’è ancora da lavorare, soprattutto a livello di backend per creare soluzioni solide in produzione. Sono sulla strada giusta. 
+**Odi et amo (e qui ti capisco)**
 
-### DeepSeek — **8.3/10**
-**La storia dell’anno:** qualità alta a costi più bassi cambia l’economia dell’adozione.
+* **AI Mode**: comodissimo, ma non sempre affidabile; quando sbaglia, allucina di brutto. #Capiamo
+* Alcune cose tolte o limitate (tipo il **controllo schermo** in AI Studio) fanno storcere il naso: erano quelle feature che ti facevano dire “ok, qui ci siamo”.
 
-### Meta — **8.2/10**
-**La storia dell’anno:** l’open diventa un’opzione concreta per aziende con vincoli.
-- Punti forti: controllo dei dati.
-- Rischi: meno “prodotto finito”, più mattoni.
+**Perché 9.5 e non 10**
 
-### Perplexity — **8.1/10**
-**La storia dell’anno:** il browser con pilota diventa un prodotto reale.
-- Punti forti: Comet e modalità progetto.
-- Rischi: competizione diretta con Google/OpenAI.
+* Troppi tool come Opal che sono ancora da integrare. Troppe cose che fanno la stessa cosa e entrano in competizione tra di loro.
+
+---
+
+### Anthropic — **9.0/10**
+
+**La storia dell’anno:** il *modello del coding*.
+
+Non fa mille cose, ma quelle che fa le fa bene. E soprattutto: se gli chiedi una cosa, spesso ti risponde con codice che ti produce il risultato.
+- Vuoi presentazioni? Scrive codice per farle.
+- Vuoi documenti? Scrive codice per farli.
+- Vuoi tabelle Excel? Ti tira fuori il codice e ti crea il file.
+- Hai incollato un papiro infinito? Lui prova comunque a “impacchettarlo” in qualcosa di sensato.
+
+**Cosa ha fatto bene**
+
+Consistenza su compiti lunghi e su contesti complessi. Carina la loro Deep research
+
+
+**Il difetto grosso**
+
+* È **molto cara**. E quando la usi tanto, il costo lo senti.
+
+---
+
+### Meta — **5.0/10**
+
+**La storia dell’anno**: pensavo di darle meno, ma almeno ci ha provato.
+- I modelli sono usciti e, per come li ho vissuti io, hanno floppato.
+- La scelta di obbligarti a vedere il loro modello sul telefono ogni giorno... Non lo capisco. O meglio capisco la logica, ma è una mossa strana.
+- Via API: tra i peggiori che ho provato (insieme a IBM Granite).
+
+**Cosa ha fatto bene**
+
+* Il valore vero resta l’open: il fatto che tanti pezzi siano **rilasciati open** permette al mondo di testarli, adattarli, farci ricerca e costruirci attorno.
+
+**Cosa non ha funzionato (secondo la mia esperienza)**
+
+* Prestazioni: via API è stato uno dei modelli peggiori che ho provato (insieme a IBM Granite).
+* Distribuzione “forzata”: la scelta di spingere il modello dentro le principali app di Meta in modo molto obbligatorio è… Diciamo particolare. Capisco la logica, ma l’effetto “imposizione” può diventare un boomerang.
+
+**Perché non scendo sotto 5:** perché rilasciare open, anche quando non brilli, è comunque un atto utile per l’ecosistema.
+
+### Mistral — **8.0/10**
+
+**La storia dell’anno:** finalmente un’alternativa europea che piano piano arriva quasi al livello degli altri.
+
+**Cosa ha fatto bene**
+
+* È arrivata la **memoria** (e l’idea è buona: utile senza diventare invadente).
+* Sono arrivati i modelli speech con **Voxtral**.
+* L’italiano, stando ai benchmark, va **meglio del francese**. 
+* **Mistral Small** è stato il mio modello open preferito dell’anno: pratico, veloce, “da lavoro”.
+
+**Dove può crescere ancora**
+
+* Nei flussi di ricerca “lunghi” (deep research) c’è spazio per fare di più.
+* Sui documenti (lettura/estrazione/riassunto su file complessi) manca ancora qualcosina per essere davvero una scelta “default”.
+* È ancora poco conosciuta fuori dai cerchi tecnici.
+
+**Perché il voto è 8:** ottima direzione e identità forte; non è ancora “ovunque”, ma sta diventando credibile.
+
+### Microsoft — **6.5/10**
+
+**La storia dell’anno:** FINALMENTE.
+
+Finalmente ha deciso di non mettere l’esclusiva su OpenAI. Finalmente ha prestazioni decenti. Finalmente ha un sacco di feature carine prese (e adattate) da ciò che ha funzionato altrove.
+
+**Cosa ha fatto bene**
+
+* Ha iniziato a muoversi in modo più indipendente e pragmatico.
+* Ha una distribuzione enorme: se azzecca l’esperienza, può diventare la porta d’ingresso per tantissimi.
+
+**Cosa non mi convince ancora**
+
+* Affidabilità operativa: un down del servizio **martedì 9 dicembre** ha creato parecchi problemi.
+* Tantissimo potenziale, ma non si applica ancora abbastanza, specialmente nel suo software proprietario (dove potrebbe spingere davvero sulla produttività).
+
+**Perché il voto è 6.5:** sei mesi fa non pensavo di dargli la sufficienza. Ora ci siamo, ma manca poco per trasformare il potenziale in una “macchina da lavoro” davvero stabile.
+
+### Perplexity — **8.0/10**
+
+**La storia dell’anno:** Comet è figo, ma Labs lo è di più.
+
+**Cosa mi piace**
+
+* La modalità “a progetto” è pratica: parti con una domanda e finisci con un risultato già usabile.
+* La rassegna stampa usando compiti + Labs rende davvero più semplice restare aggiornati.
+* Il modo in cui “prende” le informazioni, per me, è spesso più affidabile di altri competitor (parere personale).
+
+**Cose che mi lasciano perplesso**
+
+* Le **deep research** sono troppo brevi: quando stai lavorando su cose serie, vorresti più profondità.
+* Prezzo: non è economico, ma il Pro è incluso in bundle (tipo TIM/PayPal).
+
+---
+
+### xAI — **6.9/10**
+
+**La storia dell’anno:** velocissimo, ma pieno di spigoli.
+
+Non so, sarà per l’approccio “senza filtri” e a immagine e somiglianza del suo "papà": io faccio fatica a considerarlo un prodotto davvero commerciabile, perché spesso **tocca confini etici** che in azienda non puoi ignorare.
+
+**Però…**
+
+* È tra i più rapidi per certe cose (coding “al volo”, creatività, immagini).
+* A volte la libertà di tono lo rende sorprendentemente utile, finché non diventa un rischio.
+
+**Perché 6.9:** utilissimo per alcune cose, ma troppo “non governabile” per diventare un default professionale.
+
+---
 
 ### Alibaba — **8.0/10**
-**La storia dell’anno:** accelerazione forte in Asia e nel cloud locale.
 
-### Mistral — **7.9/10**
-**La storia dell’anno:** l’Europa prova a essere protagonista con soluzioni pratiche.
-- Punti forti: posizionamento EU‑friendly.
-- Rischi: scala e distribuzione globali.
+**La storia dell’anno:** la famiglia Qwen spinge parecchio.
 
-### Microsoft — **7.6/10**
-**La storia dell’anno:** la forza è la distribuzione, la sfida è la percezione di innovazione di punta.
+Ho poco da dire perché, in generale, i modelli si fanno rispettare e sono diventati un pezzo importante dell’ecosistema.
+
+**Perché non do di più (nota personale, traumatica 😄)**
+Una volta ho fatto un casino incredibile su un server europeo per colpa di Qwen: è stato l’unico che si era sbilanciato e mi aveva risposto su come forzare l’aggiornamento di CUDA. Trauma a vita.
+
+**Perché comunque resta un 8:** direzione solida, modelli competitivi, spinta reale. Solo… ecco, io ormai li tratto con i guanti.
+
+### DeepSeek — **7.8/10**
+
+**La storia dell’anno:** il pesciolone biondo che ha fatto impazzire il mondo.
+
+A gennaio crea un terremoto: improvvisamente si capisce che OpenAI **non è più irraggiungibile** e che la qualità “alta” può arrivare anche da un attore meno ovvio.
+
+**Cosa ha fatto bene**
+
+* Ha dimostrato che il ragionamento “serio” può essere più accessibile e meno legato a budget enormi.
+* Ha continuato a spingere sul fronte ricerca, e con **DeepSeek‑V3.2** ha fatto capire di essere ancora vivo.
+
+**Cosa non ha funzionato (secondo la mia esperienza)**
+
+* Problemi etici/sicurezza: sono emersi dubbi e criticità che rendono difficile usarlo “a cuor leggero” in contesti professionali.
+* Non è rimasto sempre al passo dei competitor sul prodotto finito (integrazioni, esperienza consumer, continuità di rilascio).
+
+**Cosa vorrei vedere nel 2026**
+
+* Se lo sforzo è serio, oltre alla ricerca investirei anche sul lato **consumer** (esperienza, affidabilità, funzioni quotidiane).
+
+**Perché il voto è 7.8 e non più alto:** impatto enorme iniziale, ma serve più continuità e più prodotto.
+
+### Cursor / Anysphere — **10/10**
+
+**La storia dell’anno:** progetto di sviluppo pazzesco.
+
+Mi ha fatto ridere quando GPT‑5 è uscito prima lì che su ChatGPT: è un segnale di quanto sia diventato veloce nel portare novità *dove serve davvero*.
+
+È il mio IDE di riferimento: in un anno è cresciuto tantissimo e ha reso naturale un modo di lavorare “a cicli”: propongo → genero → provo → correggo → rifaccio. Quando entra nel flow, ti fa macinare lavoro.
+
+**Perché 10:** impatto quotidiano enorme e miglioramento continuo senza perdere la bussola.
+
+---
+
+### Lovable e “creatori di app” — **8.0/10**
+
+**La storia dell’anno:** il posto migliore (online) per fare vibe coding “da demo a cosa che gira”.
+
+Per fare mock collegati a un piccolo DB (tipo Supabase) è davvero figo: dall’idea al prototipo in poche ore.
+
+**Perché non è più alto**
+
+* Il tratto finale resta "duro": è difficile fare manutenzione, gestire la sicurezza, e in generale gestire la qualità “da produzione”.  
+* Quando un progetto cresce, spesso serve comunque una mano più esperta per evitare di accumulare debito tecnico.
+
+**Perché è 8:** direzione giusta e impatto enorme su prototipi/MVP.
+
+---
+
+### Apple — **2.0/10**
+
+**La storia dell’anno:** ci ha provato due volte e, per molte persone, ha fallito due volte.
+
+L’ultima volta che ho chiesto a un’amica “come funziona Apple Intelligence?”, mi ha risposto: “Cos’è?”. E questo, secondo me, dice tutto.
+
+**Perché così basso**
+
+* Arriva tardi e a scaglioni, e molta gente non capisce cosa è disponibile davvero e cosa no.
+
+---
 
 ### Spazio e difesa (settore) — **7.4/10**
-**La storia dell’anno:** meno hype, più piani reali e sperimentazioni.
 
-### xAI — **7.2/10**
-**La storia dell’anno:** forte sul tempo reale, meno sui processi completi da lavoro.
+**La storia dell’anno:** meno hype, più piani reali.
+
+**Cosa va forte**
+
+* Roadmap e sperimentazioni concrete su robotica e autonomia.
+
+**Cosa frena**
+
+* Cicli lunghi, sicurezza, certificazioni.
 
 ---
 
-## Conclusione: le scoperte del 2025 e cosa aspettarsi nel 2026
+## Conclusione — Le scoperte del 2025 e cosa aspettarsi nel 2026
 
 ### Le 5 scoperte principali del 2025
-1) La ricerca è diventata un lavoro completo: non chiedi “un link”, chiedi “un report”.
-2) L’ufficio si sposta nel browser: se il browser sa agire, tante attività diventano più veloci.
-3) Il coding cambia ritmo: più iterazioni rapide, meno tempo sui compiti ripetitivi.
-4) L’hype non basta: servono processo, dati puliti e misure di qualità.
-5) Efficienza e responsabilità contano quanto la potenza: costi, energia, controllo degli errori.
+
+1. **La ricerca è diventata un lavoro completo**: non cerchi “un’informazione”, chiedi “un report”.
+2. **L’ufficio si sposta nel browser**: se il browser sa agire, tante attività diventano più veloci.
+3. **Il coding cambia ritmo**: più bozze, più test, più iterazioni rapide; meno tempo su compiti ripetitivi.
+4. **L’hype non basta**: molte aziende scoprono che serve processo, dati puliti e misure di qualità.
+5. **Efficienza e responsabilità contano quanto la potenza**: costi, energia, controllo degli errori.
 
 ### Trend probabili per il 2026
-- Strumenti che lavorano a blocchi di **30–120 minuti**, non a colpi di singola risposta.
-- Più piloti automatici dentro software esistenti (browser, suite d’ufficio, IDE).
-- Prezzi e metriche legati al risultato (e al costo operativo), non solo ai token.
-- Più attenzione a qualità e sicurezza, soprattutto in aziende e PA.
-- Più esecuzione “in locale” dove possibile, per costi e privacy.
+
+* **Strumenti che lavorano a blocchi di 30–120 minuti**, non a colpi di singola risposta.
+* **Più “piloti automatici” dentro software esistenti** (browser, suite d’ufficio, IDE).
+* **Prezzi e metriche legati al risultato**, non solo al consumo.
+* **Più attenzione a qualità e sicurezza** (specie in aziende e pubblica amministrazione).
+* **Più esecuzione “in locale”** dove possibile, per costi e privacy.
 
 ---
 
-## Appendice — Fonti (selezione, ordinate per codice)
+### Appendice — Voti riassunti (per confronto rapido)
 
+* Cursor/Anysphere 10.0
+* Google/DeepMind 9.5
+* OpenAI 9.2
+* Anthropic 9.0
+* Perplexity 8.0
+* Lovable 8.0
+* Alibaba 8.0
+* Mistral 8.0
+* DeepSeek 7.8
+* Spazio/Difesa 7.4
+* xAI 6.9
+* Microsoft 6.5
+* Meta 5.0
+* Apple 2.0
 
-* **[F01]** OpenAI — [“Announcing The Stargate Project”](https://openai.com/index/announcing-the-stargate-project/) — 21 Jan 2025
+## Appendice — Fonti (con link)
+
+$1
+
+* **[F02c]** OpenAI — [“Introducing upgrades to Codex”](https://openai.com/index/introducing-upgrades-to-codex/) — 16 May 2025
+* **[F02d]** OpenAI — [“gpt-5.1-codex-max (model docs)”](https://platform.openai.com/docs/models/gpt-5-1-codex-max) — 2025
+* **[F02a]** OpenAI — [“New tools for building agents”](https://openai.com/index/new-tools-for-building-agents/) — 11 Mar 2025
+* **[F02b]** OpenAI — [“Introducing ChatGPT agent: bridging research and action”](https://openai.com/index/introducing-chatgpt-agent/) — 17 Jul 2025
 * **[F03]** DeepSeek — [“DeepSeek‑R1 Release Notes”](https://api-docs.deepseek.com/news/news250120) (weights: [Hugging Face](https://huggingface.co/deepseek-ai/DeepSeek-R1)) — 20 Jan 2025
 * **[F04]** arXiv — [“Humanity’s Last Exam”](https://arxiv.org/abs/2501.14249) — 24 Jan 2025
 * **[F05]** Mistral AI — [“Codestral 25.01”](https://mistral.ai/it/news/codestral-2501) — 13 Jan 2025
@@ -406,6 +606,7 @@ Ad Maiora.
 * **[F21]** Mistral AI — [“Magistral”](https://mistral.ai/en/news/magistral) — 10 Jun 2025
 * **[F22]** Perplexity — [“Introducing Comet”](https://www.perplexity.ai/hub/blog/introducing-comet) — 9 Jul 2025
 * **[F23]** OpenAI — [“Introducing GPT‑5”](https://openai.com/index/introducing-gpt-5/) — 7 Aug 2025
+* **[F23a]** OpenAI — [“GPT‑5.1: A smarter, more conversational ChatGPT”](https://openai.com/index/gpt-5-1/) — 12 Nov 2025
 * **[F24]** Google — [“Gemini 2.5 Flash‑Lite” (models docs)](https://ai.google.dev/gemini-api/docs/models/gemini#gemini-2.5-flash-lite) — Sep 2025
 * **[F25]** OpenAI — [“Introducing ChatGPT Atlas”](https://openai.com/index/introducing-chatgpt-atlas/) — 21 Oct 2025
 * **[F26]** Google Workspace Updates — [“Gemini 3 Pro”](https://workspaceupdates.googleblog.com/2025/11/gemini-3-pro.html) — 18 Nov 2025
@@ -416,5 +617,10 @@ Ad Maiora.
 * **[F31]** U.S. Space Force — [“Data & AI FY2025 Strategic Action Plan”](https://www.spaceforce.mil/Portals/1/Documents/Data%20and%20AI%20FY25%20Strategic%20Action%20Plan.pdf) — 19 Mar 2025
 * **[F32]** NASA — [dynamic targeting / onboard decision‑making for Earth observation](https://www.nasa.gov/) — 25 Jul 2025
 * **[F33]** Gov.cn — [news on “space‑based computing constellation”](https://english.www.gov.cn/) — 15 May 2025
-* **[F34]** ESA Φ‑lab — [AI4EO / challenges](https://ai4eo.esa.int/) — 2025 (ongoing)
-
+  $1
+* **[F35]** PayPal — [“PayPal partners with Perplexity to help users shop smarter”](https://newsroom.paypal-corp.com/2025-06-25-PayPal-partners-with-Perplexity-to-help-users-shop-smarter) — 25 Jun 2025
+* **[F36]** Reuters — [“PayPal partners with Perplexity to help users shop smarter”](https://www.reuters.com/world/us/paypal-partners-with-perplexity-help-users-shop-smarter-2025-06-25/) — 25 Jun 2025
+* **[F37]** The Verge — [“Apple drops ‘available now’ from Apple Intelligence page”](https://www.theverge.com/news/653413/apple-intelligence-available-now-advertising-claim) — 22 Apr 2025
+* **[F38]** Ars Technica — [“Anthropic launches Claude Max plan for $200 per month”](https://arstechnica.com/information-technology/2025/04/anthropic-launches-claude-max-plan-for-200-per-month/) — 9 Apr 2025
+* **[F39]** Gartner Peer Insights — [“Cursor reviews (AI code assistants)”](https://www.gartner.com/reviews/market/ai-code-assistants/vendor/anysphere/product/cursor) — 2025
+* **[F40]** Trustpilot — [“Lovable reviews”](https://www.trustpilot.com/review/lovable.dev) — 2025
