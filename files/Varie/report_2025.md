@@ -2,50 +2,43 @@
 
 ## Abstract
 
-Nel 2025 l’AI ha smesso di essere solo “un modello che risponde”: la ricerca arriva fino al report, il browser diventa operativo, l’IDE lavora “in compagnia”, e l’open/local si fa davvero competitivo. Questo articolo ricostruisce mese per mese i rilasci chiave, confronta i principali player e chiude con le lezioni pratiche e i trend più probabili per il 2026.
+Nel 2025 la GenAI ha smesso di essere solo ChatGPT e usato solo risponde a delle domande "semplici”, ma ha permesso di fare tante altre cose: dalle ricerche su centinaia di fonti browser "agentici", IDE che lavorano a fianco degli sviluppatori, e l’open/local si fa davvero competitivo. Questo articolo ricostruisce mese per mese i rilasci chiave, confronta i principali player e chiude con le lezioni pratiche e i trend più probabili per il 2026.
 
-Questo report racconta il 2025 **in modo pratico**: cosa è uscito, cosa ha davvero cambiato le abitudini, e quali aziende hanno “portato a casa” risultati concreti. Uso termini più umani: **assistenti**, **strumenti di ricerca**, **editor di codice**, **browser con pilota**, **creatori di app**. Le sigle contano solo quando aiutano a capire *che cosa puoi fare domani mattina in ufficio*.
-
----
-
-## 1\. Metodo: come ho verificato le date
-
-- Quando possibile ho usato **annunci ufficiali** (blog/press release dell’azienda).
-- Quando non esiste un annuncio unico (es. rollout graduali), ho usato **fonti giornalistiche solide** e ho indicato la natura “a scaglioni”.
-- In timeline trovi sempre: **Quando** (data) e **Fonte** (codice [Fxx] → elenco completo in appendice).
+Questo report racconta il 2025 **in modo molto pratico** dal punto di vista di uno che fino a un anno fa era studente, e ora si occupa di portare la GenAI e le sue applicazioni nelle azinede: cosa è uscito, cosa ha davvero cambiato le abitudini, e quali aziende hanno “portato a casa” risultati concreti. 
 
 ---
 
-## 2\. Timeline 2025 (completa e spiegata)
+## Timeline 2025 (completa e spiegata)
 
-Mini‑legenda “da persone”:
-- **Modelli “Pro / top”**: li chiami quando devi *capire davvero* (ragionamenti lunghi, decisioni difficili, codice delicato).
-- **Modelli “Flash / fast”**: li chiami quando devi *fare volume* (riassunti, classificazioni, triage, customer care, piccole automazioni ripetute).
-- **Modelli “open / locali”**: li scegli quando contano **controllo, costi, privacy**, e vuoi farli girare vicino ai dati.
-- **Strumenti (ricerca, IDE, browser con pilota, creatori di app)**: qui è dove il 2025 ha cambiato davvero le abitudini: non solo “parlare”, ma **chiudere attività**.
+Una mini‑legenda che per alcuni sarà banale, ma non per altri no, penso sia necessaria. Di conseguenza ecco a te:
+- **Modelli “Pro / top”**: li chiami quando devi risolvere task molto complesse (ragionamenti lunghi, decisioni difficili, codice delicato).
+- **Modelli “Flash / fast”**: li chiami quando devi *assolvere compiti semplici* (riassunti, classificazioni con degli esempi, triage, customer care, piccole automazioni ripetute).
+- **Modelli “open / locali”**: li scegli quando contano **controllo, costi, privacy**, e vuoi farli girare su server dedicati o addirittura sul tuo computer.
+- **Agenti (ricerca, IDE, browser con pilota, creatori di app)**: l'AI agentica ha cambiato davvero le abitudini delle persone: quindi parlando con il chatbot, questo delega agli strumenti più adatti in base alle esigenze. Questo apre una marea di possibili scenari e applicazioni nella vita di tutti i giorni.
 
 ---
 
-### Gennaio 2025 — Si ragiona anche senza budget da colosso
+### Gennaio 2025
+Gennaio ha dimostrato che non servono grandissimi budget per creare dei buoni modelli:
 
 - **Codestral 25.01 (Mistral, coding)**
   - Quando: **13 gennaio 2025**
-  - Perché conta: aiuta chi scrive codice con un’impostazione molto “da mestiere”: meno fuochi d’artificio, più utilità quotidiana.
+  - In breve: modello ad hoc di Mistral per scrivere codice.
   - Fonte: **[F05]**
 
 - **DeepSeek‑R1 (reasoning, open)**
   - Quando: **20 gennaio 2025**
-  - Perché conta: il ragionamento “serio” diventa accessibile anche a team che non possono spendere come i big.
+  - In breve: il ragionamento “serio” diventa accessibile anche a team che non possono spendere come i big.
   - Fonte: **[F03]**
 
 - **Stargate Project (OpenAI + SoftBank + Oracle + MGX, infrastruttura)**
   - Quando: **21 gennaio 2025**
-  - Perché conta: segnale chiaro che il prossimo salto non è solo “modello più bravo”, ma **capacità operativa** (sessioni lunghe, più agenti, più utenti, più strumenti).
+  - In breve: segnale chiaro che il prossimo salto non è solo “modello più bravo”, ma **capacità operativa** (sessioni lunghe, più agenti, più utenti, più strumenti).
   - Fonte: **[F01]** (supporto: [F02])
 
 - **Humanity’s Last Exam (benchmark, “domande cattive”)**
   - Quando: **24 gennaio 2025** (pubblicazione paper)
-  - Perché conta: sposta l’asticella da “scrive bene” a “ci arriva davvero” su compiti difficili.
+  - In breve: sposta l’asticella da “scrive bene” a “ci arriva davvero” su compiti difficili.
   - Fonte: **[F04]**
 
 ---
@@ -54,22 +47,22 @@ Mini‑legenda “da persone”:
 
 - **Deep Research (OpenAI, ricerca guidata fino al report)**
   - Quando: **3 febbraio 2025**
-  - Perché conta: nasce l’abitudine “dammi un deliverable”: piano → raccolta fonti → sintesi con citazioni → conclusioni.
+  - In breve: nasce l’abitudine “dammi un deliverable”: piano → raccolta fonti → sintesi con citazioni → conclusioni.
   - Fonte: **[F06]**
 
 - **Le Chat (Mistral, prodotto consumer/enterprise)**
   - Quando: **6 febbraio 2025** (annuncio/launch pubblico riportato dalla stampa)
-  - Perché conta: Mistral prova a competere sul terreno dell’esperienza d’uso (velocità, frizione bassa) con un posizionamento molto europeo.
+  - In breve: Mistral prova a competere sul terreno dell’esperienza d’uso (velocità, frizione bassa) con un posizionamento molto europeo.
   - Fonte: **[F07]**
 
 - **GPT‑4.5 (OpenAI, più tenuta e affidabilità)**
   - Quando: **27 febbraio 2025**
-  - Perché conta: migliora la qualità “da ufficio”: meno risposte strane, più coerenza su task lunghi.
+  - In breve: migliora la qualità “da ufficio”: meno risposte strane, più coerenza su task lunghi.
   - Fonte: **[F08]**
 
 - **“Vibe coding” entra nel vocabolario**
   - Quando: **2 febbraio 2025** (il termine esplode dopo un post/tweet di Andrej Karpathy)
-  - Perché conta: molte persone iniziano a lavorare così: *non scrivo ogni riga, ma guido iterazione e qualità finché l’app sta in piedi*.
+  - In breve: molte persone iniziano a lavorare così: *non scrivo ogni riga, ma guido iterazione e qualità finché l’app sta in piedi*.
   - Fonte: **[F09]**
 
 ---
@@ -78,12 +71,12 @@ Mini‑legenda “da persone”:
 
 - **Gemini 2.5 Pro (Google, preview)**
   - Quando: **25 marzo 2025**
-  - Perché conta: “scelta profonda” per ragionamenti lunghi, analisi tecniche, codice complesso.
+  - In breve: “scelta profonda” per ragionamenti lunghi, analisi tecniche, codice complesso.
   - Fonte: **[F10]**
 
 - **Gemma 3 (Google, open)**
   - Quando: **10 marzo 2025**
-  - Perché conta: l’open non è più un hobby: diventa un’opzione reale per fare assistenti interni e automazioni vicino ai dati.
+  - In breve: l’open non è più un hobby: diventa un’opzione reale per fare assistenti interni e automazioni vicino ai dati.
   - Fonte: **[F11]**
 
 ---
@@ -92,27 +85,27 @@ Mini‑legenda “da persone”:
 
 - **Llama 4 (Meta, open: Scout/Maverick)**
   - Quando: **5 aprile 2025**
-  - Perché conta: spinge forte su contesti lunghi e su modelli “da tenere in casa”, utili per documenti e codice.
+  - In breve: spinge forte su contesti lunghi e su modelli “da tenere in casa”, utili per documenti e codice.
   - Fonte: **[F13]**
 
 - **Pixtral Large 25.02 (Mistral, visione + testo)**
   - Quando: **8 aprile 2025** (rilascio su AWS Marketplace)
-  - Perché conta: è un altro segnale della linea europea: multimodale, ma pensato per casi d’uso pratici.
+  - In breve: è un altro segnale della linea europea: multimodale, ma pensato per casi d’uso pratici.
   - Fonte: **[F14]**
 
 - **o3 e o4‑mini (OpenAI, ragionamento “pronto al lavoro”)**
   - Quando: **16 aprile 2025**
-  - Perché conta: più ragionamento “da produzione” su debugging, code review, analisi documenti.
+  - In breve: più ragionamento “da produzione” su debugging, code review, analisi documenti.
   - Fonte: **[F12]**
 
 - **Qwen3 (Alibaba, hybrid reasoning)**
   - Quando: **29 aprile 2025**
-  - Perché conta: rafforza un ecosistema Asia‑first molto competitivo, soprattutto nel cloud locale.
+  - In breve: rafforza un ecosistema Asia‑first molto competitivo, soprattutto nel cloud locale.
   - Fonte: **[F15]**
 
 - **Lovable 2.0 (creatore di app, no‑code/low‑code)**
   - Quando: **24 aprile 2025**
-  - Perché conta: rende “normale” costruire prototipi e micro‑tool interni senza essere sviluppatori esperti.
+  - In breve: rende “normale” costruire prototipi e micro‑tool interni senza essere sviluppatori esperti.
   - Fonte: **[F29]**
 
 ---
@@ -121,27 +114,27 @@ Mini‑legenda “da persone”:
 
 - **AI Mode in Google Search (ricerca in stile “assistente”)**
   - Quando: **20 maggio 2025**
-  - Perché conta: per molti la ricerca smette di essere una lista di risultati e diventa un dialogo con sintesi.
+  - In breve: per molti la ricerca smette di essere una lista di risultati e diventa un dialogo con sintesi.
   - Fonte: **[F16]**
 
 - **Veo 3 (Google/DeepMind, video con audio)**
   - Quando: **20 maggio 2025** (copertura stampa di lancio)
-  - Perché conta: impatto enorme su training, marketing, demo interne e didattica.
+  - In breve: impatto enorme su training, marketing, demo interne e didattica.
   - Fonte: **[F17]**
 
 - **Claude 4 (Anthropic: Opus/Sonnet)**
   - Quando: **22 maggio 2025**
-  - Perché conta: cresce l’idea del “collega digitale” che regge lavori lunghi, soprattutto sul coding.
+  - In breve: cresce l’idea del “collega digitale” che regge lavori lunghi, soprattutto sul coding.
   - Fonte: **[F18]**
 
 - **Perplexity Labs (modalità “a progetto”)**
   - Quando: **29 maggio 2025**
-  - Perché conta: rende esplicito il passaggio da “chiedere cose” a “commissionare risultati” (report, piani, file).
+  - In breve: rende esplicito il passaggio da “chiedere cose” a “commissionare risultati” (report, piani, file).
   - Fonte: **[F19]**
 
 - **Gemma 3n (Google, on‑device)**
   - Quando: **20 maggio 2025**
-  - Perché conta: porta l’idea “una parte dell’assistente vive sul dispositivo” più vicino alla realtà.
+  - In breve: porta l’idea “una parte dell’assistente vive sul dispositivo” più vicino alla realtà.
   - Fonte: **[F20]**
 
 ---
@@ -150,7 +143,7 @@ Mini‑legenda “da persone”:
 
 - **Magistral (Mistral, reasoning)**
   - Quando: **10 giugno 2025**
-  - Perché conta: Mistral entra nel campo dei modelli che ragionano per passaggi, con un tono molto “da prodotto” e attento al contesto europeo.
+  - In breve: Mistral entra nel campo dei modelli che ragionano per passaggi, con un tono molto “da prodotto” e attento al contesto europeo.
   - Fonte: **[F21]**
 
 ---
@@ -159,7 +152,7 @@ Mini‑legenda “da persone”:
 
 - **Comet (Perplexity, browser con pilota: beta pubblica a scaglioni)**
   - Quando: **9 luglio 2025**
-  - Perché conta: “l’ufficio nel browser” diventa una cosa reale: ricerca, azioni sul web, piccoli flussi.
+  - In breve: “l’ufficio nel browser” diventa una cosa reale: ricerca, azioni sul web, piccoli flussi.
   - Fonte: **[F22]**
 
 ---
@@ -168,7 +161,7 @@ Mini‑legenda “da persone”:
 
 - **GPT‑5 (OpenAI)**
   - Quando: **7 agosto 2025**
-  - Perché conta: aumenta la sensazione di continuità su lavori lunghi: non solo risposte, ma accompagnamento fino alla consegna.
+  - In breve: aumenta la sensazione di continuità su lavori lunghi: non solo risposte, ma accompagnamento fino alla consegna.
   - Fonte: **[F23]**
 
 ---
@@ -177,7 +170,7 @@ Mini‑legenda “da persone”:
 
 - **Gemini 2.5 Flash‑Lite (Google, preview)**
   - Quando: **settembre 2025** (indicato come “09‑2025” nei materiali di rilascio)
-  - Perché conta: benzina per automazioni ripetute (riassunti, classificazioni, triage) a costo più basso.
+  - In breve: benzina per automazioni ripetute (riassunti, classificazioni, triage) a costo più basso.
   - Fonte: **[F24]**
 
 ---
@@ -186,12 +179,12 @@ Mini‑legenda “da persone”:
 
 - **ChatGPT Atlas (OpenAI, browser con pilota)**
   - Quando: **21 ottobre 2025**
-  - Perché conta: l’assistente non si limita a spiegare: può navigare, compilare, seguire passaggi, raccogliere dati.
+  - In breve: l’assistente non si limita a spiegare: può navigare, compilare, seguire passaggi, raccogliere dati.
   - Fonte: **[F25]**
 
 - **Cursor (Anysphere) e la stagione del coding “in compagnia”**
   - Quando: **Q4 2025 (rilasci e rollout a scaglioni)**
-  - Perché conta: l’editor smette di essere un posto dove “scrivi” e diventa un posto dove **coordini** (scrivi, controlli, refactorizzi, testi).
+  - In breve: l’editor smette di essere un posto dove “scrivi” e diventa un posto dove **coordini** (scrivi, controlli, refactorizzi, testi).
   - Nota: qui la data precisa dipende da canali/rollout; in questa versione ho preferito non fissare un giorno unico senza una fonte primaria univoca.
 
 ---
@@ -200,7 +193,7 @@ Mini‑legenda “da persone”:
 
 - **Gemini 3 Pro (Google)**
   - Quando: **18 novembre 2025**
-  - Perché conta: torna forte sul lavoro complesso (testo + immagini + contesti lunghi), con focus su scenari reali.
+  - In breve: torna forte sul lavoro complesso (testo + immagini + contesti lunghi), con focus su scenari reali.
   - Fonte: **[F26]**
 
 ---
@@ -209,22 +202,22 @@ Mini‑legenda “da persone”:
 
 - **GPT‑5.2 (OpenAI)**
   - Quando: **11 dicembre 2025**
-  - Perché conta: spinge su lavoro professionale e progetti multi‑passo (più stabilità operativa).
+  - In breve: spinge su lavoro professionale e progetti multi‑passo (più stabilità operativa).
   - Fonte: **[F27]**
 
 - **Gemini 3 Flash (Google)**
   - Quando: **17 dicembre 2025**
-  - Perché conta: “veloce ma intelligente” come impostazione predefinita; riduce ancora i tempi morti.
+  - In breve: “veloce ma intelligente” come impostazione predefinita; riduce ancora i tempi morti.
   - Fonte: **[F28]**
 
 - **Lovable (finanziamento, segnale di mercato)**
   - Quando: **18 dicembre 2025** (Series B annunciata)
-  - Perché conta: conferma che i “creatori di app” non sono un gioco: diventano una categoria.
+  - In breve: conferma che i “creatori di app” non sono un gioco: diventano una categoria.
   - Fonte: **[F30]**
 
 ---
 
-## 3\. Focus: AI nello spazio (2025)
+## Focus: AI nello spazio (2025)
 
 Nel 2025 la parola chiave nello spazio non è “fantascienza”, è **autonomia**. Il motivo è semplice: quando sei in orbita (o oltre), comunicare costa e arriva in ritardo. Quindi: più software capace di decidere e adattarsi a bordo, più missione efficiente.
 
@@ -260,7 +253,7 @@ Nel 2025 l’Europa tende a muoversi con un approccio più “ingegneristico”:
 
 ---
 
-## 4\. Una nota importante: chi ha investito tanto ma ha raccolto poco
+## Una nota importante: chi ha investito tanto ma ha raccolto poco
 
 Nel 2025 si è visto un pattern ricorrente (vale in tutti i settori):
 1) **Pilot eterno**: POC belli, ma nessuno li porta in produzione.
@@ -272,7 +265,7 @@ La differenza tra chi ha vinto e chi ha perso nel 2025 è stata quasi sempre qui
 
 ---
 
-## 5\. Azienda per azienda: cosa hanno fatto bene, cosa no, e voto finale
+## Azienda per azienda: cosa hanno fatto bene, cosa no, e voto finale
 
 > **Come leggo il voto (0–10):** utilità concreta, qualità, velocità di miglioramento, distribuzione, chiarezza di prodotto.
 
@@ -333,7 +326,7 @@ La differenza tra chi ha vinto e chi ha perso nel 2025 è stata quasi sempre qui
 
 ---
 
-## 6\. Conclusione: le scoperte del 2025 e cosa aspettarsi nel 2026
+## Conclusione: le scoperte del 2025 e cosa aspettarsi nel 2026
 
 ### Le 5 scoperte principali del 2025
 1) La ricerca è diventata un lavoro completo: non chiedi “un link”, chiedi “un report”.
@@ -357,7 +350,7 @@ La differenza tra chi ha vinto e chi ha perso nel 2025 è stata quasi sempre qui
 - **[F02]** SoftBank Group — press release “Stargate Project” — 21 Jan 2025
 - **[F03]** Hugging Face — model card “DeepSeek‑R1” — 20 Jan 2025
 - **[F04]** arXiv — “Humanity’s Last Exam” — 24 Jan 2025
-- **[F05]** Mistral AI — “Codestral 25.01” — 13 Jan 2025
+- **[F05]** Mistral AI — [“Codestral 25.01”](https://mistral.ai/it/news/codestral-2501) — 13 Jan 2025
 - **[F06]** OpenAI — “Introducing Deep Research” — 3 Feb 2025
 - **[F07]** TechCrunch — “Mistral launches Le Chat…” — 6 Feb 2025
 - **[F08]** OpenAI — “Introducing GPT‑4.5” — 27 Feb 2025
