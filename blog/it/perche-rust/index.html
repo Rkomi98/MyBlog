@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Perché Rust sembra difficile all&#39;inizio (e perché in realtà non lo è) | Mirko Calcaterra</title>
-  <meta name="description" content="Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? E questo mi ha fatto porgere una domanda: P…">
+  <meta name="description" content="Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? Per questo mi sono posto una domanda: Perch…">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="https://rkomi98.github.io/MyBlog/blog/it/perche-rust/">
 
@@ -22,7 +22,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/perche-rust/">
   <meta property="og:title" content="Perché Rust sembra difficile all&#39;inizio (e perché in realtà non lo è)">
-  <meta property="og:description" content="Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? E questo mi ha fatto porgere una domanda: P…">
+  <meta property="og:description" content="Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? Per questo mi sono posto una domanda: Perch…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2025-12-23T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -31,7 +31,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Perché Rust sembra difficile all&#39;inizio (e perché in realtà non lo è)">
-  <meta property="twitter:description" content="Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? E questo mi ha fatto porgere una domanda: P…">
+  <meta property="twitter:description" content="Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? Per questo mi sono posto una domanda: Perch…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -41,7 +41,7 @@
     "headline": "Perché Rust sembra difficile all&#39;inizio (e perché in realtà non lo è)",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-12-23T00:00:00.000Z",
-    "dateModified": "2025-12-23T19:46:16.593Z",
+    "dateModified": "2025-12-23T19:49:59.428Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -51,7 +51,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? E questo mi ha fatto porgere una domanda: P…"
+    "description": "Rust: il linguaggio del momento In questo articolo voglio rispondere alla domanda che più spesso ho ricevuto e ho deciso di iniziare una serie intera su Rust proprio con questa domanda: Perché Rust mette così paura? Per questo mi sono posto una domanda: Perch…"
   }
   </script>
 
@@ -1039,14 +1039,18 @@
 <blockquote>
 <p>Perché Rust mette così paura?</p>
 </blockquote>
-<p>E questo mi ha fatto porgere una domanda:</p>
+<p>Per questo mi sono posto una domanda:</p>
 <blockquote>
 <p>Perché sembra difficile all&#39;inizio (e perché in realtà non lo è)?</p>
 </blockquote>
 <p>Spoiler sebbene sia una domanda semplice merita un articolo intero.</p>
 <h2 id="introduzione">Introduzione</h2>
+<p>Intanto cos&#39;è Rust? Lo potrei definire come:</p>
+<blockquote>
+<p>Rust è un linguaggio di programmazione che punta a prestazioni e sicurezza della memoria senza l&#39;utilizzo di garbage collector.</p>
+</blockquote>
 <p>Rust è spesso celebrato come uno dei linguaggi &quot;più amati&quot; dagli sviluppatori.</p>
-<p>Oddio, o lo conosci e lo ami, oppure lo temi e lo eviti</p>
+<p>Oddio, o lo conosci bene e lo ami, oppure lo temi e lo eviti</p>
 <p>Diciamo che, chi lo conosce bene può confermare, questo garantisce prestazioni elevate, sicurezza nella gestione della memoria e un ecosistema moderno. Eppure, chi si avvicina a Rust provenendo da altri linguaggi spesso lo trova <strong>ostico e frustrante</strong> nei primi tentativi. </p>
 <p>La curva di apprendimento di questo linguaggio la definirei a dir poco leggendaria: c&#39;è chi l&#39;ha definita <em>ripida</em> - anzi <a href="https://medium.com/@techInFocus/rusts-learning-curve-is-brutal-here-s-how-i-survived-459082669e91#:~:text=it's%20vertical">&quot;verticale&quot;</a>, e racconta di aver <a href="https://medium.com/@techInFocus/rusts-learning-curve-is-brutal-here-s-how-i-survived-459082669e91#:~:text=Learning%20Rust%20can%20feel%20like,intellectual%20hazing">&quot;urlato contro il compilatore&quot;</a> durante i primi esperimenti. </p>
 <p><a href="https://medium.com/@techInFocus/rusts-learning-curve-is-brutal-here-s-how-i-survived-459082669e91#:~:text=The%20borrow%20checker%20will%20make,don%E2%80%99t%20know%20how%20to%20code">Molti</a> arrivano a chiedersi se il problema siano loro stessi (&quot;<strong>sono io che non so programmare?</strong>&quot;) quando vedono errori su errori dal compilatore Rust.</p>
