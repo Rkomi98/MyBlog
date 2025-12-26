@@ -2,7 +2,7 @@
 
 ## Abstract
 
-Nel 2025 la GenAI ha smesso di essere solo ChatGPT e usato solo risponde a delle domande "semplici”, ma ha permesso di fare tante altre cose: dalle ricerche su centinaia di fonti browser "agentici", IDE che lavorano a fianco degli sviluppatori, e l’open/local si fa davvero competitivo. Questo articolo ricostruisce mese per mese i rilasci chiave, confronta i principali player e chiude con le lezioni pratiche e i trend più probabili per il 2026.
+Nel 2025 la GenAI ha smesso di essere solo ChatGPT e usato solo per rispondere a delle domande "semplici”, ma ha permesso di fare tante altre cose: dalle ricerche su centinaia di fonti browser "agentici", IDE che lavorano a fianco degli sviluppatori, e l’open/local si fa davvero competitivo. Questo articolo ricostruisce mese per mese i rilasci chiave, confronta i principali player e chiude con le lezioni pratiche e i trend più probabili per il 2026.
 
 Questo report racconta il 2025 **in modo molto pratico** dal punto di vista di uno che fino a un anno fa era studente, e ora si occupa di portare la GenAI e le sue applicazioni nelle azinede: cosa è uscito, cosa ha davvero cambiato le abitudini, e quali aziende hanno “portato a casa” risultati concreti. 
 
