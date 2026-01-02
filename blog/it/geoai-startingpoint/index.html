@@ -41,7 +41,7 @@
     "headline": "GeoAI Stack: Una guida per il 2025",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2025-12-23T09:38:13.281Z",
+    "dateModified": "2026-01-02T11:14:46.947Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1043,7 +1043,21 @@
             <span class="post-toc__number">2.5</span>
             <span class="post-toc__text">2.5 Dataset Open e Cataloghi STAC/COG per Disastri</span>
           </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#cataloghi-stac-attivi">
+            <span class="post-toc__number">2.5.1</span>
+            <span class="post-toc__text">Cataloghi STAC attivi</span>
+          </a>
           
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#altri-dataset-degni-di-nota-2025">
+            <span class="post-toc__number">2.5.2</span>
+            <span class="post-toc__text">Altri dataset degni di nota 2025</span>
+          </a>
+          
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#26-librerie-geospaziali-e-rs-core">
             <span class="post-toc__number">2.6</span>
@@ -1499,33 +1513,36 @@ Poi per maggiori info sui satelliti, ti rimando all&#39;articolo <a href="../../
 <td>Microsoft Planetary Computer - [<a href="https://github.com/microsoft/PlanetaryComputerExamples#:~:text=If%20you%27re%20viewing%20this%20repository,quickstarts%2C%20dataset%20examples%2C%20and%20tutorials">Docs</a>](chiave API gratuita richiesta per throughput elevato)</td>
 </tr>
 <tr>
-<td><strong>Radiant MLHub</strong> (ongoing)</td>
-<td>Catalogo di <strong>dataset geospaziali per ML</strong> con labels: es. LandCoverNet (class. uso suolo global), BigEarthNet, Functional Map of World, etc. + modelli pre-addestrati</td>
-<td>Vari - globale (LandCoverNet copre 5 continenti), regionali (crop type in ruanda, ecc.). Dati spesso in formato chips/COCO.</td>
-<td><strong>Training data repository</strong> - unifica dataset curati usati in competizioni e paper, pronti all&#39;uso con librerie (torchgeo, tf.data).</td>
-<td>Radiant Earth - [Registry on AWS]<a href="https://registry.opendata.aws/radiant-mlhub/#:~:text=Radiant%20MLHub%20,as%20other%20training%20data">[67]</a><a href="https://medium.com/radiant-earth-insights/geospatial-models-now-available-in-radiant-mlhub-a41eb795d7d7#:~:text=Radiant%20MLHub%20has%20been%20the,ML%29%20algorithms%20since%202019">[68]</a> (API key gratuita disponibile)</td>
-</tr>
-<tr>
 <td><strong>NOAA NGS Aerial</strong> (varie)</td>
 <td>Immagini aeree nadir oblique post-evento (~10-20 cm/px)</td>
-<td>USA (coste e aree colpite da uragani, tornado, incendi). Esempio: <del>15k foto aeree dopo uragano Ian 2022 Florida[[69]](<a href="https://storms.ngs.noaa.gov/storms/ian/index.html#">https://storms.ngs.noaa.gov/storms/ian/index.html#</a>:</del>:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote).</td>
+<td>USA (coste e aree colpite da uragani, tornado, incendi). <a href="https://storms.ngs.noaa.gov/storms/ian/index.html#:~:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote">Esempio</a>: ~15k foto aeree dopo uragano Ian 2022 Florida.</td>
 <td><strong>Damage inspection</strong> - utilizzate per valutazione visuale danni subito dopo eventi (anche input per CV - es. rilevamento tetti danneggiati).</td>
-<td>NOAA NGS Emergency Response Imagery<a href="https://storms.ngs.noaa.gov/storms/ian/index.html#:~:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote">[69]</a> (visualizzatore storms.ngs.noaa.gov, dati scaricabili via API)</td>
+<td><a href="https://storms.ngs.noaa.gov/storms/ian/index.html#:~:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote">NOAA NGS Emergency Response Imagery</a> (dati scaricabili via API)</td>
 </tr>
 <tr>
-<td><strong>Planet Disaster Data</strong> (2020-)</td>
-<td>Immagini PlanetScope (3-5 m) e SkySat (~0.8 m) con licenza temporanea libera per disastri maggiori</td>
-<td>Globale, selettiva. Esempi: Incendi Australia 2020, Beirut 2020, ecc. Spesso copertura area evento completa per giorni/settimane successive.</td>
+<td><a href="https://esri-disasterresponse.hub.arcgis.com/pages/imagery"><strong>Planet Disaster Data</strong></a> (ongoing)</td>
+<td>Immagini PlanetScope (<del>3 m) e SkySat (</del>0.5 m) con accesso temporaneo per enti idonei (su richiesta/approvazione)</td>
+<td>Globale, selettiva. Copertura variabile: può includere più acquisizioni nei giorni/settimane post-evento, a seconda dell’evento e della disponibilità.</td>
 <td><strong>Rapid Monitoring</strong> - immagini ottiche ad alta frequenza (quotidiane) per monitoraggio evoluzione disastri. Utili per time series prima/dopo non disponibili altrove.</td>
-<td>Planet/Open Region - (richiede registrazione, dati forniti su richiesta o via partner)<a href="https://esri-disasterresponse.hub.arcgis.com/pages/imagery#:~:text=disasterresponse,major%20earthquakes%2C%20floods%2C%20storms">[70]</a></td>
+<td>Planet Disaster Data: accesso per enti idonei tramite richiesta/programma DRP/partner</td>
 </tr>
 </tbody></table>
-</div></figure><p>Questi dataset consentono di allenare e validare modelli per <em>damage assessment</em>, <em>flood mapping</em>, <em>change detection</em>, ecc., sfruttando dati reali di eventi passati. Notiamo la tendenza a dataset multi-modali (SAR+ottico insieme), multi-evento (generalizzazione) e con <strong>etichettatura ricca</strong> (non solo binaria, ma gradi di danno, tipologia land cover, ecc.). Ad esempio, xBD rimane il riferimento per damage detection con la sua ampiezza senza precedenti<a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images">[54]</a><a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world">[55]</a>, mentre i dataset di flood di Cloud to Street uniscono Sentinel-1 e 2 per mitigare problemi di copertura nuvole<a href="https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#:~:text=The%20C2S,of%20chips%2C%20and%20water%20labels">[57]</a>.</p>
-<p><strong>Cataloghi STAC attivi:</strong> Planetary Computer e Radiant MLHub citati offrono API uniformi per cercare dati per area e data. Ad esempio, con <strong>pystac-client</strong> possiamo interrogare Planetary Computer:</p>
-<p>from pystac_client import Client<br>catalog = Client.open(&quot;<a href="https://planetarycomputer.microsoft.com/api/stac/v1">https://planetarycomputer.microsoft.com/api/stac/v1</a>&quot;)<br>search = catalog.search(collections=[&quot;sentinel-2-l2a&quot;],<br>intersects={&quot;type&quot;: &quot;Point&quot;, &quot;coordinates&quot;: [30.5,50.5]},<br>datetime=&quot;2023-06-01/2023-06-30&quot;)<br>items = list(search.get_items())<br>print(f&quot;Trovate {len(items)} immagini Sentinel-2 in giugno 2023 nel AOI.&quot;)<br>for item in items[:5]:<br>print(item.id, item.assets[&quot;B04&quot;].href) # stampa link alla banda 4 (rosso)</p>
-<p><em>(Esempio di utilizzo pystac-client per cercare immagini Sentinel-2 in un AOI e periodo dati. Ci consente di ottenere URL (spesso firmati) a cui accedere il file COG direttamente, oppure scaricare i subset.)</em></p>
+</div></figure><p>Questi dataset consentono di allenare e validare modelli per <em>damage assessment</em>, <em>flood mapping</em>, <em>change detection</em>, ecc., sfruttando dati reali di eventi passati. Notiamo la tendenza a dataset multi-modali (SAR+ottico insieme), multi-evento e con <strong>etichettatura ricca</strong> (non solo binaria, ma gradi di danno, tipologia land cover, ecc.). </p>
+<p>Ad esempio, xBD rimane il riferimento per damage detection con la sua <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images">qualità</a> e <a href="https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world">copertura</a> senza precedenti.</p>
+<h4 id="cataloghi-stac-attivi">Cataloghi STAC attivi</h4>
+<p>Planetary Computer e Radiant MLHub citati offrono API uniformi per cercare dati per area e data. Ad esempio, con <strong>pystac-client</strong> possiamo interrogare Planetary Computer:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> pystac_client <span class="hljs-keyword">import</span> Client  
+catalog = Client.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;&lt;https://planetarycomputer.microsoft.com/api/stac/v1&gt;&quot;</span>)  
+search = catalog.search(collections=\[<span class="hljs-string">&quot;sentinel-2-l2a&quot;</span>\],  
+intersects={<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Point&quot;</span>, <span class="hljs-string">&quot;coordinates&quot;</span>: \[<span class="hljs-number">30.5</span>,<span class="hljs-number">50.5</span>\]},  
+datetime=<span class="hljs-string">&quot;2023-06-01/2023-06-30&quot;</span>)  
+items = <span class="hljs-built_in">list</span>(search.get_items())  
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Trovate <span class="hljs-subst">{<span class="hljs-built_in">len</span>(items)}</span> immagini Sentinel-2 in giugno 2023 nel AOI.&quot;</span>)  
+<span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> items\[:<span class="hljs-number">5</span>\]:  
+<span class="hljs-built_in">print</span>(item.<span class="hljs-built_in">id</span>, item.assets\[<span class="hljs-string">&quot;B04&quot;</span>\].href) <span class="hljs-comment"># stampa link alla banda 4 (rosso)</span></code></pre><p><em>Snippet 01: Esempio di utilizzo pystac-client per cercare immagini Sentinel-2 in un AOI e periodo dati. Ci consente di ottenere URL (spesso firmati) a cui accedere il file COG direttamente, oppure scaricare i subset.</em></p>
 <p>Analogamente, Radiant MLHub fornisce SDK e API per scaricare dataset ML. Ad esempio, con il pacchetto radiant_mlhub possiamo fare query di collezioni per nome e scaricare le annotazioni.</p>
-<p><strong>Altri dataset degni di nota 2025:</strong> SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, road network extraction, change detection di edifici su tempi multi-annuali (SpaceNet 7), ecc. Anche se un po&#39; datati, rimangono preziosi per benchmark. Ad esempio, SpaceNet8 (2022) fornisce immagini PlanetScope pre/post alluvione + mask flood e building footprints, utile per approcci multimodali (simile a xBD ma per inondazioni). Inoltre, dataset come <strong>CASA Landslide</strong> e <strong>DMLD</strong> (China) offrono migliaia di esempi di frane mappate in diverse regioni<a href="https://www.mdpi.com/2072-4292/16/11/1886#:~:text=The%20Diverse%20Mountainous%20Landslide%20Dataset,across%20different%20terrain%20in">[71]</a><a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City">[72]</a>. La comunità open si sta muovendo anche verso <strong>foundation models geospaziali</strong>: ad es. <em>BigEarthNet</em> (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari.</p>
+<h4 id="altri-dataset-degni-di-nota-2025">Altri dataset degni di nota 2025</h4>
+<p>SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, road network extraction, change detection di edifici su tempi multi-annuali (SpaceNet 7), ecc. Anche se un po&#39; datati, rimangono preziosi per benchmark. Ad esempio, SpaceNet8 (2022) fornisce immagini PlanetScope pre/post alluvione + mask flood e building footprints, utile per approcci multimodali (simile a xBD ma per inondazioni). Inoltre, dataset come <strong>CASA Landslide</strong> e <strong>DMLD</strong> (China) offrono migliaia di esempi di frane mappate in diverse regioni<a href="https://www.mdpi.com/2072-4292/16/11/1886#:~:text=The%20Diverse%20Mountainous%20Landslide%20Dataset,across%20different%20terrain%20in">[71]</a><a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City">[72]</a>. La comunità open si sta muovendo anche verso <strong>foundation models geospaziali</strong>: ad es. <em>BigEarthNet</em> (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari.</p>
 <h3 id="26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</h3>
 <p>L&#39;ecosistema Python geospaziale è maturo. Strumenti chiave:</p>
 <ul>
@@ -1670,9 +1687,9 @@ Poi per maggiori info sui satelliti, ti rimando all&#39;articolo <a href="../../
     </article>
   </main>
   <footer>
-    <span data-it="© 2025 Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© 2025 Mirko Calcaterra. All rights reserved.">
-      © 2025 Mirko Calcaterra. Tutti i diritti riservati.
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
     </span>
   </footer>
   <script>
