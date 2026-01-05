@@ -41,7 +41,7 @@
     "headline": "GeoAI Stack: Una guida per il 2025",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2026-01-02T11:14:46.947Z",
+    "dateModified": "2026-01-05T12:22:23.611Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1532,17 +1532,19 @@ Poi per maggiori info sui satelliti, ti rimando all&#39;articolo <a href="../../
 <h4 id="cataloghi-stac-attivi">Cataloghi STAC attivi</h4>
 <p>Planetary Computer e Radiant MLHub citati offrono API uniformi per cercare dati per area e data. Ad esempio, con <strong>pystac-client</strong> possiamo interrogare Planetary Computer:</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">from</span> pystac_client <span class="hljs-keyword">import</span> Client  
-catalog = Client.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;&lt;https://planetarycomputer.microsoft.com/api/stac/v1&gt;&quot;</span>)  
-search = catalog.search(collections=\[<span class="hljs-string">&quot;sentinel-2-l2a&quot;</span>\],  
-intersects={<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Point&quot;</span>, <span class="hljs-string">&quot;coordinates&quot;</span>: \[<span class="hljs-number">30.5</span>,<span class="hljs-number">50.5</span>\]},  
-datetime=<span class="hljs-string">&quot;2023-06-01/2023-06-30&quot;</span>)  
-items = <span class="hljs-built_in">list</span>(search.get_items())  
+catalog = Client.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;https://planetarycomputer.microsoft.com/api/stac/v1&quot;</span>)  
+search = catalog.search(
+    collections=[<span class="hljs-string">&quot;sentinel-2-l2a&quot;</span>],
+    intersects={<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Point&quot;</span>, <span class="hljs-string">&quot;coordinates&quot;</span>: [<span class="hljs-number">30.5</span>,<span class="hljs-number">50.5</span>]},  
+    datetime=<span class="hljs-string">&quot;2023-06-01/2023-06-30&quot;</span>
+    )  
+items = <span class="hljs-built_in">list</span>(search.get_items())
 <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Trovate <span class="hljs-subst">{<span class="hljs-built_in">len</span>(items)}</span> immagini Sentinel-2 in giugno 2023 nel AOI.&quot;</span>)  
-<span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> items\[:<span class="hljs-number">5</span>\]:  
-<span class="hljs-built_in">print</span>(item.<span class="hljs-built_in">id</span>, item.assets\[<span class="hljs-string">&quot;B04&quot;</span>\].href) <span class="hljs-comment"># stampa link alla banda 4 (rosso)</span></code></pre><p><em>Snippet 01: Esempio di utilizzo pystac-client per cercare immagini Sentinel-2 in un AOI e periodo dati. Ci consente di ottenere URL (spesso firmati) a cui accedere il file COG direttamente, oppure scaricare i subset.</em></p>
+<span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> items[:<span class="hljs-number">5</span>]:  
+  <span class="hljs-built_in">print</span>(item.<span class="hljs-built_in">id</span>, item.assets[<span class="hljs-string">&quot;B04&quot;</span>].href) <span class="hljs-comment"># stampa link alla banda 4 (rosso)</span></code></pre><p><em>Snippet 01: Esempio di utilizzo pystac-client per cercare immagini Sentinel-2 in un AOI e periodo dati. Ci consente di ottenere URL (spesso firmati) a cui accedere il file COG direttamente, oppure scaricare i subset.</em></p>
 <p>Analogamente, Radiant MLHub fornisce SDK e API per scaricare dataset ML. Ad esempio, con il pacchetto radiant_mlhub possiamo fare query di collezioni per nome e scaricare le annotazioni.</p>
 <h4 id="altri-dataset-degni-di-nota-2025">Altri dataset degni di nota 2025</h4>
-<p>SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, road network extraction, change detection di edifici su tempi multi-annuali (SpaceNet 7), ecc. Anche se un po&#39; datati, rimangono preziosi per benchmark. Ad esempio, SpaceNet8 (2022) fornisce immagini PlanetScope pre/post alluvione + mask flood e building footprints, utile per approcci multimodali (simile a xBD ma per inondazioni). Inoltre, dataset come <strong>CASA Landslide</strong> e <strong>DMLD</strong> (China) offrono migliaia di esempi di frane mappate in diverse regioni<a href="https://www.mdpi.com/2072-4292/16/11/1886#:~:text=The%20Diverse%20Mountainous%20Landslide%20Dataset,across%20different%20terrain%20in">[71]</a><a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City">[72]</a>. La comunità open si sta muovendo anche verso <strong>foundation models geospaziali</strong>: ad es. <em>BigEarthNet</em> (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari.</p>
+<p>SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, road network extraction, change detection di edifici su tempi multi-annuali (SpaceNet 7), ecc. Anche se un po&#39; datati, rimangono preziosi per benchmark. Ad esempio, SpaceNet8 (2022) fornisce immagini PlanetScope pre/post alluvione + mask flood e building footprints, utile per approcci multimodali (simile a xBD ma per inondazioni). Inoltre, dataset come <strong>CASA Landslide</strong> e <a href="https://www.mdpi.com/2072-4292/16/11/1886"><strong>DMLD</strong></a> (China) offrono migliaia di esempi di frane mappate in diverse regioni<a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City">[72]</a>. La comunità open si sta muovendo anche verso <strong>foundation models geospaziali</strong>: ad es. <em>BigEarthNet</em> (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari.</p>
 <h3 id="26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</h3>
 <p>L&#39;ecosistema Python geospaziale è maturo. Strumenti chiave:</p>
 <ul>
