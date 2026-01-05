@@ -41,7 +41,7 @@
     "headline": "GeoAI Stack: Una guida per il 2025",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2025-11-23T00:00:00.000Z",
-    "dateModified": "2026-01-05T12:22:23.611Z",
+    "dateModified": "2026-01-05T18:26:48.992Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1059,11 +1059,25 @@
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#26-librerie-geospaziali-e-rs-core">
+          <a class="post-toc__link" href="#26-librerie-geospaziali-e-per-remote-sensing">
             <span class="post-toc__number">2.6</span>
-            <span class="post-toc__text">2.6 Librerie Geospaziali e RS Core</span>
+            <span class="post-toc__text">2.6 Librerie Geospaziali e per Remote Sensing</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#quando-usare-cosa">
+            <span class="post-toc__number">2.6.1</span>
+            <span class="post-toc__text">Quando usare cosa</span>
           </a>
           
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#pipeline-esempio-ottico-sar">
+            <span class="post-toc__number">2.6.2</span>
+            <span class="post-toc__text">Pipeline esempio (ottico + SAR)</span>
+          </a>
+          
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#27-template-progetti-repos-di-riferimento-e-best-practice">
             <span class="post-toc__number">2.7</span>
@@ -1544,27 +1558,52 @@ items = <span class="hljs-built_in">list</span>(search.get_items())
   <span class="hljs-built_in">print</span>(item.<span class="hljs-built_in">id</span>, item.assets[<span class="hljs-string">&quot;B04&quot;</span>].href) <span class="hljs-comment"># stampa link alla banda 4 (rosso)</span></code></pre><p><em>Snippet 01: Esempio di utilizzo pystac-client per cercare immagini Sentinel-2 in un AOI e periodo dati. Ci consente di ottenere URL (spesso firmati) a cui accedere il file COG direttamente, oppure scaricare i subset.</em></p>
 <p>Analogamente, Radiant MLHub fornisce SDK e API per scaricare dataset ML. Ad esempio, con il pacchetto radiant_mlhub possiamo fare query di collezioni per nome e scaricare le annotazioni.</p>
 <h4 id="altri-dataset-degni-di-nota-2025">Altri dataset degni di nota 2025</h4>
-<p>SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, road network extraction, change detection di edifici su tempi multi-annuali (SpaceNet 7), ecc. Anche se un po&#39; datati, rimangono preziosi per benchmark. Ad esempio, SpaceNet8 (2022) fornisce immagini PlanetScope pre/post alluvione + mask flood e building footprints, utile per approcci multimodali (simile a xBD ma per inondazioni). Inoltre, dataset come <strong>CASA Landslide</strong> e <a href="https://www.mdpi.com/2072-4292/16/11/1886"><strong>DMLD</strong></a> (China) offrono migliaia di esempi di frane mappate in diverse regioni<a href="https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City">[72]</a>. La comunità open si sta muovendo anche verso <strong>foundation models geospaziali</strong>: ad es. <em>BigEarthNet</em> (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari.</p>
-<h3 id="26-librerie-geospaziali-e-rs-core">2.6 Librerie Geospaziali e RS Core</h3>
-<p>L&#39;ecosistema Python geospaziale è maturo. Strumenti chiave:</p>
+<p>SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, road network extraction, change detection di edifici su tempi multi-annuali (SpaceNet 7), ecc. Anche se un po&#39; datati, rimangono preziosi per benchmark. Ad esempio, SpaceNet8 (2022) fornisce immagini PlanetScope pre/post alluvione + mask flood e building footprints, utile per approcci multimodali (simile a xBD ma per inondazioni). Inoltre, dataset come <a href="https://www.nature.com/articles/s41597-023-02847-z"><strong>CAS Landslide</strong></a> e <a href="https://www.mdpi.com/2072-4292/16/11/1886"><strong>DMLD</strong></a> (China) offrono migliaia di esempi di frane mappate in diverse regioni. </p>
+<p>La comunità open si sta muovendo anche verso <strong>foundation models geospaziali</strong>: ad es. <a href="https://bigearth.net/"><em>BigEarthNet</em></a> (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari ed è disponibile direttamente su <a href="https://www.tensorflow.org/datasets/catalog/bigearthnet?hl=it">Tensorflow</a>.</p>
+<h3 id="26-librerie-geospaziali-e-per-remote-sensing">2.6 Librerie Geospaziali e per Remote Sensing</h3>
+<p>Il mondo geospaziale in Python è fatto a strati: I/O, geometrie, analisi, visualizzazione e serving. Qui sotto le librerie più comuni con una descrizione pratica.</p>
 <ul>
-<li><strong>GDAL (osgeo)</strong> - la libreria <em>foundation</em> per raster e vettori GIS. In Python si usa indirettamente via binding (osgeo.gdal) ma più spesso tramite wrapper più pitonici:</li>
-<li><strong>rasterio</strong> (per raster) e <strong>fiona</strong> (per shapefile) sono <em>wrapper</em> pythonic di GDAL/OGR. <em>Rasterio</em> offre lettura/scrittura di GeoTIFF, cropping, reproiezione, e funzioni numpy-friendly.</li>
-<li><strong>Geopandas</strong> (per vettori) combina Fiona + Shapely: permette di leggere shapefile/GeoJSON in DataFrame e usare operazioni geografiche (buffer, intersection) via Shapely in modo vectorizzato. Ottimo per layer vettoriali non enormi (fino a ~100k entità).</li>
-<li><strong>Shapely 2.0</strong> - libreria geometrica (in C) usata da geopandas; con la v2 supporta nativamente <em>array</em> (grazie a PyGEOS), quindi molto efficiente su grandi insiemi di geometrie.</li>
-<li><strong>pyproj</strong> - gestisce sistemi di coordinate e trasformazioni (usa PROJ sotto).</li>
-<li><strong>rasterio vs rioxarray vs xarray</strong>: <em>rasterio</em> è ideale per operazioni raster file-per-file ad alte prestazioni e batch processing (script); <em>xarray</em> è preferibile per analisi su stack di dati come cubi temporali o mosaici grandi, grazie a <em>dask</em> per la parallelizzazione. <em>rioxarray</em> è un&#39;estensione di xarray che aggiunge consapevolezza geospaziale (CRS, trasformate) usando rasterio sotto il cofano. <strong>Ruff</strong> - <em>&quot;Rasterio is for speed, batch processing of many files, Rioxarray shines for interactive analytical work in notebooks&quot;</em> notano gli utenti<a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%207mo%20ago">[73]</a>. Attenzione però: rioxarray/xarray possono consumare molta memoria se non ben chunk-ati, e su dataset grandi a volte crashano, dove rasterio a basse prestazioni esegue comunque (&quot;quando dataset grandi rallentano o crashano con rioxarray, passo a GDAL/rasterio che risolve in pochi secondi&quot; cit.)<a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%206mo%20ago">[74]</a><a href="https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=This,to">[75]</a>. <strong>Consiglio:</strong> usare <em>xarray + dask</em> per elaborazioni distribuite (es. calcolare NDVI su 1000 scene) - dask creerà grafo ed eseguirà in parallelo (anche su cluster).</li>
-<li><strong>rio-tiler</strong>: libreria per lavorare con COG (Cloud Optimized GeoTIFF) e generare tile (es. 256x256) per visualizzazione web. Permette di estrarre rapidamente porzioni di immagine via HTTP range requests e creare tile XYZ o WMTS. Indispensabile se si costruisce un servizio di mappe (tipo fornire una mappa interattiva delle predizioni modello). Esempio: con rio-tiler puoi ottenere il tile PNG di zoom 15, x=17342,y=11945 da un COG in S3 con una chiamata, includendo magari applicazione di color mapping.</li>
-<li><strong>folium / ipyleaflet / leafmap</strong>: per visualizzare i risultati su mappe interattive in Jupyter. <em>Folium</em> è semplice: produce una mappa Leaflet HTML con marker, layer raster/vettoriali (puoi addirittura aggiungere l&#39;URL di un tile server o di un COG). <em>ipyleaflet</em> è più avanzato (bidirezionale, reagisce a Python in real-time) - ad es. permette di disegnare un poligono sulla mappa e averlo in Python per analisi. <em>Leafmap</em> fornisce un&#39;API di alto livello e supporta anche interfacce come Google Earth Engine. Integrare queste librerie aiuta a <strong>validare visualmente</strong> le output del modello (es. mostrare in rosso gli edifici danneggiati su una mappa).</li>
-<li><strong>TorchGeo</strong>: merita menzione di nuovo qui - è un <em>PyTorch Domain Library</em> ufficiale<a href="https://pytorch.org/blog/geospatial-deep-learning-with-torchgeo/#:~:text=Geospatial%20deep%20learning%20with%20TorchGeo,models%20specific%20to%20geospatial%20data">[76]</a> che fornisce dataset loader per molti dataset geospaziali (come quelli sopra), samplers per estrarre patch geolocalizzate bilanciando classi, e modelli pre-addestrati (es. una ResNet50 pre-addestrata su BigEarthNet). Semplifica la creazione di pipeline di training con PyTorch Lightning per compiti come segmentazione di edifici, classificazione uso suolo, ecc., riducendo il codice custom da scrivere. Ad esempio, TorchGeo include il datamodule per xView2, così puoi ottenere facilmente coppie pre/post e mask danno con un semplice API<a href="https://github.com/torchgeo/torchgeo#:~:text=from%20torchgeo,trainers%20import%20SemanticSegmentationTask">[77]</a><a href="https://github.com/torchgeo/torchgeo#:~:text=datasets%20can%20be%20challenging%20to,reprojected%20into%20a%20matching%20CRS">[78]</a>.</li>
-<li><strong>Altre</strong>: <em>scikit-image</em> per filtri su raster (es. filtro mediano per rimuovere speckle SAR), <em>OpenCV</em> se servono trasformazioni veloci, <em>pySAR</em> (o <em>Gamma</em>) per processare SAR (ad es. generare interferogrammi - ambito specialistico). <strong>SNAP</strong> (di ESA) ha API Java che si possono chiamare in Python (non triviale, ma utile per pre-processing Sentinel-1).</li>
-<li><strong>Database geospaziali</strong>: se i dati vettoriali diventano grandi, considerare <em>PostGIS</em> (PostgreSQL + estensione GIS) per memorizzare e interrogare efficacemente. Ad esempio, i risultati di building detection per una città (milioni di punti) possono essere messi in PostGIS e interrogati con indici spaziali (es. trovare edifici danneggiati in un raggio di 1 km da coordinate X). O ancora, in retrieval geospaziale per agenti LLM (vedi Spatial RAG), un database spaziale può filtrare rapidamente candidati (come suggerito da Yu et al. 2024<a href="https://arxiv.org/html/2502.18470v5#:~:text=Answering%20real,the%20answering%20process%20as%20a">[79]</a><a href="https://arxiv.org/html/2502.18470v5#:~:text=geographic%20relationships%20and%20semantic%20user,retriever%20that%20combines%20sparse%20spatial">[80]</a>). Con Python, si interagisce via SQLAlchemy/GeoAlchemy o direttamente con geopandas (che può leggere da PostGIS con read_postgis).</li>
+<li><strong>GDAL (osgeo)</strong>: è la base per leggere/scrivere raster e vettori in molti formati; include CLI come <code>gdal_translate</code> e <code>gdalwarp</code>. In Python di solito ci si arriva usando rasterio o fiona.</li>
+<li><strong>rasterio</strong>: lettura/scrittura (I/O) di raster (GeoTIFF, COG) e operazioni base come ritaglio, mascheratura con poligoni, riproiezione e lettura a finestre. Utile quando devi processare molti file uno per volta senza caricarli interamente in memoria.</li>
+<li><strong>fiona</strong>: I/O vettoriale (Shapefile, GeoJSON, GeoPackage). Legge/scrive feature senza passare da GeoPandas.</li>
+<li><strong>GeoPandas</strong>: gestisce DataFrame con geometrie. In particolare si possono fare overlay, join spaziali, buffer, dissolve. Funziona bene su dataset piccoli/medi.</li>
+<li><strong>Shapely 2.0</strong>: operazioni geometriche (intersection, distance, buffer). Non gestisce CRS; da abbinare a pyproj/GeoPandas.</li>
+<li><strong>pyproj</strong>: definizione dei CRS e trasformazioni di coordinate. Base per reproiezioni affidabili.</li>
+<li><strong>xarray</strong>: array N-D con etichette (dimensioni e coordinate). Utile per serie temporali multi-banda o stack di immagini; con dask gestisce dataset grandi in modo lazy.</li>
+<li><strong>rioxarray</strong>: aggiunge CRS e trasformazioni a xarray e permette I/O raster geospaziale. Utile se lavori con DataArray e vuoi clip/reproject senza perdere la georeferenziazione.</li>
+<li><strong>rio-tiler</strong>: legge COG anche via HTTP e genera tile o preview. Da usare quando devi servire mappe o immagini via API.</li>
+<li><strong>folium</strong>: crea mappe HTML statiche basate su Leaflet. Ideale per report o condivisione veloce.</li>
+<li><strong>ipyleaflet</strong>: widget Leaflet per Jupyter con callback live. Utile per disegnare poligoni, cliccare e ottenere input in Python.</li>
+<li><strong>leafmap</strong>: API ad alto livello per mappe con meno boilerplate; integra anche servizi come Google Earth Engine.</li>
+<li><strong>TorchGeo</strong>: dataset e sampler geospaziali per PyTorch, con utility per patching e training.</li>
+<li><strong>scikit-image</strong>: filtri e operazioni su array (denoise, soglie, morfologia). Non geospaziale, ma comodo per pre/post-processing.</li>
+<li><strong>OpenCV</strong>: primitive CV ottimizzate (resize, warp, feature). Scelta pratica quando serve velocità.</li>
+<li><strong>pySAR / Gamma / SNAP</strong>: strumenti per SAR. SNAP copre calibrazione, speckle e terrain correction; Gamma è più specialistico (interferometria).</li>
+<li><strong>PDAL / pylas</strong>: gestione di point cloud LiDAR. PDAL per pipeline e filtri, pylas per I/O leggero.</li>
+<li><strong>PostGIS</strong>: database spaziale per grandi volumi vettoriali; indici e query spaziali quando non stai più in memoria.</li>
 </ul>
-<p><strong>Quando usare cosa:</strong> - Se devi solo leggere qualche immagine, fare calcoli pixel-wise o maschere =&gt; <em>rasterio</em> + numpy è semplice e sufficiente. - Se hai bisogno di gestire un grande stack di dati (time series, data cube su area vasta) =&gt; <em>xarray + dask</em> è più appropriato (ma richiede riflettere su chunking e memoria). - Per pipeline a streaming (molte immagini indipendenti) =&gt; sfrutta <em>concurrent.futures</em> o <em>dask.bag</em> con rasterio (che rilascia GIL nelle operazioni I/O). - Per vettori, se &lt;100k features =&gt; <em>geopandas</em> va bene; &gt;100k considerare PostGIS o usare <em>spatialindex</em>/Rtree per query spaziali in-memory. - Per <em>serving tile maps</em> =&gt; <em>rio-tiler</em> per il backend (taglia immagini) e <em>folium/ipyleaflet</em> per frontend map. - Per <em>analisi raster-vector miste</em> (zonal stats, clip raster con maschera) =&gt; <em>rasterstats</em> è un pacchetto utile (costruito su rasterio). - Se stai lavorando con <em>dati 3D o LiDAR</em> =&gt; <em>PDAL</em> (Point Data Abstraction Lib) con binding Python o <em>pylas</em> per LAS.</p>
-<p><strong>Pipeline esempio (ottico + SAR):</strong> supponiamo di voler individuare aree alluvionate combinando Sentinel-1 e Sentinel-2: 1. <strong>Data loading:</strong> scarichiamo un&#39;immagine Sentinel-2 post-evento (es. banda infrarosso e rosso) e una Sentinel-1 coeva. Possiamo usare pystac-client per ottenere gli asset URL e scaricarli. Carichiamo con rasterio: s2 = rasterio.open(&#39;sentinel2.tif&#39;), s1 = rasterio.open(&#39;sentinel1.tif&#39;). 2. <strong>Pre-process:</strong> allineiamo risoluzione e CRS - ad es. portiamo Sentinel-1 (10 m, polarizzazione VV) nella grid di Sentinel-2 (10 m). Con rasterio: rasterio.warp.reproject(source=s1.read(1), src_transform=s1.transform, src_crs=s1.crs, destination=arr, dst_transform=s2.transform, dst_crs=s2.crs, dst_shape=s2.shape). Otteniamo arr SAR registrato. 3. <strong>Stack &amp; filter:</strong> normalizziamo le bande (es. Sentinel-1 in dB, applicando soglia per rimuovere rumore) e impiliamo: costruiamo un array 3-canali: NIR, Red, SAR. Possiamo farlo con numpy su piccole immagini, o con xarray (un DataArray multi-band). Applichiamo magari un filtro mediano sul SAR per ridurre speckle. 4. <strong>Inferenza modello:</strong> passiamo il tensor [H,W,3] al modello di segmentazione (es. U-Net addestrata su dataset di flood). Otteniamo una mask binaria predetta. 5. <strong>Post-process &amp; vectorize:</strong> usando <em>rasterio.features</em>, trasformiamo la mask in shapefile (poligoni allagati). shapes = rasterio.features.shapes(mask_pred, transform=s2.transform) fornisce geometrie; filtriamo quelle con area minima e le scriviamo con geopandas in un GeoJSON. 6. <strong>Visualizza/valida:</strong> apriamo la mappa con folium: folium.Map(...). Add layer Sentinel-2 RGB, poi add i poligoni alluvione semi-trasparenti in blu.</p>
-<p>Questa pipeline combina <strong>rasterio</strong> per I/O e warp, <strong>numpy/scikit-image</strong> per filtri, <strong>deep learning (PyTorch)</strong> per inferenza, <strong>rasterio.features/geopandas</strong> per output vettoriale. Se la scala cresce (immagini molto grandi o tante), possiamo distribuire su dask: ad es. leggere le immagini come dask array via rioxarray (rioxarray.open_rasterio(..., chunks=...)), fare calcoli in lazy, usare map_blocks per inferenza modello (se il modello è deployato in modo che dask possa chiamarlo - non banale, ma possibile con dask.delayed). Oppure processare a tile (es. 512x512) iterativamente.</p>
-<p><strong>Integrazione con LLM:</strong> i risultati geospaziali finali (es. shapefile di aree allagate con attributi) possono essere inseriti in un <em>knowledge base</em> testuale: ad esempio, generare un breve riassunto in JSON o CSV (50 km² allagati in regione X). Un agente LLM può poi fare query geospaziali semplici tramite codice Python (es. usando <em>shapely</em> per controllare se un punto è dentro area allagata) - come visto in approcci <em>Spatial-QA</em> di ricerca recente.</p>
-<p>In breve, <strong>librerie geospaziali Python offrono potenza simile a GIS desktop</strong> ma programmabile: da semplici buffer a complessi join spaziali o reproiezioni in massa. La chiave è scegliere lo strumento giusto in base a <strong>scalabilità e complessità</strong>: un mix di rasterio/geopandas per task mirati, xarray/dask per big data, database/servizi dedicati se necessario. Fortunatamente, la compatibilità reciproca è buona (geopandas può usare shapely/dask-geopandas per parallelismo, rasterio interagisce con numpy/xarray facilmente). Il tutto integrato con il mondo PyData (numpy, pandas) e ora PyTorch/TensorFlow per modelli ML crea un <strong>ecosistema potente per l&#39;AI geospaziale</strong>.</p>
+<h4 id="quando-usare-cosa">Quando usare cosa</h4>
+<p>Vediamo di tirare un po&#39; le somme:</p>
+<ul>
+<li>per raster semplici o batch file-per-file basta <em>rasterio</em> + <em>numpy</em>.</li>
+<li>Per stack grandi o time series: <em>xarray</em> + dask (con <em>rioxarray</em> se serve CRS).</li>
+<li>Per vettori piccoli/medi: <em>GeoPandas</em>; per grandi: <em>PostGIS</em>.</li>
+<li>Per statistiche di alcune zone o clip raster con poligoni: <em>rasterstats</em> (basato su rasterio).</li>
+<li>Per tile server o mappe web: <em>rio-tiler</em> per backend, <em>folium/ipyleaflet</em> per front-end.</li>
+</ul>
+<h4 id="pipeline-esempio-ottico-sar">Pipeline esempio (ottico + SAR)</h4>
+<p>Per individuare aree alluvionate con Sentinel-1 e Sentinel-2:</p>
+<ol>
+<li><strong>Data loading:</strong> scarica gli asset (pystac-client) e apri con rasterio.</li>
+<li><strong>Pre-process:</strong> allinea CRS e risoluzione con <code>rasterio.warp.reproject</code>.</li>
+<li><strong>Stack &amp; filter:</strong> normalizza le bande e crea uno stack (NIR, Red, SAR); filtra lo speckle SAR.</li>
+<li><strong>Inferenza:</strong> passa lo stack al modello di segmentazione.</li>
+<li><strong>Post-process:</strong> vettorializza la mask con <code>rasterio.features</code> e salva con GeoPandas.</li>
+<li><strong>Visualizza:</strong> overlay su mappa con folium.</li>
+</ol>
+<p><img src="../../../geospatial_pipeline.svg" alt="Geospatial pipeline">
+<em>Figura: schema sintetico della pipeline geospaziale.</em></p>
+<p>Questa pipeline usa <strong>rasterio</strong> per I/O, <strong>numpy/scikit-image</strong> per filtri, <strong>PyTorch</strong> per inferenza e <strong>GeoPandas</strong> per output vettoriale. Su scala grande conviene leggere con rioxarray + dask e processare per tile.</p>
 <h3 id="27-template-progetti-repos-di-riferimento-e-best-practice">2.7 Template Progetti, Repos di Riferimento e Best Practice</h3>
 <p>Per costruire uno stack <strong>production-ready</strong> è utile studiare progetti open-source esistenti che affrontano problemi simili. Ecco <strong>10 repository e template di riferimento (2025)</strong> da cui trarre insegnamenti, con motivazione:</p>
 <ul>
