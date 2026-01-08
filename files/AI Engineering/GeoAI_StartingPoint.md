@@ -1,11 +1,4 @@
-# GeoAI Stack: Una guida per il 2025
-
-<details class="post-warning">
-<summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
-
-Questo articolo è ancora in fase di scrittura e sotto revisione tecnica. Alcuni contenuti potrebbero risultare incompleti oppure essere modificati con breve preavviso.
-
-</details>
+# GeoAI Stack: da dove partire per diventare un GeoAI engineer?
 
 Seconda puntata del nostro lungo cammino diventare GeoAI engineer. La scorsa volta abbiamo descritto molto in generale cosa fa un AI engineer e cosa lo differenzia. 
 
@@ -504,150 +497,83 @@ Seguendo queste azioni all'inizio, metterai le basi per diventare un buon GeoAI 
 
 ## Bibliografia
 
-[\[1\]](https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=Our%20main%20algorithm%20of%20choice,algorithm%20for%20semantic%20image%20segmentation) [\[54\]](https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20data%20used%20for%20the,resolution%20color%20images) [\[55\]](https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20images%20capture%2019%20natural,from%20all%20over%20the%20world) [\[84\]](https://www.ibm.com/think/insights/the-xview2-ai-challenge#:~:text=The%20U,sampler%20or%20the%20decoder) The xView2 AI Challenge | IBM
-
-<https://www.ibm.com/think/insights/the-xview2-ai-challenge>
-
-[\[2\]](https://github.com/torchgeo/torchgeo#:~:text=Image%3A%20TorchGeo%20logo) [\[3\]](https://github.com/torchgeo/torchgeo#:~:text=First%20we%27ll%20import%20various%20classes,used%20in%20the%20following%20sections) [\[77\]](https://github.com/torchgeo/torchgeo#:~:text=from%20torchgeo,trainers%20import%20SemanticSegmentationTask) [\[78\]](https://github.com/torchgeo/torchgeo#:~:text=datasets%20can%20be%20challenging%20to,reprojected%20into%20a%20matching%20CRS) GitHub - torchgeo/torchgeo: TorchGeo: datasets, samplers, transforms, and pre-trained models for geospatial data
-
-<https://github.com/torchgeo/torchgeo>
-
-[\[4\]](https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=search%20engines%20with%20LLMs%20to,more%20accurate%20and%20reliable%20answers) [\[5\]](https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=This%20teamwork%20reduces%20the%20chance,existent%20street) [\[9\]](https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=A%20RAG%20pipeline%20works%20like,The%20team%20includes) [\[10\]](https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=capture%20the%20essence%20of%20each,or%20another%20LLM%2C%20the%20model%E2%80%99s) [\[11\]](https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=Image%3A%20rag%20pipeline%20architecture%20diagram) [\[12\]](https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline#:~:text=find%20documents%20discussing%20%E2%80%9Creturns%2C%E2%80%9D%20%E2%80%9Cdownloads%2C%E2%80%9D,of%20the%20context%20it%20receives) How to Build a RAG Pipeline: A Step-by-Step Guide
-
-<https://www.meilisearch.com/blog/how-to-build-a-rag-pipepline>
-
-[\[6\]](https://github.com/langchain-ai/langchain#:~:text=LangChain%20is%20a%20framework%20for,as%20the%20underlying%20technology%20evolves) [\[7\]](https://github.com/langchain-ai/langchain#:~:text=Why%20use%20LangChain%3F) GitHub - langchain-ai/langchain: The platform for reliable agents.
-
-<https://github.com/langchain-ai/langchain>
-
-[\[8\]](https://arxiv.org/html/2502.18470v5#:~:text=On%20the%20other%20hand%2C%20large,zhang2024bb%20%2C%20but%20the%20resulting) [\[79\]](https://arxiv.org/html/2502.18470v5#:~:text=Answering%20real,the%20answering%20process%20as%20a) [\[80\]](https://arxiv.org/html/2502.18470v5#:~:text=geographic%20relationships%20and%20semantic%20user,retriever%20that%20combines%20sparse%20spatial) Spatial-RAG: Spatial Retrieval Augmented Generation for Real-World Geospatial Reasoning Questions
-
-<https://arxiv.org/html/2502.18470v5>
-
-[\[13\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20OG%20of%20Python%20package,be%20completely%20decoupled%20from%20a) [\[14\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20of%20the%20key%20faults,that%20are%20no%20longer%20useful) [\[17\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Furthermore%2C%20as%20of%202024%2C%20the,actual%20conflict%20in%20the%20DAG) [\[18\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=) [\[19\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20core%20tradeoff%20with%20,possible%20leading%20to%20a%20potentially) [\[20\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=tools%20like%20,to%20build%20and%20publish%20Python) [\[21\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=specify%20upper%20and%20lower%20bounds,intended%20to%20be%20used%20widely) [\[22\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=pdm) [\[23\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Unlike%20the%20other%20tools%20on,on%20multiple%20versions%20of%20python) [\[24\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=The%20downside%20to%20,%E2%80%9Cidiomatic%E2%80%9D%20in%20the%20long%20run%E2%80%A6) [\[27\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=,it%20was%20released%20in%202022) [\[28\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=written%20in%20Rust%20and%20is,rye) [\[30\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=dependencies.%20In%20mid%202024%2C%20,for%20reproducibility) [\[33\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=One%20thing%20to%20note%20about,were%20using%20for%20different%20projects) [\[34\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=Verdict) [\[39\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=drop,it%20was%20released%20in%202022) [\[40\]](https://dublog.net/blog/so-many-python-package-managers/#:~:text=linter%20notes,it%20was%20released%20in%202022) Python has too many package managers
-
-<https://dublog.net/blog/so-many-python-package-managers/>
-
-[\[15\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Unlike%20pip%2C%20Conda%20package%20manager,python%2C%20we%20get%20following%20error) [\[16\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=Python%20GDAL%20requires%20,while%20using%20Conda%20package%20manager) [\[45\]](https://www.geosynopsis.com/posts/docker-image-for-geospatial-application#:~:text=We%20are%20starting%20from%20Miniconda,of%20dockerfile%20are%20as%20follows) Docker image for geospatial python application
-
-<https://www.geosynopsis.com/posts/docker-image-for-geospatial-application>
-
-[\[25\]](https://docs.astral.sh/uv/#:~:text=,boost%20with%20a%20familiar%20CLI) uv
-
-<https://docs.astral.sh/uv/>
-
-[\[26\]](https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/#:~:text=updoot%20for%20,Here%20is%20their%20site) Poetry, Conda, Pipenv or just Pip. What are you using? : r/learnpython
-
-<https://www.reddit.com/r/learnpython/comments/1fyvk0v/poetry_conda_pipenv_or_just_pip_what_are_you_using/>
-
-[\[29\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=benchmarks%20show%20that%20pixi%20is,on%20a%20M2%20MacBook%20Pro) [\[31\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=In%20comparison%20with%20conda%2C%20pixi,conda%20packages%20for%20real%20reproducibility) [\[32\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Reason%203%3A%20No%20more%20Miniconda,base%20environment) [\[35\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=At%20prefix%2C%20we%E2%80%99re%20solving%20conda,tasks%20for%20collaboration%2C%20and%20more) [\[36\]](https://prefix.dev/blog/pixi_a_fast_conda_alternative#:~:text=Image) 7 Reasons to Switch from Conda to Pixi | prefix.dev
-
-<https://prefix.dev/blog/pixi_a_fast_conda_alternative>
-
-[\[37\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.ruff%5D%20target,by%20Black%20fix%20%3D%20true) [\[38\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=line,by%20Black%20fix%20%3D%20true) [\[41\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%23%20pyproject.toml%20%5Btool.black%5D%20line,version%20%3D%20%5B%22py311) [\[42\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=%5Btool.mypy%5D%20python_version%20%3D%20,true%20plugins%20%3D) [\[44\]](https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac#:~:text=friction%20Python%20code%20quality%20with,commit%2C%20CI%2C%20and%20editor%20tips) 10 mypy/ruff/black/isort Combos for Zero-Friction Quality | by Syntal | Oct, 2025 | Medium
-
-<https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac>
-
-[\[43\]](https://github.com/syrupy-project/syrupy#:~:text=syrupy,assert%20immutability%20of%20computed%20results) syrupy-project/syrupy: :pancakes: The sweeter pytest snapshot plugin
-
-<https://github.com/syrupy-project/syrupy>
-
-[\[46\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=) [\[47\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bproduction%5D%20DATABASE_URL%20%3D%20,Dynaconf%20can%20handle%20encrypted%20secrets) [\[48\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=API_KEY%20%3D%20%22%40STRONGLY_ENCRYPTED%3Aprod_api_key_encrypted_value%22%20,can%20handle%20encrypted%20secrets) [\[49\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=) [\[50\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=%5Bdevelopment%5D%20DATABASE_URL%20%3D%20) [\[51\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=DATABASE_URL%20%3D%20) [\[52\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=) [\[53\]](https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration#:~:text=print%28f,Debug%20Mode%3A%20%7Bsettings.get%28%27DEBUG_MODE) Pydantic BaseSettings vs. Dynaconf A Modern Guide to Application Configuration | Leapcell
-
-<https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration>
-
-[\[56\]](https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf#:~:text=Imagery%20openaccess,of%20imagery%20from%2015%20countries) \[PDF\] A Dataset for Assessing Building Damage from Satellite Imagery
-
-<https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf>
-
-[\[57\]](https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html#:~:text=The%20C2S,of%20chips%2C%20and%20water%20labels) Cloud to Street - Microsoft flood dataset - CMR Search
-
-<https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html>
-
-[\[58\]](https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf#:~:text=The%20C2S,oz32gz) \[PDF\] C2SMS Floods - NET
-
-<https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf>
-
-[\[59\]](https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1#:~:text=,to%20train%20and%20evaluate) (PDF) Sen1Floods11: a georeferenced dataset to train and test deep ...
-
-<https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1>
-
-[\[60\]](https://eod-grss-ieee.com/dataset-detail/ekFTRmNnWmtGOE52LzgrVUE4Ykd4dz09#:~:text=Sen1Floods11%20is%20a%20surface%20water,consists%20of%204%2C831%20512) Sen1Floods11 - Earth Observation Database
-
-<https://eod-grss-ieee.com/dataset-detail/ekFTRmNnWmtGOE52LzgrVUE4Ykd4dz09>
-
-[\[61\]](https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.pdf#:~:text=,ter%20data%20set) \[PDF\] Sen1Floods11: A Georeferenced Dataset to Train and Test Deep ...
-
-<https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Bonafilia_Sen1Floods11_A_Georeferenced_Dataset_to_Train_and_Test_Deep_Learning_CVPRW_2020_paper.pdf>
-
-[\[62\]](https://gee-community-catalog.org/projects/maxar_opendata/#:~:text=MAXAR%20Open%20Data%20Events%20,events%20like%20earthquakes%20and) MAXAR Open Data Events - awesome-gee-community-catalog
-
-<https://gee-community-catalog.org/projects/maxar_opendata/>
-
-[\[63\]](https://www.reddit.com/r/AirlinerAbduction2014/comments/17190ge/maxar_technologies_open_data_list_of_the_last/#:~:text=Maxar%20Technologies%20Open%20Data%20List,some%20of%20these%20datasets) Maxar Technologies Open Data List of the Last Decade of Global ...
-
-<https://www.reddit.com/r/AirlinerAbduction2014/comments/17190ge/maxar_technologies_open_data_list_of_the_last/>
-
-[\[64\]](https://essd.copernicus.org/articles/16/4817/2024/#:~:text=globally%20distributed%2C%20event,art%20semantic%20segmentation%20algorithms.%20These) ESSD - A globally distributed dataset of coseismic landslide mapping via multi-source high-resolution remote sensing images
-
-<https://essd.copernicus.org/articles/16/4817/2024/>
-
-[\[65\]](https://github.com/microsoft/PlanetaryComputerExamples#:~:text=quickstarts%2C%20dataset%20examples%2C%20and%20tutorials) [\[66\]](https://github.com/microsoft/PlanetaryComputerExamples#:~:text=If%20you%27re%20viewing%20this%20repository,quickstarts%2C%20dataset%20examples%2C%20and%20tutorials) GitHub - microsoft/PlanetaryComputerExamples: Examples of using the Planetary Computer
-
-<https://github.com/microsoft/PlanetaryComputerExamples>
-
-[\[67\]](https://registry.opendata.aws/radiant-mlhub/#:~:text=Radiant%20MLHub%20,as%20other%20training%20data) Radiant MLHub - Registry of Open Data on AWS
-
-<https://registry.opendata.aws/radiant-mlhub/>
-
-[\[68\]](https://medium.com/radiant-earth-insights/geospatial-models-now-available-in-radiant-mlhub-a41eb795d7d7#:~:text=Radiant%20MLHub%20has%20been%20the,ML%29%20algorithms%20since%202019) Geospatial Models Now Available in Radiant MLHub - Medium
-
-<https://medium.com/radiant-earth-insights/geospatial-models-now-available-in-radiant-mlhub-a41eb795d7d7>
-
-[\[69\]](https://storms.ngs.noaa.gov/storms/ian/index.html#:~:text=Hurricane%20IAN%20Imagery%20Hurricane%20IAN,by%20the%20NOAA%20Remote) Hurricane IAN Imagery
-
-<https://storms.ngs.noaa.gov/storms/ian/index.html>
-
-[\[70\]](https://esri-disasterresponse.hub.arcgis.com/pages/imagery#:~:text=disasterresponse,major%20earthquakes%2C%20floods%2C%20storms) Imagery - Esri Disaster Response Program - ArcGIS Online
-
-<https://esri-disasterresponse.hub.arcgis.com/pages/imagery>
-
-[\[71\]](https://www.mdpi.com/2072-4292/16/11/1886#:~:text=The%20Diverse%20Mountainous%20Landslide%20Dataset,across%20different%20terrain%20in) The Diverse Mountainous Landslide Dataset (DMLD) - MDPI
-
-<https://www.mdpi.com/2072-4292/16/11/1886>
-
-[\[72\]](https://www.sciencedirect.com/science/article/pii/S2666592124000568#:~:text=Landslide%20detection%20based%20on%20deep,detect%20landslides%20in%20Linzhi%20City) Landslide detection based on deep learning and remote sensing ...
-
-<https://www.sciencedirect.com/science/article/pii/S2666592124000568>
-
-[\[73\]](https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%207mo%20ago) [\[74\]](https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=%E2%80%A2%20%206mo%20ago) [\[75\]](https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/#:~:text=This,to) Rasterio vs Rioxarray : r/remotesensing
-
-<https://www.reddit.com/r/remotesensing/comments/1k4wuf5/rasterio_vs_rioxarray/>
-
-[\[76\]](https://pytorch.org/blog/geospatial-deep-learning-with-torchgeo/#:~:text=Geospatial%20deep%20learning%20with%20TorchGeo,models%20specific%20to%20geospatial%20data) Geospatial deep learning with TorchGeo - PyTorch
-
-<https://pytorch.org/blog/geospatial-deep-learning-with-torchgeo/>
-
-[\[81\]](https://github.com/hwchase17/langchain/commits#:~:text=Commits%20%C2%B7%20langchain,%C2%B7%20fix%28infra%29%3A) Commits · langchain-ai/langchain - GitHub
-
-<https://github.com/hwchase17/langchain/commits>
-
-[\[82\]](https://github.com/run-llama/llama_index/releases#:~:text=Release%20Notes.%20%5B2025,core%20%5B0.14.0%5D.%20breaking%3A%20bumped) Releases · run-llama/llama_index - GitHub
-
-<https://github.com/run-llama/llama_index/releases>
-
-[\[83\]](https://github.com/DIUx-xView/xView2_first_place#:~:text=DIUx,idea%20will%20be%20improved%20further) DIUx-xView/xView2_first_place: 1st place solution for "xView2 - GitHub
-
-<https://github.com/DIUx-xView/xView2_first_place>
-
-[\[85\]](https://github.com/SpaceNetChallenge/SpaceNet8#:~:text=Algorithmic%20baseline%20for%20SpaceNet%208,%C2%B7%20Finetune%20the) Algorithmic baseline for SpaceNet 8 Challenge - GitHub
-
-<https://github.com/SpaceNetChallenge/SpaceNet8>
-
-[\[86\]](https://nocomplexity.com/documents/fossml/generatedfiles/rastervision.html#:~:text=Complexity%20nocomplexity,metric%21%20Stars%20count%20are) Raster Vision - Free and Open Machine Learning - NO Complexity
-
-<https://nocomplexity.com/documents/fossml/generatedfiles/rastervision.html>
-
-[\[87\]](https://pystac-client.readthedocs.io/en/stable/usage.html#:~:text=The%20following%20code%20creates%20an,Microsoft%20Planetary%20Computer%20root%20catalog) [\[88\]](https://pystac-client.readthedocs.io/en/stable/usage.html#:~:text=,Microsoft%20Planetary%20Computer%20STAC%20API) Usage - pystac-client 0.8.5 documentation
-
-<https://pystac-client.readthedocs.io/en/stable/usage.html>
+### Modelli, paper e architetture
+
+- **xView2 AI Challenge (IBM, U-Net per damage assessment)**: <https://www.ibm.com/think/insights/the-xview2-ai-challenge>
+- **SegFormer (paper)**: <https://arxiv.org/abs/2105.15203>
+- **Open-CD (change detection, paper)**: <https://arxiv.org/abs/2407.15317v1>
+- **Spatial-RAG (paper)**: <https://arxiv.org/html/2502.18470v5>
+
+### Librerie e framework GeoAI
+
+- **TorchGeo (GitHub)**: <https://github.com/torchgeo/torchgeo>
+- **TorchGeo (OSGeo project)**: <https://www.osgeo.org/projects/torchgeo/>
+- **Segment Anything - SAM3 (GitHub)**: <https://github.com/facebookresearch/sam3>
+- **Raster Vision**: <https://rastervision.io/>
+- **xView2 First Place Solution (GitHub)**: <https://github.com/vdurnov/xview2_1st_place_solution>
+
+### Servizi e API
+
+- **FastAPI (docs)**: <https://fastapi.tiangolo.com/>
+
+### Agenti e framework RAG
+
+- **LangChain**: <https://www.langchain.com/>
+- **Datapizza-AI framework**: <https://datapizza.tech/en/ai-framework/>
+- **Datapizza-AI: app semplici (video YouTube)**: <https://youtu.be/Mmu5f7jLBds?si=eJrqIwp62B8bXyko>
+- **LlamaIndex (releases)**: <https://github.com/run-llama/llama_index/releases>
+- **Haystack (docs)**: <https://haystack.deepset.ai/>
+- **Haystack (GitHub)**: <https://github.com/deepset-ai/haystack>
+
+### Tooling Python e qualita
+
+- **pip resolver/backtracking (debuglab)**: <https://debuglab.net/2024/01/26/resolving-new-pip-backtracking-runtime-issue/>
+- **Python has too many package managers (blog)**: <https://dublog.net/blog/so-many-python-package-managers/>
+- **uv (docs)**: <https://docs.astral.sh/uv/>
+- **Pixi: fast conda alternative (blog)**: <https://prefix.dev/blog/pixi_a_fast_conda_alternative>
+- **Cookiecutter Data Science (docs)**: <https://cookiecutter-data-science.drivendata.org/>
+- **Cookiecutter Data Science (GitHub)**: <https://github.com/drivendata/cookiecutter-data-science>
+- **Mypy/Ruff/Black/Isort combos (Medium)**: <https://medium.com/@sparknp1/10-mypy-ruff-black-isort-combos-for-zero-friction-quality-770a0fde94ac>
+- **Syrupy (pytest snapshot plugin)**: <https://github.com/syrupy-project/syrupy>
+- **python-dotenv (PyPI)**: <https://pypi.org/project/python-dotenv/>
+- **Pydantic BaseSettings vs Dynaconf (article)**: <https://leapcell.io/blog/pydantic-basesettings-vs-dynaconf-a-modern-guide-to-application-configuration>
+
+### Container e immagini base
+
+- **Docker image for geospatial Python app (blog)**: <https://www.geosynopsis.com/posts/docker-image-for-geospatial-application>
+- **Python 3.12-slim (Docker Hub)**: <https://hub.docker.com/layers/library/python/3.12-slim/images/>
+- **Miniconda3 (Docker Hub)**: <https://hub.docker.com/r/continuumio/miniconda3>
+- **micromamba (docs)**: <https://micromamba-docker.readthedocs.io/en/latest/>
+- **NVIDIA CUDA runtime (Docker Hub)**: <https://hub.docker.com/r/nvidia/cuda>
+- **PyTorch (Docker Hub)**: <https://hub.docker.com/r/pytorch/pytorch>
+- **GDAL container (OSGeo)**: <https://github.com/OSGeo/gdal/pkgs/container/gdal>
+- **Jupyter scipy-notebook (Docker Hub)**: <https://hub.docker.com/r/jupyter/scipy-notebook>
+
+### STAC e accesso dati
+
+- **pystac-client (usage)**: <https://pystac-client.readthedocs.io/en/stable/usage.html>
+- **Planetary Computer Examples (GitHub)**: <https://github.com/microsoft/PlanetaryComputerExamples>
+- **Planetary Computer: Sen1Floods11 benchmark notebook**: <https://github.com/microsoft/PlanetaryComputerExamples/blob/main/competitions/s1floods/benchmark_tutorial.ipynb>
+
+### Dataset, benchmark e cataloghi open
+
+- **xBD dataset (paper)**: <https://arxiv.org/abs/1911.09296>
+- **xView2 (official site)**: <https://xview2.org/>
+- **Cloud to Street (CMR)**: <https://cmr.earthdata.nasa.gov/search/concepts/C2781412798-MLHUB.html>
+- **C2SMS Floods (documentation PDF)**: <https://radiantearth.blob.core.windows.net/mlhub/c2smsfloods/Documentation.pdf>
+- **Sen1Floods11 (paper, ResearchGate)**: <https://www.researchgate.net/publication/343275667_Sen1Floods11_a_georeferenced_dataset_to_train_and_test_deep_learning_flood_algorithms_for_Sentinel-1>
+- **Sen1Floods11 (GitHub)**: <https://github.com/cloudtostreet/Sen1Floods11>
+- **Coseismic landslide dataset (ESSD 2024)**: <https://essd.copernicus.org/articles/16/4817/2024/>
+- **CAS Landslide dataset (Scientific Data)**: <https://www.nature.com/articles/s41597-023-02847-z>
+- **DMLD dataset (MDPI)**: <https://www.mdpi.com/2072-4292/16/11/1886>
+- **BigEarthNet (project site)**: <https://bigearth.net/>
+- **BigEarthNet (TF Datasets)**: <https://www.tensorflow.org/datasets/catalog/bigearthnet?hl=it>
+- **Google Flood Forecasting**: <https://sites.research.google/gr/floodforecasting/>
+- **Hurricane Ian imagery (NOAA)**: <https://storms.ngs.noaa.gov/storms/ian/index.html>
+- **Esri Disaster Response imagery**: <https://esri-disasterresponse.hub.arcgis.com/pages/imagery>
+- **Maxar Open Data portal**: <https://xpress.maxar.com/?lat=0&lon=0&zoom=3.0>
+- **Copernicus Emergency Management Service**: <https://emergency.copernicus.eu/>
+- **Copernicus Emergency Mapping Service**: <https://mapping.emergency.copernicus.eu/>
+- **UNOSAT**: <https://unosat.org/>
+- **UNOSAT products**: <https://unosat.org/products/>
+- **HOTOSM: introduction to open mapping**: <https://learning.hotosm.org/course/introduction-to-open-mapping>
