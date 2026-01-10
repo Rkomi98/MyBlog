@@ -1,5 +1,12 @@
 # Dai modelli NLP classici ai LLM
 
+<details class="post-warning">
+<summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
+
+Questo articolo è ancora in lavorazione e sotto revisione editoriale. Alcuni paragrafi potrebbero risultare incompleti o cambiare in modo significativo nelle prossime settimane.
+
+</details>
+
 Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest'articolo ci parleremo di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini & co. e da dove siamo partiti. Non solo, non ti preoccupare!
 
 Buona lettura!
@@ -14,11 +21,66 @@ L'obiettivo è costruire una **mappa concettuale chiara**: capire _perché_ il T
 
 ## NLP prima dei Transformer
 
-Prima dell'era _deep learning_, l'NLP era dominato da metodi **statistici e basati su feature manuali**. Alcuni approcci chiave includevano:
+Prima dell'era _deep learning_, l'NLP era dominato da metodi **statistici e basati su feature manuali**. 
 
-- **Bag-of-Words & TF-IDF:** Si rappresenta un documento come una _borsa di parole_, ignorando l'ordine. Ogni parola è una dimensione nel vettore (spesso enorme e sparso); i pesi TF-IDF ne attenuano l'importanza se la parola è troppo comune. Questo modello è semplice ma perde completamente la struttura sintattica: _"gatto nero"_ e _"nero gatto"_ sono identici per Bag-of-Words. Inoltre, parole come _"blu"_ e _"azzurro"_ sono vettori ortogonali, quindi nessuna somiglianza semantica implicita.
-- **Modelli a N-grammi:** Introducono un minimo di contesto considerando sequenze di _N_ parole. Un **trigramma** ad esempio stima la probabilità di una parola basandosi sulle 2 precedenti (N=3). Funzionano bene per frasi brevi o molto frequenti (es: _"thank you very" → "much"_), ma hanno grossi limiti: generano probabilità non nulle solo per frasi viste o molto simili al training, soffrono di **sparseness** (combinazioni rare non sono coperte) e usano un contesto rigido di lunghezza fissa[\[1\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A). In pratica _"voglio mangiare una fetta di \___"_ può difficilmente indovinare _"torta"_ se non ha mai visto quella sequenza esatta[\[2\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third). Inoltre, trattano le parole come simboli atomici (nessuna nozione che "gatto" e "felino" siano correlati).
-- **Modelli probabilistici e lineari:** Esempi sono il **Naive Bayes** per classificazione di testo (assume che le parole del documento siano indipendenti dato il tema) o i **Modelli di Markov Nascosti (HMM)** per compiti sequenziali (es: _Part-of-Speech tagging_, analisi del parlato). Il Naive Bayes è veloce e spesso efficace su testi semplici (ad es. spam vs ham) ma l'ipotesi di indipendenza tra parole è grossolana. Gli HMM modellano le dipendenze come transizioni di stato, ma sono limitati da assunzioni di Markov di ordine basso (tipicamente bigrammi di stati) e richiedono definire a mano feature/osservazioni. In generale, questi approcci **richiedevano feature engineering manuale** (es: conteggi, liste di parole rilevanti) e faticavano a catturare relazioni semantiche profonde o dipendenze a lungo raggio.
+Se ti sei mai avvicinato al mondo dell'Elaborazione del Linguaggio Naturale (NLP), probabilmente ti sei imbattuto in definizioni tecniche, magari anche incomprensibili.
+
+Partiamo dal Bag-of-Words (letteralmente "Sacco di Parole"), uno dei metodi più antichi per insegnare a un computer a leggere.
+
+###  Il "frullatore" (Bag-of-Words) e il filtro (TF-IDF)
+Immagina di voler spiegare a un computer la differenza tra due frasi. Il computer non sa cosa sia la grammatica, né conosce il soggetto o il verbo. Come facciamo?
+
+Il metodo Bag-of-Words (BoW) fa qualcosa di semplice ma anche abbastanza efficace:
+
+1. Prende la tua frase.
+
+2. Ritaglia ogni singola parola con le forbici.
+
+3. Butta tutto in un sacchetto e lo agita.
+
+Quello che rimane è un elenco di ingredienti senza ordine.
+
+Esempio:
+
+> *Frase originale: "Il gatto insegue il topo"*<br>
+>Bag-of-Words: { "gatto": 1, "insegue": 1, "il": 2, "topo": 1 }
+
+Il computer guarda nel sacchetto e dice: "Ok, questo testo parla di gatti e topi". Direi molto semplice, te che dici?
+
+Il problemino che si paga con questa semplicità è che l'ordine non conta, perché si perde completamente la struttura.
+
+Se per assurdo mettiamo nel sacchetto la frase inversa:
+
+*"Il topo insegue il gatto"*
+
+Per il modello Bag-of-Words, il contenuto del sacchetto è identico al 100%. Per lui, queste due frasi significano la stessa cosa, anche se nella realtà la situazione è ben diversa!
+
+Questo metodo spreca parecchie risorse perché ha spesso a che fare con dei vettori molto sparsi. Per avere un'idea, prova ad immaginare un file excel avente una colonna per ogni parola del dizionario italiano (circa 100.000 colonne), e sulle righe le frasi che vuoi analizzare. Se la tua frase è 
+
+*"Ciao Matteo"*
+
+Metterai un 1 nella colonna "Ciao" e un 1 nella colonna "Matteo". Nelle altre 99.998 colonne ci sarà uno 0.
+
+Per questo che spesso viene considerato un metodo molto sprecone: serve tantissima memoria per salvare informazioni minime.
+
+Prima di passare oltre vorrei spiegare una frase che ho sentito dire spesso. Parole come blu e azzurro sono vettori ortogonali se consideriamo Bag of words. <br> Cosa significa? Significa che il modello Bag-of-Words non ha nessuna intuizione semantica.
+
+La parola "Felice" è nella colonna A. La parola "Contento" è nella colonna B. Per noi umani, A e B sono praticamente uguali. Ma seguendo questo algoritmo, A e B sono distanti e diversi tanto quanto "Felice" e "Lavastoviglie". Sono solo caselle diverse nel foglio Excel. Se cerchi un documento che parla di gente "felice", il computer potrebbe ignorare un documento che parla di gente "contenta", perché non sa che sono sinonimi.
+
+Infine, c'è quella sigla che può apparire strana: TF-IDF. Questo è semplicemente un correttore matematico per dare il giusto peso alle parole nel nostro sacchetto. Senza TF-IDF, la parola più importante in un libro in italiano sarebbe "IL" o "DI", perché compaiono ovunque. Ma queste parole non ci dicono nulla sull'argomento del libro!
+
+TF-IDF è praticamente un evidenziatore intelligente: 
+- Abbassa il volume delle parole che compaiono ovunque (come gli articoli: il, lo, la, di, a, da). 
+- Alza il volume delle parole rare e specifiche (come "Astronave", "Microscopio", "Rinascimento").
+
+Se la parola "Banca" appare in un solo documento su mille, TF-IDF le assegna un punteggio altissimo: quella parola è la chiave per capirne di più per quel testo specifico.
+
+### Modelli a N-grammi
+I **modelli a N-grammi** sono stati proposti nel 1948 da Claude Shannon (1948) nell'ambito della probabilità fondazionale e introducono un minimo di contesto considerando sequenze di _N_ parole. Un **trigramma** ad esempio stima la probabilità di una parola basandosi sulle 2 precedenti ($N=3$). Funzionano bene per frasi brevi o molto frequenti (es: _"thank you very" → "much"_), ma hanno grossi limiti: generano probabilità non nulle solo per frasi viste o molto simili al training, soffrono di [**sparseness**](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A) (combinazioni rare non sono coperte) e usano un contesto rigido di lunghezza fissa. In pratica _"voglio mangiare una fetta di \___"_ può difficilmente indovinare _"torta"_ se non ha mai visto quella sequenza esatta. Inoltre, trattano le parole come simboli atomici (nessuna nozione che "gatto" e "felino" siano correlati).
+
+### Modelli probabilistici e lineari
+
+Esempi sono il **Naive Bayes** per classificazione di testo (assume che le parole del documento siano indipendenti dato il tema) o i **Modelli di Markov Nascosti (HMM)** per compiti sequenziali (es: _Part-of-Speech tagging_, analisi del parlato). Il Naive Bayes è veloce e spesso efficace su testi semplici (ad es. spam vs ham) ma l'ipotesi di indipendenza tra parole è grossolana. Gli HMM modellano le dipendenze come transizioni di stato, ma sono limitati da assunzioni di Markov di ordine basso (tipicamente bigrammi di stati) e richiedono definire a mano feature/osservazioni. In generale, questi approcci **richiedevano feature engineering manuale** (es: conteggi, liste di parole rilevanti) e faticavano a catturare relazioni semantiche profonde o dipendenze a lungo raggio.
 
 **Problemi principali e soluzioni tentate (pre-Transformer):**
 
@@ -30,7 +92,7 @@ Prima dell'era _deep learning_, l'NLP era dominato da metodi **statistici e basa
 
 Queste soluzioni, pur efficaci in contesti ristretti, evidenziavano **lacune strutturali**. Non potendo rappresentare il _significato_ delle parole né tenere in memoria frasi lunghe, aprirono la strada a metodi in grado di **catturare semantica distribuita e dipendenze più lunghe**. È qui che nascono gli _embedding_ neurali e i modelli a rete ricorrente.
 
-## 2\. Embedding classici: word2vec, GloVe, fastText
+## Embedding classici: word2vec, GloVe, fastText
 
 Per superare la rappresentazione simbolica pura delle parole, negli anni 2010 si affermano i **word embeddings**, ovvero rappresentazioni dense in cui ogni parola è un vettore continuo in uno spazio a bassa dimensione. L'idea base è **distribuzionale**: _"una parola è definita dal contesto che tiene"_ (Firth). Modelli come **word2vec** (Mikolov et al., 2013) hanno introdotto tecniche di training non supervisionato su grandi corpora per ottenere vettori di parola che **catturano somiglianze semantiche**[\[4\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A). Ad esempio, word2vec produce vettori tali che:
 
@@ -65,7 +127,7 @@ Di seguito un confronto tra **embedding statici** e **contestuali**:
 
 **Riassumendo:** word2vec, GloVe e simili hanno segnato una svolta introducendo la semantica distribuita e attenuando il problema della sparsità[\[4\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A). Hanno però lasciato aperta la questione del **contesto**: come rappresentare frasi intere, o parole che cambiano significato a seconda di dove compaiono? La risposta iniziale a questo è arrivata con i **modelli ricorrenti**, progettati per _modellare sequenze_.
 
-## 3\. RNN, LSTM, GRU: il tentativo di modellare il contesto
+## RNN, LSTM, GRU: il tentativo di modellare il contesto
 
 Mentre gli embedding producevano rappresentazioni statiche di parole, i **Recurrent Neural Network (RNN)** miravano a modellare intere **sequenze di testo** come input dinamici. Un RNN classico è una rete neurale che processa un elemento alla volta (es. una parola), **riciclando** un vettore di stato nascosto che porta informazione da un passo al successivo. Formalmente, al tempo _t_ prende in input la rappresentazione del _t_‑esimo token \$x_t\$ e lo stato precedente \$h_{t-1}\$, producendo un nuovo stato \$h_t = f(h_{t-1}, x_t)\$ e magari un'uscita (se si fa modellazione linguistica, l'output può essere la distribuzione sulla prossima parola). In notazione vettoriale, un semplice RNN fa qualcosa come: \$h_t = \\tanh(W \\cdot \[h_{t-1}, x_t\])\$, dove \$W\$ contiene i pesi (stessi a ogni passo).
 
@@ -85,7 +147,7 @@ Per mitigare il vanishing gradient, **Hochreiter & Schmidhuber (1997)** introdus
 
 In sintesi, RNN/LSTM hanno introdotto l'**idea di memoria temporale differenziabile** e hanno permesso notevoli progressi (es. _Google Neural Machine Translation 2016_ usava LSTM bidirezionali + attenzione). Ma la loro natura ricorrente poneva limiti di **velocità** e **capacità di modellare contesti lunghi**. Era chiaro che per fare ulteriore salto serviva un'architettura diversa, più adatta al parallel computing e in grado di **guardare tutto il contesto in modo più diretto**. Da queste esigenze nasce il **Transformer**.
 
-## 4\. La rivoluzione del Transformer
+## La rivoluzione del Transformer
 
 Nel 2017 Vaswani et al. pubblicano _"Attention Is All You Need"_, introducendo il **Transformer**, un'architettura che elimina completamente la ricorrenza a favore di un meccanismo di **self-attention** generalizzato[\[16\]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including). Questo cambiamento concettualmente semplice ha innescato una rivoluzione: il Transformer ha dimostrato di poter scalare molto meglio, essere addestrato in parallelo e raggiungere performance superiori su compiti come la traduzione in una frazione del tempo di training dei modelli ricorrenti[\[17\]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training).
 
@@ -124,7 +186,7 @@ Uno stack di N layer così forma l'Encoder. Nel Decoder, ogni layer ha in più u
 
 Il risultato netto: **il Transformer riesce a modellare dipendenze lunghe e complesse con efficienza, ed è altamente scalabile**. Dal 2018 in poi, ogni record in NLP (traduzione, QA, summa, etc.) è stato polverizzato da modelli basati su Transformer. Questo architettura è la base di praticamente tutti i _Large Language Models_ moderni.
 
-## 5\. Dai Transformer ai LLM
+## Dai Transformer ai LLM
 
 Con il Transformer come nuovo blocco fondamentale, il passo successivo è stato **scalare modelli e dataset** a livelli prima impensabili. Sono emerse due grandi famiglie di modelli pre-addestrati sul linguaggio:
 
@@ -141,7 +203,7 @@ Tuttavia, nel 2022 uno studio di DeepMind (**Chinchilla** di Hoffmann et al.) ha
 
 In conclusione, dal 2018 a oggi siamo passati da Transformer ~110M parametri (BERT-base) a LLM da centinaia di miliardi. Questa **scalata** ha sbloccato capacità latenti e aperto nuove applicazioni. Ma ha anche evidenziato problemi di **allineamento** (evitare output tossici, assicurare veridicità) e di **efficienza**. Questo ci porta al contesto attuale, dove un LLM raramente è usato "da solo": viene integrato in sistemi più ampi per essere reso affidabile, aggiornabile e utile in contesti applicativi reali.
 
-## 6\. LLM come _componenti di sistema_, non solo modelli
+## LLM come _componenti di sistema_, non solo modelli
 
 Un moderno AI engineer sa che usare un LLM potente **"grezzo" e isolato** spesso non basta. Oggi gli LLM sono tipicamente incapsulati in architetture più ampie dove altri componenti ne mitigano i limiti e ne potenziano le capacità. Ecco i principali ruoli e integrazioni:
 
@@ -160,7 +222,7 @@ In sintesi, **oggi un LLM in produzione è raramente nudo e crudo**. Lo si avvol
 
 Concludendo, la _system view_ di un LLM è come **di un cervello linguistico inserito in un corpo con sensori e attuatori**: l'LLM fornisce capacità cognitive generali (comprensione, ragionamento, linguaggio), ma ha bisogno di "occhi e orecchie" (moduli di ricerca, database) e "mani" (API per agire) per essere veramente utile e affidabile nel mondo reale.
 
-## 7\. Limiti strutturali dei LLM
+## Limiti strutturali dei LLM
 
 Nonostante i miracoli che sembrano fare, gli LLM attuali hanno **limiti intrinseci** importanti. Capirli è cruciale perché molte sfide di utilizzo nascono da questi limiti, che non si risolvono semplicemente "addestrando un po' meglio" ma richiedono interventi architetturali o di sistema (come abbiamo visto sopra). I principali sono:
 
@@ -176,7 +238,7 @@ Questi limiti _non sono bug risolvibili con una patch_, ma aspetti fondanti. Sig
 
 In futuro, nuove architetture (es. integrazione più profonda con knowledge base, o modelli multi-modali che _vedono_ e _agiscono_ nell'ambiente) potranno ridurre questi limiti. Ma al 2026, chi utilizza LLM deve farlo con consapevolezza di queste _incertezze intrinseche_, adottando un mindset di "AI safety": mai lasciare che un LLM prenda decisioni irreversibili senza supervisione, e strutturare i prodotti in modo da poter intervenire se (quando) qualcosa va storto.
 
-## 8\. Collegamento con il tuo percorso GEO & Disaster Response
+## Collegamento con il tuo percorso GEO & Disaster Response
 
 Veniamo ora al caso d'uso che ti interessa: applicare queste tecnologie in ambito geospaziale e di risposta a disastri (terremoti, calamità naturali, ecc.). Questo settore combina dati _multi-modali_ (testi, mappe, immagini satellitari, sensori) e richiede sia **analisi quantitative precise** (es. rilevare danni da immagini) sia **capacità di sintesi e ragionamento** (es. redigere un rapporto di situazione, fare inferenze su rischi). Gli LLM possono giocare un ruolo prezioso, ma **devono essere integrati correttamente** con i flussi geospaziali esistenti. Vediamo alcuni scenari:
 
@@ -194,11 +256,11 @@ Veniamo ora al caso d'uso che ti interessa: applicare queste tecnologie in ambit
 
 In conclusione su GEO & Disaster Response: un LLM può fungere da **collettore intelligente e comunicatore** sopra i dati geospaziali. Pensalo come un **analista virtuale** che conosce un po' di tutto (grazie al training generale) e che può essere istruito a usare i tuoi dati specifici per produrre analisi e report. Ti libera dal dover manualmente interpretare ogni mappa e ogni tabella, proponendoti un quadro integrato. Ma tu come ingegnere predisponi l'ecosistema: modelli specialistici per estrarre info dai dati grezzi, database ben organizzati, e poi l'LLM opportunamente imbrigliato (prompt mirati, RAG, tool) per cucire il tutto. Così sfrutti il meglio dei due mondi - accuratezza quantitativa dei modelli geo e _intelligenza linguistica_ degli LLM.
 
-## 9\. Conclusioni e mappa concettuale evolutiva
+## Conclusioni e mappa concettuale evolutiva
 
 Per ricapitolare quanto visto, presentiamo una **mappa concettuale** dell'evoluzione NLP → LLM, e alcune linee guida per un AI Engineer su cosa è fondamentale padroneggiare e cosa si può (relativamente) trascurare:
 
-### 9.1 Mappa concettuale riassuntiva (NLP → LLM)
+### Mappa concettuale riassuntiva (NLP → LLM)
 
 - **Era statistica (anni '90 - primi '00):** Approcci basati su modelli di probabilità semplici e feature manuali. Esempi: _n-grammi_ per il language modeling[\[2\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third), modelli di Markov (HMM) per tag sequenziali, _bag-of-words + TF-IDF_ per IR e classificazione. **Limiti:** nessuna comprensione di significato, contesto limitato a poche parole, richiedono molte osservazioni per coprire casi rari[\[3\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations). L'ingegnere doveva progettare features (liste di parole chiave, pattern regex, ecc.). Obsoleto oggi se non per baseline veloci.
 - **Prime reti neurali per NLP (anni '00 - primi '10):** Introduzione di reti **feed-forward** per language model (Bengio et al. 2003) e soprattutto **word embeddings** (Mikolov 2013)[\[45\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Researchers%3A%20Tomas%20Mikolov%20et%20al,%28GloVe%2C%202014). Qui il focus è rappresentare le parole in vettori densi che catturano similarità semantica (famoso _king-man+woman=queen_[\[5\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D)). I modelli neurali iniziano a superare i conta-parole, risolvendo in parte la sparsità. **Tuttavia** questi modelli non modellano ancora bene le frasi intere: gli embedding sono statici, e le reti feed-forward avevano contesto finestra limitato (es. 5 parole). Si afferma il paradigma _"pre-training + fine-tuning"_ in versione primitiva: si pre-addestrano embedding generali, poi si usano in modelli per compiti specifici.
@@ -209,7 +271,7 @@ Per ricapitolare quanto visto, presentiamo una **mappa concettuale** dell'evoluz
 - **Allineamento e utilità (2022-2023):** Una sfida diventa rendere questi modelli "utili" e non solo grandi modelli pappagallo. OpenAI sviluppa **InstructGPT** poi ChatGPT: applica RLHF (rinforzo con feedback umano) per allineare l'output agli intenti degli utenti (meno divagazioni, più seguire istruzioni). ChatGPT (basato su GPT-3.5) esplode in popolarità mostrando l'efficacia di LLM _allineati_ in un'interfaccia conversazionale. Intanto, la ricerca su **scaling laws** porta a Chinchilla (70B) che batte Gopher (280B) usando 4x dati, e **UL2** (Google) esplora architetture di training alternative (mix di obiettivi seq2seq). Nel 2023, OpenAI rilascia **GPT-4**, modello multimodale (accetta immagini) e con capacità di ragionamento ancora avanzate (punta a un livello quasi da _"AGI piccola"_ in certi benchmark). Vengono anche rilasciati modelli open-source notevoli: **T5** (Google 2019, text-to-text), **BLOOM** (2022, modello multi-lingua open 176B), **OPT** (Meta 175B), e soprattutto **LLaMA** (Meta 2023) che pur non open-source completo trapela e viene fine-tunato in mille varianti (Alpaca, Vicuna, etc.), democratizzando un po' gli LLM di qualità. Nel frattempo si integrano LLM in prodotti e flussi industriali, con forte focus su **incorporare conoscenza del cliente** (da qui il boom di RAG) e **strumenti** (plugin di ChatGPT, LangChain per developer). Si affaccia la **multimodalità**: GPT-4 Vision, Google Gemini all'orizzonte, idee di agenti con percezione (vedi PaLM-E di Google che collega robotics). La tendenza è avere LLM come _cervelli generali_ con occhi, orecchie e mani collegati.
 - **Verso Small & Specialized Models (2024+):** In reazione al costo enorme dei LLM giganti, c'è un filone di ricerca su modelli più piccoli ed efficienti. Tecniche come **distillation** (compressione di un grande modello in uno più piccolo), **quantization** (riduzione precisione numerica dei pesi), e architetture alternative (mixture of experts, RETRO with retrieval in training, ecc.) promettono performance simili a GPT-3/4 con minor impronta. Si parla di **Small Language Models** quando un modello è addestrato su dominio specifico con molte meno dimensioni ma mantenendo qualità su quel dominio. Ad esempio, potresti addestrare un modello 6B param tutto su letteratura medica: otterrai un _MedLM_ che con 6B param fa cose che GPT-3 175B farebbe faticando perché generalista. Non c'è free lunch - piccoli modelli difficilmente avranno la robustezza di quelli enormi su input "wild". Ma per implementazione pratica, a volte _pezzi di LLM medi_ integrati con retrieval bastano e avanzano, con frazione di costo (sia computazionale che di rischio allucinazioni). Nel 2026 è probabile che vedremo architetture ibridate: parte neurale generativa + moduli simbolici o retrieval, più che spingere a 1 trilione di parametri e basta. Soprattutto, l'accento è su **controllo e interpretabilità**: come far spiegare ai LLM le loro risposte (es. citazioni fonti), come avere _"constitutional AI"_ (modelli che seguono una costituzione di principi etici nella generazione).
 
-### 9.2 Cosa deve sapere un AI Engineer, cosa può ignorare
+### Cosa deve sapere un AI Engineer, cosa può ignorare
 
 **Da sapere assolutamente:**
 
@@ -234,7 +296,7 @@ Per ricapitolare quanto visto, presentiamo una **mappa concettuale** dell'evoluz
 
 Riassumendo, un AI Engineer deve essere **T-shaped**: conoscenza ampia del panorama (dal bag-of-words agli LLM, per capire le soluzioni esistenti) ma profondità in quelle tecnologie oggi essenziali (Transformer e sue evoluzioni, e come metterle in produzione). Può tranquillamente fare a meno di dettagli storici e dimostrazioni teoriche rigorose, finché comprende i _perché_ e _quando_ di ogni tecnica.
 
-### 9.3 Fonti fondamentali da studiare davvero
+### Fonti fondamentali da studiare davvero
 
 Chiudiamo con alcune fonti consigliate (paper e blog) che reputo fondamentali per consolidare le conoscenze discusse e rimanere aggiornati:
 

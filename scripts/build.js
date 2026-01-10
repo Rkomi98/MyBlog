@@ -87,6 +87,7 @@ function mergeMetadata(posts, metadata) {
       en: category,
     };
     const titles = matchedEntry?.titles ?? {};
+    const keywords = matchedEntry?.keywords ?? '';
 
     for (const [lang, langData] of Object.entries(post.languages)) {
       const overrideTitle = titles[lang];
@@ -113,6 +114,7 @@ function mergeMetadata(posts, metadata) {
       publishedAt,
       readTime,
       titles,
+      keywords,
     };
   }
 

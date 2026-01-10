@@ -171,6 +171,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Blog | Mirko Calcaterra</title>
   <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
+  <meta name="keywords" content="Mirko Calcaterra, Blog, AI, Data Engineering, Geoinformatica, GeoAI, FRIA, AI Act, Python, Deep Learning">
   <link rel="canonical" href="${canonicalUrl}">
 
   <!-- Google tag (gtag.js) -->
@@ -886,6 +887,7 @@ export function renderBlogDetail({
   const pageUrl = `${baseUrl}/blog/${language}/${post.slug}/`;
   const summary = langData.summary || `Articolo su ${formattedCategory} di Mirko Calcaterra.`;
   const imageUrl = post.meta?.image ? (post.meta.image.startsWith('http') ? post.meta.image : `${baseUrl}/${post.meta.image}`) : `${baseUrl}/Assets/Logo.png`;
+  const keywords = post.meta?.keywords ? post.meta.keywords : '';
 
   return `<!DOCTYPE html>
 <html lang="${language}" ${language === 'en' ? '' : 'translate="no"'}>
@@ -894,8 +896,9 @@ export function renderBlogDetail({
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${pageTitle} | Mirko Calcaterra</title>
   <meta name="description" content="${escapeHtml(summary)}">
+  <meta name="keywords" content="${escapeHtml(keywords)}">
   <meta name="author" content="Mirko Calcaterra">
-  <link rel="canonical" href="${pageUrl}">
+  <link rel="canonical" href="\${pageUrl}">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>

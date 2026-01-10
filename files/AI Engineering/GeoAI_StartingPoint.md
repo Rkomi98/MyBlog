@@ -4,7 +4,7 @@ Seconda puntata del nostro lungo cammino diventare GeoAI engineer. La scorsa vol
 
 Ora capiamo cosa serve ad un aspirante GeoAI engineer per iniziare, ovvero gli strumenti, i dataset e il setup necessario.
 
-## 1\. Panoramica architetturale dello Stack AI Geospaziale
+## Panoramica architetturale dello Stack AI Geospaziale
 
 Partiamo dall'obiettivo principale e teniamolo a mente.
 
@@ -45,11 +45,11 @@ Come leggevo in [questo paper](https://arxiv.org/html/2502.18470v5#:~:text=On%20
 
 _Figura 3 – Schema riassuntivo dello stack GeoAI che collega ingestion e analisi geospaziale, modelli CV, componenti RAG/LLM e servizi di deployment orchestrati da agenti._ 
 
-## 2\. Mappa di Strumenti e Risorse (2025)
+## Mappa di Strumenti e Risorse (2025)
 
 In questo capitolo vediamo insieme le principali opzioni per ciascun aspetto dello stack: dalla gestione ambiente Python, agli strumenti di sviluppo, passando per le basi sui container, i dataset geospaziali open e le librerie chiave. L'obiettivo non sarà solo conoscere tutto questo, ma anche avere in mente un confronto delle caratteristiche, esponendo i vantaggi di ciascun metodo.
 
-### 2.1 Gestione Ambiente Python (venv, conda, poetry, ecc.)
+### Gestione Ambiente Python (venv, conda, poetry, ecc.)
 
 Una cosa su cui siamo tutti d'accordo: per avere una base solida è necessario un **ambiente Python riproducibile** con tutte le dipendenze inclusi pacchetti per GPU e le librerie geospaziali. 
 
@@ -94,7 +94,7 @@ Questa organizzazione segue in parte il modello [_Cookiecutter Data Science_](ht
 
 Diciamo che è una buona prassi, non costa nulla e ti fornisce un ordine che è utile sia a te che a chi lavora con te.
 
-### 2.2 Tooling Essenziale da AI Engineer
+### Tooling Essenziale da AI Engineer
 
 Per garantire **qualità del codice e velocità di sviluppo**, ogni sviluppatore adotta una serie di strumenti DevOps/MLOps leggeri che vediamo tra un attimo. 
 
@@ -153,7 +153,7 @@ Quindi l’AI non elimina la necessità di queste pratiche. Anzi, le rende ancor
 La qualità non è più solo questione di scrittura, ma di ecosistema. E in questo ecosistema, l’AI è un acceleratore potente, ma non un sostituto!
 
 
-### 2.3 Docker e Containerizzazione AI+GEO
+### Docker e Containerizzazione AI+GEO
 
 Questa è una parte che mi sta molto a cuore (tanto da voler spendere una serie intera su Docker).
 
@@ -295,7 +295,7 @@ Non escludo che ci siano
 
 In deployment on-prem, abilitare runtime GPU con `--gpus all` su `Docker run` (usando i runtime NVIDIA). In Kubernetes, usare device plugins NVIDIA. Se l'host non ha GPU, basterà che l'immagine contenga comunque le librerie giuste e potremo eseguire in CPU senza errori, o delegare a Colab per esecuzione GPU.
 
-### 2.4 Gestione di "password" e configurazioni
+### Gestione di "password" e configurazioni
 
 La parola AI oggi, spesso chiama la parola **API**, e di cnseguenza anche **credenziali (o config)** per servizi (es. token Mapbox, key OpenAI, URL database). È fondamentale **non inserire** questi valori **nel codice sorgente**, ma **usare sistemi di config**.
 
@@ -350,7 +350,7 @@ Molti servizi CI/CD (GitHub Actions, GitLab CI) offrono un vault integrato per s
 
 In sintesi, investire tempo in una solida gestione di config/secret garantisce che l'app possa passare da dev a prod senza modifiche manuali al codice, minimizzando rischi di leak (niente chiavi in repository mi raccomando).
 
-### 2.5 Dataset Open e Cataloghi STAC/COG per Disastri
+### Dataset Open e Cataloghi STAC/COG per Disastri
 Prima di far vedere i dataset vorrei chiarire alcuni punti e dare un paio di definizioni:
 > “Chip” = ritaglio/tessera (“patch/tile”) estratta da una scena satellitare grande. In pratica: invece di usare un’intera immagine satellitare, la si spezza in tanti quadrati più piccoli, ognuno usato come esempio di training.
 Poi per maggiori info sui satelliti, ti rimando all'articolo [Che dati registrano i satelliti?](../blog/it/geodata/), in cui ho fatto un bell'approfondimento sulle tipologie di dati satellitari.
@@ -398,7 +398,7 @@ SpaceNet Challenges (1-8) hanno prodotto dataset open su building footprints, ro
 
 La comunità open si sta muovendo anche verso **foundation models geospaziali**: ad es. [_BigEarthNet_](https://bigearth.net/) (520k patch Sentinel-2 etichettate land cover) viene usato per pre-addestrare modelli tipo ResNet/ViT su dati satellitari ed è disponibile direttamente su [Tensorflow](https://www.tensorflow.org/datasets/catalog/bigearthnet?hl=it).
 
-### 2.6 Librerie Geospaziali e per Remote Sensing
+### Librerie Geospaziali e per Remote Sensing
 
 Il mondo geospaziale in Python è fatto a strati: I/O, geometrie, analisi, visualizzazione e serving. Qui sotto le librerie più comuni con una descrizione pratica.
 
@@ -443,7 +443,7 @@ Per individuare aree alluvionate con Sentinel-1 e Sentinel-2:
 
 Questa pipeline usa **rasterio** per I/O, **numpy/scikit-image** per filtri, **PyTorch** per inferenza e **GeoPandas** per output vettoriale. Su scala grande conviene leggere con rioxarray + dask e processare per tile.
 
-### 2.7 Template Progetti, Repos di Riferimento e Best Practice
+### Template Progetti, Repos di Riferimento e Best Practice
 
 Per costruire uno stack **production-ready** è utile studiare progetti open-source esistenti che affrontano problemi simili. Ecco **10 repository e template di riferimento (2025)** da cui trarre insegnamenti, con motivazione:
 
