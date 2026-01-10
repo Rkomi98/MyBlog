@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dai modelli NLP classici ai LLM | Mirko Calcaterra</title>
+  <meta name="description" content="Dai modelli NLP classici ai LLM Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest&#39;articolo ci parleremo di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini &amp; co. e da dove siamo partiti. Non sol…">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="https://rkomi98.github.io/MyBlog/blog/it/from-nlp-to-llm/">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/from-nlp-to-llm/">
+  <meta property="og:title" content="Dai modelli NLP classici ai LLM">
+  <meta property="og:description" content="Dai modelli NLP classici ai LLM Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest&#39;articolo ci parleremo di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini &amp; co. e da dove siamo partiti. Non sol…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-01-10T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="Percorso AI Engineering">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Dai modelli NLP classici ai LLM">
+  <meta property="twitter:description" content="Dai modelli NLP classici ai LLM Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest&#39;articolo ci parleremo di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini &amp; co. e da dove siamo partiti. Non sol…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Dai modelli NLP classici ai LLM",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-01-10T00:00:00.000Z",
+    "dateModified": "2026-01-10T17:33:05.077Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "Dai modelli NLP classici ai LLM Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest&#39;articolo ci parleremo di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini &amp; co. e da dove siamo partiti. Non sol…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+      --code-inline-bg: rgba(6, 11, 19, 0.92);
+      --code-block-bg: #050912;
+      --code-border: rgba(148, 163, 184, 0.35);
+      --code-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      --code-text: #f8fafc;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--code-text);
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .post-body pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .post-body pre {
+      background: var(--code-block-bg);
+      color: var(--code-text);
+      padding: 1.2rem 1.4rem;
+      padding-right: 3.6rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: var(--code-shadow);
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      position: relative;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      background: rgba(96, 165, 250, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .code-copy-btn__icon {
+      font-size: 0.95rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      background: rgba(248, 250, 252, 0.85);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.92);
+      color: #ffffff;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(37, 99, 235, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">Percorso AI Engineering</span>
+        <h1 class="post-hero__title">Dai modelli NLP classici ai LLM</h1>
+        <div class="post-hero__meta">
+          <span>📅 10 gennaio 2026</span>
+          <span>⏱️ 66 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#introduzione">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Introduzione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#nlp-prima-dei-transformer">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">NLP prima dei Transformer</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#2-embedding-classici-word2vec-glove-fasttext">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">2\. Embedding classici: word2vec, GloVe, fastText</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#3-rnn-lstm-gru-il-tentativo-di-modellare-il-contesto">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">3\. RNN, LSTM, GRU: il tentativo di modellare il contesto</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#4-la-rivoluzione-del-transformer">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">4\. La rivoluzione del Transformer</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#5-dai-transformer-ai-llm">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">5\. Dai Transformer ai LLM</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#6-llm-come-componenti-di-sistema-non-solo-modelli">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">6\. LLM come _componenti di sistema_, non solo modelli</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#7-limiti-strutturali-dei-llm">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">7\. Limiti strutturali dei LLM</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#8-collegamento-con-il-tuo-percorso-geo-disaster-response">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">8\. Collegamento con il tuo percorso GEO &amp; Disaster Response</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#9-conclusioni-e-mappa-concettuale-evolutiva">
+            <span class="post-toc__number">10</span>
+            <span class="post-toc__text">9\. Conclusioni e mappa concettuale evolutiva</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#91-mappa-concettuale-riassuntiva-nlp-llm">
+            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__text">9.1 Mappa concettuale riassuntiva (NLP → LLM)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#92-cosa-deve-sapere-un-ai-engineer-cosa-pu-ignorare">
+            <span class="post-toc__number">10.2</span>
+            <span class="post-toc__text">9.2 Cosa deve sapere un AI Engineer, cosa può ignorare</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#93-fonti-fondamentali-da-studiare-davvero">
+            <span class="post-toc__number">10.3</span>
+            <span class="post-toc__text">9.3 Fonti fondamentali da studiare davvero</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <p>Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest&#39;articolo ci parleremo di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini &amp; co. e da dove siamo partiti. Non solo, non ti preoccupare!</p>
+<p>Buona lettura!</p>
+<h2 id="introduzione">Introduzione</h2>
+<p>Negli ultimi decenni il trattamento automatico del linguaggio (NLP) ha vissuto un&#39;evoluzione straordinaria, passando da metodi statistici &quot;semplici&quot; ai moderni <strong>Large Language Model (LLM)</strong> con miliardi di parametri.</p>
+<p>Questa rivoluzione non è stata solo storica, ma soprattutto <strong>architetturale</strong>: nuove idee (in primis parleremo di Transformer) hanno superato limiti prima considerati insuperabili. In questa guida strutturata (o meglio, così spero che sia), ripercorriamo le tappe fondamentali di questa evoluzione, dai modelli NLP classici agli LLM odierni, <strong>analizzando per ogni fase le scelte progettuali, i limiti incontrati e i trade-off</strong>. </p>
+<p>L&#39;obiettivo è costruire una <strong>mappa concettuale chiara</strong>: capire <em>perché</em> il Transformer ha cambiato tutto, quando ha senso usare un LLM (e quando no), e come gli LLM si inseriscono nei sistemi AI moderni (RAG, agenti, multimodalità). </p>
+<h2 id="nlp-prima-dei-transformer">NLP prima dei Transformer</h2>
+<p>Prima dell&#39;era <em>deep learning</em>, l&#39;NLP era dominato da metodi <strong>statistici e basati su feature manuali</strong>. Alcuni approcci chiave includevano:</p>
+<ul>
+<li><strong>Bag-of-Words &amp; TF-IDF:</strong> Si rappresenta un documento come una <em>borsa di parole</em>, ignorando l&#39;ordine. Ogni parola è una dimensione nel vettore (spesso enorme e sparso); i pesi TF-IDF ne attenuano l&#39;importanza se la parola è troppo comune. Questo modello è semplice ma perde completamente la struttura sintattica: <em>&quot;gatto nero&quot;</em> e <em>&quot;nero gatto&quot;</em> sono identici per Bag-of-Words. Inoltre, parole come <em>&quot;blu&quot;</em> e <em>&quot;azzurro&quot;</em> sono vettori ortogonali, quindi nessuna somiglianza semantica implicita.</li>
+<li><strong>Modelli a N-grammi:</strong> Introducono un minimo di contesto considerando sequenze di <em>N</em> parole. Un <strong>trigramma</strong> ad esempio stima la probabilità di una parola basandosi sulle 2 precedenti (N=3). Funzionano bene per frasi brevi o molto frequenti (es: <em>&quot;thank you very&quot; → &quot;much&quot;</em>), ma hanno grossi limiti: generano probabilità non nulle solo per frasi viste o molto simili al training, soffrono di <strong>sparseness</strong> (combinazioni rare non sono coperte) e usano un contesto rigido di lunghezza fissa<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A">[1]</a>. In pratica <em>&quot;voglio mangiare una fetta di ___&quot;</em> può difficilmente indovinare <em>&quot;torta&quot;</em> se non ha mai visto quella sequenza esatta<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third">[2]</a>. Inoltre, trattano le parole come simboli atomici (nessuna nozione che &quot;gatto&quot; e &quot;felino&quot; siano correlati).</li>
+<li><strong>Modelli probabilistici e lineari:</strong> Esempi sono il <strong>Naive Bayes</strong> per classificazione di testo (assume che le parole del documento siano indipendenti dato il tema) o i <strong>Modelli di Markov Nascosti (HMM)</strong> per compiti sequenziali (es: <em>Part-of-Speech tagging</em>, analisi del parlato). Il Naive Bayes è veloce e spesso efficace su testi semplici (ad es. spam vs ham) ma l&#39;ipotesi di indipendenza tra parole è grossolana. Gli HMM modellano le dipendenze come transizioni di stato, ma sono limitati da assunzioni di Markov di ordine basso (tipicamente bigrammi di stati) e richiedono definire a mano feature/osservazioni. In generale, questi approcci <strong>richiedevano feature engineering manuale</strong> (es: conteggi, liste di parole rilevanti) e faticavano a catturare relazioni semantiche profonde o dipendenze a lungo raggio.</li>
+</ul>
+<p><strong>Problemi principali e soluzioni tentate (pre-Transformer):</strong></p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th><strong>Problema</strong></th>
+<th><strong>Soluzione storica</strong></th>
+<th><strong>Limite intrinseco</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nessuna comprensione semantica</strong> - Parole come ID univoci (one-hot), nessuna similarità tra termini correlati.</td>
+<td>Bag-of-Words, TF-IDF, modelli lineari basati su conteggi.</td>
+<td><strong>Sparsità &amp; no meaning</strong>: vettori enormi e sparsi; nessun concetto di sinonimi o polisemia (per il modello &quot;dog&quot; e &quot;puppy&quot; non hanno nulla in comune)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A">[1]</a>.</td>
+</tr>
+<tr>
+<td><strong>Uso del contesto locale limitato</strong> - L&#39;ordine delle parole conta, ma modelli unigram ignorano la sequenza.</td>
+<td>N-grammi (bigram, trigram, …) che considerano finestre di <em>N-1</em> parole precedenti.</td>
+<td><strong>Finestra rigida e data sparsity</strong>: catturano solo dipendenze brevi; combinazioni rare di parole mai viste non possono essere previste<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations">[3]</a>. Memoria limitata a N-1 parole, niente dipendenze a lungo termine.</td>
+</tr>
+<tr>
+<td><strong>Feature fatte a mano e assunzioni semplicistiche</strong> - Modelli generativi semplici (NB, HMM) o reti neurali &quot;shallow&quot;.</td>
+<td>HMM per sequenze; modelli lineari con feature (es: presenza di parola, conteggi).</td>
+<td><strong>Scalabilità e generalizzazione limitata</strong>: necessitano di definire a priori le feature giuste. Ipotesi forti (Markov, indipendenza) portano a perdita di informazione di contesto e correlazioni non catturate.</td>
+</tr>
+</tbody></table>
+</div></figure><p>Queste soluzioni, pur efficaci in contesti ristretti, evidenziavano <strong>lacune strutturali</strong>. Non potendo rappresentare il <em>significato</em> delle parole né tenere in memoria frasi lunghe, aprirono la strada a metodi in grado di <strong>catturare semantica distribuita e dipendenze più lunghe</strong>. È qui che nascono gli <em>embedding</em> neurali e i modelli a rete ricorrente.</p>
+<h2 id="2-embedding-classici-word2vec-glove-fasttext">2. Embedding classici: word2vec, GloVe, fastText</h2>
+<p>Per superare la rappresentazione simbolica pura delle parole, negli anni 2010 si affermano i <strong>word embeddings</strong>, ovvero rappresentazioni dense in cui ogni parola è un vettore continuo in uno spazio a bassa dimensione. L&#39;idea base è <strong>distribuzionale</strong>: <em>&quot;una parola è definita dal contesto che tiene&quot;</em> (Firth). Modelli come <strong>word2vec</strong> (Mikolov et al., 2013) hanno introdotto tecniche di training non supervisionato su grandi corpora per ottenere vettori di parola che <strong>catturano somiglianze semantiche</strong><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. Ad esempio, word2vec produce vettori tali che:</p>
+<ul>
+<li><em>&quot;king&quot; - &quot;man&quot; + &quot;woman&quot; ≈ &quot;queen&quot;</em><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">[5]</a></li>
+<li><em>&quot;Parigi&quot; - &quot;Francia&quot; + &quot;Italia&quot; ≈ &quot;Roma&quot;</em></li>
+</ul>
+<p>Ciò indica che il modello ha appreso relazioni analogiche e cluster semantici: parole simili (re, regina) hanno vettori vicini, e la differenza vettoriale tra re e regina è simile a quella tra uomo e donna.</p>
+<p><strong>Come funzionano questi embedding?</strong> Word2vec offre due approcci principali: <strong>CBOW</strong> (<em>Continuous Bag-of-Words</em>) predice una parola dato il contesto circostante, mentre <strong>Skip-gram</strong> fa l&#39;opposto (predice il contesto data la parola target). In entrambi i casi la rete neurale addestra le rappresentazioni interne (embedding) affinché parole apparse in contesti simili abbiano vettori simili<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A">[6]</a>. Un altro modello popolare, <strong>GloVe</strong> (Pennington et al., 2014), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch&#39;esso vettori densi. Varianti come <strong>fastText</strong> (Bojanowski et al., 2016) hanno introdotto l&#39;uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.</p>
+<p><strong>Cosa risolvono gli embedding statici:</strong><br>- <strong>Sparsità ridotta:</strong> si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se <em>&quot;gatto&quot;</em> e <em>&quot;felino&quot;</em> hanno vettori vicini, il modello può trasferire conoscenza da uno all&#39;altro anche se uno dei due era raro nel corpus<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. - <strong>Similarità semantica:</strong> per la prima volta la macchina ha un <em>notion</em> di significato. Parole correlate (per contesto d&#39;uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).</p>
+<p><strong>Cosa <em>non</em> risolvono:</strong> il problema cruciale degli embedding classici è che sono <strong>statici</strong>. Ad ogni parola nel dizionario corrisponde un singolo vettore fisso, a prescindere del contesto in cui appare. Questo è limitante perché molte parole sono <strong>polisemiche</strong>: il significato di <em>&quot;bank&quot;</em> dipende dal contesto (banca vs argine del fiume). Un embedding statico di <em>&quot;bank&quot;</em> finirà per essere una sorta di media dei due significati, incapace di rappresentarli precisamente. Un esempio in italiano: <em>&quot;Java&quot;</em> può indicare un linguaggio di programmazione o un&#39;isola; un unico vettore non può riflettere entrambe le possibilità in modo distinto.</p>
+<p>Per chiarire, consideriamo alcune frasi con la parola <strong>&quot;porto&quot;</strong>:<br>- <em>&quot;Il</em> <em>porto</em> <em>di Genova è uno dei più grandi del Mediterraneo.&quot;</em> (scalo marittimo)<br>- <em>&quot;Dopo cena prendo un bicchiere di</em> <em>Porto.&quot;</em> (vino liquoroso)</p>
+<p>Un modello a embedding statici darà alla parola &quot;porto&quot; lo stesso identico vettore in entrambe le frasi, incapace di cogliere che nel primo caso è un sostantivo luogo e nel secondo un nome proprio di vino. Questa <strong>ambiguità semantica</strong> resta irrisolta. In pratica, un modello con embedding statici &quot;pensa&quot; che <em>&quot;porto (harbor)&quot;</em> e <em>&quot;porto (wine)&quot;</em> siano un unico concetto, perdendo informazione cruciale.</p>
+<p>Di seguito un confronto tra <strong>embedding statici</strong> e <strong>contestuali</strong>:</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th><strong>Embedding statici (word2vec, GloVe)</strong></th>
+<th><strong>Embedding contestuali (ELMo, BERT, GPT)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Un vettore fisso per ogni <em>parola-tipo</em> nel vocabolario, indipendente dal contesto.</td>
+<td>Vettore dinamico per ogni <em>occorrenza</em> della parola, calcolato in base alle parole circostanti.</td>
+</tr>
+<tr>
+<td>Catturano somiglianze <strong>globali</strong> tra parole (es. <em>&quot;banca&quot;</em> vicino a <em>&quot;finanza&quot;</em> e <em>&quot;denaro&quot;</em> in assoluto).</td>
+<td>Catturano il <strong>senso specifico</strong> in quella frase (es. <em>&quot;banca&quot;</em> in <em>&quot;riva della banca del fiume&quot;</em> avrà embedding vicino a <em>&quot;sponda&quot;</em>, mentre in <em>&quot;direttore di banca&quot;</em> sarà vicino a <em>&quot;istituto di credito&quot;</em>)<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=%2A%20,%28River%20edge">[7]</a>.</td>
+</tr>
+<tr>
+<td>Vengono pre-addestrati una volta su corpus generico; uso diretto o come inizializzazione in modelli NLP.</td>
+<td>Derivano da modelli deep (RNN/Transformer) pre-addestrati su larghi corpus con obiettivi linguistici (es. language model). Richiedono calcolo al volo ma forniscono comprensione più ricca.</td>
+</tr>
+<tr>
+<td><strong>Limite:</strong> non gestiscono polisemia né dipendenze sintattiche a lungo raggio. Il contesto oltre la finestra locale è ignorato.</td>
+<td><strong>Vantaggio:</strong> incorporano contesto arbitrariamente lungo: l&#39;intero enunciato (o paragrafo) influisce sul vettore di ogni parola, riflettendo anche struttura sintattica e informazioni lontane.</td>
+</tr>
+</tbody></table>
+</div></figure><p><strong>Esempio concreto:</strong> Frase 1: <em>&quot;Devo andare in</em> <em>banca</em> <em>a depositare un assegno&quot;</em> vs Frase 2: <em>&quot;Ci sediamo sulla</em> <em>banca</em> <em>del fiume&quot;</em>. Un modello statico ha un solo vettore v(&quot;banca&quot;). Un modello contestuale (come BERT o GPT) produrrà v1(&quot;banca&quot;) e v2(&quot;banca&quot;) diversi: nel contesto finanziario v1(&quot;banca&quot;) sarà vicino a vettori di <em>&quot;soldi&quot;</em>, <em>&quot;sportello&quot;</em>, mentre nel contesto naturale v2(&quot;banca&quot;) sarà vicino a <em>&quot;sponda&quot;</em>, <em>&quot;acqua&quot;</em>. Questo è un enorme passo avanti: la macchina &quot;capisce&quot; quale accezione è in gioco osservando le parole circostanti<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=%2A%20,%28River%20edge">[7]</a>.</p>
+<p><strong>Riassumendo:</strong> word2vec, GloVe e simili hanno segnato una svolta introducendo la semantica distribuita e attenuando il problema della sparsità<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. Hanno però lasciato aperta la questione del <strong>contesto</strong>: come rappresentare frasi intere, o parole che cambiano significato a seconda di dove compaiono? La risposta iniziale a questo è arrivata con i <strong>modelli ricorrenti</strong>, progettati per <em>modellare sequenze</em>.</p>
+<h2 id="3-rnn-lstm-gru-il-tentativo-di-modellare-il-contesto">3. RNN, LSTM, GRU: il tentativo di modellare il contesto</h2>
+<p>Mentre gli embedding producevano rappresentazioni statiche di parole, i <strong>Recurrent Neural Network (RNN)</strong> miravano a modellare intere <strong>sequenze di testo</strong> come input dinamici. Un RNN classico è una rete neurale che processa un elemento alla volta (es. una parola), <strong>riciclando</strong> un vettore di stato nascosto che porta informazione da un passo al successivo. Formalmente, al tempo <em>t</em> prende in input la rappresentazione del <em>t</em>‑esimo token $x_t$ e lo stato precedente $h_{t-1}$, producendo un nuovo stato $h_t = f(h_{t-1}, x_t)$ e magari un&#39;uscita (se si fa modellazione linguistica, l&#39;output può essere la distribuzione sulla prossima parola). In notazione vettoriale, un semplice RNN fa qualcosa come: $h_t = \tanh(W \cdot [h_{t-1}, x_t])$, dove $W$ contiene i pesi (stessi a ogni passo).</p>
+<p><strong>In parole povere,</strong> un RNN legge il testo <em>come faremmo noi, parola dopo parola</em>, aggiornando una sorta di &quot;memoria interna&quot; che accumula le informazioni lette finora. Ciò permette in teoria di tener conto di <strong>dipendenze a lungo raggio</strong>, perché l&#39;influenza di una parola potrebbe farsi strada attraverso lo stato nascosto lungo tutta la sequenza. Ad esempio, in <em>&quot;Il libro che il professore ha assegnato era…&quot;</em> un RNN potrebbe, al momento di predire l&#39;aggettivo finale, <em>ricordare</em> il soggetto distante <em>&quot;il libro&quot;</em> invece di confondersi con <em>&quot;il professore&quot;</em>. Questa capacità di <em>&quot;memoria&quot;</em> era il grande vantaggio rispetto ai modelli a n-grammi.</p>
+<p>Tuttavia, i RNN nella pratica hanno dimostrato serie <strong>difficoltà nel catturare dipendenze a lungo termine</strong>. Il problema principale è noto come <strong>vanishing gradient</strong>: durante l&#39;addestramento, i gradienti propagati all&#39;indietro attraverso molti passi temporali <strong>si attenuano esponenzialmente</strong>, fino quasi ad annullarsi<a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to">[8]</a>. Intuitivamente, ogni volta che applichiamo la catena di derivazioni attraverso un passo temporale, moltiplichiamo per la matrice di pesi e per la derivata della funzione di attivazione. Se questi valori hanno norma &lt; 1 (come spesso con $\tanh$ o $\sigma$ nelle regioni saturanti), dopo 10, 20, 50 moltiplicazioni il prodotto diventa <del>0. Significa che gli errori avvenuti al passo 50 non riescono a retropropagare efficacemente fino al passo 1: la rete <em>dimentica</em> l&#39;inizio della sequenza mentre addestra la fine. In parole semplici, i RNN base &quot;hanno la memoria corta&quot;. Questo spiega perché avevano <em>difficoltà ad apprendere dipendenze di lungo raggio</em> come quelle sintattiche complesse o di contesto globale[[9]](<a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#">https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#</a>:</del>:text=In%20previous%20parts%20of%20the,between%20words%20that%20are%20several).</p>
+<p>Parallelamente si ha il caso opposto, l&#39;<strong>exploding gradient</strong> (gradienti che esplodono): se i pesi o le derivate sono &gt;1, la norma cresce esponenzialmente e porta a valori enormi, mandando in NaN i parametri. Fortunatamente questo è più facile da gestire (si risolve spesso con il <em>gradient clipping</em>) e da individuare subito (il training diverge visibilmente)<a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=It%20is%20easy%20to%20imagine,it%E2%80%99s%20not%20obvious%20when%20they">[10]</a>. I gradienti vanishing invece sono subdoli: il training sembra procedere ma in realtà la rete non impara relazioni a lungo termine perché gli aggiornamenti dal lontano passato sono praticamente zero<a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=parameters%2C%20we%20could%20get%20exploding,Your">[11]</a>.</p>
+<p>Per mitigare il vanishing gradient, <strong>Hochreiter &amp; Schmidhuber (1997)</strong> introdussero la <strong>Long Short-Term Memory (LSTM)</strong>, una variante di RNN con un&#39;architettura interna più complessa<a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and">[12]</a>. L&#39;LSTM aggiunge <strong>gating</strong>: in ogni cella ci sono porte di ingresso, uscita e soprattutto <em>porta di forget</em>, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l&#39;LSTM conserva una <em>cella di stato</em> $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da 0.&lt;span&gt;something&lt;/span&gt;. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l&#39;azzeramento. L&#39;LSTM può così <em>&quot;ricordare&quot;</em> informazioni per più passi, decidendo autonomamente quando dimenticare. Un analogo più semplice introdotto in seguito è il <strong>GRU (Gated Recurrent Unit)</strong>, che combina alcuni gate e semplifica l&#39;unità: funziona bene in molti casi con meno parametri. Questi modelli <strong>erano esplicitamente progettati per apprendere dipendenze a lungo termine</strong> in sequenze<a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and">[13]</a>.</p>
+<p><strong>Nonostante LSTM/GRU abbiano portato miglioramenti notevoli</strong>, restano alcuni limiti strutturali degli approcci ricorrenti:</p>
+<ul>
+<li><strong>Dipendenze molto lunghe ancora problematiche:</strong> In teoria un LSTM può mantenere info per centinaia di passi, ma in pratica oltre una certa lunghezza (es. 100 token) l&#39;efficacia diminuisce. Inoltre il <em>contesto</em> è tutto compresso nel vettore hidden di dimensione fissata (p.es. 256 o 512): c&#39;è un limite fisico a quanta informazione distinguibile possa portare. Se il testo è molto lungo (un documento), anche un LSTM fatica a ricordare dettagli di inizio documento quando è arrivato alla fine.</li>
+<li><strong>Backpropagation Through Time (BPTT) costosa e fragile:</strong> Addestrare un RNN richiede <em>unrolling</em> della rete sul tempo e backpropagare su ogni step. Questo significa che se abbiamo sequenze di 50 parole, la rete effettiva su cui facciamo gradienti ha 50 layer (tutti condividono i pesi, ma computazionalmente è come una rete profonda di 50 strati). È un calcolo pesante e <strong>sequenziale</strong>: non si può parallelizzare i 50 step perché il passo <em>t</em> dipende dallo stato di <em>t-1</em>. Questo è un grosso collo di bottiglia: anche con GPU, l&#39;RNN deve procedere in serie, a differenza di modelli feed-forward che elaborano tutti gli elementi insieme. Ciò rende il training lento su sequenze lunghe<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental">[14]</a>. Inoltre, più lungo è l&#39;unroll più i gradienti diventano instabili (vanishing/exploding). Spesso si usava <em>truncated BPTT</em>: si tronca la backpropagazione a, ad esempio, 20 passi indietro, rompendo intenzionalmente le dipendenze troppo lunghe per stabilizzare e velocizzare<a href="https://d2l.ai/chapter_recurrent-neural-networks/bptt.html#:~:text=Alternatively%2C%20we%20can%20truncate%20the,simpler%20and%20more%20stable%20models">[15]</a>. Ma così facendo, la rete non impara davvero oltre quella finestra artificiale.</li>
+<li><strong>Non scalano bene in termini di dati e modello:</strong> Per sfruttare grandi dataset o modelli molto capienti, servirebbe parallelizzare e batchare di più, cosa non banale con RNN. All&#39;epoca (2015-2017) si usavano già LSTM con centinaia di milioni di parametri (ad es. traduttori neurali sequence-to-sequence con attenzione), però aumentarne le dimensioni portava rendimenti decrescenti: il training diventava oneroso, e altre parti come il meccanismo di attenzione (introdotto per sopperire alle carenze della pura ricorrenza) dominavano i benefici.</li>
+</ul>
+<p>In sintesi, RNN/LSTM hanno introdotto l&#39;<strong>idea di memoria temporale differenziabile</strong> e hanno permesso notevoli progressi (es. <em>Google Neural Machine Translation 2016</em> usava LSTM bidirezionali + attenzione). Ma la loro natura ricorrente poneva limiti di <strong>velocità</strong> e <strong>capacità di modellare contesti lunghi</strong>. Era chiaro che per fare ulteriore salto serviva un&#39;architettura diversa, più adatta al parallel computing e in grado di <strong>guardare tutto il contesto in modo più diretto</strong>. Da queste esigenze nasce il <strong>Transformer</strong>.</p>
+<h2 id="4-la-rivoluzione-del-transformer">4. La rivoluzione del Transformer</h2>
+<p>Nel 2017 Vaswani et al. pubblicano <em>&quot;Attention Is All You Need&quot;</em>, introducendo il <strong>Transformer</strong>, un&#39;architettura che elimina completamente la ricorrenza a favore di un meccanismo di <strong>self-attention</strong> generalizzato<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including">[16]</a>. Questo cambiamento concettualmente semplice ha innescato una rivoluzione: il Transformer ha dimostrato di poter scalare molto meglio, essere addestrato in parallelo e raggiungere performance superiori su compiti come la traduzione in una frazione del tempo di training dei modelli ricorrenti<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training">[17]</a>.</p>
+<p>Vediamo i concetti chiave del Transformer:</p>
+<ul>
+<li><strong>Self-Attention:</strong> è il cuore di tutto. In un layer di self-attention, ogni posizione/tokén nella sequenza <strong>&quot;presta attenzione&quot;</strong> a tutti gli altri, per decidere quali parole sono più rilevanti per interpretare quella posizione. Tecnicamente, per ogni token <em>i</em> si calcola un <strong>vector di query</strong> $q_i$ e, per ogni potenziale riferimento <em>j</em>, un <strong>vector chiave</strong> $k_j$ (entrambi ottenuti proiettando gli embedding iniziali). Si calcola un punteggio di affinità $s_{ij} = q_i \cdot k_j$ (maggiore se la parola <em>j</em> è rilevante per interpretare <em>i</em>). Questi punteggi attivano una somma pesata delle <strong>value</strong> $v_j$ (altra proiezione di ogni token) per produrre l&#39;output per la posizione <em>i</em>. In formula:</li>
+</ul>
+<p>dove $Q$ è la matrice delle query di tutti i token, $K$ delle key, $V$ delle value, e $\sqrt{d_k}$ è un fattore di normalizzazione (dimensione dei vettori chiave). La softmax produce pesi che evidenziano le posizioni più affini alla query. Il risultato è che l&#39;output per il token <em>i</em> è una combinazione delle rappresentazioni di <em>tutti</em> gli altri token, <strong>ponderata</strong> in base alla rilevanza. Ad esempio, in <em>&quot;Lei posò il bicchiere perché era</em> <em>fragile.&quot;</em>, la parola <em>&quot;fragile&quot;</em> come query assegnerà alta attenzione a <em>&quot;bicchiere&quot;</em> e molto meno a <em>&quot;lei&quot;</em>, riuscendo a risolvere correttamente il riferimento di <em>&quot;era fragile&quot;</em><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,%E2%80%9D">[18]</a>.</p>
+<ul>
+<li><strong>Multi-Head Attention:</strong> invece di una singola proiezione Q,K,V, il Transformer ne esegue diverse in parallelo (<em>multi-head</em>). Ogni <em>head</em> è come un canale di attenzione che può concentrarsi su un tipo diverso di relazione (per es. una head potrebbe focalizzarsi sulle relazioni sintattiche soggetto-verbo, un&#39;altra sulle coreferenze pronominali, etc.). I risultati di diverse heads (che operano su sottospazi dimensionali ridotti) vengono concatenati e combinati linearmente. Questo arricchisce la capacità espressiva: il modello può <strong>simultaneamente</strong> considerare più aspetti di dipendenza per ogni token<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order">[19]</a>.</li>
+<li><strong>Positional Encoding:</strong> uno &quot;svantaggio&quot; della self-attention pura è che tratta gli input come un insieme non ordinato - se scambiamo due token, i punteggi di attenzione cambiano, ma l&#39;architettura non ha un&#39;informazione intrinseca di posizione sequenziale. Per questo si aggiunge a ogni embedding iniziale un <strong>encoding della posizione</strong> (fisso sinusoidale, oppure appreso). Così, i vettori di input contengono sia il significato della parola sia la sua posizione assoluta/relativa. In questo modo la rete può distinguere &quot;il gatto ha mangiato il topo&quot; da &quot;il topo ha mangiato il gatto&quot; in base agli offset posizionali<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,are%20added%20to%20preserve%20order">[20]</a>.</li>
+<li><strong>Encoder-Decoder vs varianti:</strong> Il modello originale è Encoder-Decoder: un <strong>Encoder</strong> legge la sequenza di input (es. frase in lingua originale) producendo rappresentazioni contestuali; un <strong>Decoder</strong> genera la sequenza di output (es. frase tradotta) un token alla volta, &quot;guardando&quot; sia gli stati interni dell&#39;encoder (via <em>cross-attention</em> tra decoder e encoder) sia i token già generati (via self-attn autoregressiva con maschera futuro). Oggi esistono configurazioni semplificate: i modelli tipo <strong>BERT</strong> usano solo l&#39;encoder (self-attention bidirezionale su tutto input, per compiti di comprensione), mentre modelli tipo <strong>GPT</strong> usano solo il decoder (self-attention unidirezionale, autoregressiva, per generazione di testo)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Original%20architecture%3A">[21]</a>.</li>
+</ul>
+<p><strong>Perché il Transformer scala (e ha cambiato tutto):</strong></p>
+<ul>
+<li><em>Parallelizzazione totale:</em> Contrariamente a un RNN, il Transformer non ha dipendenze sequenziali <em>dentro</em> ciascun layer. Ogni layer di self-attention può elaborare <strong>tutti i token in parallelo</strong> mediante operazioni matriciali ottimizzate su GPU/TensorCore. La dipendenza sequenziale rimane solo nell&#39;autoregressione del decoder durante l&#39;<strong>inferenza</strong> (generazione passo passo), ma durante il <em>training</em> anche il decoder può essere addestrato in parallelo usando maschere (tutta la sequenza di output &quot;shiftata&quot; in input). Di fatto, se prima per analizzare 10 parole dovevo fare 10 passi uno dopo l&#39;altro, ora posso fare 1 passo che copre 10 posizioni con attenzione. Il guadagno in efficienza è enorme, specialmente su sequenze lunghe<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order">[22]</a><a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,of%20sequential%20computation%2C%20however%2C%20remains">[23]</a>. Transformers allenati su dataset giganteschi sono diventati fattibili <em>solo grazie</em> a questa caratteristica.</li>
+<li><em>Lungo raggio senza sforzo:</em> In un singolo layer di attenzione, ogni token può interagire <em>direttamente</em> con qualsiasi altro, anche a distanza di 50 posizioni, <em>con un solo passo</em>. In un RNN per connettere token distanti occorrono molti passi e i gradienti potrebbero svanire lungo il percorso. Il Transformer invece in <strong>un colpo</strong> calcola dipendenze globali. Questo porta a catturare naturalmente relazioni a lungo termine (es. chi è soggetto di un verbo lontano, concordanze a distanza, ecc.) molto meglio dei RNN. Formalmente, nei Transformer il numero di operazioni necessario per collegare due posizioni qualsiasi è costante (1 per layer, o alcuni layer se relazioni di ordine più alto)<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=hidden%20representations%20in%20parallel%20for,as%20described%20in%20section%C2%A0%2016">[24]</a>, mentre in un RNN è proporzionale alla loro distanza nella sequenza.</li>
+<li><em>Maggiore espressività:</em> La combinazione di multi-head attention e feed-forward position-wise (ogni layer ha anche una rete FFN che elabora individualmente ogni posizione dopo l&#39;attention) fornisce al modello una capacità di rappresentazione enorme. Un Transformer con sufficienti heads e strati può simulare efficacemente anche operazioni sequenziali, ma ha la libertà di apprendere strutture molto diverse (ad es. ordinamenti topologici delle parole per rappresentare l&#39;albero sintattico, ecc.). La comunità ha scoperto che i Transformer tendono spontaneamente ad apprendere cose come <em>pattern grammaticali</em>, <em>relazioni semantiche</em> e persino svolgere <em>forme di ragionamento</em> latente quando scalati. In breve, la loro capacità di generalizzazione con l&#39;aumentare della dimensione è superiore a quella dei modelli precedenti.</li>
+</ul>
+<p><strong>RNN vs Transformer - confronto in sintesi:</strong></p>
+<ul>
+<li><em>Parallelismo:</em> RNN elaborano 1 token per volta (difficile parallellizzare), Transformer elaborano N token in parallelo (molto più efficienti su hardware moderno)<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental">[14]</a>.</li>
+<li><em>Memoria a lungo termine:</em> RNN/LSTM memorizzano nel vettore hidden con potenziale attenuazione, Transformer con self-attention guardano direttamente ogni parte rilevante della sequenza (teoricamente contesto infinito, limitato solo dalla lunghezza di input gestibile).</li>
+<li><em>Complessità:</em> Il costo di self-attention cresce $O(N^2)$ con la lunghezza (perché confronta ogni coppia di token). Questo è più costoso di un RNN ($O(N)$ per step), ma il trade-off è ampiamente ripagato dall&#39;esecuzione parallela. Su sequenze brevi/medie il Transformer è decisamente più veloce a parità di risorse; su sequenze <em>molto</em> lunghe (es. migliaia di token) può diventare pesante in memoria e tempo, ma sono stati introdotti molti algoritmi di <em>sparse attention</em> per mitigare questo.</li>
+<li><em>Dati necessari:</em> In generale i Transformer hanno più parametri e flessibilità, quindi tendono a richiedere molti dati per esprimere il loro potenziale. Fortunatamente, l&#39;era dei big data ha fornito corpora immensi; inoltre l&#39;addestramento auto-supervisionato (language modeling) ha reso possibile usare praticamente tutto internet come dati.</li>
+<li><em>Architettura modulare:</em> Il Transformer è più facile da distribuire in cluster GPU (ogni layer è una serie di operazioni matriciali standard). Inoltre, è modulare: si possono sostituire parti (es: diversi schemi di attenzione, diverse pos. encoding) senza stravolgere tutto. Questo ha portato a un ecosistema di varianti e miglioramenti rapidi.</li>
+</ul>
+<p><strong>Schema concettuale (passo-passo) di un Transformer encoder layer:</strong><br>1. <strong>Input Embedding + Positional Encoding:</strong> ad ogni token si somma un vettore di posizione.<br>2. <strong>Self-Attention (multi-head):</strong> si calcolano $Q,K,V$ per ogni token e si computa l&#39;attenzione. Ogni token &quot;raccoglie&quot; informazioni rilevanti da altri token. (Nel decoder autogressivo, si applicherebbe una maschera per prevenire occhiata al futuro).<br>3. <strong>Add &amp; Norm:</strong> c&#39;è un residual skip connection che aggiunge l&#39;input originario dell&#39;attenzione al suo output, seguito da layer normalization. Questo aiuta il flusso di gradiente e la stabilità (il modello impara in pratica una sorta di identità + correzioni).<br>4. <strong>Feed-Forward Network (FFN):</strong> un MLP applicato separatamente a ogni posizione (stessa rete per tutti i token). Di solito 2 layer con ReLU/GELU, espande e ricontrae dimensione (ad es. da d_model=512 a 2048 e back). Serve ad introdurre non-linearità e mescolare le informazioni sintetizzate dall&#39;attenzione.<br>5. <strong>Add &amp; Norm:</strong> un&#39;altra connessione residua sommando l&#39;input FFN (che era l&#39;output del sublayer di attn) all&#39;output FFN, poi normalizzazione.</p>
+<p>Uno stack di N layer così forma l&#39;Encoder. Nel Decoder, ogni layer ha in più un blocco di <em>cross-attention</em> dopo il self-attn, dove le <em>query</em> vengono dal layer precedente del decoder e le <em>key/value</em> dall&#39;output finale dell&#39;Encoder, permettendo al decoder di condizionare la generazione sull&#39;input codificato (utile in compiti seq2seq come traduzione).</p>
+<p>Il risultato netto: <strong>il Transformer riesce a modellare dipendenze lunghe e complesse con efficienza, ed è altamente scalabile</strong>. Dal 2018 in poi, ogni record in NLP (traduzione, QA, summa, etc.) è stato polverizzato da modelli basati su Transformer. Questo architettura è la base di praticamente tutti i <em>Large Language Models</em> moderni.</p>
+<h2 id="5-dai-transformer-ai-llm">5. Dai Transformer ai LLM</h2>
+<p>Con il Transformer come nuovo blocco fondamentale, il passo successivo è stato <strong>scalare modelli e dataset</strong> a livelli prima impensabili. Sono emerse due grandi famiglie di modelli pre-addestrati sul linguaggio:</p>
+<ul>
+<li><strong>Modelli autoregressivi (tipo GPT):</strong> utilizzano solo la metà decoder del Transformer e sono addestrati come <em>language model</em> tradizionale - predire il prossimo token dato tutto il contesto precedente. Esempio: data la sequenza &quot;La capitale di <strong>Francia</strong> è [MASK].&quot;, il modello (con maschera che impedisce di vedere <em>&quot;Parigi&quot;</em> se fosse dopo) impara a continuare plausibilmente la frase (in questo caso con &quot;Parigi&quot;). Questi modelli apprendono a generare testo <em>uno step alla volta</em>, e grazie all&#39;attenzione hanno ampia visione sul contesto già generato. <strong>GPT-2</strong> (OpenAI, 2019) con 1.5 miliardi di parametri fu uno shock per la capacità di generare testi coerenti e lunghi<a href="https://arxiv.org/abs/2005.14165#:~:text=approaches.%20Specifically%2C%20we%20train%20GPT,At%20the%20same%20time%2C%20we">[25]</a>. <strong>GPT-3</strong> (2020, 175 miliardi) ha poi mostrato che aumentando di un ordine di grandezza i parametri comparivano abilità nuove, come il <strong>few-shot learning</strong>: senza ulteriore addestramento, dando solo pochi esempi nel prompt GPT-3 risolve compiti nuovi<a href="https://arxiv.org/abs/2005.14165#:~:text=language%20models%20greatly%20improves%20task,several%20tasks%20that%20require%20on">[26]</a><a href="https://arxiv.org/abs/2005.14165#:~:text=approaches.%20Specifically%2C%20we%20train%20GPT,At%20the%20same%20time%2C%20we">[25]</a>. In pratica GPT-3 ha dimostrato che un modello enorme allenato su <em>quasi tutto internet</em> in modo autoregressivo può <em>&quot;imparare a imparare&quot;</em> dai prompt, generalizzando a molti task prima risolvibili solo con modelli specifici. Questo ha inaugurato l&#39;era degli <strong>LLM generativi</strong> come ChatGPT.</li>
+<li><strong>Modelli auto-encoder (tipo BERT):</strong> utilizzano solo la parte encoder del Transformer e sono addestrati con compiti <em>bidirezionali</em> come il <strong>Masked Language Modeling (MLM)</strong>. In BERT (Devlin et al., 2018) si maschera random il 15% delle parole in input e il modello deve predirle guardando <em>sia a sinistra che a destra</em> (quindi sfrutta pienamente l&#39;attenzione bidirezionale)<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=BERT%20is%20trained%20on%20two,clever%20tasks">[27]</a>. Inoltre BERT fu addestrato anche con un compito ausiliario di <em>Next Sentence Prediction</em> (decidere se due frasi erano in sequenza nel testo originale), incoraggiando comprensione di discorso<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=1,it%20learn%20relationships%20between%20sentences">[28]</a>. BERT ha fornito embedding contestuali potenti che, con un fine-tuning leggero, hanno migliorato radicalmente decine di task NLP (dalla classificazione, al QA, al NER). Questi modelli non sono progettati per generare arbitrariamente (non hanno un decoder autoregressivo), ma eccellono in <strong>comprensione</strong> e in produzione di rappresentazioni da dare in input a semplici classificatori. BERT fu uno spartiacque: in pochi mesi praticamente ogni benchmark NLP fu dominato da varianti di BERT. Tra queste: <em>RoBERTa</em> (2019, addestrato meglio e senza NSP), <em>ALBERT</em> (2019, più piccolo grazie a fattorizzazione e condivisione), <em>DistilBERT</em> (2019, compresso), ecc.</li>
+</ul>
+<p>Successivamente, l&#39;attenzione si è spostata sempre più sui <strong>modelli generativi di grandi dimensioni</strong>, in particolare con l&#39;uscita di GPT-3. La comunità ha scoperto che <em>scalare la dimensione del modello e dei dati porta a miglioramenti sostanziali e talvolta qualitativamente nuovi</em>. Questo è stato formalizzato negli <strong>Scaling Laws</strong> di Kaplan et al. (OpenAI 2020): la <em>perplexity</em> (una misura di bontà del language model) decresce seguendo all&#39;incirca una legge di potenza al crescere di parametri, dati e compute impiegata<a href="https://arxiv.org/abs/2001.08361#:~:text=,efficient%20training%20involves">[29]</a>. Nessun segno di saturazione appariva all&#39;orizzonte: <em>bigger is better</em>. In altre parole, se raddoppi parametri (e proporzionalmente i dati e il calcolo), l&#39;errore scende in modo prevedibile (anche se con rendimenti leggermente decrescenti). Ciò ha incoraggiato un <strong>&quot;gigantismo&quot;</strong> nei modelli: GPT-3 con 175B fu seguito da modelli ancora più grandi come <strong>Megatron-Turing NLG</strong> (Microsoft-Nvidia, 530B, 2021) e vari modelli cinesi da 200+ miliardi.</p>
+<p>Tuttavia, nel 2022 uno studio di DeepMind (<strong>Chinchilla</strong> di Hoffmann et al.) ha ricalibrato la prospettiva: si è scoperto che molti LLM erano <em>sotto-addestrati</em> rispetto alla loro dimensione. Chinchilla (70B parametri) fu addestrato con 4 volte più dati di quelli usati per GPT-3, mostrando performance superiori a GPT-3 pur essendo &lt; metà dei parametri, perché aveva utilizzato meglio il budget di calcolo<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,Transformers%20to%2022%20Billion%20Parameters">[30]</a>. In pratica, per un budget di <em>compute</em> fisso c&#39;è un equilibrio ottimo tra dimensione del modello e numero di token di training: modelli troppo grandi allenati su pochi dati non raggiungono il loro potenziale, conviene ridurre parametri e prolungare il training. Questo ha portato uno shift: non solo aumentare i parametri, ma assicurarsi di avere <em>molti più dati</em> (il che è un problema, perché dopo aver raschiato tutto l&#39;internet testuale, servono dati sintetici o multimodali per continuare).</p>
+<p><strong>Emergent Abilities:</strong> Un fenomeno affascinante osservato con i LLM è l&#39;apparizione di capacità <em>non presenti in modelli più piccoli</em>. Wei et al. (2022) hanno catalogato varie <strong>abilità emergenti</strong> che spuntano oltre certe soglie di parametro/dati<a href="https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up">[31]</a>. Ad esempio, modelli sotto i 10B parametri falliscono nel fare semplici calcoli aritmetici o ragionamenti logici multi-step, mentre modelli come GPT-3 (175B) riescono a fare somme a 3 cifre, traduzioni zero-shot, spiegare barzellette, scrivere codice semplice, ecc. Queste abilità <em>non scalano linearmente</em> ma sembrano attivarsi improvvisamente quando il modello supera un &quot;punto critico&quot; di conoscenza e generalizzazione. C&#39;è dibattito sul perché - alcuni dicono che in realtà emergono gradualmente ma diventano misurabili oltre un certo livello di rumore; altri che i modelli iniziano a fare <em>meta-learning</em>. Fatto sta che LLM molto grandi mostrano comportamenti qualitativamente diversi: sanno seguire istru-zioni (<strong>instruction following</strong>), pianificare un ragionamento tramite <em>chain-of-thought</em>, interfacciarsi con strumenti se opportunamente istruiti, ecc., mentre modelli piccoli tendono a restituire frasi sconnesse o a non cogliere consegne più complesse.</p>
+<p><strong>&quot;Più grande è meglio&quot; - fino a quando?</strong> La spinta a scalare ha portato enormi progressi, ma non risolve <em>tutti</em> i problemi. Oltre al costo computazionale (addestrare GPT-3 costò su ordine dei milioni di $, GPT-4 ancor di più), ci sono <strong>limiti pratici</strong>: modelli enormi sono difficili da aggiornare, distribuire e far girare con bassa latenza. Inoltre, alcune fragilità (es. tendenza ad <em>allucinare</em> fatti, bias) persistono anche ingrandendo il modello - semplicemente i grandi allucinano in modo più convincente 😅. Studi come Chinchilla suggeriscono che non serve salire all&#39;infinito coi parametri se non si può alimentarli con dati adeguati. Oggi molte ricerche puntano su <em>scaling efficiente</em>: migliore scelta dei dati, architetture specializzate per contesti lunghi (Transformers con attenzioni sparse o ricorrenti), modelli <strong>più piccoli ma specializzati</strong> (i cosiddetti <strong>Small Language Models</strong> emergenti). Un esempio è <strong>Alpaca</strong> (Stanford, 2023): un modello di soli 7 miliardi (basato su LLaMA) che, con fine-tuning su istruzioni, riesce a comportarsi simile a ChatGPT su molte richieste comuni - indice che con la giusta specializzazione non sempre serve un mostro da 100B per deliverare valore.</p>
+<p>In conclusione, dal 2018 a oggi siamo passati da Transformer ~110M parametri (BERT-base) a LLM da centinaia di miliardi. Questa <strong>scalata</strong> ha sbloccato capacità latenti e aperto nuove applicazioni. Ma ha anche evidenziato problemi di <strong>allineamento</strong> (evitare output tossici, assicurare veridicità) e di <strong>efficienza</strong>. Questo ci porta al contesto attuale, dove un LLM raramente è usato &quot;da solo&quot;: viene integrato in sistemi più ampi per essere reso affidabile, aggiornabile e utile in contesti applicativi reali.</p>
+<h2 id="6-llm-come-componenti-di-sistema-non-solo-modelli">6. LLM come <em>componenti di sistema</em>, non solo modelli</h2>
+<p>Un moderno AI engineer sa che usare un LLM potente <strong>&quot;grezzo&quot; e isolato</strong> spesso non basta. Oggi gli LLM sono tipicamente incapsulati in architetture più ampie dove altri componenti ne mitigano i limiti e ne potenziano le capacità. Ecco i principali ruoli e integrazioni:</p>
+<ul>
+<li><strong>Prompt Engineering e formattazione:</strong> Il <em>prompt</em> è l&#39;interfaccia immediata con un LLM. Dato che questi modelli sono <em>task-agnostic</em> (non hanno un obiettivo predefinito oltre a generare testo plausibile), l&#39;utente deve definire l&#39;<strong>istruzione</strong> o domanda in modo chiaro e spesso includere <em>contesto aggiuntivo ed esempi</em>. Progettare buoni prompt è un&#39;arte: ad es. fornire il formato desiderato nella richiesta, oppure concatenare una breve conversazione di esempio che mostra al modello come dovrebbe rispondere. Per sistemi complessi, a volte i prompt vengono costruiti automaticamente combinando vari pezzi (istruzioni, conoscenza recuperata, memoria di conversazione, ecc.) - qui si parla di <strong>orchestrazione</strong> del prompt. Una buona ingegnerizzazione del prompt può migliorare affidabilità e precisione senza toccare il modello sottostante. In produzione, i prompt vanno anche <strong>gestiti in versione</strong>: piccoli cambiamenti (una frase in più, un esempio diverso) possono alterare sensibilmente l&#39;output. Serve dunque logging e test sui prompt per garantire che il comportamento resti stabile al variare di prompt ed eventualmente tra diverse versioni di modelli.</li>
+<li><strong>Retrieval-Augmented Generation (RAG):</strong> Uno dei problemi maggiori dei LLM è che la loro <em>conoscenza</em> è statica (limitata ai dati di training) e talvolta imprecisa. La tecnica RAG cerca di <strong>ancorare</strong> l&#39;LLM a informazioni aggiornate e fattuali integrando un componente di <em>retrieval</em> (ricerca) nel loop. In pratica, di fronte a una domanda o task, il sistema effettua prima una ricerca in una base di conoscenza esterna (documenti, database, web) e poi costruisce un prompt che include i contenuti trovati come <strong>contesto</strong> per l&#39;LLM. L&#39;LLM viene quindi guidato a formulare la risposta basandosi su quel contesto invece che sulla sola conoscenza interna<a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static">[32]</a>. Ad esempio, se chiediamo: <em>&quot;Qual è il tasso di inflazione in Italia quest&#39;anno?&quot;</em>, un LLM base (addestrato fino al 2021) potrà solo indovinare e rischia di inventare; con RAG, il sistema cercherà su fonti affidabili gli ultimi dati e li fornirà al modello, che li riassumerà correttamente. <strong>Benefici:</strong> RAG affronta sia il problema di conoscenza vecchia (perché inserisce info aggiornate) sia riduce le allucinazioni (il modello è &quot;ancorato&quot; a fonti esplicite)<a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=LLMs%27%20knowledge,to%20two%20key%20issues">[33]</a>. Inoltre consente di avere LLM più piccoli con conoscenza generale limitata ma integrati con <strong>memorie esterne</strong> estensive. Molte applicazioni &quot;LLM-enabled&quot; (come chatbot su documentazione aziendale, assistenti per customer support, motori di Q&amp;A su dati specifici) usano RAG: &quot;spezzano&quot; il prompt utente in query a un motore di ricerca (spesso su un <strong>vector database</strong> con embedding semantici dei documenti) e confezionano i risultati in un prompt finale per l&#39;LLM.</li>
+<li><strong>Tool use e API calling:</strong> LLM di ultima generazione possono essere visti come &quot;cervelli&quot; linguistici che ragionano ma non hanno interazione diretta col mondo esterno (a parte il testo). Per estenderne le capacità, li si dota della facoltà di <strong>chiamare strumenti esterni</strong>. Ad esempio, un LLM integrato in un assistente potrebbe, su richiesta, invocare: calcolatrici, servizi di meteo, database SQL, funzioni Python, motori di ricerca, ecc. Ciò richiede un&#39;architettura che intercetti quando il modello &quot;decide&quot; di usare uno strumento. Esistono vari approcci: uno è il pattern <strong>ReAct</strong> (Reason+Act), in cui il modello produce esplicitamente un <em>chain-of-thought</em> e comandi d&#39;azione (es: Cerca(&quot;ultime notizie inflazione Italia&quot;)), che il sistema esegue, per poi restituire al modello il risultato e permettergli di continuare la generazione<a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=decision,and%20coordinate%20with%20other%20agents">[34]</a><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=Overview%20of%20LLM,to%20the%20LLM%20prompt%20through">[35]</a>. Un altro approccio è fornire all&#39;LLM un elenco di funzioni disponibili (con relativa documentazione nel prompt) e far sì che emetta una sintassi speciale quando vuole invocarle (vedi ad es. <em>OpenAI function calling</em> o <em>LangChain tools</em>). L&#39;idea chiave è che l&#39;LLM fa da <strong>controller</strong> intelligente: capisce di quale tool c&#39;è bisogno e con quali parametri, delega il sub-task e poi ingloba la risposta nel suo flusso. Questo aumenta enormemente l&#39;affidabilità su compiti dove il puro LLM sarebbe debole: calcoli matematici precisi, data lookup, interazioni su web in tempo reale, manipolazione di immagini, ecc. In pratica, l&#39;LLM passa da <em>solista</em> a <em>orchestratore</em> di una rete di servizi.</li>
+<li><strong>Agenti (LLM-driven agents):</strong> Un <em>agent</em> è un sistema più complesso che combina i meccanismi sopra (memoria, ricerca, tool) per perseguire obiettivi di più alto livello in modo autonomo. Un agente LLM tipicamente: riceve un obiettivo (es: <em>&quot;Prenota un volo da Milano a New York per venerdì prossimo sotto i 500€&quot;</em>), poi pianifica una serie di azioni (cerca voli, confronta prezzi, forse chiede conferma all&#39;utente, infine chiama l&#39;API di prenotazione). Durante questo processo, l&#39;LLM potrebbe dover <strong>iterare</strong>: riflettere sui risultati parziali, aggiornare il piano, gestire errori (es. nessun volo sotto 500€, rilassare vincoli). Implementare agenti affidabili richiede cura: bisogna fornire al modello una sorta di <em>loop</em> dove può generare pensieri e azioni in cicli finché non raggiunge una condizione di termine. Inoltre serve assicurare che non faccia passi indesiderati. Framework come <strong>LangChain</strong>, <strong>Microsoft Semantic Kernel</strong> o <strong>Hugging Face transformers agent</strong> forniscono astrazioni per costruire agenti con LLM, definendo gli strumenti disponibili e gestendo il ciclo di prompt con i risultati delle azioni. Questo è un campo di frontiera, ma promette sistemi AI più <strong>autonomi e proattivi</strong> nel risolvere problemi complessi spezzandoli in sotto-problemi (un po&#39; come faremmo noi umani). Un principio cardine emerso anche nelle guide di OpenAI/AWS è: <em>&quot;un LLM da solo non basta per comportamenti intelligenti e affidabili, serve incastonarlo in un workflow strutturato con pianificazione, memoria, strumenti…&quot;</em><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=decision,and%20coordinate%20with%20other%20agents">[34]</a><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,building%20robust%2C%20extensible%2C%20and%20intelligent">[36]</a>.</li>
+<li><strong>Controllo di qualità, sicurezza e osservabilità:</strong> Integrando LLM in sistemi più grandi, abbiamo anche l&#39;opportunità di introdurre moduli di <strong>verifica</strong> e <strong>monitoraggio</strong>. Ad esempio, dopo che l&#39;LLM genera una risposta, potremmo avere un passaggio di <strong>validation</strong> (un altro modello o un insieme di regole controlla se la risposta soddisfa certi criteri: no contenuti vietati, no info mancanti, formato corretto, etc.). Oppure implementare un loop di <strong>self-reflection</strong>: il modello rilegge la sua risposta e valuta se sembra coerente e corretta (tecniche di <em>chain-of-thought</em> aggiuntivo o <em>vote/verify</em>). In produzione è cruciale avere <strong>telemetria</strong>: misurare latenza delle chiamate all&#39;LLM, numero di token usati, tassi di errore di parsing, ecc. Strumenti di <em>LLM observability</em> servono a tracciare non solo metriche classiche ma anche indicatori come: frequenza di allucinazioni rilevate, trend di costi (token per richiesta), tipi di richieste fatte dall&#39;utente, e feedback degli utenti. Tutto questo rientra nell&#39;<strong>ML-Ops per LLM</strong> (talvolta chiamato LLMOps). Non si può davvero mettere un modello conversazionale in mano a milioni di utenti senza logging e monitoraggio adeguato: &quot;le cose possono diventare strane in produzione&quot; - latenze che impennano, output fuori policy dopo un aggiornamento, costi che sfuggono, ecc<a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=experiences,after%20a%20minor%20prompt%20change">[37]</a><a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1.%20Latency%2C%20cost%2C%20and%20third,dependencies">[38]</a>. Un AI Engineer deve implementare <strong>guardrail e allarmi</strong>: ad esempio, se improvvisamente il tasso di utilizzo di uno strumento (API esterna) chiamato dall&#39;agente sale anomalo, potrebbe esserci un prompt injection in corso; oppure se il tempo medio di risposta cresce, forse il modello sta &quot;ragionando&quot; troppo a lungo su certe query (magari utenti maliziosi fanno input per stressarlo). LLM observability significa poter <em>vedere dentro</em> queste dinamiche e reagire<a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=Engineering%20teams%20need%20more%20than,built%20to%20handle%20AI%20workloads">[39]</a><a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1,and%20scoring%20of%20LLM%20responses">[40]</a>.</li>
+</ul>
+<p>In sintesi, <strong>oggi un LLM in produzione è raramente nudo e crudo</strong>. Lo si avvolge in uno strato di <strong>prompt ingegnerizzato</strong>, con eventuale <strong>retrieval</strong> per conoscenza aggiornata, la capacità di chiamare <strong>tool</strong> esterni, e modulistica di <strong>controllo</strong>. Tutto questo per ragioni di:</p>
+<ul>
+<li><strong>Latency &amp; cost:</strong> minimizzare token inutili (prompt brevi ottimizzati<a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,the%20entire%20history%20every%20time">[41]</a>, caching di risposte frequenti<a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,logic%20and%20cache%20invalidation%20strategy">[42]</a>, far fare al modello solo il necessario e delegare il resto). Ad esempio, se so che il 90% delle query utenti sono semplici, potrei usare un modello più piccolo/economico per quelle e chiamare il modello grande solo per il 10% difficile<a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=%2A%20Model%20right,com">[43]</a>. Oppure <em>riassumere</em> la conversazione in background per non passare tutto il contesto ogni volta (riducendo token, quindi costo, e latenza).</li>
+<li><strong>Affidabilità:</strong> usare tool per compiti dove l&#39;LLM è debole (calcolo, dati in real-time), retrieval per migliorare accuratezza sui fatti, validazione per prevenire output scorretti. Questo aumenta la confidenza che il sistema risponda correttamente e diminuisce i rischi (es. se l&#39;LLM allucina un dato finanziario, potremmo mitigare avendo imposto di <em>sempre</em> citare un documento di conoscenza: niente documento = il modello deve dire &quot;non so&quot;).</li>
+<li><strong>Manutenibilità:</strong> tenendo i pezzi separati, posso aggiornare la knowledge base senza dover ri-addestrare il modello; posso modificare i prompt o aggiungere nuovi strumenti se cambiano i requisiti. È un approccio più modulare e ingegnerizzabile rispetto a vedere l&#39;LLM come monolite.</li>
+<li><strong>Osservabilità:</strong> un design a componenti permette di loggare le interazioni tra essi. Posso vedere quale documento è stato fetchato in RAG, quale tool è stato chiamato e con che input, e naturalmente la conversazione utente-modello. Questi log aiutano a diagnosticare problemi: se l&#39;LLM dà risposte strane, forse il documento di conoscenza passato era sbagliato o il prompt si è degradato. Senza questa visibilità, un LLM è una black box che &quot;ogni tanto sbrocca&quot; e non sai perché.</li>
+</ul>
+<p>Concludendo, la <em>system view</em> di un LLM è come <strong>di un cervello linguistico inserito in un corpo con sensori e attuatori</strong>: l&#39;LLM fornisce capacità cognitive generali (comprensione, ragionamento, linguaggio), ma ha bisogno di &quot;occhi e orecchie&quot; (moduli di ricerca, database) e &quot;mani&quot; (API per agire) per essere veramente utile e affidabile nel mondo reale.</p>
+<h2 id="7-limiti-strutturali-dei-llm">7. Limiti strutturali dei LLM</h2>
+<p>Nonostante i miracoli che sembrano fare, gli LLM attuali hanno <strong>limiti intrinseci</strong> importanti. Capirli è cruciale perché molte sfide di utilizzo nascono da questi limiti, che non si risolvono semplicemente &quot;addestrando un po&#39; meglio&quot; ma richiedono interventi architetturali o di sistema (come abbiamo visto sopra). I principali sono:</p>
+<ul>
+<li><strong>Allucinazioni:</strong> Un LLM &quot;allucina&quot; quando inventa informazioni non corrispondenti a realtà fattuale, pur esprimendole in modo convincente. Esempio: chiedi a un modello di elencare le opere di un autore e lui inserisce 2 libri inesistenti in mezzo ai titoli corretti, senza batter ciglio. Perché accade? A livello fondamentale, il training di un LLM lo spinge a <em>predire la parola più probabile successiva</em>, non a verificare verità. Se nei dati di training un nome appare spesso associato a certi fatti, il modello li ripeterà anche se sono falsi in quel caso specifico. Inoltre, quando viene spinto fuori distribuzione (domanda su qualcosa di cui non ha mai letto), il modello <strong>tende comunque a dare una risposta_, perché è così che è addestrato (penalizzato se non produce output). Non ha una base di conoscenza &quot;verificata&quot;, ha solo correlazioni statistiche. Quindi se chiediamo_ &quot;Chi ha vinto il Nobel per la fisica nel 2025?&quot; <em>(futuro, non sa), è probabile che allucini un nome plausibile, magari combinando nomi di scienziati esistenti. Questa tendenza a</em> &quot;extrapolare quando i fatti non sono disponibili&quot; <em>è intrinseca al modo in cui funzionano i language model</em></strong><a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=LLMs%27%20knowledge,to%20two%20key%20issues"><strong><em>[33]</em></strong></a><strong><em>. Non c&#39;è una semplice soluzione dentro il modello (anche modelli enormi e avanzati come GPT-4 ogni tanto allucinano). La mitigazione viene da RAG (così deve basarsi su fonti) o da tecniche di</em> post-checking*. Ma finché un LLM genera testo sulla base di probabilità apprese,</strong> non avrà il concetto di &quot;verità&quot; <em>se non come altro testo probabile. Alcuni ricercatori dicono che la veridicità è un&#39;esternalità per questi modelli: va introdotta con regole o retrieval, perché di default il modello non sa quando non sa</em>.</li>
+<li><strong>Assenza di grounding (ancoraggio alla realtà):</strong> Questo è collegato alle allucinazioni ma più generale. Un LLM ragiona solo sul <strong>testo</strong>. Non ha percezione diretta del mondo fisico, né &quot;esperienze&quot; reali. Con &quot;grounding&quot; si intende il collegamento tra simboli e cose reali. I LLM sono stati chiamati <em>pappagalli stocastici</em> (Bender et al.) proprio perché generano frasi plausibili senza &quot;comprendere&quot; il mondo come noi. Ad esempio, un LLM può dire che un elefante pesa 5 kg se il prompt lo porta su una strada sbagliata, perché non ha mai visto un elefante vero. Questa mancanza di grounding li rende anche <strong>fragili a contraddizioni</strong>: potrebbe dire in una frase che <em>&quot;Roma è la capitale d&#39;Italia&quot;</em> e poche righe dopo che <em>&quot;la capitale d&#39;Italia è Milano&quot;</em>, se spinto da domande/opzioni formulate diversamente. Per noi è assurdo perché sappiamo che c&#39;è un&#39;unica realtà esterna; per il modello, potrebbe aver memorizzato entrambe le frasi in contesti diversi e le ripete senza un meta-consistenza. Un altro aspetto: senza grounding temporale, i LLM non <em>&quot;sanno&quot;</em> dello scorrere del tempo. Se il training si è fermato al 2021, nel 2023 il modello non sente alcun <em>disagio cognitivo</em> nel dire &quot;l&#39;attuale primo ministro è X&quot; quando X non lo è più - il modello non percepisce la realtà cambiata, vive nei dati con cui è stato nutrito<a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=,called%20hallucination">[44]</a>. Questa staticità (salvo aggiornare il modello con fine-tuning, che però è costoso e non continuo) è un problema intrinseco.</li>
+<li><strong>Difficoltà di aggiornamento incrementale:</strong> Collegato al punto precedente, i LLM <strong>non hanno una memoria separabile</strong> facilmente aggiornabile. Se la capitale di un paese cambia, un sistema classico basato su DB modifica una riga nella tabella e tutte le query future riflettono la modifica. Un LLM invece ha la &quot;conoscenza&quot; impressa nei pesi sinaptici di una rete enorme: per aggiornarne uno bisognerebbe rifare training (costosissimo) o tentare tecniche di editing neuronale/fine-tuning locale. Ma questi interventi sono rischiosi: <em>catastrophic forgetting</em> (cambi un&#39;informazione e inconsapevolmente ne rovini altre collegate), <em>overfitting</em> (il modello inizia a ripetere la frase di training aggiornata e perde fluidità), ecc. In breve, gli LLM <strong>non sono pensati come knowledge base aggiornabili</strong>, ma come modelli statistici statici. Anche qui RAG è una toppa: mantieni la conoscenza in un DB esterno e fai in modo che il modello lo usi, così aggiorni il DB e il modello &quot;sa&quot; di nuovo le cose. Ma il modello di per sé rimane statico; se gli chiedi senza fornirgli contesto aggiornato, ti darà la vecchia informazione. In applicazioni critiche, questo è un grosso limite (pensiamo a assistenti medici che devono stare al passo con linee guida, o chatbot di news… non puoi retrainare GPT-4 ogni giorno con le notizie).</li>
+<li><strong>Bias e tossicità:</strong> I LLM apprendono dai dati di training, che includono ampie porzioni di Internet, social media, libri… Purtroppo questi dati contengono <strong>bias culturali, stereotipi, linguaggio d&#39;odio, disinformazione</strong> e così via. Ne risulta che il modello li interiorizza e, se non filtrato, può riprodurli o addirittura amplificarli. Ci sono casi documentati di modelli che generavano output razzisti o sessisti quando provocati. Le aziende hanno introdotto tecniche di <strong>fine-tuning con Human Feedback (RLHF)</strong> e filtri per attenuare questi problemi (ad esempio ChatGPT ha una &quot;Personalità di default&quot; moderata e rifiuta certi contenuti). Ma è una mitigazione <em>post hoc</em>. Intrinsecamente, se chiedi a un LLM di impersonare un certo ruolo tossico o esplori in maniera non filtrata, i bias originali possono emergere. Inoltre, anche su cose non tossiche, i LLM possono avere bias sottili: ad es. tendenza a nominare più inventori uomini che donne, o assumere contesti occidentali come default in storie, ecc. Questi riflettono i dataset (più contenuti su uomini storici, etc.). <strong>Correggere bias dopo addestramento</strong> è difficile: devi o filtrare i dati in entrata (censura/pro-attiva, ma rischia di ridurre diversità) o applicare penalizzazioni tramite RL (rischi di rovinare conoscenza). È un campo attivo di ricerca. Da ingegnere, devi esserne consapevole: <em>mai</em> assumere che l&#39;LLM sia neutrale o privo di pregiudizi. Va testato e monitorato, specie su output sensibili (es. consigli in ambito medico-legale).</li>
+<li><strong>Fragilità adversarial e inconsistenza:</strong> I LLM possono essere sorprendentemente <strong>sensibili a piccoli cambiamenti</strong> nel prompt. Ad esempio, invertire l&#39;ordine di due frasi nella domanda può talvolta portare a risposte diverse. Oppure aggiungere un dettaglio superfluo può confondere il modello. Ci sono anche attacchi di <em>prompt injection</em>: se l&#39;utente inserisce nel suo input qualcosa come &quot;Forget previous instructions. [Malicious instruction]&quot;, alcuni modelli potrebbero obbedire e violare i vincoli originali. Questa vulnerabilità nasce dal fatto che il modello non ha un forte concetto di <em>verità di livello superiore</em> o <em>autorizzazioni</em>: ogni input è testo da continuare, quindi se l&#39;input conteneva &quot;Il seguente è un prompt malizioso: ...&quot; il modello potrebbe inglobarlo nella sua narrazione interna. Insomma, <strong>non hanno robustezza formale</strong>. Anche la consistenza logica interna non è garantita: possono contraddirsi, o fornire due risposte diverse a domande parafrasi. Per un ingegnere, questo significa che bisogna mettere <strong>safety net</strong>: es. validare le risposte attraverso modelli/verificatori separati, non fidarsi ciecamente su questioni di correttezza. Anche test A/B dei prompt e <em>unit test</em> comportamentali per il modello sono auspicabili per capire come risponde a vari phrasing, e scegliere quelli meno instabili.</li>
+</ul>
+<p><strong>Perché sono limiti intrinseci?</strong> In ultima analisi, perché derivano dalla natura stessa dei modelli linguistici. Un LLM è addestrato a comprimere le statistiche di un enorme corpus di testo nel suo parametro. Non ha percezione diretta del mondo né un modello causale del mondo (solo correlazioni linguistiche). Dunque non può sapere se un enunciato è <em>vero</em>, può solo giudicare se è <em>probabile</em>. Bias e tossicità sono presenti perché sono presenti nei dati umani e il modello non ha un valore etico proprio - a meno che glielo inseriamo tramite obiettivi aggiuntivi. L&#39;inconsistenza e fragilità derivano dal non avere ragionamenti simbolici affidabili: anche se modelli avanzati mostrano tracce di logica, alla base non fanno inferenza simbolica, quindi possono cadere in contraddizione o essere sviati.</p>
+<p>Questi limiti <em>non sono bug risolvibili con una patch</em>, ma aspetti fondanti. Significa che quando progettiamo sistemi con LLM dobbiamo <strong>costruire attorno</strong> per mitigarli. Ad esempio, per la conoscenza aggiornata (grounding) usiamo RAG; per le allucinazioni possiamo far ricontrollare la risposta a un motore di ricerca o fornire fonti; per bias/tossicità mettiamo filtri di moderazione e definizioni di stile nel prompt; per l&#39;inconsistenza usiamo agenti che ricontrollano le risposte o segmentiamo problemi in sottoproblemi più facili.</p>
+<p>In futuro, nuove architetture (es. integrazione più profonda con knowledge base, o modelli multi-modali che <em>vedono</em> e <em>agiscono</em> nell&#39;ambiente) potranno ridurre questi limiti. Ma al 2026, chi utilizza LLM deve farlo con consapevolezza di queste <em>incertezze intrinseche</em>, adottando un mindset di &quot;AI safety&quot;: mai lasciare che un LLM prenda decisioni irreversibili senza supervisione, e strutturare i prodotti in modo da poter intervenire se (quando) qualcosa va storto.</p>
+<h2 id="8-collegamento-con-il-tuo-percorso-geo-disaster-response">8. Collegamento con il tuo percorso GEO &amp; Disaster Response</h2>
+<p>Veniamo ora al caso d&#39;uso che ti interessa: applicare queste tecnologie in ambito geospaziale e di risposta a disastri (terremoti, calamità naturali, ecc.). Questo settore combina dati <em>multi-modali</em> (testi, mappe, immagini satellitari, sensori) e richiede sia <strong>analisi quantitative precise</strong> (es. rilevare danni da immagini) sia <strong>capacità di sintesi e ragionamento</strong> (es. redigere un rapporto di situazione, fare inferenze su rischi). Gli LLM possono giocare un ruolo prezioso, ma <strong>devono essere integrati correttamente</strong> con i flussi geospaziali esistenti. Vediamo alcuni scenari:</p>
+<ul>
+<li><strong>LLM + RAG per report post-terremoto:</strong> Immagina dopo un forte terremoto di dover creare rapidamente un rapporto che riassuma i danni, le zone più colpite, lo stato delle infrastrutture e possibili azioni. Si dispone di varie fonti: relazioni dei vigili del fuoco, post sui social geolocalizzati, immagini satellitari con analisi dei crolli, database GIS con edifici e popolazione. Un LLM da solo non <em>sa</em> nulla del terremoto (a meno di aver addestrato su eventi passati, ma non sul nuovo). Però potremmo usarlo come <strong>motore di generazione linguistica</strong> alimentandolo con i dati specifici dell&#39;evento. Con un approccio RAG, il sistema può recuperare ad esempio: <em>&quot;rapporti testuali dei vigili del fuoco nelle ultime 12h&quot;</em>, <em>&quot;risultati di analisi automatica da immagini (X edifici crollati in area Y)&quot;</em>, <em>&quot;elenchi di strade bloccate da mappe live&quot;</em>. Queste informazioni vengono inserite (magari in forma già riassunta) nel prompt, e l&#39;LLM viene incaricato di redigere un <strong>resoconto coerente e leggibile</strong> per, ad esempio, le autorità. L&#39;LLM eccelle nel <strong>collegare i punti</strong>: può prendere l&#39;elenco di fatti e trasformarlo in una narrazione: &quot;Nella zona nord della città (Quartiere XX), risultano crollati circa 30 edifici, con le maggiori concentrazioni di danni lungo Via Alfa e Via Beta. Le squadre di soccorso hanno tratto in salvo 12 persone dalle macerie e segnalano almeno 5 dispersi. Il ponte sul fiume è inagibile, isolando temporaneamente la frazione Gamma...&quot;. Senza LLM, un operatore umano dovrebbe manualmente scrivere questo sommario integrando tante fonti; con l&#39;LLM, l&#39;operatore può concentrarsi su verificare e correggere, invece di scrivere da zero. <strong>Importante:</strong> come visto, qui l&#39;LLM va <em>grounded</em> ai dati reali: non vogliamo che inventi numeri di dispersi! Dunque forniamo cifre e dettagli precisi via RAG, e magari chiediamo al modello di citare le fonti (se l&#39;output è solo per uso interno). In tal modo l&#39;LLM fa bene ciò che sa fare - linguaggio e ragionamento testuale - ma non agisce &quot;in assenza di informazioni&quot;.</li>
+<li><strong>LLM + agenti per supporto decisionale in emergenza:</strong> In situazioni di crisi, un decisore potrebbe interrogare un sistema AI con domande complesse, tipo <em>&quot;Dove dovremmo concentrare le squadre USAR in base alle segnalazioni e ai dati di danno?&quot;</em>. Rispondere richiede: capire la domanda (compito linguistico), avere dati (geospaziali e testuali), ragionare combinando <em>criteri</em> (ad esempio: squadre USAR = ricerca e soccorso in macerie, quindi servono dove edifici crollati e popolazione intrappolata potenziale è maggiore). Un singolo modello statico farebbe fatica. Ma possiamo costruire un <strong>agente LLM</strong> dotato di strumenti: uno che query un database GIS per numero di edifici crollati per zona, uno che legge gli ultimi messaggi SOS arrivati, uno che consulta il registro di squadre già dispiegate. L&#39;agente può fare un piano tipo: 1) ottenere mappa di densità crolli; 2) ottenere elenco segnalazioni di persone intrappolate; 3) incrociare per zone; 4) proporre priorità. I passi 1) e 2) li fa tramite tool (ad esempio chiamando un&#39;API geospatiale che ritorna dati, o eseguendo una query su un knowledge graph di emergenza). Poi l&#39;LLM stesso può generare una risposta tipo: <em>&quot;Le zone con maggior bisogno di USAR sembrano A e B. Nel quartiere A (20 edifici crollati, ~50 persone sotto macerie segnalate) al momento c&#39;è solo una squadra operativa, suggerisco di inviarne almeno altre due. Nel quartiere B (15 crolli, 30 persone segnalate) la situazione è simile. Le zone C e D hanno meno crolli o già sufficiente copertura.&quot;</em>. Questo è <strong>supporto decisionale</strong>: l&#39;LLM non prende la decisione, ma fornisce un&#39;analisi ragionata e leggibile rapidamente, integrando dati disparati (GIS + segnalazioni + stato risorse). Ciò permette al responsabile di confermare e agire molto più velocemente. Ancora, l&#39;LLM qui funge da <strong>collettore intelligente</strong>: manipola i dati con ragionamenti e li presenta efficacemente.</li>
+<li><strong>LLM come &quot;interfaccia cognitiva&quot; sopra modelli di Remote Sensing (RS):</strong> In analisi di immagini satellitari o telerilevamento, spesso otteniamo risultati tecnici: mappe di classificazione, matrici di confusione, percentuali di danno per cella, ecc. Un LLM può aiutare a tradurre questi output grezzi in <strong>insight umanamente fruibili</strong>. Per esempio, un modello di visione computazionale elabora immagini post-disastro e produce come output shapefile con poligoni delle aree allagate, e un indicatore di gravità per area. Un LLM potrebbe prendere questi risultati (convertiti in testo strutturato) e generare un <strong>briefing</strong>: <em>&quot;Le analisi satellitari indicano estese inondazioni lungo il fiume Delta: circa 45 km² di territorio risultano allagati. Particolarmente colpiti i comuni di X e Y, dove l&#39;acqua ha coperto rispettivamente ~30% e ~45% dell&#39;area urbana. L&#39;area industriale di Y è interamente sommersa con possibile rilascio di sostanze in acqua. Le infrastrutture principali interessate includono la SP123 e la ferrovia Z, entrambe interrotte.&quot;</em>. Osserva quante deduzioni e aggregazioni sono incluse: l&#39;LLM può descrivere l&#39;area totale (sommando poligoni), convertire quell&#39;informazione in frase di impatto, identificare comuni dentro i poligoni (incrociando coordinate con nomi via un tool GIS nel backend), menzionare infrastrutture toccate (se ha dati vettoriali su strade ferrovie, può incrociarli). Insomma, lo usiamo come un <em>report generator intelligente</em> che sta sopra ai modelli numerici. <strong>Cosa non deve fare l&#39;LLM?</strong> Non deve fare <em>lui</em> la segmentazione sull&#39;immagine! Per riconoscere pixel allagati c&#39;è un modello di visione specialistico che lavora su raster e magari utilizza reti convolutive o altre architetture. L&#39;LLM non ha la percezione visiva diretta (a meno di usare un modello multimodale, ma attualmente per compiti di precisione i modelli dedicati sono migliori). Quindi la regola: lasciare ai modelli RS il lavoro &quot;pixel-wise&quot; quantitativo (sono addestrati per alta accuratezza su quello), e usare l&#39;LLM per <strong>collegare quei risultati con la conoscenza e presentarli</strong>. Un LLM può ad esempio spiegare perché un certo pattern di allagamento è pericoloso (&quot;quest&#39;area era già franosa, l&#39;alluvione la rende instabile&quot;), cosa che un modello RS puro non fa.</li>
+</ul>
+<p><strong>Multimodalità (testo ↔ immagini ↔ geospaziale):</strong> Vale la pena notare che la tendenza attuale è verso modelli in grado di ingerire più forme di dati. Ad esempio <em>GPT-4</em> ha capacità visive: puoi dargli un&#39;immagine e lui produce testo su di essa. Ci sono modelli come <strong>CLIP</strong> e <strong>BLIP</strong> che collegano visione e linguaggio. Per dati geospaziali, emergono lavori che integrano grafi georeferenziati con LLM (es. GraphRAG nel geospaziale). Quindi in un futuro non lontano potresti avere un <em>LLM multimodale</em> che prende direttamente sia mappe che testi. Già oggi servizi come <strong>Google&#39;s PaLM-E</strong> puntano a unire visione, linguaggio e robotica. Nel contesto disastri, immagina di dare al modello sia la mappa del danno sia i tweet localizzati: un modello multimodale potrebbe combinare direttamente e spiegarti la situazione. Siamo agli inizi in questo - per ora, l&#39;approccio modulare (modello visivo + LLM) è più pratico. Ma tieni d&#39;occhio le ricerche, perché strumenti come <strong>Imagen (Google)</strong> o <strong>Kosmos-1 (Microsoft)</strong> stanno gettando ponti tra dati visivi e LLM.</p>
+<p><strong>Cosa un LLM <em>non deve fare</em> nel geospaziale/DR:</strong> come già accennato, non affidare a un LLM la <strong>precisione tecnica</strong> che richiede algoritmi dedicati. Se devi ottenere la latitudine/longitudine di un indirizzo, usa un geocoding API, non chiedere al modello di inventarsela! Se devi calcolare la magnitudo di un terremoto dai dati sismografici, servono formule fisiche, non il &quot;parere&quot; di un LLM. Gli LLM non hanno garanzie di accuratezza numerica né rigore scientifico. Quindi le parti <em>core</em> di analisi (rilevare danno, calcolare estensioni, contare esatti) vanno fatte con metodi deterministici o modelli ML specialistici. LLM eccelle invece in: <strong>sintesi, correlazione di alto livello, comunicazione, Q&amp;A</strong>. Inoltre è bravissimo a colmare gap di knowledge generale: se in un rapporto devi anche spiegare concetti (es: cos&#39;è una faglia sismica, o quali sono gli effetti del liquefacimento del suolo) l&#39;LLM può generare quei paragrafi attingendo alla sua conoscenza addestrata.</p>
+<p><strong>Integrazione con pipeline GEO esistenti:</strong> Potresti immaginare il tuo sistema come: pipeline di data ingestion (satelliti, sensor, open data) → modelli analitici (CV per immagini, GIS computations, ecc.) → <strong>layer LLM</strong> per l&#39;output all&#39;utente. In fase di design, definisci bene l&#39;API tra il layer analitico e l&#39;LLM. Spesso conviene strutturare i dati in un formato testuale comprensibile al modello (es. bullet point o JSON), includendo anche spiegazioni. Ad esempio, invece di buttare raw numbers, potresti dire: &quot;Strada X: interrotta (ponte crollato)&quot;. Così l&#39;LLM sa già che la strada X è interrotta e perché, e può facilmente includerlo nel suo racconto, magari ragionando &quot;ponte crollato → isolato quel comune a nord&quot;. Se dessi solo &quot;strada X status: 0&quot; dovrebbe inferire il significato di 0, molto più difficile. Quindi fare un po&#39; di <strong>data preprocessing per LLM</strong> è utile: convertire i risultati tecnici in frasi o dichiarazioni semplici.</p>
+<p><strong>Validazione incrociata:</strong> in ambiti safety-critical (disastri lo sono), un LLM non deve essere l&#39;unica voce. Si possono usare <em>ensemble</em> di approcci: far generare il rapporto all&#39;LLM, poi farlo rileggere a un altro LLM chiedendo di evidenziare contraddizioni o possibili errori, e infine avere un human-in-the-loop (un operatore) che verifica punti chiave. Oppure generare due versioni (magari con temperature diverse o prompt diversi) e confrontare. Insomma, usare l&#39;LLM come assistente, non come oracolo.</p>
+<p>In conclusione su GEO &amp; Disaster Response: un LLM può fungere da <strong>collettore intelligente e comunicatore</strong> sopra i dati geospaziali. Pensalo come un <strong>analista virtuale</strong> che conosce un po&#39; di tutto (grazie al training generale) e che può essere istruito a usare i tuoi dati specifici per produrre analisi e report. Ti libera dal dover manualmente interpretare ogni mappa e ogni tabella, proponendoti un quadro integrato. Ma tu come ingegnere predisponi l&#39;ecosistema: modelli specialistici per estrarre info dai dati grezzi, database ben organizzati, e poi l&#39;LLM opportunamente imbrigliato (prompt mirati, RAG, tool) per cucire il tutto. Così sfrutti il meglio dei due mondi - accuratezza quantitativa dei modelli geo e <em>intelligenza linguistica</em> degli LLM.</p>
+<h2 id="9-conclusioni-e-mappa-concettuale-evolutiva">9. Conclusioni e mappa concettuale evolutiva</h2>
+<p>Per ricapitolare quanto visto, presentiamo una <strong>mappa concettuale</strong> dell&#39;evoluzione NLP → LLM, e alcune linee guida per un AI Engineer su cosa è fondamentale padroneggiare e cosa si può (relativamente) trascurare:</p>
+<h3 id="91-mappa-concettuale-riassuntiva-nlp-llm">9.1 Mappa concettuale riassuntiva (NLP → LLM)</h3>
+<ul>
+<li><strong>Era statistica (anni &#39;90 - primi &#39;00):</strong> Approcci basati su modelli di probabilità semplici e feature manuali. Esempi: <em>n-grammi</em> per il language modeling<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third">[2]</a>, modelli di Markov (HMM) per tag sequenziali, <em>bag-of-words + TF-IDF</em> per IR e classificazione. <strong>Limiti:</strong> nessuna comprensione di significato, contesto limitato a poche parole, richiedono molte osservazioni per coprire casi rari<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations">[3]</a>. L&#39;ingegnere doveva progettare features (liste di parole chiave, pattern regex, ecc.). Obsoleto oggi se non per baseline veloci.</li>
+<li><strong>Prime reti neurali per NLP (anni &#39;00 - primi &#39;10):</strong> Introduzione di reti <strong>feed-forward</strong> per language model (Bengio et al. 2003) e soprattutto <strong>word embeddings</strong> (Mikolov 2013)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Researchers%3A%20Tomas%20Mikolov%20et%20al,%28GloVe%2C%202014">[45]</a>. Qui il focus è rappresentare le parole in vettori densi che catturano similarità semantica (famoso <em>king-man+woman=queen</em><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">[5]</a>). I modelli neurali iniziano a superare i conta-parole, risolvendo in parte la sparsità. <strong>Tuttavia</strong> questi modelli non modellano ancora bene le frasi intere: gli embedding sono statici, e le reti feed-forward avevano contesto finestra limitato (es. 5 parole). Si afferma il paradigma <em>&quot;pre-training + fine-tuning&quot;</em> in versione primitiva: si pre-addestrano embedding generali, poi si usano in modelli per compiti specifici.</li>
+<li><strong>Sequence modeling con RNN (2014-2016):</strong> Il bisogno di contesto più ampio porta all&#39;adozione massiccia di <strong>RNN, LSTM e GRU</strong>. <em>Sequence-to-sequence</em> con attenzione (Bahdanau et al. 2014) rivoluziona la traduzione automatica: un encoder LSTM codifica la frase sorgente, un decoder LSTM genera la frase target, con <strong>attention</strong> che fa da ponte flessibile (all&#39;epoca l&#39;attenzione era un meccanismo specifico, non l&#39;architettura intera). Le LSTM dominano molte applicazioni - es. sintesi vocale, didascalie immagini (image captioning combinava CNN+LSTM). <strong>Problemi risolti:</strong> memoria a breve termine, ordine di parola, variabili lunghezze. <strong>Problemi rimasti:</strong> difficoltà con dipendenze molto lunghe (LSTM migliora ma non fa miracoli se paragrafi interi)<a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to">[8]</a>, training non parallelo e lento<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,The%20fundamental">[46]</a>, tanti trick necessari per non divergere (clipping, inizializzazioni ortogonali, ecc.). In questa fase i modelli iniziavano ad avere qualche decina di milioni di parametri e l&#39;addestramento GPU diventava standard in NLP.</li>
+<li><strong>Il Transformer (2017):</strong> <em>Game changer</em>. Introduce self-attention multipla e abbandona la ricorsione<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including">[16]</a>. Risultato: modelli più veloci da addestrare, che scalano a dati enormi e catturano contesto globale meglio di LSTM. In pochi mesi sostituisce LSTM in traduzione, poi in praticamente ogni task sequenziale. Librerie come Tensor2Tensor e successivamente Hugging Face accelerano la diffusione. Modelli Transformer encoder-only (BERT, 2018) e decoder-only (GPT, 2018) inaugurano l&#39;era dei <strong>pre-trained language models</strong>.</li>
+<li><strong>Pre-training su larga scala (2018-2019):</strong> Con BERT e GPT si vede il potenziale di allenare modelli su quantità massicce di testo generico e poi riutilizzarli. BERT ottiene SOTA su 11 task NLP con fine-tuning minimo - &quot;ImageNet moment&quot; per NLP. GPT-2 mostra generazione di testo fluida e coerente come mai prima (al punto che inizialmente OpenAI fu riluttante a rilasciarlo interamente temendo abusi). La comunità open replica BERT facilmente (vedi RoBERTa), mentre GPT-2 resta un po&#39; esclusivo per via dei costi di training. Compare anche <strong>ULMFiT</strong> (Howard &amp; Ruder) che mostra il fine-tuning universale. I modelli base BERT-base (110M param) e GPT-2 (1.5B param) sembravano già grandi… ma era solo l&#39;inizio.</li>
+<li><strong>Large Language Models emergono (2020-2021):</strong> OpenAI rilascia <strong>GPT-3 (175 miliardi)</strong><a href="https://arxiv.org/abs/2005.14165#:~:text=language%20models%20greatly%20improves%20task,several%20tasks%20that%20require%20on">[26]</a>, dimostrando che <em>scalando</em> di un ordine di grandezza si ottengono capacità zero-shot/few-shot impressionanti. Si diffonde il concetto di <strong>prompting</strong> come alternativa al fine-tuning: GPT-3 risolve compiti descritti nella prompt senza cambiare pesi. Altri big lab seguono: Google Brain con <strong>PaLM (540B)</strong>, NVIDIA/Microsoft con Megatron-Turing (530B). Si esplora anche architetture sparse (Switch Transformers con gating per arrivare a trillioni di parametri efficaci, Mixture-of-Experts), ma i densi come GPT-3 dominano. <strong>Emergent abilities</strong> diventano topic di ricerca - modelli grandi mostrano comprensione del linguaggio, ragionamenti aritmetici e logici di base, programmazione, che modelli piccoli non mostravano<a href="https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up">[31]</a>. In parallelo, DeepMind pubblica <strong>Gopher (280B)</strong> e un&#39;analisi sui rischi/bias degli LLM. Empiricamente, &quot;more data, more parameters&quot; continua a migliorare performance quasi su ogni metrica, sebbene con costi enormi.</li>
+<li><strong>Allineamento e utilità (2022-2023):</strong> Una sfida diventa rendere questi modelli &quot;utili&quot; e non solo grandi modelli pappagallo. OpenAI sviluppa <strong>InstructGPT</strong> poi ChatGPT: applica RLHF (rinforzo con feedback umano) per allineare l&#39;output agli intenti degli utenti (meno divagazioni, più seguire istruzioni). ChatGPT (basato su GPT-3.5) esplode in popolarità mostrando l&#39;efficacia di LLM <em>allineati</em> in un&#39;interfaccia conversazionale. Intanto, la ricerca su <strong>scaling laws</strong> porta a Chinchilla (70B) che batte Gopher (280B) usando 4x dati, e <strong>UL2</strong> (Google) esplora architetture di training alternative (mix di obiettivi seq2seq). Nel 2023, OpenAI rilascia <strong>GPT-4</strong>, modello multimodale (accetta immagini) e con capacità di ragionamento ancora avanzate (punta a un livello quasi da <em>&quot;AGI piccola&quot;</em> in certi benchmark). Vengono anche rilasciati modelli open-source notevoli: <strong>T5</strong> (Google 2019, text-to-text), <strong>BLOOM</strong> (2022, modello multi-lingua open 176B), <strong>OPT</strong> (Meta 175B), e soprattutto <strong>LLaMA</strong> (Meta 2023) che pur non open-source completo trapela e viene fine-tunato in mille varianti (Alpaca, Vicuna, etc.), democratizzando un po&#39; gli LLM di qualità. Nel frattempo si integrano LLM in prodotti e flussi industriali, con forte focus su <strong>incorporare conoscenza del cliente</strong> (da qui il boom di RAG) e <strong>strumenti</strong> (plugin di ChatGPT, LangChain per developer). Si affaccia la <strong>multimodalità</strong>: GPT-4 Vision, Google Gemini all&#39;orizzonte, idee di agenti con percezione (vedi PaLM-E di Google che collega robotics). La tendenza è avere LLM come <em>cervelli generali</em> con occhi, orecchie e mani collegati.</li>
+<li><strong>Verso Small &amp; Specialized Models (2024+):</strong> In reazione al costo enorme dei LLM giganti, c&#39;è un filone di ricerca su modelli più piccoli ed efficienti. Tecniche come <strong>distillation</strong> (compressione di un grande modello in uno più piccolo), <strong>quantization</strong> (riduzione precisione numerica dei pesi), e architetture alternative (mixture of experts, RETRO with retrieval in training, ecc.) promettono performance simili a GPT-3/4 con minor impronta. Si parla di <strong>Small Language Models</strong> quando un modello è addestrato su dominio specifico con molte meno dimensioni ma mantenendo qualità su quel dominio. Ad esempio, potresti addestrare un modello 6B param tutto su letteratura medica: otterrai un <em>MedLM</em> che con 6B param fa cose che GPT-3 175B farebbe faticando perché generalista. Non c&#39;è free lunch - piccoli modelli difficilmente avranno la robustezza di quelli enormi su input &quot;wild&quot;. Ma per implementazione pratica, a volte <em>pezzi di LLM medi</em> integrati con retrieval bastano e avanzano, con frazione di costo (sia computazionale che di rischio allucinazioni). Nel 2026 è probabile che vedremo architetture ibridate: parte neurale generativa + moduli simbolici o retrieval, più che spingere a 1 trilione di parametri e basta. Soprattutto, l&#39;accento è su <strong>controllo e interpretabilità</strong>: come far spiegare ai LLM le loro risposte (es. citazioni fonti), come avere <em>&quot;constitutional AI&quot;</em> (modelli che seguono una costituzione di principi etici nella generazione).</li>
+</ul>
+<h3 id="92-cosa-deve-sapere-un-ai-engineer-cosa-pu-ignorare">9.2 Cosa deve sapere un AI Engineer, cosa può ignorare</h3>
+<p><strong>Da sapere assolutamente:</strong></p>
+<ul>
+<li>Le <strong>fondamenta architetturali</strong>: come funziona un Transformer (self-attention, multi-head, ecc.)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Core%20ideas%3A">[47]</a>, differenze tra RNN e Transformer<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental">[14]</a>, cosa sono encoder vs decoder. Non necessariamente saper dedurre le equazioni a mano, ma capire il <em>flusso dei dati</em> e perché è efficiente. Questo aiuta a debuggare dimensioni tensoriali, capire errori di shape, e ragionare su limitazioni (es: perché un modello 2k token context non può accettare 10k token senza modifiche).</li>
+<li>Il concetto di <strong>pre-training vs fine-tuning vs prompting</strong>: sapere che i modelli tipo GPT/BERT vengono pre-addestrati su enormi corpora con obiettivo generico, poi possono essere <em>fine-tunati</em> (aggiornando i pesi) su task specifici o <em>promptati</em> con opportune istruzioni. Ciò influisce sulle scelte progettuali: se hai pochi dati specifici, forse conviene prompt engineering invece di fine-tuning pesi, ecc.</li>
+<li>Conoscere le <strong>principali famiglie di modelli</strong> e cosa offrono: BERT (encoder, bidirezionale, ottimo per comprensione), GPT (decoder, generativo), T5 (encoder-decoder &quot;unified&quot; text-to-text), e alcuni modelli open come GPT-neo/LLama, Bloom. Non tanto i dettagli implementativi, quanto le differenze concettuali: un AI eng deve saper scegliere &quot;per questo compito mi serve un modello generativo (es. completamento/assistente) vs un modello di classificazione (es. estrazione di info)&quot;.</li>
+<li><strong>Limitazioni e failure modes</strong> dei LLM: <em>hallucination</em>, <em>bias</em>, <em>context length limit</em>, ecc e relative mitigazioni<a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=LLMs%27%20knowledge,to%20two%20key%20issues">[33]</a><a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1.%20Latency%2C%20cost%2C%20and%20third,dependencies">[38]</a>. Questo è essenziale per progettare sistemi robusti: se sai che un LLM può inventare, predisponi i controlli; se sai che non può elaborare input &gt; 4096 token, devi pensare a chunking o modelli speciali long-form.</li>
+<li>I principi di <strong>Retrieval-Augmented Generation</strong>: anche se non implementerai tu l&#39;algoritmo di vettorizzazione, devi capire come un vector database può integrarsi, come si fa embedding di query e documenti, cos&#39;è la similarità coseno. E soprattutto <em>quando RAG serve</em>: situazioni knowledge-intensive con info aggiornate<a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static">[32]</a>. Esempi pratici: chatbot su documentazione (il modello da solo non sa risposte precise, serve RAG). Sapere anche i limiti: se i documenti sono lunghi, il modello potrebbe non usarli bene se troppi; se la query embedding fallisce, il modello risponde a vuoto. Quindi testare pipeline end-to-end.</li>
+<li><strong>Tool/Agents pattern</strong>: Familiarità con almeno una libreria (LangChain, etc.) per orchestrare LLM con tool. Non è necessario sapere nel dettaglio l&#39;algoritmo di un agente tipo ReAct, ma <em>sì</em> sapere come l&#39;LLM può eseguire step iterativi e chiamare funzioni<a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,and%20coordinate%20with%20other%20agents">[48]</a><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=Overview%20of%20LLM,to%20the%20LLM%20prompt%20through">[35]</a>. È molto utile anche saper leggere i &quot;chain-of-thought&quot; log di un agente per debugging.</li>
+<li><strong>Prompt engineering pratica:</strong> Sapere formulare i prompt per vari scenari (es. role prompt, few-shot con esempi, delimiting context con token speciali, ecc.). Conoscere trucchi come: <em>&quot;Pensaci passo passo&quot;</em> per incoraggiare ragionamento, oppure fornire istruzioni strutturate (&quot;Rispondi con JSON contenente campi X, Y, Z&quot;). Questa è diventata quasi una skill di programmazione. Un AI eng deve fare iterazioni sul prompt per migliorare output, e stare attento a <em>iniezioni</em> da input utente. Insomma, considerare il prompt come parte del codice applicativo.</li>
+<li><strong>MLOps per LLM:</strong> Anche se non in dettaglio, concetti base: logging, monitoring cost e latenza<a href="https://www.braintrust.dev/articles/top-10-llm-observability-tools-2025#:~:text=Each%20integration%20serves%20production%20AI,evaluation%20metrics%2C%20production%20alerting%2C">[49]</a>, test di regressione (se cambio modello o prompt, ho test cases per confrontare risposte), gestione versioni (modello v1 vs v2, come rollout). E sapere usare strumenti come OpenAI Evaluation framework o prompt testing suites.</li>
+<li><strong>Etica e policy:</strong> Non ignorare aspetti di AI Ethics. Un AI Engineer deve almeno conoscere le linee guida di utilizzo del modello (evitare output discriminatori, proteggere dati sensibili degli utenti, etc.). E sapere implementare filtri di moderazione (ad es. usare le API di moderazione su output, o modelli dedicati che classificano il testo generato). Questo è sia per responsabilità sociale sia per evitare guai legali o di reputazione.</li>
+</ul>
+<p><strong>Cosa si può (relativamente) ignorare / delegare:</strong></p>
+<ul>
+<li><strong>Dettagli matematici di retropropagazione e derivazione:</strong> Come funziona BPTT esattamente, dimostrare la vanishing gradient formalmente, o dedurre a mano l&#39;equazione dell&#39;attenzione con penna e foglio - come engineer puoi considerarlo background. L&#39;intuizione qualitativa basta nella maggior parte dei casi. In pratica, librerie e paper implementano già tutto; tu devi capire l&#39;effetto (es. <em>&quot;il gradiente svanisce se la sequenza è troppo lunga&quot;</em><a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to">[8]</a>, <em>&quot;l&#39;attenzione pesa termini rilevanti&quot;</em>), ma non devi saper dimostrare il perché da zero.</li>
+<li><strong>Modelli ormai superati:</strong> Non spendere troppo tempo a padroneggiare Naive Bayes, HMM, n-grammi Markov o anche algoritmi classici come CRF, SVM applicati al testo - a meno che lavori su un caso a bassissime risorse computazionali dove un modello semplice può bastare. Oggi quasi sempre un piccolo Transformer fine-tunato o un LLM via API li surclassa, quindi sapere teoria HMM è conoscenza storica più che pratica. (È comunque utile averli presenti per cultura generale e per capire i termini che trovi in vecchi sistemi, ma raramente li implementerai in nuovi progetti).</li>
+<li><strong>Implementare modelli from scratch:</strong> Non è efficiente ricreare un Transformer layer per layer se esistono librerie collaudate (Transformers di Hugging Face, PyTorch Lightning, etc.). A meno di fare ricerca architetturale, un ingegnere può usare i modelli pre-addestrati e le API. Quindi si può &quot;ignorare&quot; il codice di basso livello (tipo scrivere il multi-head attention manualmente, con tutti i dimensionamenti). Meglio concentrarsi su <em>come integrare</em> il modello nella pipeline più ampia.</li>
+<li><strong>Tutti i modelli usciti sul mercato:</strong> Ci sono decine di varianti (ALBERT, XLNet, ELECTRA, DeBERTa, GPT-NeoX, etc.). Non serve conoscerle tutte in dettaglio. È utile sapere macro-categorie e magari 1-2 nomi per categoria come esempio. Quando ti servirà uno specifico, puoi documentarti sul momento. Focus sulle idee generali: es. &quot;ELECTRA pre-addestra come discriminatore anziché generatore mascherato, per efficienza&quot; - ok concetto, ma non devi ricordare ogni particolare. In pratica oggi userai o modelli mainstream (BERT, GPT-3, etc.) o modelli addestrati ad hoc su tuoi dati (in cui caso segui architettura nota). Le differenze minori tra architetture contano poco per l&#39;uso.</li>
+<li><strong>Teoria linguistica approfondita:</strong> Sapere cos&#39;è POS tagging, cos&#39;è una dipendenza sintattica, è utile. Ma non occorre avere un PhD in linguistica computazionale. Molti concetti linguistici classici (grammatiche formali, ecc.) sono stati inglobati implicitamente nei modelli neurali. Un tempo bisognava codificare a mano grammatica e semantica; oggi il modello lo impara. Quindi, ad esempio, potresti non dover implementare un parser sintattico manualmente mai, se usi LLM per analisi testuale. Concentrati piuttosto su come valutare le output (metrica BLEU, Rouge, etc.) e su nozioni pratiche (tokenizzazione, etc.).</li>
+<li><strong>Spingere al limite la SOTA</strong>: Se il tuo scopo è costruire sistemi funzionali, non è necessario ottenere l&#39;accuracy assoluta top su un benchmark con fine-tuning elaborato. Spesso un modello pre-addestrato out-of-the-box + un po&#39; di prompt engineering dà già ottimi risultati per prodotti. A volte &quot;good enough&quot; vince su &quot;perfetto ma complicato&quot;. Quindi, puoi ignorare micro-ottimizzazioni tipo &quot;dovrei usare Adafactor con linear decay vs AdamW con cosine schedule?&quot; a meno che non addestri tu modelli. Se usi API come OpenAI, queste scelte sono astratte via. (Certo, se <em>addestri</em> modelli, allora sì devi curare iperparametri - ma è un lavoro da ricercatore ML più che da implementatore di sistema).</li>
+</ul>
+<p>Riassumendo, un AI Engineer deve essere <strong>T-shaped</strong>: conoscenza ampia del panorama (dal bag-of-words agli LLM, per capire le soluzioni esistenti) ma profondità in quelle tecnologie oggi essenziali (Transformer e sue evoluzioni, e come metterle in produzione). Può tranquillamente fare a meno di dettagli storici e dimostrazioni teoriche rigorose, finché comprende i <em>perché</em> e <em>quando</em> di ogni tecnica.</p>
+<h3 id="93-fonti-fondamentali-da-studiare-davvero">9.3 Fonti fondamentali da studiare davvero</h3>
+<p>Chiudiamo con alcune fonti consigliate (paper e blog) che reputo fondamentali per consolidare le conoscenze discusse e rimanere aggiornati:</p>
+<ul>
+<li><strong>Tomas Mikolov et al. (2013), &quot;Efficient Estimation of Word Representations in Vector Space&quot;</strong><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">[5]</a><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a> - <em>(Paper)</em> Introduce <strong>word2vec</strong>. Pietra miliare che spiega il concetto di embedding distribuito e due algoritmi (CBOW, Skip-gram). Rilevante perché getta le basi dell&#39;idea di rappresentazioni dense che ancora oggi è al cuore dei modelli linguistici.</li>
+<li><strong>Sepp Hochreiter &amp; Jürgen Schmidhuber (1997), &quot;Long Short-Term Memory&quot;</strong><a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=functions,deal%20with%20vanishing%20gradients%20and">[50]</a> - <em>(Paper)</em> Propone l&#39;architettura <strong>LSTM</strong> per superare il vanishing gradient nei RNN. È un paper tecnico, ma leggere almeno l&#39;introduzione e capire le componenti (input/forget/output gate) aiuta a comprendere come è nato il concetto di <em>memoria nel tempo</em>. Utile per retrospettiva storica e perché LSTM sono ancora usati in alcuni contesti particolari.</li>
+<li><strong>Vaswani et al. (2017), &quot;Attention Is All You Need&quot;</strong><a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including">[16]</a><a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training">[17]</a> - <em>(Paper)</em> Da leggere assolutamente. Introduce il <strong>Transformer</strong>. Spiega self-attention, multi-head, positional encoding, e mostra risultati su traduzione. È il fondamento di tutto ciò che è venuto dopo. Dopo averlo letto, il concetto di attenzione risulterà molto più chiaro e si apprezzerà il motivo della svolta. (Contiene anche qualche dettaglio implementativo come <em>scaled dot-product</em>, utile da conoscere).</li>
+<li><strong>Brown et al. (2020), &quot;Language Models are Few-Shot Learners&quot; (GPT-3 paper)</strong><a href="https://arxiv.org/abs/2005.14165#:~:text=language%20models%20greatly%20improves%20task,several%20tasks%20that%20require%20on">[26]</a><a href="https://arxiv.org/abs/2005.14165#:~:text=approaches.%20Specifically%2C%20we%20train%20GPT,At%20the%20same%20time%2C%20we">[25]</a> - <em>(Paper)</em> L&#39;abstract e alcune sezioni chiave mostrano cosa succede quando si scala un modello a 175 miliardi di parametri. Introdotto il fenomeno del <strong>few-shot learning</strong> dentro il prompt. Leggere questo paper aiuta a capire le capacità emergenti degli LLM e anche i limiti (hanno una sezione onesta su dove GPT-3 fallisce)<a href="https://arxiv.org/abs/2005.14165#:~:text=demonstrations%20specified%20purely%20via%20text,evaluators%20have%20difficulty%20distinguishing%20from">[51]</a>. È lungo, ma consiglio di concentrarsi sulle parti descrittive e sulle tabelle di esempi.</li>
+<li><strong>Jared Kaplan et al. (2020), &quot;Scaling Laws for Neural Language Models&quot;</strong><a href="https://arxiv.org/abs/2001.08361#:~:text=,efficient%20training%20involves">[29]</a> - <em>(Paper)</em> Un lavoro di OpenAI che ha quantificato come aumentando modello/dati/compute l&#39;errore decresce in modo prevedibile. È utile per avere intuizione che più grande = meglio (fino a certi limiti) e concetti come <em>compute-optimal</em>. Anche se non si seguono tutte le formule, il messaggio è chiaro: c&#39;è un modo efficiente di scegliere dimensione modello vs data. Questo ha informato scelte come quelle di Chinchilla.</li>
+<li><strong>Hoffmann et al. (2022), &quot;Training Compute-Optimal Large Language Models&quot; (Chinchilla)</strong><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,Transformers%20to%2022%20Billion%20Parameters">[30]</a> - <em>(Paper)</em> Importante perché rettifica le scaling laws considerando il trade-off parametri vs token. Mostra che un modello 70B addestrato con 4x token batte un 175B under-trained. Da leggere per capire che non basta accumulare parametri, bisogna anche <em>nutrirli</em> a sufficienza. Ci sono grafici molto istruttivi sulla perplexity al variare delle quantità. Concetto di &quot;compute-optimal&quot; LLM.</li>
+<li><strong>Wei et al. (2022), &quot;Emergent Abilities of Large Language Models&quot;</strong><a href="https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up">[31]</a> - <em>(Paper)</em> Saggio (anche in forma di articolo di blog su Google Research) che cataloga vari <em>emergent skills</em> apparse oltre una certa scala, es. compositionality, multimodalità, ecc. È utile per avere coscienza delle differenze tra modelli medi e modelli giganti. Utile anche a livello concettuale: discute cos&#39;è un&#39;abilità emergente e quali ipotesi spiegano il fenomeno. Per un AI eng, aiuta a motivare <em>perché</em> modelli grossi hanno valore (fanno cose qualitativamente diverse, non solo un po&#39; meglio il solito).</li>
+<li><strong>Lewis et al. (2020), &quot;Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks&quot;</strong><a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static">[32]</a> - <em>(Paper)</em> Propone il framework <strong>RAG</strong>. È la base teorica dietro tanti sistemi QA moderni. Mostra come combinare un index di documenti con un generatore neurale. Leggendolo, capirai architettura di RAG (encoders per query e documenti, selezione top-k, generazione condizionata) e vedrai risultati su QA dove il modello con retrieval supera di molto uno senza. Fondamentale per chi vuole implementare o migliorare sistemi <em>LLM + knowledge base</em>.</li>
+<li><strong>Akanksha Sinha (2025), &quot;From N-grams to Transformers: Tracing the Evolution of Language Models&quot;</strong><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=5,Broader%2C%20Multimodal">[52]</a><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20scale%20matters%3A">[53]</a> - <em>(Blog)</em> Un articolo di Medium che riassume un percorso simile al nostro, includendo anche contesto storico. È utile perché scritto in modo discorsivo, tocca N-gram, Word2Vec, RNN, Transformer, Scaling, in ~6 minuti di lettura. Può servire come ripasso rapido o per spiegare a colleghi non specialisti l&#39;evoluzione (ha anche immagini e analogie). Una lettura leggera che però rinforza la comprensione cronologica.</li>
+<li><strong>Jay Alammar (2018), &quot;The Illustrated Transformer&quot;</strong><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,language%20models%20and%20their%20implications">[54]</a> - <em>(Blog/Tutorial)</em> Una spiegazione visuale e passo-passo del Transformer. Alammar è noto per i suoi blog con schemi e illustrazioni eccellenti (in questo post rappresenta le query-key-value con diagrammi colorati, etc.). È fortemente consigliato se vuoi <em>intuire</em> cosa succede dentro l&#39;attention senza perderti in algebra. Dopo averlo letto, concetti come multi-head e residual connection diventano molto più concreti. È una risorsa perfetta anche da consigliare a studenti o colleghi in formazione.</li>
+</ul>
+<p><em>(Queste fonti coprono teoria e pratica. Ovviamente la letteratura è vastissima; altre menzioni onorevoli:</em> <em>Chris Olah&#39;s blog</em> <em>- es. &quot;Understanding LSTM Networks&quot; - per spiegazioni intuitive su LSTM; il blog OpenAI &quot;Better Language Models and Their Implications&quot; (2019) che discute GPT-2 e rischi; il</em> <em>report tecnico di GPT-4 (2023)</em> <em>per capire capability e limitazioni del più avanzato; e il sito</em> <em>Papers with Code</em> <em>per stare aggiornati sui nuovi SOTA. Ma i 10 sopra offrono un&#39;ottima base.)</em></p>
+<p><strong>Chiusura:</strong> La rivoluzione dai modelli NLP classici ai LLM ha unito solidi fondamenti teorici (rete neurale, attenzione, probabilità) con una visione ingegneristica di larga scala (dataset immensi, infrastrutture GPU, integrazione in sistema). Come AI Engineer, comprendere questa evoluzione ti permette di fare scelte informate su <em>quale modello usare, come addestrarlo o integrarlo, quali limiti considerare,</em> e in definitiva come costruire <strong>sistemi AI efficaci e affidabili</strong>. Siamo solo all&#39;inizio di questa nuova era: i modelli continueranno a evolversi (forse diventeranno più multimodali, più efficienti, più specializzati), ma i principi che hai appreso qui ti aiuteranno ad orientarti nel paesaggio in rapido cambiamento dell&#39;AI linguistica. Buon lavoro sul tuo percorso GEO &amp; Disaster Response - con queste conoscenze, potrai sfruttare al meglio gli LLM per fare davvero la differenza in applicazioni critiche e di impatto sociale!</p>
+<p><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A">[1]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third">[2]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations">[3]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">[5]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,%E2%80%9D">[18]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order">[19]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,are%20added%20to%20preserve%20order">[20]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Original%20architecture%3A">[21]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order">[22]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,Transformers%20to%2022%20Billion%20Parameters">[30]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Researchers%3A%20Tomas%20Mikolov%20et%20al,%28GloVe%2C%202014">[45]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Core%20ideas%3A">[47]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=5,Broader%2C%20Multimodal">[52]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20scale%20matters%3A">[53]</a> <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,language%20models%20and%20their%20implications">[54]</a> From N-Grams to Transformers: Tracing the Evolution of Language Models | by Akanksha Sinha | Medium</p>
+<p><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba">https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba</a></p>
+<p><a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A">[6]</a> <a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=%2A%20,%28River%20edge">[7]</a> <a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=BERT%20is%20trained%20on%20two,clever%20tasks">[27]</a> <a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=1,it%20learn%20relationships%20between%20sentences">[28]</a> Beyond &quot;One-Word, One-Meaning&quot;: Contextual Embeddings - DEV Community</p>
+<p><a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16">https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16</a></p>
+<p><a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to">[8]</a> <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=In%20previous%20parts%20of%20the,between%20words%20that%20are%20several">[9]</a> <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=It%20is%20easy%20to%20imagine,it%E2%80%99s%20not%20obvious%20when%20they">[10]</a> <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=parameters%2C%20we%20could%20get%20exploding,Your">[11]</a> <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and">[12]</a> <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and">[13]</a> <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=functions,deal%20with%20vanishing%20gradients%20and">[50]</a> Recurrent Neural Networks Tutorial, Part 3 - Backpropagation Through Time and Vanishing Gradients · Denny&#39;s Blog</p>
+<p><a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/">https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/</a></p>
+<p><a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental">[14]</a> <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including">[16]</a> <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training">[17]</a> <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,of%20sequential%20computation%2C%20however%2C%20remains">[23]</a> <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=hidden%20representations%20in%20parallel%20for,as%20described%20in%20section%C2%A0%2016">[24]</a> <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,The%20fundamental">[46]</a> [1706.03762] Attention Is All You Need</p>
+<p><a href="https://ar5iv.labs.arxiv.org/html/1706.03762">https://ar5iv.labs.arxiv.org/html/1706.03762</a></p>
+<p><a href="https://d2l.ai/chapter_recurrent-neural-networks/bptt.html#:~:text=Alternatively%2C%20we%20can%20truncate%20the,simpler%20and%20more%20stable%20models">[15]</a> 9.7. Backpropagation Through Time - Dive into Deep Learning 1.0.3 documentation</p>
+<p><a href="https://d2l.ai/chapter_recurrent-neural-networks/bptt.html">https://d2l.ai/chapter_recurrent-neural-networks/bptt.html</a></p>
+<p><a href="https://arxiv.org/abs/2005.14165#:~:text=approaches.%20Specifically%2C%20we%20train%20GPT,At%20the%20same%20time%2C%20we">[25]</a> <a href="https://arxiv.org/abs/2005.14165#:~:text=language%20models%20greatly%20improves%20task,several%20tasks%20that%20require%20on">[26]</a> <a href="https://arxiv.org/abs/2005.14165#:~:text=demonstrations%20specified%20purely%20via%20text,evaluators%20have%20difficulty%20distinguishing%20from">[51]</a> [2005.14165] Language Models are Few-Shot Learners</p>
+<p><a href="https://arxiv.org/abs/2005.14165">https://arxiv.org/abs/2005.14165</a></p>
+<p><a href="https://arxiv.org/abs/2001.08361#:~:text=,efficient%20training%20involves">[29]</a> [2001.08361] Scaling Laws for Neural Language Models</p>
+<p><a href="https://arxiv.org/abs/2001.08361">https://arxiv.org/abs/2001.08361</a></p>
+<p><a href="https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up">[31]</a> Emergent Abilities in Large Language Models: An Explainer</p>
+<p><a href="https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/">https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/</a></p>
+<p><a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static">[32]</a> <a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=LLMs%27%20knowledge,to%20two%20key%20issues">[33]</a> <a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=,called%20hallucination">[44]</a> Retrieval augmented generation: Keeping LLMs relevant and current - Stack Overflow</p>
+<p><a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/">https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/</a></p>
+<p><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=decision,and%20coordinate%20with%20other%20agents">[34]</a> <a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=Overview%20of%20LLM,to%20the%20LLM%20prompt%20through">[35]</a> <a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,building%20robust%2C%20extensible%2C%20and%20intelligent">[36]</a> <a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,and%20coordinate%20with%20other%20agents">[48]</a> AWS Prescriptive Guidance - Agentic AI patterns and workflows on AWS</p>
+<p><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf">https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf</a></p>
+<p><a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=experiences,after%20a%20minor%20prompt%20change">[37]</a> <a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1.%20Latency%2C%20cost%2C%20and%20third,dependencies">[38]</a> <a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=Engineering%20teams%20need%20more%20than,built%20to%20handle%20AI%20workloads">[39]</a> <a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1,and%20scoring%20of%20LLM%20responses">[40]</a> What Is LLM Observability and Monitoring? | Honeycomb</p>
+<p><a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability">https://www.honeycomb.io/resources/getting-started/what-is-llm-observability</a></p>
+<p><a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,the%20entire%20history%20every%20time">[41]</a> <a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,logic%20and%20cache%20invalidation%20strategy">[42]</a> <a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=%2A%20Model%20right,com">[43]</a> FinOps in the Age of AI: A CPO&#39;s Guide to LLM Workflows, RAG, AI Agents, and Agentic Systems</p>
+<p><a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems">https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems</a></p>
+<p><a href="https://www.braintrust.dev/articles/top-10-llm-observability-tools-2025#:~:text=Each%20integration%20serves%20production%20AI,evaluation%20metrics%2C%20production%20alerting%2C">[49]</a> Top 10 LLM observability tools: Complete guide for 2025 - Braintrust</p>
+<p><a href="https://www.braintrust.dev/articles/top-10-llm-observability-tools-2025">https://www.braintrust.dev/articles/top-10-llm-observability-tools-2025</a></p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/from-nlp-to-llm/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true') {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">📋</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          pre.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
+      enhanceCodeBlocks();
+      initToc();
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>
