@@ -42,7 +42,7 @@
     "headline": "Dai modelli NLP classici ai LLM",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-10T00:00:00.000Z",
-    "dateModified": "2026-01-10T20:07:02.173Z",
+    "dateModified": "2026-01-10T22:54:35.802Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -952,15 +952,21 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#il-concetto-del-frullatore-bag-of-words">
+          <a class="post-toc__link" href="#il-frullatore-bag-of-words-e-il-filtro-tf-idf">
             <span class="post-toc__number">2.1</span>
-            <span class="post-toc__text">Il concetto del &quot;Frullatore&quot; (Bag-of-Words)</span>
+            <span class="post-toc__text">Il &quot;frullatore&quot; (Bag-of-Words) e il filtro (TF-IDF)</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#modelli-a-n-grammi">
             <span class="post-toc__number">2.2</span>
             <span class="post-toc__text">Modelli a N-grammi</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#modelli-probabilistici-e-lineari">
+            <span class="post-toc__number">2.3</span>
+            <span class="post-toc__text">Modelli probabilistici e lineari</span>
           </a>
           
         </li>
@@ -1054,7 +1060,7 @@
 <p>Prima dell&#39;era <em>deep learning</em>, l&#39;NLP era dominato da metodi <strong>statistici e basati su feature manuali</strong>. </p>
 <p>Se ti sei mai avvicinato al mondo dell&#39;Elaborazione del Linguaggio Naturale (NLP), probabilmente ti sei imbattuto in definizioni tecniche, magari anche incomprensibili.</p>
 <p>Partiamo dal Bag-of-Words (letteralmente &quot;Sacco di Parole&quot;), uno dei metodi più antichi per insegnare a un computer a leggere.</p>
-<h3 id="il-concetto-del-frullatore-bag-of-words">Il concetto del &quot;Frullatore&quot; (Bag-of-Words)</h3>
+<h3 id="il-frullatore-bag-of-words-e-il-filtro-tf-idf">Il &quot;frullatore&quot; (Bag-of-Words) e il filtro (TF-IDF)</h3>
 <p>Immagina di voler spiegare a un computer la differenza tra due frasi. Il computer non sa cosa sia la grammatica, né conosce il soggetto o il verbo. Come facciamo?</p>
 <p>Il metodo Bag-of-Words (BoW) fa qualcosa di semplice ma anche abbastanza efficace:</p>
 <ol>
@@ -1080,11 +1086,19 @@ Bag-of-Words: { &quot;gatto&quot;: 1, &quot;insegue&quot;: 1, &quot;il&quot;: 2,
 <p><em>&quot;Ciao Matteo&quot;</em></p>
 <p>Metterai un 1 nella colonna &quot;Ciao&quot; e un 1 nella colonna &quot;Matteo&quot;. Nelle altre 99.998 colonne ci sarà uno 0.</p>
 <p>Per questo che spesso viene considerato un metodo molto sprecone: serve tantissima memoria per salvare informazioni minime.</p>
-<h3 id="modelli-a-n-grammi">Modelli a N-grammi</h3>
+<p>Prima di passare oltre vorrei spiegare una frase che ho sentito dire spesso. Parole come blu e azzurro sono vettori ortogonali se consideriamo Bag of words. <br> Cosa significa? Significa che il modello Bag-of-Words non ha nessuna intuizione semantica.</p>
+<p>La parola &quot;Felice&quot; è nella colonna A. La parola &quot;Contento&quot; è nella colonna B. Per noi umani, A e B sono praticamente uguali. Ma seguendo questo algoritmo, A e B sono distanti e diversi tanto quanto &quot;Felice&quot; e &quot;Lavastoviglie&quot;. Sono solo caselle diverse nel foglio Excel. Se cerchi un documento che parla di gente &quot;felice&quot;, il computer potrebbe ignorare un documento che parla di gente &quot;contenta&quot;, perché non sa che sono sinonimi.</p>
+<p>Infine, c&#39;è quella sigla che può apparire strana: TF-IDF. Questo è semplicemente un correttore matematico per dare il giusto peso alle parole nel nostro sacchetto. Senza TF-IDF, la parola più importante in un libro in italiano sarebbe &quot;IL&quot; o &quot;DI&quot;, perché compaiono ovunque. Ma queste parole non ci dicono nulla sull&#39;argomento del libro!</p>
+<p>TF-IDF è praticamente un evidenziatore intelligente: </p>
 <ul>
-<li><strong>Modelli a N-grammi:</strong> Introducono un minimo di contesto considerando sequenze di <em>N</em> parole. Un <strong>trigramma</strong> ad esempio stima la probabilità di una parola basandosi sulle 2 precedenti (N=3). Funzionano bene per frasi brevi o molto frequenti (es: <em>&quot;thank you very&quot; → &quot;much&quot;</em>), ma hanno grossi limiti: generano probabilità non nulle solo per frasi viste o molto simili al training, soffrono di <strong>sparseness</strong> (combinazioni rare non sono coperte) e usano un contesto rigido di lunghezza fissa<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A">[1]</a>. In pratica <em>&quot;voglio mangiare una fetta di ___&quot;</em> può difficilmente indovinare <em>&quot;torta&quot;</em> se non ha mai visto quella sequenza esatta<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third">[2]</a>. Inoltre, trattano le parole come simboli atomici (nessuna nozione che &quot;gatto&quot; e &quot;felino&quot; siano correlati).</li>
-<li><strong>Modelli probabilistici e lineari:</strong> Esempi sono il <strong>Naive Bayes</strong> per classificazione di testo (assume che le parole del documento siano indipendenti dato il tema) o i <strong>Modelli di Markov Nascosti (HMM)</strong> per compiti sequenziali (es: <em>Part-of-Speech tagging</em>, analisi del parlato). Il Naive Bayes è veloce e spesso efficace su testi semplici (ad es. spam vs ham) ma l&#39;ipotesi di indipendenza tra parole è grossolana. Gli HMM modellano le dipendenze come transizioni di stato, ma sono limitati da assunzioni di Markov di ordine basso (tipicamente bigrammi di stati) e richiedono definire a mano feature/osservazioni. In generale, questi approcci <strong>richiedevano feature engineering manuale</strong> (es: conteggi, liste di parole rilevanti) e faticavano a catturare relazioni semantiche profonde o dipendenze a lungo raggio.</li>
+<li>Abbassa il volume delle parole che compaiono ovunque (come gli articoli: il, lo, la, di, a, da). </li>
+<li>Alza il volume delle parole rare e specifiche (come &quot;Astronave&quot;, &quot;Microscopio&quot;, &quot;Rinascimento&quot;).</li>
 </ul>
+<p>Se la parola &quot;Banca&quot; appare in un solo documento su mille, TF-IDF le assegna un punteggio altissimo: quella parola è la chiave per capirne di più per quel testo specifico.</p>
+<h3 id="modelli-a-n-grammi">Modelli a N-grammi</h3>
+<p>I <strong>modelli a N-grammi</strong> sono stati proposti nel 1948 da Claude Shannon (1948) nell&#39;ambito della probabilità fondazionale e introducono un minimo di contesto considerando sequenze di <em>N</em> parole. Un <strong>trigramma</strong> ad esempio stima la probabilità di una parola basandosi sulle 2 precedenti ($N=3$). Funzionano bene per frasi brevi o molto frequenti (es: <em>&quot;thank you very&quot; → &quot;much&quot;</em>), ma hanno grossi limiti: generano probabilità non nulle solo per frasi viste o molto simili al training, soffrono di <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A"><strong>sparseness</strong></a> (combinazioni rare non sono coperte) e usano un contesto rigido di lunghezza fissa. In pratica <em>&quot;voglio mangiare una fetta di ___&quot;</em> può difficilmente indovinare <em>&quot;torta&quot;</em> se non ha mai visto quella sequenza esatta. Inoltre, trattano le parole come simboli atomici (nessuna nozione che &quot;gatto&quot; e &quot;felino&quot; siano correlati).</p>
+<h3 id="modelli-probabilistici-e-lineari">Modelli probabilistici e lineari</h3>
+<p>Esempi sono il <strong>Naive Bayes</strong> per classificazione di testo (assume che le parole del documento siano indipendenti dato il tema) o i <strong>Modelli di Markov Nascosti (HMM)</strong> per compiti sequenziali (es: <em>Part-of-Speech tagging</em>, analisi del parlato). Il Naive Bayes è veloce e spesso efficace su testi semplici (ad es. spam vs ham) ma l&#39;ipotesi di indipendenza tra parole è grossolana. Gli HMM modellano le dipendenze come transizioni di stato, ma sono limitati da assunzioni di Markov di ordine basso (tipicamente bigrammi di stati) e richiedono definire a mano feature/osservazioni. In generale, questi approcci <strong>richiedevano feature engineering manuale</strong> (es: conteggi, liste di parole rilevanti) e faticavano a catturare relazioni semantiche profonde o dipendenze a lungo raggio.</p>
 <p><strong>Problemi principali e soluzioni tentate (pre-Transformer):</strong></p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
