@@ -42,7 +42,7 @@
     "headline": "Dai modelli NLP classici ai LLM",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-10T00:00:00.000Z",
-    "dateModified": "2026-01-11T13:35:46.540Z",
+    "dateModified": "2026-01-18T22:29:15.029Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -990,7 +990,15 @@
             <span class="post-toc__number">3</span>
             <span class="post-toc__text">Embedding classici: word2vec, GloVe, fastText</span>
           </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#come-funzionano-questi-embedding">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">Come funzionano questi embedding?</span>
+          </a>
           
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#rnn-lstm-gru-il-tentativo-di-modellare-il-contesto">
             <span class="post-toc__number">4</span>
@@ -1162,13 +1170,19 @@ Bag-of-Words: { &quot;gatto&quot;: 1, &quot;insegue&quot;: 1, &quot;il&quot;: 2,
 </tbody></table>
 </div></figure><p>Queste soluzioni funzionavano in contesti ristretti, ma avevano <strong>lacune strutturali</strong>. Non riuscivano a rappresentare il <em>significato</em> delle parole né a mantenere in memoria frasi lunghe. Quindi, i ricercatori hanno spinto verso metodi capaci di <strong>catturare semantica distribuita e dipendenze più lunghe</strong>. Ed è qui che sono nati gli <em>embedding</em> neurali e i modelli a rete ricorrente.</p>
 <h2 id="embedding-classici-word2vec-glove-fasttext">Embedding classici: word2vec, GloVe, fastText</h2>
-<p>Per superare la rappresentazione simbolica pura delle parole, negli anni 2010 si affermano i <strong>word embeddings</strong>, ovvero rappresentazioni dense in cui ogni parola è un vettore continuo in uno spazio a bassa dimensione. L&#39;idea base è <strong>distribuzionale</strong>: <em>&quot;una parola è definita dal contesto che tiene&quot;</em> (Firth). Modelli come <strong>word2vec</strong> (Mikolov et al., 2013) hanno introdotto tecniche di training non supervisionato su grandi corpora per ottenere vettori di parola che <strong>catturano somiglianze semantiche</strong><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. Ad esempio, word2vec produce vettori tali che:</p>
+<p>Per superare la rappresentazione simbolica pura delle parole, negli anni 2010 si affermano i <strong>word embeddings</strong>, ovvero rappresentazioni dense in cui ogni parola è un vettore continuo in uno spazio a bassa dimensione. </p>
+<blockquote>
+<p>Cosa significa a bassa dimensione? Vuol dire che ogni parola non è più un vettore enorme lungo quanto tutto il vocabolario, ma un vettore compatto (es. 50-300 numeri) che riassume le sue relazioni con le altre parole.</p>
+</blockquote>
+<p>L&#39;idea base è <strong>distribuzionale</strong>: <em>&quot;You shall know a word by the company it keeps&quot;</em> (<a href="https://archive.org/details/papersinlinguist0000firt/page/n5/mode/2up">Firth, 1957</a>). Modelli come <strong>word2vec</strong> (<a href="https://arxiv.org/abs/1301.3781">Mikolov et al., 2013</a>) hanno introdotto tecniche di training non supervisionato su un grande numero di dati per ottenere vettori di parola che <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A"><strong>catturano somiglianze semantiche</strong></a>. Ad <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">esempio</a>, word2vec produce vettori tali che:</p>
 <ul>
-<li><em>&quot;king&quot; - &quot;man&quot; + &quot;woman&quot; ≈ &quot;queen&quot;</em><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">[5]</a></li>
+<li><em>&quot;king&quot; - &quot;man&quot; + &quot;woman&quot; ≈ &quot;queen&quot;</em></li>
 <li><em>&quot;Parigi&quot; - &quot;Francia&quot; + &quot;Italia&quot; ≈ &quot;Roma&quot;</em></li>
 </ul>
 <p>Ciò indica che il modello ha appreso relazioni analogiche e cluster semantici: parole simili (re, regina) hanno vettori vicini, e la differenza vettoriale tra re e regina è simile a quella tra uomo e donna.</p>
-<p><strong>Come funzionano questi embedding?</strong> Word2vec offre due approcci principali: <strong>CBOW</strong> (<em>Continuous Bag-of-Words</em>) predice una parola dato il contesto circostante, mentre <strong>Skip-gram</strong> fa l&#39;opposto (predice il contesto data la parola target). In entrambi i casi la rete neurale addestra le rappresentazioni interne (embedding) affinché parole apparse in contesti simili abbiano vettori simili<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A">[6]</a>. Un altro modello popolare, <strong>GloVe</strong> (Pennington et al., 2014), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch&#39;esso vettori densi. Varianti come <strong>fastText</strong> (Bojanowski et al., 2016) hanno introdotto l&#39;uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.</p>
+<p><img src="../../../Assets/word2vec_example.svg" alt="Esempio di analogia in word2vec"><br><em>Figura 02: Esempio di relazione analogica nello spazio degli embedding.</em></p>
+<h3 id="come-funzionano-questi-embedding">Come funzionano questi embedding?</h3>
+<p>Word2vec offre due approcci principali: <strong>CBOW</strong> (<em>Continuous Bag-of-Words</em>) predice una parola dato il contesto circostante, mentre <strong>Skip-gram</strong> fa l&#39;opposto (predice il contesto data la parola target). In entrambi i casi la rete neurale addestra le rappresentazioni interne (embedding) affinché parole apparse in contesti simili abbiano vettori simili<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A">[6]</a>. Un altro modello popolare, <strong>GloVe</strong> (Pennington et al., 2014), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch&#39;esso vettori densi. Varianti come <strong>fastText</strong> (Bojanowski et al., 2016) hanno introdotto l&#39;uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.</p>
 <p><strong>Cosa risolvono gli embedding statici:</strong><br>- <strong>Sparsità ridotta:</strong> si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se <em>&quot;gatto&quot;</em> e <em>&quot;felino&quot;</em> hanno vettori vicini, il modello può trasferire conoscenza da uno all&#39;altro anche se uno dei due era raro nel corpus<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. - <strong>Similarità semantica:</strong> per la prima volta la macchina ha un <em>notion</em> di significato. Parole correlate (per contesto d&#39;uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).</p>
 <p><strong>Cosa <em>non</em> risolvono:</strong> il problema cruciale degli embedding classici è che sono <strong>statici</strong>. Ad ogni parola nel dizionario corrisponde un singolo vettore fisso, a prescindere del contesto in cui appare. Questo è limitante perché molte parole sono <strong>polisemiche</strong>: il significato di <em>&quot;bank&quot;</em> dipende dal contesto (banca vs argine del fiume). Un embedding statico di <em>&quot;bank&quot;</em> finirà per essere una sorta di media dei due significati, incapace di rappresentarli precisamente. Un esempio in italiano: <em>&quot;Java&quot;</em> può indicare un linguaggio di programmazione o un&#39;isola; un unico vettore non può riflettere entrambe le possibilità in modo distinto.</p>
 <p>Per chiarire, consideriamo alcune frasi con la parola <strong>&quot;porto&quot;</strong>:<br>- <em>&quot;Il</em> <em>porto</em> <em>di Genova è uno dei più grandi del Mediterraneo.&quot;</em> (scalo marittimo)<br>- <em>&quot;Dopo cena prendo un bicchiere di</em> <em>Porto.&quot;</em> (vino liquoroso)</p>

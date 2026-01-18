@@ -1,0 +1,172 @@
+<?xml version="1.0" standalone="no"?>
+<svg width="960" height="600" viewBox="0 0 960 600" fill="none" xmlns="http://www.w3.org/2000/svg" id="diagram-svg">
+            <defs>
+                <!-- Sfondo Gradiente -->
+                <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0b1224"/>
+                    <stop offset="100%" stop-color="#101a36"/>
+                </linearGradient>
+
+                <!-- Grid Pattern -->
+                <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
+                </pattern>
+
+                <!-- Markers (Arrowheads) -->
+                <!-- Cyan Arrow -->
+                <marker id="arrow-cyan" markerWidth="14" markerHeight="14" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,8 L12,4 z" fill="#38bdf8"/>
+                </marker>
+                
+                <!-- Purple Arrow -->
+                <marker id="arrow-purple" markerWidth="14" markerHeight="14" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,8 L12,4 z" fill="#c084fc"/>
+                </marker>
+                
+                <!-- Orange Arrow -->
+                <marker id="arrow-orange" markerWidth="14" markerHeight="14" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,8 L12,4 z" fill="#facc15"/>
+                </marker>
+                
+                <!-- Grey Arrow (Axes) -->
+                <marker id="arrow-grey" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+                </marker>
+                
+                <!-- Glow Filters per il testo -->
+                <filter id="text-glow" x="-20%" y="-20%" width="140%" height="140%">
+                     <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+                     <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0" result="coloredBlur"/>
+                     <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                     </feMerge>
+                </filter>
+            </defs>
+
+            <!-- Background -->
+            <rect width="100%" height="100%" fill="url(#bg-grad)" rx="16"/>
+            <rect width="100%" height="100%" fill="url(#grid-pattern)" opacity="0.3" rx="16"/>
+
+            <!-- Main Title -->
+            <text x="480" y="50" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="700" font-size="24" fill="#f8fafc" letter-spacing="1">WORD2VEC ARITHMETIC</text>
+            <text x="480" y="75" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="400" font-size="14" fill="#94a3b8">Relazioni Vettoriali e Offset Semantici</text>
+
+            <!-- ============================================== -->
+            <!-- PANEL 1: Re & Regina (Gender/Royalty) -->
+            <!-- ============================================== -->
+            <g transform="translate(60, 120)">
+                <!-- Panel Background -->
+                <rect x="0" y="0" width="400" height="420" rx="12" fill="#1e293b" fill-opacity="0.4" stroke="#334155" stroke-width="1"/>
+                
+                <!-- Axis -->
+                <line x1="20" y1="380" x2="380" y2="380" stroke="#475569" stroke-width="2" marker-end="url(#arrow-grey)"/>
+                <line x1="20" y1="380" x2="20" y2="20" stroke="#475569" stroke-width="2" marker-end="url(#arrow-grey)"/>
+                
+                <text x="330" y="405" font-size="10" fill="#64748b">Asse Genere</text>
+                <text x="30" y="30" font-size="10" fill="#64748b">Asse Status</text>
+
+                <!-- 
+                     COORDINATES LOGIC (Center Points):
+                     Man: (100, 300)
+                     King: (100, 100)
+                     Woman: (300, 300)
+                     Queen: (300, 100)
+                -->
+
+                <!-- 1. Vertical Vectors (Status/Royalty) -->
+                <!-- Man -> King -->
+                <line x1="100" y1="285" x2="100" y2="118" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+                <!-- Woman -> Queen -->
+                <line x1="300" y1="285" x2="300" y2="118" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+                
+                <!-- 2. Horizontal Vectors (Gender) -->
+                <!-- Man -> Woman -->
+                <line x1="115" y1="300" x2="285" y2="300" stroke="#c084fc" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-purple)"/>
+                <!-- King -> Queen -->
+                <line x1="115" y1="100" x2="285" y2="100" stroke="#c084fc" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-purple)"/>
+
+                <!-- Labels for Vectors -->
+                <text x="80" y="210" text-anchor="end" font-size="12" font-weight="600" fill="#38bdf8" transform="rotate(-90, 80, 210)">Vettore Status</text>
+                <text x="200" y="290" text-anchor="middle" font-size="12" font-weight="600" fill="#c084fc">Vettore Genere</text>
+
+                <!-- NODES (Drawn AFTER lines) -->
+                <!-- Man -->
+                <circle cx="100" cy="300" r="8" fill="#101a36" stroke="#94a3b8" stroke-width="2"/>
+                <text x="100" y="335" text-anchor="middle" font-weight="600" fill="#cbd5f5" font-size="14">Uomo</text>
+                
+                <!-- King -->
+                <circle cx="100" cy="100" r="8" fill="#101a36" stroke="#38bdf8" stroke-width="2"/>
+                <text x="100" y="80" text-anchor="middle" font-weight="700" fill="#f8fafc" font-size="16" filter="url(#text-glow)">Re</text>
+
+                <!-- Woman -->
+                <circle cx="300" cy="300" r="8" fill="#101a36" stroke="#94a3b8" stroke-width="2"/>
+                <text x="300" y="335" text-anchor="middle" font-weight="600" fill="#cbd5f5" font-size="14">Donna</text>
+
+                <!-- Queen -->
+                <circle cx="300" cy="100" r="8" fill="#101a36" stroke="#38bdf8" stroke-width="2"/>
+                <text x="300" y="80" text-anchor="middle" font-weight="700" fill="#f8fafc" font-size="16" filter="url(#text-glow)">Regina</text>
+                
+                <!-- Math Formula moved to bottom -->
+                <text x="200" y="390" text-anchor="middle" fill="#38bdf8" font-family="monospace" font-size="12">V(Re) - V(Uomo) + V(Donna) ≈ V(Regina)</text>
+            </g>
+
+
+            <!-- ============================================== -->
+            <!-- PANEL 2: Capitali (Country -> Capital) -->
+            <!-- ============================================== -->
+            <g transform="translate(500, 120)">
+                <!-- Panel Background -->
+                <rect x="0" y="0" width="400" height="420" rx="12" fill="#1e293b" fill-opacity="0.4" stroke="#334155" stroke-width="1"/>
+
+                <!-- Axis -->
+                <line x1="20" y1="380" x2="380" y2="380" stroke="#475569" stroke-width="2" marker-end="url(#arrow-grey)"/>
+                <line x1="20" y1="380" x2="20" y2="20" stroke="#475569" stroke-width="2" marker-end="url(#arrow-grey)"/>
+                
+                <text x="330" y="405" font-size="10" fill="#64748b">Dimensione X</text>
+                <text x="30" y="30" font-size="10" fill="#64748b">Dimensione Y</text>
+
+                <!-- 1. Diagonal Vectors (Capital Transformation) -->
+                <!-- France -> Paris -->
+                <line x1="80" y1="320" x2="170" y2="140" stroke="#facc15" stroke-width="3" marker-end="url(#arrow-orange)"/>
+                
+                <!-- Italy -> Rome -->
+                <line x1="240" y1="320" x2="330" y2="140" stroke="#facc15" stroke-width="3" marker-end="url(#arrow-orange)"/>
+
+                <!-- 2. Horizontal Connection -->
+                <line x1="100" y1="320" x2="220" y2="320" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="200" y1="120" x2="320" y2="120" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+
+                <!-- Label for Vector - Moved further down and right -->
+                <text x="150" y="280" fill="#facc15" font-size="12" font-weight="600" transform="rotate(-63, 150, 280)">Capital Transform</text>
+
+                <!-- NODES -->
+                <!-- France -->
+                <rect x="50" y="305" width="60" height="30" rx="6" fill="#101a36" stroke="#94a3b8" stroke-width="2"/>
+                <text x="80" y="325" text-anchor="middle" font-weight="600" fill="#cbd5f5" font-size="14">Francia</text>
+
+                <!-- Paris -->
+                <rect x="150" y="105" width="60" height="30" rx="6" fill="#101a36" stroke="#facc15" stroke-width="2"/>
+                <text x="180" y="125" text-anchor="middle" font-weight="700" fill="#f8fafc" font-size="16" filter="url(#text-glow)">Parigi</text>
+
+                <!-- Italy -->
+                <rect x="210" y="305" width="60" height="30" rx="6" fill="#101a36" stroke="#94a3b8" stroke-width="2"/>
+                <text x="240" y="325" text-anchor="middle" font-weight="600" fill="#cbd5f5" font-size="14">Italia</text>
+
+                <!-- Rome -->
+                <rect x="310" y="105" width="60" height="30" rx="6" fill="#101a36" stroke="#facc15" stroke-width="2"/>
+                <text x="340" y="125" text-anchor="middle" font-weight="700" fill="#f8fafc" font-size="16" filter="url(#text-glow)">Roma</text>
+                
+                 <!-- Math Formula moved to bottom -->
+                <text x="200" y="390" text-anchor="middle" fill="#facc15" font-family="monospace" font-size="12">V(Parigi) - V(Francia) + V(Italia) ≈ V(Roma)</text>
+            </g>
+
+            <!-- Bottom Legend -->
+            <g transform="translate(60, 560)">
+                <rect width="840" height="1" fill="#334155"/>
+                <text x="420" y="25" text-anchor="middle" font-size="12" fill="#94a3b8">
+                    Le frecce piene rappresentano le trasformazioni vettoriali costanti. Le linee tratteggiate indicano relazioni parallele nello spazio.
+                </text>
+            </g>
+
+        </svg>
