@@ -42,7 +42,7 @@
     "headline": "Dai modelli NLP classici ai LLM",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-10T00:00:00.000Z",
-    "dateModified": "2026-01-19T23:35:13.892Z",
+    "dateModified": "2026-01-19T23:37:39.452Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -997,6 +997,12 @@
             <span class="post-toc__text">Come funzionano questi embedding?</span>
           </a>
           
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#cosa-risolvono-gli-embedding-statici">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Cosa risolvono gli embedding statici</span>
+          </a>
+          
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
@@ -1187,8 +1193,9 @@ Bag-of-Words: { &quot;gatto&quot;: 1, &quot;insegue&quot;: 1, &quot;il&quot;: 2,
 <p>Un embedding è una funzione $f: V \to \mathbb{R}^d$ che mappa un simbolo discreto del vocabolario $V$ in un vettore denso di dimensione $d$; operativamente è una matrice $E \in \mathbb{R}^{|V|\times d}$ e l’embedding di un token è la sua riga</p>
 </blockquote>
 <p><img src="../../../Assets/cbow_vs_skipgram.svg" alt="CBOW vs Skip-gram"><br><em>Figura 03: Confronto tra CBOW e Skip-gram.</em></p>
-<p>Un altro modello popolare, <strong>GloVe</strong> (Pennington et al., 2014), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch&#39;esso vettori densi. Varianti come <strong>fastText</strong> (Bojanowski et al., 2016) hanno introdotto l&#39;uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.</p>
-<p><strong>Cosa risolvono gli embedding statici:</strong><br>- <strong>Sparsità ridotta:</strong> si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se <em>&quot;gatto&quot;</em> e <em>&quot;felino&quot;</em> hanno vettori vicini, il modello può trasferire conoscenza da uno all&#39;altro anche se uno dei due era raro nel corpus<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. - <strong>Similarità semantica:</strong> per la prima volta la macchina ha un <em>notion</em> di significato. Parole correlate (per contesto d&#39;uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).</p>
+<p>Un altro modello popolare, <strong>GloVe</strong> (<a href="https://aclanthology.org/D14-1162/">Pennington et al., 2014</a>), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch&#39;esso vettori densi. Varianti come <strong>fastText</strong> (<a href="https://arxiv.org/abs/1607.04606">Bojanowski et al., 2016</a>) hanno introdotto l&#39;uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.</p>
+<h3 id="cosa-risolvono-gli-embedding-statici">Cosa risolvono gli embedding statici</h3>
+<p>Attraverso la cosiddetta <strong>sparsità ridotta:</strong> si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se <em>&quot;gatto&quot;</em> e <em>&quot;felino&quot;</em> hanno vettori vicini, il modello può trasferire conoscenza da uno all&#39;altro anche se uno dei due era raro nel corpus<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. - <strong>Similarità semantica:</strong> per la prima volta la macchina ha un <em>notion</em> di significato. Parole correlate (per contesto d&#39;uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).</p>
 <p><strong>Cosa <em>non</em> risolvono:</strong> il problema cruciale degli embedding classici è che sono <strong>statici</strong>. Ad ogni parola nel dizionario corrisponde un singolo vettore fisso, a prescindere del contesto in cui appare. Questo è limitante perché molte parole sono <strong>polisemiche</strong>: il significato di <em>&quot;bank&quot;</em> dipende dal contesto (banca vs argine del fiume). Un embedding statico di <em>&quot;bank&quot;</em> finirà per essere una sorta di media dei due significati, incapace di rappresentarli precisamente. Un esempio in italiano: <em>&quot;Java&quot;</em> può indicare un linguaggio di programmazione o un&#39;isola; un unico vettore non può riflettere entrambe le possibilità in modo distinto.</p>
 <p>Per chiarire, consideriamo alcune frasi con la parola <strong>&quot;porto&quot;</strong>:<br>- <em>&quot;Il</em> <em>porto</em> <em>di Genova è uno dei più grandi del Mediterraneo.&quot;</em> (scalo marittimo)<br>- <em>&quot;Dopo cena prendo un bicchiere di</em> <em>Porto.&quot;</em> (vino liquoroso)</p>
 <p>Un modello a embedding statici darà alla parola &quot;porto&quot; lo stesso identico vettore in entrambe le frasi, incapace di cogliere che nel primo caso è un sostantivo luogo e nel secondo un nome proprio di vino. Questa <strong>ambiguità semantica</strong> resta irrisolta. In pratica, un modello con embedding statici &quot;pensa&quot; che <em>&quot;porto (harbor)&quot;</em> e <em>&quot;porto (wine)&quot;</em> siano un unico concetto, perdendo informazione cruciale.</p>
