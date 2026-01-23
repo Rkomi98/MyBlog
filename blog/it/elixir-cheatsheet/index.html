@@ -42,7 +42,7 @@
     "headline": "Elixir Cheatsheet",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-23T00:00:00.000Z",
-    "dateModified": "2026-01-23T16:57:51.353Z",
+    "dateModified": "2026-01-23T17:08:52.020Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1012,15 +1012,51 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#esempi-di-pattern-matching">
+          <a class="post-toc__link" href="#come-funziona">
             <span class="post-toc__number">5.1</span>
-            <span class="post-toc__text">Esempi di Pattern Matching</span>
+            <span class="post-toc__text">Come Funziona</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#pattern-matching-con-tuple">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">Pattern Matching con Tuple</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#pattern-matching-con-liste">
+            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__text">Pattern Matching con Liste</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#pattern-matching-con-mappe">
+            <span class="post-toc__number">5.4</span>
+            <span class="post-toc__text">Pattern Matching con Mappe</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#pattern-matching-in-azione-funzioni">
+            <span class="post-toc__number">5.5</span>
+            <span class="post-toc__text">Pattern Matching in Azione: Funzioni</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-pin-operator">
-            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__number">5.6</span>
             <span class="post-toc__text">Il Pin Operator (^)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#lunderscore-il-jolly">
+            <span class="post-toc__number">5.7</span>
+            <span class="post-toc__text">L&#39;Underscore: Il Jolly</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#pattern-matching-everywhere">
+            <span class="post-toc__number">5.8</span>
+            <span class="post-toc__text">Pattern Matching Everywhere!</span>
           </a>
           
         </li>
@@ -1038,29 +1074,83 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#guard-clauses">
+          <a class="post-toc__link" href="#pattern-matching-nelle-funzioni">
             <span class="post-toc__number">6.2</span>
+            <span class="post-toc__text">Pattern Matching nelle Funzioni</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#ricorsione-con-pattern-matching">
+            <span class="post-toc__number">6.3</span>
+            <span class="post-toc__text">Ricorsione con Pattern Matching</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#guard-clauses">
+            <span class="post-toc__number">6.4</span>
             <span class="post-toc__text">Guard Clauses</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#funzioni-anonime">
-            <span class="post-toc__number">6.3</span>
+            <span class="post-toc__number">6.5</span>
             <span class="post-toc__text">Funzioni Anonime</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#sintassi-shorthand-con">
+            <span class="post-toc__number">6.6</span>
+            <span class="post-toc__text">Sintassi Shorthand con &amp;</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#default-arguments">
+            <span class="post-toc__number">6.7</span>
+            <span class="post-toc__text">Default Arguments</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#7-loperatore-pipe">
+          <a class="post-toc__link" href="#7-loperatore-pipe-scrivere-codice-leggibile">
             <span class="post-toc__number">7</span>
-            <span class="post-toc__text">7. L&#39;Operatore Pipe (|&gt;)</span>
+            <span class="post-toc__text">7. L&#39;Operatore Pipe (|&gt;): Scrivere Codice Leggibile</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#esempi-di-pipe">
+          <a class="post-toc__link" href="#il-problema-che-risolve">
             <span class="post-toc__number">7.1</span>
-            <span class="post-toc__text">Esempi di Pipe</span>
+            <span class="post-toc__text">Il Problema che Risolve</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#la-soluzione-il-pipe">
+            <span class="post-toc__number">7.2</span>
+            <span class="post-toc__text">La Soluzione: Il Pipe</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#come-funziona-1">
+            <span class="post-toc__number">7.3</span>
+            <span class="post-toc__text">Come Funziona</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#esempi-pratici">
+            <span class="post-toc__number">7.4</span>
+            <span class="post-toc__text">Esempi Pratici</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#pipe-con-funzioni-multi-argomento">
+            <span class="post-toc__number">7.5</span>
+            <span class="post-toc__text">Pipe con Funzioni Multi-Argomento</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#debug-con-ioinspect">
+            <span class="post-toc__number">7.6</span>
+            <span class="post-toc__text">Debug con IO.inspect</span>
           </a>
           
         </li>
@@ -1220,161 +1310,410 @@ su più righe
 </ul>
 <p>Sembrano simili, ma le prestazioni sono <strong>opposte</strong>.</p>
 <h3 id="liste-linked-lists">Liste (Linked Lists)</h3>
-<pre><code class="hljs language-elixir"><span class="hljs-comment"># Lista (Linked List)</span>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Creare una lista</span>
 lista = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
-[<span class="hljs-number">0</span> | lista] <span class="hljs-comment"># =&gt; [0, 1, 2, 3] (Prepend è veloce!)</span>
 
-<span class="hljs-comment"># Destrutturare una lista</span>
-[head | tail] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
-<span class="hljs-comment"># head =&gt; 1</span>
-<span class="hljs-comment"># tail =&gt; [2, 3, 4]</span>
+<span class="hljs-comment"># Accedere agli elementi</span>
+<span class="hljs-title class_">List</span>.first(lista) <span class="hljs-comment"># =&gt; 1</span>
+<span class="hljs-title class_">List</span>.last(lista)  <span class="hljs-comment"># =&gt; 3</span>
+
+<span class="hljs-comment"># Aggiungere in testa (VELOCE!)</span>
+[<span class="hljs-number">0</span> | lista] <span class="hljs-comment"># =&gt; [0, 1, 2, 3]</span>
 
 <span class="hljs-comment"># Aggiungere in coda (LENTO!)</span>
-lista ++ [<span class="hljs-number">4</span>] <span class="hljs-comment"># =&gt; [1, 2, 3, 4]</span></code></pre><h3 id="tuple">Tuple</h3>
-<pre><code class="hljs language-elixir"><span class="hljs-comment"># Tupla</span>
-tupla = {<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Tutto bene&quot;</span>}
-elem(tupla, <span class="hljs-number">0</span>) <span class="hljs-comment"># =&gt; :ok (Accesso istantaneo)</span>
+lista ++ [<span class="hljs-number">4</span>] <span class="hljs-comment"># =&gt; [1, 2, 3, 4]</span>
 
-<span class="hljs-comment"># Pattern matching con tuple</span>
-{<span class="hljs-symbol">:ok</span>, result} = {<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Successo&quot;</span>}
-<span class="hljs-comment"># result =&gt; &quot;Successo&quot;</span>
+<span class="hljs-comment"># Concatenare liste</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>] ++ [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>] <span class="hljs-comment"># =&gt; [1, 2, 3, 4]</span>
+
+<span class="hljs-comment"># Lunghezza</span>
+length(lista) <span class="hljs-comment"># =&gt; 3</span></code></pre><h3 id="tuple">Tuple</h3>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Creare una tupla</span>
+tupla = {<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Tutto bene&quot;</span>}
+
+<span class="hljs-comment"># Accedere agli elementi (per indice)</span>
+elem(tupla, <span class="hljs-number">0</span>) <span class="hljs-comment"># =&gt; :ok</span>
+elem(tupla, <span class="hljs-number">1</span>) <span class="hljs-comment"># =&gt; &quot;Tutto bene&quot;</span>
+
+<span class="hljs-comment"># Dimensione della tupla</span>
+tuple_size(tupla) <span class="hljs-comment"># =&gt; 2</span>
 
 <span class="hljs-comment"># Aggiornare una tupla (crea una nuova tupla)</span>
-put_elem(tupla, <span class="hljs-number">1</span>, <span class="hljs-string">&quot;Modificato&quot;</span>)</code></pre><blockquote>
+put_elem(tupla, <span class="hljs-number">1</span>, <span class="hljs-string">&quot;Modificato&quot;</span>)
+<span class="hljs-comment"># =&gt; {:ok, &quot;Modificato&quot;}</span>
+
+<span class="hljs-comment"># Uso comune: risultati di funzioni</span>
+{<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Successo&quot;</span>}
+{<span class="hljs-symbol">:error</span>, <span class="hljs-string">&quot;Qualcosa è andato storto&quot;</span>}</code></pre><blockquote>
 <p>💡 <strong>Pro Tip</strong>: Usa le <strong>Liste</strong> quando devi scorrere dati o aggiungere elementi in testa dinamicamente. Usa le <strong>Tuple</strong> quando sai esattamente quanti elementi hai (come restituire <code>{:ok, result}</code> da una funzione). Ricorda: aggiungere un elemento in fondo a una lista è un&#39;operazione lenta <strong>O(n)</strong>, mentre aggiungerlo in testa è istantaneo <strong>O(1)</strong>.</p>
 </blockquote>
 <h2 id="4-mappe-e-keyword-lists">4. Mappe e Keyword Lists</h2>
 <p>Hai bisogno di strutture chiave-valore? Hai due strade principali:</p>
 <h3 id="mappe">Mappe (%{})</h3>
-<p>Le Mappe sono il &quot;go-to&quot; per strutture dati generiche. Offrono accesso rapido e sintassi comoda.</p>
-<pre><code class="hljs language-elixir"><span class="hljs-comment"># Mappa con chiavi atomo</span>
-user = %{<span class="hljs-symbol">name:</span> <span class="hljs-string">&quot;Alice&quot;</span>, <span class="hljs-symbol">age:</span> <span class="hljs-number">30</span>}
-user.name <span class="hljs-comment"># =&gt; &quot;Alice&quot; (Sintassi comoda se la chiave è un atomo)</span>
-user[<span class="hljs-symbol">:age</span>] <span class="hljs-comment"># =&gt; 30</span>
+<p>Le Mappe sono il &quot;go-to&quot; per strutture dati generiche. Offrono accesso rapido e una sintassi oggettivamente comoda.</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Creare una mappa con chiavi atomo</span>
+user = %{<span class="hljs-symbol">name:</span> <span class="hljs-string">&quot;Lucia&quot;</span>, <span class="hljs-symbol">age:</span> <span class="hljs-number">23</span>}
 
-<span class="hljs-comment"># Mappa con chiavi miste</span>
-mixed = %{<span class="hljs-string">&quot;città&quot;</span> =&gt; <span class="hljs-string">&quot;Roma&quot;</span>, <span class="hljs-symbol">:paese</span> =&gt; <span class="hljs-string">&quot;Italia&quot;</span>}
-mixed[<span class="hljs-string">&quot;città&quot;</span>] <span class="hljs-comment"># =&gt; &quot;Roma&quot;</span>
+<span class="hljs-comment"># Accedere ai valori (due modi)</span>
+user.name    <span class="hljs-comment"># =&gt; &quot;Lucia&quot; (solo se la chiave è un atomo)</span>
+user[<span class="hljs-symbol">:age</span>]   <span class="hljs-comment"># =&gt; 23</span>
+user[<span class="hljs-symbol">:email</span>] <span class="hljs-comment"># =&gt; nil (chiave non esiste)</span>
 
-<span class="hljs-comment"># Aggiornare una mappa (sintassi speciale per atomi)</span>
-%{user | <span class="hljs-symbol">age:</span> <span class="hljs-number">31</span>} <span class="hljs-comment"># =&gt; %{name: &quot;Alice&quot;, age: 31}</span>
+<span class="hljs-comment"># Mappa con chiavi stringa</span>
+config = %{<span class="hljs-string">&quot;host&quot;</span> =&gt; <span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-string">&quot;port&quot;</span> =&gt; <span class="hljs-number">8080</span>}
+config[<span class="hljs-string">&quot;host&quot;</span>] <span class="hljs-comment"># =&gt; &quot;localhost&quot;</span>
+
+<span class="hljs-comment"># Aggiornare un valore esistente</span>
+%{user | <span class="hljs-symbol">age:</span> <span class="hljs-number">24</span>} <span class="hljs-comment"># =&gt; %{name: &quot;Lucia&quot;, age: 24}</span>
 
 <span class="hljs-comment"># Aggiungere nuove chiavi</span>
-<span class="hljs-title class_">Map</span>.put(user, <span class="hljs-symbol">:email</span>, <span class="hljs-string">&quot;alice@example.com&quot;</span>)</code></pre><h3 id="keyword-lists">Keyword Lists</h3>
-<p>Sono liste speciali di tuple usate principalmente per passare opzioni alle funzioni (perché l&#39;ordine è garantito e le chiavi possono ripetersi).</p>
+<span class="hljs-title class_">Map</span>.put(user, <span class="hljs-symbol">:email</span>, <span class="hljs-string">&quot;lucia@example.com&quot;</span>)
+<span class="hljs-comment"># =&gt; %{name: &quot;Lucia&quot;, age: 23, email: &quot;lucia@example.com&quot;}</span>
+
+<span class="hljs-comment"># Rimuovere una chiave</span>
+<span class="hljs-title class_">Map</span>.delete(user, <span class="hljs-symbol">:age</span>)
+<span class="hljs-comment"># =&gt; %{name: &quot;Lucia&quot;}</span>
+
+<span class="hljs-comment"># Verificare se una chiave esiste</span>
+<span class="hljs-title class_">Map</span>.has_key?(user, <span class="hljs-symbol">:name</span>) <span class="hljs-comment"># =&gt; true</span></code></pre><h3 id="keyword-lists">Keyword Lists</h3>
+<p>Sono liste speciali di tuple usate principalmente per passare opzioni alle funzioni. La differenza con le mappe? L&#39;ordine è garantito e le chiavi possono ripetersi.</p>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Keyword List</span>
-options = [<span class="hljs-symbol">debug:</span> <span class="hljs-literal">true</span>, <span class="hljs-symbol">active:</span> <span class="hljs-literal">false</span>, <span class="hljs-symbol">debug:</span> <span class="hljs-literal">true</span>]
-<span class="hljs-comment"># È zucchero sintattico per: [{:debug, true}, {:active, false}, {:debug, true}]</span>
+options = [<span class="hljs-symbol">debug:</span> <span class="hljs-literal">true</span>, <span class="hljs-symbol">active:</span> <span class="hljs-literal">false</span>]
+<span class="hljs-comment"># È zucchero sintattico per: [{:debug, true}, {:active, false}]</span>
 
 <span class="hljs-comment"># Accesso</span>
-options[<span class="hljs-symbol">:debug</span>] <span class="hljs-comment"># =&gt; true (prende il primo)</span>
+options[<span class="hljs-symbol">:debug</span>] <span class="hljs-comment"># =&gt; true</span>
+
+<span class="hljs-comment"># Chiavi duplicate (l&#x27;accesso prende il primo)</span>
+options = [<span class="hljs-symbol">debug:</span> <span class="hljs-literal">true</span>, <span class="hljs-symbol">active:</span> <span class="hljs-literal">false</span>, <span class="hljs-symbol">debug:</span> <span class="hljs-literal">false</span>]
+options[<span class="hljs-symbol">:debug</span>] <span class="hljs-comment"># =&gt; true (primo valore)</span>
 
 <span class="hljs-comment"># Uso comune: opzioni di funzione</span>
-<span class="hljs-title class_">String</span>.split(<span class="hljs-string">&quot;a,b,c&quot;</span>, <span class="hljs-string">&quot;,&quot;</span>, <span class="hljs-symbol">trim:</span> <span class="hljs-literal">true</span>)</code></pre><blockquote>
-<p>💡 <strong>Pro Tip</strong>: Nelle mappe, puoi usare il pattern matching per estrarre valori nidificati in modo elegantissimo. Se cerchi una chiave che non esiste con la sintassi <code>map.key</code>, otterrai un <strong>errore</strong>; se usi <code>map[:key]</code>, otterrai <code>nil</code>. Scegli in base a quanto sei sicuro che il dato esista!</p>
+<span class="hljs-title class_">String</span>.split(<span class="hljs-string">&quot;a,b,c&quot;</span>, <span class="hljs-string">&quot;,&quot;</span>, <span class="hljs-symbol">trim:</span> <span class="hljs-literal">true</span>)
+<span class="hljs-title class_">Enum</span>.map([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], <span class="hljs-keyword">fn</span> x -&gt; x * <span class="hljs-number">2</span> <span class="hljs-keyword">end</span>)</code></pre><blockquote>
+<p>💡 <strong>Pro Tip</strong>: Se cerchi una chiave che non esiste con la sintassi <code>map.key</code>, otterrai un <strong>errore</strong> (KeyError); se usi <code>map[:key]</code>, otterrai <code>nil</code>. Usa la prima quando sei sicuro che la chiave esiste, la seconda quando vuoi gestire l&#39;assenza del valore.</p>
 </blockquote>
 <h2 id="5-pattern-matching-la-magia-delloperatore">5. Pattern Matching: La Magia dell&#39;Operatore =</h2>
-<p>In Elixir, il simbolo <code>=</code> <strong>non è un&#39;assegnazione</strong>. È un <strong>operatore di confronto</strong> (match operator). Elixir prova a far combaciare il lato sinistro con il destro. Se ci riesce, lega le variabili; se no, lancia un errore.</p>
-<p><strong>È la feature più potente del linguaggio.</strong></p>
-<h3 id="esempi-di-pattern-matching">Esempi di Pattern Matching</h3>
-<pre><code class="hljs language-elixir"><span class="hljs-comment"># Assegnazione &quot;classica&quot; (Match riuscito)</span>
+<p>Qui arriva il vero game changer di Elixir. In Elixir, il simbolo <code>=</code> <strong>non è un&#39;assegnazione</strong> nel senso tradizionale. È un <strong>match operator</strong>: Elixir prova a far combaciare (match) il lato sinistro con il destro. Se ci riesce, lega le variabili; se no, lancia un errore.</p>
+<p><strong>È la feature più potente del linguaggio</strong> e cambia completamente il modo in cui scrivi codice.</p>
+<h3 id="come-funziona">Come Funziona</h3>
+<p>Pensa a <code>=</code> come a un&#39;equazione matematica. Elixir cerca di rendere veri entrambi i lati:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># &quot;x deve essere uguale a 1&quot;</span>
 x = <span class="hljs-number">1</span>
+<span class="hljs-comment"># Elixir lega x al valore 1</span>
 
-<span class="hljs-comment"># Pattern Matching con tuple</span>
+<span class="hljs-comment"># &quot;1 deve essere uguale a 1&quot;</span>
+<span class="hljs-number">1</span> = x
+<span class="hljs-comment"># OK! Matcha perché x vale 1</span>
+
+<span class="hljs-comment"># &quot;2 deve essere uguale a 1&quot;</span>
+<span class="hljs-number">2</span> = x
+<span class="hljs-comment"># ** (MatchError) no match of right hand side value: 1</span></code></pre><h3 id="pattern-matching-con-tuple">Pattern Matching con Tuple</h3>
+<p>Ora che conosci le tuple, vediamo come destrutturarle con eleganza:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Destrutturare una tupla</span>
 {a, b} = {<span class="hljs-number">10</span>, <span class="hljs-number">20</span>}
-<span class="hljs-comment"># Ora a vale 10, b vale 20</span>
+<span class="hljs-comment"># a =&gt; 10, b =&gt; 20</span>
 
-<span class="hljs-comment"># Matching parziale con atomi</span>
-{<span class="hljs-symbol">:ok</span>, result} = {<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Dati salvati&quot;</span>}
-<span class="hljs-comment"># result ora vale &quot;Dati salvati&quot;</span>
+<span class="hljs-comment"># Uso pratico: gestire risultati di funzioni</span>
+{<span class="hljs-symbol">:ok</span>, result} = {<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Operazione riuscita&quot;</span>}
+<span class="hljs-comment"># result =&gt; &quot;Operazione riuscita&quot;</span>
 
-<span class="hljs-comment"># Questo fallirebbe:</span>
-<span class="hljs-comment"># {:ok, result} = {:error, &quot;Qualcosa non va&quot;} </span>
-<span class="hljs-comment"># ** (MatchError) no match of right hand side value</span>
+<span class="hljs-comment"># Se il pattern non matcha, errore!</span>
+{<span class="hljs-symbol">:ok</span>, result} = {<span class="hljs-symbol">:error</span>, <span class="hljs-string">&quot;Qualcosa è andato storto&quot;</span>}
+<span class="hljs-comment"># ** (MatchError) no match of right hand side value: {:error, &quot;Qualcosa è andato storto&quot;}</span>
 
-<span class="hljs-comment"># Matching con liste</span>
+<span class="hljs-comment"># Ignorare valori che non ci interessano</span>
+{<span class="hljs-symbol">:ok</span>, _} = {<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Non mi interessa il contenuto&quot;</span>}
+<span class="hljs-comment"># OK! L&#x27;underscore matcha qualsiasi cosa</span>
+
+<span class="hljs-comment"># Esempio real-world: File.read</span>
+{<span class="hljs-symbol">:ok</span>, contenuto} = <span class="hljs-title class_">File</span>.read(<span class="hljs-string">&quot;config.txt&quot;</span>)
+<span class="hljs-comment"># Se il file esiste, contenuto avrà il testo</span>
+<span class="hljs-comment"># Se no, MatchError (crash intenzionale)</span></code></pre><h3 id="pattern-matching-con-liste">Pattern Matching con Liste</h3>
+<p>Le liste diventano magiche con il pattern matching:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Destrutturare head (testa) e tail (coda)</span>
+[head | tail] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+<span class="hljs-comment"># head =&gt; 1</span>
+<span class="hljs-comment"># tail =&gt; [2, 3, 4, 5]</span>
+
+<span class="hljs-comment"># Prendere i primi due elementi</span>
 [first, second | rest] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
 <span class="hljs-comment"># first =&gt; 1, second =&gt; 2, rest =&gt; [3, 4, 5]</span>
 
-<span class="hljs-comment"># Matching con mappe</span>
-%{<span class="hljs-symbol">name:</span> nome} = %{<span class="hljs-symbol">name:</span> <span class="hljs-string">&quot;Alice&quot;</span>, <span class="hljs-symbol">age:</span> <span class="hljs-number">30</span>}
-<span class="hljs-comment"># nome =&gt; &quot;Alice&quot;</span></code></pre><h3 id="il-pin-operator">Il Pin Operator (^)</h3>
-<p>A volte non vuoi riassegnare una variabile, ma vuoi matchare il suo valore attuale. Usa <code>^</code>:</p>
-<pre><code class="hljs language-elixir">x = <span class="hljs-number">1</span>
-^x = <span class="hljs-number">1</span>  <span class="hljs-comment"># OK, matcha</span>
-^x = <span class="hljs-number">2</span>  <span class="hljs-comment"># Errore! x vale 1, non 2</span></code></pre><blockquote>
-<p>💡 <strong>Pro Tip</strong>: Usa l&#39;underscore <code>_</code> come &quot;jolly&quot; quando non ti interessa un valore specifico ma devi soddisfare la struttura del pattern. Esempio: <code>{:ok, _} = funzione_che_ritorna_ok()</code>. Puoi anche usare <code>_variabile</code> per dare un nome descrittivo ma indicare che non la userai (evita warning del compilatore).</p>
+<span class="hljs-comment"># Pattern matching esatto</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+<span class="hljs-comment"># OK!</span>
+
+<span class="hljs-comment"># Pattern matching con valori misti</span>
+[<span class="hljs-number">1</span>, x, <span class="hljs-number">3</span>] = [<span class="hljs-number">1</span>, <span class="hljs-number">42</span>, <span class="hljs-number">3</span>]
+<span class="hljs-comment"># x =&gt; 42</span>
+
+<span class="hljs-comment"># Lista vuota</span>
+[] = []
+<span class="hljs-comment"># OK!</span>
+
+<span class="hljs-comment"># Questo fallirebbe</span>
+[a, b] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+<span class="hljs-comment"># ** (MatchError) - il pattern richiede esattamente 2 elementi</span></code></pre><h3 id="pattern-matching-con-mappe">Pattern Matching con Mappe</h3>
+<p>Le mappe sono ancora più flessibili: puoi matchare solo le chiavi che ti interessano!</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Estrarre valori specifici</span>
+%{<span class="hljs-symbol">name:</span> nome} = %{<span class="hljs-symbol">name:</span> <span class="hljs-string">&quot;Lucia&quot;</span>, <span class="hljs-symbol">age:</span> <span class="hljs-number">23</span>, <span class="hljs-symbol">city:</span> <span class="hljs-string">&quot;Roma&quot;</span>}
+<span class="hljs-comment"># nome =&gt; &quot;Lucia&quot;</span>
+<span class="hljs-comment"># age e city vengono ignorati</span>
+
+<span class="hljs-comment"># Estrarre più valori</span>
+%{<span class="hljs-symbol">name:</span> n, <span class="hljs-symbol">age:</span> a} = %{<span class="hljs-symbol">name:</span> <span class="hljs-string">&quot;Lucia&quot;</span>, <span class="hljs-symbol">age:</span> <span class="hljs-number">23</span>, <span class="hljs-symbol">city:</span> <span class="hljs-string">&quot;Roma&quot;</span>}
+<span class="hljs-comment"># n =&gt; &quot;Lucia&quot;, a =&gt; 23</span>
+
+<span class="hljs-comment"># Verificare che una chiave esista con un certo valore</span>
+%{<span class="hljs-symbol">status:</span> <span class="hljs-symbol">:ok</span>} = %{<span class="hljs-symbol">status:</span> <span class="hljs-symbol">:ok</span>, <span class="hljs-symbol">data:</span> <span class="hljs-string">&quot;qualcosa&quot;</span>}
+<span class="hljs-comment"># OK!</span>
+
+%{<span class="hljs-symbol">status:</span> <span class="hljs-symbol">:ok</span>} = %{<span class="hljs-symbol">status:</span> <span class="hljs-symbol">:error</span>, <span class="hljs-symbol">data:</span> <span class="hljs-string">&quot;qualcosa&quot;</span>}
+<span class="hljs-comment"># ** (MatchError) - status non è :ok</span>
+
+<span class="hljs-comment"># Combinare con atomi per validazione</span>
+%{<span class="hljs-symbol">type:</span> <span class="hljs-symbol">:user</span>, <span class="hljs-symbol">id:</span> user_id} = %{<span class="hljs-symbol">type:</span> <span class="hljs-symbol">:user</span>, <span class="hljs-symbol">id:</span> <span class="hljs-number">42</span>, <span class="hljs-symbol">name:</span> <span class="hljs-string">&quot;Bob&quot;</span>}
+<span class="hljs-comment"># user_id =&gt; 42</span>
+<span class="hljs-comment"># Utile per validare che stiamo ricevendo il tipo giusto di dato!</span></code></pre><h3 id="pattern-matching-in-azione-funzioni">Pattern Matching in Azione: Funzioni</h3>
+<p>Il vero potere si vede nelle definizioni di funzione:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-class"><span class="hljs-keyword">defmodule</span> <span class="hljs-title">FileHandler</span></span> <span class="hljs-keyword">do</span>
+  <span class="hljs-comment"># Clausola 1: matcha solo se il risultato è {:ok, contenuto}</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">handle</span></span>({<span class="hljs-symbol">:ok</span>, contenuto}) <span class="hljs-keyword">do</span>
+    <span class="hljs-string">&quot;File letto con successo: <span class="hljs-subst">#{contenuto}</span>&quot;</span>
+  <span class="hljs-keyword">end</span>
+  
+  <span class="hljs-comment"># Clausola 2: matcha solo se il risultato è {:error, motivo}</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">handle</span></span>({<span class="hljs-symbol">:error</span>, motivo}) <span class="hljs-keyword">do</span>
+    <span class="hljs-string">&quot;Errore nella lettura: <span class="hljs-subst">#{motivo}</span>&quot;</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-comment"># Uso</span>
+<span class="hljs-title class_">File</span>.read(<span class="hljs-string">&quot;test.txt&quot;</span>) |&gt; <span class="hljs-title class_">FileHandler</span>.handle()
+<span class="hljs-comment"># Elixir sceglie automaticamente la clausola giusta!</span></code></pre><h3 id="il-pin-operator">Il Pin Operator (^)</h3>
+<p>A volte non vuoi riassegnare una variabile, ma vuoi matchare contro il suo valore attuale:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Senza pin: riassegna</span>
+x = <span class="hljs-number">1</span>
+x = <span class="hljs-number">2</span>  <span class="hljs-comment"># x ora vale 2</span>
+
+<span class="hljs-comment"># Con pin: matcha il valore attuale</span>
+x = <span class="hljs-number">1</span>
+^x = <span class="hljs-number">1</span>  <span class="hljs-comment"># OK, matcha perché x vale 1</span>
+^x = <span class="hljs-number">2</span>  <span class="hljs-comment"># Errore! x vale 1, non 2</span>
+
+<span class="hljs-comment"># Uso pratico: validare un valore atteso</span>
+expected_status = <span class="hljs-symbol">:ok</span>
+^expected_status = get_status()
+<span class="hljs-comment"># Si assicura che get_status() ritorni :ok, altrimenti crasha</span></code></pre><h3 id="lunderscore-il-jolly">L&#39;Underscore: Il Jolly</h3>
+<p>L&#39;underscore <code>_</code> matcha qualsiasi cosa ma non la lega a una variabile:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Ignorare completamente un valore</span>
+{<span class="hljs-symbol">:ok</span>, _} = {<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;Non mi interessa&quot;</span>}
+
+<span class="hljs-comment"># Ignorare parti di una lista</span>
+[_, secondo, _, quarto] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+<span class="hljs-comment"># secondo =&gt; 2, quarto =&gt; 4</span>
+
+<span class="hljs-comment"># Dare un nome descrittivo ma non usare il valore (evita warning)</span>
+{<span class="hljs-symbol">:ok</span>, _contenuto_che_non_uso} = <span class="hljs-title class_">File</span>.read(<span class="hljs-string">&quot;test.txt&quot;</span>)</code></pre><h3 id="pattern-matching-everywhere">Pattern Matching Everywhere!</h3>
+<p>Il pattern matching non si usa solo con <code>=</code>. È ovunque in Elixir:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Nelle funzioni (vedi sezione 6)</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calcola</span></span>({<span class="hljs-symbol">:somma</span>, a, b}), <span class="hljs-symbol">do:</span> a + b
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calcola</span></span>({<span class="hljs-symbol">:prodotto</span>, a, b}), <span class="hljs-symbol">do:</span> a * b
+
+<span class="hljs-comment"># Nel case (vedi sezione 8)</span>
+<span class="hljs-keyword">case</span> <span class="hljs-title class_">File</span>.read(<span class="hljs-string">&quot;file.txt&quot;</span>) <span class="hljs-keyword">do</span>
+  {<span class="hljs-symbol">:ok</span>, contenuto} -&gt; <span class="hljs-string">&quot;Letto: <span class="hljs-subst">#{contenuto}</span>&quot;</span>
+  {<span class="hljs-symbol">:error</span>, <span class="hljs-symbol">:enoent</span>} -&gt; <span class="hljs-string">&quot;File non trovato&quot;</span>
+  {<span class="hljs-symbol">:error</span>, motivo} -&gt; <span class="hljs-string">&quot;Errore: <span class="hljs-subst">#{motivo}</span>&quot;</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-comment"># Nelle list comprehensions</span>
+<span class="hljs-keyword">for</span> {<span class="hljs-symbol">:ok</span>, valore} &lt;- results, <span class="hljs-symbol">do:</span> valore
+
+<span class="hljs-comment"># Nei parametri di funzioni anonime</span>
+<span class="hljs-title class_">Enum</span>.map([{<span class="hljs-symbol">:ok</span>, <span class="hljs-number">1</span>}, {<span class="hljs-symbol">:ok</span>, <span class="hljs-number">2</span>}], <span class="hljs-keyword">fn</span> {<span class="hljs-symbol">:ok</span>, n} -&gt; n * <span class="hljs-number">2</span> <span class="hljs-keyword">end</span>)</code></pre><blockquote>
+<p>💡 <strong>Pro Tip</strong>: Il pattern matching ti permette di scrivere codice <strong>dichiarativo</strong> invece che <strong>imperativo</strong>. Invece di chiedere &quot;questo valore è ok? Poi estrailo&quot;, dici &quot;questo deve essere {:ok, valore}&quot; e Elixir fa tutto il lavoro sporco. Se il pattern non matcha, il programma crasha (fail fast), che è esattamente quello che vuoi durante lo sviluppo.</p>
 </blockquote>
 <h2 id="6-funzioni-e-moduli">6. Funzioni e Moduli</h2>
-<p>Il codice vive nei <strong>moduli</strong>. Le funzioni possono essere &quot;con nome&quot; (<code>def</code>) o &quot;anonime&quot; (<code>fn</code>). Una cosa bellissima? Puoi definire la stessa funzione più volte con argomenti diversi, sfruttando il <strong>pattern matching nella firma della funzione!</strong></p>
+<p>Il codice vive nei <strong>moduli</strong>. Le funzioni possono essere &quot;con nome&quot; (<code>def</code>) o &quot;anonime&quot; (<code>fn</code>). Una cosa bellissima? Puoi definire la stessa funzione più volte con argomenti diversi, sfruttando il <strong>pattern matching nella firma della funzione</strong> (che hai appena imparato nella sezione precedente!).</p>
 <h3 id="funzioni-con-nome">Funzioni con Nome</h3>
 <pre><code class="hljs language-elixir"><span class="hljs-class"><span class="hljs-keyword">defmodule</span> <span class="hljs-title">Math</span></span> <span class="hljs-keyword">do</span>
-  <span class="hljs-comment"># Clausola 1: Se l&#x27;argomento è 0</span>
+  <span class="hljs-comment"># Funzione semplice</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span></span>(a, b), <span class="hljs-symbol">do:</span> a + b
+  
+  <span class="hljs-comment"># Funzione con corpo multi-linea</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">multiply</span></span>(a, b) <span class="hljs-keyword">do</span>
+    result = a * b
+    result
+  <span class="hljs-keyword">end</span>
+  
+  <span class="hljs-comment"># Funzione privata (solo dentro il modulo)</span>
+  <span class="hljs-function"><span class="hljs-keyword">defp</span> <span class="hljs-title">private_helper</span></span>(x), <span class="hljs-symbol">do:</span> x * <span class="hljs-number">2</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-title class_">Math</span>.add(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)      <span class="hljs-comment"># =&gt; 5</span>
+<span class="hljs-title class_">Math</span>.multiply(<span class="hljs-number">4</span>, <span class="hljs-number">5</span>) <span class="hljs-comment"># =&gt; 20</span></code></pre><h3 id="pattern-matching-nelle-funzioni">Pattern Matching nelle Funzioni</h3>
+<p>Ora che conosci il pattern matching, ecco dove diventa davvero potente:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-class"><span class="hljs-keyword">defmodule</span> <span class="hljs-title">FileHandler</span></span> <span class="hljs-keyword">do</span>
+  <span class="hljs-comment"># Clausola 1: matcha {:ok, contenuto}</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">process</span></span>({<span class="hljs-symbol">:ok</span>, contenuto}) <span class="hljs-keyword">do</span>
+    <span class="hljs-string">&quot;Elaborato: <span class="hljs-subst">#{contenuto}</span>&quot;</span>
+  <span class="hljs-keyword">end</span>
+  
+  <span class="hljs-comment"># Clausola 2: matcha {:error, motivo}</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">process</span></span>({<span class="hljs-symbol">:error</span>, motivo}) <span class="hljs-keyword">do</span>
+    <span class="hljs-string">&quot;Errore: <span class="hljs-subst">#{motivo}</span>&quot;</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-comment"># Elixir sceglie automaticamente la clausola giusta!</span>
+<span class="hljs-title class_">FileHandler</span>.process({<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;dati&quot;</span>})    <span class="hljs-comment"># =&gt; &quot;Elaborato: dati&quot;</span>
+<span class="hljs-title class_">FileHandler</span>.process({<span class="hljs-symbol">:error</span>, <span class="hljs-string">&quot;boom&quot;</span>}) <span class="hljs-comment"># =&gt; &quot;Errore: boom&quot;</span></code></pre><h3 id="ricorsione-con-pattern-matching">Ricorsione con Pattern Matching</h3>
+<p>Il pattern matching rende la ricorsione elegantissima:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-class"><span class="hljs-keyword">defmodule</span> <span class="hljs-title">Math</span></span> <span class="hljs-keyword">do</span>
+  <span class="hljs-comment"># Caso base: 0! = 1</span>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">factorial</span></span>(<span class="hljs-number">0</span>), <span class="hljs-symbol">do:</span> <span class="hljs-number">1</span>
   
-  <span class="hljs-comment"># Clausola 2: Per tutti gli altri numeri</span>
+  <span class="hljs-comment"># Caso ricorsivo: n! = n * (n-1)!</span>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">factorial</span></span>(n) <span class="hljs-keyword">when</span> n &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">do</span>
     n * factorial(n - <span class="hljs-number">1</span>)
   <span class="hljs-keyword">end</span>
-  
-  <span class="hljs-comment"># Funzione pubblica</span>
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span></span>(a, b), <span class="hljs-symbol">do:</span> a + b
-  
-  <span class="hljs-comment"># Funzione privata (solo dentro il modulo)</span>
-  <span class="hljs-function"><span class="hljs-keyword">defp</span> <span class="hljs-title">multiply</span></span>(a, b), <span class="hljs-symbol">do:</span> a * b
 <span class="hljs-keyword">end</span>
 
-<span class="hljs-title class_">Math</span>.factorial(<span class="hljs-number">5</span>) <span class="hljs-comment"># =&gt; 120</span>
-<span class="hljs-title class_">Math</span>.add(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)    <span class="hljs-comment"># =&gt; 5</span></code></pre><h3 id="guard-clauses">Guard Clauses</h3>
-<p>Le guard clauses aggiungono condizioni extra al pattern matching:</p>
+<span class="hljs-title class_">Math</span>.factorial(<span class="hljs-number">5</span>) <span class="hljs-comment"># =&gt; 120</span></code></pre><pre><code class="hljs language-elixir"><span class="hljs-class"><span class="hljs-keyword">defmodule</span> <span class="hljs-title">ListHelper</span></span> <span class="hljs-keyword">do</span>
+  <span class="hljs-comment"># Caso base: lista vuota</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sum</span></span>([]), <span class="hljs-symbol">do:</span> <span class="hljs-number">0</span>
+  
+  <span class="hljs-comment"># Caso ricorsivo: somma la testa + somma della coda</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sum</span></span>([head | tail]) <span class="hljs-keyword">do</span>
+    head + sum(tail)
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-title class_">ListHelper</span>.sum([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]) <span class="hljs-comment"># =&gt; 10</span></code></pre><h3 id="guard-clauses">Guard Clauses</h3>
+<p>Le guard clauses aggiungono condizioni extra <strong>dopo</strong> il pattern matching:</p>
 <pre><code class="hljs language-elixir"><span class="hljs-class"><span class="hljs-keyword">defmodule</span> <span class="hljs-title">Temperature</span></span> <span class="hljs-keyword">do</span>
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(temp) <span class="hljs-keyword">when</span> temp &gt; <span class="hljs-number">30</span>, <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Caldo&quot;</span>
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(temp) <span class="hljs-keyword">when</span> temp &gt; <span class="hljs-number">15</span>, <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Mite&quot;</span>
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(temp) <span class="hljs-keyword">when</span> temp &gt; <span class="hljs-number">0</span>, <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Freddo&quot;</span>
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(_), <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Gelido&quot;</span>
-<span class="hljs-keyword">end</span></code></pre><h3 id="funzioni-anonime">Funzioni Anonime</h3>
+  <span class="hljs-comment"># Pattern matching + condizione</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(temp) <span class="hljs-keyword">when</span> temp &gt; <span class="hljs-number">30</span>, <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Caldissimo! 🔥&quot;</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(temp) <span class="hljs-keyword">when</span> temp &gt; <span class="hljs-number">15</span>, <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Mite 😊&quot;</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(temp) <span class="hljs-keyword">when</span> temp &gt; <span class="hljs-number">0</span>, <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Freddo 🥶&quot;</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">describe</span></span>(_), <span class="hljs-symbol">do:</span> <span class="hljs-string">&quot;Gelido ❄️&quot;</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-title class_">Temperature</span>.describe(<span class="hljs-number">35</span>) <span class="hljs-comment"># =&gt; &quot;Caldissimo! 🔥&quot;</span>
+<span class="hljs-title class_">Temperature</span>.describe(<span class="hljs-number">18</span>) <span class="hljs-comment"># =&gt; &quot;Mite 😊&quot;</span></code></pre><p>Guards supportati: <code>&lt;</code>, <code>&gt;</code>, <code>==</code>, <code>!=</code>, <code>and</code>, <code>or</code>, <code>not</code>, <code>is_list</code>, <code>is_map</code>, <code>is_atom</code>, etc.</p>
+<h3 id="funzioni-anonime">Funzioni Anonime</h3>
+<p>Funzioni &quot;usa e getta&quot; senza nome:</p>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Sintassi classica</span>
 add = <span class="hljs-keyword">fn</span> a, b -&gt; a + b <span class="hljs-keyword">end</span>
 add.(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) <span class="hljs-comment"># =&gt; 3 (Nota il punto per chiamare le anonime!)</span>
 
-<span class="hljs-comment"># Sintassi shorthand con &amp;</span>
-multiply = &amp;(&amp;<span class="hljs-number">1</span> * &amp;<span class="hljs-number">2</span>)
-multiply.(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>) <span class="hljs-comment"># =&gt; 12</span>
-
-<span class="hljs-comment"># Multi-clausola</span>
+<span class="hljs-comment"># Con pattern matching multi-clausola</span>
 handle_result = <span class="hljs-keyword">fn</span>
   {<span class="hljs-symbol">:ok</span>, result} -&gt; <span class="hljs-string">&quot;Successo: <span class="hljs-subst">#{result}</span>&quot;</span>
   {<span class="hljs-symbol">:error</span>, reason} -&gt; <span class="hljs-string">&quot;Errore: <span class="hljs-subst">#{reason}</span>&quot;</span>
-<span class="hljs-keyword">end</span></code></pre><blockquote>
+  _ -&gt; <span class="hljs-string">&quot;Caso non gestito&quot;</span>
+<span class="hljs-keyword">end</span>
+
+handle_result.({<span class="hljs-symbol">:ok</span>, <span class="hljs-string">&quot;tutto ok&quot;</span>}) <span class="hljs-comment"># =&gt; &quot;Successo: tutto ok&quot;</span></code></pre><h3 id="sintassi-shorthand-con">Sintassi Shorthand con &amp;</h3>
+<p>Per funzioni super semplici:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Versione lunga</span>
+<span class="hljs-title class_">Enum</span>.map([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], <span class="hljs-keyword">fn</span> x -&gt; x * <span class="hljs-number">2</span> <span class="hljs-keyword">end</span>)
+
+<span class="hljs-comment"># Versione corta con &amp; (capture operator)</span>
+<span class="hljs-title class_">Enum</span>.map([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], &amp;(&amp;<span class="hljs-number">1</span> * <span class="hljs-number">2</span>))
+<span class="hljs-comment"># &amp;1 = primo argomento, &amp;2 = secondo, etc.</span>
+
+<span class="hljs-comment"># Passare funzioni esistenti</span>
+<span class="hljs-title class_">Enum</span>.map([<span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-string">&quot;world&quot;</span>], &amp;<span class="hljs-title class_">String</span>.upcase/<span class="hljs-number">1</span>)
+<span class="hljs-comment"># =&gt; [&quot;HELLO&quot;, &quot;WORLD&quot;]</span></code></pre><h3 id="default-arguments">Default Arguments</h3>
+<pre><code class="hljs language-elixir"><span class="hljs-class"><span class="hljs-keyword">defmodule</span> <span class="hljs-title">Greeter</span></span> <span class="hljs-keyword">do</span>
+  <span class="hljs-comment"># \\ definisce un valore di default</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">greet</span></span>(name, saluto \\ <span class="hljs-string">&quot;Ciao&quot;</span>) <span class="hljs-keyword">do</span>
+    <span class="hljs-string">&quot;<span class="hljs-subst">#{saluto}</span>, <span class="hljs-subst">#{name}</span>!&quot;</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-title class_">Greeter</span>.greet(<span class="hljs-string">&quot;Lucia&quot;</span>)           <span class="hljs-comment"># =&gt; &quot;Ciao, Lucia!&quot;</span>
+<span class="hljs-title class_">Greeter</span>.greet(<span class="hljs-string">&quot;Lucia&quot;</span>, <span class="hljs-string">&quot;Buongiorno&quot;</span>) <span class="hljs-comment"># =&gt; &quot;Buongiorno, Lucia!&quot;</span></code></pre><blockquote>
 <p>💡 <strong>Pro Tip</strong>: L&#39;ordine conta! Elixir controlla le definizioni delle funzioni <strong>dall&#39;alto in basso</strong>. Metti sempre i casi più specifici (come <code>factorial(0)</code>) prima dei casi generali, altrimenti non verranno mai eseguiti. Le guard clauses vengono valutate <strong>dopo</strong> il pattern matching base.</p>
 </blockquote>
-<h2 id="7-loperatore-pipe">7. L&#39;Operatore Pipe (|&gt;)</h2>
-<p>Probabilmente il simbolo più amato dagli sviluppatori Elixir. Il pipe operator <code>|&gt;</code> prende il risultato dell&#39;espressione a sinistra e lo passa come <strong>primo argomento</strong> alla funzione a destra. Rende il codice leggibile come una ricetta di cucina, evitando le parentesi annidate tipo <code>f(g(h(x)))</code>.</p>
-<h3 id="esempi-di-pipe">Esempi di Pipe</h3>
-<pre><code class="hljs language-elixir"><span class="hljs-comment"># Senza Pipe (Difficile da leggere)</span>
-<span class="hljs-title class_">String</span>.upcase(<span class="hljs-title class_">String</span>.trim(<span class="hljs-string">&quot;  elixir  &quot;</span>))
+<h2 id="7-loperatore-pipe-scrivere-codice-leggibile">7. L&#39;Operatore Pipe (|&gt;): Scrivere Codice Leggibile</h2>
+<p>Il pipe operator <code>|&gt;</code> è probabilmente il simbolo più amato dagli sviluppatori Elixir. Prende il risultato dell&#39;espressione a sinistra e lo passa come <strong>primo argomento</strong> alla funzione a destra.</p>
+<h3 id="il-problema-che-risolve">Il Problema che Risolve</h3>
+<p>Senza pipe, il codice diventa un incubo di parentesi annidate:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Orribile da leggere (devi leggere da dentro verso fuori)</span>
+<span class="hljs-title class_">String</span>.upcase(<span class="hljs-title class_">String</span>.trim(<span class="hljs-title class_">String</span>.reverse(<span class="hljs-string">&quot;  elixir  &quot;</span>)))
 
-<span class="hljs-comment"># Con Pipe (Chiaro e lineare)</span>
+<span class="hljs-comment"># Diviso in variabili temporanee (troppo verboso)</span>
+step1 = <span class="hljs-title class_">String</span>.reverse(<span class="hljs-string">&quot;  elixir  &quot;</span>)
+step2 = <span class="hljs-title class_">String</span>.trim(step1)
+step3 = <span class="hljs-title class_">String</span>.upcase(step2)</code></pre><h3 id="la-soluzione-il-pipe">La Soluzione: Il Pipe</h3>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Leggibile come una ricetta di cucina (dall&#x27;alto in basso)</span>
 <span class="hljs-string">&quot;  elixir  &quot;</span>
+|&gt; <span class="hljs-title class_">String</span>.reverse()
 |&gt; <span class="hljs-title class_">String</span>.trim()
 |&gt; <span class="hljs-title class_">String</span>.upcase()
-<span class="hljs-comment"># =&gt; &quot;ELIXIR&quot;</span>
+<span class="hljs-comment"># =&gt; &quot;RIXILE&quot;</span></code></pre><p>Leggi il codice come: &quot;Prendi la stringa, POI invertila, POI rimuovi gli spazi, POI rendila maiuscola&quot;.</p>
+<h3 id="come-funziona-1">Come Funziona</h3>
+<p>Il pipe passa il risultato come <strong>primo argomento</strong>:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Queste due espressioni sono identiche</span>
+<span class="hljs-string">&quot;hello&quot;</span> |&gt; <span class="hljs-title class_">String</span>.upcase()
+<span class="hljs-title class_">String</span>.upcase(<span class="hljs-string">&quot;hello&quot;</span>)
 
-<span class="hljs-comment"># Pipeline complessa</span>
+<span class="hljs-comment"># Pipeline</span>
+<span class="hljs-string">&quot;hello&quot;</span> |&gt; <span class="hljs-title class_">String</span>.upcase() |&gt; <span class="hljs-title class_">String</span>.reverse()
+<span class="hljs-comment"># È uguale a:</span>
+<span class="hljs-title class_">String</span>.reverse(<span class="hljs-title class_">String</span>.upcase(<span class="hljs-string">&quot;hello&quot;</span>))</code></pre><h3 id="esempi-pratici">Esempi Pratici</h3>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># Processare input utente</span>
 user_input
 |&gt; <span class="hljs-title class_">String</span>.downcase()
 |&gt; <span class="hljs-title class_">String</span>.split(<span class="hljs-string">&quot; &quot;</span>)
 |&gt; <span class="hljs-title class_">Enum</span>.map(&amp;<span class="hljs-title class_">String</span>.capitalize/<span class="hljs-number">1</span>)
 |&gt; <span class="hljs-title class_">Enum</span>.join(<span class="hljs-string">&quot; &quot;</span>)
-<span class="hljs-comment"># Converte &quot;hello WORLD&quot; in &quot;Hello World&quot;</span></code></pre><blockquote>
-<p>💡 <strong>Pro Tip</strong>: Quando fai debugging in una catena di pipe lunga, usa <code>IO.inspect/1</code> nel mezzo. Restituisce il valore che riceve intatto, ma lo stampa in console. È perfetto per &quot;spiare&quot; i dati mentre fluiscono nella pipeline.</p>
-</blockquote>
+<span class="hljs-comment"># &quot;hello WORLD&quot; diventa &quot;Hello World&quot;</span>
+
+<span class="hljs-comment"># Lavorare con numeri</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+|&gt; <span class="hljs-title class_">Enum</span>.filter(&amp;(rem(&amp;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) == <span class="hljs-number">0</span>))
+|&gt; <span class="hljs-title class_">Enum</span>.map(&amp;(&amp;<span class="hljs-number">1</span> * <span class="hljs-number">10</span>))
+|&gt; <span class="hljs-title class_">Enum</span>.sum()
+<span class="hljs-comment"># =&gt; 60 (perché 2*10 + 4*10 = 60)</span>
+
+<span class="hljs-comment"># API chain (pattern comune nel web)</span>
+conn
+|&gt; assign(<span class="hljs-symbol">:user</span>, current_user)
+|&gt; put_flash(<span class="hljs-symbol">:info</span>, <span class="hljs-string">&quot;Benvenuto!&quot;</span>)
+|&gt; render(<span class="hljs-string">&quot;index.html&quot;</span>)</code></pre><h3 id="pipe-con-funzioni-multi-argomento">Pipe con Funzioni Multi-Argomento</h3>
+<p>Ricorda: il pipe passa il valore come <strong>primo</strong> argomento. Gli altri vanno specificati:</p>
+<pre><code class="hljs language-elixir"><span class="hljs-comment"># String.split richiede (stringa, separatore)</span>
+<span class="hljs-string">&quot;a,b,c&quot;</span>
+|&gt; <span class="hljs-title class_">String</span>.split(<span class="hljs-string">&quot;,&quot;</span>)
+<span class="hljs-comment"># È uguale a: String.split(&quot;a,b,c&quot;, &quot;,&quot;)</span>
+
+<span class="hljs-comment"># Con più argomenti</span>
+<span class="hljs-string">&quot;hello world&quot;</span>
+|&gt; <span class="hljs-title class_">String</span>.split(<span class="hljs-string">&quot; &quot;</span>)
+|&gt; <span class="hljs-title class_">Enum</span>.join(<span class="hljs-string">&quot;-&quot;</span>)
+<span class="hljs-comment"># =&gt; &quot;hello-world&quot;</span></code></pre><h3 id="debug-con-ioinspect">Debug con IO.inspect</h3>
+<p>Il trucco killer per il debugging:</p>
 <pre><code class="hljs language-elixir">dati
 |&gt; elabora()
-|&gt; <span class="hljs-title class_">IO</span>.inspect(<span class="hljs-symbol">label:</span> <span class="hljs-string">&quot;Dopo elaborazione&quot;</span>)
+|&gt; <span class="hljs-title class_">IO</span>.inspect(<span class="hljs-symbol">label:</span> <span class="hljs-string">&quot;✓ Dopo elaborazione&quot;</span>)
 |&gt; trasforma()
-|&gt; <span class="hljs-title class_">IO</span>.inspect(<span class="hljs-symbol">label:</span> <span class="hljs-string">&quot;Dopo trasformazione&quot;</span>)
-|&gt; salva()</code></pre><h2 id="8-control-flow-if-case-cond">8. Control Flow: if, case, cond</h2>
+|&gt; <span class="hljs-title class_">IO</span>.inspect(<span class="hljs-symbol">label:</span> <span class="hljs-string">&quot;✓ Dopo trasformazione&quot;</span>)
+|&gt; valida()
+|&gt; <span class="hljs-title class_">IO</span>.inspect(<span class="hljs-symbol">label:</span> <span class="hljs-string">&quot;✓ Dopo validazione&quot;</span>)
+|&gt; salva()
+
+<span class="hljs-comment"># Output in console:</span>
+<span class="hljs-comment"># ✓ Dopo elaborazione: [1, 2, 3]</span>
+<span class="hljs-comment"># ✓ Dopo trasformazione: [2, 4, 6]</span>
+<span class="hljs-comment"># ✓ Dopo validazione: {:ok, [2, 4, 6]}</span></code></pre><blockquote>
+<p>💡 <strong>Pro Tip</strong>: <code>IO.inspect/2</code> restituisce il valore che riceve intatto, quindi non interrompe la pipeline. È perfetto per &quot;spiare&quot; i dati mentre fluiscono. Usa sempre il parametro <code>label:</code> per sapere quale step stai vedendo!</p>
+</blockquote>
+<h2 id="8-control-flow-if-case-cond">8. Control Flow: if, case, cond</h2>
 <p>Anche se Elixir privilegia il pattern matching, ha comunque costrutti di controllo tradizionali.</p>
 <h3 id="ifunless">if/unless</h3>
 <pre><code class="hljs language-elixir"><span class="hljs-keyword">if</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">do</span>
