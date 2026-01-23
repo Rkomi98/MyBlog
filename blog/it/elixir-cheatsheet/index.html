@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Elixir Cheatsheet | Mirko Calcaterra</title>
-  <meta name="description" content="Elixir Cheatsheet: Guida Pratica dal Principiante all&#39;Esperto Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in itali…">
+  <meta name="description" content="Elixir Cheatsheet Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in italiano è veramente cacofonico) di Erlang. O for…">
   <meta name="keywords" content="Elixir, Programmazione, Cheatsheet, BEAM, Mirko Calcaterra, Functional Programming">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -23,7 +23,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/elixir-cheatsheet/">
   <meta property="og:title" content="Elixir Cheatsheet">
-  <meta property="og:description" content="Elixir Cheatsheet: Guida Pratica dal Principiante all&#39;Esperto Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in itali…">
+  <meta property="og:description" content="Elixir Cheatsheet Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in italiano è veramente cacofonico) di Erlang. O for…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-01-23T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -32,7 +32,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Elixir Cheatsheet">
-  <meta property="twitter:description" content="Elixir Cheatsheet: Guida Pratica dal Principiante all&#39;Esperto Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in itali…">
+  <meta property="twitter:description" content="Elixir Cheatsheet Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in italiano è veramente cacofonico) di Erlang. O for…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -42,7 +42,7 @@
     "headline": "Elixir Cheatsheet",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-23T00:00:00.000Z",
-    "dateModified": "2026-01-23T16:29:12.148Z",
+    "dateModified": "2026-01-23T16:41:58.258Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Elixir Cheatsheet: Guida Pratica dal Principiante all&#39;Esperto Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in itali…"
+    "description": "Elixir Cheatsheet Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in italiano è veramente cacofonico) di Erlang. O for…"
   }
   </script>
 
@@ -940,15 +940,15 @@
         <div class="post-toc__content">
           <ul class="post-toc__list">
     <li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#1-hello-world-e-lessenziale">
+          <a class="post-toc__link" href="#1-hello-world">
             <span class="post-toc__number">1</span>
-            <span class="post-toc__text">1. Hello World e l&#39;Essenziale</span>
+            <span class="post-toc__text">1. Hello World</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#2-atomi-e-stringhe-le-fondamenta">
+          <a class="post-toc__link" href="#2-atomi-e-stringhe-le-basi">
             <span class="post-toc__number">2</span>
-            <span class="post-toc__text">2. Atomi e Stringhe: Le Fondamenta</span>
+            <span class="post-toc__text">2. Atomi e Stringhe: le basi</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1171,8 +1171,8 @@
           <p>Se stai leggendo questo articolo, probabilmente hai sentito parlare di Elixir, quel linguaggio che unisce la sintassi elegante di Ruby con la potenza bruta e la concorrenza (questo termine in italiano è veramente cacofonico) di Erlang. O forse sei stato solo incuriosito dal titolo dell&#39;articolo. In ogni caso, ora lo vediamo insieme.</p>
 <p>Elixir non è solo un altro linguaggio di scripting; è un modo diverso di pensare. Gira sulla <strong>BEAM</strong> (la macchina virtuale di Erlang), il che significa che è costruito per scalare e scrivere codice come si deve, gestendo milioni di processi concorrenti con una facilità disarmante.</p>
 <p>In questo articolo, esploreremo i concetti fondamentali di Elixir, dandoti una base solida con esempi pratici e qualche trucco del mestiere che ti farà risparmiare ore di debug.</p>
-<h2 id="1-hello-world-e-lessenziale">1. Hello World e l&#39;Essenziale</h2>
-<p>Prima di tuffarci nei dettagli, iniziamo dalla tradizione: come stampare il classico &quot;Hello World&quot;.</p>
+<h2 id="1-hello-world">1. Hello World</h2>
+<p>Prima di tuffarci nei dettagli, iniziamo dal tradizionale step che vi permette di dire che sapete un linguaggio: come stampare il classico &quot;Hello World&quot;.</p>
 <p>In Elixir, il modulo <code>IO</code> gestisce l&#39;Input e l&#39;Output.</p>
 <pre><code class="hljs language-elixir"><span class="hljs-title class_">IO</span>.puts <span class="hljs-string">&quot;Hello World!&quot;</span>
 <span class="hljs-comment"># Stampa: Hello World!</span>
@@ -1180,7 +1180,7 @@
 <blockquote>
 <p>💡 <strong>Pro Tip</strong>: <code>IO.puts</code> è ottimo per mostrare testo agli umani, ma se provi a stampare strutture complesse (come Mappe o Liste), potresti ottenere risultati illeggibili. Per il debug, usa sempre <code>IO.inspect(dato)</code>. La magia di <code>IO.inspect</code> è che stampa il dato e lo restituisce intatto, permettendoti di inserirlo in mezzo al codice senza romperlo.</p>
 </blockquote>
-<h2 id="2-atomi-e-stringhe-le-fondamenta">2. Atomi e Stringhe: Le Fondamenta</h2>
+<h2 id="2-atomi-e-stringhe-le-basi">2. Atomi e Stringhe: le basi</h2>
 <p>In Elixir, come anche in chimica, tutto si basa sugli atomi. Ma cosa sono esattamente?</p>
 <blockquote>
 <p><strong>Un atomo è una costante il cui valore è il suo stesso nome.</strong></p>
