@@ -42,7 +42,7 @@
     "headline": "Elixir Cheatsheet",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-23T00:00:00.000Z",
-    "dateModified": "2026-01-23T16:41:58.258Z",
+    "dateModified": "2026-01-23T16:57:51.353Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -925,7 +925,7 @@
         <h1 class="post-hero__title">Elixir Cheatsheet</h1>
         <div class="post-hero__meta">
           <span>📅 23 gennaio 2026</span>
-          <span>⏱️ 6 min</span>
+          <span>⏱️ 12 min</span>
         </div>
       </section>
       <section class="post-layout">
@@ -1195,7 +1195,7 @@
 <p><strong>Esempio</strong>: Invece di restituire la stringa <code>&quot;operazione_fallita&quot;</code>, una funzione ti risponde con <code>:error</code>. È un&#39;etichetta fissa e inequivocabile.</p>
 </blockquote>
 <h3 id="stringhe">Stringhe</h3>
-<p>Le stringhe in Elixir sono binarie codificate in UTF-8. Funzionano come ti aspetti, ma con il supporto completo per l&#39;interpolazione.</p>
+<p>Le stringhe in Elixir sono codificate in UTF-8. Funzionano come ti aspetti, ma con il supporto completo per l&#39;interpolazione.</p>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Stringhe e variabili</span>
 name = <span class="hljs-string">&quot;Dev&quot;</span>
 <span class="hljs-string">&quot;Ciao <span class="hljs-subst">#{name}</span>!&quot;</span> <span class="hljs-comment"># =&gt; &quot;Ciao Dev!&quot;</span>
@@ -1213,8 +1213,10 @@ su più righe
 <h2 id="3-collezioni-liste-vs-tuple">3. Collezioni: Liste vs Tuple</h2>
 <p>Qui è dove molti inciampano venendo da linguaggi imperativi. In Elixir abbiamo due tipi principali di collezioni:</p>
 <ul>
-<li><strong>Liste (<code>[]</code>)</strong>: Sono liste collegate (Linked Lists)</li>
-<li><strong>Tuple (<code>{}</code>)</strong>: Sono blocchi di memoria contigui</li>
+<li><p><strong>Liste (<code>[]</code>)</strong>: Sono Linked Lists (liste collegate). Immaginale come una caccia al tesoro: ogni elemento contiene il suo valore e un bigliettino che dice &quot;il prossimo elemento è laggiù&quot;. Da una parte aggiungere un elemento in testa è istantaneo (basta creare un nuovo bigliettino che punta alla vecchia lista), dall&#39;altra per trovare l&#39;elemento numero 1000, devi leggere tutti i 999 bigliettini precedenti.</p>
+</li>
+<li><p><strong>Tuple (<code>{}</code>)</strong>: Sono blocchi di memoria contigui, simili agli array di C. Immaginale come uno scaffale fisso dove ogni cosa ha il suo posto numerato. Da una parte possono accedere a qualsiasi elemento è velocissimo, non importa dove si trovi. Dall&#39;altra modificarle è costoso (in termini di memoria) perché bisogna copiare l&#39;intero scaffale in un nuovo spazio.</p>
+</li>
 </ul>
 <p>Sembrano simili, ma le prestazioni sono <strong>opposte</strong>.</p>
 <h3 id="liste-linked-lists">Liste (Linked Lists)</h3>
