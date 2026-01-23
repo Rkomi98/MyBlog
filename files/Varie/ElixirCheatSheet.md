@@ -74,7 +74,7 @@ Qui è dove molti inciampano venendo da linguaggi imperativi. In Elixir abbiamo 
 
 Sembrano simili, ma le prestazioni sono **opposte**.
 
-### Liste (Linked Lists)
+### Liste o linked lists
 
 ```elixir
 # Creare una lista
@@ -186,7 +186,7 @@ Ecco, finalmente siamo arrivati al motivo per cui ho iniziato ad apprezzare Elix
 
 **È la feature più potente del linguaggio** e cambia completamente il modo in cui scrivi codice.
 
-### Come Funziona
+### Come funziona?
 
 Pensa a `=` come a un'equazione matematica. Elixir cerca di rendere veri entrambi i lati:
 
@@ -204,7 +204,7 @@ x = 1
 # ** (MatchError) no match of right hand side value: 1
 ```
 
-### Pattern Matching con Tuple
+### Pattern Matching con tuple
 
 Ora che conosci le tuple, esatttamente come le abbiamo costruite, ora vediamo come destrutturarle:
 
@@ -231,7 +231,7 @@ Ora che conosci le tuple, esatttamente come le abbiamo costruite, ora vediamo co
 # Se no, MatchError (crash diciamo "intenzionale")
 ```
 
-### Pattern Matching con Liste
+### Pattern Matching con liste
 
 Le liste assumono tutto un altro fascino con il pattern matching:
 
@@ -262,7 +262,7 @@ Le liste assumono tutto un altro fascino con il pattern matching:
 # ** (MatchError) - il pattern richiede esattamente 2 elementi
 ```
 
-### Pattern Matching con Mappe
+### Pattern Matching con mappe
 
 Le mappe sono ancora più flessibili: puoi matchare solo le chiavi che ti interessano!
 
@@ -289,7 +289,7 @@ Le mappe sono ancora più flessibili: puoi matchare solo le chiavi che ti intere
 # Utile per validare che stiamo ricevendo il tipo giusto di dato!
 ```
 
-### Pattern Matching in Azione: Funzioni
+### Pattern Matching con le funzioni
 
 Ora guarda come sono eleganti e funzionali le definizioni di funzione:
 
@@ -348,7 +348,7 @@ L'underscore `_` matcha qualsiasi cosa ma non la lega a una variabile:
 {:ok, _} = File.read("test.txt")
 ```
 
-### Pattern Matching Everywhere!
+### Pattern Matching ovunque!
 
 Il pattern matching non si usa solo con `=`. È ovunque in Elixir:
 
@@ -373,11 +373,11 @@ Enum.map([{:ok, 1}, {:ok, 2}], fn {:ok, n} -> n * 2 end)
 
 > 💡 **Pro Tip**: Il pattern matching ti permette di scrivere codice **dichiarativo** invece che **imperativo**. Invece di chiedere "questo valore è ok? Poi estrailo", dici "questo deve essere {:ok, valore}" e Elixir fa tutto il lavoro sporco. Se il pattern non matcha, il programma crasha (fail fast), che è esattamente quello che vuoi durante lo sviluppo, ovvero, non avere problemi dopo, ma capire subito se c'è un problema.
 
-## 6. Funzioni e Moduli
+## 6. Funzioni e moduli
 
 Il codice vive nei **moduli**. Le funzioni possono essere "con nome" (`def`) o "anonime" (`fn`). Una cosa bellissima? Puoi definire la stessa funzione più volte con argomenti diversi, sfruttando il **pattern matching nella firma della funzione** (che hai appena visto nella sezione precedente!).
 
-### Funzioni con Nome
+### Funzioni con nome
 
 ```elixir
 defmodule Math do
@@ -398,7 +398,7 @@ Math.add(2, 3)      # => 5
 Math.multiply(4, 5) # => 20
 ```
 
-### Pattern Matching nelle Funzioni
+### Pattern Matching nelle funzioni
 
 Ora che conosci il pattern matching, ecco dove diventa davvero utile e potente, o meglio che ti permette di fare un sacco di cose:
 
@@ -471,7 +471,7 @@ Temperature.describe(18) # => "Mite 😊"
 
 Guards supportati: `<`, `>`, `==`, `!=`, `and`, `or`, `not`, `is_list`, `is_map`, `is_atom`, etc.
 
-### Funzioni Anonime
+### Funzioni anonime
 
 Funzioni "usa e getta" senza nome:
 
@@ -490,16 +490,16 @@ end
 handle_result.({:ok, "tutto ok"}) # => "Successo: tutto ok"
 ```
 
-### Sintassi Shorthand con &
+### Sintassi shorthand con &
 
 Per funzioni super semplici:
 
 ```elixir
 # Versione lunga
-Enum.map([1, 2, 3], fn x -> x * 2 end)
+Enum.map([1, 2, 3], fn x -> x * 2 end) # => [2, 4, 6]
 
 # Versione corta con & (capture operator)
-Enum.map([1, 2, 3], &(&1 * 2))
+Enum.map([1, 2, 3], &(&1 * 2)) # => [2, 4, 6]
 # &1 = primo argomento, &2 = secondo, etc.
 
 # Passare funzioni esistenti
@@ -507,7 +507,7 @@ Enum.map(["hello", "world"], &String.upcase/1)
 # => ["HELLO", "WORLD"]
 ```
 
-### Default Arguments
+### Argomenti di default
 
 ```elixir
 defmodule Greeter do
@@ -527,9 +527,9 @@ Greeter.greet("Lucia", "Buongiorno") # => "Buongiorno, Lucia!"
 
 Il pipe operator `|>` è probabilmente il simbolo più amato dagli sviluppatori Elixir. Prende il risultato dell'espressione a sinistra e lo passa come **primo argomento** alla funzione a destra.
 
-### Il Problema che Risolve
+### Perché esiste?
 
-Senza pipe, il codice diventa un incubo di parentesi annidate:
+Se non esistesse il pipe operator, il codice sarebbe un incubo di parentesi annidate:
 
 ```elixir
 # Orribile da leggere (devi leggere da dentro verso fuori)
@@ -541,7 +541,7 @@ step2 = String.trim(step1)
 step3 = String.upcase(step2)
 ```
 
-### La Soluzione: Il Pipe
+Ed ecco la soluzione, usare pipe
 
 ```elixir
 # Leggibile come una ricetta di cucina (dall'alto in basso)
@@ -554,7 +554,7 @@ step3 = String.upcase(step2)
 
 Leggi il codice come: "Prendi la stringa, POI invertila, POI rimuovi gli spazi, POI rendila maiuscola".
 
-### Come Funziona
+### Come funziona?
 
 Il pipe passa il risultato come **primo argomento**:
 
@@ -569,7 +569,7 @@ String.upcase("hello")
 String.reverse(String.upcase("hello"))
 ```
 
-### Esempi Pratici
+### Esempi
 
 ```elixir
 # Processare input utente
@@ -594,7 +594,7 @@ conn
 |> render("index.html")
 ```
 
-### Pipe con Funzioni Multi-Argomento
+### Pipe con funzioni multi-argomento
 
 Ricorda: il pipe passa il valore come **primo** argomento. Gli altri vanno specificati:
 
@@ -611,9 +611,9 @@ Ricorda: il pipe passa il valore come **primo** argomento. Gli altri vanno speci
 # => "hello-world"
 ```
 
-### Debug con IO.inspect
+### Debug con `IO.inspect`
 
-Il trucco killer per il debugging:
+Il trucco numero uno per fare debugging è unire il pin e `IO.inspect`:
 
 ```elixir
 dati
@@ -631,7 +631,7 @@ dati
 # ✓ Dopo validazione: {:ok, [2, 4, 6]}
 ```
 
-> 💡 **Pro Tip**: `IO.inspect/2` restituisce il valore che riceve intatto, quindi non interrompe la pipeline. È perfetto per "spiare" i dati mentre fluiscono. Usa sempre il parametro `label:` per sapere quale step stai vedendo!
+> 💡 **Pro Tip**: `IO.inspect/2` (ovvero prende 2 argomenti, si usa per distinguere overload) restituisce il valore che riceve intatto, quindi non interrompe la pipeline. È perfetto per "spiare" i dati mentre fluiscono. Usa sempre il parametro `label:` per sapere quale step stai vedendo!
 
 ## 8. Control Flow: if, case, cond
 
@@ -697,11 +697,11 @@ else
 end
 ```
 
-## 9. Concorrenza: Processi e Messaggi
+## 9. Concorrenza: processi e messaggi
 
-Ecco dove Elixir brilla davvero. I processi in Elixir **non sono** thread del sistema operativo, ma processi leggeri della BEAM. Puoi averne milioni contemporaneamente.
+Ecco che in questa sezione diamo un altro esempio in Elixir eccelle. I processi in Elixir **non sono** thread del sistema operativo, ma processi leggeri della BEAM. Puoi averne milioni contemporaneamente.
 
-### Creare un Processo
+### Creare un processo
 
 ```elixir
 # Spawn di un processo
@@ -730,9 +730,9 @@ after
 end
 ```
 
-### Task: Processi con Stile
+### Task: processi con stile
 
-I `Task` sono un'astrazione di alto livello per processi:
+I `Task` sono un'astrazione di alto livello per i processi:
 
 ```elixir
 # Task asincrono
@@ -749,9 +749,9 @@ result = Task.await(task)
 IO.puts result
 ```
 
-### Agent: Stato Condiviso
+### Agent: stato condiviso
 
-Gli `Agent` gestiscono stato in modo concorrente:
+Gli `Agent` gestiscono lo stato in modo concorrente:
 
 ```elixir
 # Creare un agent
@@ -771,9 +771,9 @@ end)
 
 > 💡 **Pro Tip**: I processi Elixir sono **isolati**: se uno crasha, non porta giù gli altri. Questo è il principio "Let it crash" di Erlang. Usa i **Supervisor** per gestire automaticamente il riavvio di processi crashati.
 
-## 10. Enum e Stream: Lavorare con le Collezioni
+## 10. Enum e Stream: come lavorare con le collezioni
 
-Il modulo `Enum` è il tuo migliore amico per manipolare liste, mappe e qualsiasi cosa enumerabile.
+Il modulo `Enum` è il tuo migliore amico per manipolare liste, mappe e qualsiasi cosa numerabile.
 
 ```elixir
 # Map
@@ -795,7 +795,7 @@ Enum.reduce([1, 2, 3], 0, fn x, acc -> x + acc end)
 # => [20, 40]
 ```
 
-### Stream: Lazy Evaluation
+### Stream: lazy evaluation
 
 A differenza di `Enum`, `Stream` è **lazy** (valutazione pigra):
 
@@ -812,26 +812,29 @@ Enum.take(stream, 5)
 
 ## Conclusione
 
-Questo è stato un viaggio attraverso i concetti fondamentali di Elixir, ma è solo l'inizio. Abbiamo coperto:
+In questo breve viaggio abbiamo coperto i concetti fondamentali di Elixir, ovvero:
 
-- **Atomi e Stringhe**: le fondamenta del tipo di dati
+- **Atomi e stringhe**: le fondamenta del tipo di dati
 - **Collezioni**: Liste, Tuple, Mappe e Keyword Lists
 - **Pattern Matching**: la killer feature che cambia il modo di programmare
-- **Funzioni e Moduli**: come organizzare il codice
+- **Funzioni e moduli**: come organizzare il codice
 - **Pipe Operator**: per scrivere codice leggibile e fluido
 - **Control Flow**: gestione del flusso con case, cond e with
 - **Concorrenza**: processi, Task e Agent per sfruttare la potenza della BEAM
-- **Enum e Stream**: manipolazione di collezioni eager e lazy
+- **Enum e stream**: manipolazione di collezioni eager e lazy
 
-### Perché Scegliere Elixir?
+### Perché scegliere Elixir?
+Diciamo che ho in mente vari motivi, ma ordinando per importanza in base alla mia esperienza posso dire:
 
-1. **Scalabilità**: Milioni di processi concorrenti senza sudare
-2. **Affidabilità**: "Let it crash" con Supervisor per sistemi fault-tolerant
-3. **Produttività**: Sintassi chiara e strumenti fantastici (Mix, IEx, ExUnit)
-4. **Ecosistema**: Phoenix per il web, Nerves per IoT, Livebook per data science
-5. **Community**: Accogliente e in crescita costante
+1. **Scalabilità**: Milioni di processi concorrenti senza troppi problemi.
+2. **Affidabilità**: "Let it crash" con Supervisor per sistemi fault-tolerant.
+3. **Produttività**: Sintassi chiara e strumenti fantastici (Mix, IEx, ExUnit).
+4. **Ecosistema**: Phoenix per il web, Nerves per IoT, Livebook per data science.
+5. **Community**: Accogliente e in crescita costante!
 
-### Prossimi Passi
+Se tu ne hai altri, ti invito a scrivermi per dirmi la tua!
+
+### Prossimi passi
 
 Se vuoi approfondire:
 
@@ -841,15 +844,15 @@ Se vuoi approfondire:
 - **LiveView**: UI interattive senza scrivere JavaScript
 - **Macro e Metaprogramming**: estendere il linguaggio stesso
 
-La curva di apprendimento può sembrare ripida all'inizio a causa del paradigma funzionale, ma una volta che il concetto di **immutabilità** e **pattern matching** fa click, non vorrai più tornare indietro.
+La curva di apprendimento può sembrare ripida all'inizio, ma una volta che il concetto di **immutabilità** e che ci si abitua al **pattern matching**, non vorrai più tornare indietro. Fidati di me!
 
-### Risorse Utili
+### Risorse utili
 
 - [Documentazione Ufficiale](https://elixir-lang.org/docs.html)
 - [Elixir School](https://elixirschool.com/it/) - Tutorial gratuito in italiano
 - [Exercism Elixir Track](https://exercism.org/tracks/elixir) - Esercizi pratici
 - [Phoenix Framework](https://www.phoenixframework.org/)
 
-Hai domande su una sezione specifica? Vuoi che approfondiamo GenServer o Supervisor? Scrivilo nei commenti! 👇
+Hai domande su una sezione specifica? Vuoi che approfondiamo GenServer o Supervisor? Scrivimi su Linkedin! 
 
 **Happy Coding!** 🚀✨
