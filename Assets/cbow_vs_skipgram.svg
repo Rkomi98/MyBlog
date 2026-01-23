@@ -1,0 +1,173 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" id="semantic-diagram" width="1000" height="600" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Background Gradient -->
+                <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0b1224"/>
+                    <stop offset="100%" stop-color="#101a36"/>
+                </linearGradient>
+
+                <!-- Box Gradients -->
+                <linearGradient id="box-stroke-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+                
+                <linearGradient id="box-stroke-orange" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f97316"/>
+                    <stop offset="100%" stop-color="#facc15"/>
+                </linearGradient>
+
+                <!-- Shadows -->
+                <filter id="shadow-effect" x="-50%" y="-50%" width="200%" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+                </filter>
+
+                <!-- Markers (Arrows) -->
+                <marker id="arrow-cyan" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8"/>
+                </marker>
+                
+                <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#fb923c"/>
+                </marker>
+            </defs>
+
+            <!-- Main Background -->
+            <rect width="100%" height="100%" fill="url(#bg-gradient)" rx="16"/>
+
+            <!-- SEPARATOR -->
+            <line x1="500" y1="50" x2="500" y2="550" stroke="#334155" stroke-width="2" stroke-dasharray="8 8"/>
+
+            <!-- ========================================= -->
+            <!-- LEFT SIDE: CBOW -->
+            <!-- ========================================= -->
+            
+            <text x="250" y="60" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="bold">CBOW</text>
+            <text x="250" y="85" text-anchor="middle" fill="#94a3b8" font-size="14">Input: Brand/Action ➔ Predict: Product</text>
+
+            <!-- Input Layer (Context) - Shifted Left to X=30 -->
+            <g transform="translate(30, 150)">
+                <text x="60" y="-20" text-anchor="middle" fill="#cbd5f5" font-size="12" font-weight="600" letter-spacing="1">CONTEXT (Inputs)</text>
+                
+                <!-- Box 1 -->
+                <rect x="0" y="0" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="18" text-anchor="middle" fill="#94a3b8" font-size="10">w(t-2)</text>
+                <text x="60" y="36" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"Apple"</text>
+                
+                <!-- Box 2 -->
+                <rect x="0" y="60" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="78" text-anchor="middle" fill="#94a3b8" font-size="10">w(t-1)</text>
+                <text x="60" y="96" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"launches"</text>
+
+                <!-- Box 3 -->
+                <rect x="0" y="120" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="138" text-anchor="middle" fill="#94a3b8" font-size="10">w(t+1)</text>
+                <text x="60" y="156" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"new"</text>
+
+                <!-- Box 4 -->
+                <rect x="0" y="180" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="198" text-anchor="middle" fill="#94a3b8" font-size="10">w(t+2)</text>
+                <text x="60" y="216" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"device"</text>
+            </g>
+
+            <!-- Hidden Layer -->
+            <g transform="translate(250, 200)">
+                <text x="0" y="-70" text-anchor="middle" fill="#cbd5f5" font-size="12" font-weight="600" letter-spacing="1">PROJECTION</text>
+                <circle cx="0" cy="60" r="50" fill="#1f2937" stroke="url(#box-stroke-orange)" stroke-width="2" filter="url(#shadow-effect)"/>
+                <text x="0" y="65" text-anchor="middle" fill="#fb923c" font-size="20" font-weight="bold">SUM</text>
+            </g>
+
+            <!-- Output Layer -->
+            <g transform="translate(340, 240)">
+                <text x="60" y="-110" text-anchor="middle" fill="#cbd5f5" font-size="12" font-weight="600" letter-spacing="1">TARGET (Label)</text>
+                <rect x="0" y="0" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="18" text-anchor="middle" fill="#94a3b8" font-size="10">w(t)</text>
+                <text x="60" y="36" text-anchor="middle" fill="#38bdf8" font-size="15" font-weight="bold">"iPhone"</text>
+            </g>
+
+            <!-- Connections CBOW -->
+            <!-- Start: Right edge of Input boxes (X=150) -->
+            <!-- End: Left edge of Circle (X=200 inside global frame which is 250-50) -->
+            <!-- Using symmetric control points for smooth S-curves -->
+            
+            <path d="M150,172 C175,172 175,260 196,260" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+            <path d="M150,232 C175,232 175,260 196,260" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+            <path d="M150,292 C175,292 175,260 196,260" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+            <path d="M150,352 C175,352 175,260 196,260" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+            
+            <path d="M300,260 L330,260" stroke="#fb923c" stroke-width="2" fill="none" marker-end="url(#arrow-orange)"/>
+
+
+            <!-- ========================================= -->
+            <!-- RIGHT SIDE: Skip-gram -->
+            <!-- ========================================= -->
+
+            <text x="750" y="60" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="bold">SKIP-GRAM</text>
+            <text x="750" y="85" text-anchor="middle" fill="#94a3b8" font-size="14">Input: Product ➔ Predict: Brand/Context</text>
+
+            <!-- Input Layer -->
+            <g transform="translate(540, 240)">
+                <text x="60" y="-110" text-anchor="middle" fill="#cbd5f5" font-size="12" font-weight="600" letter-spacing="1">INPUT (Word)</text>
+                <rect x="0" y="0" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="18" text-anchor="middle" fill="#94a3b8" font-size="10">w(t)</text>
+                <text x="60" y="36" text-anchor="middle" fill="#38bdf8" font-size="15" font-weight="bold">"iPhone"</text>
+            </g>
+
+            <!-- Hidden Layer - Centered at 750 -->
+            <g transform="translate(750, 200)">
+                <text x="0" y="-70" text-anchor="middle" fill="#cbd5f5" font-size="12" font-weight="600" letter-spacing="1">DENSE LAYER</text>
+                <circle cx="0" cy="60" r="50" fill="#1f2937" stroke="url(#box-stroke-orange)" stroke-width="2" filter="url(#shadow-effect)"/>
+                <text x="0" y="65" text-anchor="middle" fill="#fb923c" font-size="14" font-weight="bold">Vector</text>
+            </g>
+
+            <!-- Output Layer - Shifted Right to X=880 -->
+            <g transform="translate(880, 150)">
+                <text x="60" y="-20" text-anchor="middle" fill="#cbd5f5" font-size="12" font-weight="600" letter-spacing="1">OUTPUT (Context)</text>
+                
+                <!-- Box 1 -->
+                <rect x="0" y="0" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="18" text-anchor="middle" fill="#94a3b8" font-size="10">w(t-2)</text>
+                <text x="60" y="36" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"Apple"</text>
+                
+                <!-- Box 2 -->
+                <rect x="0" y="60" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="78" text-anchor="middle" fill="#94a3b8" font-size="10">w(t-1)</text>
+                <text x="60" y="96" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"launches"</text>
+
+                <!-- Box 3 -->
+                <rect x="0" y="120" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="138" text-anchor="middle" fill="#94a3b8" font-size="10">w(t+1)</text>
+                <text x="60" y="156" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"new"</text>
+
+                <!-- Box 4 -->
+                <rect x="0" y="180" width="120" height="45" rx="8" fill="#1e293b" stroke="url(#box-stroke-cyan)" stroke-width="1.5" filter="url(#shadow-effect)"/>
+                <text x="60" y="198" text-anchor="middle" fill="#94a3b8" font-size="10">w(t+2)</text>
+                <text x="60" y="216" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="bold">"device"</text>
+            </g>
+
+            <!-- Connections Skip-gram (PERFECT CURVES) -->
+            <!-- Input to Hidden -->
+            <path d="M660,260 L690,260" stroke="#fb923c" stroke-width="2" fill="none" marker-end="url(#arrow-orange)"/>
+
+            <!-- Hidden to Outputs -->
+            <!-- 
+               Source Point: (800, 260) - Right edge of circle (Center 750 + Radius 50)
+               Target X: 880 (Start of output group)
+               Target Ys: 172.5, 232.5, 292.5, 352.5 (Centers of boxes)
+               Control Point 1: (800 + 40, 260) -> (840, 260) - Push horizontal from source
+               Control Point 2: (880 - 40, TargetY) -> (840, TargetY) - Push horizontal into target
+            -->
+            
+            <path d="M800,260 C840,260 840,172 870,172" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.7"/>
+            <path d="M800,260 C840,260 840,232 870,232" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.7"/>
+            <path d="M800,260 C840,260 840,292 870,292" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.7"/>
+            <path d="M800,260 C840,260 840,352 870,352" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#arrow-cyan)" opacity="0.7"/>
+
+            <!-- Math Annotations -->
+            <g transform="translate(0, 520)">
+                <text x="250" y="0" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="13">Learning: Context("Apple") -&gt; Target("iPhone")</text>
+                <text x="750" y="0" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="13">Learning: Target("iPhone") -&gt; Context("Apple")</text>
+            </g>
+
+        </svg>

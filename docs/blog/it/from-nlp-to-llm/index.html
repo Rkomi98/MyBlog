@@ -42,7 +42,7 @@
     "headline": "Dai modelli NLP classici ai LLM",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-10T00:00:00.000Z",
-    "dateModified": "2026-01-10T22:54:35.802Z",
+    "dateModified": "2026-01-19T23:37:39.452Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -968,7 +968,21 @@
             <span class="post-toc__number">2.3</span>
             <span class="post-toc__text">Modelli probabilistici e lineari</span>
           </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#naive-bayes">
+            <span class="post-toc__number">2.3.1</span>
+            <span class="post-toc__text">Naive Bayes</span>
+          </a>
           
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#modelli-di-markov">
+            <span class="post-toc__number">2.3.2</span>
+            <span class="post-toc__text">Modelli di Markov</span>
+          </a>
+          
+        </li>
+  </ul>
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
@@ -976,7 +990,21 @@
             <span class="post-toc__number">3</span>
             <span class="post-toc__text">Embedding classici: word2vec, GloVe, fastText</span>
           </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#come-funzionano-questi-embedding">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">Come funzionano questi embedding?</span>
+          </a>
           
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#cosa-risolvono-gli-embedding-statici">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Cosa risolvono gli embedding statici</span>
+          </a>
+          
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#rnn-lstm-gru-il-tentativo-di-modellare-il-contesto">
             <span class="post-toc__number">4</span>
@@ -1095,10 +1123,32 @@ Bag-of-Words: { &quot;gatto&quot;: 1, &quot;insegue&quot;: 1, &quot;il&quot;: 2,
 <li>Alza il volume delle parole rare e specifiche (come &quot;Astronave&quot;, &quot;Microscopio&quot;, &quot;Rinascimento&quot;).</li>
 </ul>
 <p>Se la parola &quot;Banca&quot; appare in un solo documento su mille, TF-IDF le assegna un punteggio altissimo: quella parola è la chiave per capirne di più per quel testo specifico.</p>
+<p><img src="../../../Assets/WordCloud.svg" alt="Word cloud delle parole nel documento"><br><em>Figura 01: Word Cloud che contiene tutte le parole presenti nel documento che stiamo scrivendo.</em></p>
 <h3 id="modelli-a-n-grammi">Modelli a N-grammi</h3>
 <p>I <strong>modelli a N-grammi</strong> sono stati proposti nel 1948 da Claude Shannon (1948) nell&#39;ambito della probabilità fondazionale e introducono un minimo di contesto considerando sequenze di <em>N</em> parole. Un <strong>trigramma</strong> ad esempio stima la probabilità di una parola basandosi sulle 2 precedenti ($N=3$). Funzionano bene per frasi brevi o molto frequenti (es: <em>&quot;thank you very&quot; → &quot;much&quot;</em>), ma hanno grossi limiti: generano probabilità non nulle solo per frasi viste o molto simili al training, soffrono di <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A"><strong>sparseness</strong></a> (combinazioni rare non sono coperte) e usano un contesto rigido di lunghezza fissa. In pratica <em>&quot;voglio mangiare una fetta di ___&quot;</em> può difficilmente indovinare <em>&quot;torta&quot;</em> se non ha mai visto quella sequenza esatta. Inoltre, trattano le parole come simboli atomici (nessuna nozione che &quot;gatto&quot; e &quot;felino&quot; siano correlati).</p>
 <h3 id="modelli-probabilistici-e-lineari">Modelli probabilistici e lineari</h3>
-<p>Esempi sono il <strong>Naive Bayes</strong> per classificazione di testo (assume che le parole del documento siano indipendenti dato il tema) o i <strong>Modelli di Markov Nascosti (HMM)</strong> per compiti sequenziali (es: <em>Part-of-Speech tagging</em>, analisi del parlato). Il Naive Bayes è veloce e spesso efficace su testi semplici (ad es. spam vs ham) ma l&#39;ipotesi di indipendenza tra parole è grossolana. Gli HMM modellano le dipendenze come transizioni di stato, ma sono limitati da assunzioni di Markov di ordine basso (tipicamente bigrammi di stati) e richiedono definire a mano feature/osservazioni. In generale, questi approcci <strong>richiedevano feature engineering manuale</strong> (es: conteggi, liste di parole rilevanti) e faticavano a catturare relazioni semantiche profonde o dipendenze a lungo raggio.</p>
+<h4 id="naive-bayes">Naive Bayes</h4>
+<p>Il metodo più semplice per la classificazione di testo usando metodi probabilistici è <strong>Naive Bayes</strong>, che assume che le parole del documento siano indipendenti dato il tema. Questo modello fa un&#39;assunzione molto forte: ogni parola non ha alcun legame con le altre parole della frase.</p>
+<p>Consideriamo un filtro che deve classificare la seguente frase:</p>
+<blockquote>
+<p><em>&quot;Hai vinto un milione di euro&quot;</em></p>
+</blockquote>
+<p>Il modello calcola la probabilità che il messaggio sia spam basandosi sulle singole parole, isolatamente: la parola &quot;Vinto&quot; ha un&#39;alta frequenza storica nelle email di spam; la parola &quot;Milione&quot; è statisticamente rara nelle comunicazioni ordinarie, ma frequente nello spam; la parola &quot;Euro&quot; contribuisce ulteriormente al calcolo probabilistico. Combinando queste probabilità individuali, il modello classifica il messaggio come SPAM. </p>
+<p>L&#39;assunzione di indipendenza è spesso errata nella realtà linguistica. Se la frase fosse &quot;Non hai vinto, peccato perché c&#39;erano un milione di premi, molti in euro&quot;, il modello rileverebbe le stesse parole chiave (&quot;vinto&quot;, &quot;milione&quot;, &quot;euro&quot;) e potrebbe classificarla erroneamente, ignorando la negazione iniziale o la struttura sintattica che ne cambia il senso.</p>
+<p>Nonostante questa approssimazione, Naive Bayes è estremamente efficiente e offre ottime prestazioni in compiti di classificazione dove la presenza di specifici termini è determinante (es. Text Categorization).</p>
+<h4 id="modelli-di-markov">Modelli di Markov</h4>
+<p>A differenza del Naive Bayes, i <strong>Modelli di Markov Nascosti (HMM)</strong> prendono in considerazione la struttura sequenziale del testo, seppur con un orizzonte limitato per svolgere compiti sequenziali. Un esempio è <em>Part-of-Speech tagging</em>, il cui l&#39;obiettivo è determinare se una parola è un sostantivo, un verbo o un aggettivo in base al contesto.</p>
+<p>Gli HMM modellano le dipendenze come transizioni di stato, ma sono limitati da una memoria molto corta(tipicamente bigrammi di stati) e richiedono di definire a mano feature/osservazioni. In generale, questi approcci <strong>richiedevano feature engineering manuale</strong> (es: conteggi, liste di parole rilevanti) e faticavano a catturare relazioni semantiche profonde o dipendenze a lungo raggio.</p>
+<p>A differenza delle moderne reti neurali che apprendono autonomamente le rappresentazioni dai dati, i modelli lineari richiedono che un esperto definisca a priori quali caratteristiche osservare:</p>
+<ul>
+<li><p>Definire liste di parole rilevanti (lessici).</p>
+</li>
+<li><p>Creare regole morfologiche (es. &quot;le parole che terminano in -are sono verbi&quot;).</p>
+</li>
+<li><p>Gestire manualmente le eccezioni.</p>
+</li>
+</ul>
+<p>Questo approccio artigianale rendeva difficile scalare i modelli e catturare relazioni semantiche complesse o sfumature di significato che non fossero esplicitamente codificate dall&#39;uomo.</p>
 <p><strong>Problemi principali e soluzioni tentate (pre-Transformer):</strong></p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
@@ -1115,8 +1165,8 @@ Bag-of-Words: { &quot;gatto&quot;: 1, &quot;insegue&quot;: 1, &quot;il&quot;: 2,
 </tr>
 <tr>
 <td><strong>Uso del contesto locale limitato</strong> - L&#39;ordine delle parole conta, ma modelli unigram ignorano la sequenza.</td>
-<td>N-grammi (bigram, trigram, …) che considerano finestre di <em>N-1</em> parole precedenti.</td>
-<td><strong>Finestra rigida e data sparsity</strong>: catturano solo dipendenze brevi; combinazioni rare di parole mai viste non possono essere previste<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations">[3]</a>. Memoria limitata a N-1 parole, niente dipendenze a lungo termine.</td>
+<td>N-grammi (bigram, trigram, …) che considerano finestre di $N-1$ parole precedenti.</td>
+<td><strong>Finestra rigida e data sparsity</strong>: catturano solo dipendenze brevi; combinazioni rare di parole mai viste non possono essere previste<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations">[3]</a>. Memoria limitata a $N-1$ parole, niente dipendenze a lungo termine.</td>
 </tr>
 <tr>
 <td><strong>Feature fatte a mano e assunzioni semplicistiche</strong> - Modelli generativi semplici (NB, HMM) o reti neurali &quot;shallow&quot;.</td>
@@ -1124,16 +1174,28 @@ Bag-of-Words: { &quot;gatto&quot;: 1, &quot;insegue&quot;: 1, &quot;il&quot;: 2,
 <td><strong>Scalabilità e generalizzazione limitata</strong>: necessitano di definire a priori le feature giuste. Ipotesi forti (Markov, indipendenza) portano a perdita di informazione di contesto e correlazioni non catturate.</td>
 </tr>
 </tbody></table>
-</div></figure><p>Queste soluzioni, pur efficaci in contesti ristretti, evidenziavano <strong>lacune strutturali</strong>. Non potendo rappresentare il <em>significato</em> delle parole né tenere in memoria frasi lunghe, aprirono la strada a metodi in grado di <strong>catturare semantica distribuita e dipendenze più lunghe</strong>. È qui che nascono gli <em>embedding</em> neurali e i modelli a rete ricorrente.</p>
+</div></figure><p>Queste soluzioni funzionavano in contesti ristretti, ma avevano <strong>lacune strutturali</strong>. Non riuscivano a rappresentare il <em>significato</em> delle parole né a mantenere in memoria frasi lunghe. Quindi, i ricercatori hanno spinto verso metodi capaci di <strong>catturare semantica distribuita e dipendenze più lunghe</strong>. Ed è qui che sono nati gli <em>embedding</em> neurali e i modelli a rete ricorrente.</p>
 <h2 id="embedding-classici-word2vec-glove-fasttext">Embedding classici: word2vec, GloVe, fastText</h2>
-<p>Per superare la rappresentazione simbolica pura delle parole, negli anni 2010 si affermano i <strong>word embeddings</strong>, ovvero rappresentazioni dense in cui ogni parola è un vettore continuo in uno spazio a bassa dimensione. L&#39;idea base è <strong>distribuzionale</strong>: <em>&quot;una parola è definita dal contesto che tiene&quot;</em> (Firth). Modelli come <strong>word2vec</strong> (Mikolov et al., 2013) hanno introdotto tecniche di training non supervisionato su grandi corpora per ottenere vettori di parola che <strong>catturano somiglianze semantiche</strong><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. Ad esempio, word2vec produce vettori tali che:</p>
+<p>Per superare la rappresentazione simbolica pura delle parole, negli anni 2010 si affermano i <strong>word embeddings</strong>, ovvero rappresentazioni dense in cui ogni parola è un vettore continuo in uno spazio a bassa dimensione. </p>
+<blockquote>
+<p>Cosa significa a bassa dimensione? Vuol dire che ogni parola non è più un vettore enorme lungo quanto tutto il vocabolario, ma un vettore compatto (es. 50-300 numeri) che riassume le sue relazioni con le altre parole.</p>
+</blockquote>
+<p>L&#39;idea base è <strong>distribuzionale</strong>: <em>&quot;You shall know a word by the company it keeps&quot;</em> (<a href="https://archive.org/details/papersinlinguist0000firt/page/n5/mode/2up">Firth, 1957</a>). Modelli come <strong>word2vec</strong> (<a href="https://arxiv.org/abs/1301.3781">Mikolov et al., 2013</a>) hanno introdotto tecniche di training non supervisionato su un grande numero di dati per ottenere vettori di parola che <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A"><strong>catturano somiglianze semantiche</strong></a>. Ad <a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">esempio</a>, word2vec produce vettori tali che:</p>
 <ul>
-<li><em>&quot;king&quot; - &quot;man&quot; + &quot;woman&quot; ≈ &quot;queen&quot;</em><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D">[5]</a></li>
+<li><em>&quot;king&quot; - &quot;man&quot; + &quot;woman&quot; ≈ &quot;queen&quot;</em></li>
 <li><em>&quot;Parigi&quot; - &quot;Francia&quot; + &quot;Italia&quot; ≈ &quot;Roma&quot;</em></li>
 </ul>
 <p>Ciò indica che il modello ha appreso relazioni analogiche e cluster semantici: parole simili (re, regina) hanno vettori vicini, e la differenza vettoriale tra re e regina è simile a quella tra uomo e donna.</p>
-<p><strong>Come funzionano questi embedding?</strong> Word2vec offre due approcci principali: <strong>CBOW</strong> (<em>Continuous Bag-of-Words</em>) predice una parola dato il contesto circostante, mentre <strong>Skip-gram</strong> fa l&#39;opposto (predice il contesto data la parola target). In entrambi i casi la rete neurale addestra le rappresentazioni interne (embedding) affinché parole apparse in contesti simili abbiano vettori simili<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A">[6]</a>. Un altro modello popolare, <strong>GloVe</strong> (Pennington et al., 2014), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch&#39;esso vettori densi. Varianti come <strong>fastText</strong> (Bojanowski et al., 2016) hanno introdotto l&#39;uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.</p>
-<p><strong>Cosa risolvono gli embedding statici:</strong><br>- <strong>Sparsità ridotta:</strong> si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se <em>&quot;gatto&quot;</em> e <em>&quot;felino&quot;</em> hanno vettori vicini, il modello può trasferire conoscenza da uno all&#39;altro anche se uno dei due era raro nel corpus<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. - <strong>Similarità semantica:</strong> per la prima volta la macchina ha un <em>notion</em> di significato. Parole correlate (per contesto d&#39;uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).</p>
+<p><img src="../../../Assets/word2vec_example.svg" alt="Esempio di analogia in word2vec"><br><em>Figura 02: Esempio di relazione analogica nello spazio degli embedding.</em></p>
+<h3 id="come-funzionano-questi-embedding">Come funzionano questi embedding?</h3>
+<p><a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A">Word2vec</a> offre due approcci principali: <strong>CBOW</strong> (<em>Continuous Bag-of-Words</em>) predice una parola dato il contesto circostante, mentre <strong>Skip-gram</strong> fa l&#39;opposto (predice il contesto data la parola target). In entrambi i casi la rete neurale addestra le rappresentazioni interne (embedding) affinché parole apparse in contesti simili abbiano vettori simili. Ho creato un&#39;immagine dopo che prova a spiegare questi due in modo visivo.</p>
+<blockquote>
+<p>Un embedding è una funzione $f: V \to \mathbb{R}^d$ che mappa un simbolo discreto del vocabolario $V$ in un vettore denso di dimensione $d$; operativamente è una matrice $E \in \mathbb{R}^{|V|\times d}$ e l’embedding di un token è la sua riga</p>
+</blockquote>
+<p><img src="../../../Assets/cbow_vs_skipgram.svg" alt="CBOW vs Skip-gram"><br><em>Figura 03: Confronto tra CBOW e Skip-gram.</em></p>
+<p>Un altro modello popolare, <strong>GloVe</strong> (<a href="https://aclanthology.org/D14-1162/">Pennington et al., 2014</a>), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch&#39;esso vettori densi. Varianti come <strong>fastText</strong> (<a href="https://arxiv.org/abs/1607.04606">Bojanowski et al., 2016</a>) hanno introdotto l&#39;uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.</p>
+<h3 id="cosa-risolvono-gli-embedding-statici">Cosa risolvono gli embedding statici</h3>
+<p>Attraverso la cosiddetta <strong>sparsità ridotta:</strong> si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se <em>&quot;gatto&quot;</em> e <em>&quot;felino&quot;</em> hanno vettori vicini, il modello può trasferire conoscenza da uno all&#39;altro anche se uno dei due era raro nel corpus<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A">[4]</a>. - <strong>Similarità semantica:</strong> per la prima volta la macchina ha un <em>notion</em> di significato. Parole correlate (per contesto d&#39;uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).</p>
 <p><strong>Cosa <em>non</em> risolvono:</strong> il problema cruciale degli embedding classici è che sono <strong>statici</strong>. Ad ogni parola nel dizionario corrisponde un singolo vettore fisso, a prescindere del contesto in cui appare. Questo è limitante perché molte parole sono <strong>polisemiche</strong>: il significato di <em>&quot;bank&quot;</em> dipende dal contesto (banca vs argine del fiume). Un embedding statico di <em>&quot;bank&quot;</em> finirà per essere una sorta di media dei due significati, incapace di rappresentarli precisamente. Un esempio in italiano: <em>&quot;Java&quot;</em> può indicare un linguaggio di programmazione o un&#39;isola; un unico vettore non può riflettere entrambe le possibilità in modo distinto.</p>
 <p>Per chiarire, consideriamo alcune frasi con la parola <strong>&quot;porto&quot;</strong>:<br>- <em>&quot;Il</em> <em>porto</em> <em>di Genova è uno dei più grandi del Mediterraneo.&quot;</em> (scalo marittimo)<br>- <em>&quot;Dopo cena prendo un bicchiere di</em> <em>Porto.&quot;</em> (vino liquoroso)</p>
 <p>Un modello a embedding statici darà alla parola &quot;porto&quot; lo stesso identico vettore in entrambe le frasi, incapace di cogliere che nel primo caso è un sostantivo luogo e nel secondo un nome proprio di vino. Questa <strong>ambiguità semantica</strong> resta irrisolta. In pratica, un modello con embedding statici &quot;pensa&quot; che <em>&quot;porto (harbor)&quot;</em> e <em>&quot;porto (wine)&quot;</em> siano un unico concetto, perdendo informazione cruciale.</p>
