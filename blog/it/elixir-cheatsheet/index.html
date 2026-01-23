@@ -42,7 +42,7 @@
     "headline": "Elixir Cheatsheet",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-23T00:00:00.000Z",
-    "dateModified": "2026-01-23T21:57:15.591Z",
+    "dateModified": "2026-01-23T22:09:34.428Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1144,7 +1144,7 @@
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#debug-con-ioinspect">
             <span class="post-toc__number">7.5</span>
-            <span class="post-toc__text">Debug con IO.inspect</span>
+            <span class="post-toc__text">Debug con `IO.inspect`</span>
           </a>
           
         </li>
@@ -1208,9 +1208,9 @@
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#10-enum-e-stream-lavorare-con-le-collezioni">
+          <a class="post-toc__link" href="#10-enum-e-stream-come-lavorare-con-le-collezioni">
             <span class="post-toc__number">10</span>
-            <span class="post-toc__text">10. Enum e Stream: Lavorare con le Collezioni</span>
+            <span class="post-toc__text">10. Enum e Stream: come lavorare con le collezioni</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1639,7 +1639,7 @@ handle_result.({<span class="hljs-symbol">:ok</span>, <span class="hljs-string">
 <h2 id="7-loperatore-pipe-scrivere-codice-leggibile">7. L&#39;Operatore Pipe (|&gt;): Scrivere Codice Leggibile</h2>
 <p>Il pipe operator <code>|&gt;</code> è probabilmente il simbolo più amato dagli sviluppatori Elixir. Prende il risultato dell&#39;espressione a sinistra e lo passa come <strong>primo argomento</strong> alla funzione a destra.</p>
 <h3 id="perch-esiste">Perché esiste?</h3>
-<p>Senza pipe, il codice diventa un incubo di parentesi annidate:</p>
+<p>Se non esistesse il pipe operator, il codice sarebbe un incubo di parentesi annidate:</p>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Orribile da leggere (devi leggere da dentro verso fuori)</span>
 <span class="hljs-title class_">String</span>.upcase(<span class="hljs-title class_">String</span>.trim(<span class="hljs-title class_">String</span>.reverse(<span class="hljs-string">&quot;  elixir  &quot;</span>)))
 
@@ -1693,8 +1693,8 @@ conn
 <span class="hljs-string">&quot;hello world&quot;</span>
 |&gt; <span class="hljs-title class_">String</span>.split(<span class="hljs-string">&quot; &quot;</span>)
 |&gt; <span class="hljs-title class_">Enum</span>.join(<span class="hljs-string">&quot;-&quot;</span>)
-<span class="hljs-comment"># =&gt; &quot;hello-world&quot;</span></code></pre><h3 id="debug-con-ioinspect">Debug con IO.inspect</h3>
-<p>Il trucco killer per il debugging:</p>
+<span class="hljs-comment"># =&gt; &quot;hello-world&quot;</span></code></pre><h3 id="debug-con-ioinspect">Debug con <code>IO.inspect</code></h3>
+<p>Il trucco numero uno per fare debugging è unire il pin e <code>IO.inspect</code>:</p>
 <pre><code class="hljs language-elixir">dati
 |&gt; elabora()
 |&gt; <span class="hljs-title class_">IO</span>.inspect(<span class="hljs-symbol">label:</span> <span class="hljs-string">&quot;✓ Dopo elaborazione&quot;</span>)
@@ -1708,7 +1708,7 @@ conn
 <span class="hljs-comment"># ✓ Dopo elaborazione: [1, 2, 3]</span>
 <span class="hljs-comment"># ✓ Dopo trasformazione: [2, 4, 6]</span>
 <span class="hljs-comment"># ✓ Dopo validazione: {:ok, [2, 4, 6]}</span></code></pre><blockquote>
-<p>💡 <strong>Pro Tip</strong>: <code>IO.inspect/2</code> restituisce il valore che riceve intatto, quindi non interrompe la pipeline. È perfetto per &quot;spiare&quot; i dati mentre fluiscono. Usa sempre il parametro <code>label:</code> per sapere quale step stai vedendo!</p>
+<p>💡 <strong>Pro Tip</strong>: <code>IO.inspect/2</code> (ovvero prende 2 argomenti, si usa per distinguere overload) restituisce il valore che riceve intatto, quindi non interrompe la pipeline. È perfetto per &quot;spiare&quot; i dati mentre fluiscono. Usa sempre il parametro <code>label:</code> per sapere quale step stai vedendo!</p>
 </blockquote>
 <h2 id="8-control-flow-if-case-cond">8. Control Flow: if, case, cond</h2>
 <p>Anche se Elixir privilegia il pattern matching, ha comunque costrutti di controllo tradizionali.</p>
@@ -1750,7 +1750,7 @@ conn
 <span class="hljs-keyword">else</span>
   {<span class="hljs-symbol">:error</span>, reason} -&gt; {<span class="hljs-symbol">:error</span>, reason}
 <span class="hljs-keyword">end</span></code></pre><h2 id="9-concorrenza-processi-e-messaggi">9. Concorrenza: processi e messaggi</h2>
-<p>Ecco dove Elixir brilla davvero. I processi in Elixir <strong>non sono</strong> thread del sistema operativo, ma processi leggeri della BEAM. Puoi averne milioni contemporaneamente.</p>
+<p>Ecco che in questa sezione diamo un altro esempio in Elixir eccelle. I processi in Elixir <strong>non sono</strong> thread del sistema operativo, ma processi leggeri della BEAM. Puoi averne milioni contemporaneamente.</p>
 <h3 id="creare-un-processo">Creare un processo</h3>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Spawn di un processo</span>
 pid = spawn(<span class="hljs-keyword">fn</span> -&gt; 
@@ -1776,7 +1776,7 @@ send(pid, {<span class="hljs-symbol">:ciao</span>, self()})
 <span class="hljs-keyword">after</span>
   <span class="hljs-number">1000</span> -&gt; <span class="hljs-title class_">IO</span>.puts <span class="hljs-string">&quot;Timeout!&quot;</span>
 <span class="hljs-keyword">end</span></code></pre><h3 id="task-processi-con-stile">Task: processi con stile</h3>
-<p>I <code>Task</code> sono un&#39;astrazione di alto livello per processi:</p>
+<p>I <code>Task</code> sono un&#39;astrazione di alto livello per i processi:</p>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Task asincrono</span>
 task = <span class="hljs-title class_">Task</span>.async(<span class="hljs-keyword">fn</span> -&gt; 
   <span class="hljs-symbol">:timer</span>.sleep(<span class="hljs-number">1000</span>)
@@ -1789,7 +1789,7 @@ task = <span class="hljs-title class_">Task</span>.async(<span class="hljs-keywo
 <span class="hljs-comment"># Aspettare il risultato</span>
 result = <span class="hljs-title class_">Task</span>.await(task)
 <span class="hljs-title class_">IO</span>.puts result</code></pre><h3 id="agent-stato-condiviso">Agent: stato condiviso</h3>
-<p>Gli <code>Agent</code> gestiscono stato in modo concorrente:</p>
+<p>Gli <code>Agent</code> gestiscono lo stato in modo concorrente:</p>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Creare un agent</span>
 {<span class="hljs-symbol">:ok</span>, counter} = <span class="hljs-title class_">Agent</span>.start_link(<span class="hljs-keyword">fn</span> -&gt; <span class="hljs-number">0</span> <span class="hljs-keyword">end</span>)
 
@@ -1805,8 +1805,8 @@ result = <span class="hljs-title class_">Task</span>.await(task)
 <span class="hljs-keyword">end</span>)</code></pre><blockquote>
 <p>💡 <strong>Pro Tip</strong>: I processi Elixir sono <strong>isolati</strong>: se uno crasha, non porta giù gli altri. Questo è il principio &quot;Let it crash&quot; di Erlang. Usa i <strong>Supervisor</strong> per gestire automaticamente il riavvio di processi crashati.</p>
 </blockquote>
-<h2 id="10-enum-e-stream-lavorare-con-le-collezioni">10. Enum e Stream: Lavorare con le Collezioni</h2>
-<p>Il modulo <code>Enum</code> è il tuo migliore amico per manipolare liste, mappe e qualsiasi cosa enumerabile.</p>
+<h2 id="10-enum-e-stream-come-lavorare-con-le-collezioni">10. Enum e Stream: come lavorare con le collezioni</h2>
+<p>Il modulo <code>Enum</code> è il tuo migliore amico per manipolare liste, mappe e qualsiasi cosa numerabile.</p>
 <pre><code class="hljs language-elixir"><span class="hljs-comment"># Map</span>
 <span class="hljs-title class_">Enum</span>.map([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], <span class="hljs-keyword">fn</span> x -&gt; x * <span class="hljs-number">2</span> <span class="hljs-keyword">end</span>)
 <span class="hljs-comment"># =&gt; [2, 4, 6]</span>
@@ -1833,25 +1833,27 @@ stream = <span class="hljs-number">1</span>..<span class="hljs-number">1_000_000
 <span class="hljs-comment"># Eseguito solo quando serve</span>
 <span class="hljs-title class_">Enum</span>.take(stream, <span class="hljs-number">5</span>)
 <span class="hljs-comment"># =&gt; [6, 12, 18, 24, 30]</span></code></pre><h2 id="conclusione">Conclusione</h2>
-<p>Questo è stato un viaggio attraverso i concetti fondamentali di Elixir, ma è solo l&#39;inizio. Abbiamo coperto:</p>
+<p>In questo breve viaggio abbiamo coperto i concetti fondamentali di Elixir, ovvero:</p>
 <ul>
-<li><strong>Atomi e Stringhe</strong>: le fondamenta del tipo di dati</li>
+<li><strong>Atomi e stringhe</strong>: le fondamenta del tipo di dati</li>
 <li><strong>Collezioni</strong>: Liste, Tuple, Mappe e Keyword Lists</li>
 <li><strong>Pattern Matching</strong>: la killer feature che cambia il modo di programmare</li>
-<li><strong>Funzioni e Moduli</strong>: come organizzare il codice</li>
+<li><strong>Funzioni e moduli</strong>: come organizzare il codice</li>
 <li><strong>Pipe Operator</strong>: per scrivere codice leggibile e fluido</li>
 <li><strong>Control Flow</strong>: gestione del flusso con case, cond e with</li>
 <li><strong>Concorrenza</strong>: processi, Task e Agent per sfruttare la potenza della BEAM</li>
-<li><strong>Enum e Stream</strong>: manipolazione di collezioni eager e lazy</li>
+<li><strong>Enum e stream</strong>: manipolazione di collezioni eager e lazy</li>
 </ul>
 <h3 id="perch-scegliere-elixir">Perché scegliere Elixir?</h3>
+<p>Diciamo che ho in mente vari motivi, ma ordinando per importanza in base alla mia esperienza posso dire:</p>
 <ol>
-<li><strong>Scalabilità</strong>: Milioni di processi concorrenti senza sudare</li>
-<li><strong>Affidabilità</strong>: &quot;Let it crash&quot; con Supervisor per sistemi fault-tolerant</li>
-<li><strong>Produttività</strong>: Sintassi chiara e strumenti fantastici (Mix, IEx, ExUnit)</li>
-<li><strong>Ecosistema</strong>: Phoenix per il web, Nerves per IoT, Livebook per data science</li>
-<li><strong>Community</strong>: Accogliente e in crescita costante</li>
+<li><strong>Scalabilità</strong>: Milioni di processi concorrenti senza troppi problemi.</li>
+<li><strong>Affidabilità</strong>: &quot;Let it crash&quot; con Supervisor per sistemi fault-tolerant.</li>
+<li><strong>Produttività</strong>: Sintassi chiara e strumenti fantastici (Mix, IEx, ExUnit).</li>
+<li><strong>Ecosistema</strong>: Phoenix per il web, Nerves per IoT, Livebook per data science.</li>
+<li><strong>Community</strong>: Accogliente e in crescita costante!</li>
 </ol>
+<p>Se tu ne hai altri, ti invito a scrivermi per dirmi la tua!</p>
 <h3 id="prossimi-passi">Prossimi passi</h3>
 <p>Se vuoi approfondire:</p>
 <ul>
@@ -1861,7 +1863,7 @@ stream = <span class="hljs-number">1</span>..<span class="hljs-number">1_000_000
 <li><strong>LiveView</strong>: UI interattive senza scrivere JavaScript</li>
 <li><strong>Macro e Metaprogramming</strong>: estendere il linguaggio stesso</li>
 </ul>
-<p>La curva di apprendimento può sembrare ripida all&#39;inizio a causa del paradigma funzionale, ma una volta che il concetto di <strong>immutabilità</strong> e <strong>pattern matching</strong> fa click, non vorrai più tornare indietro.</p>
+<p>La curva di apprendimento può sembrare ripida all&#39;inizio, ma una volta che il concetto di <strong>immutabilità</strong> e che ci si abitua al <strong>pattern matching</strong>, non vorrai più tornare indietro. Fidati di me!</p>
 <h3 id="risorse-utili">Risorse utili</h3>
 <ul>
 <li><a href="https://elixir-lang.org/docs.html">Documentazione Ufficiale</a></li>
@@ -1869,7 +1871,7 @@ stream = <span class="hljs-number">1</span>..<span class="hljs-number">1_000_000
 <li><a href="https://exercism.org/tracks/elixir">Exercism Elixir Track</a> - Esercizi pratici</li>
 <li><a href="https://www.phoenixframework.org/">Phoenix Framework</a></li>
 </ul>
-<p>Hai domande su una sezione specifica? Vuoi che approfondiamo GenServer o Supervisor? Scrivilo nei commenti! 👇</p>
+<p>Hai domande su una sezione specifica? Vuoi che approfondiamo GenServer o Supervisor? Scrivimi su Linkedin! </p>
 <p><strong>Happy Coding!</strong> 🚀✨</p>
         </div>
       </section>
