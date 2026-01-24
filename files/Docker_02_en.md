@@ -10,7 +10,7 @@ This article is still being drafted and reviewed. Portions of the text may be in
 ## Abstract
 Welcome to the second episode of the "Docker for Developers" series. Since the first article was well-received, I'd say we can go deep this time, analyzing Docker's key concepts in a way that's accessible to everyone. Let's try to understand what Docker does conceptually, without yet writing code or configuring anything.
 
-## 1. Fundamental Concepts
+## 1\. Fundamental concepts
 
 ![Image](../Assets/Docker.png)
 
@@ -80,7 +80,7 @@ We conclude this section by discussing two commands we've already partially cove
 
 - **Docker Run.** The `docker run` command starts a container from an image. In a single step, it performs an eventual `docker pull` (if the image is not present locally) and creates/starts the new container. If you run `docker run ubuntu:22.04 echo "ciao"`, Docker checks for the presence of the `ubuntu:22.04` image, downloads it if necessary, **creates a container** (allocating resources, preparing the filesystem, assigning an ID), and **starts it** by executing `echo "ciao"` inside it. Once the command has finished, the container can be stopped and removed or reused. In summary, `docker run` manages the entire lifecycle: download (if needed) and execution of the process within the container.
 
-## 2\. Container Lifecycle
+## 2\. Container lifecycle
 
 ### From build to execution (behind `docker run`):
 
@@ -121,7 +121,7 @@ Each container has its own writable layer, so changes made in one container **ar
 
 This copy-on-write design makes containers **lightweight** but also **ephemeral**. In fact, they share immutable layers among themselves (saving space and memory), and each adds only the necessary differences. For example, if we start 5 containers from the Ubuntu image, on disk we will have only one copy of the Ubuntu layers, used in common, plus 5 small separate layers for the differences of each container.
 
-## 3\. Internal Architecture
+## 3\. Internal architecture
 
 ### Isolation with namespaces and cgroups (Linux kernel)
 
@@ -139,7 +139,7 @@ In addition to namespaces, Docker uses **cgroups** (_control groups_) to limit a
 
 layer on top of existing layers). The use of a layered filesystem is a crucial concept: it's what makes Docker images composed of **reusable layers** and containers lightweight instances that leverage those shared layers.
 
-## 4. Docker Images as Layers
+## 4\. Docker images as layers
 
 **Layer: what it is and how it's stored:** A Docker image is not a single monolithic blob, but is made up of an **ordered series of stacked layers**. Each _layer_ represents a set of **filesystem changes** relative to the underlying layer[[28]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image). For example, let's imagine creating an image for a Python application. The layers could be structured as follows[[28]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=Each%20layer%20in%20an%20image,look%20at%20a%20theoretical%20image):
 
@@ -169,7 +169,7 @@ When we build this image, Docker executes:
 
 The resulting image therefore has: the Ubuntu layers, a layer for the Nginx installation, and a layer for copying the HTML file. If we wanted to create another similar image (for example, another static site also based on Ubuntu and Nginx), Docker would reuse the existing Ubuntu and Nginx layers, only needing to add the layer with the new specific files. This shows how layers allow **extending existing images** by adding only what is additionally needed[\[32\]](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/#:~:text=This%20is%20beneficial%20because%20it,look%20similar%20to%20the%20following). During container execution, the read-only layers of the newly created Nginx image can be shared among all containers that use it, while any files that differ between containers (e.g., customizations made at runtime) remain confined to their respective writable layers. Ultimately, the layered architecture of Docker images is a fundamental element for **portability** (I can download only what is needed), **consistency** (each layer is immutable and reproducible), and **efficiency** (maximum reuse of common components).
 
-## 5\. Registries and Distribution
+## 5\. Registries and distribution
 
 **What happens with docker pull:** We have seen that docker pull downloads an image from a registry, but let's briefly analyze the process. When we execute docker pull name:tag, the Docker client connects to the registry (by default Docker Hub, or another if specified in the name or config) and performs a series of HTTP API calls. Firstly, it requests the **manifest** of the image - the manifest is a document (in JSON format) that lists the digests of all image layers and metadata (such as the hash of the image's config JSON, architecture, etc.). The registry responds with the manifest, which can be of two types: a _manifest list_ (multi-architecture index containing references to manifests for different platforms) or a single manifest for a specific platform[\[33\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=There%20are%20currently%20two%20types,and%20a%20manifest)[\[34\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Pull%20a%20manifest). If the Docker client receives a manifest list, it will choose the manifest suitable for the host system (e.g., choosing linux/amd64 layers if we are on an x86_64 PC)[\[35\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Instead%20of%20blobs%2C%20the%20client,its%20operating%20system%20and%20architecture)[\[36\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=Suppose%20a%20client%20chooses%20the,architecture%20and%20the%20manifest%20digest). Once the specific manifest is obtained, Docker proceeds to **download the listed layers**: for each layer digest, it makes a GET request to the registry to retrieve the corresponding blob[\[7\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry). The layers are downloaded in parallel (to speed up the process) and saved in the local cache (typically under /var/lib/docker/ in the storage driver in use). If some layers were already present (perhaps because they are common with other images), Docker skips them. Once the download of all blobs is complete, Docker composes or updates the image locally (by writing the config JSON that describes the image and referencing the local layers). At this point, the image is available to be run. In summary, docker pull is a process of **downloading image components** orchestrated via REST calls: first the manifest (or multi-arch index), then the layer blobs[\[37\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=A%20Podman%20or%20Docker%20,image%20manifest%20is%20being%20pulled)[\[7\]](https://www.redhat.com/en/blog/pull-container-image#:~:text=When%20you%20initiate%20a%20pull%2C,a%20manifest%20from%20the%20registry). From the user's perspective, this translates into "Pull complete" messages for each layer and finally "Downloaded newer image for name:tag".
 
@@ -179,7 +179,7 @@ The resulting image therefore has: the Ubuntu layers, a layer for the Nginx inst
 
 **Image Signing (security):** In addition to tags and digests, Docker also supports **cryptographic image signing** through a feature called Docker Content Trust (based on an open-source project called Notary). By enabling Content Trust, every image push is digitally signed by the publisher, and every pull verifies the signature, ensuring that the image has not been altered and genuinely originates from the declared publisher[\[42\]](https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust). In practice, a private/public key system is used: whoever builds the image signs it with their private key; whoever downloads it, if verification is enabled, will use the corresponding public key to check that the image's digest matches the one signed by the producer. This prevents _man-in-the-middle_ attacks or the unintentional use of tampered images. Docker Hub supports Content Trust, as do other registries (or it can be implemented in internal pipelines). Furthermore, alternative technologies like **Sigstore Cosign** (an open-source CNCF project) have emerged to sign and verify containers in a way that is even more integrated into cloud-native pipelines. The important conceptual aspect to understand is: the digest ensures **integrity** (detects unauthorized modifications to the content, as the hash no longer matches), while the digital signature also adds **authenticity** (guarantees who produced that image, i.e., that the hash corresponds to an image signed by the holder of a trusted private key)[\[43\]](https://www.cncf.io/blog/2021/07/28/enforcing-image-trust-on-docker-containers-using-notary/#:~:text=match%20at%20L267%20thus%20improving,container%20image%20trust%20using%20Docker)[\[42\]](https://help.sonatype.com/en/docker-content-trust.html#:~:text=Docker%20Content%20Trust). In contexts where supply chain security is critical, verifying image signatures before executing them is highly recommended.
 
-## 6\. Conceptual Demo: What Happens with docker run nginx
+## 6\. Conceptual demo: what happens with docker run nginx
 
 To consolidate the concepts, let's do a **step-by-step narration** of what happens when we execute a concrete Docker command. Let's imagine we launch:
 

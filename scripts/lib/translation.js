@@ -140,6 +140,8 @@ async function translateChunk(
     chunkContext,
     'Translate the following Markdown content from Italian to English.',
     'Preserve the original Markdown structure, code blocks, formatting, images, links, and emphasis.',
+    'Keep heading capitalization and numbering exactly as in the Italian source (do not convert to Title Case or camel case).',
+    'Use sentence case in English headings unless the Italian heading explicitly uses a different casing.',
     'Do not add commentary or explanations. Return only the translated Markdown.',
     '',
     markdown,

@@ -136,10 +136,58 @@ Ciò indica che il modello ha appreso relazioni analogiche e cluster semantici: 
 ![Esempio di analogia in word2vec](../Assets/word2vec_example.svg)  
 _Figura 02: Esempio di relazione analogica nello spazio degli embedding._
 
-### Come funzionano questi embedding?
-[Word2vec](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A) offre due approcci principali: **CBOW** (_Continuous Bag-of-Words_) predice una parola dato il contesto circostante, mentre **Skip-gram** fa l'opposto (predice il contesto data la parola target). In entrambi i casi la rete neurale addestra le rappresentazioni interne (embedding) affinché parole apparse in contesti simili abbiano vettori simili. Ho creato un'immagine dopo che prova a spiegare questi due in modo visivo.
+### Cos'è un embedding?
+Facciamo un passo indietro e diamo delle definizioni più rigorose. Ora potrai leggere prima una versione breve e poi una più approfondita, dipende da che grado di dettaglio vuoi.
 
-> Un embedding è una funzione $f: V \to \mathbb{R}^d$ che mappa un simbolo discreto del vocabolario $V$ in un vettore denso di dimensione $d$; operativamente è una matrice $E \in \mathbb{R}^{|V|\times d}$ e l’embedding di un token è la sua riga
+In termini matematici generali, un embedding è una funzione $f: X \to Y$ che mappa uno spazio $X$ all'interno di un altro spazio $Y$ preservando la struttura essenziale di $X$.
+
+Affinché $f$ sia un embedding, deve soddisfare due condizioni fondamentali:
+
+- **Iniettività**: $f$ deve essere una funzione "uno-a-uno" ($f(a) = f(b) \implies a = b$), garantendo che elementi distinti in $X$ rimangano distinti in $Y$.
+
+- **Preservazione della struttura**: Le relazioni tra i punti in $X$ (come la distanza o la vicinanza topologica) devono essere mantenute nella loro immagine in $Y$.
+
+Nel contesto del **Machine Learning** (quindi è questa la definizione che interessa a noi), un embedding è una mappa $\phi: S \to \mathbb{R}^d$ che trasforma un insieme discreto $S$ (come parole o nodi di un grafo) in uno spazio vettoriale continuo di dimensione $d$ (dove solitamente $d \ll |S|$), in modo tale che la vicinanza geometrica nello spazio di arrivo rifletta la similarità semantica nello spazio di partenza.
+
+#### Approfondimento deep
+
+Se dovessimo scrivere la biografia matematica di un embedding, inizieremmo col dire che è un ponte tra mondi diversi. È lo strumento che ci permette di tradurre oggetti astratti o discreti in una lingua che l'algebra lineare, e quindi anche le reti neurali, possono comprendere.
+
+Analizziamo il concetto su due livelli: la definizione topologica pura e come viene instanziata nel mondo dell'Intelligenza Artificiale.
+
+> Formalmente, siano $(X, \mathcal{T}_X)$ e $(Y, \mathcal{T}_Y)$ due spazi topologici. Una mappa $f: X \to Y$ è detta **embedding topologico** se:
+> - $f$ è iniettiva (non collassa punti diversi su uno stesso punto).
+> - $f$ è continua.
+> L'inversa della funzione ristretta alla sua immagine, $f^{-1}: f(X) \to X$, è anch'essa continua.
+
+In sintesi, $f$ è un **omeomorfismo** tra $X$ e la sua immagine $f(X) \subset Y$. Questo significa che $X$ può essere trattato come se fosse un sottospazio di $Y$. La struttura "vive" dentro $Y$ senza distorsioni o strappi.
+
+Passiamo ora all'applicazione con i **vector embeddings e gli **spazi metrici**.
+
+Nel Deep Learning, rilassiamo leggermente la richiesta di omeomorfismo perfetto a favore di una proprietà metrica.
+
+> Consideriamo un vocabolario discreto $V$ (insieme di parole). Un embedding è una funzione parametrica:
+> $$\theta: V \to \mathbb{R}^d$$
+
+L'obiettivo matematico non è solo mappare, ma isometrare (o quasi) una nozione astratta di similarità. 
+
+> Per isometrare intendo forzare lo spazio vettoriale affinché le distanze geometriche (es. quanto sono vicini due vettori) corrispondano esattamente alla "distanza" semantica (quanto sono simili due concetti). Insomma, forzare un'isometria. Amo inventare neologismi :)
+
+Se definiamo una funzione di similarità semantica ideale $Sim(w_i, w_j)$ tra due parole, l'embedding cerca di soddisfare la condizione:
+
+$$Sim(w_i, w_j) \approx \langle \theta(w_i), \theta(w_j) \rangle$$
+
+Dove $\langle \cdot, \cdot \rangle$ rappresenta il prodotto scalare (o una metrica basata sulla distanza euclidea).
+
+Perché funziona? La giustificazione matematica risiede nella **manifold hypothesis**. Questa ipotesi assume che i dati reali (come immagini o testo), pur vivendo in uno spazio ad altissima dimensione (lo spazio dei pixel o il one-hot encoding delle parole), si concentrino in realtà su una varietà topologica (manifold) di dimensione molto inferiore immersa in quello spazio.
+
+L'operazione di embedding, quindi, è il tentativo di scoprire le coordinate intrinseche di questa varietà, "srotolando" la complessità dei dati su uno spazio vettoriale $\mathbb{R}^d$ denso e continuo, dove le operazioni algebriche (somma, differenza, media) acquisiscono un significato semantico.
+
+### Come funzionano questi approcci?
+
+Abbiamo visto tanta teoria, ora passimao alla pratica.
+
+[Word2vec](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A) offre due approcci principali: **CBOW** (_Continuous Bag-of-Words_) predice una parola dato il contesto circostante, mentre **Skip-gram** fa l'opposto (predice il contesto data la parola target). In entrambi i casi la rete neurale addestra le rappresentazioni interne (embedding) affinché parole apparse in contesti simili abbiano vettori simili. Ho creato un'immagine dopo che prova a spiegare questi due in modo visivo.
 
 ![CBOW vs Skip-gram](../Assets/cbow_vs_skipgram.svg)  
 _Figura 03: Confronto tra CBOW e Skip-gram._
