@@ -22,7 +22,7 @@ Simple, right? But there's an interesting detail: `IO.puts` always returns the a
 
 > 💡 **Pro Tip**: `IO.puts` is great for showing text to humans, but if you try to print complex structures (like Maps or Lists), you might get unreadable results. For debugging, always use `IO.inspect(data)`. The magic of `IO.inspect` is that it prints the data and returns it intact, allowing you to insert it into your code without breaking it.
 
-## 2. Atoms and Strings: The Basics
+## 2. Atoms and strings: the basics
 
 In Elixir, just like in chemistry, everything is based on atoms. But what exactly are they?
 
@@ -64,7 +64,7 @@ on multiple lines
 
 > 💡 **Pro Tip**: Atoms are managed in an internal VM table and are never deallocated by the Garbage Collector. They are extremely fast for comparisons, but **do not generate them dynamically** (e.g., by converting user input into atoms) indefinitely, or you risk running out of VM memory (Atom table limit).
 
-## 3. Collections: Lists vs Tuples
+## 3. Collections: lists vs tuples
 
 This is where many stumble coming from imperative languages. In Elixir, we have two main types of collections:
 
@@ -121,7 +121,7 @@ put_elem(tuple, 1, "Modified")
 
 > 💡 **Pro Tip**: Use **Lists** when you need to iterate over data or dynamically add elements to the head. Use **Tuples** when you know exactly how many elements you have (like returning `{:ok, result}` from a function). Remember: adding an element to the end of a list is a slow **O(n)** operation, while adding it to the head is instantaneous **O(1)**.
 
-## 4. Maps and Keyword Lists
+## 4. Maps and keyword lists
 
 Do you need key-value structures? You have two main paths:
 
@@ -157,7 +157,7 @@ Map.delete(user, :age)
 Map.has_key?(user, :name) # => true
 ```
 
-### Keyword Lists
+### Keyword lists
 
 These are special lists of tuples primarily used to pass options to functions. The difference from maps? Order is guaranteed, and keys can be repeated.
 
@@ -180,7 +180,7 @@ Enum.map([1, 2], fn x -> x * 2 end)
 
 > 💡 **Pro Tip**: If you look for a key that doesn't exist with the `map.key` syntax, you will get an **error** (KeyError); if you use `map[:key]`, you will get `nil`. Use the first when you are sure the key exists, the second when you want to handle the absence of the value.
 
-## 5. Pattern Matching: The Magic of the `=` Operator
+## 5. Pattern matching: the magic of the `=` operator
 
 Here, we've finally arrived at why I started to appreciate Elixir. In Elixir, the `=` symbol is **not an assignment** in the traditional sense. It is a **match operator**: Elixir tries to match the left side with the right. If it succeeds, it binds the variables; otherwise, it throws an error.
 
@@ -204,7 +204,7 @@ x = 1
 # ** (MatchError) no match of right hand side value: 1
 ```
 
-### Pattern Matching with tuples
+### Pattern matching with tuples
 
 Now that you know tuples, exactly how we constructed them, let's see how to destructure them:
 
@@ -231,7 +231,7 @@ Now that you know tuples, exactly how we constructed them, let's see how to dest
 # Otherwise, MatchError (an "intentional" crash)
 ```
 
-### Pattern Matching with lists
+### Pattern matching with lists
 
 Lists take on a whole new charm with pattern matching:
 
@@ -262,7 +262,7 @@ Lists take on a whole new charm with pattern matching:
 # ** (MatchError) - the pattern requires exactly 2 elements
 ```
 
-### Pattern Matching with maps
+### Pattern matching with maps
 
 Maps are even more flexible: you can match only the keys you are interested in!
 
@@ -289,7 +289,7 @@ Maps are even more flexible: you can match only the keys you are interested in!
 # Useful for validating that we are receiving the correct type of data!
 ```
 
-### Pattern Matching with functions
+### Pattern matching with functions
 
 Now look at how elegant and functional function definitions are:
 
@@ -348,7 +348,7 @@ The underscore `_` matches anything but doesn't bind it to a variable:
 {:ok, _} = File.read("test.txt")
 ```
 
-### Pattern Matching everywhere!
+### Pattern matching everywhere!
 
 Pattern matching isn't just used with `=`. It's everywhere in Elixir:
 
@@ -373,11 +373,11 @@ Enum.map([{:ok, 1}, {:ok, 2}], fn {:ok, n} -> n * 2 end)
 
 > 💡 **Pro Tip**: Pattern matching allows you to write **declarative** code instead of **imperative** code. Instead of asking "is this value ok? Then extract it", you say "this must be {:ok, value}" and Elixir does all the heavy lifting. If the pattern doesn't match, the program crashes (fail fast), which is exactly what you want during development – not to have problems later, but to understand immediately if there's an issue.
 
-## 6. Functions and Modules
+## 6. Functions and modules
 
 Code lives in **modules**. Functions can be "named" (`def`) or "anonymous" (`fn`). Something beautiful? You can define the same function multiple times with different arguments, leveraging **pattern matching in the function signature** (which you just saw in the previous section!).
 
-### Named Functions
+### Named functions
 
 ```elixir
 defmodule Math do
@@ -398,7 +398,7 @@ Math.add(2, 3)      # => 5
 Math.multiply(4, 5) # => 20
 ```
 
-### Pattern Matching in Functions
+### Pattern matching in functions
 
 Now that you know pattern matching, here's where it becomes truly useful and powerful, or rather, allows you to do a lot of things:
 
@@ -420,7 +420,7 @@ FileHandler.process({:ok, "data"})    # => "Processed: data"
 FileHandler.process({:error, "boom"}) # => "Error: boom"
 ```
 
-### Recursion with Pattern Matching
+### Recursion with pattern matching
 
 Pattern matching makes recursion very elegant:
 
@@ -452,7 +452,7 @@ end
 ListHelper.sum([1, 2, 3, 4]) # => 10
 ```
 
-### Guard Clauses
+### Guard clauses
 
 Guard clauses add extra conditions **after** pattern matching:
 
@@ -471,7 +471,7 @@ Temperature.describe(18) # => "Mild 😊"
 
 Supported guards: `<`, `>`, `==`, `!=`, `and`, `or`, `not`, `is_list`, `is_map`, `is_atom`, etc.
 
-### Anonymous Functions
+### Anonymous functions
 
 Disposable "throwaway" functions without a name:
 
@@ -490,7 +490,7 @@ end
 handle_result.({:ok, "all good"}) # => "Success: all good"
 ```
 
-### Shorthand Syntax with &
+### Shorthand syntax with &
 
 For super simple functions:
 
@@ -507,7 +507,7 @@ Enum.map(["hello", "world"], &String.upcase/1)
 # => ["HELLO", "WORLD"]
 ```
 
-### Default Arguments
+### Default arguments
 
 ```elixir
 defmodule Greeter do
@@ -523,7 +523,7 @@ Greeter.greet("Lucia", "Good morning") # => "Good morning, Lucia!"
 
 > 💡 **Pro Tip**: Order matters! Elixir checks function definitions **from top to bottom**. Always put more specific cases (like `factorial(0)`) before general cases, otherwise they will never be executed. Guard clauses are evaluated **after** basic pattern matching.
 
-## 7. The Pipe Operator (|>): Writing Readable Code
+## 7. The pipe operator (|>): writing readable code
 
 The pipe operator `|>` is probably the most beloved symbol by Elixir developers. It takes the result of the expression on the left and passes it as the **first argument** to the function on the right.
 
@@ -633,7 +633,7 @@ data
 
 > 💡 **Pro Tip**: `IO.inspect/2` (meaning it takes 2 arguments, used to distinguish overloads) returns the value it receives intact, so it doesn't break the pipeline. It's perfect for "spying" on data as it flows. Always use the `label:` parameter to know which step you are viewing!
 
-## 8. Control Flow: if, case, cond
+## 8. Control flow: if, case, cond
 
 Even though Elixir favors pattern matching, it still has traditional control constructs.
 
@@ -697,11 +697,11 @@ else
 end
 ```
 
-## 9. Concurrency: Processes and Messages
+## 9. Concurrency: processes and messages
 
 Here's another example where Elixir excels. Processes in Elixir are **not** operating system threads, but lightweight BEAM processes. You can have millions of them concurrently.
 
-### Creating a Process
+### Creating a process
 
 ```elixir
 # Spawn a process
@@ -730,7 +730,7 @@ after
 end
 ```
 
-### Task: Processes with Style
+### Task: processes with style
 
 `Task`s are a high-level abstraction for processes:
 
@@ -749,7 +749,7 @@ result = Task.await(task)
 IO.puts result
 ```
 
-### Agent: Shared State
+### Agent: shared state
 
 `Agent`s manage state concurrently:
 
@@ -771,7 +771,7 @@ end)
 
 > 💡 **Pro Tip**: Elixir processes are **isolated**: if one crashes, it doesn't bring down the others. This is Erlang's "Let it crash" principle. Use **Supervisors** to automatically manage restarting crashed processes.
 
-## 10. Enum and Stream: How to Work with Collections
+## 10. Enum and stream: how to work with collections
 
 The `Enum` module is your best friend for manipulating lists, maps, and anything enumerable.
 
@@ -795,7 +795,7 @@ Enum.reduce([1, 2, 3], 0, fn x, acc -> x + acc end)
 # => [20, 40]
 ```
 
-### Stream: Lazy Evaluation
+### Stream: lazy evaluation
 
 Unlike `Enum`, `Stream` is **lazy**:
 
@@ -834,7 +834,7 @@ Let's say I have several reasons in mind, but ordering by importance based on my
 
 If you have others, I invite you to write to me to tell me your opinion!
 
-### Next Steps
+### Next steps
 
 If you want to delve deeper:
 
@@ -846,7 +846,7 @@ If you want to delve deeper:
 
 The learning curve might seem steep at first, but once you grasp the concept of **immutability** and get used to **pattern matching**, you won't want to go back. Trust me!
 
-### Useful Resources
+### Useful resources
 
 - [Official Documentation](https://elixir-lang.org/docs.html)
 - [Elixir School](https://elixirschool.com/it/) - Free tutorial in Italian (Note: The link points to the Italian version, keeping it as is per instructions)
