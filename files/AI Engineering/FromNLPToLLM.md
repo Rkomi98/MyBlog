@@ -194,14 +194,80 @@ _Figura 03: Confronto tra CBOW e Skip-gram._
 
 Un altro modello popolare, **GloVe** ([Pennington et al., 2014](https://aclanthology.org/D14-1162/)), parte da statistiche globali di co-occorrenza parola-parola e fattorizza una matrice, ottenendo anch'esso vettori densi. Varianti come **fastText** ([Bojanowski et al., 2016](https://arxiv.org/abs/1607.04606)) hanno introdotto l'uso di sotto-parole, costruendo embedding di caratteri/n-grammi utili per catturare similarità morfologiche e gestire parole rare o out-of-vocabulary.
 
-### Cosa risolvono gli embedding statici
-Attraverso la cosiddetta **sparsità ridotta:** si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se _"gatto"_ e _"felino"_ hanno vettori vicini, il modello può trasferire conoscenza da uno all'altro anche se uno dei due era raro nel corpus[\[4\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A). - **Similarità semantica:** per la prima volta la macchina ha un _notion_ di significato. Parole correlate (per contesto d'uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).
+#### GloVe (Global Vectors for Word Representation)
 
-**Cosa _non_ risolvono:** il problema cruciale degli embedding classici è che sono **statici**. Ad ogni parola nel dizionario corrisponde un singolo vettore fisso, a prescindere del contesto in cui appare. Questo è limitante perché molte parole sono **polisemiche**: il significato di _"bank"_ dipende dal contesto (banca vs argine del fiume). Un embedding statico di _"bank"_ finirà per essere una sorta di media dei due significati, incapace di rappresentarli precisamente. Un esempio in italiano: _"Java"_ può indicare un linguaggio di programmazione o un'isola; un unico vettore non può riflettere entrambe le possibilità in modo distinto.
+Lanciato nel 2014 da [Stanford](https://aclanthology.org/D14-1162/), GloVe è nato per risolvere un problema intrinseco dei modelli precedenti. I metodi basati sul conteggio (come [LSA e altri](https://medium.com/voice-tech-podcast/topic-modeling-with-lsa-plsa-lda-and-word-embedding-51bc2540b78d)) catturavano bene le statistiche globali ma male le analogie. **Word2Vec**, che abbiamo visto poco fa, catturava bene le analogie locali ma ignorava le statistiche globali del corpus.
+
+GloVe combina il meglio di entrambi i mondi.
+
+Il concetto che sta alla base e che ritengo fondamentale è la **matrice di co-occorrenza**.
+
+A differenza di Word2Vec che apprende guardando una finestra locale di contesto alla volta, GloVe si allena su una matrice di co-occorrenza globale $X$.
+
+> L'elemento $X_{ij}$ rappresenta *quante volte la parola $j$ appare nel contesto della parola $i$*.
+
+L'intuizione brillante degli autori è che il significato non risiede nelle probabilità semplici $P(k|i)$, ma nel rapporto delle probabilità.
+
+Facciamo un esempio perché rileggendo queste definizioni puramente astratte mi sto perdendo anche io. Immaginiamo di voler distinguere ghiaccio e vapore:
+
+Una parola come solido sarà molto correlata a ghiaccio ma non a vapore.
+
+Una parola come gas sarà correlata a vapore ma non a ghiaccio.
+
+Una parola come acqua sarà correlata ad entrambi.
+
+Una parola come moda non sarà correlata a nessuno dei due.
+
+Matematicamente, GloVe cerca di soddisfare questa relazione lineare:
+
+$$w_i^T w_j + b_i + b_j = \log(X_{ij})$$
+
+Dove $w$ sono i vettori e $b$ sono i bias. In sostanza, il prodotto scalare di due vettori deve eguagliare il logaritmo della loro co-occorrenza. Questo costringe i vettori a catturare la struttura statistica globale del linguaggio. Ti invito a leggere il [paper ufficiale](https://aclanthology.org/D14-1162/) per avere una panoramica completa su come funziona.
+
+#### FastText: L'Importanza della Morfologia
+
+Introdotto da [Facebook AI Research (FAIR)](https://arxiv.org/pdf/1607.04606) nel 2016, FastText affronta il limite più grande di Word2Vec e GloVe: il trattamento delle *parole come unità atomiche indivisibili*.
+
+Per GloVe, "mangiare", "mangiato" e "mangeremo" sono tre entità distinte. Se il modello incontra "mangiucchiare" e non l'ha mai visto prima, **fallisce** (problema *OOV - Out Of Vocabulary*).
+
+Vediamo il meccanismo con cui funziona, ovvero N-grammi di caratteri.
+
+FastText rappresenta ogni parola come un sacco (bag) di n-grammi di caratteri.
+Prendiamo la parola apple con $n=3$. FastText la scompone così:
+
+Aggiunge delimitatori speciali: < apple >
+
+Genera gli n-grammi (ricordati che il carattere speciale conta comunque come carattere): <ap, app, ppl, ple, le>
+
+Include la parola intera: < apple >
+
+Il vettore finale della parola è la somma (o la media) dei vettori di questi n-grammi.
+
+In inglese, la morfologia è semplice. In italiano, una radice verbale può avere decine di declinazioni. FastText capisce che "velocemente" e "lentamente" condividono un suffisso avverbiale, o che "gatto" e "gatti" condividono la radice. \
+Inoltre, se incontra una parola sconosciuta (es. un neologismo o un errore di battitura), può comunque costruire un vettore sommando gli n-grammi noti che la compongono.
+
+| Caratteristica | GloVe | FastText |
+| --- | --- | --- |
+| Unità base | Parola intera | N-grammi di caratteri |
+| Training | Matrice Co-occorrenza Globale | Predizione locale (skip-gram con subwords) |
+| Parole Sconosciute (OOV) | Impossibile (vettore random o zero) | Possibile (costruito dagli n-grammi) |
+| Dimensione Modello | Compatta | Grande (deve salvare vettori per tutti gli n-grammi) |
+| Caso d'uso ideale | Analisi semantica standard, corpus inglese | Lingue con morfologia ricca (IT, DE, ES), testi rumorosi |
+
+*Tabella 01: Confronto tra GloVe e FastText*
+
+In conclusione se devi lavorare su un dataset pulito in inglese, GloVe offre eccellenti prestazioni con costi computazionali contenuti. Tuttavia, per applicazioni moderne, specialmente su social media o lingue romanze, FastText è quasi sempre superiore grazie alla sua resilienza morfologica.
+
+### Cosa risolvono e cosa non risolvono gli embedding statici
+Gli embedding statici risolvono essenzialmente due cose:
+- Attraverso la cosiddetta **sparsità ridotta:** si passa da vettori enormi e sparsi (one-hot su vocabolari di decine di migliaia di parole) a vettori densi di dimensione tipicamente 50-300. Questo allevia problemi di memoria e permette di generalizzare: se _"gatto"_ e _"felino"_ hanno vettori vicini, il [modello può trasferire conoscenza](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A) da uno all'altro anche se uno dei due era raro nel corpus. 
+- **Similarità semantica:** per la prima volta la macchina ha una nozione di significato. Parole correlate (per contesto d'uso) si trovano vicine nello spazio vettoriale; cluster di parole simili emergono automaticamente (es.: {lunedì, martedì, …} raggruppati, {Roma, Milano, …} raggruppati).
+
+Ora vediamo però **cosa _non_ risolvono.** Il problema cruciale degli embedding classici è che sono **statici**. Ad ogni parola nel dizionario corrisponde un singolo vettore fisso, a prescindere del contesto in cui appare. Questo è limitante perché molte parole sono **polisemiche**: il significato di _"bank"_ dipende dal contesto (banca vs argine del fiume). Un embedding statico di _"bank"_ finirà per essere una sorta di media dei due significati, incapace di rappresentarli precisamente. Un esempio in italiano: _"Java"_ può indicare un linguaggio di programmazione o un'isola; un unico vettore non può riflettere entrambe le possibilità in modo distinto.
 
 Per chiarire, consideriamo alcune frasi con la parola **"porto"**:  
-\- _"Il_ _porto_ _di Genova è uno dei più grandi del Mediterraneo."_ (scalo marittimo)  
-\- _"Dopo cena prendo un bicchiere di_ _Porto."_ (vino liquoroso)
+- _"Il_ _porto_ _di Genova è uno dei più grandi del Mediterraneo."_ (scalo marittimo)  
+- _"Dopo cena prendo un bicchiere di_ _Porto."_ (vino liquoroso)
 
 Un modello a embedding statici darà alla parola "porto" lo stesso identico vettore in entrambe le frasi, incapace di cogliere che nel primo caso è un sostantivo luogo e nel secondo un nome proprio di vino. Questa **ambiguità semantica** resta irrisolta. In pratica, un modello con embedding statici "pensa" che _"porto (harbor)"_ e _"porto (wine)"_ siano un unico concetto, perdendo informazione cruciale.
 
