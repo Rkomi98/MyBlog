@@ -276,24 +276,86 @@ Di seguito un confronto tra **embedding statici** e **contestuali**:
 | **Embedding statici (word2vec, GloVe)** | **Embedding contestuali (ELMo, BERT, GPT)** |
 | --- | --- |
 | Un vettore fisso per ogni _parola-tipo_ nel vocabolario, indipendente dal contesto. | Vettore dinamico per ogni _occorrenza_ della parola, calcolato in base alle parole circostanti. |
-| Catturano somiglianze **globali** tra parole (es. _"banca"_ vicino a _"finanza"_ e _"denaro"_ in assoluto). | Catturano il **senso specifico** in quella frase (es. _"banca"_ in _"riva della banca del fiume"_ avrà embedding vicino a _"sponda"_, mentre in _"direttore di banca"_ sarà vicino a _"istituto di credito"_)[\[7\]](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=%2A%20,%28River%20edge). |
-| Vengono pre-addestrati una volta su corpus generico; uso diretto o come inizializzazione in modelli NLP. | Derivano da modelli deep (RNN/Transformer) pre-addestrati su larghi corpus con obiettivi linguistici (es. language model). Richiedono calcolo al volo ma forniscono comprensione più ricca. |
+| Catturano somiglianze **globali** tra parole (es. _"banca"_ vicino a _"finanza"_ e _"denaro"_). | Catturano il **senso specifico** in quella frase (es. _"banca"_ in _"banca dati"_ avrà embedding vicino a _"informatica"_, mentre in _"direttore di banca"_ sarà vicino a _"istituto di credito"_). |
+| Vengono pre-addestrati una volta su corpus generico; uso diretto o come inizializzazione in modelli NLP. | Derivano da modelli deep (RNN/Transformer che vedremo dopo) pre-addestrati su larghi corpus con obiettivi linguistici (es. language model). Richiedono inferenza ma forniscono comprensione più ricca. |
 | **Limite:** non gestiscono polisemia né dipendenze sintattiche a lungo raggio. Il contesto oltre la finestra locale è ignorato. | **Vantaggio:** incorporano contesto arbitrariamente lungo: l'intero enunciato (o paragrafo) influisce sul vettore di ogni parola, riflettendo anche struttura sintattica e informazioni lontane. |
 
-**Esempio concreto:** Frase 1: _"Devo andare in_ _banca_ _a depositare un assegno"_ vs Frase 2: _"Ci sediamo sulla_ _banca_ _del fiume"_. Un modello statico ha un solo vettore v("banca"). Un modello contestuale (come BERT o GPT) produrrà v1("banca") e v2("banca") diversi: nel contesto finanziario v1("banca") sarà vicino a vettori di _"soldi"_, _"sportello"_, mentre nel contesto naturale v2("banca") sarà vicino a _"sponda"_, _"acqua"_. Questo è un enorme passo avanti: la macchina "capisce" quale accezione è in gioco osservando le parole circostanti[\[7\]](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=%2A%20,%28River%20edge).
+*Tabella 02: Confronto embedding statici e contestuali*
 
-**Riassumendo:** word2vec, GloVe e simili hanno segnato una svolta introducendo la semantica distribuita e attenuando il problema della sparsità[\[4\]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A). Hanno però lasciato aperta la questione del **contesto**: come rappresentare frasi intere, o parole che cambiano significato a seconda di dove compaiono? La risposta iniziale a questo è arrivata con i **modelli ricorrenti**, progettati per _modellare sequenze_.
+Riassumendo, word2vec, GloVe e simili hanno segnato una [svolta](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered:) introducendo la semantica distribuita e attenuando il problema della sparsità. Hanno però lasciato aperta la questione del **contesto**: come rappresentare frasi intere, o parole che cambiano significato a seconda di dove compaiono? La risposta iniziale a questo è arrivata con i **modelli ricorrenti**, progettati per _modellare sequenze_.
 
-## RNN, LSTM, GRU: il tentativo di modellare il contesto
+## RNN, LSTM, GRU: come modellare il contesto
 
-Mentre gli embedding producevano rappresentazioni statiche di parole, i **Recurrent Neural Network (RNN)** miravano a modellare intere **sequenze di testo** come input dinamici. Un RNN classico è una rete neurale che processa un elemento alla volta (es. una parola), **riciclando** un vettore di stato nascosto che porta informazione da un passo al successivo. Formalmente, al tempo _t_ prende in input la rappresentazione del _t_‑esimo token \$x_t\$ e lo stato precedente \$h_{t-1}\$, producendo un nuovo stato \$h_t = f(h_{t-1}, x_t)\$ e magari un'uscita (se si fa modellazione linguistica, l'output può essere la distribuzione sulla prossima parola). In notazione vettoriale, un semplice RNN fa qualcosa come: \$h_t = \\tanh(W \\cdot \[h_{t-1}, x_t\])\$, dove \$W\$ contiene i pesi (stessi a ogni passo).
+### RNN: Le reti ricorrenti, una questione di memoria
+Mentre gli embedding producevano rappresentazioni statiche di parole, i **Recurrent Neural Network (RNN)** miravano a modellare intere **sequenze di testo** come input dinamici. 
 
-**In parole povere,** un RNN legge il testo _come faremmo noi, parola dopo parola_, aggiornando una sorta di "memoria interna" che accumula le informazioni lette finora. Ciò permette in teoria di tener conto di **dipendenze a lungo raggio**, perché l'influenza di una parola potrebbe farsi strada attraverso lo stato nascosto lungo tutta la sequenza. Ad esempio, in _"Il libro che il professore ha assegnato era…"_ un RNN potrebbe, al momento di predire l'aggettivo finale, _ricordare_ il soggetto distante _"il libro"_ invece di confondersi con _"il professore"_. Questa capacità di _"memoria"_ era il grande vantaggio rispetto ai modelli a n-grammi.
+Immagina di leggere una frase. Non riparti da zero a ogni parola; mantieni un "filo del discorso" mentale che si aggiorna man mano che prosegui. Le RNN (Recurrent Neural Networks) cercano di replicare esattamente questo meccanismo biologico.
 
-Tuttavia, i RNN nella pratica hanno dimostrato serie **difficoltà nel catturare dipendenze a lungo termine**. Il problema principale è noto come **vanishing gradient**: durante l'addestramento, i gradienti propagati all'indietro attraverso molti passi temporali **si attenuano esponenzialmente**, fino quasi ad annullarsi[\[8\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to). Intuitivamente, ogni volta che applichiamo la catena di derivazioni attraverso un passo temporale, moltiplichiamo per la matrice di pesi e per la derivata della funzione di attivazione. Se questi valori hanno norma < 1 (come spesso con \$\\tanh\$ o \$\\sigma\$ nelle regioni saturanti), dopo 10, 20, 50 moltiplicazioni il prodotto diventa $\approx 0$. Significa che gli errori avvenuti al passo 50 non riescono a retropropagare efficacemente fino al passo 1: la rete _dimentica_ l'inizio della sequenza mentre addestra la fine. In parole semplici, i RNN base "hanno la memoria corta". Questo spiega perché avevano _difficoltà ad apprendere dipendenze di lungo raggio_ come quelle sintattiche complesse o di contesto globale[\[9\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=In%20previous%20parts%20of%20the,between%20words%20that%20are%20several).
+A differenza delle reti tradizionali (feed-forward) che processano gli input in blocco, una RNN è intrinsecamente sequenziale. Processa un elemento alla volta (un token), portandosi dietro un bagaglio di informazioni dal passato.
 
-Parallelamente si ha il caso opposto, l'**exploding gradient** (gradienti che esplodono): se i pesi o le derivate sono >1, la norma cresce esponenzialmente e porta a valori enormi, mandando in NaN i parametri. Fortunatamente questo è più facile da gestire (si risolve spesso con il _gradient clipping_) e da individuare subito (il training diverge visibilmente)[\[10\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=It%20is%20easy%20to%20imagine,it%E2%80%99s%20not%20obvious%20when%20they). I gradienti vanishing invece sono subdoli: il training sembra procedere ma in realtà la rete non impara relazioni a lungo termine perché gli aggiornamenti dal lontano passato sono praticamente zero[\[11\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=parameters%2C%20we%20could%20get%20exploding,Your).
+Ti starai chiedendo, ok il principio, ma come funziona il "riciclo" delle informazioni?
 
+Il segreto sta nel vettore di stato nascosto (hidden state), indicato spesso come $h$. Questo vettore è la "memoria a breve termine" della rete.
+
+Ad ogni passo temporale $t$ (quando la rete legge la $t$-esima parola), succedono due cose contemporaneamente:
+
+- **Input attuale**: La rete guarda il nuovo token in ingresso $x_t$.
+
+- **Memoria passata**: La rete recupera lo stato nascosto calcolato al passo precedente, $h_{t-1}$.
+
+Questi due ingredienti vengono fusi insieme per aggiornare la memoria.
+
+#### Deep matematico
+Come ho fatto precedentemente vediamo la matematica che c'è sotto. Non siete obbligati a leggerlo, ma serve per avere una visione completa sul funzionamento di queste retu neurali.
+
+Formalmente, il cuore pulsante di una RNN è una singola equazione che viene ripetuta ciclicamente:
+
+$$h_t = \tanh(W \cdot [h_{t-1}, x_t] + b)$$
+
+Analizziamola pezzo per pezzo:
+
+- $[h_{t-1}, x_t]$: È l'operazione di **concatenazione**. Mettiamo fisicamente vicini il vettore della memoria passata e il vettore della parola attuale.
+
+- $W$ (matrice dei **pesi**): È il "cervello" della rete. Contiene i parametri che la rete ha imparato durante il training. Nota fondamentale: $W$ è condivisa a ogni passo. La rete usa la stessa matrice per elaborare la prima parola e l'ultima, il che le permette di gestire frasi di lunghezza variabile.
+
+- $\tanh$: È la funzione di attivazione. Serve a mantenere i valori limitati (tra -1 e 1), prevenendo l'esplosione dei valori risultanti (exploding activations) durante il calcolo in avanti. Attenzione però, la $\tanh$ non risolve il problema del **vanishing gradient** (la scomparsa del gradiente) durante l'addestramento; anzi, le sue derivate sempre $< 1$ contribuiscono a rendere difficile l'apprendimento su sequenze molto lunghe
+Se vuoi saperne di più su [exploding o vainshing gradient](https://kishanakbari.medium.com/understanding-vanishing-and-exploding-gradients-in-neural-networks-a-deep-dive-with-examples-ca9284863d50) contattami!
+
+In sintesi: al tempo $t$, la nuova memoria $h_t$ è una versione trasformata della vecchia memoria più la nuova informazione.
+
+**In parole povere**, un RNN legge il testo come faremmo noi, parola dopo parola, aggiornando una sorta di *"memoria interna"* che accumula le informazioni lette finora. Ciò permette di tener conto di dipendenze a lungo raggio, perché l'influenza di una parola potrebbe farsi strada attraverso lo stato nascosto lungo tutta la sequenza. Ad esempio, nella frase:
+
+*"Il libro che il professore ha assegnato era…"*
+
+un RNN potrebbe, al momento di predire l'aggettivo finale, ricordare il soggetto distante "il libro" invece di confondersi con "il professore". Questa capacità di "memoria" era il grande vantaggio rispetto ai modelli a n-grammi.
+
+#### Il problema del gradiente
+
+Tuttavia, i RNN nella pratica hanno dimostrato serie **difficoltà nel catturare dipendenze a lungo termine**. Il problema principale è noto come **vanishing gradient** (l'abbiamo già citato poco fa): durante l'addestramento, i gradienti propagati all'indietro attraverso molti passi temporali **si attenuano esponenzialmente**, fino quasi ad annullarsi (una caratteristica che [non riguarda solo RNN](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to)). 
+
+Partiamo dal vanishing gradient.
+
+Per capire il perché, dobbiamo guardare alla [**Backpropagation Through Time (BPTT)**](https://d2l.ai/chapter_recurrent-neural-networks/bptt.html). Quando calcoliamo l'errore al tempo $T$ e cerchiamo di aggiornare i pesi basandoci su un input avvenuto molto prima (al tempo $k$), dobbiamo applicare la regola della catena (**chain rule**).
+
+Il gradiente parziale dello stato $h_T$ rispetto a uno stato precedente $h_k$ è il prodotto delle derivate parziali di tutti gli step intermedi:
+
+$$\frac{\partial h_T}{\partial h_k} = \prod_{i=k+1}^{T} \frac{\partial h_i}{\partial h_{i-1}} = \prod_{i=k+1}^{T} W^T \cdot \text{diag}(f'(z_i))$$
+
+Dove $f'$ è la derivata della funzione di attivazione (es. $\tanh$). Ed ecco che è qui che sta il problema:
+
+La derivata di $\tanh$ è sempre $< 1$.
+
+Se i pesi in $W$ sono inizializzati come numeri piccoli (come da prassi), anche la loro norma sarà spesso $< 1$.
+
+Il risultato è una moltiplicazione ripetuta di termini minori di 1. Come calcolare $0.9^{50} \approx 0.005$, il gradiente tende rapidamente a zero man mano che la distanza ($T - k$) aumenta.
+
+Come risultato quindi cosa otteniamo? La rete dimentica l'inizio della sequenza mentre addestra la fine. In sostanza le reti RNN base hanno la ["memoria corta"](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=In%20previous%20parts%20of%20the,between%20words%20that%20are%20several) e faticano ad apprendere dipendenze sintattiche complesse o contesti globali.
+
+Parallelamente si ha il caso opposto, l'**exploding gradient** (gradienti che esplodono): se i pesi o le derivate sono >1, la norma cresce esponenzialmente e porta a valori enormi, mandando in NaN i parametri. 
+
+Fortunatamente questo è più facile da gestire (si risolve spesso con il [_gradient clipping_](https://www.youtube.com/watch?v=KrQp1TxTCUY)) e da [individuare subito](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=It%20is%20easy%20to%20imagine,it%E2%80%99s%20not%20obvious%20when%20they) (il training diverge visibilmente). I gradienti vanishing invece sono subdoli: il training sembra procedere ma in realtà la rete non impara relazioni a lungo termine perché gli aggiornamenti dal lontano passato sono praticamente zero.
+
+### LSTM: Long Short-Term Memory
 Per mitigare il vanishing gradient, **Hochreiter & Schmidhuber (1997)** introdussero la **Long Short-Term Memory (LSTM)**, una variante di RNN con un'architettura interna più complessa[\[12\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and). L'LSTM aggiunge **gating**: in ogni cella ci sono porte di ingresso, uscita e soprattutto _porta di forget_, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l'LSTM conserva una _cella di stato_ \$c_t\$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da 0.&lt;span&gt;something&lt;/span&gt;. I gradienti possono fluire attraverso \$c_t\$ più facilmente, evitando l'azzeramento. L'LSTM può così _"ricordare"_ informazioni per più passi, decidendo autonomamente quando dimenticare. Un analogo più semplice introdotto in seguito è il **GRU (Gated Recurrent Unit)**, che combina alcuni gate e semplifica l'unità: funziona bene in molti casi con meno parametri. Questi modelli **erano esplicitamente progettati per apprendere dipendenze a lungo termine** in sequenze[\[13\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and).
 
 **Nonostante LSTM/GRU abbiano portato miglioramenti notevoli**, restano alcuni limiti strutturali degli approcci ricorrenti:
