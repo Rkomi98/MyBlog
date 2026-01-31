@@ -308,17 +308,28 @@ Questi due ingredienti vengono fusi insieme per aggiornare la memoria.
 #### Deep matematico
 Come ho fatto precedentemente vediamo la matematica che c'è sotto. Non siete obbligati a leggerlo, ma serve per avere una visione completa sul funzionamento di queste retu neurali.
 
-Formalmente, il cuore pulsante di una RNN è una singola equazione che viene ripetuta ciclicamente:
+Formalmente, il segreto sta nel vettore di stato nascosto (hidden state), indicato spesso come $h$. Questo vettore è la "memoria a breve termine" della rete. Ad ogni passo temporale $t$ (quando la rete legge la $t$-esima parola), succedono due cose contemporaneamente:
 
-$$h_t = \tanh(W \cdot [h_{t-1}, x_t] + b)$$
+- **Input attuale**: La rete guarda il nuovo token in ingresso $x_t$.
+
+- **Memoria Passata**: La rete recupera lo stato nascosto calcolato al passo precedente, $h_{t-1}$.
+
+Questi due ingredienti vengono fusi insieme per aggiornare la memoria. Ecco che, formalmente, il cuore pulsante di una RNN è una singola equazione che viene ripetuta ciclicamente:
+
+$$h_t = \sigma_a(W \cdot [h_{t-1}, x_t] + b)$$
 
 Analizziamola pezzo per pezzo:
 
 - $[h_{t-1}, x_t]$: È l'operazione di **concatenazione**. Mettiamo fisicamente vicini il vettore della memoria passata e il vettore della parola attuale.
 
-- $W$ (matrice dei **pesi**): È il "cervello" della rete. Contiene i parametri che la rete ha imparato durante il training. Nota fondamentale: $W$ è condivisa a ogni passo. La rete usa la stessa matrice per elaborare la prima parola e l'ultima, il che le permette di gestire frasi di lunghezza variabile.
+- $W$ (Matrice dei **pesi**): È il "cervello" della rete. Contiene i parametri che la rete ha imparato durante il training ed è condivisa a ogni passo. La rete usa la stessa matrice per elaborare la prima parola e l'ultima, il che le permette di gestire frasi di lunghezza variabile.
 
-- $\tanh$: È la funzione di attivazione. Serve a mantenere i valori limitati (tra -1 e 1), prevenendo l'esplosione dei valori risultanti (exploding activations) durante il calcolo in avanti. Attenzione però, la $\tanh$ non risolve il problema del **vanishing gradient** (la scomparsa del gradiente) durante l'addestramento; anzi, le sue derivate sempre $< 1$ contribuiscono a rendere difficile l'apprendimento su sequenze molto lunghe
+- $\sigma_a$: È la funzione di attivazione. Nelle RNN classiche (o Elman Networks), la scelta standard è la Tangente Iperbolica ($\tanh$). Poiché l'output viene riutilizzato ciclicamente, una funzione non limitata (come la ReLU standard o la lineare) rischierebbe di far esplodere i valori verso l'infinito (exploding activations) dopo poche iterazioni se i pesi non sono perfettamente bilanciati. La $\tanh$ agisce come una valvola di sicurezza per la stabilità numerica. Per maggiori informazioni lascio qui il [libro](https://mcube.lab.nycu.edu.tw/~cfung/docs/books/goodfellow2016deep_learning.pdf) da cui ho studiato tutto ciò.
+
+> Perché proprio la funzione $\tanh$? Serve a mantenere i valori limitati (tra -1 e 1), prevenendo l'esplosione dei valori risultanti (exploding activations) durante il calcolo in avanti. Attenzione però, la $\tanh$ non risolve il problema del **vanishing gradient** (la scomparsa del gradiente) durante l'addestramento; anzi, le sue derivate sempre $< 1$ contribuiscono a rendere difficile l'apprendimento su sequenze molto lunghe
+
+> **Attenzione**: è possibile usare la ReLU per mitigare il vanishing gradient, ma richiede un'inizializzazione dei pesi molto specifica (come l'identità) per evitare instabilità, come dimostrato da 
+
 Se vuoi saperne di più su [exploding o vainshing gradient](https://kishanakbari.medium.com/understanding-vanishing-and-exploding-gradients-in-neural-networks-a-deep-dive-with-examples-ca9284863d50) contattami!
 
 In sintesi: al tempo $t$, la nuova memoria $h_t$ è una versione trasformata della vecchia memoria più la nuova informazione.
@@ -331,7 +342,7 @@ un RNN potrebbe, al momento di predire l'aggettivo finale, ricordare il soggetto
 
 #### Il problema del gradiente
 
-Tuttavia, i RNN nella pratica hanno dimostrato serie **difficoltà nel catturare dipendenze a lungo termine**. Il problema principale è noto come **vanishing gradient** (l'abbiamo già citato poco fa): durante l'addestramento, i gradienti propagati all'indietro attraverso molti passi temporali **si attenuano esponenzialmente**, fino quasi ad annullarsi (una caratteristica che [non riguarda solo RNN](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to)). 
+Tuttavia, le RNN nella pratica hanno dimostrato serie **difficoltà nel catturare dipendenze a lungo termine**, ovvero su serie molto grandi. Il problema principale è noto come **vanishing gradient** (l'abbiamo già citato poco fa): durante l'addestramento, i gradienti propagati all'indietro attraverso molti passi temporali **si attenuano esponenzialmente**, fino quasi ad annullarsi (una caratteristica che [non riguarda solo RNN](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to)). 
 
 Partiamo dal vanishing gradient.
 
@@ -343,24 +354,33 @@ $$\frac{\partial h_T}{\partial h_k} = \prod_{i=k+1}^{T} \frac{\partial h_i}{\par
 
 Dove $f'$ è la derivata della funzione di attivazione (es. $\tanh$). Ed ecco che è qui che sta il problema:
 
-La derivata di $\tanh$ è sempre $< 1$.
+1. La derivata di $\tanh$ è sempre $< 1$.
 
-Se i pesi in $W$ sono inizializzati come numeri piccoli (come da prassi), anche la loro norma sarà spesso $< 1$.
+2. Se i pesi in $W$ sono inizializzati come numeri piccoli (come da prassi), anche la loro norma sarà spesso $< 1$.
 
 Il risultato è una moltiplicazione ripetuta di termini minori di 1. Come calcolare $0.9^{50} \approx 0.005$, il gradiente tende rapidamente a zero man mano che la distanza ($T - k$) aumenta.
 
 Come risultato quindi cosa otteniamo? La rete dimentica l'inizio della sequenza mentre addestra la fine. In sostanza le reti RNN base hanno la ["memoria corta"](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=In%20previous%20parts%20of%20the,between%20words%20that%20are%20several) e faticano ad apprendere dipendenze sintattiche complesse o contesti globali.
 
-Parallelamente si ha il caso opposto, l'**exploding gradient** (gradienti che esplodono): se i pesi o le derivate sono >1, la norma cresce esponenzialmente e porta a valori enormi, mandando in NaN i parametri. 
+Parallelamente si ha il caso opposto, l'**exploding gradient** (gradienti che esplodono): se i pesi o le derivate sono $>1$, la norma cresce esponenzialmente e porta a valori enormi, mandando in NaN (Not a Number) i parametri. 
 
-Fortunatamente questo è più facile da gestire (si risolve spesso con il [_gradient clipping_](https://www.youtube.com/watch?v=KrQp1TxTCUY)) e da [individuare subito](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=It%20is%20easy%20to%20imagine,it%E2%80%99s%20not%20obvious%20when%20they) (il training diverge visibilmente). I gradienti vanishing invece sono subdoli: il training sembra procedere ma in realtà la rete non impara relazioni a lungo termine perché gli aggiornamenti dal lontano passato sono praticamente zero.
+Fortunatamente questo è più facile da gestire (si risolve spesso con il [_gradient clipping_](https://www.youtube.com/watch?v=KrQp1TxTCUY)) e da [individuare subito](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=It%20is%20easy%20to%20imagine,it%E2%80%99s%20not%20obvious%20when%20they) (il training diverge visibilmente): sostanzialmente se la norma del gradiente supera una certa soglia, viene tagliata ("clippata") manualmente.
+
+I gradienti vanishing invece sono subdoli: il training sembra procedere ma in realtà la rete non impara relazioni a lungo termine perché gli aggiornamenti dal lontano passato sono praticamente zero.
+
+![RNN: cella compatta e unrolling nel tempo](../Assets/rnn.svg)
+_Figura 04: Architettura di una RNN_
 
 ### LSTM: Long Short-Term Memory
-Per mitigare il vanishing gradient, **Hochreiter & Schmidhuber (1997)** introdussero la **Long Short-Term Memory (LSTM)**, una variante di RNN con un'architettura interna più complessa[\[12\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and). L'LSTM aggiunge **gating**: in ogni cella ci sono porte di ingresso, uscita e soprattutto _porta di forget_, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l'LSTM conserva una _cella di stato_ \$c_t\$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da 0.&lt;span&gt;something&lt;/span&gt;. I gradienti possono fluire attraverso \$c_t\$ più facilmente, evitando l'azzeramento. L'LSTM può così _"ricordare"_ informazioni per più passi, decidendo autonomamente quando dimenticare. Un analogo più semplice introdotto in seguito è il **GRU (Gated Recurrent Unit)**, che combina alcuni gate e semplifica l'unità: funziona bene in molti casi con meno parametri. Questi modelli **erano esplicitamente progettati per apprendere dipendenze a lungo termine** in sequenze[\[13\]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and).
+Per mitigare il vanishing gradient, [**Hochreiter & Schmidhuber (1997)**](https://www.bioinf.jku.at/publications/older/2604.pdf) introdussero la **Long Short-Term Memory (LSTM)**, una [variante di RNN](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and) con un'architettura interna più complessa. 
+
+L'LSTM aggiunge **gating**: in ogni cella ci sono porte di ingresso, uscita e soprattutto _porta di forget_, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l'LSTM conserva una _cella di stato_ $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l'azzeramento. 
+
+L'LSTM può così _"ricordare"_ informazioni per più passi, decidendo autonomamente quando dimenticare. Un analogo più semplice introdotto in seguito è il **GRU (Gated Recurrent Unit)**, che combina alcuni gate e semplifica l'unità: funziona bene in molti casi con meno parametri. Questi modelli **erano esplicitamente progettati per apprendere [dipendenze a lungo termine](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and)** in sequenze.
 
 **Nonostante LSTM/GRU abbiano portato miglioramenti notevoli**, restano alcuni limiti strutturali degli approcci ricorrenti:
 
-- **Dipendenze molto lunghe ancora problematiche:** In teoria un LSTM può mantenere info per centinaia di passi, ma in pratica oltre una certa lunghezza (es. 100 token) l'efficacia diminuisce. Inoltre il _contesto_ è tutto compresso nel vettore hidden di dimensione fissata (p.es. 256 o 512): c'è un limite fisico a quanta informazione distinguibile possa portare. Se il testo è molto lungo (un documento), anche un LSTM fatica a ricordare dettagli di inizio documento quando è arrivato alla fine.
+- **Dipendenze molto lunghe restano problematiche:** In teoria un LSTM può mantenere info per centinaia di passi, ma in pratica oltre una certa lunghezza (es. 100 token) l'efficacia diminuisce. Inoltre il _contesto_ è tutto compresso nel vettore hidden di dimensione fissata (p.es. 256 o 512): c'è un limite fisico a quanta informazione distinguibile possa portare. Se il testo è molto lungo (un documento), anche un LSTM fatica a ricordare dettagli di inizio documento quando è arrivato alla fine.
 - **Backpropagation Through Time (BPTT) costosa e fragile:** Addestrare un RNN richiede _unrolling_ della rete sul tempo e backpropagare su ogni step. Questo significa che se abbiamo sequenze di 50 parole, la rete effettiva su cui facciamo gradienti ha 50 layer (tutti condividono i pesi, ma computazionalmente è come una rete profonda di 50 strati). È un calcolo pesante e **sequenziale**: non si può parallelizzare i 50 step perché il passo _t_ dipende dallo stato di _t-1_. Questo è un grosso collo di bottiglia: anche con GPU, l'RNN deve procedere in serie, a differenza di modelli feed-forward che elaborano tutti gli elementi insieme. Ciò rende il training lento su sequenze lunghe[\[14\]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental). Inoltre, più lungo è l'unroll più i gradienti diventano instabili (vanishing/exploding). Spesso si usava _truncated BPTT_: si tronca la backpropagazione a, ad esempio, 20 passi indietro, rompendo intenzionalmente le dipendenze troppo lunghe per stabilizzare e velocizzare[\[15\]](https://d2l.ai/chapter_recurrent-neural-networks/bptt.html#:~:text=Alternatively%2C%20we%20can%20truncate%20the,simpler%20and%20more%20stable%20models). Ma così facendo, la rete non impara davvero oltre quella finestra artificiale.
 - **Non scalano bene in termini di dati e modello:** Per sfruttare grandi dataset o modelli molto capienti, servirebbe parallelizzare e batchare di più, cosa non banale con RNN. All'epoca (2015-2017) si usavano già LSTM con centinaia di milioni di parametri (ad es. traduttori neurali sequence-to-sequence con attenzione), però aumentarne le dimensioni portava rendimenti decrescenti: il training diventava oneroso, e altre parti come il meccanismo di attenzione (introdotto per sopperire alle carenze della pura ricorrenza) dominavano i benefici.
 

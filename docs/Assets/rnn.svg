@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="rnnSvg" viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagramma RNN: cella compatta e unrolling nel tempo" shape-rendering="geometricPrecision">
+        <defs>
+          <!-- Page background gradient (for SVG export) -->
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0b1224"/>
+            <stop offset="100%" stop-color="#101a36"/>
+          </linearGradient>
+
+          <!-- Strokes -->
+          <linearGradient id="strokeCyan" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="100%" stop-color="#60a5fa"/>
+          </linearGradient>
+          <linearGradient id="strokeOrange" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f97316"/>
+            <stop offset="100%" stop-color="#facc15"/>
+          </linearGradient>
+
+          <!-- Soft shadow -->
+          <filter id="ds" x="-20%" y="-20%" width="140%" height="160%">
+            <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.5"/>
+          </filter>
+
+          <!-- Markers (bigger + crisper) -->
+          <marker id="arrowCyan" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M 0 0 L 12 6 L 0 12 z" fill="#38bdf8"/>
+          </marker>
+          <marker id="arrowOrange" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M 0 0 L 12 6 L 0 12 z" fill="#fb923c"/>
+          </marker>
+
+          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2" result="b"/>
+            <feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.65 0" result="g"/>
+            <feMerge>
+              <feMergeNode in="g"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+
+          <!-- Node fills -->
+          <radialGradient id="gInput" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.65"/>
+            <stop offset="100%" stop-color="#1e293b" stop-opacity="0.95"/>
+          </radialGradient>
+          <radialGradient id="gHidden" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#22c55e" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#1e293b" stop-opacity="0.95"/>
+          </radialGradient>
+          <radialGradient id="gOutput" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#1e293b" stop-opacity="0.95"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Background -->
+        <rect x="0" y="0" width="1400" height="720" fill="url(#bgGrad)"/>
+
+        <!-- Title pill -->
+        <g filter="url(#ds)">
+          <rect x="28" y="22" width="460" height="54" rx="16" fill="rgba(15,23,42,.65)" stroke="rgba(96,165,250,.26)"/>
+          <text x="48" y="47" fill="#f8fafc" font-size="18" font-weight="700">RNN — cella compatta + unrolling nel tempo</text>
+          <text x="48" y="68" fill="#cbd5f5" font-size="12">connessioni: U (input→hidden), W (ricorrenza), V (hidden→output)</text>
+        </g>
+
+        <!-- ========================
+             LEFT: Compact RNN cell
+             ======================== -->
+        <!-- Folded group around x=140 -->
+        <g filter="url(#ds)" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Nodes -->
+          <circle cx="140" cy="520" r="46" fill="url(#gInput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+          <circle cx="140" cy="340" r="56" fill="url(#gHidden)" stroke="url(#strokeCyan)" stroke-width="2"/>
+          <circle cx="140" cy="160" r="46" fill="url(#gOutput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+
+          <!-- Labels in nodes -->
+          <text x="140" y="346" text-anchor="middle" fill="#f8fafc" font-size="22" font-weight="700" font-style="italic">h</text>
+          <text x="140" y="166" text-anchor="middle" fill="#f8fafc" font-size="22" font-weight="700" font-style="italic">o</text>
+          <text x="140" y="526" text-anchor="middle" fill="#f8fafc" font-size="22" font-weight="700" font-style="italic">x</text>
+
+          <!-- Vertical arrows: x → h → o (straight + aligned) -->
+          <path d="M 140 474 L 140 408" fill="none" stroke="#38bdf8" stroke-width="3.2" marker-end="url(#arrowCyan)" filter="url(#glow)"/>
+          <path d="M 140 284 L 140 218" fill="none" stroke="#38bdf8" stroke-width="3.2" marker-end="url(#arrowCyan)" filter="url(#glow)"/>
+
+          <!-- Recurrent loop (W): smooth arc above h, exits RIGHT and re-enters LEFT -->
+          <path d="M 196 340 C 260 340, 260 240, 140 240 C 20 240, 20 340, 84 340" fill="none" stroke="#fb923c" stroke-width="3.6" marker-end="url(#arrowOrange)" filter="url(#glow)" stroke-linecap="round"/>
+
+          <!-- Coefficient labels -->
+          <text class="tech" x="160" y="436" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">U</text>
+          <text class="tech" x="160" y="246" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">V</text>
+          <text class="tech" x="255" y="310" fill="#fb923c" font-size="16" font-weight="800" font-style="italic">W</text>
+        </g>
+
+        <!-- ========================
+             UNFOLD: from h to h(t-2)
+             ======================== -->
+        <!-- Target dotted node is h(t-2) (shown as h(-)) -->
+        <g stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 210 340 L 266 340" fill="none" stroke="#38bdf8" stroke-width="3.2" marker-end="url(#arrowCyan)" filter="url(#glow)"/>
+          <rect x="236" y="306" width="92" height="28" rx="12" fill="rgba(15,23,42,.62)" stroke="rgba(96,165,250,.22)"/>
+          <text x="282" y="325" text-anchor="middle" fill="#cbd5f5" font-size="12" font-weight="600">Unfold</text>
+        </g>
+
+        <!-- ========================
+             RIGHT: Unrolled in time (aligned spacing)
+             ======================== -->
+        <!-- Hidden centers (uniform): 330, 590, 850, 1110, 1370
+             Input/Output aligned on same x
+             y: output=160, hidden=340, input=520
+        -->
+        <g stroke-linecap="round" stroke-linejoin="round">
+          <!-- Dotted continuation: h(t-2) and h(t+2) -->
+          <g opacity="0.9">
+            <circle cx="330" cy="340" r="56" fill="url(#gHidden)" fill-opacity="0.55" stroke="rgba(203,213,245,.6)" stroke-width="2" stroke-dasharray="6 6"/>
+            <text x="330" y="346" text-anchor="middle" fill="#cbd5f5" font-size="18" font-weight="700" font-style="italic">h<tspan baseline-shift="super" font-size="12">(t−2)</tspan></text>
+
+            <circle cx="1370" cy="340" r="56" fill="url(#gHidden)" fill-opacity="0.55" stroke="rgba(203,213,245,.6)" stroke-width="2" stroke-dasharray="6 6"/>
+            <text x="1370" y="346" text-anchor="middle" fill="#cbd5f5" font-size="18" font-weight="700" font-style="italic">h<tspan baseline-shift="super" font-size="12">(t+2)</tspan></text>
+          </g>
+
+          <!-- Time step nodes -->
+          <g filter="url(#ds)">
+            <!-- t-1 -->
+            <circle cx="590" cy="520" r="46" fill="url(#gInput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <circle cx="590" cy="340" r="56" fill="url(#gHidden)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <circle cx="590" cy="160" r="46" fill="url(#gOutput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <text x="590" y="526" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">x<tspan baseline-shift="super" font-size="12">(t−1)</tspan></text>
+            <text x="590" y="346" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">h<tspan baseline-shift="super" font-size="12">(t−1)</tspan></text>
+            <text x="590" y="166" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">o<tspan baseline-shift="super" font-size="12">(t−1)</tspan></text>
+
+            <!-- t -->
+            <circle cx="850" cy="520" r="46" fill="url(#gInput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <circle cx="850" cy="340" r="56" fill="url(#gHidden)" stroke="url(#strokeOrange)" stroke-width="2"/>
+            <circle cx="850" cy="160" r="46" fill="url(#gOutput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <text x="850" y="526" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">x<tspan baseline-shift="super" font-size="12">(t)</tspan></text>
+            <text x="850" y="346" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">h<tspan baseline-shift="super" font-size="12">(t)</tspan></text>
+            <text x="850" y="166" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">o<tspan baseline-shift="super" font-size="12">(t)</tspan></text>
+
+            <!-- t+1 -->
+            <circle cx="1110" cy="520" r="46" fill="url(#gInput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <circle cx="1110" cy="340" r="56" fill="url(#gHidden)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <circle cx="1110" cy="160" r="46" fill="url(#gOutput)" stroke="url(#strokeCyan)" stroke-width="2"/>
+            <text x="1110" y="526" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">x<tspan baseline-shift="super" font-size="12">(t+1)</tspan></text>
+            <text x="1110" y="346" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">h<tspan baseline-shift="super" font-size="12">(t+1)</tspan></text>
+            <text x="1110" y="166" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="700" font-style="italic">o<tspan baseline-shift="super" font-size="12">(t+1)</tspan></text>
+          </g>
+
+          <!-- Vertical connections (U and V): straight + centered -->
+          <g fill="none" stroke="#38bdf8" stroke-width="3.2" filter="url(#glow)">
+            <!-- input -> hidden -->
+            <path d="M 590 474 L 590 396" marker-end="url(#arrowCyan)"/>
+            <path d="M 850 474 L 850 396" marker-end="url(#arrowCyan)"/>
+            <path d="M 1110 474 L 1110 396" marker-end="url(#arrowCyan)"/>
+            <!-- hidden -> output -->
+            <path d="M 590 284 L 590 206" marker-end="url(#arrowCyan)"/>
+            <path d="M 850 284 L 850 206" marker-end="url(#arrowCyan)"/>
+            <path d="M 1110 284 L 1110 206" marker-end="url(#arrowCyan)"/>
+          </g>
+
+          <!-- Horizontal recurrent connections (W): all pointing to next h, with equal spacing -->
+          <g fill="none" stroke="#fb923c" stroke-width="3.4" marker-end="url(#arrowOrange)" filter="url(#glow)">
+            <!-- h(t-2) -> h(t-1) dashed -->
+            <path d="M 386 340 L 534 340" stroke-dasharray="7 7"/>
+            <!-- h(t-1) -> h(t) -->
+            <path d="M 646 340 L 794 340"/>
+            <!-- h(t) -> h(t+1) -->
+            <path d="M 906 340 L 1054 340"/>
+            <!-- h(t+1) -> h(t+2) dashed -->
+            <path d="M 1166 340 L 1314 340" stroke-dasharray="7 7"/>
+          </g>
+
+          <!-- Edge labels U, V, W (centered over edges) -->
+          <g class="tech" opacity="0.95">
+            <!-- U labels -->
+            <text x="610" y="436" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">U</text>
+            <text x="870" y="436" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">U</text>
+            <text x="1130" y="436" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">U</text>
+            <!-- V labels -->
+            <text x="610" y="246" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">V</text>
+            <text x="870" y="246" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">V</text>
+            <text x="1130" y="246" fill="#cbd5f5" font-size="16" font-weight="700" font-style="italic">V</text>
+            <!-- W labels -->
+            <text x="460" y="320" fill="#fb923c" font-size="16" font-weight="900" font-style="italic">W</text>
+            <text x="720" y="320" fill="#fb923c" font-size="16" font-weight="900" font-style="italic">W</text>
+            <text x="980" y="320" fill="#fb923c" font-size="16" font-weight="900" font-style="italic">W</text>
+            <text x="1240" y="320" fill="#fb923c" font-size="16" font-weight="900" font-style="italic">W</text>
+          </g>
+
+          <!-- Time labels above outputs -->
+          <g class="tech" opacity="0.9" filter="url(#ds)">
+            <rect x="538" y="96" width="104" height="28" rx="12" fill="rgba(15,23,42,.58)" stroke="rgba(96,165,250,.22)"/>
+            <text x="590" y="115" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="600">t−1</text>
+
+            <rect x="798" y="96" width="104" height="28" rx="12" fill="rgba(15,23,42,.58)" stroke="rgba(96,165,250,.22)"/>
+            <text x="850" y="115" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="600">t</text>
+
+            <rect x="1058" y="96" width="104" height="28" rx="12" fill="rgba(15,23,42,.58)" stroke="rgba(96,165,250,.22)"/>
+            <text x="1110" y="115" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="600">t+1</text>
+          </g>
+        </g>
+
+        <!-- Legend (small) -->
+        <g transform="translate(28, 620)" filter="url(#ds)">
+          <rect x="0" y="0" width="520" height="78" rx="16" fill="rgba(15,23,42,.62)" stroke="rgba(96,165,250,.22)"/>
+          <text x="18" y="26" fill="#f8fafc" font-size="14" font-weight="700">Legenda</text>
+          <path d="M 18 46 L 108 46" fill="none" stroke="#38bdf8" stroke-width="3.2" marker-end="url(#arrowCyan)"/>
+          <text x="122" y="50" fill="#cbd5f5" font-size="12">forward (x→h, h→o)</text>
+          <path d="M 310 46 L 400 46" fill="none" stroke="#fb923c" stroke-width="3.4" marker-end="url(#arrowOrange)"/>
+          <text x="414" y="50" fill="#cbd5f5" font-size="12">recurrent (h→h)</text>
+        </g>
+      </svg>
