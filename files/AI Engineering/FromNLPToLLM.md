@@ -374,9 +374,51 @@ _Figura 04: Architettura di una RNN_
 ### LSTM: Long Short-Term Memory
 Per mitigare il vanishing gradient, [**Hochreiter & Schmidhuber (1997)**](https://www.bioinf.jku.at/publications/older/2604.pdf) introdussero la **Long Short-Term Memory (LSTM)**, una [variante di RNN](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and) con un'architettura interna più complessa. 
 
-L'LSTM aggiunge **gating**: in ogni cella ci sono porte di ingresso, uscita e soprattutto _porta di forget_, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l'LSTM conserva una _cella di stato_ $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l'azzeramento. 
+L'idea che c'è dietro le LSTM è separare la memoria vera e propria dalle operazioni di calcolo. Prova ad immaginare la **cella di stato** ($C_t$) come un nastro trasportatore che corre dritto attraverso tutta la catena temporale.
 
-L'LSTM può così _"ricordare"_ informazioni per più passi, decidendo autonomamente quando dimenticare. Un analogo più semplice introdotto in seguito è il **GRU (Gated Recurrent Unit)**, che combina alcuni gate e semplifica l'unità: funziona bene in molti casi con meno parametri. Questi modelli **erano esplicitamente progettati per apprendere [dipendenze a lungo termine](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and)** in sequenze.
+In una RNN classica, lo stato viene continuamente trasformato (moltiplicato per $W$, passato per la funzione di attivazione), il che corrompe l'informazione originale dopo pochi passaggi. In una LSTM, l'informazione può scorrere lungo la cella di stato praticamente invariata (questo lo spiego meglio tra un attimo). La rete deve fare uno sforzo attivo per modificarla (aggiungere o rimuovere dati).
+
+Questo flusso lineare permette ai gradienti di retropropagarsi senza svanire, anche per 1000 passi temporali.
+
+Una cella LSTM controlla il flusso di informazioni tramite tre porte (gates). Ogni porta è una rete neurale con attivazione **sigmoide** ($\sigma$), che produce valori tra 0 (chiuso, non passa nulla) e 1 (aperto, passa tutto).
+
+L'LSTM aggiunge quindi un **gating**: in ogni cella ci sono porte di ingresso, uscita e soprattutto _porta di forget_, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l'LSTM conserva una _cella di stato_ $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l'azzeramento. 
+
+L'LSTM può così _"ricordare"_ informazioni per più passi, decidendo autonomamente quando dimenticare. Vediamo nelle prossime sottosezioni l'anatomia della cella di stato.
+
+#### A. Forget Gate: La porta dell'oblio
+Questa parte risponde alla domanda: 
+> "Cosa devo buttare via della vecchia memoria?"
+
+Guarda l'input attuale $x_t$ e lo stato precedente $h_{t-1}$ e decide per ogni numero nella Cell State $C_{t-1}$ se tenerlo o azzerarlo.
+
+Per esempio, se l'input è "Egli", la rete potrebbe decidere di dimenticare il genere "femminile" che aveva memorizzato dal soggetto precedente.
+
+#### B. Input Gate: La porta di ingresso
+Questa parte risponde alla domanda:
+
+> "Cosa devo memorizzare di nuovo?"
+
+Avviene in due step:
+
+- Una sigmoide decide quali valori aggiornare.
+
+- Una funzione $\tanh$ crea un vettore di nuovi candidati valori.
+
+Questi due vengono moltiplicati e aggiunti alla **cella di stato**.
+
+#### C. Output Gate: La porta di uscita
+Infine questa parte risponde alla domanda:
+
+> "Cosa devo dire al mondo (e al prossimo step) adesso?". 
+
+Considera che non tutto ciò che è in memoria serve subito. 
+
+La memoria $C_t$ viene filtrata: magari la rete ricorda che il soggetto è singolare, ma ora deve predire un verbo, quindi in output ($h_t$) fa passare solo l'informazione "singolare" per coniugare il verbo correttamente.
+
+### GRU: Una variante di LSTM
+
+Un analogo più semplice introdotto in seguito è il **GRU (Gated Recurrent Unit)**, che combina alcuni gate e semplifica l'unità: funziona bene in molti casi con meno parametri. Questi modelli **erano esplicitamente progettati per apprendere [dipendenze a lungo termine](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and)** in sequenze.
 
 **Nonostante LSTM/GRU abbiano portato miglioramenti notevoli**, restano alcuni limiti strutturali degli approcci ricorrenti:
 

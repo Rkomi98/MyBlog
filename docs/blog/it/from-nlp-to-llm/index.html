@@ -42,7 +42,7 @@
     "headline": "Dai modelli NLP classici ai LLM",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-10T00:00:00.000Z",
-    "dateModified": "2026-01-30T23:05:28.859Z",
+    "dateModified": "2026-02-01T14:16:53.672Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1064,6 +1064,32 @@
             <span class="post-toc__number">4.2</span>
             <span class="post-toc__text">LSTM: Long Short-Term Memory</span>
           </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#a-forget-gate-la-porta-delloblio">
+            <span class="post-toc__number">4.2.1</span>
+            <span class="post-toc__text">A. Forget Gate: La porta dell&#39;oblio</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#b-input-gate-la-porta-di-ingresso">
+            <span class="post-toc__number">4.2.2</span>
+            <span class="post-toc__text">B. Input Gate: La porta di ingresso</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#c-output-gate-la-porta-di-uscita">
+            <span class="post-toc__number">4.2.3</span>
+            <span class="post-toc__text">C. Output Gate: La porta di uscita</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#gru-una-variante-di-lstm">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">GRU: Una variante di LSTM</span>
+          </a>
           
         </li>
   </ul>
@@ -1458,8 +1484,41 @@ Prendiamo la parola apple con $n=3$. FastText la scompone così:</p>
 <em>Figura 04: Architettura di una RNN</em></p>
 <h3 id="lstm-long-short-term-memory">LSTM: Long Short-Term Memory</h3>
 <p>Per mitigare il vanishing gradient, <a href="https://www.bioinf.jku.at/publications/older/2604.pdf"><strong>Hochreiter &amp; Schmidhuber (1997)</strong></a> introdussero la <strong>Long Short-Term Memory (LSTM)</strong>, una <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and">variante di RNN</a> con un&#39;architettura interna più complessa. </p>
-<p>L&#39;LSTM aggiunge <strong>gating</strong>: in ogni cella ci sono porte di ingresso, uscita e soprattutto <em>porta di forget</em>, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l&#39;LSTM conserva una <em>cella di stato</em> $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l&#39;azzeramento. </p>
-<p>L&#39;LSTM può così <em>&quot;ricordare&quot;</em> informazioni per più passi, decidendo autonomamente quando dimenticare. Un analogo più semplice introdotto in seguito è il <strong>GRU (Gated Recurrent Unit)</strong>, che combina alcuni gate e semplifica l&#39;unità: funziona bene in molti casi con meno parametri. Questi modelli <strong>erano esplicitamente progettati per apprendere <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and">dipendenze a lungo termine</a></strong> in sequenze.</p>
+<p>L&#39;idea che c&#39;è dietro le LSTM è separare la memoria vera e propria dalle operazioni di calcolo. Prova ad immaginare la <strong>cella di stato</strong> ($C_t$) come un nastro trasportatore che corre dritto attraverso tutta la catena temporale.</p>
+<p>In una RNN classica, lo stato viene continuamente trasformato (moltiplicato per $W$, passato per la funzione di attivazione), il che corrompe l&#39;informazione originale dopo pochi passaggi. In una LSTM, l&#39;informazione può scorrere lungo la cella di stato praticamente invariata (questo lo spiego meglio tra un attimo). La rete deve fare uno sforzo attivo per modificarla (aggiungere o rimuovere dati).</p>
+<p>Questo flusso lineare permette ai gradienti di retropropagarsi senza svanire, anche per 1000 passi temporali.</p>
+<p>Una cella LSTM controlla il flusso di informazioni tramite tre porte (gates). Ogni porta è una rete neurale con attivazione <strong>sigmoide</strong> ($\sigma$), che produce valori tra 0 (chiuso, non passa nulla) e 1 (aperto, passa tutto).</p>
+<p>L&#39;LSTM aggiunge quindi un <strong>gating</strong>: in ogni cella ci sono porte di ingresso, uscita e soprattutto <em>porta di forget</em>, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l&#39;LSTM conserva una <em>cella di stato</em> $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l&#39;azzeramento. </p>
+<p>L&#39;LSTM può così <em>&quot;ricordare&quot;</em> informazioni per più passi, decidendo autonomamente quando dimenticare. Vediamo nelle prossime sottosezioni l&#39;anatomia della cella di stato.</p>
+<h4 id="a-forget-gate-la-porta-delloblio">A. Forget Gate: La porta dell&#39;oblio</h4>
+<p>Questa parte risponde alla domanda: </p>
+<blockquote>
+<p>&quot;Cosa devo buttare via della vecchia memoria?&quot;</p>
+</blockquote>
+<p>Guarda l&#39;input attuale $x_t$ e lo stato precedente $h_{t-1}$ e decide per ogni numero nella Cell State $C_{t-1}$ se tenerlo o azzerarlo.</p>
+<p>Per esempio, se l&#39;input è &quot;Egli&quot;, la rete potrebbe decidere di dimenticare il genere &quot;femminile&quot; che aveva memorizzato dal soggetto precedente.</p>
+<h4 id="b-input-gate-la-porta-di-ingresso">B. Input Gate: La porta di ingresso</h4>
+<p>Questa parte risponde alla domanda:</p>
+<blockquote>
+<p>&quot;Cosa devo memorizzare di nuovo?&quot;</p>
+</blockquote>
+<p>Avviene in due step:</p>
+<ul>
+<li><p>Una sigmoide decide quali valori aggiornare.</p>
+</li>
+<li><p>Una funzione $\tanh$ crea un vettore di nuovi candidati valori.</p>
+</li>
+</ul>
+<p>Questi due vengono moltiplicati e aggiunti alla <strong>cella di stato</strong>.</p>
+<h4 id="c-output-gate-la-porta-di-uscita">C. Output Gate: La porta di uscita</h4>
+<p>Infine questa parte risponde alla domanda:</p>
+<blockquote>
+<p>&quot;Cosa devo dire al mondo (e al prossimo step) adesso?&quot;. </p>
+</blockquote>
+<p>Considera che non tutto ciò che è in memoria serve subito. </p>
+<p>La memoria $C_t$ viene filtrata: magari la rete ricorda che il soggetto è singolare, ma ora deve predire un verbo, quindi in output ($h_t$) fa passare solo l&#39;informazione &quot;singolare&quot; per coniugare il verbo correttamente.</p>
+<h3 id="gru-una-variante-di-lstm">GRU: Una variante di LSTM</h3>
+<p>Un analogo più semplice introdotto in seguito è il <strong>GRU (Gated Recurrent Unit)</strong>, che combina alcuni gate e semplifica l&#39;unità: funziona bene in molti casi con meno parametri. Questi modelli <strong>erano esplicitamente progettati per apprendere <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and">dipendenze a lungo termine</a></strong> in sequenze.</p>
 <p><strong>Nonostante LSTM/GRU abbiano portato miglioramenti notevoli</strong>, restano alcuni limiti strutturali degli approcci ricorrenti:</p>
 <ul>
 <li><strong>Dipendenze molto lunghe restano problematiche:</strong> In teoria un LSTM può mantenere info per centinaia di passi, ma in pratica oltre una certa lunghezza (es. 100 token) l&#39;efficacia diminuisce. Inoltre il <em>contesto</em> è tutto compresso nel vettore hidden di dimensione fissata (p.es. 256 o 512): c&#39;è un limite fisico a quanta informazione distinguibile possa portare. Se il testo è molto lungo (un documento), anche un LSTM fatica a ricordare dettagli di inizio documento quando è arrivato alla fine.</li>
