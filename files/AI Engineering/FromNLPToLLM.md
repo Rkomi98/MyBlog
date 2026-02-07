@@ -420,6 +420,20 @@ La memoria $C_t$ viene filtrata: magari la rete ricorda che il soggetto è singo
 
 Un analogo più semplice introdotto in seguito è il **GRU (Gated Recurrent Unit)**, che combina alcuni gate e semplifica l'unità: funziona bene in molti casi con meno parametri. Questi modelli **erano esplicitamente progettati per apprendere [dipendenze a lungo termine](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and)** in sequenze.
 
+Nel 2014, [Cho et al.](https://arxiv.org/abs/1409.1259) hanno introdotto una versione semplificata di LSTM: l'architettura **GRU**.
+
+Le differenze principali sono essenzialmente due:
+
+- **Fusione delle porte**: GRU unisce Forget Gate e Input Gate in un'unica **Update Gate**. Se la porta è 1, mantiene la memoria vecchia; se è 0, la sovrascrive con la nuova.
+
+- **Stato unico**: Non separa più Cell State ($C$) e Hidden State ($h$). C'è un solo vettore di stato.
+
+Il vantaggio principale è che ci sono meno parametri da addestrare, computazionalmente più veloce. A livello di performance, le GRU eguagliano le LSTM in molti task empirici. Le LSTM tendono a performare leggermente meglio su dataset molto grandi e sequenze molto lunghe grazie alla maggiore capacità espressiva (hanno più parametri).
+
+
+
+
+
 **Nonostante LSTM/GRU abbiano portato miglioramenti notevoli**, restano alcuni limiti strutturali degli approcci ricorrenti:
 
 - **Dipendenze molto lunghe restano problematiche:** In teoria un LSTM può mantenere info per centinaia di passi, ma in pratica oltre una certa lunghezza (es. 100 token) l'efficacia diminuisce. Inoltre il _contesto_ è tutto compresso nel vettore hidden di dimensione fissata (p.es. 256 o 512): c'è un limite fisico a quanta informazione distinguibile possa portare. Se il testo è molto lungo (un documento), anche un LSTM fatica a ricordare dettagli di inizio documento quando è arrivato alla fine.
