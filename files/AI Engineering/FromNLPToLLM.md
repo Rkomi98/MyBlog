@@ -447,6 +447,17 @@ Il vantaggio principale è che ci sono meno parametri da addestrare, computazion
 
 In sintesi, RNN/LSTM hanno introdotto l'**idea di memoria temporale differenziabile** e hanno permesso notevoli progressi (es. _Google Neural Machine Translation 2016_ usava LSTM bidirezionali + attenzione, su cui torneremo tra un attimo). Ma la loro natura ricorrente poneva limiti di **velocità** e **capacità di modellare contesti lunghi**. Era chiaro che per fare ulteriore salto serviva un'architettura diversa, più adatta al parallel computing e in grado di **guardare tutto il contesto in modo più diretto**. Da queste esigenze nasce l'architettura **Transformer**.
 
+> 🎮 **Simulazione interattiva.** Prima di passare al Transformer, puoi confrontare visivamente il comportamento di RNN, LSTM e GRU nella [simulazione dedicata](Assets/simulations/RNN/RNN_LSTM_GRU.html).
+
+<iframe
+  src="../../../Assets/simulations/RNN/RNN_LSTM_GRU.html"
+  title="Simulazione comparativa RNN, LSTM e GRU"
+  loading="lazy"
+  style="width: 100%; min-height: 760px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
+></iframe>
+
+_Figura 05: Simulazione interattiva comparativa tra architetture RNN, LSTM e GRU._
+
 ## La rivoluzione del Transformer
 
 Nel 2017 Vaswani et al. pubblicano [_"Attention Is All You Need"_](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental), introducendo il **Transformer**, un'architettura che elimina completamente la ricorrenza a favore di un meccanismo di **self-attention** generalizzato[\[16\]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including). Questo cambiamento concettualmente semplice ha innescato una rivoluzione: il Transformer ha dimostrato di poter scalare molto meglio, essere addestrato in parallelo e raggiungere performance superiori su compiti come la traduzione in una frazione del tempo di training dei modelli ricorrenti[\[17\]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training).

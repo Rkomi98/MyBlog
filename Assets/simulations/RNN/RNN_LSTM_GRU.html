@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNN · LSTM · GRU — Visualizzazione 3D</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Sora:wght@200;300;400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#08080f;color:#e4e2df;font-family:'Sora',sans-serif;overflow:hidden;width:100vw;height:100vh}
+#scene{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+
+/* ===== TOP BAR ===== */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:1rem 2rem;background:linear-gradient(to bottom,rgba(8,8,15,.95),rgba(8,8,15,0));pointer-events:none}
+.topbar *{pointer-events:auto}
+.arch-btn{
+  padding:.55rem 1.6rem;border-radius:99px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:#8a8a9a;font-family:'Sora',sans-serif;
+  font-size:.85rem;font-weight:400;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);
+  letter-spacing:.02em;position:relative;overflow:hidden
+}
+.arch-btn:hover{background:rgba(255,255,255,.08);color:#e4e2df;border-color:rgba(255,255,255,.2)}
+.arch-btn.active{color:#fff;border-color:transparent}
+.arch-btn.active.rnn{background:linear-gradient(135deg,#ff4d6a,#ff7a92);box-shadow:0 4px 24px rgba(255,77,106,.3)}
+.arch-btn.active.lstm{background:linear-gradient(135deg,#4a90ff,#70b0ff);box-shadow:0 4px 24px rgba(74,144,255,.3)}
+.arch-btn.active.gru{background:linear-gradient(135deg,#00d4aa,#40ffcc);box-shadow:0 4px 24px rgba(0,212,170,.3);color:#08080f}
+
+/* ===== INFO PANEL ===== */
+.info{
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  background:linear-gradient(to top,rgba(8,8,15,.97) 60%,rgba(8,8,15,0));
+  padding:0 2rem 1.5rem;pointer-events:none
+}
+.info-inner{max-width:860px;margin:0 auto;pointer-events:auto}
+.info h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:400;margin-bottom:.4rem;transition:color .4s}
+.info h2.rnn{color:#ff7a92}.info h2.lstm{color:#70b0ff}.info h2.gru{color:#40ffcc}
+.info .desc{font-size:.92rem;color:#8a8a9a;line-height:1.7;max-width:680px;margin-bottom:.8rem;transition:opacity .3s}
+.info .desc strong{color:#e4e2df;font-weight:600}
+
+/* ===== EQUATIONS ===== */
+.eq{
+  font-family:'DM Mono',monospace;font-size:.78rem;line-height:2;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;padding:.8rem 1.2rem;display:inline-block;
+  max-width:100%;overflow-x:auto;transition:opacity .3s
+}
+.eq .f{color:#ff4d6a}.eq .i{color:#30e870}.eq .o{color:#ffb020}
+.eq .c{color:#b060ff}.eq .z{color:#00d4aa}.eq .r{color:#ff8040}
+.eq .d{color:#555}
+
+/* ===== STEP NAV ===== */
+.step-nav{
+  display:flex;align-items:center;gap:.6rem;margin-top:.7rem
+}
+.step-btn{
+  width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);color:#e4e2df;font-size:.9rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .25s
+}
+.step-btn:hover{background:rgba(255,255,255,.1)}
+.step-btn:disabled{opacity:.2;cursor:default}
+.step-lbl{font-family:'DM Mono',monospace;font-size:.72rem;color:#6b6b80;min-width:180px}
+.step-dots{display:flex;gap:4px}
+.step-dot{width:6px;height:6px;border-radius:50%;background:#333;transition:all .3s}
+.step-dot.a{box-shadow:0 0 6px currentColor}
+.step-dot.a.rnn{background:#ff4d6a}.step-dot.a.lstm{background:#4a90ff}.step-dot.a.gru{background:#00d4aa}
+
+/* ===== LEGEND ===== */
+.legend{position:fixed;top:5rem;right:1.5rem;z-index:10;display:flex;flex-direction:column;gap:.35rem;transition:opacity .4s}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:#6b6b80}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* ===== HINT ===== */
+.hint{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;color:#444;font-size:.8rem;pointer-events:none;opacity:1;transition:opacity 1s}
+.hint.hide{opacity:0}
+
+@media(max-width:600px){
+  .info{padding:0 1rem 1rem}
+  .eq{font-size:.7rem;padding:.6rem .8rem}
+  .legend{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="scene"></div>
+
+<div class="hint" id="hint">🖱️ Trascina per ruotare · Scroll per zoom</div>
+
+<div class="topbar">
+  <button class="arch-btn rnn active" data-arch="rnn">RNN</button>
+  <button class="arch-btn lstm" data-arch="lstm">LSTM</button>
+  <button class="arch-btn gru" data-arch="gru">GRU</button>
+</div>
+
+<div class="legend" id="legend"></div>
+
+<div class="info">
+  <div class="info-inner">
+    <h2 id="info-title" class="rnn">Recurrent Neural Network</h2>
+    <p class="desc" id="info-desc"></p>
+    <div class="eq" id="info-eq"></div>
+    <div class="step-nav">
+      <button class="step-btn" id="step-prev" disabled>‹</button>
+      <div class="step-dots" id="step-dots"></div>
+      <button class="step-btn" id="step-next">›</button>
+      <div class="step-lbl" id="step-lbl"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ================================================================
+//  DATA DEFINITIONS
+// ================================================================
+const ARCHS = {
+  rnn: {
+    title: 'Recurrent Neural Network',
+    color: 0xff4d6a,
+    colorCSS: '#ff4d6a',
+    steps: [
+      {
+        label: 'Panoramica',
+        desc: 'La <strong>RNN vanilla</strong> è l\'architettura ricorrente più semplice: un singolo blocco che riceve l\'input x<sub>t</sub> e lo stato nascosto precedente h<sub>t-1</sub>, li combina, e produce un nuovo h<sub>t</sub>.',
+        eq: 'h<sub>t</sub> = tanh(W<sub>h</sub>·h<sub>t-1</sub> + W<sub>x</sub>·x<sub>t</sub> + b)',
+        highlight: null
+      },
+      {
+        label: 'Input x_t',
+        desc: 'L\'<strong>input x<sub>t</sub></strong> entra dal basso — può essere un embedding di una parola, un valore di una serie temporale, un pixel. Viene moltiplicato per la matrice dei pesi W<sub>x</sub>.',
+        eq: 'W<sub>x</sub> · x<sub>t</sub> <span class="d">← trasformazione dell\'input</span>',
+        highlight: 'input'
+      },
+      {
+        label: 'Stato h_{t-1}',
+        desc: 'Lo <strong>stato nascosto h<sub>t-1</sub></strong> arriva dal timestep precedente e porta con sé tutta la "memoria" della sequenza vista finora. Viene moltiplicato per W<sub>h</sub>.',
+        eq: 'W<sub>h</sub> · h<sub>t-1</sub> <span class="d">← memoria del passato</span>',
+        highlight: 'hidden'
+      },
+      {
+        label: 'Combinazione + tanh',
+        desc: 'I due contributi vengono <strong>sommati</strong> e passati per una <strong>tanh</strong>, che comprime i valori in [-1, 1]. Questo è il nuovo stato h<sub>t</sub>. Semplice ma fragile: la moltiplicazione ripetuta di W<sub>h</sub> causa il vanishing gradient.',
+        eq: 'h<sub>t</sub> = <span class="c">tanh</span>(W<sub>h</sub>·h<sub>t-1</sub> + W<sub>x</sub>·x<sub>t</sub> + b)',
+        highlight: 'cell'
+      }
+    ],
+    legend: [
+      { color: '#ff4d6a', label: 'Blocco RNN (tanh)' },
+      { color: '#ffb020', label: 'Hidden state h' },
+      { color: '#8a8a9a', label: 'Input x_t' }
+    ]
+  },
+  lstm: {
+    title: 'Long Short-Term Memory',
+    color: 0x4a90ff,
+    colorCSS: '#4a90ff',
+    steps: [
+      {
+        label: 'Panoramica',
+        desc: 'L\'<strong>LSTM</strong> aggiunge un <strong>cell state C</strong> (il nastro in alto) protetto da tre gate. Ogni gate è una piccola rete neurale con sigmoid che produce valori in [0,1] — porte che controllano il flusso.',
+        eq: 'C<sub>t</sub> = <span class="f">f</span>⊙C<sub>t-1</sub> + <span class="i">i</span>⊙<span class="c">C̃</span> · h<sub>t</sub> = <span class="o">o</span>⊙tanh(C<sub>t</sub>)',
+        highlight: null
+      },
+      {
+        label: 'Forget Gate',
+        desc: 'Il <strong style="color:#ff4d6a">Forget Gate</strong> decide cosa <strong>cancellare</strong> dal cell state. Legge [h<sub>t-1</sub>, x<sub>t</sub>] e produce valori in [0,1]. Dove il valore è 0, quell\'informazione viene dimenticata; dove è 1, viene mantenuta.',
+        eq: '<span class="f">f<sub>t</sub></span> = σ(W<sub>f</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>f</sub>) <span class="d">→ moltiplica C<sub>t-1</sub></span>',
+        highlight: 'forget'
+      },
+      {
+        label: 'Input Gate + Candidato',
+        desc: 'L\'<strong style="color:#30e870">Input Gate</strong> decide <strong>quanto scrivere</strong>. Il <strong style="color:#b060ff">Candidato C̃</strong> (tanh) genera i <strong>nuovi valori</strong>. Il prodotto i⊙C̃ viene <strong>sommato</strong> al cell state — ecco la scorciatoia additiva che preserva il gradiente!',
+        eq: '<span class="i">i<sub>t</sub></span> = σ(W<sub>i</sub>·[h,x]) · <span class="c">C̃<sub>t</sub></span> = tanh(W<sub>C</sub>·[h,x]) <span class="d">→ sommati a C</span>',
+        highlight: 'input'
+      },
+      {
+        label: 'Output Gate',
+        desc: 'L\'<strong style="color:#ffb020">Output Gate</strong> controlla quanto del cell state <strong>rivelare come output</strong>. Il cell state passa per tanh, poi viene filtrato dal gate. Il risultato è il nuovo hidden state h<sub>t</sub>.',
+        eq: '<span class="o">o<sub>t</sub></span> = σ(W<sub>o</sub>·[h,x]) · h<sub>t</sub> = <span class="o">o</span>⊙tanh(C<sub>t</sub>)',
+        highlight: 'output'
+      },
+      {
+        label: 'Cell State — Il Segreto',
+        desc: 'Il <strong style="color:#4a90ff">Cell State</strong> è la chiave: scorre in alto quasi indisturbato, con solo operazioni di <strong>moltiplicazione</strong> (forget) e <strong>somma</strong> (input). Questo percorso lineare permette al gradiente di fluire anche su centinaia di timestep.',
+        eq: 'C<sub>t</sub> = <span class="f">f<sub>t</sub></span>⊙C<sub>t-1</sub> + <span class="i">i<sub>t</sub></span>⊙<span class="c">C̃<sub>t</sub></span> <span class="d">← percorso additivo!</span>',
+        highlight: 'cellstate'
+      }
+    ],
+    legend: [
+      { color: '#4a90ff', label: 'Cell State C' },
+      { color: '#ff4d6a', label: 'Forget Gate (σ)' },
+      { color: '#30e870', label: 'Input Gate (σ)' },
+      { color: '#b060ff', label: 'Candidato (tanh)' },
+      { color: '#ffb020', label: 'Output Gate (σ)' }
+    ]
+  },
+  gru: {
+    title: 'Gated Recurrent Unit',
+    color: 0x00d4aa,
+    colorCSS: '#00d4aa',
+    steps: [
+      {
+        label: 'Panoramica',
+        desc: 'La <strong>GRU</strong> fonde cell state e hidden state in un unico vettore <strong>h</strong> e usa solo <strong>2 gate</strong> invece di 3. Il risultato è un\'architettura più snella con ~25% meno parametri dell\'LSTM.',
+        eq: 'h<sub>t</sub> = (1-<span class="z">z</span>)⊙h<sub>t-1</sub> + <span class="z">z</span>⊙<span class="c">h̃</span>',
+        highlight: null
+      },
+      {
+        label: 'Update Gate (z)',
+        desc: 'L\'<strong style="color:#00d4aa">Update Gate z</strong> è il cuore della GRU: decide <strong>quanto aggiornare</strong> lo stato. Se z≈0, il vecchio stato passa intatto. Se z≈1, viene completamente riscritto. Fa il lavoro del forget <em>e</em> dell\'input gate dell\'LSTM insieme!',
+        eq: '<span class="z">z<sub>t</sub></span> = σ(W<sub>z</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>z</sub>) <span class="d">← controlla vecchio vs nuovo</span>',
+        highlight: 'update'
+      },
+      {
+        label: 'Reset Gate (r)',
+        desc: 'Il <strong style="color:#ff8040">Reset Gate r</strong> decide quanto del vecchio stato <strong>esporre al candidato</strong>. Se r≈0, il candidato ignora il passato e può generare uno stato completamente nuovo — come un "reset" della memoria.',
+        eq: '<span class="r">r<sub>t</sub></span> = σ(W<sub>r</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>r</sub>) <span class="d">← filtra h per il candidato</span>',
+        highlight: 'reset'
+      },
+      {
+        label: 'Candidato h̃',
+        desc: 'Il <strong style="color:#b060ff">Candidato h̃</strong> genera il nuovo stato proposto usando il vecchio stato <strong>filtrato dal reset gate</strong>: r⊙h<sub>t-1</sub>. Il reset gate controlla quanto "ricordare" nella proposta.',
+        eq: '<span class="c">h̃<sub>t</sub></span> = tanh(W·[<span class="r">r</span>⊙h<sub>t-1</sub>, x<sub>t</sub>] + b) <span class="d">← stato proposto</span>',
+        highlight: 'candidate'
+      },
+      {
+        label: 'Interpolazione Lineare',
+        desc: 'Lo stato finale è un\'<strong>interpolazione lineare</strong> tra vecchio e nuovo: (1-z) e z sono <strong>complementari</strong> — sommano sempre a 1. Questo crea il percorso additivo per il gradiente, proprio come il cell state dell\'LSTM.',
+        eq: 'h<sub>t</sub> = (1-<span class="z">z</span>)⊙h<sub>t-1</sub> + <span class="z">z</span>⊙<span class="c">h̃</span> <span class="d">← interpolazione elegante</span>',
+        highlight: 'interp'
+      }
+    ],
+    legend: [
+      { color: '#00d4aa', label: 'Update Gate (z)' },
+      { color: '#ff8040', label: 'Reset Gate (r)' },
+      { color: '#b060ff', label: 'Candidato h̃ (tanh)' },
+      { color: '#e4e2df', label: 'Hidden State h' }
+    ]
+  }
+};
+
+// ================================================================
+//  THREE.JS SETUP
+// ================================================================
+const container = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x08080f, 1);
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x08080f, 0.018);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 4, 18);
+camera.lookAt(0, 0, 0);
+
+// Lights
+const ambientLight = new THREE.AmbientLight(0x222244, 0.6);
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.4);
+dirLight.position.set(5, 10, 7);
+scene.add(dirLight);
+const pointLight = new THREE.PointLight(0x4a90ff, 0.6, 30);
+pointLight.position.set(0, 5, 5);
+scene.add(pointLight);
+
+// Grid floor
+const gridHelper = new THREE.GridHelper(40, 40, 0x111122, 0x111122);
+gridHelper.position.y = -3;
+scene.add(gridHelper);
+
+// ================================================================
+//  ORBIT CONTROLS (manual, lightweight)
+// ================================================================
+let isDragging = false, prevMouse = { x: 0, y: 0 };
+let spherical = { theta: 0, phi: Math.PI / 6, radius: 18 };
+let targetSpherical = { ...spherical };
+
+renderer.domElement.addEventListener('pointerdown', e => {
+  isDragging = true; prevMouse = { x: e.clientX, y: e.clientY };
+  document.getElementById('hint').classList.add('hide');
+});
+window.addEventListener('pointerup', () => isDragging = false);
+window.addEventListener('pointermove', e => {
+  if (!isDragging) return;
+  const dx = e.clientX - prevMouse.x, dy = e.clientY - prevMouse.y;
+  targetSpherical.theta -= dx * 0.005;
+  targetSpherical.phi = Math.max(0.1, Math.min(Math.PI / 2.2, targetSpherical.phi - dy * 0.005));
+  prevMouse = { x: e.clientX, y: e.clientY };
+});
+renderer.domElement.addEventListener('wheel', e => {
+  targetSpherical.radius = Math.max(8, Math.min(30, targetSpherical.radius + e.deltaY * 0.015));
+}, { passive: true });
+
+function updateCamera() {
+  spherical.theta += (targetSpherical.theta - spherical.theta) * 0.08;
+  spherical.phi += (targetSpherical.phi - spherical.phi) * 0.08;
+  spherical.radius += (targetSpherical.radius - spherical.radius) * 0.08;
+  const { theta, phi, radius } = spherical;
+  camera.position.set(
+    radius * Math.sin(phi) * Math.sin(theta),
+    radius * Math.cos(phi),
+    radius * Math.sin(phi) * Math.cos(theta)
+  );
+  camera.lookAt(0, 0.5, 0);
+}
+
+// Resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ================================================================
+//  HELPERS
+// ================================================================
+function makeBox(w, h, d, color, opacity = 0.85) {
+  const geo = new THREE.BoxGeometry(w, h, d, 1, 1, 1);
+  const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity, shininess: 80 });
+  const edges = new THREE.EdgesGeometry(geo);
+  const lineMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.5 });
+  const mesh = new THREE.Mesh(geo, mat);
+  const wireframe = new THREE.LineSegments(edges, lineMat);
+  mesh.add(wireframe);
+  return mesh;
+}
+
+function makeSphere(r, color, emissive = false) {
+  const geo = new THREE.SphereGeometry(r, 16, 16);
+  const mat = new THREE.MeshPhongMaterial({
+    color, transparent: true, opacity: 0.9,
+    emissive: emissive ? color : 0x000000, emissiveIntensity: emissive ? 0.4 : 0
+  });
+  return new THREE.Mesh(geo, mat);
+}
+
+function makeCylinder(rTop, rBot, h, color) {
+  const geo = new THREE.CylinderGeometry(rTop, rBot, h, 16);
+  const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity: 0.7 });
+  return new THREE.Mesh(geo, mat);
+}
+
+function makeTube(points, color, thickness = 0.04) {
+  const curve = new THREE.CatmullRomCurve3(points);
+  const geo = new THREE.TubeGeometry(curve, 32, thickness, 8, false);
+  const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity: 0.6 });
+  return new THREE.Mesh(geo, mat);
+}
+
+function makeLabel(text, color = '#fff') {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256; canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = color;
+  ctx.font = 'bold 28px Sora, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 128, 32);
+  const tex = new THREE.CanvasTexture(canvas);
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.set(2, 0.5, 1);
+  return sprite;
+}
+
+// Particle system for data flow
+class FlowParticles {
+  constructor(count, color, path, speed = 0.003) {
+    this.path = path; // array of Vector3
+    this.speed = speed;
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(count * 3);
+    this.offsets = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      this.offsets[i] = Math.random();
+      positions[i * 3] = 0; positions[i * 3 + 1] = 0; positions[i * 3 + 2] = 0;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const mat = new THREE.PointsMaterial({ color, size: 0.12, transparent: true, opacity: 0.9, depthTest: false });
+    this.points = new THREE.Points(geo, mat);
+    this.count = count;
+  }
+  update(dt) {
+    const pos = this.points.geometry.attributes.position.array;
+    const curve = new THREE.CatmullRomCurve3(this.path);
+    for (let i = 0; i < this.count; i++) {
+      this.offsets[i] = (this.offsets[i] + this.speed + Math.random() * 0.001) % 1;
+      const p = curve.getPointAt(this.offsets[i]);
+      pos[i * 3] = p.x; pos[i * 3 + 1] = p.y; pos[i * 3 + 2] = p.z;
+    }
+    this.points.geometry.attributes.position.needsUpdate = true;
+  }
+  setVisible(v) { this.points.visible = v; }
+}
+
+// ================================================================
+//  BUILD ARCHITECTURES
+// ================================================================
+const groups = { rnn: new THREE.Group(), lstm: new THREE.Group(), gru: new THREE.Group() };
+const particles = { rnn: [], lstm: [], gru: [] };
+const highlightables = { rnn: {}, lstm: {}, gru: {} };
+
+// ---- RNN ----
+(function buildRNN() {
+  const g = groups.rnn;
+
+  // Main cell
+  const cell = makeBox(3, 2, 2, 0xff4d6a, 0.3);
+  cell.position.set(0, 0, 0);
+  g.add(cell);
+  highlightables.rnn.cell = [cell];
+
+  const cellLabel = makeLabel('tanh', '#ff7a92');
+  cellLabel.position.set(0, 0.2, 1.2);
+  g.add(cellLabel);
+
+  // Input arrow (from below)
+  const inputTube = makeTube([new THREE.Vector3(0, -4, 0), new THREE.Vector3(0, -1.2, 0)], 0x8a8a9a, 0.05);
+  g.add(inputTube);
+  const inputSphere = makeSphere(0.25, 0x8a8a9a);
+  inputSphere.position.set(0, -4, 0);
+  g.add(inputSphere);
+  const inputLabel = makeLabel('x_t', '#8a8a9a');
+  inputLabel.position.set(0, -4.5, 0);
+  g.add(inputLabel);
+  highlightables.rnn.input = [inputTube, inputSphere];
+
+  // Output arrow (to above)
+  const outputTube = makeTube([new THREE.Vector3(0, 1.2, 0), new THREE.Vector3(0, 4, 0)], 0xffb020, 0.05);
+  g.add(outputTube);
+  const outputSphere = makeSphere(0.25, 0xffb020, true);
+  outputSphere.position.set(0, 4, 0);
+  g.add(outputSphere);
+  const outputLabel = makeLabel('h_t', '#ffb020');
+  outputLabel.position.set(0, 4.6, 0);
+  g.add(outputLabel);
+
+  // Hidden state recurrent loop (curved arrow from right side back to left)
+  const loopPts = [
+    new THREE.Vector3(1.7, 0, 0),
+    new THREE.Vector3(4, 0, -1),
+    new THREE.Vector3(4, 2, -2),
+    new THREE.Vector3(0, 3, -2),
+    new THREE.Vector3(-4, 2, -2),
+    new THREE.Vector3(-4, 0, -1),
+    new THREE.Vector3(-1.7, 0, 0)
+  ];
+  const loopTube = makeTube(loopPts, 0xffb020, 0.04);
+  g.add(loopTube);
+  highlightables.rnn.hidden = [loopTube, outputTube, outputSphere];
+
+  const hLabel = makeLabel('h_{t-1}', '#ffb020');
+  hLabel.position.set(-4.3, 2, -2);
+  g.add(hLabel);
+
+  // Particles: input flow
+  const pInput = new FlowParticles(12, 0xcccccc, [new THREE.Vector3(0, -4, 0), new THREE.Vector3(0, -1, 0)], 0.008);
+  g.add(pInput.points); particles.rnn.push(pInput);
+
+  // Particles: output flow
+  const pOutput = new FlowParticles(12, 0xffb020, [new THREE.Vector3(0, 1.2, 0), new THREE.Vector3(0, 4, 0)], 0.008);
+  g.add(pOutput.points); particles.rnn.push(pOutput);
+
+  // Particles: recurrent loop
+  const pLoop = new FlowParticles(20, 0xff7a92, loopPts, 0.004);
+  g.add(pLoop.points); particles.rnn.push(pLoop);
+
+  scene.add(g);
+  g.visible = true;
+})();
+
+// ---- LSTM ----
+(function buildLSTM() {
+  const g = groups.lstm;
+  const Y_CELL = 3.2; // cell state height
+
+  // Cell state pipe (top)
+  const cellPipe = makeTube([new THREE.Vector3(-7, Y_CELL, 0), new THREE.Vector3(7, Y_CELL, 0)], 0x4a90ff, 0.08);
+  g.add(cellPipe);
+  const cLabel1 = makeLabel('C_{t-1}', '#4a90ff'); cLabel1.position.set(-7.5, Y_CELL + 0.5, 0); g.add(cLabel1);
+  const cLabel2 = makeLabel('C_t', '#4a90ff'); cLabel2.position.set(7.5, Y_CELL + 0.5, 0); g.add(cLabel2);
+  highlightables.lstm.cellstate = [cellPipe];
+
+  // Forget gate
+  const forgetBox = makeBox(2, 1.2, 1.5, 0xff4d6a, 0.35);
+  forgetBox.position.set(-3.5, 0.5, 0);
+  g.add(forgetBox);
+  const fLabel = makeLabel('Forget σ', '#ff7a92');
+  fLabel.position.set(-3.5, 0.5, 1);
+  g.add(fLabel);
+  // Multiply op on cell state
+  const fMulSphere = makeSphere(0.3, 0xff4d6a, true);
+  fMulSphere.position.set(-3.5, Y_CELL, 0);
+  g.add(fMulSphere);
+  const fMulLabel = makeLabel('×', '#ff7a92'); fMulLabel.position.set(-3.5, Y_CELL + 0.7, 0.3); fMulLabel.scale.set(1, 0.3, 1); g.add(fMulLabel);
+  const fConn = makeTube([new THREE.Vector3(-3.5, 1.2, 0), new THREE.Vector3(-3.5, Y_CELL - 0.3, 0)], 0xff4d6a, 0.03);
+  g.add(fConn);
+  highlightables.lstm.forget = [forgetBox, fMulSphere, fConn];
+
+  // Input gate
+  const inputBox = makeBox(2, 1.2, 1.5, 0x30e870, 0.35);
+  inputBox.position.set(0, 0.5, 0);
+  g.add(inputBox);
+  const iLabel = makeLabel('Input σ', '#60ff96');
+  iLabel.position.set(0, 0.5, 1);
+  g.add(iLabel);
+
+  // Candidate
+  const candBox = makeBox(2, 1.2, 1.5, 0xb060ff, 0.3);
+  candBox.position.set(0, -1.5, 0);
+  g.add(candBox);
+  const candLabel = makeLabel('C̃ tanh', '#d0a0ff');
+  candLabel.position.set(0, -1.5, 1);
+  g.add(candLabel);
+
+  // Add op on cell state
+  const addSphere = makeSphere(0.3, 0x30e870, true);
+  addSphere.position.set(0, Y_CELL, 0);
+  g.add(addSphere);
+  const addLabel = makeLabel('+', '#60ff96'); addLabel.position.set(0, Y_CELL + 0.7, 0.3); addLabel.scale.set(1, 0.3, 1); g.add(addLabel);
+  const iConn = makeTube([new THREE.Vector3(0, 1.2, 0), new THREE.Vector3(0, Y_CELL - 0.3, 0)], 0x30e870, 0.03);
+  g.add(iConn);
+  highlightables.lstm.input = [inputBox, candBox, addSphere, iConn];
+
+  // Output gate
+  const outputBox = makeBox(2, 1.2, 1.5, 0xffb020, 0.35);
+  outputBox.position.set(3.5, 0.5, 0);
+  g.add(outputBox);
+  const oLabel = makeLabel('Output σ', '#ffd060');
+  oLabel.position.set(3.5, 0.5, 1);
+  g.add(oLabel);
+  // tanh block
+  const tanhBox = makeBox(1.2, 0.8, 1, 0x4a90ff, 0.25);
+  tanhBox.position.set(3.5, 2.0, 0);
+  g.add(tanhBox);
+  const tanhLabel = makeLabel('tanh', '#70b0ff'); tanhLabel.position.set(3.5, 2.0, 0.8); tanhLabel.scale.set(1.2, 0.3, 1); g.add(tanhLabel);
+  // Multiply for h_t
+  const oMulSphere = makeSphere(0.3, 0xffb020, true);
+  oMulSphere.position.set(5, 2.0, 0);
+  g.add(oMulSphere);
+  const oMulLabel = makeLabel('×', '#ffd060'); oMulLabel.position.set(5, 2.7, 0.3); oMulLabel.scale.set(1, 0.3, 1); g.add(oMulLabel);
+  const oConn = makeTube([new THREE.Vector3(3.5, 1.2, 0), new THREE.Vector3(3.5, 1.6, 0)], 0xffb020, 0.03);
+  g.add(oConn);
+  const oConn2 = makeTube([new THREE.Vector3(4.2, 2.0, 0), new THREE.Vector3(4.7, 2.0, 0)], 0xffb020, 0.03);
+  g.add(oConn2);
+  // Cell state tap down to tanh
+  const cellTap = makeTube([new THREE.Vector3(3.5, Y_CELL, 0), new THREE.Vector3(3.5, 2.5, 0)], 0x4a90ff, 0.025);
+  g.add(cellTap);
+  highlightables.lstm.output = [outputBox, oMulSphere, oConn, oConn2, tanhBox, cellTap];
+
+  // h_t output
+  const htOut = makeTube([new THREE.Vector3(5, 2.0, 0), new THREE.Vector3(7, 2.0, 0), new THREE.Vector3(7, -0.5, 0)], 0xe4e2df, 0.04);
+  g.add(htOut);
+  const htLabel = makeLabel('h_t', '#e4e2df'); htLabel.position.set(7.5, -0.5, 0); g.add(htLabel);
+
+  // h_{t-1} input
+  const htIn = makeTube([new THREE.Vector3(-7, -0.5, 0), new THREE.Vector3(-6, -0.5, 0), new THREE.Vector3(-6, 0, 0)], 0xe4e2df, 0.04);
+  g.add(htIn);
+  const htInLabel = makeLabel('h_{t-1}', '#8a8a9a'); htInLabel.position.set(-7.5, -0.5, 0); g.add(htInLabel);
+
+  // x_t input
+  const xtIn = makeTube([new THREE.Vector3(0, -4, 0), new THREE.Vector3(0, -2.2, 0)], 0x8a8a9a, 0.04);
+  g.add(xtIn);
+  const xtLabel = makeLabel('x_t', '#8a8a9a'); xtLabel.position.set(0, -4.5, 0); g.add(xtLabel);
+
+  // Particles
+  const pCell = new FlowParticles(20, 0x70b0ff, [new THREE.Vector3(-7, Y_CELL, 0), new THREE.Vector3(7, Y_CELL, 0)], 0.004);
+  g.add(pCell.points); particles.lstm.push(pCell);
+
+  const pForget = new FlowParticles(8, 0xff7a92, [new THREE.Vector3(-3.5, -0.5, 0), new THREE.Vector3(-3.5, 1.2, 0), new THREE.Vector3(-3.5, Y_CELL, 0)], 0.006);
+  g.add(pForget.points); particles.lstm.push(pForget);
+
+  const pInput = new FlowParticles(8, 0x60ff96, [new THREE.Vector3(0, -2, 0), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(0, Y_CELL, 0)], 0.005);
+  g.add(pInput.points); particles.lstm.push(pInput);
+
+  const pOutput = new FlowParticles(8, 0xffd060, [new THREE.Vector3(3.5, -0.5, 0), new THREE.Vector3(3.5, 1.2, 0), new THREE.Vector3(5, 2, 0), new THREE.Vector3(7, 2, 0)], 0.005);
+  g.add(pOutput.points); particles.lstm.push(pOutput);
+
+  scene.add(g);
+  g.visible = false;
+})();
+
+// ---- GRU ----
+(function buildGRU() {
+  const g = groups.gru;
+  const Y_H = 3; // hidden state highway
+
+  // Hidden state pipe
+  const hPipe = makeTube([new THREE.Vector3(-7, Y_H, 0), new THREE.Vector3(7, Y_H, 0)], 0xe4e2df, 0.07);
+  g.add(hPipe);
+  const hL1 = makeLabel('h_{t-1}', '#8a8a9a'); hL1.position.set(-7.5, Y_H + 0.5, 0); g.add(hL1);
+  const hL2 = makeLabel('h_t', '#e4e2df'); hL2.position.set(7.5, Y_H + 0.5, 0); g.add(hL2);
+
+  // Update gate
+  const updateBox = makeBox(2.2, 1.2, 1.5, 0x00d4aa, 0.35);
+  updateBox.position.set(-3, 0.5, 0);
+  g.add(updateBox);
+  const zLabel = makeLabel('Update σ', '#40ffcc');
+  zLabel.position.set(-3, 0.5, 1);
+  g.add(zLabel);
+  highlightables.gru.update = [updateBox];
+
+  // (1-z) op on hidden state
+  const oneMinusZ = makeSphere(0.35, 0x00d4aa, true);
+  oneMinusZ.position.set(-3, Y_H, 0);
+  g.add(oneMinusZ);
+  const omzLabel = makeLabel('1-z', '#40ffcc'); omzLabel.position.set(-3, Y_H + 0.7, 0.3); omzLabel.scale.set(1.2, 0.3, 1); g.add(omzLabel);
+  const uConn = makeTube([new THREE.Vector3(-3, 1.2, 0), new THREE.Vector3(-3, Y_H - 0.4, 0)], 0x00d4aa, 0.03);
+  g.add(uConn);
+  highlightables.gru.update.push(oneMinusZ, uConn);
+
+  // Reset gate
+  const resetBox = makeBox(2.2, 1.2, 1.5, 0xff8040, 0.35);
+  resetBox.position.set(1, 0.5, 0);
+  g.add(resetBox);
+  const rLabel = makeLabel('Reset σ', '#ffa070');
+  rLabel.position.set(1, 0.5, 1);
+  g.add(rLabel);
+  highlightables.gru.reset = [resetBox];
+
+  // Candidate
+  const candBox = makeBox(2.2, 1.2, 1.5, 0xb060ff, 0.3);
+  candBox.position.set(1, -1.5, 0);
+  g.add(candBox);
+  const candLabel = makeLabel('h̃ tanh', '#d0a0ff');
+  candLabel.position.set(1, -1.5, 1);
+  g.add(candLabel);
+  const rConn = makeTube([new THREE.Vector3(1, -0.1, 0), new THREE.Vector3(1, -0.8, 0)], 0xff8040, 0.03);
+  g.add(rConn);
+  highlightables.gru.candidate = [candBox, rConn];
+
+  // z mul op
+  const zMul = makeSphere(0.35, 0x00d4aa, true);
+  zMul.position.set(3.5, Y_H, 0);
+  g.add(zMul);
+  const zMulLabel = makeLabel('z', '#40ffcc'); zMulLabel.position.set(3.5, Y_H + 0.7, 0.3); zMulLabel.scale.set(1, 0.3, 1); g.add(zMulLabel);
+  const candToZ = makeTube([new THREE.Vector3(1, -1.5, 0), new THREE.Vector3(3.5, -1.5, 0), new THREE.Vector3(3.5, Y_H - 0.4, 0)], 0xb060ff, 0.03);
+  g.add(candToZ);
+  highlightables.gru.interp = [zMul, candToZ, oneMinusZ];
+
+  // Add sphere
+  const addSp = makeSphere(0.3, 0xe4e2df, true);
+  addSp.position.set(5.5, Y_H, 0);
+  g.add(addSp);
+  const addSpLabel = makeLabel('+', '#e4e2df'); addSpLabel.position.set(5.5, Y_H + 0.7, 0.3); addSpLabel.scale.set(1, 0.3, 1); g.add(addSpLabel);
+  highlightables.gru.interp.push(addSp);
+
+  // x_t input
+  const xtIn = makeTube([new THREE.Vector3(-1, -4, 0), new THREE.Vector3(-1, -0.1, 0)], 0x8a8a9a, 0.04);
+  g.add(xtIn);
+  const xtLabel = makeLabel('x_t', '#8a8a9a'); xtLabel.position.set(-1, -4.5, 0); g.add(xtLabel);
+
+  // Particles
+  const pH = new FlowParticles(18, 0xe4e2df, [new THREE.Vector3(-7, Y_H, 0), new THREE.Vector3(7, Y_H, 0)], 0.004);
+  g.add(pH.points); particles.gru.push(pH);
+
+  const pZ = new FlowParticles(8, 0x40ffcc, [new THREE.Vector3(-3, 0, 0), new THREE.Vector3(-3, 1.2, 0), new THREE.Vector3(-3, Y_H, 0)], 0.006);
+  g.add(pZ.points); particles.gru.push(pZ);
+
+  const pR = new FlowParticles(6, 0xffa070, [new THREE.Vector3(1, -0.1, 0), new THREE.Vector3(1, -1, 0)], 0.007);
+  g.add(pR.points); particles.gru.push(pR);
+
+  const pCand = new FlowParticles(8, 0xd0a0ff, [new THREE.Vector3(1, -1.5, 0), new THREE.Vector3(3.5, -1.5, 0), new THREE.Vector3(3.5, Y_H, 0)], 0.005);
+  g.add(pCand.points); particles.gru.push(pCand);
+
+  scene.add(g);
+  g.visible = false;
+})();
+
+// ================================================================
+//  UI STATE
+// ================================================================
+let currentArch = 'rnn';
+let currentStep = 0;
+
+function setArch(arch) {
+  currentArch = arch;
+  currentStep = 0;
+
+  // Toggle groups
+  Object.keys(groups).forEach(k => { groups[k].visible = k === arch; });
+
+  // Update buttons
+  document.querySelectorAll('.arch-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.arch === arch);
+  });
+
+  // Update point light color
+  const c = ARCHS[arch].color;
+  pointLight.color.setHex(c);
+
+  // Reset camera
+  targetSpherical = { theta: 0, phi: Math.PI / 5.5, radius: arch === 'rnn' ? 16 : 20 };
+
+  updateInfo();
+  updateLegend();
+}
+
+function updateInfo() {
+  const a = ARCHS[currentArch];
+  const s = a.steps[currentStep];
+  document.getElementById('info-title').textContent = a.title;
+  document.getElementById('info-title').className = currentArch;
+  document.getElementById('info-desc').innerHTML = s.desc;
+  document.getElementById('info-eq').innerHTML = s.eq;
+
+  // Dots
+  const dotsEl = document.getElementById('step-dots');
+  dotsEl.innerHTML = '';
+  a.steps.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'step-dot' + (i === currentStep ? ` a ${currentArch}` : '');
+    dotsEl.appendChild(d);
+  });
+  document.getElementById('step-lbl').textContent = s.label;
+  document.getElementById('step-prev').disabled = currentStep === 0;
+  document.getElementById('step-next').disabled = currentStep === a.steps.length - 1;
+
+  applyHighlight(s.highlight);
+}
+
+function updateLegend() {
+  const leg = document.getElementById('legend');
+  leg.innerHTML = '';
+  ARCHS[currentArch].legend.forEach(l => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<div class="legend-dot" style="background:${l.color}"></div>${l.label}`;
+    leg.appendChild(item);
+  });
+}
+
+function applyHighlight(key) {
+  const hl = highlightables[currentArch];
+  const group = groups[currentArch];
+
+  // Reset all materials
+  group.traverse(child => {
+    if (child.material) {
+      if (child._origOpacity === undefined) child._origOpacity = child.material.opacity;
+    }
+  });
+
+  if (!key) {
+    // Show everything full
+    group.traverse(child => {
+      if (child.material && child._origOpacity !== undefined) {
+        child.material.opacity = child._origOpacity;
+      }
+    });
+    return;
+  }
+
+  // Dim everything
+  group.traverse(child => {
+    if (child.material) {
+      child.material.opacity = 0.06;
+    }
+  });
+
+  // Highlight the target
+  if (hl[key]) {
+    hl[key].forEach(obj => {
+      obj.traverse(c => {
+        if (c.material) c.material.opacity = c._origOpacity !== undefined ? c._origOpacity : 0.9;
+      });
+    });
+  }
+}
+
+// Event listeners
+document.querySelectorAll('.arch-btn').forEach(b => {
+  b.addEventListener('click', () => setArch(b.dataset.arch));
+});
+document.getElementById('step-prev').addEventListener('click', () => {
+  if (currentStep > 0) { currentStep--; updateInfo(); }
+});
+document.getElementById('step-next').addEventListener('click', () => {
+  const max = ARCHS[currentArch].steps.length - 1;
+  if (currentStep < max) { currentStep++; updateInfo(); }
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    const max = ARCHS[currentArch].steps.length - 1;
+    if (currentStep < max) { currentStep++; updateInfo(); }
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    if (currentStep > 0) { currentStep--; updateInfo(); }
+  }
+  if (e.key === '1') setArch('rnn');
+  if (e.key === '2') setArch('lstm');
+  if (e.key === '3') setArch('gru');
+});
+
+// ================================================================
+//  ANIMATION LOOP
+// ================================================================
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.016;
+
+  updateCamera();
+
+  // Slow auto-rotate when not dragging
+  if (!isDragging) targetSpherical.theta += 0.001;
+
+  // Update particles
+  particles[currentArch].forEach(p => p.update(time));
+
+  // Animate gate boxes (subtle pulse)
+  const group = groups[currentArch];
+  group.traverse(child => {
+    if (child.geometry && child.geometry.type === 'BoxGeometry' && child.material.opacity > 0.15) {
+      const s = 1 + Math.sin(time * 2 + child.position.x) * 0.015;
+      child.scale.set(s, s, s);
+    }
+  });
+
+  // Animate emissive spheres
+  group.traverse(child => {
+    if (child.geometry && child.geometry.type === 'SphereGeometry' && child.material.emissiveIntensity > 0) {
+      child.material.emissiveIntensity = 0.3 + Math.sin(time * 3 + child.position.x * 2) * 0.2;
+    }
+  });
+
+  renderer.render(scene, camera);
+}
+
+// ================================================================
+//  INIT
+// ================================================================
+setArch('rnn');
+animate();
+</script>
+</body>
+</html>
