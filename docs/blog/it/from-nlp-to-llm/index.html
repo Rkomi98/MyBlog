@@ -42,7 +42,7 @@
     "headline": "Dai modelli NLP classici ai LLM",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-10T00:00:00.000Z",
-    "dateModified": "2026-02-01T14:16:53.672Z",
+    "dateModified": "2026-02-07T22:44:44.893Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1519,15 +1519,59 @@ Prendiamo la parola apple con $n=3$. FastText la scompone così:</p>
 <p>La memoria $C_t$ viene filtrata: magari la rete ricorda che il soggetto è singolare, ma ora deve predire un verbo, quindi in output ($h_t$) fa passare solo l&#39;informazione &quot;singolare&quot; per coniugare il verbo correttamente.</p>
 <h3 id="gru-una-variante-di-lstm">GRU: Una variante di LSTM</h3>
 <p>Un analogo più semplice introdotto in seguito è il <strong>GRU (Gated Recurrent Unit)</strong>, che combina alcuni gate e semplifica l&#39;unità: funziona bene in molti casi con meno parametri. Questi modelli <strong>erano esplicitamente progettati per apprendere <a href="https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and">dipendenze a lungo termine</a></strong> in sequenze.</p>
+<p>Nel 2014, <a href="https://arxiv.org/abs/1409.1259">Cho et al.</a> hanno introdotto una versione semplificata di LSTM: l&#39;architettura <strong>GRU</strong>.</p>
+<p>Le differenze principali sono essenzialmente due:</p>
+<ul>
+<li><p><strong>Fusione delle porte</strong>: GRU unisce Forget Gate e Input Gate in un&#39;unica <strong>Update Gate</strong>. Se la porta è 1, mantiene la memoria vecchia; se è 0, la sovrascrive con la nuova.</p>
+</li>
+<li><p><strong>Stato unico</strong>: Non separa più Cell State ($C$) e Hidden State ($h$). C&#39;è un solo vettore di stato.</p>
+</li>
+</ul>
+<p>Il vantaggio principale è che ci sono meno parametri da addestrare, computazionalmente più veloce. A livello di performance, le GRU eguagliano le LSTM in molti task empirici. Le LSTM tendono a performare leggermente meglio su dataset molto grandi e sequenze molto lunghe grazie alla maggiore capacità espressiva (hanno più parametri).</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Caratteristica</th>
+<th>RNN Standard</th>
+<th>LSTM</th>
+<th>GRU</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Memoria</td>
+<td>Instabile (Vanishing Gradient)</td>
+<td>Stabile (Cell State separata)</td>
+<td>Stabile (Meccanismo a porte)</td>
+</tr>
+<tr>
+<td>Complessità</td>
+<td>Bassa (1 operazione per step)</td>
+<td>Alta (4 reti neurali interne)</td>
+<td>Media (2 reti neurali interne)</td>
+</tr>
+<tr>
+<td>Porte</td>
+<td>Nessuna</td>
+<td>3 (Forget, Input, Output)</td>
+<td>2 (Reset, Update)</td>
+</tr>
+<tr>
+<td>Utilizzo Oggi</td>
+<td>Raramente (solo baseline)</td>
+<td>Serie temporali, Legacy NLP</td>
+<td>Sistemi efficienti, Mobile</td>
+</tr>
+</tbody></table>
+</div></figure><p><em>Tabella 03: Confronto tra RNN, LSTM e GRU</em></p>
 <p><strong>Nonostante LSTM/GRU abbiano portato miglioramenti notevoli</strong>, restano alcuni limiti strutturali degli approcci ricorrenti:</p>
 <ul>
-<li><strong>Dipendenze molto lunghe restano problematiche:</strong> In teoria un LSTM può mantenere info per centinaia di passi, ma in pratica oltre una certa lunghezza (es. 100 token) l&#39;efficacia diminuisce. Inoltre il <em>contesto</em> è tutto compresso nel vettore hidden di dimensione fissata (p.es. 256 o 512): c&#39;è un limite fisico a quanta informazione distinguibile possa portare. Se il testo è molto lungo (un documento), anche un LSTM fatica a ricordare dettagli di inizio documento quando è arrivato alla fine.</li>
-<li><strong>Backpropagation Through Time (BPTT) costosa e fragile:</strong> Addestrare un RNN richiede <em>unrolling</em> della rete sul tempo e backpropagare su ogni step. Questo significa che se abbiamo sequenze di 50 parole, la rete effettiva su cui facciamo gradienti ha 50 layer (tutti condividono i pesi, ma computazionalmente è come una rete profonda di 50 strati). È un calcolo pesante e <strong>sequenziale</strong>: non si può parallelizzare i 50 step perché il passo <em>t</em> dipende dallo stato di <em>t-1</em>. Questo è un grosso collo di bottiglia: anche con GPU, l&#39;RNN deve procedere in serie, a differenza di modelli feed-forward che elaborano tutti gli elementi insieme. Ciò rende il training lento su sequenze lunghe<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental">[14]</a>. Inoltre, più lungo è l&#39;unroll più i gradienti diventano instabili (vanishing/exploding). Spesso si usava <em>truncated BPTT</em>: si tronca la backpropagazione a, ad esempio, 20 passi indietro, rompendo intenzionalmente le dipendenze troppo lunghe per stabilizzare e velocizzare<a href="https://d2l.ai/chapter_recurrent-neural-networks/bptt.html#:~:text=Alternatively%2C%20we%20can%20truncate%20the,simpler%20and%20more%20stable%20models">[15]</a>. Ma così facendo, la rete non impara davvero oltre quella finestra artificiale.</li>
-<li><strong>Non scalano bene in termini di dati e modello:</strong> Per sfruttare grandi dataset o modelli molto capienti, servirebbe parallelizzare e batchare di più, cosa non banale con RNN. All&#39;epoca (2015-2017) si usavano già LSTM con centinaia di milioni di parametri (ad es. traduttori neurali sequence-to-sequence con attenzione), però aumentarne le dimensioni portava rendimenti decrescenti: il training diventava oneroso, e altre parti come il meccanismo di attenzione (introdotto per sopperire alle carenze della pura ricorrenza) dominavano i benefici.</li>
+<li><strong>Dipendenze molto lunghe restano problematiche:</strong> In teoria un LSTM può mantenere info per centinaia di passi, ma in pratica oltre una certa lunghezza (es. 100 token) l&#39;efficacia diminuisce. Inoltre il <em>contesto</em> è tutto compresso nel vettore nascosto di dimensione fissata (p.es. 256 o 512): c&#39;è un limite fisico a quanta informazione questo possa portare. Se il testo è molto lungo (un documento), anche un LSTM fatica a ricordare dettagli di inizio documento quando è arrivato alla fine.</li>
+<li><strong>Backpropagation Through Time (BPTT) costosa e fragile:</strong> Addestrare un RNN richiede <em>unrolling</em> della rete sul tempo e backpropagare su ogni step, come ammesso nel paper <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental">&quot;Attention is all you need&quot;</a>. Questo significa che se abbiamo sequenze di 50 parole, la rete effettiva su cui facciamo gradienti ha 50 layer (tutti condividono i pesi, ma computazionalmente è come una rete profonda di 50 strati). È un calcolo pesante e <strong>sequenziale</strong>: non si può parallelizzare i 50 step perché il passo <em>t</em> dipende dallo stato di <em>t-1</em>. Questo è un grosso collo di bottiglia: anche con GPU, l&#39;RNN deve procedere in serie, a differenza di modelli feed-forward che elaborano tutti gli elementi insieme. Ciò rende il training lento su sequenze lunghe. Inoltre, più lungo è l&#39;unroll più i gradienti diventano instabili (vanishing/exploding). Spesso si usava <a href="https://d2l.ai/chapter_recurrent-neural-networks/bptt.html"><em>truncated BPTT</em></a>: si tronca la backpropagazione a, ad esempio, 20 passi indietro, rompendo intenzionalmente le dipendenze troppo lunghe per stabilizzare e velocizzare. Ma così facendo, la <em>rete non impara davvero oltre quella finestra &quot;artificiale&quot;</em>.</li>
+<li><strong>Non scalano bene in termini di dati e modello:</strong> Per sfruttare grandi dataset o modelli molto capienti, servirebbe parallelizzare e batchare di più, cosa non banale con RNN.</li>
 </ul>
-<p>In sintesi, RNN/LSTM hanno introdotto l&#39;<strong>idea di memoria temporale differenziabile</strong> e hanno permesso notevoli progressi (es. <em>Google Neural Machine Translation 2016</em> usava LSTM bidirezionali + attenzione). Ma la loro natura ricorrente poneva limiti di <strong>velocità</strong> e <strong>capacità di modellare contesti lunghi</strong>. Era chiaro che per fare ulteriore salto serviva un&#39;architettura diversa, più adatta al parallel computing e in grado di <strong>guardare tutto il contesto in modo più diretto</strong>. Da queste esigenze nasce il <strong>Transformer</strong>.</p>
+<p>In sintesi, RNN/LSTM hanno introdotto l&#39;<strong>idea di memoria temporale differenziabile</strong> e hanno permesso notevoli progressi (es. <em>Google Neural Machine Translation 2016</em> usava LSTM bidirezionali + attenzione, su cui torneremo tra un attimo). Ma la loro natura ricorrente poneva limiti di <strong>velocità</strong> e <strong>capacità di modellare contesti lunghi</strong>. Era chiaro che per fare ulteriore salto serviva un&#39;architettura diversa, più adatta al parallel computing e in grado di <strong>guardare tutto il contesto in modo più diretto</strong>. Da queste esigenze nasce l&#39;architettura <strong>Transformer</strong>.</p>
 <h2 id="la-rivoluzione-del-transformer">La rivoluzione del Transformer</h2>
-<p>Nel 2017 Vaswani et al. pubblicano <em>&quot;Attention Is All You Need&quot;</em>, introducendo il <strong>Transformer</strong>, un&#39;architettura che elimina completamente la ricorrenza a favore di un meccanismo di <strong>self-attention</strong> generalizzato<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including">[16]</a>. Questo cambiamento concettualmente semplice ha innescato una rivoluzione: il Transformer ha dimostrato di poter scalare molto meglio, essere addestrato in parallelo e raggiungere performance superiori su compiti come la traduzione in una frazione del tempo di training dei modelli ricorrenti<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training">[17]</a>.</p>
+<p>Nel 2017 Vaswani et al. pubblicano <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental"><em>&quot;Attention Is All You Need&quot;</em></a>, introducendo il <strong>Transformer</strong>, un&#39;architettura che elimina completamente la ricorrenza a favore di un meccanismo di <strong>self-attention</strong> generalizzato<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including">[16]</a>. Questo cambiamento concettualmente semplice ha innescato una rivoluzione: il Transformer ha dimostrato di poter scalare molto meglio, essere addestrato in parallelo e raggiungere performance superiori su compiti come la traduzione in una frazione del tempo di training dei modelli ricorrenti<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training">[17]</a>.</p>
 <p>Vediamo i concetti chiave del Transformer:</p>
 <ul>
 <li><strong>Self-Attention:</strong> è il cuore di tutto. In un layer di self-attention, ogni posizione/tokén nella sequenza <strong>&quot;presta attenzione&quot;</strong> a tutti gli altri, per decidere quali parole sono più rilevanti per interpretare quella posizione. Tecnicamente, per ogni token <em>i</em> si calcola un <strong>vector di query</strong> $q_i$ e, per ogni potenziale riferimento <em>j</em>, un <strong>vector chiave</strong> $k_j$ (entrambi ottenuti proiettando gli embedding iniziali). Si calcola un punteggio di affinità $s_{ij} = q_i \cdot k_j$ (maggiore se la parola <em>j</em> è rilevante per interpretare <em>i</em>). Questi punteggi attivano una somma pesata delle <strong>value</strong> $v_j$ (altra proiezione di ogni token) per produrre l&#39;output per la posizione <em>i</em>. In formula:</li>
