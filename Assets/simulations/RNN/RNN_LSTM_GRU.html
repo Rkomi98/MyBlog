@@ -9,834 +9,532 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#08080f;color:#e4e2df;font-family:'Sora',sans-serif;overflow:hidden;width:100vw;height:100vh}
 #scene{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
-
-/* ===== TOP BAR ===== */
 .topbar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:1rem 2rem;background:linear-gradient(to bottom,rgba(8,8,15,.95),rgba(8,8,15,0));pointer-events:none}
 .topbar *{pointer-events:auto}
-.arch-btn{
-  padding:.55rem 1.6rem;border-radius:99px;border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.04);color:#8a8a9a;font-family:'Sora',sans-serif;
-  font-size:.85rem;font-weight:400;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);
-  letter-spacing:.02em;position:relative;overflow:hidden
-}
+.arch-btn{padding:.55rem 1.6rem;border-radius:99px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#8a8a9a;font-family:'Sora',sans-serif;font-size:.85rem;font-weight:400;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);letter-spacing:.02em}
 .arch-btn:hover{background:rgba(255,255,255,.08);color:#e4e2df;border-color:rgba(255,255,255,.2)}
 .arch-btn.active{color:#fff;border-color:transparent}
 .arch-btn.active.rnn{background:linear-gradient(135deg,#ff4d6a,#ff7a92);box-shadow:0 4px 24px rgba(255,77,106,.3)}
 .arch-btn.active.lstm{background:linear-gradient(135deg,#4a90ff,#70b0ff);box-shadow:0 4px 24px rgba(74,144,255,.3)}
 .arch-btn.active.gru{background:linear-gradient(135deg,#00d4aa,#40ffcc);box-shadow:0 4px 24px rgba(0,212,170,.3);color:#08080f}
-
-/* ===== INFO PANEL ===== */
-.info{
-  position:fixed;bottom:0;left:0;right:0;z-index:10;
-  background:linear-gradient(to top,rgba(8,8,15,.97) 60%,rgba(8,8,15,0));
-  padding:0 2rem 1.5rem;pointer-events:none
-}
+.info{position:fixed;bottom:0;left:0;right:0;z-index:10;background:linear-gradient(to top,rgba(8,8,15,.97) 60%,rgba(8,8,15,0));padding:0 2rem 1.5rem;pointer-events:none}
 .info-inner{max-width:860px;margin:0 auto;pointer-events:auto}
 .info h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:400;margin-bottom:.4rem;transition:color .4s}
 .info h2.rnn{color:#ff7a92}.info h2.lstm{color:#70b0ff}.info h2.gru{color:#40ffcc}
-.info .desc{font-size:.92rem;color:#8a8a9a;line-height:1.7;max-width:680px;margin-bottom:.8rem;transition:opacity .3s}
+.info .desc{font-size:.92rem;color:#8a8a9a;line-height:1.7;max-width:680px;margin-bottom:.8rem}
 .info .desc strong{color:#e4e2df;font-weight:600}
-
-/* ===== EQUATIONS ===== */
-.eq{
-  font-family:'DM Mono',monospace;font-size:.78rem;line-height:2;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
-  border-radius:10px;padding:.8rem 1.2rem;display:inline-block;
-  max-width:100%;overflow-x:auto;transition:opacity .3s
-}
-.eq .f{color:#ff4d6a}.eq .i{color:#30e870}.eq .o{color:#ffb020}
-.eq .c{color:#b060ff}.eq .z{color:#00d4aa}.eq .r{color:#ff8040}
-.eq .d{color:#555}
-
-/* ===== STEP NAV ===== */
-.step-nav{
-  display:flex;align-items:center;gap:.6rem;margin-top:.7rem
-}
-.step-btn{
-  width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.04);color:#e4e2df;font-size:.9rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .25s
-}
-.step-btn:hover{background:rgba(255,255,255,.1)}
-.step-btn:disabled{opacity:.2;cursor:default}
+.eq{font-family:'DM Mono',monospace;font-size:.78rem;line-height:2;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.8rem 1.2rem;display:inline-block;max-width:100%;overflow-x:auto}
+.eq .f{color:#ff4d6a}.eq .i{color:#30e870}.eq .o{color:#ffb020}.eq .c{color:#b060ff}.eq .z{color:#00d4aa}.eq .r{color:#ff8040}.eq .d{color:#555}
+.step-nav{display:flex;align-items:center;gap:.6rem;margin-top:.7rem}
+.step-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#e4e2df;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.step-btn:hover{background:rgba(255,255,255,.1)}.step-btn:disabled{opacity:.2;cursor:default}
 .step-lbl{font-family:'DM Mono',monospace;font-size:.72rem;color:#6b6b80;min-width:180px}
 .step-dots{display:flex;gap:4px}
 .step-dot{width:6px;height:6px;border-radius:50%;background:#333;transition:all .3s}
 .step-dot.a{box-shadow:0 0 6px currentColor}
 .step-dot.a.rnn{background:#ff4d6a}.step-dot.a.lstm{background:#4a90ff}.step-dot.a.gru{background:#00d4aa}
-
-/* ===== LEGEND ===== */
-.legend{position:fixed;top:5rem;right:1.5rem;z-index:10;display:flex;flex-direction:column;gap:.35rem;transition:opacity .4s}
+.legend{position:fixed;top:5rem;right:1.5rem;z-index:10;display:flex;flex-direction:column;gap:.35rem}
 .legend-item{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:#6b6b80}
 .legend-dot{width:8px;height:8px;border-radius:50%}
-
-/* ===== HINT ===== */
-.hint{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;color:#444;font-size:.8rem;pointer-events:none;opacity:1;transition:opacity 1s}
-.hint.hide{opacity:0}
-
-@media(max-width:600px){
-  .info{padding:0 1rem 1rem}
-  .eq{font-size:.7rem;padding:.6rem .8rem}
-  .legend{display:none}
-}
+.hint{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;color:#444;font-size:.8rem;pointer-events:none;opacity:1;transition:opacity 1s}.hint.hide{opacity:0}
+@media(max-width:600px){.info{padding:0 1rem 1rem}.eq{font-size:.7rem}.legend{display:none}}
 </style>
 </head>
 <body>
-
 <div id="scene"></div>
-
 <div class="hint" id="hint">🖱️ Trascina per ruotare · Scroll per zoom</div>
-
 <div class="topbar">
   <button class="arch-btn rnn active" data-arch="rnn">RNN</button>
   <button class="arch-btn lstm" data-arch="lstm">LSTM</button>
   <button class="arch-btn gru" data-arch="gru">GRU</button>
 </div>
-
 <div class="legend" id="legend"></div>
-
-<div class="info">
-  <div class="info-inner">
-    <h2 id="info-title" class="rnn">Recurrent Neural Network</h2>
-    <p class="desc" id="info-desc"></p>
-    <div class="eq" id="info-eq"></div>
-    <div class="step-nav">
-      <button class="step-btn" id="step-prev" disabled>‹</button>
-      <div class="step-dots" id="step-dots"></div>
-      <button class="step-btn" id="step-next">›</button>
-      <div class="step-lbl" id="step-lbl"></div>
-    </div>
+<div class="info"><div class="info-inner">
+  <h2 id="info-title" class="rnn">Recurrent Neural Network</h2>
+  <p class="desc" id="info-desc"></p>
+  <div class="eq" id="info-eq"></div>
+  <div class="step-nav">
+    <button class="step-btn" id="step-prev" disabled>‹</button>
+    <div class="step-dots" id="step-dots"></div>
+    <button class="step-btn" id="step-next">›</button>
+    <div class="step-lbl" id="step-lbl"></div>
   </div>
-</div>
+</div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ================================================================
-//  DATA DEFINITIONS
+//  CONTENT DATA
 // ================================================================
 const ARCHS = {
   rnn: {
-    title: 'Recurrent Neural Network',
-    color: 0xff4d6a,
-    colorCSS: '#ff4d6a',
+    title: 'Recurrent Neural Network', color: 0xff4d6a, colorCSS: '#ff4d6a',
     steps: [
-      {
-        label: 'Panoramica',
-        desc: 'La <strong>RNN vanilla</strong> è l\'architettura ricorrente più semplice: un singolo blocco che riceve l\'input x<sub>t</sub> e lo stato nascosto precedente h<sub>t-1</sub>, li combina, e produce un nuovo h<sub>t</sub>.',
-        eq: 'h<sub>t</sub> = tanh(W<sub>h</sub>·h<sub>t-1</sub> + W<sub>x</sub>·x<sub>t</sub> + b)',
-        highlight: null
-      },
-      {
-        label: 'Input x_t',
-        desc: 'L\'<strong>input x<sub>t</sub></strong> entra dal basso — può essere un embedding di una parola, un valore di una serie temporale, un pixel. Viene moltiplicato per la matrice dei pesi W<sub>x</sub>.',
-        eq: 'W<sub>x</sub> · x<sub>t</sub> <span class="d">← trasformazione dell\'input</span>',
-        highlight: 'input'
-      },
-      {
-        label: 'Stato h_{t-1}',
-        desc: 'Lo <strong>stato nascosto h<sub>t-1</sub></strong> arriva dal timestep precedente e porta con sé tutta la "memoria" della sequenza vista finora. Viene moltiplicato per W<sub>h</sub>.',
-        eq: 'W<sub>h</sub> · h<sub>t-1</sub> <span class="d">← memoria del passato</span>',
-        highlight: 'hidden'
-      },
-      {
-        label: 'Combinazione + tanh',
-        desc: 'I due contributi vengono <strong>sommati</strong> e passati per una <strong>tanh</strong>, che comprime i valori in [-1, 1]. Questo è il nuovo stato h<sub>t</sub>. Semplice ma fragile: la moltiplicazione ripetuta di W<sub>h</sub> causa il vanishing gradient.',
-        eq: 'h<sub>t</sub> = <span class="c">tanh</span>(W<sub>h</sub>·h<sub>t-1</sub> + W<sub>x</sub>·x<sub>t</sub> + b)',
-        highlight: 'cell'
-      }
+      { label:'Panoramica', desc:'La <strong>RNN vanilla</strong> è l\'architettura più semplice: un singolo blocco riceve x<sub>t</sub> dal basso e h<sub>t-1</sub> da sinistra, li combina con tanh, e produce h<sub>t</sub> che esce a destra e verso l\'alto come output.', eq:'h<sub>t</sub> = tanh(W<sub>h</sub>·h<sub>t-1</sub> + W<sub>x</sub>·x<sub>t</sub> + b)', highlight:null },
+      { label:'Input x_t', desc:'L\'<strong>input x<sub>t</sub></strong> entra dal basso — può essere un embedding, un valore temporale, un pixel. Viene moltiplicato per W<sub>x</sub> e sommato al contributo dello stato.', eq:'W<sub>x</sub>·x<sub>t</sub> <span class="d">← trasformazione dell\'input</span>', highlight:'input' },
+      { label:'Stato h_{t-1} → h_t', desc:'Lo <strong>stato nascosto h<sub>t-1</sub></strong> arriva da sinistra portando la "memoria" della sequenza. Viene moltiplicato per W<sub>h</sub>. Dopo la tanh, il nuovo h<sub>t</sub> esce a destra per il prossimo timestep e verso l\'alto come output.', eq:'h<sub>t</sub> = tanh(W<sub>h</sub>·<strong>h<sub>t-1</sub></strong> + W<sub>x</sub>·x<sub>t</sub> + b)', highlight:'hidden' },
+      { label:'Il Problema', desc:'La moltiplicazione ripetuta di W<sub>h</sub> ad ogni timestep causa il <strong>vanishing gradient</strong>: dopo pochi step il gradiente svanisce e la rete non impara dipendenze a lungo raggio. Servono <strong>gate</strong> per controllare il flusso.', eq:'∂h<sub>t</sub>/∂h<sub>0</sub> = ∏ W<sub>h</sub> · diag(tanh\'(...)) <span class="d">→ svanisce!</span>', highlight:'cell' }
     ],
-    legend: [
-      { color: '#ff4d6a', label: 'Blocco RNN (tanh)' },
-      { color: '#ffb020', label: 'Hidden state h' },
-      { color: '#8a8a9a', label: 'Input x_t' }
-    ]
+    legend: [ {color:'#ff4d6a',label:'Blocco RNN (tanh)'},{color:'#ffb020',label:'Hidden state h'},{color:'#8a8a9a',label:'Input x_t'} ]
   },
   lstm: {
-    title: 'Long Short-Term Memory',
-    color: 0x4a90ff,
-    colorCSS: '#4a90ff',
+    title: 'Long Short-Term Memory', color: 0x4a90ff, colorCSS: '#4a90ff',
     steps: [
-      {
-        label: 'Panoramica',
-        desc: 'L\'<strong>LSTM</strong> aggiunge un <strong>cell state C</strong> (il nastro in alto) protetto da tre gate. Ogni gate è una piccola rete neurale con sigmoid che produce valori in [0,1] — porte che controllano il flusso.',
-        eq: 'C<sub>t</sub> = <span class="f">f</span>⊙C<sub>t-1</sub> + <span class="i">i</span>⊙<span class="c">C̃</span> · h<sub>t</sub> = <span class="o">o</span>⊙tanh(C<sub>t</sub>)',
-        highlight: null
-      },
-      {
-        label: 'Forget Gate',
-        desc: 'Il <strong style="color:#ff4d6a">Forget Gate</strong> decide cosa <strong>cancellare</strong> dal cell state. Legge [h<sub>t-1</sub>, x<sub>t</sub>] e produce valori in [0,1]. Dove il valore è 0, quell\'informazione viene dimenticata; dove è 1, viene mantenuta.',
-        eq: '<span class="f">f<sub>t</sub></span> = σ(W<sub>f</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>f</sub>) <span class="d">→ moltiplica C<sub>t-1</sub></span>',
-        highlight: 'forget'
-      },
-      {
-        label: 'Input Gate + Candidato',
-        desc: 'L\'<strong style="color:#30e870">Input Gate</strong> decide <strong>quanto scrivere</strong>. Il <strong style="color:#b060ff">Candidato C̃</strong> (tanh) genera i <strong>nuovi valori</strong>. Il prodotto i⊙C̃ viene <strong>sommato</strong> al cell state — ecco la scorciatoia additiva che preserva il gradiente!',
-        eq: '<span class="i">i<sub>t</sub></span> = σ(W<sub>i</sub>·[h,x]) · <span class="c">C̃<sub>t</sub></span> = tanh(W<sub>C</sub>·[h,x]) <span class="d">→ sommati a C</span>',
-        highlight: 'input'
-      },
-      {
-        label: 'Output Gate',
-        desc: 'L\'<strong style="color:#ffb020">Output Gate</strong> controlla quanto del cell state <strong>rivelare come output</strong>. Il cell state passa per tanh, poi viene filtrato dal gate. Il risultato è il nuovo hidden state h<sub>t</sub>.',
-        eq: '<span class="o">o<sub>t</sub></span> = σ(W<sub>o</sub>·[h,x]) · h<sub>t</sub> = <span class="o">o</span>⊙tanh(C<sub>t</sub>)',
-        highlight: 'output'
-      },
-      {
-        label: 'Cell State — Il Segreto',
-        desc: 'Il <strong style="color:#4a90ff">Cell State</strong> è la chiave: scorre in alto quasi indisturbato, con solo operazioni di <strong>moltiplicazione</strong> (forget) e <strong>somma</strong> (input). Questo percorso lineare permette al gradiente di fluire anche su centinaia di timestep.',
-        eq: 'C<sub>t</sub> = <span class="f">f<sub>t</sub></span>⊙C<sub>t-1</sub> + <span class="i">i<sub>t</sub></span>⊙<span class="c">C̃<sub>t</sub></span> <span class="d">← percorso additivo!</span>',
-        highlight: 'cellstate'
-      }
+      { label:'Panoramica', desc:'L\'<strong>LSTM</strong> ha un <strong>cell state C</strong> (nastro blu in alto) che scorre quasi indisturbato. Sotto, tre gate (forget, input, output) e un candidato ricevono tutti sia h<sub>t-1</sub> che x<sub>t</sub> come input. h<sub>t-1</sub> arriva da sinistra, x<sub>t</sub> dal basso.', eq:'C<sub>t</sub> = <span class="f">f</span>⊙C<sub>t-1</sub> + <span class="i">i</span>⊙<span class="c">C̃</span> · h<sub>t</sub> = <span class="o">o</span>⊙tanh(C<sub>t</sub>)', highlight:null },
+      { label:'Forget Gate (f)', desc:'Il <strong style="color:#ff4d6a">Forget Gate</strong> riceve [h<sub>t-1</sub>, x<sub>t</sub>] e produce un vettore σ in [0,1]. Questo vettore <strong>moltiplica (×)</strong> il cell state C<sub>t-1</sub>: dove vale 0 l\'informazione viene cancellata, dove vale 1 viene mantenuta.', eq:'<span class="f">f<sub>t</sub></span> = σ(W<sub>f</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>f</sub>) <span class="d">→ × sul cell state</span>', highlight:'forget' },
+      { label:'Input Gate (i) + Candidato (C̃)', desc:'L\'<strong style="color:#30e870">Input Gate</strong> (σ) decide <strong>quanto scrivere</strong>. Il <strong style="color:#b060ff">Candidato C̃</strong> (tanh) genera i nuovi valori. Entrambi ricevono [h<sub>t-1</sub>, x<sub>t</sub>]. Il loro prodotto i⊙C̃ viene <strong>sommato (+)</strong> al cell state — la scorciatoia additiva!', eq:'<span class="i">i</span> = σ(W<sub>i</sub>·[h,x]) · <span class="c">C̃</span> = tanh(W<sub>C</sub>·[h,x]) <span class="d">→ i⊙C̃ sommato a C</span>', highlight:'input' },
+      { label:'Output Gate (o)', desc:'L\'<strong style="color:#ffb020">Output Gate</strong> riceve [h<sub>t-1</sub>, x<sub>t</sub>] e controlla quanto del cell state <strong>rivelare</strong>. C<sub>t</sub> passa per tanh → poi viene filtrato: h<sub>t</sub> = o ⊙ tanh(C<sub>t</sub>). h<sub>t</sub> esce a destra e diventa h<sub>t-1</sub> del prossimo step.', eq:'<span class="o">o</span> = σ(W<sub>o</sub>·[h,x]) · h<sub>t</sub> = <span class="o">o</span>⊙tanh(C<sub>t</sub>)', highlight:'output' },
+      { label:'Cell State — Il Nastro', desc:'Il <strong style="color:#4a90ff">Cell State</strong> è la chiave: scorre in alto con solo due operazioni lineari — <strong>× (forget)</strong> e <strong>+ (input)</strong>. Nessuna moltiplicazione per matrici di pesi! Il gradiente fluisce quasi inalterato anche su centinaia di timestep.', eq:'C<sub>t</sub> = <span class="f">f</span>⊙C<sub>t-1</sub> + <span class="i">i</span>⊙<span class="c">C̃</span> <span class="d">← percorso additivo!</span>', highlight:'cellstate' }
     ],
-    legend: [
-      { color: '#4a90ff', label: 'Cell State C' },
-      { color: '#ff4d6a', label: 'Forget Gate (σ)' },
-      { color: '#30e870', label: 'Input Gate (σ)' },
-      { color: '#b060ff', label: 'Candidato (tanh)' },
-      { color: '#ffb020', label: 'Output Gate (σ)' }
-    ]
+    legend: [ {color:'#4a90ff',label:'Cell State C'},{color:'#ff4d6a',label:'Forget Gate (σ)'},{color:'#30e870',label:'Input Gate (σ)'},{color:'#b060ff',label:'Candidato C̃ (tanh)'},{color:'#ffb020',label:'Output Gate (σ)'},{color:'#e4e2df',label:'Hidden State h'} ]
   },
   gru: {
-    title: 'Gated Recurrent Unit',
-    color: 0x00d4aa,
-    colorCSS: '#00d4aa',
+    title: 'Gated Recurrent Unit', color: 0x00d4aa, colorCSS: '#00d4aa',
     steps: [
-      {
-        label: 'Panoramica',
-        desc: 'La <strong>GRU</strong> fonde cell state e hidden state in un unico vettore <strong>h</strong> e usa solo <strong>2 gate</strong> invece di 3. Il risultato è un\'architettura più snella con ~25% meno parametri dell\'LSTM.',
-        eq: 'h<sub>t</sub> = (1-<span class="z">z</span>)⊙h<sub>t-1</sub> + <span class="z">z</span>⊙<span class="c">h̃</span>',
-        highlight: null
-      },
-      {
-        label: 'Update Gate (z)',
-        desc: 'L\'<strong style="color:#00d4aa">Update Gate z</strong> è il cuore della GRU: decide <strong>quanto aggiornare</strong> lo stato. Se z≈0, il vecchio stato passa intatto. Se z≈1, viene completamente riscritto. Fa il lavoro del forget <em>e</em> dell\'input gate dell\'LSTM insieme!',
-        eq: '<span class="z">z<sub>t</sub></span> = σ(W<sub>z</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>z</sub>) <span class="d">← controlla vecchio vs nuovo</span>',
-        highlight: 'update'
-      },
-      {
-        label: 'Reset Gate (r)',
-        desc: 'Il <strong style="color:#ff8040">Reset Gate r</strong> decide quanto del vecchio stato <strong>esporre al candidato</strong>. Se r≈0, il candidato ignora il passato e può generare uno stato completamente nuovo — come un "reset" della memoria.',
-        eq: '<span class="r">r<sub>t</sub></span> = σ(W<sub>r</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>r</sub>) <span class="d">← filtra h per il candidato</span>',
-        highlight: 'reset'
-      },
-      {
-        label: 'Candidato h̃',
-        desc: 'Il <strong style="color:#b060ff">Candidato h̃</strong> genera il nuovo stato proposto usando il vecchio stato <strong>filtrato dal reset gate</strong>: r⊙h<sub>t-1</sub>. Il reset gate controlla quanto "ricordare" nella proposta.',
-        eq: '<span class="c">h̃<sub>t</sub></span> = tanh(W·[<span class="r">r</span>⊙h<sub>t-1</sub>, x<sub>t</sub>] + b) <span class="d">← stato proposto</span>',
-        highlight: 'candidate'
-      },
-      {
-        label: 'Interpolazione Lineare',
-        desc: 'Lo stato finale è un\'<strong>interpolazione lineare</strong> tra vecchio e nuovo: (1-z) e z sono <strong>complementari</strong> — sommano sempre a 1. Questo crea il percorso additivo per il gradiente, proprio come il cell state dell\'LSTM.',
-        eq: 'h<sub>t</sub> = (1-<span class="z">z</span>)⊙h<sub>t-1</sub> + <span class="z">z</span>⊙<span class="c">h̃</span> <span class="d">← interpolazione elegante</span>',
-        highlight: 'interp'
-      }
+      { label:'Panoramica', desc:'La <strong>GRU</strong> fonde cell state e hidden state in un unico <strong>h</strong> (pipe in alto). Solo <strong>2 gate</strong>: update (z) e reset (r). Entrambi ricevono [h<sub>t-1</sub>, x<sub>t</sub>]. Il reset filtra h per il candidato, l\'update interpola tra vecchio e nuovo.', eq:'h<sub>t</sub> = (1-<span class="z">z</span>)⊙h<sub>t-1</sub> + <span class="z">z</span>⊙<span class="c">h̃</span>', highlight:null },
+      { label:'Update Gate (z)', desc:'L\'<strong style="color:#00d4aa">Update Gate z</strong> riceve [h<sub>t-1</sub>, x<sub>t</sub>] e produce σ in [0,1]. Il risultato <strong>(1-z)</strong> moltiplica h<sub>t-1</sub> e <strong>z</strong> moltiplica h̃. Se z≈0 lo stato passa intatto; se z≈1 viene riscritto. Fa il lavoro del forget + input gate LSTM!', eq:'<span class="z">z<sub>t</sub></span> = σ(W<sub>z</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>z</sub>)', highlight:'update' },
+      { label:'Reset Gate (r)', desc:'Il <strong style="color:#ff8040">Reset Gate r</strong> riceve [h<sub>t-1</sub>, x<sub>t</sub>] e decide quanto del vecchio stato <strong>esporre al candidato</strong>. Il prodotto <strong>r⊙h<sub>t-1</sub></strong> viene passato al candidato. Se r≈0, il candidato ignora il passato.', eq:'<span class="r">r<sub>t</sub></span> = σ(W<sub>r</sub>·[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>r</sub>) <span class="d">→ r⊙h passa al candidato</span>', highlight:'reset' },
+      { label:'Candidato h̃', desc:'Il <strong style="color:#b060ff">Candidato h̃</strong> riceve [<strong>r⊙h<sub>t-1</sub></strong>, x<sub>t</sub>] — lo stato filtrato dal reset gate! Genera il nuovo stato proposto con tanh. Il reset controlla quanto "ricordare" nella proposta.', eq:'<span class="c">h̃</span> = tanh(W·[<span class="r">r</span>⊙h<sub>t-1</sub>, x<sub>t</sub>] + b)', highlight:'candidate' },
+      { label:'Interpolazione Finale', desc:'h<sub>t</sub> è un\'<strong>interpolazione lineare</strong>: (1-z)⊙h<sub>old</sub> + z⊙h̃. I pesi <strong>(1-z) e z sono complementari</strong> (sommano a 1). Questo crea il percorso additivo per il gradiente, come il cell state dell\'LSTM.', eq:'h<sub>t</sub> = (1-<span class="z">z</span>)⊙h<sub>t-1</sub> + <span class="z">z</span>⊙<span class="c">h̃</span> <span class="d">← eleganza!</span>', highlight:'interp' }
     ],
-    legend: [
-      { color: '#00d4aa', label: 'Update Gate (z)' },
-      { color: '#ff8040', label: 'Reset Gate (r)' },
-      { color: '#b060ff', label: 'Candidato h̃ (tanh)' },
-      { color: '#e4e2df', label: 'Hidden State h' }
-    ]
+    legend: [ {color:'#00d4aa',label:'Update Gate z (σ)'},{color:'#ff8040',label:'Reset Gate r (σ)'},{color:'#b060ff',label:'Candidato h̃ (tanh)'},{color:'#e4e2df',label:'Hidden State h'} ]
   }
 };
 
 // ================================================================
-//  THREE.JS SETUP
+//  THREE.JS CORE
 // ================================================================
 const container = document.getElementById('scene');
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x08080f, 1);
 container.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x08080f, 0.018);
+scene.fog = new THREE.FogExp2(0x08080f, 0.015);
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 200);
+camera.position.set(0, 5, 20);
 
-const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(0, 4, 18);
-camera.lookAt(0, 0, 0);
+scene.add(new THREE.AmbientLight(0x334466, 0.7));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+dirLight.position.set(5, 10, 7); scene.add(dirLight);
+const pointLight = new THREE.PointLight(0x4a90ff, 0.8, 40);
+pointLight.position.set(0, 5, 5); scene.add(pointLight);
 
-// Lights
-const ambientLight = new THREE.AmbientLight(0x222244, 0.6);
-scene.add(ambientLight);
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.4);
-dirLight.position.set(5, 10, 7);
-scene.add(dirLight);
-const pointLight = new THREE.PointLight(0x4a90ff, 0.6, 30);
-pointLight.position.set(0, 5, 5);
-scene.add(pointLight);
+const grid = new THREE.GridHelper(40, 40, 0x111122, 0x111122);
+grid.position.y = -4.5; scene.add(grid);
 
-// Grid floor
-const gridHelper = new THREE.GridHelper(40, 40, 0x111122, 0x111122);
-gridHelper.position.y = -3;
-scene.add(gridHelper);
+// Orbit
+let isDragging=false,prevM={x:0,y:0};
+let sph={theta:0,phi:Math.PI/5.5,radius:20},tSph={...sph};
+renderer.domElement.addEventListener('pointerdown',e=>{isDragging=true;prevM={x:e.clientX,y:e.clientY};document.getElementById('hint').classList.add('hide')});
+window.addEventListener('pointerup',()=>isDragging=false);
+window.addEventListener('pointermove',e=>{if(!isDragging)return;tSph.theta-=(e.clientX-prevM.x)*.005;tSph.phi=Math.max(.1,Math.min(Math.PI/2.2,tSph.phi-(e.clientY-prevM.y)*.005));prevM={x:e.clientX,y:e.clientY}});
+renderer.domElement.addEventListener('wheel',e=>{tSph.radius=Math.max(10,Math.min(35,tSph.radius+e.deltaY*.015))},{passive:true});
+window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)});
+
+function updateCam(){
+  sph.theta+=(tSph.theta-sph.theta)*.08;sph.phi+=(tSph.phi-sph.phi)*.08;sph.radius+=(tSph.radius-sph.radius)*.08;
+  camera.position.set(sph.radius*Math.sin(sph.phi)*Math.sin(sph.theta),sph.radius*Math.cos(sph.phi),sph.radius*Math.sin(sph.phi)*Math.cos(sph.theta));
+  camera.lookAt(0,.5,0);
+}
 
 // ================================================================
-//  ORBIT CONTROLS (manual, lightweight)
+//  GEOMETRY HELPERS
 // ================================================================
-let isDragging = false, prevMouse = { x: 0, y: 0 };
-let spherical = { theta: 0, phi: Math.PI / 6, radius: 18 };
-let targetSpherical = { ...spherical };
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath()}
 
-renderer.domElement.addEventListener('pointerdown', e => {
-  isDragging = true; prevMouse = { x: e.clientX, y: e.clientY };
-  document.getElementById('hint').classList.add('hide');
-});
-window.addEventListener('pointerup', () => isDragging = false);
-window.addEventListener('pointermove', e => {
-  if (!isDragging) return;
-  const dx = e.clientX - prevMouse.x, dy = e.clientY - prevMouse.y;
-  targetSpherical.theta -= dx * 0.005;
-  targetSpherical.phi = Math.max(0.1, Math.min(Math.PI / 2.2, targetSpherical.phi - dy * 0.005));
-  prevMouse = { x: e.clientX, y: e.clientY };
-});
-renderer.domElement.addEventListener('wheel', e => {
-  targetSpherical.radius = Math.max(8, Math.min(30, targetSpherical.radius + e.deltaY * 0.015));
-}, { passive: true });
-
-function updateCamera() {
-  spherical.theta += (targetSpherical.theta - spherical.theta) * 0.08;
-  spherical.phi += (targetSpherical.phi - spherical.phi) * 0.08;
-  spherical.radius += (targetSpherical.radius - spherical.radius) * 0.08;
-  const { theta, phi, radius } = spherical;
-  camera.position.set(
-    radius * Math.sin(phi) * Math.sin(theta),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.cos(theta)
-  );
-  camera.lookAt(0, 0.5, 0);
+function makeBox(w,h,d,color,op=0.6){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshPhongMaterial({color,transparent:true,opacity:op,shininess:60}));
+  m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),new THREE.LineBasicMaterial({color,transparent:true,opacity:Math.min(1,op+.2)})));
+  return m;
+}
+function makeSphere(r,color,emissive=false){
+  return new THREE.Mesh(new THREE.SphereGeometry(r,20,20),new THREE.MeshPhongMaterial({color,transparent:true,opacity:.9,emissive:emissive?color:0,emissiveIntensity:emissive?.5:0}));
+}
+function makeTube(pts,color,thick=.04,op=.6){
+  const c=new THREE.CatmullRomCurve3(pts);
+  return new THREE.Mesh(new THREE.TubeGeometry(c,48,thick,8,false),new THREE.MeshPhongMaterial({color,transparent:true,opacity:op}));
+}
+function makeLabel(text,color='#fff',scale=2){
+  const cv=document.createElement('canvas');cv.width=512;cv.height=96;
+  const ctx=cv.getContext('2d');ctx.fillStyle=color;ctx.font='bold 42px Sora,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,256,48);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthTest:false}));
+  sp.scale.set(scale,scale*.19,1);return sp;
 }
 
-// Resize
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-// ================================================================
-//  HELPERS
-// ================================================================
-function makeBox(w, h, d, color, opacity = 0.85) {
-  const geo = new THREE.BoxGeometry(w, h, d, 1, 1, 1);
-  const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity, shininess: 80 });
-  const edges = new THREE.EdgesGeometry(geo);
-  const lineMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.5 });
-  const mesh = new THREE.Mesh(geo, mat);
-  const wireframe = new THREE.LineSegments(edges, lineMat);
-  mesh.add(wireframe);
-  return mesh;
-}
-
-function makeSphere(r, color, emissive = false) {
-  const geo = new THREE.SphereGeometry(r, 16, 16);
-  const mat = new THREE.MeshPhongMaterial({
-    color, transparent: true, opacity: 0.9,
-    emissive: emissive ? color : 0x000000, emissiveIntensity: emissive ? 0.4 : 0
-  });
-  return new THREE.Mesh(geo, mat);
-}
-
-function makeCylinder(rTop, rBot, h, color) {
-  const geo = new THREE.CylinderGeometry(rTop, rBot, h, 16);
-  const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity: 0.7 });
-  return new THREE.Mesh(geo, mat);
-}
-
-function makeTube(points, color, thickness = 0.04) {
-  const curve = new THREE.CatmullRomCurve3(points);
-  const geo = new THREE.TubeGeometry(curve, 32, thickness, 8, false);
-  const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity: 0.6 });
-  return new THREE.Mesh(geo, mat);
-}
-
-function makeLabel(text, color = '#fff') {
-  const canvas = document.createElement('canvas');
-  canvas.width = 256; canvas.height = 64;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = color;
-  ctx.font = 'bold 28px Sora, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, 128, 32);
-  const tex = new THREE.CanvasTexture(canvas);
-  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
-  const sprite = new THREE.Sprite(mat);
-  sprite.scale.set(2, 0.5, 1);
-  return sprite;
-}
-
-// Particle system for data flow
-class FlowParticles {
-  constructor(count, color, path, speed = 0.003) {
-    this.path = path; // array of Vector3
-    this.speed = speed;
-    const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(count * 3);
-    this.offsets = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      this.offsets[i] = Math.random();
-      positions[i * 3] = 0; positions[i * 3 + 1] = 0; positions[i * 3 + 2] = 0;
-    }
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const mat = new THREE.PointsMaterial({ color, size: 0.12, transparent: true, opacity: 0.9, depthTest: false });
-    this.points = new THREE.Points(geo, mat);
-    this.count = count;
+// Flow particles
+class Flow {
+  constructor(n,color,path,speed=.004){
+    this.curve=new THREE.CatmullRomCurve3(path);this.speed=speed;this.n=n;
+    this.offsets=Float32Array.from({length:n},()=>Math.random());
+    const pos=new Float32Array(n*3);
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    this.pts=new THREE.Points(geo,new THREE.PointsMaterial({color,size:.14,transparent:true,opacity:.9,depthTest:false}));
   }
-  update(dt) {
-    const pos = this.points.geometry.attributes.position.array;
-    const curve = new THREE.CatmullRomCurve3(this.path);
-    for (let i = 0; i < this.count; i++) {
-      this.offsets[i] = (this.offsets[i] + this.speed + Math.random() * 0.001) % 1;
-      const p = curve.getPointAt(this.offsets[i]);
-      pos[i * 3] = p.x; pos[i * 3 + 1] = p.y; pos[i * 3 + 2] = p.z;
+  update(){
+    const p=this.pts.geometry.attributes.position.array;
+    for(let i=0;i<this.n;i++){
+      this.offsets[i]=(this.offsets[i]+this.speed+Math.random()*.0008)%1;
+      const v=this.curve.getPointAt(this.offsets[i]);
+      p[i*3]=v.x;p[i*3+1]=v.y;p[i*3+2]=v.z;
     }
-    this.points.geometry.attributes.position.needsUpdate = true;
+    this.pts.geometry.attributes.position.needsUpdate=true;
   }
-  setVisible(v) { this.points.visible = v; }
 }
 
 // ================================================================
-//  BUILD ARCHITECTURES
+//  BUILD RNN
 // ================================================================
-const groups = { rnn: new THREE.Group(), lstm: new THREE.Group(), gru: new THREE.Group() };
-const particles = { rnn: [], lstm: [], gru: [] };
-const highlightables = { rnn: {}, lstm: {}, gru: {} };
+const groups={rnn:new THREE.Group(),lstm:new THREE.Group(),gru:new THREE.Group()};
+const flows={rnn:[],lstm:[],gru:[]};
+const hlMap={rnn:{},lstm:{},gru:{}};
 
-// ---- RNN ----
-(function buildRNN() {
-  const g = groups.rnn;
+(function buildRNN(){
+  const g=groups.rnn;
+  // Cell
+  const cell=makeBox(3,2,2,0xff4d6a,.35);g.add(cell);
+  const cl=makeLabel('tanh','#ff7a92');cl.position.set(0,.15,1.2);g.add(cl);
+  hlMap.rnn.cell=[cell];
 
-  // Main cell
-  const cell = makeBox(3, 2, 2, 0xff4d6a, 0.3);
-  cell.position.set(0, 0, 0);
-  g.add(cell);
-  highlightables.rnn.cell = [cell];
+  // x_t from below
+  const xtTube=makeTube([new THREE.Vector3(0,-4.5,0),new THREE.Vector3(0,-1.2,0)],0x8a8a9a,.05,.4);g.add(xtTube);
+  const xtSp=makeSphere(.2,0x8a8a9a);xtSp.position.set(0,-4.5,0);g.add(xtSp);
+  const xtL=makeLabel('x_t','#8a8a9a');xtL.position.set(0,-5,0);g.add(xtL);
+  hlMap.rnn.input=[xtTube,xtSp];
 
-  const cellLabel = makeLabel('tanh', '#ff7a92');
-  cellLabel.position.set(0, 0.2, 1.2);
-  g.add(cellLabel);
+  // h_{t-1} from left
+  const hInTube=makeTube([new THREE.Vector3(-6,0,0),new THREE.Vector3(-1.7,0,0)],0xffb020,.05,.5);g.add(hInTube);
+  const hInL=makeLabel('h_{t-1}','#ffb020');hInL.position.set(-6.8,0,0);g.add(hInL);
 
-  // Input arrow (from below)
-  const inputTube = makeTube([new THREE.Vector3(0, -4, 0), new THREE.Vector3(0, -1.2, 0)], 0x8a8a9a, 0.05);
-  g.add(inputTube);
-  const inputSphere = makeSphere(0.25, 0x8a8a9a);
-  inputSphere.position.set(0, -4, 0);
-  g.add(inputSphere);
-  const inputLabel = makeLabel('x_t', '#8a8a9a');
-  inputLabel.position.set(0, -4.5, 0);
-  g.add(inputLabel);
-  highlightables.rnn.input = [inputTube, inputSphere];
+  // h_t to right
+  const hOutTube=makeTube([new THREE.Vector3(1.7,0,0),new THREE.Vector3(6,0,0)],0xffb020,.05,.5);g.add(hOutTube);
+  const hOutSp=makeSphere(.22,0xffb020,true);hOutSp.position.set(6,0,0);g.add(hOutSp);
+  const hOutL=makeLabel('h_t','#ffb020');hOutL.position.set(6.8,0,0);g.add(hOutL);
+  hlMap.rnn.hidden=[hInTube,hOutTube,hOutSp];
 
-  // Output arrow (to above)
-  const outputTube = makeTube([new THREE.Vector3(0, 1.2, 0), new THREE.Vector3(0, 4, 0)], 0xffb020, 0.05);
-  g.add(outputTube);
-  const outputSphere = makeSphere(0.25, 0xffb020, true);
-  outputSphere.position.set(0, 4, 0);
-  g.add(outputSphere);
-  const outputLabel = makeLabel('h_t', '#ffb020');
-  outputLabel.position.set(0, 4.6, 0);
-  g.add(outputLabel);
+  // y_t output up
+  const yTube=makeTube([new THREE.Vector3(0,1.2,0),new THREE.Vector3(0,3.5,0)],0xffb020,.04,.4);g.add(yTube);
+  const yL=makeLabel('y_t','#ffb020');yL.position.set(0,4,0);g.add(yL);
 
-  // Hidden state recurrent loop (curved arrow from right side back to left)
-  const loopPts = [
-    new THREE.Vector3(1.7, 0, 0),
-    new THREE.Vector3(4, 0, -1),
-    new THREE.Vector3(4, 2, -2),
-    new THREE.Vector3(0, 3, -2),
-    new THREE.Vector3(-4, 2, -2),
-    new THREE.Vector3(-4, 0, -1),
-    new THREE.Vector3(-1.7, 0, 0)
-  ];
-  const loopTube = makeTube(loopPts, 0xffb020, 0.04);
-  g.add(loopTube);
-  highlightables.rnn.hidden = [loopTube, outputTube, outputSphere];
+  // Recurrent loop (h_t goes back as h_{t-1} via arc behind)
+  const loopPts=[new THREE.Vector3(6,0,0),new THREE.Vector3(6,3,-2),new THREE.Vector3(0,4,-3),new THREE.Vector3(-6,3,-2),new THREE.Vector3(-6,0,0)];
+  const loopTube=makeTube(loopPts,0xff7a92,.035,.3);g.add(loopTube);
+  const loopL=makeLabel('ricorrenza','#ff7a92',1.5);loopL.position.set(0,4.3,-3);g.add(loopL);
 
-  const hLabel = makeLabel('h_{t-1}', '#ffb020');
-  hLabel.position.set(-4.3, 2, -2);
-  g.add(hLabel);
-
-  // Particles: input flow
-  const pInput = new FlowParticles(12, 0xcccccc, [new THREE.Vector3(0, -4, 0), new THREE.Vector3(0, -1, 0)], 0.008);
-  g.add(pInput.points); particles.rnn.push(pInput);
-
-  // Particles: output flow
-  const pOutput = new FlowParticles(12, 0xffb020, [new THREE.Vector3(0, 1.2, 0), new THREE.Vector3(0, 4, 0)], 0.008);
-  g.add(pOutput.points); particles.rnn.push(pOutput);
-
-  // Particles: recurrent loop
-  const pLoop = new FlowParticles(20, 0xff7a92, loopPts, 0.004);
-  g.add(pLoop.points); particles.rnn.push(pLoop);
+  // Flows
+  flows.rnn.push(new Flow(10,0xaaaaaa,[new THREE.Vector3(0,-4.5,0),new THREE.Vector3(0,-1,0)],.008));
+  flows.rnn.push(new Flow(12,0xffb020,[new THREE.Vector3(-6,0,0),new THREE.Vector3(-1.5,0,0),new THREE.Vector3(1.5,0,0),new THREE.Vector3(6,0,0)],.005));
+  flows.rnn.push(new Flow(16,0xff7a92,loopPts,.003));
+  flows.rnn.forEach(f=>g.add(f.pts));
 
   scene.add(g);
-  g.visible = true;
 })();
 
-// ---- LSTM ----
-(function buildLSTM() {
-  const g = groups.lstm;
-  const Y_CELL = 3.2; // cell state height
+// ================================================================
+//  BUILD LSTM — ACCURATE CONNECTIONS
+//
+//  Data flow:
+//  - h_{t-1} enters from left, x_t from below
+//  - [h_{t-1}, x_t] feeds ALL 4 components: forget, input, candidate, output
+//  - forget gate → σ → × on cell state (pointwise multiply C_{t-1})
+//  - input gate → σ, candidate → tanh, then i⊙C̃ → + on cell state (pointwise add)
+//  - output gate → σ, then tanh(C_t) filtered by o → h_t
+//  - h_t exits right, C_t exits right on top pipe
+// ================================================================
+(function buildLSTM(){
+  const g=groups.lstm;
+  const CY=3.5;       // cell state Y
+  const GY=0;         // gates Y
+  const CANDY=-2;     // candidate Y
+  const FX=-4, IX=-.5, OX=4.5; // gate X positions
 
-  // Cell state pipe (top)
-  const cellPipe = makeTube([new THREE.Vector3(-7, Y_CELL, 0), new THREE.Vector3(7, Y_CELL, 0)], 0x4a90ff, 0.08);
-  g.add(cellPipe);
-  const cLabel1 = makeLabel('C_{t-1}', '#4a90ff'); cLabel1.position.set(-7.5, Y_CELL + 0.5, 0); g.add(cLabel1);
-  const cLabel2 = makeLabel('C_t', '#4a90ff'); cLabel2.position.set(7.5, Y_CELL + 0.5, 0); g.add(cLabel2);
-  highlightables.lstm.cellstate = [cellPipe];
+  // ===== CELL STATE PIPE =====
+  const cPipe=makeTube([new THREE.Vector3(-9,CY,0),new THREE.Vector3(9,CY,0)],0x4a90ff,.09,.5);g.add(cPipe);
+  const cL1=makeLabel('C_{t-1}','#4a90ff');cL1.position.set(-9.5,CY+.5,0);g.add(cL1);
+  const cL2=makeLabel('C_t','#4a90ff');cL2.position.set(9.5,CY+.5,0);g.add(cL2);
+  hlMap.lstm.cellstate=[cPipe];
 
-  // Forget gate
-  const forgetBox = makeBox(2, 1.2, 1.5, 0xff4d6a, 0.35);
-  forgetBox.position.set(-3.5, 0.5, 0);
-  g.add(forgetBox);
-  const fLabel = makeLabel('Forget σ', '#ff7a92');
-  fLabel.position.set(-3.5, 0.5, 1);
-  g.add(fLabel);
-  // Multiply op on cell state
-  const fMulSphere = makeSphere(0.3, 0xff4d6a, true);
-  fMulSphere.position.set(-3.5, Y_CELL, 0);
-  g.add(fMulSphere);
-  const fMulLabel = makeLabel('×', '#ff7a92'); fMulLabel.position.set(-3.5, Y_CELL + 0.7, 0.3); fMulLabel.scale.set(1, 0.3, 1); g.add(fMulLabel);
-  const fConn = makeTube([new THREE.Vector3(-3.5, 1.2, 0), new THREE.Vector3(-3.5, Y_CELL - 0.3, 0)], 0xff4d6a, 0.03);
-  g.add(fConn);
-  highlightables.lstm.forget = [forgetBox, fMulSphere, fConn];
+  // ===== h_{t-1} input from left =====
+  const hInTube=makeTube([new THREE.Vector3(-9,-1,0),new THREE.Vector3(-5.5,-1,0)],0xe4e2df,.05,.4);g.add(hInTube);
+  const hInL=makeLabel('h_{t-1}','#aaa');hInL.position.set(-9.8,-1,0);g.add(hInL);
+  // h fork point — splits to all gates
+  const hForkSp=makeSphere(.18,0xe4e2df);hForkSp.position.set(-5.5,-1,0);g.add(hForkSp);
+  // hidden backbone (visual guide): keeps h-line coherent up to the output merge
+  const hBackbone=makeTube([new THREE.Vector3(-5.5,-1,0),new THREE.Vector3(OX+2,-1,0)],0xe4e2df,.028,.2);g.add(hBackbone);
 
-  // Input gate
-  const inputBox = makeBox(2, 1.2, 1.5, 0x30e870, 0.35);
-  inputBox.position.set(0, 0.5, 0);
-  g.add(inputBox);
-  const iLabel = makeLabel('Input σ', '#60ff96');
-  iLabel.position.set(0, 0.5, 1);
-  g.add(iLabel);
+  // ===== x_t input from below =====
+  const xtTube=makeTube([new THREE.Vector3(0,-6,0),new THREE.Vector3(0,-3.5,0)],0x8a8a9a,.05,.35);g.add(xtTube);
+  const xtL=makeLabel('x_t','#8a8a9a');xtL.position.set(0,-6.5,0);g.add(xtL);
+  // x fork point
+  const xForkSp=makeSphere(.15,0x8a8a9a);xForkSp.position.set(0,-3.5,0);g.add(xForkSp);
 
-  // Candidate
-  const candBox = makeBox(2, 1.2, 1.5, 0xb060ff, 0.3);
-  candBox.position.set(0, -1.5, 0);
-  g.add(candBox);
-  const candLabel = makeLabel('C̃ tanh', '#d0a0ff');
-  candLabel.position.set(0, -1.5, 1);
-  g.add(candLabel);
+  // ===== CONNECTIONS: h_{t-1} → each gate (dashed-like thin tubes) =====
+  const hToF=makeTube([new THREE.Vector3(-5.5,-1,0),new THREE.Vector3(FX,-1,0),new THREE.Vector3(FX,GY-.8,0)],0x999999,.025,.2);g.add(hToF);
+  const hToI=makeTube([new THREE.Vector3(-5.5,-1,0),new THREE.Vector3(IX,-1,0),new THREE.Vector3(IX,GY-.8,0)],0x999999,.025,.2);g.add(hToI);
+  const hToC=makeTube([new THREE.Vector3(-5.5,-1,0),new THREE.Vector3(IX,-1,0),new THREE.Vector3(IX,CANDY-.8,0)],0x999999,.02,.15);g.add(hToC);
+  const hToO=makeTube([new THREE.Vector3(-5.5,-1,0),new THREE.Vector3(OX,-1,0),new THREE.Vector3(OX,GY-.8,0)],0x999999,.025,.2);g.add(hToO);
 
-  // Add op on cell state
-  const addSphere = makeSphere(0.3, 0x30e870, true);
-  addSphere.position.set(0, Y_CELL, 0);
-  g.add(addSphere);
-  const addLabel = makeLabel('+', '#60ff96'); addLabel.position.set(0, Y_CELL + 0.7, 0.3); addLabel.scale.set(1, 0.3, 1); g.add(addLabel);
-  const iConn = makeTube([new THREE.Vector3(0, 1.2, 0), new THREE.Vector3(0, Y_CELL - 0.3, 0)], 0x30e870, 0.03);
-  g.add(iConn);
-  highlightables.lstm.input = [inputBox, candBox, addSphere, iConn];
+  // ===== CONNECTIONS: x_t → each gate =====
+  const xToF=makeTube([new THREE.Vector3(0,-3.5,0),new THREE.Vector3(FX,-3.5,0),new THREE.Vector3(FX,GY-.8,0)],0x666666,.02,.15);g.add(xToF);
+  const xToI=makeTube([new THREE.Vector3(0,-3.5,0),new THREE.Vector3(IX,GY-.8,0)],0x666666,.02,.15);g.add(xToI);
+  const xToC=makeTube([new THREE.Vector3(0,-3.5,0),new THREE.Vector3(IX,CANDY-.8,0)],0x666666,.02,.12);g.add(xToC);
+  const xToO=makeTube([new THREE.Vector3(0,-3.5,0),new THREE.Vector3(OX,-3.5,0),new THREE.Vector3(OX,GY-.8,0)],0x666666,.02,.15);g.add(xToO);
 
-  // Output gate
-  const outputBox = makeBox(2, 1.2, 1.5, 0xffb020, 0.35);
-  outputBox.position.set(3.5, 0.5, 0);
-  g.add(outputBox);
-  const oLabel = makeLabel('Output σ', '#ffd060');
-  oLabel.position.set(3.5, 0.5, 1);
-  g.add(oLabel);
-  // tanh block
-  const tanhBox = makeBox(1.2, 0.8, 1, 0x4a90ff, 0.25);
-  tanhBox.position.set(3.5, 2.0, 0);
-  g.add(tanhBox);
-  const tanhLabel = makeLabel('tanh', '#70b0ff'); tanhLabel.position.set(3.5, 2.0, 0.8); tanhLabel.scale.set(1.2, 0.3, 1); g.add(tanhLabel);
-  // Multiply for h_t
-  const oMulSphere = makeSphere(0.3, 0xffb020, true);
-  oMulSphere.position.set(5, 2.0, 0);
-  g.add(oMulSphere);
-  const oMulLabel = makeLabel('×', '#ffd060'); oMulLabel.position.set(5, 2.7, 0.3); oMulLabel.scale.set(1, 0.3, 1); g.add(oMulLabel);
-  const oConn = makeTube([new THREE.Vector3(3.5, 1.2, 0), new THREE.Vector3(3.5, 1.6, 0)], 0xffb020, 0.03);
-  g.add(oConn);
-  const oConn2 = makeTube([new THREE.Vector3(4.2, 2.0, 0), new THREE.Vector3(4.7, 2.0, 0)], 0xffb020, 0.03);
-  g.add(oConn2);
+  // ===== FORGET GATE =====
+  const fBox=makeBox(2.2,1.2,1.5,0xff4d6a,.35);fBox.position.set(FX,GY,0);g.add(fBox);
+  const fLbl=makeLabel('Forget σ','#ff7a92');fLbl.position.set(FX,GY,.9);g.add(fLbl);
+  // f → multiply on cell state
+  const fMul=makeSphere(.3,0xff4d6a,true);fMul.position.set(FX,CY,0);g.add(fMul);
+  const fMulL=makeLabel('×','#ff7a92',1.2);fMulL.position.set(FX,CY+.7,0);g.add(fMulL);
+  const fConn=makeTube([new THREE.Vector3(FX,GY+.7,0),new THREE.Vector3(FX,CY-.35,0)],0xff4d6a,.035,.5);g.add(fConn);
+  hlMap.lstm.forget=[fBox,fMul,fConn,fMulL,hToF,xToF];
+
+  // ===== INPUT GATE =====
+  const iBox=makeBox(2.2,1.2,1.5,0x30e870,.35);iBox.position.set(IX,GY,0);g.add(iBox);
+  const iLbl=makeLabel('Input σ','#60ff96');iLbl.position.set(IX,GY,.9);g.add(iLbl);
+
+  // ===== CANDIDATE =====
+  const candBox=makeBox(2.2,1.2,1.5,0xb060ff,.3);candBox.position.set(IX,CANDY,0);g.add(candBox);
+  const candLbl=makeLabel('C̃ tanh','#d0a0ff');candLbl.position.set(IX,CANDY,.9);g.add(candLbl);
+
+  // i⊙C̃ → multiply sphere between them
+  const iMul=makeSphere(.25,0x30e870,true);iMul.position.set(IX+1.8,(GY+CANDY)/2,0);g.add(iMul);
+  const iMulL=makeLabel('i⊙C̃','#60ff96',1.5);iMulL.position.set(IX+1.8,(GY+CANDY)/2+.6,0);g.add(iMulL);
+  const iToMul=makeTube([new THREE.Vector3(IX+1.15,GY,0),new THREE.Vector3(IX+1.8,(GY+CANDY)/2+.3,0)],0x30e870,.03,.4);g.add(iToMul);
+  const cToMul=makeTube([new THREE.Vector3(IX+1.15,CANDY,0),new THREE.Vector3(IX+1.8,(GY+CANDY)/2-.3,0)],0xb060ff,.03,.4);g.add(cToMul);
+
+  // i⊙C̃ → add on cell state
+  const addSp=makeSphere(.3,0x30e870,true);addSp.position.set(IX+1.8,CY,0);g.add(addSp);
+  const addL=makeLabel('+','#60ff96',1.2);addL.position.set(IX+1.8,CY+.7,0);g.add(addL);
+  const mulToAdd=makeTube([new THREE.Vector3(IX+1.8,(GY+CANDY)/2+.3,0),new THREE.Vector3(IX+1.8,CY-.35,0)],0x30e870,.035,.5);g.add(mulToAdd);
+  hlMap.lstm.input=[iBox,candBox,iMul,addSp,iToMul,cToMul,mulToAdd,addL,iMulL,hToI,hToC,xToI,xToC];
+
+  // ===== OUTPUT GATE =====
+  const oBox=makeBox(2.2,1.2,1.5,0xffb020,.35);oBox.position.set(OX,GY,0);g.add(oBox);
+  const oLbl=makeLabel('Output σ','#ffd060');oLbl.position.set(OX,GY,.9);g.add(oLbl);
+
+  // tanh(C_t) block — takes from cell state
+  const tanhBox=makeBox(1.5,.8,1,0x4a90ff,.25);tanhBox.position.set(OX,CY-1.2,0);g.add(tanhBox);
+  const tanhLbl=makeLabel('tanh','#70b0ff',1.2);tanhLbl.position.set(OX,CY-1.2,.7);g.add(tanhLbl);
   // Cell state tap down to tanh
-  const cellTap = makeTube([new THREE.Vector3(3.5, Y_CELL, 0), new THREE.Vector3(3.5, 2.5, 0)], 0x4a90ff, 0.025);
-  g.add(cellTap);
-  highlightables.lstm.output = [outputBox, oMulSphere, oConn, oConn2, tanhBox, cellTap];
+  const cTap=makeTube([new THREE.Vector3(OX,CY,0),new THREE.Vector3(OX,CY-.75,0)],0x4a90ff,.03,.35);g.add(cTap);
 
-  // h_t output
-  const htOut = makeTube([new THREE.Vector3(5, 2.0, 0), new THREE.Vector3(7, 2.0, 0), new THREE.Vector3(7, -0.5, 0)], 0xe4e2df, 0.04);
-  g.add(htOut);
-  const htLabel = makeLabel('h_t', '#e4e2df'); htLabel.position.set(7.5, -0.5, 0); g.add(htLabel);
+  // o ⊙ tanh(C_t) → multiply for h_t
+  const oMul=makeSphere(.28,0xffb020,true);oMul.position.set(OX+2,CY-1.2,0);g.add(oMul);
+  const oMulL=makeLabel('×','#ffd060',1.2);oMulL.position.set(OX+2,CY-.4,0);g.add(oMulL);
+  // output gate → multiply
+  const oToMul=makeTube([new THREE.Vector3(OX+1.15,GY,0),new THREE.Vector3(OX+2,GY,0),new THREE.Vector3(OX+2,CY-1.55,0)],0xffb020,.035,.5);g.add(oToMul);
+  // tanh → multiply
+  const tToMul=makeTube([new THREE.Vector3(OX+.8,CY-1.2,0),new THREE.Vector3(OX+1.7,CY-1.2,0)],0x4a90ff,.03,.4);g.add(tToMul);
 
-  // h_{t-1} input
-  const htIn = makeTube([new THREE.Vector3(-7, -0.5, 0), new THREE.Vector3(-6, -0.5, 0), new THREE.Vector3(-6, 0, 0)], 0xe4e2df, 0.04);
-  g.add(htIn);
-  const htInLabel = makeLabel('h_{t-1}', '#8a8a9a'); htInLabel.position.set(-7.5, -0.5, 0); g.add(htInLabel);
+  // h_t output: first merge down to the hidden line, then continue right
+  const htOut=makeTube([new THREE.Vector3(OX+2,CY-1.2,0),new THREE.Vector3(OX+2,-1,0),new THREE.Vector3(9,-1,0)],0xe4e2df,.05,.5);g.add(htOut);
+  const htSp=makeSphere(.22,0xe4e2df,true);htSp.position.set(9,-1,0);g.add(htSp);
+  const htL=makeLabel('h_t','#e4e2df');htL.position.set(9.5,-1.5,0);g.add(htL);
+  hlMap.lstm.output=[oBox,tanhBox,oMul,oToMul,tToMul,cTap,htOut,htSp,oMulL,hToO,xToO,hBackbone];
 
-  // x_t input
-  const xtIn = makeTube([new THREE.Vector3(0, -4, 0), new THREE.Vector3(0, -2.2, 0)], 0x8a8a9a, 0.04);
-  g.add(xtIn);
-  const xtLabel = makeLabel('x_t', '#8a8a9a'); xtLabel.position.set(0, -4.5, 0); g.add(xtLabel);
+  // ===== FLOWS =====
+  flows.lstm.push(new Flow(22,0x70b0ff,[new THREE.Vector3(-9,CY,0),new THREE.Vector3(9,CY,0)],.003)); // cell state
+  flows.lstm.push(new Flow(8,0xff7a92,[new THREE.Vector3(FX,GY,0),new THREE.Vector3(FX,CY,0)],.006)); // forget up
+  flows.lstm.push(new Flow(8,0x60ff96,[new THREE.Vector3(IX+1.8,(GY+CANDY)/2,0),new THREE.Vector3(IX+1.8,CY,0)],.006)); // input up
+  flows.lstm.push(new Flow(8,0xffd060,[new THREE.Vector3(OX,GY,0),new THREE.Vector3(OX+2,GY,0),new THREE.Vector3(OX+2,CY-1.2,0),new THREE.Vector3(OX+2,-1,0),new THREE.Vector3(9,-1,0)],.004)); // output
+  flows.lstm.push(new Flow(10,0xcccccc,[new THREE.Vector3(-9,-1,0),new THREE.Vector3(-5.5,-1,0),new THREE.Vector3(OX,-1,0)],.004)); // h in
+  flows.lstm.forEach(f=>g.add(f.pts));
 
-  // Particles
-  const pCell = new FlowParticles(20, 0x70b0ff, [new THREE.Vector3(-7, Y_CELL, 0), new THREE.Vector3(7, Y_CELL, 0)], 0.004);
-  g.add(pCell.points); particles.lstm.push(pCell);
-
-  const pForget = new FlowParticles(8, 0xff7a92, [new THREE.Vector3(-3.5, -0.5, 0), new THREE.Vector3(-3.5, 1.2, 0), new THREE.Vector3(-3.5, Y_CELL, 0)], 0.006);
-  g.add(pForget.points); particles.lstm.push(pForget);
-
-  const pInput = new FlowParticles(8, 0x60ff96, [new THREE.Vector3(0, -2, 0), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(0, Y_CELL, 0)], 0.005);
-  g.add(pInput.points); particles.lstm.push(pInput);
-
-  const pOutput = new FlowParticles(8, 0xffd060, [new THREE.Vector3(3.5, -0.5, 0), new THREE.Vector3(3.5, 1.2, 0), new THREE.Vector3(5, 2, 0), new THREE.Vector3(7, 2, 0)], 0.005);
-  g.add(pOutput.points); particles.lstm.push(pOutput);
-
-  scene.add(g);
-  g.visible = false;
-})();
-
-// ---- GRU ----
-(function buildGRU() {
-  const g = groups.gru;
-  const Y_H = 3; // hidden state highway
-
-  // Hidden state pipe
-  const hPipe = makeTube([new THREE.Vector3(-7, Y_H, 0), new THREE.Vector3(7, Y_H, 0)], 0xe4e2df, 0.07);
-  g.add(hPipe);
-  const hL1 = makeLabel('h_{t-1}', '#8a8a9a'); hL1.position.set(-7.5, Y_H + 0.5, 0); g.add(hL1);
-  const hL2 = makeLabel('h_t', '#e4e2df'); hL2.position.set(7.5, Y_H + 0.5, 0); g.add(hL2);
-
-  // Update gate
-  const updateBox = makeBox(2.2, 1.2, 1.5, 0x00d4aa, 0.35);
-  updateBox.position.set(-3, 0.5, 0);
-  g.add(updateBox);
-  const zLabel = makeLabel('Update σ', '#40ffcc');
-  zLabel.position.set(-3, 0.5, 1);
-  g.add(zLabel);
-  highlightables.gru.update = [updateBox];
-
-  // (1-z) op on hidden state
-  const oneMinusZ = makeSphere(0.35, 0x00d4aa, true);
-  oneMinusZ.position.set(-3, Y_H, 0);
-  g.add(oneMinusZ);
-  const omzLabel = makeLabel('1-z', '#40ffcc'); omzLabel.position.set(-3, Y_H + 0.7, 0.3); omzLabel.scale.set(1.2, 0.3, 1); g.add(omzLabel);
-  const uConn = makeTube([new THREE.Vector3(-3, 1.2, 0), new THREE.Vector3(-3, Y_H - 0.4, 0)], 0x00d4aa, 0.03);
-  g.add(uConn);
-  highlightables.gru.update.push(oneMinusZ, uConn);
-
-  // Reset gate
-  const resetBox = makeBox(2.2, 1.2, 1.5, 0xff8040, 0.35);
-  resetBox.position.set(1, 0.5, 0);
-  g.add(resetBox);
-  const rLabel = makeLabel('Reset σ', '#ffa070');
-  rLabel.position.set(1, 0.5, 1);
-  g.add(rLabel);
-  highlightables.gru.reset = [resetBox];
-
-  // Candidate
-  const candBox = makeBox(2.2, 1.2, 1.5, 0xb060ff, 0.3);
-  candBox.position.set(1, -1.5, 0);
-  g.add(candBox);
-  const candLabel = makeLabel('h̃ tanh', '#d0a0ff');
-  candLabel.position.set(1, -1.5, 1);
-  g.add(candLabel);
-  const rConn = makeTube([new THREE.Vector3(1, -0.1, 0), new THREE.Vector3(1, -0.8, 0)], 0xff8040, 0.03);
-  g.add(rConn);
-  highlightables.gru.candidate = [candBox, rConn];
-
-  // z mul op
-  const zMul = makeSphere(0.35, 0x00d4aa, true);
-  zMul.position.set(3.5, Y_H, 0);
-  g.add(zMul);
-  const zMulLabel = makeLabel('z', '#40ffcc'); zMulLabel.position.set(3.5, Y_H + 0.7, 0.3); zMulLabel.scale.set(1, 0.3, 1); g.add(zMulLabel);
-  const candToZ = makeTube([new THREE.Vector3(1, -1.5, 0), new THREE.Vector3(3.5, -1.5, 0), new THREE.Vector3(3.5, Y_H - 0.4, 0)], 0xb060ff, 0.03);
-  g.add(candToZ);
-  highlightables.gru.interp = [zMul, candToZ, oneMinusZ];
-
-  // Add sphere
-  const addSp = makeSphere(0.3, 0xe4e2df, true);
-  addSp.position.set(5.5, Y_H, 0);
-  g.add(addSp);
-  const addSpLabel = makeLabel('+', '#e4e2df'); addSpLabel.position.set(5.5, Y_H + 0.7, 0.3); addSpLabel.scale.set(1, 0.3, 1); g.add(addSpLabel);
-  highlightables.gru.interp.push(addSp);
-
-  // x_t input
-  const xtIn = makeTube([new THREE.Vector3(-1, -4, 0), new THREE.Vector3(-1, -0.1, 0)], 0x8a8a9a, 0.04);
-  g.add(xtIn);
-  const xtLabel = makeLabel('x_t', '#8a8a9a'); xtLabel.position.set(-1, -4.5, 0); g.add(xtLabel);
-
-  // Particles
-  const pH = new FlowParticles(18, 0xe4e2df, [new THREE.Vector3(-7, Y_H, 0), new THREE.Vector3(7, Y_H, 0)], 0.004);
-  g.add(pH.points); particles.gru.push(pH);
-
-  const pZ = new FlowParticles(8, 0x40ffcc, [new THREE.Vector3(-3, 0, 0), new THREE.Vector3(-3, 1.2, 0), new THREE.Vector3(-3, Y_H, 0)], 0.006);
-  g.add(pZ.points); particles.gru.push(pZ);
-
-  const pR = new FlowParticles(6, 0xffa070, [new THREE.Vector3(1, -0.1, 0), new THREE.Vector3(1, -1, 0)], 0.007);
-  g.add(pR.points); particles.gru.push(pR);
-
-  const pCand = new FlowParticles(8, 0xd0a0ff, [new THREE.Vector3(1, -1.5, 0), new THREE.Vector3(3.5, -1.5, 0), new THREE.Vector3(3.5, Y_H, 0)], 0.005);
-  g.add(pCand.points); particles.gru.push(pCand);
-
-  scene.add(g);
-  g.visible = false;
+  scene.add(g);g.visible=false;
 })();
 
 // ================================================================
-//  UI STATE
+//  BUILD GRU — ACCURATE CONNECTIONS
+//
+//  Data flow:
+//  - h_{t-1} enters from left on top pipe, x_t from below
+//  - [h_{t-1}, x_t] feeds update gate (z) and reset gate (r)
+//  - reset gate filters h_{t-1}: r⊙h_{t-1} feeds into candidate
+//  - candidate h̃ = tanh(W·[r⊙h_{t-1}, x_t] + b)
+//  - update gate splits: (1-z) multiplies h_{t-1}, z multiplies h̃
+//  - final: h_t = (1-z)⊙h_{t-1} + z⊙h̃  (add)
 // ================================================================
-let currentArch = 'rnn';
-let currentStep = 0;
+(function buildGRU(){
+  const g=groups.gru;
+  const HY=3.2;       // hidden state highway Y
+  const ZX=-4, RX=1;  // gate X
+  const GY=0;         // gates Y
+  const CANDY=-2;     // candidate Y
 
-function setArch(arch) {
-  currentArch = arch;
-  currentStep = 0;
+  // ===== HIDDEN STATE PIPE =====
+  const addX=RX+5.5;
+  const hPipeLeft=makeTube([new THREE.Vector3(-9,HY,0),new THREE.Vector3(addX-.45,HY,0)],0xe4e2df,.08,.45);g.add(hPipeLeft);
+  const hPipeRight=makeTube([new THREE.Vector3(addX+.45,HY,0),new THREE.Vector3(9,HY,0)],0xe4e2df,.08,.45);g.add(hPipeRight);
+  const hL1=makeLabel('h_{t-1}','#aaa');hL1.position.set(-9.5,HY+.5,0);g.add(hL1);
+  const hL2=makeLabel('h_t','#e4e2df');hL2.position.set(9.5,HY+.5,0);g.add(hL2);
 
-  // Toggle groups
-  Object.keys(groups).forEach(k => { groups[k].visible = k === arch; });
+  // ===== h_{t-1} drops down to feed gates =====
+  const hDrop=makeTube([new THREE.Vector3(-6,HY,0),new THREE.Vector3(-6,-1,0)],0xaaaaaa,.04,.3);g.add(hDrop);
+  const hFork=makeSphere(.15,0xcccccc);hFork.position.set(-6,-1,0);g.add(hFork);
 
-  // Update buttons
-  document.querySelectorAll('.arch-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.arch === arch);
+  // ===== x_t from below =====
+  const xtTube=makeTube([new THREE.Vector3(-1,-6,0),new THREE.Vector3(-1,-3.5,0)],0x8a8a9a,.05,.35);g.add(xtTube);
+  const xtL=makeLabel('x_t','#8a8a9a');xtL.position.set(-1,-6.5,0);g.add(xtL);
+  const xFork=makeSphere(.12,0x8a8a9a);xFork.position.set(-1,-3.5,0);g.add(xFork);
+
+  // ===== CONNECTIONS h→gates, x→gates =====
+  const hToZ=makeTube([new THREE.Vector3(-6,-1,0),new THREE.Vector3(ZX,-1,0),new THREE.Vector3(ZX,GY-.8,0)],0x888888,.025,.2);g.add(hToZ);
+  const hToR=makeTube([new THREE.Vector3(-6,-1,0),new THREE.Vector3(RX,-1,0),new THREE.Vector3(RX,GY-.8,0)],0x888888,.025,.2);g.add(hToR);
+  const xToZ=makeTube([new THREE.Vector3(-1,-3.5,0),new THREE.Vector3(ZX,-3.5,0),new THREE.Vector3(ZX,GY-.8,0)],0x555555,.02,.15);g.add(xToZ);
+  const xToR=makeTube([new THREE.Vector3(-1,-3.5,0),new THREE.Vector3(RX,-3.5,0),new THREE.Vector3(RX,GY-.8,0)],0x555555,.02,.15);g.add(xToR);
+
+  // ===== UPDATE GATE (z) =====
+  const zBox=makeBox(2.2,1.2,1.5,0x00d4aa,.35);zBox.position.set(ZX,GY,0);g.add(zBox);
+  const zLbl=makeLabel('Update σ','#40ffcc');zLbl.position.set(ZX,GY,.9);g.add(zLbl);
+
+  // (1-z) op on hidden state — left
+  const omzSp=makeSphere(.35,0x00d4aa,true);omzSp.position.set(ZX,HY,0);g.add(omzSp);
+  const omzL=makeLabel('1-z','#40ffcc',1.3);omzL.position.set(ZX,HY+.7,0);g.add(omzL);
+  const zToOmz=makeTube([new THREE.Vector3(ZX,GY+.7,0),new THREE.Vector3(ZX,HY-.4,0)],0x00d4aa,.035,.5);g.add(zToOmz);
+  hlMap.gru.update=[zBox,omzSp,omzL,zToOmz,hToZ,xToZ];
+
+  // ===== RESET GATE (r) =====
+  const rBox=makeBox(2.2,1.2,1.5,0xff8040,.35);rBox.position.set(RX,GY,0);g.add(rBox);
+  const rLbl=makeLabel('Reset σ','#ffa070');rLbl.position.set(RX,GY,.9);g.add(rLbl);
+
+  // r⊙h multiply sphere between reset and candidate
+  const rMul=makeSphere(.22,0xff8040,true);rMul.position.set(RX,GY-.9,0);g.add(rMul);
+  const rMulL=makeLabel('r⊙h','#ffa070',1.2);rMulL.position.set(RX+1.3,GY-.9,0);g.add(rMulL);
+  const rToMul=makeTube([new THREE.Vector3(RX,GY-.6,0),new THREE.Vector3(RX,GY-.9,0)],0xff8040,.03,.5);g.add(rToMul);
+  // h_{t-1} also connects to this multiply (the r⊙h operation)
+  const hToRmul=makeTube([new THREE.Vector3(-6,-1,0),new THREE.Vector3(RX-1.3,GY-.9,0),new THREE.Vector3(RX-.25,GY-.9,0)],0x888888,.02,.2);g.add(hToRmul);
+  hlMap.gru.reset=[rBox,rMul,rToMul,rMulL,hToR,xToR,hToRmul];
+
+  // ===== CANDIDATE h̃ =====
+  const candBox=makeBox(2.2,1.2,1.5,0xb060ff,.3);candBox.position.set(RX,CANDY,0);g.add(candBox);
+  const candLbl=makeLabel('h̃ tanh','#d0a0ff');candLbl.position.set(RX,CANDY,.9);g.add(candLbl);
+  // r⊙h → candidate
+  const rMulToCand=makeTube([new THREE.Vector3(RX,GY-1.1,0),new THREE.Vector3(RX,CANDY+.7,0)],0xff8040,.03,.4);g.add(rMulToCand);
+  // x_t → candidate
+  const xToCand=makeTube([new THREE.Vector3(-1,-3.5,0),new THREE.Vector3(RX-1.3,CANDY,0),new THREE.Vector3(RX-1.15,CANDY,0)],0x666666,.02,.15);g.add(xToCand);
+  hlMap.gru.candidate=[candBox,rMulToCand,xToCand,rMul,rMulL];
+
+  // ===== z⊙h̃ — multiply on right of hidden state pipe =====
+  const zMulSp=makeSphere(.35,0x00d4aa,true);zMulSp.position.set(RX+3,HY,0);g.add(zMulSp);
+  const zMulL=makeLabel('z·h̃','#40ffcc',1.3);zMulL.position.set(RX+3,HY+.7,0);g.add(zMulL);
+  // candidate → z·h̃ (tube going up from candidate to the z·h̃ sphere)
+  const candToZmul=makeTube([new THREE.Vector3(RX+1.15,CANDY,0),new THREE.Vector3(RX+3,CANDY,0),new THREE.Vector3(RX+3,HY-.4,0)],0xb060ff,.035,.4);g.add(candToZmul);
+  // update gate also sends z to this multiply (lateral connection)
+  const zToZmul=makeTube([new THREE.Vector3(ZX+1.15,GY,0),new THREE.Vector3(ZX+2,GY+.5,0),new THREE.Vector3(RX+3,GY+.5,0),new THREE.Vector3(RX+3,HY-.6,0)],0x00d4aa,.025,.25);g.add(zToZmul);
+
+  // ===== ADD sphere =====
+  const addSp=makeSphere(.3,0xe4e2df,true);addSp.position.set(addX,HY,0);g.add(addSp);
+  const addL=makeLabel('+','#e4e2df',1.2);addL.position.set(addX,HY+.7,0);g.add(addL);
+  // (1-z)·h branch reaches add directly on the highway
+  const omzToAdd=makeTube([new THREE.Vector3(ZX+.35,HY,0),new THREE.Vector3(addX-.35,HY,0)],0x00d4aa,.032,.35);g.add(omzToAdd);
+  // z·h̃ branch curves into add
+  const zMulToAdd=makeTube([new THREE.Vector3(RX+3.35,HY,0),new THREE.Vector3(RX+4.4,HY+.35,0),new THREE.Vector3(addX-.35,HY,0)],0x00d4aa,.032,.35);g.add(zMulToAdd);
+  hlMap.gru.interp=[zMulSp,zMulL,addSp,addL,candToZmul,zToZmul,omzSp,omzL,omzToAdd,zMulToAdd,hPipeLeft,hPipeRight];
+
+  // ===== FLOWS =====
+  flows.gru.push(new Flow(12,0xdddddd,[new THREE.Vector3(-9,HY,0),new THREE.Vector3(addX-.45,HY,0)],.003));
+  flows.gru.push(new Flow(6,0xdddddd,[new THREE.Vector3(addX+.45,HY,0),new THREE.Vector3(9,HY,0)],.003));
+  flows.gru.push(new Flow(8,0x40ffcc,[new THREE.Vector3(ZX,GY,0),new THREE.Vector3(ZX,HY,0)],.006));
+  flows.gru.push(new Flow(6,0xffa070,[new THREE.Vector3(RX,GY,0),new THREE.Vector3(RX,GY-.9,0),new THREE.Vector3(RX,CANDY+.7,0)],.006));
+  flows.gru.push(new Flow(8,0xd0a0ff,[new THREE.Vector3(RX,CANDY,0),new THREE.Vector3(RX+3,CANDY,0),new THREE.Vector3(RX+3,HY,0)],.004));
+  flows.gru.push(new Flow(6,0x40ffcc,[new THREE.Vector3(RX+3.35,HY,0),new THREE.Vector3(RX+4.4,HY+.35,0),new THREE.Vector3(addX-.35,HY,0)],.005));
+  flows.gru.push(new Flow(6,0x40ffcc,[new THREE.Vector3(ZX+.35,HY,0),new THREE.Vector3(addX-.35,HY,0)],.004));
+  flows.gru.push(new Flow(10,0xaaaaaa,[new THREE.Vector3(-6,HY,0),new THREE.Vector3(-6,-1,0),new THREE.Vector3(RX,-1,0)],.004));
+  flows.gru.forEach(f=>g.add(f.pts));
+
+  scene.add(g);g.visible=false;
+})();
+
+// ================================================================
+//  UI STATE & LOGIC
+// ================================================================
+let currentArch='rnn',currentStep=0;
+
+function setArch(arch){
+  currentArch=arch;currentStep=0;
+  Object.keys(groups).forEach(k=>{groups[k].visible=k===arch});
+  document.querySelectorAll('.arch-btn').forEach(b=>b.classList.toggle('active',b.dataset.arch===arch));
+  pointLight.color.setHex(ARCHS[arch].color);
+  tSph={theta:0,phi:Math.PI/5.5,radius:arch==='rnn'?17:22};
+  updateInfo();updateLegend();
+}
+
+function updateInfo(){
+  const a=ARCHS[currentArch],s=a.steps[currentStep];
+  document.getElementById('info-title').textContent=a.title;
+  document.getElementById('info-title').className=currentArch;
+  document.getElementById('info-desc').innerHTML=s.desc;
+  document.getElementById('info-eq').innerHTML=s.eq;
+  const dots=document.getElementById('step-dots');dots.innerHTML='';
+  a.steps.forEach((_,i)=>{const d=document.createElement('div');d.className='step-dot'+(i===currentStep?` a ${currentArch}`:'');dots.appendChild(d)});
+  document.getElementById('step-lbl').textContent=s.label;
+  document.getElementById('step-prev').disabled=currentStep===0;
+  document.getElementById('step-next').disabled=currentStep===a.steps.length-1;
+  applyHL(s.highlight);
+}
+
+function updateLegend(){
+  const el=document.getElementById('legend');el.innerHTML='';
+  ARCHS[currentArch].legend.forEach(l=>{el.innerHTML+=`<div class="legend-item"><div class="legend-dot" style="background:${l.color}"></div>${l.label}</div>`});
+}
+
+function applyHL(key){
+  const g=groups[currentArch],hl=hlMap[currentArch];
+  // store original opacities once
+  g.traverse(c=>{if(c.material&&c._oo===undefined)c._oo=c.material.opacity});
+  if(!key){g.traverse(c=>{if(c.material)c.material.opacity=c._oo||.5});return}
+  // dim all
+  g.traverse(c=>{if(c.material)c.material.opacity=.04});
+  // brighten target + always show pipes
+  const targets=hl[key]||[];
+  targets.forEach(obj=>obj.traverse(c=>{if(c.material)c.material.opacity=c._oo||.6}));
+  // always keep pipes visible dimmed
+  if(currentArch==='lstm'){hlMap.lstm.cellstate.forEach(o=>o.traverse(c=>{if(c.material)c.material.opacity=.25}));}
+}
+
+document.querySelectorAll('.arch-btn').forEach(b=>b.addEventListener('click',()=>setArch(b.dataset.arch)));
+document.getElementById('step-prev').addEventListener('click',()=>{if(currentStep>0){currentStep--;updateInfo()}});
+document.getElementById('step-next').addEventListener('click',()=>{if(currentStep<ARCHS[currentArch].steps.length-1){currentStep++;updateInfo()}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'&&currentStep<ARCHS[currentArch].steps.length-1){currentStep++;updateInfo()}
+  if(e.key==='ArrowLeft'&&currentStep>0){currentStep--;updateInfo()}
+  if(e.key==='1')setArch('rnn');if(e.key==='2')setArch('lstm');if(e.key==='3')setArch('gru');
+});
+
+// ================================================================
+//  RENDER LOOP
+// ================================================================
+let t=0;
+function animate(){
+  requestAnimationFrame(animate);t+=.016;
+  updateCam();
+  if(!isDragging)tSph.theta+=.0008;
+  flows[currentArch].forEach(f=>f.update());
+  // Pulse emissive spheres
+  groups[currentArch].traverse(c=>{
+    if(c.material&&c.material.emissiveIntensity>0&&c.material.opacity>.1){
+      c.material.emissiveIntensity=.4+Math.sin(t*3+c.position.x*2)*.25;
+    }
+    if(c.geometry&&c.geometry.type==='BoxGeometry'&&c.material.opacity>.1){
+      const s=1+Math.sin(t*2+c.position.x)*.012;c.scale.set(s,s,s);
+    }
   });
+  renderer.render(scene,camera);
+}
 
-  // Update point light color
-  const c = ARCHS[arch].color;
-  pointLight.color.setHex(c);
-
-  // Reset camera
-  targetSpherical = { theta: 0, phi: Math.PI / 5.5, radius: arch === 'rnn' ? 16 : 20 };
-
+const params = new URLSearchParams(window.location.search);
+const initialArch = params.get('arch');
+const safeArch = (initialArch && ARCHS[initialArch]) ? initialArch : 'rnn';
+setArch(safeArch);
+const initialStepRaw = Number.parseInt(params.get('step') || '0', 10);
+if (Number.isFinite(initialStepRaw)) {
+  const maxStep = ARCHS[currentArch].steps.length - 1;
+  currentStep = Math.max(0, Math.min(maxStep, initialStepRaw));
   updateInfo();
-  updateLegend();
 }
-
-function updateInfo() {
-  const a = ARCHS[currentArch];
-  const s = a.steps[currentStep];
-  document.getElementById('info-title').textContent = a.title;
-  document.getElementById('info-title').className = currentArch;
-  document.getElementById('info-desc').innerHTML = s.desc;
-  document.getElementById('info-eq').innerHTML = s.eq;
-
-  // Dots
-  const dotsEl = document.getElementById('step-dots');
-  dotsEl.innerHTML = '';
-  a.steps.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'step-dot' + (i === currentStep ? ` a ${currentArch}` : '');
-    dotsEl.appendChild(d);
-  });
-  document.getElementById('step-lbl').textContent = s.label;
-  document.getElementById('step-prev').disabled = currentStep === 0;
-  document.getElementById('step-next').disabled = currentStep === a.steps.length - 1;
-
-  applyHighlight(s.highlight);
-}
-
-function updateLegend() {
-  const leg = document.getElementById('legend');
-  leg.innerHTML = '';
-  ARCHS[currentArch].legend.forEach(l => {
-    const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.innerHTML = `<div class="legend-dot" style="background:${l.color}"></div>${l.label}`;
-    leg.appendChild(item);
-  });
-}
-
-function applyHighlight(key) {
-  const hl = highlightables[currentArch];
-  const group = groups[currentArch];
-
-  // Reset all materials
-  group.traverse(child => {
-    if (child.material) {
-      if (child._origOpacity === undefined) child._origOpacity = child.material.opacity;
-    }
-  });
-
-  if (!key) {
-    // Show everything full
-    group.traverse(child => {
-      if (child.material && child._origOpacity !== undefined) {
-        child.material.opacity = child._origOpacity;
-      }
-    });
-    return;
-  }
-
-  // Dim everything
-  group.traverse(child => {
-    if (child.material) {
-      child.material.opacity = 0.06;
-    }
-  });
-
-  // Highlight the target
-  if (hl[key]) {
-    hl[key].forEach(obj => {
-      obj.traverse(c => {
-        if (c.material) c.material.opacity = c._origOpacity !== undefined ? c._origOpacity : 0.9;
-      });
-    });
-  }
-}
-
-// Event listeners
-document.querySelectorAll('.arch-btn').forEach(b => {
-  b.addEventListener('click', () => setArch(b.dataset.arch));
-});
-document.getElementById('step-prev').addEventListener('click', () => {
-  if (currentStep > 0) { currentStep--; updateInfo(); }
-});
-document.getElementById('step-next').addEventListener('click', () => {
-  const max = ARCHS[currentArch].steps.length - 1;
-  if (currentStep < max) { currentStep++; updateInfo(); }
-});
-
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    const max = ARCHS[currentArch].steps.length - 1;
-    if (currentStep < max) { currentStep++; updateInfo(); }
-  }
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    if (currentStep > 0) { currentStep--; updateInfo(); }
-  }
-  if (e.key === '1') setArch('rnn');
-  if (e.key === '2') setArch('lstm');
-  if (e.key === '3') setArch('gru');
-});
-
-// ================================================================
-//  ANIMATION LOOP
-// ================================================================
-let time = 0;
-function animate() {
-  requestAnimationFrame(animate);
-  time += 0.016;
-
-  updateCamera();
-
-  // Slow auto-rotate when not dragging
-  if (!isDragging) targetSpherical.theta += 0.001;
-
-  // Update particles
-  particles[currentArch].forEach(p => p.update(time));
-
-  // Animate gate boxes (subtle pulse)
-  const group = groups[currentArch];
-  group.traverse(child => {
-    if (child.geometry && child.geometry.type === 'BoxGeometry' && child.material.opacity > 0.15) {
-      const s = 1 + Math.sin(time * 2 + child.position.x) * 0.015;
-      child.scale.set(s, s, s);
-    }
-  });
-
-  // Animate emissive spheres
-  group.traverse(child => {
-    if (child.geometry && child.geometry.type === 'SphereGeometry' && child.material.emissiveIntensity > 0) {
-      child.material.emissiveIntensity = 0.3 + Math.sin(time * 3 + child.position.x * 2) * 0.2;
-    }
-  });
-
-  renderer.render(scene, camera);
-}
-
-// ================================================================
-//  INIT
-// ================================================================
-setArch('rnn');
 animate();
 </script>
 </body>
