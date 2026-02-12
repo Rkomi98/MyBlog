@@ -382,9 +382,9 @@ Questo flusso lineare permette ai gradienti di retropropagarsi senza svanire, an
 
 Una cella LSTM controlla il flusso di informazioni tramite tre porte (gates). Ogni porta è una rete neurale con attivazione **sigmoide** ($\sigma$), che produce valori tra 0 (chiuso, non passa nulla) e 1 (aperto, passa tutto).
 
-L'LSTM aggiunge quindi un **gating**: in ogni cella ci sono porte di ingresso, uscita e soprattutto _porta di forget_, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l'LSTM conserva una _cella di stato_ $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l'azzeramento. 
+L'architettura LSTM aggiunge quindi un **gating**: in ogni cella ci sono porte di ingresso, uscita e soprattutto _porta di forget_, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l'LSTM conserva una _cella di stato_ $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l'azzeramento. 
 
-L'LSTM può così _"ricordare"_ informazioni per più passi, decidendo autonomamente quando dimenticare. Vediamo nelle prossime sottosezioni l'anatomia della cella di stato.
+L'architettura LSTM può così _"ricordare"_ informazioni per più passi, decidendo autonomamente quando dimenticare. Vediamo nelle prossime sottosezioni l'anatomia della cella di stato.
 
 #### A. Forget Gate: La porta dell'oblio
 Questa parte risponde alla domanda: 
