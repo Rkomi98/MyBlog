@@ -55,6 +55,8 @@ Se la CLT ci dice *quanto* il cervello può processare, gli studi di [William Cl
 
 Al vertice della gerarchia troviamo la **posizione su una scala comune**. Il cervello umano è straordinariamente abile nel confrontare la posizione di punti o barre allineati su un singolo asse (come in un bar chart o un dot plot). Questo compito percettivo permette di distinguere differenze minime con grande accuratezza. Nel loro articolo sostengono che un compito percettivo è considerato più accurato se porta a giudizi umani più vicini alle quantità reali codificate. Gli esperimenti condotti confermano che i giudizi basati sulla **posizione** sono significativamente più accurati rispetto a quelli basati sulla *lunghezza* o sull'*angolo*.
 
+![Confronto tra barplot e dotplot](../Assets/barplot_dotplot.svg)
+*Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.*
 
 Segue, con un leggero degrado dell'accuratezza, la **Posizione su scale non allineate** (es. *small multiples* o pannelli di grafici affiancati). Questo compito si verifica quando si confrontano valori rappresentati su scale identiche ma spazialmente separate. Un esempio tipico è quando si confrontano dati presenti in pannelli grafici diversi affiancati (juxtaposed graphs), dove ogni pannello ha la propria scala
 

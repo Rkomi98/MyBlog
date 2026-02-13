@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-13T09:46:32.268Z",
+    "dateModified": "2026-02-13T10:51:05.842Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -958,9 +958,9 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#12-gerarchia-della-percezione-grafica-cleveland-mcgill">
+          <a class="post-toc__link" href="#gerarchia-della-percezione-grafica">
             <span class="post-toc__number">2.2</span>
-            <span class="post-toc__text">**1.2 Gerarchia della Percezione Grafica (Cleveland &amp; McGill)**</span>
+            <span class="post-toc__text">Gerarchia della percezione grafica</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
@@ -1127,14 +1127,14 @@
 </thead>
 <tbody><tr>
 <td align="left"><strong>Intrinseco</strong></td>
-<td align="left">Complessità inerente ai dati e al problema di business (es. calcolo EBITDA).</td>
+<td align="left">Complessità inerente ai dati e al problema (es. calcolo EBITDA).</td>
 <td align="left">Semplificare eccessivamente omettendo variabili causali necessarie.</td>
 <td align="left">Gestire attraverso segmentazione logica (Pyramid Principle).</td>
 </tr>
 <tr>
 <td align="left"><strong>Estraneo</strong></td>
 <td align="left">Sforzo inutile causato da design povero o &quot;chartjunk&quot;.</td>
-<td align="left">Grafici 3D, doppi assi Y, legende dislocate, decorazioni inutili.</td>
+<td align="left">Grafici 3D, doppi assi $Y$, legende dislocate, decorazioni inutili.</td>
 <td align="left">Minimizzare drasticamente (Data-Ink Ratio).</td>
 </tr>
 <tr>
@@ -1144,8 +1144,13 @@
 <td align="left">Massimizzare fornendo contesto e narrazione chiara.</td>
 </tr>
 </tbody></table>
-</div></figure><h3 id="12-gerarchia-della-percezione-grafica-cleveland-mcgill"><strong>1.2 Gerarchia della Percezione Grafica (Cleveland &amp; McGill)</strong></h3>
-<p>Se la CLT ci dice <em>quanto</em> il cervello può processare, gli studi di William Cleveland e Robert McGill (1984) ci dicono <em>come</em> il cervello decodifica le informazioni visive con maggiore o minore accuratezza. La loro ricerca ha stabilito una gerarchia fondamentale dei compiti percettivi, ordinati dal più accurato al meno accurato.<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a> Ignorare questa gerarchia significa scegliere deliberatamente di comunicare i dati in modo impreciso.<br>Al vertice della gerarchia troviamo la <strong>Posizione su una scala comune</strong>. Il cervello umano è straordinariamente abile nel confrontare la posizione di punti o barre allineati su un singolo asse (come in un bar chart o un dot plot). Questo compito percettivo permette di distinguere differenze minime con grande accuratezza.<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a> Segue, con un leggero degrado dell&#39;accuratezza, la <strong>Posizione su scale non allineate</strong> (es. <em>small multiples</em> o pannelli di grafici affiancati).<br>Scendendo nella gerarchia, troviamo la <strong>Lunghezza</strong>, la <strong>Direzione</strong> e l&#39;<strong>Angolo</strong>. È qui che risiede la condanna scientifica dei diagrammi a torta (Pie Charts). I pie chart costringono l&#39;utente a giudicare angoli e aree, compiti in cui il sistema visivo umano è notoriamente impreciso, specialmente quando le porzioni sono simili o numerose.<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a> Cleveland e McGill hanno dimostrato che il giudizio sull&#39;angolo porta a errori di stima significativamente superiori rispetto al giudizio sulla posizione. Pertanto, l&#39;uso di un pie chart in un report enterprise non è una scelta stilistica, ma un errore tecnico che riduce la leggibilità del dato.<br>Al fondo della gerarchia troviamo l&#39;<strong>Area</strong>, il <strong>Volume</strong> e il <strong>Colore (Saturazione/Tonalità)</strong> per codificare grandezze quantitative. I grafici a bolle (Bubble Charts) o le mappe coroplete (Heatmaps), sebbene utili per fornire una panoramica generale, non dovrebbero mai essere utilizzati quando è richiesta precisione nel confronto dei valori, poiché la percezione dell&#39;area non scala linearmente nella mente umana (Legge di Stevens).<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a></p>
+</div></figure><h3 id="gerarchia-della-percezione-grafica">Gerarchia della percezione grafica</h3>
+<p>Se la CLT ci dice <em>quanto</em> il cervello può processare, gli studi di <a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">William Cleveland e Robert McGill (1984)</a> ci dicono <em>come</em> il cervello decodifica le informazioni visive con maggiore o minore accuratezza. La loro ricerca ha stabilito una gerarchia fondamentale dei compiti percettivi, ordinati dal più accurato al meno accurato. </p>
+<p>Al vertice della gerarchia troviamo la <strong>posizione su una scala comune</strong>. Il cervello umano è straordinariamente abile nel confrontare la posizione di punti o barre allineati su un singolo asse (come in un bar chart o un dot plot). Questo compito percettivo permette di distinguere differenze minime con grande accuratezza. Nel loro articolo sostengono che un compito percettivo è considerato più accurato se porta a giudizi umani più vicini alle quantità reali codificate. Gli esperimenti condotti confermano che i giudizi basati sulla <strong>posizione</strong> sono significativamente più accurati rispetto a quelli basati sulla <em>lunghezza</em> o sull&#39;<em>angolo</em>.</p>
+<p><img src="../../../Assets/barplot_dotplot.svg" alt="Confronto tra barplot e dotplot">
+<em>Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.</em></p>
+<p>Segue, con un leggero degrado dell&#39;accuratezza, la <strong>Posizione su scale non allineate</strong> (es. <em>small multiples</em> o pannelli di grafici affiancati). Questo compito si verifica quando si confrontano valori rappresentati su scale identiche ma spazialmente separate. Un esempio tipico è quando si confrontano dati presenti in pannelli grafici diversi affiancati (juxtaposed graphs), dove ogni pannello ha la propria scala</p>
+<p>Scendendo nella gerarchia, troviamo la <strong>Lunghezza</strong>, la <strong>Direzione</strong> e l&#39;<strong>Angolo</strong>. È qui che risiede la condanna scientifica dei diagrammi a torta (Pie Charts). I pie chart costringono l&#39;utente a giudicare angoli e aree, compiti in cui il sistema visivo umano è notoriamente impreciso, specialmente quando le porzioni sono simili o numerose.<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a> Cleveland e McGill hanno dimostrato che il giudizio sull&#39;angolo porta a errori di stima significativamente superiori rispetto al giudizio sulla posizione. Pertanto, l&#39;uso di un pie chart in un report enterprise non è una scelta stilistica, ma un errore tecnico che riduce la leggibilità del dato.<br>Al fondo della gerarchia troviamo l&#39;<strong>Area</strong>, il <strong>Volume</strong> e il <strong>Colore (Saturazione/Tonalità)</strong> per codificare grandezze quantitative. I grafici a bolle (Bubble Charts) o le mappe coroplete (Heatmaps), sebbene utili per fornire una panoramica generale, non dovrebbero mai essere utilizzati quando è richiesta precisione nel confronto dei valori, poiché la percezione dell&#39;area non scala linearmente nella mente umana (Legge di Stevens).<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a></p>
 <h3 id="13-attributi-pre-attentivi-e-data-ink-ratio"><strong>1.3 Attributi Pre-attentivi e Data-Ink Ratio</strong></h3>
 <p>Per guidare l&#39;attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare gli <strong>Attributi Pre-attentivi</strong>. Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa in meno di 200 millisecondi, prima ancora che intervenga l&#39;attenzione conscia.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">11</a> L&#39;uso strategico del colore, ad esempio, non serve a &quot;rendere bello&quot; il grafico, ma a segnalare l&#39;eccezione. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso <em>solo</em> per i mercati sotto-performanti sfrutta la pre-attenzione per dire al C-Level: &quot;Guarda qui&quot;. Questo riduce il tempo di ricerca visiva e abbatte il carico estraneo.<br>Questo concetto si sposa perfettamente con il principio del <strong>Data-Ink Ratio</strong> di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all&#39;inchiostro totale del grafico.<a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio">14</a></p>
 <p>$$\text{Data-Ink Ratio} = \frac{\text{Inchiostro dei Dati}}{\text{Inchiostro Totale}}$$<br>L&#39;imperativo operativo è cancellare tutto ciò che non è dato (non-data-ink) e tutto ciò che è dato ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è &quot;chartjunk&quot; che deve essere rimosso per massimizzare il segnale rispetto al rumore.<a href="https://www.holistics.io/blog/data-ink-ratio/">16</a> Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l&#39;intera potenza cognitiva del lettore sui numeri e sui trend.</p>
