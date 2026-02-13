@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-13T14:04:01.786Z",
+    "dateModified": "2026-02-13T16:14:12.941Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -964,9 +964,9 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#attributi-pre-attentivi-e-data-ink-ratio">
+          <a class="post-toc__link" href="#il-data-ink-ratio">
             <span class="post-toc__number">2.3</span>
-            <span class="post-toc__text">Attributi Pre-attentivi e Data-Ink Ratio</span>
+            <span class="post-toc__text">Il Data-Ink ratio</span>
           </a>
           
         </li>
@@ -1160,7 +1160,6 @@
 <ul>
 <li>gli errori medi nei giudizi di lunghezza risultano circa dal 40% al 250% più alti rispetto ai giudizi di posizione;</li>
 <li>il 78% dei grandi errori osservati negli esperimenti ricade nei compiti basati sulla lunghezza;</li>
-<li>emerge anche un bias sistematico: quando il valore reale è circa tra il 25% e il 50% del totale, le persone tendono a stimarlo più basso di quanto sia davvero (sottostima).</li>
 </ul>
 <p>Nonostante questo, la lunghezza resta comunque preferibile ad <strong>area</strong> e <strong>volume</strong>. In termini psicofisici (<em>Legge di Stevens</em>, $p = k a^{\beta}$), la lunghezza ha un esponente $\beta$ vicino a 1: la percezione è quindi quasi lineare e molto meno distorta rispetto a codifiche areali o volumetriche, dove la sottostima è più marcata.</p>
 <p>Dal punto di vista del design, i casi più problematici sono:</p>
@@ -1169,16 +1168,34 @@
 <li><strong>Curve-difference charts:</strong> quando due serie sono rappresentate come linee, il lettore dovrebbe stimare la distanza verticale tra curve (lunghezza), ma l&#39;occhio tende a inseguire la distanza minima locale tra i tracciati, introducendo errori anche grossolani; in pratica, è un compito percettivo quasi impossibile da svolgere con precisione.</li>
 </ul>
 <p>Questo spiega perché, come visto con i rettangoli incorniciati, la <strong>posizione su scale non allineate</strong> rende meglio che la lunghezza: quando introduci un riferimento visivo stabile, il confronto percettivo diventa più robusto. Operativamente, quando possibile conviene sostituire codifiche basate sulla lunghezza (es. molte barre impilate) con grafici che privilegiano la posizione, come i <strong>dot chart</strong>.</p>
-<p>Nella loro ricerca risulta evidente grafici a torta sono sconsigliati perché costringono l&#39;osservatore a usare compiti percettivi relativamente poco accurati: <strong>angolo</strong> e <strong>area</strong>. In sintesi:</p>
+<p>Per <strong>angolo</strong> e <strong>direzione</strong> il quadro è più sottile: non sono compiti equivalenti, anche se condividono lo stesso livello della gerarchia.</p>
+<ol>
+<li><p><strong>Angolo (e problema dei pie chart).</strong><br>I grafici a torta richiedono soprattutto giudizi angolari, ed è qui che emergono i limiti maggiori. Nel <em>Position-Angle experiment</em>, i giudizi basati sulla posizione risultano quasi due volte più accurati (fattore ~1,96) rispetto a quelli basati sull&#39;angolo; inoltre, l&#39;88% dei grandi errori osservati proviene proprio dai compiti angolari. Qui compare un bias sistematico di sottostima, soprattutto nella fascia 25%-50%. La conseguenza operativa che quando l&#39;obiettivo è il confronto quantitativo, conviene sostituire il pie chart con bar chart o, meglio ancora, dot chart.</p>
+</li>
+<li><p><strong>Direzione (slope/pendenza).</strong><br>Nei grafici cartesiani, la direzione è invece utile per riconoscere rapidamente pattern (linearità, non linearità, cambi di regime). Se gli stessi dati vengono ripresentati eliminando l&#39;indizio di pendenza, la lettura della struttura complessiva diventa molto più faticosa. Detto questo, stimare con precisione un valore di pendenza resta meno accurato che leggere una posizione su scala. Per questo, quando serve accuratezza numerica, è spesso utile trasformare il problema in un compito di posizione (ad esempio calcolando le pendenze e riportandole come punti su una scala, come suggerito da Tukey in alcuni contesti diagnostici).</p>
+</li>
+</ol>
+<p>In sintesi: l&#39;<strong>angolo</strong> è un compito debole da evitare per confronti precisi (quindi pie chart da limitare), mentre la <strong>direzione</strong> è molto efficace per cogliere trend e forma globale dei dati. Quando però si passa dalla lettura qualitativa alla stima quantitativa, il criterio migliore resta sempre lo stesso: riportare il confronto su una <strong>posizione su scala comune</strong>.</p>
+<p>Al fondo della gerarchia troviamo l&#39;<strong>Area</strong> e il <strong>Volume</strong> per codificare grandezze quantitative. Qui la differenza rispetto alla lunghezza è spiegata bene dalla legge psicofisica di Stevens 
+$$p = k a^{\beta},$$ 
+che lega intensità percepita e intensità reale:</p>
 <ul>
-<li><strong>Angolo:</strong> le fette del pie chart richiedono confronti angolari, che nella gerarchia percettiva sono meno affidabili della <strong>posizione su scala comune</strong>.</li>
-<li><strong>Area:</strong> oltre all&#39;angolo, il lettore confronta implicitamente anche le aree delle fette; questo compito è ancora meno preciso. In base alla legge psicofisica di Stevens, la percezione di area e volume tende a essere distorta (spesso sottostimata), rendendo più difficile confrontare correttamente quantità simili.
-Pertanto, l&#39;uso di un pie chart in un report enterprise non è una scelta stilistica, ma un errore tecnico che riduce la leggibilità del dato.</li>
+<li><strong>Lunghezza:</strong> $\beta \approx 1$, quindi la percezione è quasi lineare (raddoppio fisico ≈ raddoppio percepito).</li>
+<li><strong>Area:</strong> $\beta &lt; 1$, tipicamente intorno a 0,7, quindi tendiamo a sottostimare; per far apparire una forma come “doppia”, l&#39;area reale deve crescere più del doppio.</li>
+<li><strong>Volume:</strong> $0.5 \leq \beta \leq 0.7$, con sottostima ancora più forte; il giudizio di volumi 3D su supporti 2D è particolarmente debole.</li>
 </ul>
-<p>Al fondo della gerarchia troviamo l&#39;<strong>Area</strong>, il <strong>Volume</strong> e il <strong>Colore (Saturazione/Tonalità)</strong> per codificare grandezze quantitative. I grafici a bolle (Bubble Charts) o le mappe coroplete (Heatmaps), sebbene utili per fornire una panoramica generale, non dovrebbero mai essere utilizzati quando è richiesta precisione nel confronto dei valori, poiché la percezione dell&#39;area non scala linearmente nella mente umana (Legge di Stevens).<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a></p>
-<h3 id="attributi-pre-attentivi-e-data-ink-ratio">Attributi Pre-attentivi e Data-Ink Ratio</h3>
-<p>Per guidare l&#39;attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare gli <strong>Attributi Pre-attentivi</strong>. Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa in meno di 200 millisecondi, prima ancora che intervenga l&#39;attenzione conscia.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">11</a> L&#39;uso strategico del colore, ad esempio, non serve a &quot;rendere bello&quot; il grafico, ma a segnalare l&#39;eccezione. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso <em>solo</em> per i mercati sotto-performanti sfrutta la pre-attenzione per dire al C-Level: &quot;Guarda qui&quot;. Questo riduce il tempo di ricerca visiva e abbatte il carico estraneo.<br>Questo concetto si sposa perfettamente con il principio del <strong>Data-Ink Ratio</strong> di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all&#39;inchiostro totale del grafico.<a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio">14</a></p>
-<p>$$\text{Data-Ink Ratio} = \frac{\text{Inchiostro dei Dati}}{\text{Inchiostro Totale}}$$<br>L&#39;imperativo operativo è cancellare tutto ciò che non è dato (non-data-ink) e tutto ciò che è dato ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è &quot;chartjunk&quot; che deve essere rimosso per massimizzare il segnale rispetto al rumore.<a href="https://www.holistics.io/blog/data-ink-ratio/">16</a> Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l&#39;intera potenza cognitiva del lettore sui numeri e sui trend.</p>
+<p>Ergo, i grafici che codificano quantità tramite area o volume (bubble chart, pie chart, barre 3D) rendono i confronti meno precisi. Se un pie chart è già inferiore a un dot chart perché richiede giudizi su angolo/area, una codifica volumetrica peggiora ulteriormente l&#39;errore percettivo.</p>
+<p>Nella gerarchia dei compiti percettivi per dati quantitativi, la <strong>saturazione del colore</strong> (insieme all&#39;ombreggiatura) è all&#39;ultimo livello: è il metodo meno accurato per comunicare numeri, inferiore a posizione, lunghezza, area e volume.</p>
+<p>La <strong>tinta</strong> (hue: rosso, blu, verde, ecc.) è deliberatamente esclusa dalla codifica quantitativa perché non esiste un ordinamento univoco e non ambiguo &quot;dal più piccolo al più grande&quot;. Per questo motivo, la tinta è adatta <strong>unicamente</strong> a variabili categoriche, non a variabili reali continue.</p>
+<p>Applicazione pratica nelle mappe: le <strong>mappe statistiche a zone (choropleth)</strong> colorano regioni geografiche in base a un valore e quindi costringono il lettore a un compito percettivo a bassa accuratezza. Quando l&#39;obiettivo è confrontare quantità in modo preciso, è preferibile sostituirle con rappresentazioni che riportano il confronto sulla posizione (ad esempio i <strong>framed-rectangle charts</strong>), invece di affidarlo alla saturazione del colore.</p>
+<p><img src="../../../Assets/italy_choropleth_vs_framed.png" alt="Confronto Italia: da evitare (choropleth) vs meglio (framed-rectangle chart)">
+<em>A sinistra: la mappa choropleth richiede confronti basati su saturazione. A destra: il framed-rectangle chart mantiene il riferimento geografico ma sposta il confronto sulla posizione del bordo superiore delle barre.</em></p>
+<h3 id="il-data-ink-ratio">Il Data-Ink ratio</h3>
+<p>Per guidare l&#39;attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare i cosiddetti <strong>attributi pre-attentivi</strong>.</p>
+<p>Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">in meno di 200 millisecondi</a>, prima ancora che intervenga l&#39;attenzione conscia. L&#39;uso strategico del colore, ad esempio, non serve a &quot;rendere bello&quot; il grafico, ma a <em>segnalare l&#39;eccezione</em>. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso <em>solo</em> per i mercati sotto-performanti sfrutta la pre-attenzione per dire a chi deve leggere quel grafico: <em>&quot;Guarda qui&quot;</em>. Questo riduce il tempo di ricerca visiva e abbatte il <strong>carico estraneo</strong>.</p>
+<p>Questo concetto si sposa perfettamente con il principio del <a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio"><strong>Data-Ink Ratio</strong></a> di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all&#39;inchiostro totale del grafico.</p>
+<p>$$\text{Data-Ink Ratio} = \frac{\text{Inchiostro dei Dati}}{\text{Inchiostro Totale}}$$</p>
+<p>L&#39;imperativo operativo è cancellare tutto ciò che non è dato (non-data-ink) e tutto ciò che è dato ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è &quot;chartjunk&quot; che deve essere rimosso per massimizzare il segnale rispetto al rumore.<a href="https://www.holistics.io/blog/data-ink-ratio/">16</a> Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l&#39;intera potenza cognitiva del lettore sui numeri e sui trend.</p>
 <h2 id="2-architettura-del-reporting-strutture-narrative-per-lenterprise"><strong>2. Architettura del Reporting: Strutture Narrative per l&#39;Enterprise</strong></h2>
 <p>Avere grafici scientificamente corretti non è sufficiente se manca una struttura logica che li connetta. La narrazione nel contesto enterprise non è il &quot;viaggio dell&#39;eroe&quot;, ma una argomentazione logica deduttiva o induttiva strutturata per l&#39;efficienza decisionale.</p>
 <h3 id="21-il-principio-della-piramide-minto-e-la-comunicazione-top-down"><strong>2.1 Il Principio della Piramide (Minto) e la Comunicazione Top-Down</strong></h3>
