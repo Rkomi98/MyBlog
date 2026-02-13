@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-13T17:30:32.995Z",
+    "dateModified": "2026-02-13T17:49:28.202Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -964,17 +964,17 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#il-data-ink-ratio">
+          <a class="post-toc__link" href="#attention-is-all-we-need">
             <span class="post-toc__number">2.3</span>
-            <span class="post-toc__text">Il Data-Ink ratio</span>
+            <span class="post-toc__text">Attention is all WE need</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#2-architettura-del-reporting-strutture-narrative-per-lenterprise">
+          <a class="post-toc__link" href="#architettura-del-reporting-strutture-narrative-per-lenterprise">
             <span class="post-toc__number">3</span>
-            <span class="post-toc__text">**2\. Architettura del Reporting: Strutture Narrative per l&#39;Enterprise**</span>
+            <span class="post-toc__text">Architettura del Reporting: Strutture Narrative per l&#39;Enterprise</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1190,13 +1190,51 @@ che lega intensità percepita e intensità reale:</p>
 <p>Applicazione pratica nelle mappe: le <strong>mappe statistiche a zone (choropleth)</strong> colorano regioni geografiche in base a un valore e quindi costringono il lettore a un compito percettivo a bassa accuratezza. Quando l&#39;obiettivo è confrontare quantità in modo preciso, è preferibile sostituirle con rappresentazioni che riportano il confronto sulla posizione (ad esempio i <strong>framed-rectangle charts</strong>), invece di affidarlo alla saturazione del colore.</p>
 <p><img src="../../../Assets/choropleth_vs_dunn.png" alt="Confronto Italia: da evitare (choropleth) vs meglio (framed-rectangle chart)">
 <em>A sinistra: la mappa choropleth richiede confronti basati su saturazione. A destra: il framed-rectangle chart mantiene il riferimento geografico ma sposta il confronto sulla posizione del bordo superiore delle barre.</em></p>
-<h3 id="il-data-ink-ratio">Il Data-Ink ratio</h3>
+<h3 id="attention-is-all-we-need">Attention is all WE need</h3>
 <p>Per guidare l&#39;attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare i cosiddetti <strong>attributi pre-attentivi</strong>.</p>
 <p>Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">in meno di 200 millisecondi</a>, prima ancora che intervenga l&#39;attenzione conscia. L&#39;uso strategico del colore, ad esempio, non serve a &quot;rendere bello&quot; il grafico, ma a <em>segnalare l&#39;eccezione</em>. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso <em>solo</em> per i mercati sotto-performanti sfrutta la pre-attenzione per dire a chi deve leggere quel grafico: <em>&quot;Guarda qui&quot;</em>. Questo riduce il tempo di ricerca visiva e abbatte il <strong>carico estraneo</strong>.</p>
 <p>Questo concetto si sposa perfettamente con il principio del <a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio"><strong>Data-Ink Ratio</strong></a> di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all&#39;inchiostro totale del grafico.</p>
 <p>$$\text{Data-Ink Ratio} = \frac{\text{Inchiostro dei Dati}}{\text{Inchiostro Totale}}$$</p>
-<p>L&#39;imperativo operativo è cancellare tutto ciò che non è dato (non-data-ink) e tutto ciò che è dato ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è &quot;chartjunk&quot; che deve essere rimosso per massimizzare il segnale rispetto al rumore.<a href="https://www.holistics.io/blog/data-ink-ratio/">16</a> Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l&#39;intera potenza cognitiva del lettore sui numeri e sui trend.</p>
-<h2 id="2-architettura-del-reporting-strutture-narrative-per-lenterprise"><strong>2. Architettura del Reporting: Strutture Narrative per l&#39;Enterprise</strong></h2>
+<p>L&#39;imperativo operativo è cancellare tutto ciò che non è relativo al dato (non-data-ink), ovvero che non aggiunge informazioni sui dati o che è ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è <em>&quot;chartjunk&quot;</em> che deve essere rimosso per massimizzare il segnale rispetto al rumore. Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l&#39;intera potenza cognitiva del lettore sui numeri e sui trend.</p>
+<p><a href="../../../(https:/www.holistics.io/blog/data-ink-ratio/)">Esempi pratici</a> di applicazione del principio sono:</p>
+<ol>
+<li><strong>Grafici a Barre (Bar Charts)</strong></li>
+</ol>
+<ul>
+<li><strong>Scenario</strong>: un analista deve mostrare le vendite totali per regione, evidenziando che Molise sta sottoperformando.</li>
+<li><strong>Problemi iniziali</strong>: griglie troppo evidenti che distraggono; colori diversi per ogni regione senza motivo; legenda ridondante; etichette degli assi (&quot;Sales&quot;, &quot;Region&quot;) inutili dato che il titolo spiega già il contenuto. </li>
+<li><strong>Ottimizzazione proposta</strong>:<ul>
+<li><strong>Rimozione:</strong> vengono eliminate le griglie e l&#39;asse verticale, scrivendo i valori direttamente sopra le colonne. Vengono rimosse anche le etichette degli assi e la legenda.</li>
+<li><strong>Colore:</strong> invece di colorare ogni barra diversamente, si usa il colore solo per la regione Sud (quella di interesse), lasciando le altre neutre. Questo attira immediatamente l&#39;attenzione sul messaggio chiave: <em>&quot;il Sud sta andando male&quot;</em>.</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><strong>Grafici a Linee (Line Charts)</strong></li>
+</ol>
+<ul>
+<li><strong>Scenario</strong>: report sui profitti di alcune categorie di prodotti, mostrando piccole perdite in alcuni mesi.</li>
+<li><strong>Problemi iniziali</strong>: etichette ridondanti (&quot;Profitto&quot;, &quot;Mese&quot;) che sono ovvie dal contesto, aree colorate sotto la linea dello zero che occupano troppo spazio visivo (&quot;overkill&quot;) e l&#39;uso di una legenda separata.  </li>
+<li><strong>Ottimizzazione proposta</strong>:<ul>
+<li><strong>Semplificazione:</strong> l&#39;area colorata viene sostituita da una linea semplice che distingue i valori positivi da quelli negativi.</li>
+<li><strong>Etichettatura diretta:</strong> la legenda viene rimossa e i nomi delle categorie vengono posizionati direttamente accanto alle linee corrispondenti. Questo permette di risparmiare spazio e rendere la lettura più immediata.</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><strong>Grafici a Torta (Pie Charts)</strong></li>
+</ol>
+<ul>
+<li><strong>Scenario</strong>: mostrare che la categoria <strong>Office Supplies</strong> costituisce la maggioranza degli ordini.  </li>
+<li><strong>Problemi iniziali</strong>: visualizzazione delle percentuali esatte (non necessarie se la proporzione è schiacciante ed evidente); uso della legenda.</li>
+<li>Ottimizzazione proposta:<ul>
+<li><strong>Trasformazione in Doughnut Chart:</strong> si suggerisce di passare da un grafico a torta a un grafico a ciambella. Questo riduce l&#39;inchiostro totale usato e libera spazio al centro.</li>
+<li><strong>Titolo integrato:</strong> lo spazio vuoto al centro della &quot;ciambella&quot; viene utilizzato per inserire il titolo o l&#39;etichetta principale, risparmiando ulteriore spazio.</li>
+</ul>
+</li>
+</ul>
+<p>In tutti gli esempi, l&#39;obiettivo è rimuovere il <em>non-data-ink</em> (griglie, effetti 3D, colori inutili) e il <em>redundant data-ink</em> (legende doppie, etichette ovvie) per far emergere chiaramente il dato. Tuttavia, non bisogna esagerare, e bisogna assicursi che il grafico rimanga comprensibile per il pubblico di destinazione.</p>
+<h2 id="architettura-del-reporting-strutture-narrative-per-lenterprise">Architettura del Reporting: Strutture Narrative per l&#39;Enterprise</h2>
 <p>Avere grafici scientificamente corretti non è sufficiente se manca una struttura logica che li connetta. La narrazione nel contesto enterprise non è il &quot;viaggio dell&#39;eroe&quot;, ma una argomentazione logica deduttiva o induttiva strutturata per l&#39;efficienza decisionale.</p>
 <h3 id="21-il-principio-della-piramide-minto-e-la-comunicazione-top-down"><strong>2.1 Il Principio della Piramide (Minto) e la Comunicazione Top-Down</strong></h3>
 <p>Il framework di riferimento per la comunicazione esecutiva è il <strong>Pyramid Principle</strong>, codificato da Barbara Minto in McKinsey. La struttura accademica tradizionale (Introduzione → Metodologia → Analisi → Conclusioni) è fallimentare nel business perché costringe il lettore ad attendere la fine per capire il punto.<a href="https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/">18</a> Gli executive, operando in regime di scarsità di tempo, necessitano di una struttura rovesciata.<br>La piramide impone di iniziare con la <strong>Governing Thought</strong> (il Pensiero Guida o Risposta Principale). Questa è la singola idea, raccomandazione o conclusione che il report vuole veicolare. Sotto il vertice, si trovano le <strong>Key Lines</strong>: 3 o 4 argomenti principali che supportano logica e fattualmente il pensiero guida. Al livello base, si trova il <strong>Support</strong>: i dati, i grafici, le tabelle e le analisi di dettaglio che provano la validità delle Key Lines.<a href="https://untools.co/minto-pyramid/">20</a><br>Questa struttura abilita una lettura efficiente: il decisore comprende immediatamente la tesi. Se si fida, può fermarsi o saltare alle azioni. Se è scettico, può scendere di un livello nella piramide per verificare l&#39;argomentazione (drill-down). È un approccio &quot;MECE&quot; (Mutually Exclusive, Collectively Exhaustive): gli argomenti devono essere distinti tra loro e coprire interamente lo spazio del problema.<a href="https://modelthinkers.com/mental-model/minto-pyramid-scqa">22</a></p>
