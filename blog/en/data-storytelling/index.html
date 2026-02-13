@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Storytelling | Mirko Calcaterra</title>
+  <meta name="description" content="Data Storytelling In this article, I wanted to delve into some principles that underpin data visualization and the way data is communicated. Introduction In the current business landscape, characterized by a hypertrophy of data (Big Data has been a topic for…">
+  <meta name="keywords" content="Data Storytelling, Data Visualization, Dashboard, Reporting, Decision Making, Mirko Calcaterra">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/data-storytelling/">
+  <meta property="og:title" content="Data Storytelling">
+  <meta property="og:description" content="Data Storytelling In this article, I wanted to delve into some principles that underpin data visualization and the way data is communicated. Introduction In the current business landscape, characterized by a hypertrophy of data (Big Data has been a topic for…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-02-13T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="AI Engineering Path">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Data Storytelling">
+  <meta property="twitter:description" content="Data Storytelling In this article, I wanted to delve into some principles that underpin data visualization and the way data is communicated. Introduction In the current business landscape, characterized by a hypertrophy of data (Big Data has been a topic for…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Data Storytelling",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-02-13T00:00:00.000Z",
+    "dateModified": "2026-02-13T09:23:50.763Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "Data Storytelling In this article, I wanted to delve into some principles that underpin data visualization and the way data is communicated. Introduction In the current business landscape, characterized by a hypertrophy of data (Big Data has been a topic for…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+      --code-inline-bg: rgba(6, 11, 19, 0.92);
+      --code-block-bg: #050912;
+      --code-border: rgba(148, 163, 184, 0.35);
+      --code-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      --code-text: #f8fafc;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--code-text);
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .post-body pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .post-body pre {
+      background: var(--code-block-bg);
+      color: var(--code-text);
+      padding: 1.2rem 1.4rem;
+      padding-right: 3.6rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: var(--code-shadow);
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      position: relative;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      background: rgba(96, 165, 250, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .code-copy-btn__icon {
+      font-size: 0.95rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      background: rgba(248, 250, 252, 0.85);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.92);
+      color: #ffffff;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(37, 99, 235, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">📈</div>
+        <span class="post-hero__category">AI Engineering Path</span>
+        <h1 class="post-hero__title">Data Storytelling</h1>
+        <div class="post-hero__meta">
+          <span>📅 February 13, 2026</span>
+          <span>⏱️ 25 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#introduction">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Introduction</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#theory-science-of-perception">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Theory: Science of perception</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#the-theory-of-cognitive-load-cognitive-load-theory">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">The theory of cognitive load (Cognitive Load Theory)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#12-gerarchia-della-percezione-grafica-cleveland-mcgill">
+            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__text">**1.2 Gerarchia della Percezione Grafica (Cleveland &amp; McGill)**</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#13-pre-attentive-attributes-and-data-ink-ratio">
+            <span class="post-toc__number">2.3</span>
+            <span class="post-toc__text">**1.3 Pre-attentive Attributes and Data-Ink Ratio**</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#2-reporting-architecture-narrative-structures-for-the-enterprise">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">**2. Reporting Architecture: Narrative Structures for the Enterprise**</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#21-the-pyramid-principle-minto-and-top-down-communication">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">**2.1 The Pyramid Principle (Minto) and Top-Down Communication**</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#22-the-scqa-framework-contextualizing-the-insight">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">**2.2 The SCQA Framework: Contextualizing the Insight**</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#23-amazon-6-pager-the-death-of-slides">
+            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__text">**2.3 Amazon 6-Pager: The Death of Slides**</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#24-executive-summary-anatomy-of-the-synthesis">
+            <span class="post-toc__number">3.4</span>
+            <span class="post-toc__text">**2.4 Executive Summary: Anatomy of the Synthesis**</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#3-data-pathologies-common-errors-and-statistical-paradoxes">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">**3\. Data Pathologies: Common Errors and Statistical Paradoxes**</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#31-simpsons-paradox-when-aggregation-lies">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">**3.1 Simpson&#39;s Paradox: When Aggregation Lies**</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#32-misinterpreted-churn-and-selection-bias">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">**3.2 Misinterpreted &quot;Churn&quot; and Selection Bias**</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#33-dashboards-without-a-question-the-so-what-problem">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">**3.3 Dashboards without a question (The &quot;So What?&quot; Problem)**</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#4-ai-as-an-adversarial-editor-not-a-decision-maker">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">**4. AI as an adversarial editor (Not a decision-maker)**</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#41-prompt-engineering-for-logical-audit">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">**4.1 Prompt engineering for logical audit**</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#5-showcase-report-transformation-before-and-after">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">**5. Showcase: Report transformation (Before and after)**</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#scenario-q3-sales-review-report">
+            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__text">**Scenario: Q3 sales review report**</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#6-section-of-typical-errors-control-checklist">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">**6. Section of Typical Errors (Control Checklist)**</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#conclusions-and-debrief">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">**Conclusions and Debrief**</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#bibliography">
+            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__text">**Bibliography**</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <p>In this article, I wanted to delve into some principles that underpin data visualization and the way data is communicated.</p>
+<h2 id="introduction">Introduction</h2>
+<p>In the current business landscape, characterized by a hypertrophy of data (Big Data has been a topic for years now), organizations face a problem:</p>
+<blockquote>
+<p>The exponential increase in the availability of information does not linearly translate into <a href="https://www.inma.org/blogs/big-data-for-news-publishers/post.cfm/ai-s-potential-role-in-data-storytelling-empowers-decision-making">improved decision-making quality</a>.</p>
+</blockquote>
+<p>On the contrary, however, this often leads to analytical paralysis. This phenomenon is not attributable to the absence of data extraction or processing technologies, areas in which Data Engineering and Data Science have made giant strides in recent years, but rather lies more in <strong>communication and reporting</strong>.</p>
+<p><strong>Data Storytelling</strong>, far from being a mere aesthetic exercise or an accessory &quot;soft skill&quot; to embellish presentations, today represents an operational problem as important as the ability to perform solid analyses. It is, to all intents and purposes, a discipline of &quot;decision engineering.&quot; You have no idea how many times I&#39;ve seen a potentially beautiful project poorly communicated.</p>
+<p>When the transfer of analytical insights from technical teams to strategic decision-makers (C-Level, VP, Directors) fails, the organization usually pays a devastating price. <a href="https://www.forbes.com/councils/forbescommunicationscouncil/2025/10/22/the-real-cost-of-bad-data-how-it-silently-undermines-pricing-and-growth/">Gartner</a> estimates that poor data quality costs average organizations approximately $12.9 million annually in wasted resources and missed opportunities. This concept extends from the beginning (how data is collected and organized) to its ineffective communication and interpretation. If we broaden our view to the U.S. economy as a whole, studies reported by the Harvard Business Review indicate that miscommunication and erroneous data drain up to <a href="https://hbr.org/2016/09/bad-data-costs-the-u-s-3-trillion-per-year">3 trillion dollars annually</a>.</p>
+<p>The report, dashboard, or executive memo are not artifacts unto themselves but constitute a kind of UI (User Interface) for the decision-making process.</p>
+<p>A poor interface, which perhaps imposes an excessive mental load or hides causal relationships behind certain aggregations, <strong>nullifies the ROI</strong>.</p>
+<p>In a pragmatic adoption path for Artificial Intelligence, the ability to narrate data with rigor becomes even more crucial: AI acts as an accelerator for content and analysis production, but without a <em>rigorous control and communication framework</em>, it risks <em>also accelerating the spread of &quot;statistical hallucinations and decision biases&quot;</em>.</p>
+<p>In this article, I want to try to dismantle the myths of &quot;Data Storytelling&quot; as a creative art, redefining it through protocols derived from cognitive psychology, graphic perception theory, and the most rigorous management methodologies (such as <strong>Amazon&#39;s narrative model</strong> or the principle of <strong>McKinsey&#39;s Pyramid</strong>). The goal is to provide an operational article to effectively transform the report writing phase. To do so, I will try to use a more formal tone than usual (as much as possible XD).</p>
+<h2 id="theory-science-of-perception">Theory: Science of perception</h2>
+<p>The first step to changing mindset is to abandon subjective intuition (&quot;I like this chart&quot;) in favor of scientific evidence on how the human brain processes visual and textual information.</p>
+<h3 id="the-theory-of-cognitive-load-cognitive-load-theory">The theory of cognitive load (Cognitive Load Theory)</h3>
+<p>Cognitive Load Theory (CLT), developed by psychologist John Sweller in the late 1980s, provides the theoretical basis for understanding why most business dashboards fail.</p>
+<p>The <a href="https://edtechbooks.org/encyclopedia/cognitive_load_theory">theory</a> postulates that human working memory has an extremely limited capacity to process new information simultaneously. When an executive is faced with a report, their brain must manage three types of cognitive load, and the goal of the report designer must be to optimize this balance. By report, I mean both classic reports and presentations, dashboards, etc.</p>
+<p>Il primo tipo è il <strong>Carico cognitivo intrinseco (Intrinsic Load)</strong>. Questo è determinato dalla <em>complessità inerente dell&#39;informazione stessa</em>. Ad esempio, comprendere un modello di attribuzione multi-touch o un&#39;analisi di <em>churn</em> predittivo richiede uno sforzo mentale ineliminabile, legato alla difficoltà del concetto.<a href="https://edtechbooks.org/encyclopedia/cognitive_load_theory">5</a> Questo carico è necessario e non può essere eliminato senza banalizzare il contenuto.
+Il secondo, e più insidioso, è il <strong>Carico Cognitivo Estraneo (Extraneous Load)</strong>. Questo carico è generato dal modo in cui l&#39;informazione è presentata. Ogni elemento visivo che non contribuisce direttamente alla comprensione del dato – griglie pesanti, effetti 3D, legende separate dal grafico, colori non codificati semanticamente, testo ridondante – costringe il cervello a sprecare risorse preziose per decodificare l&#39;interfaccia piuttosto che il messaggio.<a href="https://blog.prototypr.io/the-cognitive-cost-of-dashboard-design-data-visualisation_is_a_neuroscience_problem-a71f95cdc9b4">7</a> Nel reporting aziendale, il carico estraneo è il nemico numero uno: trasforma l&#39;analisi in rumore. Una dashboard mal progettata, che costringe l&#39;occhio a fare &quot;ping-pong&quot; tra una legenda e le barre di un grafico, aumenta il carico estraneo al punto da saturare la memoria di lavoro, impedendo l&#39;apprendimento o la decisione.
+Infine, vi è il <strong>Carico Cognitivo Germano (Germane Load)</strong>. Questo rappresenta lo sforzo mentale dedicato alla costruzione di schemi mentali e all&#39;apprendimento profondo.<a href="https://edtechbooks.org/encyclopedia/cognitive_load_theory">5</a> È il &quot;carico buono&quot;, quello che porta all&#39;insight e all&#39;azione. L&#39;obiettivo del Data Storytelling operativo è minimizzare il carico estraneo per liberare risorse cognitive da dedicare al carico germano, permettendo al decisore di comprendere non solo <em>cosa</em> sta succedendo, ma <em>perché</em> e <em>come</em> intervenire.</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th align="left">Tipo di Carico Cognitivo</th>
+<th align="left">Definizione Operativa nel Reporting</th>
+<th align="left">Esempio di Errore (Bad Practice)</th>
+<th align="left">Obiettivo di Design</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Intrinseco</strong></td>
+<td align="left">Complessità inerente ai dati e al problema di business (es. calcolo EBITDA).</td>
+<td align="left">Semplificare eccessivamente omettendo variabili causali necessarie.</td>
+<td align="left">Gestire attraverso segmentazione logica (Pyramid Principle).</td>
+</tr>
+<tr>
+<td align="left"><strong>Estraneo</strong></td>
+<td align="left">Sforzo inutile causato da design povero o &quot;chartjunk&quot;.</td>
+<td align="left">Grafici 3D, doppi assi Y, legende dislocate, decorazioni inutili.</td>
+<td align="left">Minimizzare drasticamente (Data-Ink Ratio).</td>
+</tr>
+<tr>
+<td align="left"><strong>Germano</strong></td>
+<td align="left">Sforzo produttivo per creare modelli mentali e decisioni.</td>
+<td align="left">Manca la sintesi o la raccomandazione (&quot;So What?&quot;).</td>
+<td align="left">Massimizzare fornendo contesto e narrazione chiara.</td>
+</tr>
+</tbody></table>
+</div></figure><h3 id="12-gerarchia-della-percezione-grafica-cleveland-mcgill"><strong>1.2 Gerarchia della Percezione Grafica (Cleveland &amp; McGill)</strong></h3>
+<p>If CLT tells us <em>how much</em> the brain can process, the studies by William Cleveland and Robert McGill (1984) tell us <em>how</em> the brain decodes visual information with greater or lesser accuracy. Their research established a fundamental hierarchy of perceptual tasks, ordered from most accurate to least accurate.<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a> Ignoring this hierarchy means deliberately choosing to communicate data inaccurately.
+At the top of the hierarchy, we find <strong>Position on a common scale</strong>. The human brain is extraordinarily adept at comparing the position of points or bars aligned on a single axis (as in a bar chart or a dot plot). This perceptual task allows for distinguishing minimal differences with great accuracy.<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a> Following, with a slight degradation in accuracy, is <strong>Position on non-aligned scales</strong> (e.g., <em>small multiples</em> or side-by-side chart panels).
+Moving down the hierarchy, we find <strong>Length</strong>, <strong>Direction</strong>, and <strong>Angle</strong>. This is where the scientific condemnation of Pie Charts lies. Pie charts force the user to judge angles and areas, tasks in which the human visual system is notoriously imprecise, especially when portions are similar or numerous.<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a> Cleveland and McGill demonstrated that judging angles leads to significantly higher estimation errors compared to judging position. Therefore, the use of a pie chart in an enterprise report is not a stylistic choice, but a technical error that reduces data readability.
+At the bottom of the hierarchy, we find <strong>Area</strong>, <strong>Volume</strong>, and <strong>Color (Saturation/Hue)</strong> for encoding quantitative magnitudes. Bubble Charts or choropleth maps (Heatmaps), while useful for providing a general overview, should never be used when precision in value comparison is required, as the perception of area does not scale linearly in the human mind (Stevens&#39; Law).<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a></p>
+<h3 id="13-pre-attentive-attributes-and-data-ink-ratio"><strong>1.3 Pre-attentive Attributes and Data-Ink Ratio</strong></h3>
+<p>To guide the decision-maker&#39;s attention without exhausting their cognitive load, the designer must leverage <strong>Pre-attentive Attributes</strong>. These are visual characteristics (color, size, orientation, movement) that the brain processes in less than 200 milliseconds, even before conscious attention intervenes.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">11</a> The strategic use of color, for example, does not serve to &quot;make the chart pretty,&quot; but to signal an exception. In a sales performance dashboard, using a neutral gray color for all data in line with the budget and a bright red <em>only</em> for underperforming markets leverages pre-attention to tell the C-Level: &quot;Look here.&quot; This reduces visual search time and lowers extraneous load.
+This concept aligns perfectly with Edward Tufte&#39;s <strong>Data-Ink Ratio</strong> principle. Tufte defines this ratio as the proportion of ink (or pixels) used to represent actual data relative to the total ink in the graphic.<a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio">14</a></p>
+<p>$$\text{Data-Ink Ratio} = \frac{\text{Data Ink}}{\text{Total Ink}}$$
+The operational imperative is to erase everything that is not data (non-data-ink) and everything that is redundant data. Heavy grids, colored backgrounds, borders, 3D effects: all of this is &quot;chartjunk&quot; that must be removed to maximize signal over noise.<a href="https://www.holistics.io/blog/data-ink-ratio/">16</a> A chart with a high Data-Ink Ratio is sparse, essential, and focuses the reader&#39;s entire cognitive power on the numbers and trends.</p>
+<h2 id="2-reporting-architecture-narrative-structures-for-the-enterprise"><strong>2. Reporting Architecture: Narrative Structures for the Enterprise</strong></h2>
+<p>Having scientifically correct charts is not enough if there is no logical structure connecting them. Narrative in the enterprise context is not the &quot;hero&#39;s journey,&quot; but a logical deductive or inductive argument structured for decision-making efficiency.</p>
+<h3 id="21-the-pyramid-principle-minto-and-top-down-communication"><strong>2.1 The Pyramid Principle (Minto) and Top-Down Communication</strong></h3>
+<p>The reference framework for executive communication is the <strong>Pyramid Principle</strong>, codified by Barbara Minto at McKinsey. The traditional academic structure (Introduction → Methodology → Analysis → Conclusions) is failing in business because it forces the reader to wait until the end to understand the point.<a href="https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/">18</a> Executives, operating under time scarcity, require an inverted structure.
+The pyramid dictates starting with the <strong>Governing Thought</strong> (the Guiding Thought or Main Answer). This is the single idea, recommendation, or conclusion that the report aims to convey. Below the apex are the <strong>Key Lines</strong>: 3 or 4 main arguments that logically and factually support the guiding thought. At the base level is the <strong>Support</strong>: the data, graphs, tables, and detailed analyses that prove the validity of the Key Lines.<a href="https://untools.co/minto-pyramid/">20</a>
+This structure enables efficient reading: the decision-maker immediately understands the thesis. If they trust it, they can stop or jump to actions. If skeptical, they can descend one level in the pyramid to verify the argumentation (drill-down). It is a &quot;MECE&quot; (Mutually Exclusive, Collectively Exhaustive) approach: arguments must be distinct from each other and entirely cover the problem space.<a href="https://modelthinkers.com/mental-model/minto-pyramid-scqa">22</a></p>
+<h3 id="22-the-scqa-framework-contextualizing-the-insight"><strong>2.2 The SCQA Framework: Contextualizing the Insight</strong></h3>
+<p>Every effective report must answer a question that exists, or should exist, in the recipient&#39;s mind. The <strong>SCQA (Situation, Complication, Question, Answer)</strong> model is the standard for defining the introduction of a report or section.<a href="https://modelthinkers.com/mental-model/minto-pyramid-scqa">22</a></p>
+<ul>
+<li><strong>Situation:</strong> Describes the known and uncontroversial state of affairs. It serves to align all readers on the starting context (e.g., &quot;In Q3, EMEA revenue was €50M, in line with historical data&quot;).</li>
+<li><strong>Complication:</strong> Introduces the new element, the problem, or the opportunity that alters the situation and creates tension (e.g., &quot;However, the contribution margin dropped by 15% due to unexpected increases in logistics costs&quot;).</li>
+<li><strong>Question:</strong> The implicit question that arises from the complication (e.g., &quot;How can we recover profitability in Q4 without compromising volumes?&quot;).</li>
+<li><strong>Answer:</strong> The report&#39;s thesis, which coincides with the <em>Governing Thought</em> of the Pyramid (e.g., &quot;We recommend an immediate review of shipping rates for orders under €50 and a shift in the sales mix towards the Premium product&quot;).</li>
+</ul>
+<p>This sequence transforms a set of cold data into a relevant business story, capturing the reader&#39;s attention and justifying the very existence of the report.</p>
+<h3 id="23-amazon-6-pager-the-death-of-slides"><strong>2.3 Amazon 6-Pager: The Death of Slides</strong></h3>
+<p>In the advanced technological world, slides (PowerPoint) are often seen as a &quot;low-resolution&quot; communication vehicle. Jeff Bezos famously banned PowerPoint from Amazon&#39;s executive meetings in favor of 6-page &quot;Narrative Memos&quot;.<a href="https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7">23</a> The reason is cognitive: the bullet points typical of slides allow for hiding weaknesses in thinking. It&#39;s easy to write &quot;• Cost increase&quot; and &quot;• New supplier&quot; one below the other, leaving the causal relationship ambiguous. Writing complete sentences, with subject, verb, and predicate, forces the author to explicitly state the connection: &quot;The cost increase was <em>caused</em> by the onboarding of the new supplier.&quot; If the logic is flawed, narrative writing mercilessly exposes it.<a href="https://medium.com/@info_14390/the-ultimate-guide-to-amazons-6-pager-memo-method-c4b683441593">25</a>
+<strong>Operational Memo Structure (Adapted Amazon Template):</strong></p>
+<ol>
+<li><strong>Introduction:</strong> Context and purpose of the document (using SCQA).</li>
+<li><strong>Goals:</strong> SMART objectives and success metrics defined upfront.</li>
+<li><strong>Tenets:</strong> Guiding principles and non-negotiable assumptions that orient decisions.</li>
+<li><strong>State of the Business:</strong> Rigorous analysis of current data. Here, graphs are used (integrated into the text, not attached) to establish the baseline.</li>
+<li><strong>Lessons Learned:</strong> Retrospective analysis of what worked and what didn&#39;t, based on data.</li>
+<li><strong>Strategic Priorities:</strong> The proposed action plan for the future.</li>
+<li><strong>Appendix:</strong> Raw data tables, supplementary graphs, and technical details (does not count towards the page limit).</li>
+</ol>
+<p>Meetings at Amazon begin with 20-30 minutes of silent &quot;study hall,&quot; where everyone reads the memo. Only then does the discussion begin. This levels the playing field, ensures everyone has consumed the data, and dramatically raises the quality of the debate, shifting it from understanding facts to interpretation and decision-making.<a href="https://www.appeq.ai/amazon-6-pager-customer-success-leadership">24</a></p>
+<h3 id="24-executive-summary-anatomy-of-the-synthesis"><strong>2.4 Executive Summary: Anatomy of the Synthesis</strong></h3>
+<p>The Executive Summary is often the most read and worst written part. It should not be a &quot;teaser&quot; (&quot;in this report we will see...&quot;), but a complete spoiler. It must be able to replace the entire document.<br>An effective structure for the Executive Summary of a Data Science report must contain four key elements:</p>
+<ol>
+<li><strong>Claim (Thesis):</strong> The main conclusion.  </li>
+<li><strong>Evidence (Proof):</strong> The strongest statistical data supporting the thesis (not all data, just the &quot;killer stat&quot;).  </li>
+<li><strong>Caveat (Risks/Limitations):</strong> Intellectual honesty about the limits of the analysis (e.g., &quot;Data limited to the US market&quot;, &quot;Model confidence at 85%&quot;). This increases the author&#39;s credibility.  </li>
+<li><strong>Next Steps (Action):</strong> What is required of the decision-maker (approval, budget, acknowledgment).<a href="https://www.diligent.com/resources/blog/executive-summary-report">28</a></li>
+</ol>
+<h2 id="3-data-pathologies-common-errors-and-statistical-paradoxes"><strong>3. Data Pathologies: Common Errors and Statistical Paradoxes</strong></h2>
+<p>The application of Data Storytelling serves as a quality control mechanism (Quality Assurance). By attempting to build a causal narrative, interpretive errors often emerge that would go unnoticed in a simple table.</p>
+<h3 id="31-simpsons-paradox-when-aggregation-lies"><strong>3.1 Simpson&#39;s Paradox: When Aggregation Lies</strong></h3>
+<p>One of the most dangerous errors in aggregated reporting is <strong>Simpson&#39;s Paradox</strong>. It occurs when a trend appears in several groups of data but disappears or reverses when these groups are combined.<a href="https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions">30</a> This paradox is frequent in marketing and sales and can lead to decisions opposite to reality.<br><strong>Concrete Example: Marketing Campaign Performance</strong><br>Let&#39;s imagine we need to decide which of two campaigns (A and B) to keep active, based on the Conversion Rate (CR).</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th align="left">Campaign</th>
+<th align="left">Total Visits</th>
+<th align="left">Total Conversions</th>
+<th align="left">Conversion Rate (CR)</th>
+<th align="left">Apparent Decision</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Campaign A</strong></td>
+<td align="left">2500</td>
+<td align="left">460</td>
+<td align="left"><strong>18.4%</strong></td>
+<td align="left"><strong>WINNER</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>Campaign B</strong></td>
+<td align="left">3300</td>
+<td align="left">450</td>
+<td align="left">13.6%</td>
+<td align="left">LOSER</td>
+</tr>
+</tbody></table>
+</div></figure><p>Looking at the aggregated data, Campaign A appears significantly superior (18.4% vs 13.6%). A manager would decide to cut B.<br>However, disaggregating the data by customer segment (High Value vs Low Value), a different reality emerges:</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th align="left">Segment</th>
+<th align="left">Campaign A (CR)</th>
+<th align="left">Campaign B (CR)</th>
+<th align="left">Real Winner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>High Value</strong> (High propensity)</td>
+<td align="left">58.0% (290/500)</td>
+<td align="left"><strong>60.0%</strong> (180/300)</td>
+<td align="left"><strong>Campaign B</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>Low Value</strong> (Low propensity)</td>
+<td align="left">8.5% (170/2000)</td>
+<td align="left"><strong>9.0%</strong> (270/3000)</td>
+<td align="left"><strong>Campaign B</strong></td>
+</tr>
+</tbody></table>
+</div></figure><p>Campaign B is superior <em>in both</em> segments taken individually! Why does the total say the opposite? Because Campaign A had the &quot;luck&quot; of having a higher percentage of traffic from the <em>High Value</em> segment (which naturally converts much more), while Campaign B was penalized by receiving most of its traffic from the <em>Low Value</em> segment. This is a &quot;Mix Effects&quot; problem.<a href="https://research.google.com/pubs/archive/42901.pdf">31</a> Without this narrative disaggregation, the report would have led to canceling the technically more performant campaign (B). Rigorous Data Storytelling always requires asking: &quot;Is there a latent variable (confounder) that is distorting the average?&quot;.<a href="https://bookdown.org/mike/data_analysis/simpsons-paradox.html">33</a></p>
+<h3 id="32-misinterpreted-churn-and-selection-bias"><strong>3.2 Misinterpreted &quot;Churn&quot; and Selection Bias</strong></h3>
+<p>Un altro classico errore operativo riguarda la metrica del <strong>Churn</strong>. Riportare un &quot;Churn Rate&quot; unico (es. 5%) è spesso fuorviante in ambito B2B Enterprise. Se l&#39;azienda perde 10 piccoli clienti che pagano 1k€ l&#39;anno, ma mantiene l&#39;unico cliente che ne paga 100k€, il <em>Customer Churn</em> sarà alto, ma il <em>Revenue Churn</em> sarà nullo o positivo (se c&#39;è upsell). Un report che non distingue tra <strong>Logo Churn</strong> e <strong>Revenue Churn</strong> (o Net Revenue Retention - NRR) crea allarmismo ingiustificato o falsa sicurezza.<a href="https://www.zendesk.com/blog/customer-churn-rate/">35</a><br>Inoltre, molti report soffrono di <strong>Selection Bias</strong> o <strong>Survivorship Bias</strong>. Analizzare la soddisfazione dei clienti basandosi solo sui ticket di supporto o sui sondaggi NPS (Net Promoter Score) introduce un bias enorme: stiamo ascoltando solo chi ha deciso di parlare o chi è rimasto cliente.<a href="https://www.omniconvert.com/what-is/selection-bias/">37</a> I clienti insoddisfatti che se ne sono andati silenziosamente sono invisibili nei dati. Un report rigoroso deve esplicitare questo caveat: &quot;L&#39;analisi riflette il sentiment dei clienti attivi e rispondenti, non della totalità della base utenti&quot;.</p>
+<h3 id="33-dashboards-without-a-question-the-so-what-problem"><strong>3.3 Dashboards without a question (The &quot;So What?&quot; Problem)</strong></h3>
+<p>The typical failure of operational dashboards is the lack of a clear business question. A screen full of disconnected gauges, numbers, and graphs fails the &quot;So What?&quot; test. The user looks at the data and asks: &quot;So what? Is it good or bad? What should I do?&quot;. Every visualization must be an answer. If we show sales by region, the sorting should not be alphabetical (which answers nothing), but descending by value (answers &quot;Who sells the most?&quot;) or by deviation from budget (answers &quot;Who is performing worse than expected?&quot;). The absence of semantic ordering is a design error that increases cognitive load.<a href="https://nces.ed.gov/forum/pdf/nces_table_design.pdf">39</a></p>
+<h2 id="4-ai-as-an-adversarial-editor-not-a-decision-maker"><strong>4. AI as an adversarial editor (Not a decision-maker)</strong></h2>
+<p>In the AI adoption journey, the role of Large Language Models (LLMs) in reporting should not be that of an oracle (&quot;Tell me what to do&quot;), but rather an <strong>Adversarial Editor</strong> or logical auditor. AI excels at identifying inconsistencies in text and data when properly instructed, acting as a &quot;Red Team&quot; before the report reaches the board.</p>
+<h3 id="41-prompt-engineering-for-logical-audit"><strong>4.1 Prompt engineering for logical audit</strong></h3>
+<p>Instead of asking AI to &quot;write a report,&quot; the analyst should provide it with the draft report and raw data, asking it to critique them. This technique, known as <strong>Adversarial Prompting</strong>, allows for simulating the scrutiny of a skeptical executive or an experienced Data Scientist.<a href="https://www.obsidiansecurity.com/blog/adversarial-prompt-engineering">40</a><br><strong>Example of Structured Prompt for Validation:</strong><br>&quot;Act as a Senior Data Scientist with experience in econometrics and a risk-averse CFO. Analyze the following report text and associated data tables.</p>
+<ol>
+<li><strong>Causality check:</strong> Identify every sentence that implies causality (e.g., &#39;X led to Y&#39;, &#39;thanks to X...&#39;) and verify if the provided data statistically supports such a link or if it might be a simple correlation.  </li>
+<li><strong>Bias detective:</strong> Report potential cases of Simpson&#39;s Paradox. Are there suspicious aggregations that might hide opposite trends in subgroups?  </li>
+<li><strong>Tone check:</strong> Highlight all qualitative adjectives (e.g., &#39;significant&#39;, &#39;enormous&#39;, &#39;concerning&#39;) that are not immediately followed by a precise number and context (benchmark).  </li>
+<li><strong>Executive summary audit:</strong> Verify if the first paragraph contains the main conclusion (BLUF) or if it &#39;buries the lede&#39; at the end.</li>
+</ol>
+<p>&quot;<br>This approach keeps the human at the center of the decision (&quot;Human-in-the-loop&quot;), using AI to enhance rigor and reduce errors of distraction or confirmation biases.<a href="https://arxiv.org/html/2402.09346v3">42</a></p>
+<h2 id="5-showcase-report-transformation-before-and-after"><strong>5. Showcase: Report transformation (Before and after)</strong></h2>
+<p>To make these concepts tangible, let&#39;s analyze the transformation of a typical quarterly sales report.</p>
+<h3 id="scenario-q3-sales-review-report"><strong>Scenario: Q3 sales review report</strong></h3>
+<p><strong>&quot;Bad&quot; version (Unoptimized standard approach):</strong></p>
+<ul>
+<li><strong>Title:</strong> &quot;Q3 2025 Sales Analysis&quot; (Generic, uninformative).  </li>
+<li><strong>Format:</strong> PowerPoint slide.  </li>
+<li><strong>Content:</strong>  <ul>
+<li>A bulleted list: &quot;• Sales increased. • Great team work. • Product X performs well. • Problems in Asia.&quot;  </li>
+<li>A 3D Pie Chart showing sales division by region (unreadable for small slices).  </li>
+<li>A line chart with two Y-axes (Sales and Margin) that intersect, creating visual confusion.</li>
+</ul>
+</li>
+<li><strong>Critique:</strong> Context is missing. &quot;Increased&quot; by how much? Compared to what (Budget, Previous year)? &quot;Problems in Asia&quot; is vague. The Pie Chart violates Cleveland &amp; McGill&#39;s principles. The two Y-axes violate Tufte&#39;s principle of simplicity.</li>
+</ul>
+<p><strong>&quot;Good&quot; version (Operational data storytelling):</strong></p>
+<ul>
+<li><strong>Titolo Narrativo:</strong> &quot;Q3 Performance: Global target exceeded by 10%, but margin erosion in Asia (-500bps) requires immediate pricing intervention.&quot;</li>
+<li><strong>Formato:</strong> Narrative memo or Dashboard with &quot;Small Multiples&quot;.</li>
+<li><strong>Visualizzazione:</strong><ul>
+<li><strong>Bullet Graph:</strong> For total sales (Dark bar = Actual, Vertical line = Target, Grey background = Historical performance). Immediately answers &quot;Are we on track?&quot;.</li>
+<li><strong>Dot Plot (or Horizontal Bar Chart):</strong> For regions, ordered by negative margin deviation. Asia immediately appears at the top (or bottom) highlighted in red (pre-attentive attribute).</li>
+</ul>
+</li>
+<li><strong>Struttura Narrativa (Pyramid Principle):</strong><ol>
+<li><strong>Governing Thought:</strong> Top-line growth (+10% YoY) is healthy, but profitability is at risk. Asia is &quot;buying revenue&quot; by underselling the product.</li>
+<li><strong>Key Line 1 (Evidence):</strong> The US and EU markets are driving growth (+15% YoY) while maintaining stable margins, thanks to the successful launch of Product X.</li>
+<li><strong>Key Line 2 (Complication):</strong> Asia grew in volume (+20%) but the margin collapsed (-500bps). Transactional analysis shows an abuse of discretionary discounts by the local sales force.</li>
+<li><strong>Action (Next Steps):</strong> Immediate block on discretionary discounts exceeding 10% in Asia; review of regional pricing strategy with the VP Sales by Friday.</li>
+</ol>
+</li>
+<li><strong>Rigor:</strong> Data is precise (bps, YoY). Causality is investigated (discretionary discounts). Action is specific.</li>
+</ul>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th align="left">Feature</th>
+<th align="left">Bad Report (Standard)</th>
+<th align="left">Good Report (Operational Storytelling)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Title</strong></td>
+<td align="left">Descriptive (&quot;Q3 Sales&quot;)</td>
+<td align="left">Assertive/Narrative (Conclusion + Action)</td>
+</tr>
+<tr>
+<td align="left"><strong>Structure</strong></td>
+<td align="left">Inductive (Data -&gt; Possible Conclusions)</td>
+<td align="left">Deductive (Pyramid: Conclusion -&gt; Data)</td>
+</tr>
+<tr>
+<td align="left"><strong>Graphics</strong></td>
+<td align="left">Pie Charts, 3D, Random colors</td>
+<td align="left">Bar Charts, Bullet Graphs, Semantic color</td>
+</tr>
+<tr>
+<td align="left"><strong>Metrics</strong></td>
+<td align="left">Generic aggregates</td>
+<td align="left">Segmented, Compared (YoY, vs Budget)</td>
+</tr>
+<tr>
+<td align="left"><strong>Cognitive Load</strong></td>
+<td align="left">High Extraneous (Difficult decoding)</td>
+<td align="left">High Germane (Focus on the problem)</td>
+</tr>
+</tbody></table>
+</div></figure><h2 id="6-section-of-typical-errors-control-checklist"><strong>6. Section of Typical Errors (Control Checklist)</strong></h2>
+<p>Before dissemination, every report must pass a quality control to avoid the following common &quot;Anti-Patterns&quot;:</p>
+<ol>
+<li><strong>Truncated Axes:</strong> Starting the Y-axis of a Bar Chart at a value other than zero (e.g., from 50 to 60 instead of 0 to 60). This visually exaggerates differences, transforming a modest variation into a dramatic collapse. It is visual manipulation.<a href="https://nces.ed.gov/forum/pdf/nces_table_design.pdf">39</a></li>
+<li><strong>The &quot;Wall of Data&quot;:</strong> Filling every available pixel with tables and numbers. The lack of white space (&quot;White Space&quot;) increases cognitive load. White space is an active design element: it serves to group information and allow for easier reading.</li>
+<li><strong>Dual Y-Axis (Dual Axis):</strong> Placing two different scales (e.g., Revenue in millions and Margin in %) on the same chart. Often, lines intersect in ways that suggest non-existent correlations. Solution: use two separate charts stacked vertically with the X-axis (time) aligned.<a href="https://nces.ed.gov/forum/pdf/nces_table_design.pdf">39</a></li>
+<li><strong>Confusing Correlation with Causation:</strong> &quot;&quot;We launched the new UI and sales went up.&quot; Perhaps it was just Christmas (Seasonality)? Without a control group or counterfactual analysis, this statement is risky. Use terms like &quot;coincides with&quot; or &quot;is correlated with&quot; instead of &quot;caused,&quot; unless there is strong statistical evidence.</li>
+<li><strong>Lack of Benchmark:</strong> A number alone has no meaning. &quot;Churn is at 3%.&quot; Is that good? Is that bad? Context is always needed: &quot;Churn is at 3%, down from 4% last year (YoY), but above the 2.5% target.&quot;</li>
+</ol>
+<h2 id="conclusions-and-debrief"><strong>Conclusions and Debrief</strong></h2>
+<p>The adoption of Data Storytelling in an enterprise context is not a one-off training project, but a cultural paradigm shift. It means moving the organization from a culture of <em>data transmission</em> to a culture of <em>meaning sharing</em>.
+For technology and business leaders, the operational steps are clear:</p>
+<ol>
+<li><strong>Language Standardization:</strong> Define a unique glossary of metrics.</li>
+<li><strong>Training on Principles:</strong> Teach teams not only the tools (PowerBI, Tableau) but also the science of perception (Cleveland, Tufte) and structured logic (Minto).</li>
+<li><strong>Review Process:</strong> Institute &quot;Report Review&quot; sessions where logical structure and clarity are critiqued, not just the numbers.</li>
+<li><strong>AI Governance:</strong> Integrate AI as a logical auditor into analytics workflows.</li>
+</ol>
+<p>Only by applying this engineering rigor to communication can companies bridge the chasm between the enormous potential of their data and the actual quality of their strategic decisions. In a world dominated by AI, the human ability to discern, narrate, and decide with clarity becomes the ultimate asset.</p>
+<h4 id="bibliography"><strong>Bibliography</strong></h4>
+<ol>
+<li><p>AI&#39;s potential role in data storytelling empowers decision making - INMA, accessed on February 12, 2026, <a href="https://www.inma.org/blogs/big-data-for-news-publishers/post.cfm/ai-s-potential-role-in-data-storytelling-empowers-decision-making">https://www.inma.org/blogs/big-data-for-news-publishers/post.cfm/ai-s-potential-role-in-data-storytelling-empowers-decision-making</a>  </p>
+</li>
+<li><p>The Real Cost Of Bad Data: How It Silently Undermines Pricing And Growth - Forbes, accessed on February 12, 2026, <a href="https://www.forbes.com/councils/forbescommunicationscouncil/2025/10/22/the-real-cost-of-bad-data-how-it-silently-undermines-pricing-and-growth/">https://www.forbes.com/councils/forbescommunicationscouncil/2025/10/22/the-real-cost-of-bad-data-how-it-silently-undermines-pricing-and-growth/</a>  </p>
+</li>
+<li><p>The $1.2 Trillion Cost of Miscommunication in the Workplace (and How Managers Can Fix It) - Talaera, accessed on February 12, 2026, <a href="https://www.talaera.com/leadership/cost-of-miscommunication-in-the-workplace/">https://www.talaera.com/leadership/cost-of-miscommunication-in-the-workplace/</a>  </p>
+</li>
+<li><p>The effects of visualisation literacy and data storytelling dashboards on teachers&#39; cognitive load - Australasian Journal of Educational Technology, accessed on February 12, 2026, <a href="https://ajet.org.au/index.php/AJET/article/download/8988/2145/32823">https://ajet.org.au/index.php/AJET/article/download/8988/2145/32823</a>  </p>
+</li>
+<li><p>Cognitive Load Theory - EdTech Books, accessed on February 12, 2026, <a href="https://edtechbooks.org/encyclopedia/cognitive_load_theory">https://edtechbooks.org/encyclopedia/cognitive_load_theory</a>  </p>
+</li>
+<li><p>Cognitive Load as a Guide: 12 Spectrums to Improve Your Data Visualizations | Nightingale, accessed on February 12, 2026, <a href="https://nightingaledvs.com/cognitive-load-as-a-guide-12-spectrums-to-improve-your-data-visualizations/">https://nightingaledvs.com/cognitive-load-as-a-guide-12-spectrums-to-improve-your-data-visualizations/</a>  </p>
+</li>
+<li><p>The Cognitive Cost of Dashboard Design: Data Visualisation is a Neuroscience Problem, accessed on February 12, 2026, <a href="https://blog.prototypr.io/the-cognitive-cost-of-dashboard-design-data-visualisation-is-a-neuroscience-problem-a71f95cdc9b4">https://blog.prototypr.io/the-cognitive-cost-of-dashboard-design-data-visualisation-is-a-neuroscience-problem-a71f95cdc9b4</a>  </p>
+</li>
+<li><p>Cognitive Load Theory - The Decision Lab, accessed on February 12, 2026, <a href="https://thedecisionlab.com/reference-guide/psychology/cognitive-load-theory">https://thedecisionlab.com/reference-guide/psychology/cognitive-load-theory</a>  </p>
+</li>
+<li><p>Graphical Perception: Theory, Experimentation, and Application to ..., accessed on February 12, 2026, <a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf</a>  </p>
+</li>
+<li><p>Graphical Perception and Graphical Methods for Analyzing Scientific Data - William S. Cleveland; Robert McGill, accessed on February 12, 2026, <a href="https://web.cs.dal.ca/~sbrooks/csci4166-6406/seminars/readings/Cleveland_GraphicalPerception_Science85.pdf">https://web.cs.dal.ca/~sbrooks/csci4166-6406/seminars/readings/Cleveland_GraphicalPerception_Science85.pdf</a>  </p>
+</li>
+<li><p>Visual Perception and Pre-Attentive Attributes in Oncological Data Visualisation - PMC - NIH, accessed on February 12, 2026, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/</a>  </p>
+</li>
+<li><p>Preattentive Attributes in Visualization - An Example - Daydreaming Numbers, accessed on February 12, 2026, <a href="https://daydreamingnumbers.com/preattentive-attributes-example/">https://daydreamingnumbers.com/preattentive-attributes-example/</a>  </p>
+</li>
+<li><p>Preattentive attributes of visual perception and their application to data visualizations | by Ryan Posternak | UX Collective, accessed on February 12, 2026, <a href="https://uxdesign.cc/preattentive-attributes-of-visual-perception-and-their-application-to-data-visualizations-7b0fb50e1375">https://uxdesign.cc/preattentive-attributes-of-visual-perception-and-their-application-to-data-visualizations-7b0fb50e1375</a>  </p>
+</li>
+<li><p>Data-Ink Ratio - InfoVis:Wiki, accessed on February 12, 2026, <a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio">https://infovis-wiki.net/wiki/Data-Ink_Ratio</a></p>
+</li>
+<li><p>Data-Ink Ratio - Medium, accessed on February 12, 2026, <a href="https://medium.com/@vaniv7397/data-ink-ratio-fcad209ef425">https://medium.com/@vaniv7397/data-ink-ratio-fcad209ef425</a></p>
+</li>
+<li><p>Data-ink Ratio: How to Simplify Data Visualization - Holistics.io, accessed on February 12, 2026, <a href="https://www.holistics.io/blog/data-ink-ratio/">https://www.holistics.io/blog/data-ink-ratio/</a></p>
+</li>
+<li><p>Chapter 10 Tufte&#39;s Principles of Data-Ink | Community contributions for EDAV Fall 2019, accessed on February 12, 2026, <a href="https://jtr13.github.io/cc19/tuftes-principles-of-data-ink.html">https://jtr13.github.io/cc19/tuftes-principles-of-data-ink.html</a></p>
+</li>
+<li><p>The Pyramid Principle: What It Is &amp; How to Use It + Example - My Consulting Offer, accessed on February 12, 2026, <a href="https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/">https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/</a></p>
+</li>
+<li><p>The Pyramid Principle Applied | Consulting Concepts &amp; Resources, accessed on February 12, 2026, <a href="https://managementconsulted.com/pyramid-principle/">https://managementconsulted.com/pyramid-principle/</a></p>
+</li>
+<li><p>Minto Pyramid - Untools, accessed on February 12, 2026, <a href="https://untools.co/minto-pyramid/">https://untools.co/minto-pyramid/</a></p>
+</li>
+<li><p>Barbara Minto: “MECE: I invented it, so I get to say how to pronounce ..., accessed on February 12, 2026, <a href="https://www.mckinsey.com/alumni/news-and-events/global-news/alumni-news/barbara-minto-mece-i-invented-it-so-i-get-to-say-how-to-pronounce-it">https://www.mckinsey.com/alumni/news-and-events/global-news/alumni-news/barbara-minto-mece-i-invented-it-so-i-get-to-say-how-to-pronounce-it</a></p>
+</li>
+<li><p>Minto Pyramid &amp; SCQA - ModelThinkers, accessed on February 12, 2026, <a href="https://modelthinkers.com/mental-model/minto-pyramid-scqa">https://modelthinkers.com/mental-model/minto-pyramid-scqa</a></p>
+</li>
+<li><p>The Amazon 6-Pager Memo: Better Than Powerpoint? | by The Effective Project Manager, accessed on February 12, 2026, <a href="https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7">https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7</a></p>
+</li>
+<li><p>The Amazon 6 Pager Memo: Transforming Customer Success Leadership Meetings, accessed on February 12, 2026, <a href="https://www.appeq.ai/amazon-6-pager-customer-success-leadership">https://www.appeq.ai/amazon-6-pager-customer-success-leadership</a></p>
+</li>
+<li><p>The Ultimate Guide to Amazon&#39;s 6-Pager Memo Method | by The ..., accessed on February 12, 2026, <a href="https://medium.com/@info_14390/the-ultimate-guide-to-amazons-6-pager-memo-method-c4b683441593">https://medium.com/@info_14390/the-ultimate-guide-to-amazons-6-pager-memo-method-c4b683441593</a></p>
+</li>
+<li><p>Share your experience with 6-Page Memos / Design Docs / RFCs : r/SoftwareEngineering, accessed on February 12, 2026, <a href="https://www.reddit.com/r/SoftwareEngineering/comments/1am412j/share_your_experience_with_6page_memos_design/">https://www.reddit.com/r/SoftwareEngineering/comments/1am412j/share_your_experience_with_6page_memos_design/</a></p>
+</li>
+<li><p>The Amazon 6-Pager: What, Why, and How (2025), accessed on February 12, 2026, <a href="https://www.larksuite.com/en_us/blog/amazon-6-pager">https://www.larksuite.com/en_us/blog/amazon-6-pager</a></p>
+</li>
+<li><p>Executive summary: How to write one (with a template) - Diligent, accessed on February 12, 2026, <a href="https://www.diligent.com/resources/blog/executive-summary-report">https://www.diligent.com/resources/blog/executive-summary-report</a></p>
+</li>
+<li><p>How to Write an Executive Summary, with Examples [2025] - Asana, accessed on February 12, 2026, <a href="https://asana.com/resources/executive-summary-examples">https://asana.com/resources/executive-summary-examples</a></p>
+</li>
+<li><p>Simpson&#39;s Paradox for Marketing Analysts: A Guide to Avoiding the Road to Distorted Assumptions - Revlitix, accessed on February 12, 2026, <a href="https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions">https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions</a></p>
+</li>
+<li><p>Visualizing Statistical Mix Effects and Simpson&#39;s Paradox - Google Research, accessed on February 12, 2026, <a href="https://research.google.com/pubs/archive/42901.pdf">https://research.google.com/pubs/archive/42901.pdf</a></p>
+</li>
+<li><p>Defining Simpson&#39;s Paradox and How to Automatically Detect it - Altair, accessed on February 12, 2026, <a href="https://altair.com/blog/articles/Defining-Simpson-s-Paradox-and-How-to-Automatically-Detect-it">https://altair.com/blog/articles/Defining-Simpson-s-Paradox-and-How-to-Automatically-Detect-it</a></p>
+</li>
+<li><p>21.2 Simpson&#39;s Paradox | A Guide on Data Analysis - Bookdown, accessed on February 12, 2026, <a href="https://bookdown.org/mike/data_analysis/simpsons-paradox.html">https://bookdown.org/mike/data_analysis/simpsons-paradox.html</a>  </p>
+</li>
+<li><p>Segmenting Data for Web Analytics – The Simpson&#39;s Paradox ..., accessed on February 12, 2026, <a href="https://blog.analytics-toolkit.com/2014/segmenting-data-web-analytics-simpsons-paradox/">https://blog.analytics-toolkit.com/2014/segmenting-data-web-analytics-simpsons-paradox/</a>  </p>
+</li>
+<li><p>Churn rate: What it is + how to calculate it - Zendesk, accessed on February 12, 2026, <a href="https://www.zendesk.com/blog/customer-churn-rate/">https://www.zendesk.com/blog/customer-churn-rate/</a>  </p>
+</li>
+<li><p>Churn Rate | Formula + Calculator - Wall Street Prep, accessed on February 12, 2026, <a href="https://www.wallstreetprep.com/knowledge/churn-rate/">https://www.wallstreetprep.com/knowledge/churn-rate/</a>  </p>
+</li>
+<li><p>Selection Bias: Definition, Types and Examples | Omniconvert, accessed on February 12, 2026, <a href="https://www.omniconvert.com/what-is/selection-bias/">https://www.omniconvert.com/what-is/selection-bias/</a>  </p>
+</li>
+<li><p>What Is Response Bias? | Definition &amp; Examples - Scribbr, accessed on February 12, 2026, <a href="https://www.scribbr.com/research-bias/response-bias/">https://www.scribbr.com/research-bias/response-bias/</a>  </p>
+</li>
+<li><p>Table and Graph Design - for Enlightening Communication - National Center for Education Statistics (NCES), accessed on February 12, 2026, <a href="https://nces.ed.gov/forum/pdf/nces_table_design.pdf">https://nces.ed.gov/forum/pdf/nces_table_design.pdf</a>  </p>
+</li>
+<li><p>Adversarial Prompt Engineering: The Dark Art of Manipulating LLMs - Obsidian Security, accessed on February 12, 2026, <a href="https://www.obsidiansecurity.com/blog/adversarial-prompt-engineering">https://www.obsidiansecurity.com/blog/adversarial-prompt-engineering</a>  </p>
+</li>
+<li><p>200 AI Prompts for Quantitative Interviews and Data Analysis in M&amp;E, accessed on February 12, 2026, <a href="https://academy.evalcommunity.com/200-ai-prompts-for-quantitative-interviews-and-data-analysis-in-me/">https://academy.evalcommunity.com/200-ai-prompts-for-quantitative-interviews-and-data-analysis-in-me/</a>  </p>
+</li>
+<li><p>LLMAuditor: A Framework for Auditing Large Language Models Using Human-in-the-Loop, accessed on February 12, 2026, <a href="https://arxiv.org/html/2402.09346v3">https://arxiv.org/html/2402.09346v3</a>  </p>
+</li>
+<li><p>Prompts for Mitigating Bias and Inaccuracies in AI Responses | Brainstorm in Progress, accessed on February 12, 2026, <a href="https://geoffcain.com/blog/prompts-for-mitigating-bias-and-inaccuracies-in-ai-responses/">https://geoffcain.com/blog/prompts-for-mitigating-bias-and-inaccuracies-in-ai-responses/</a>  </p>
+</li>
+<li><p>Effectively Communicating Numbers: Selecting ... - Perceptual Edge, accessed on February 12, 2026, <a href="https://www.perceptualedge.com/articles/Whitepapers/Communicating_Numbers.pdf">https://www.perceptualedge.com/articles/Whitepapers/Communicating_Numbers.pdf</a></p>
+</li>
+</ol>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/data-storytelling/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true') {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">📋</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          pre.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
+      enhanceCodeBlocks();
+      initToc();
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -42,7 +42,7 @@
     "headline": "Dai modelli NLP classici ai LLM",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-01-10T00:00:00.000Z",
-    "dateModified": "2026-02-07T22:56:45.238Z",
+    "dateModified": "2026-02-12T10:36:14.995Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1488,8 +1488,8 @@ Prendiamo la parola apple con $n=3$. FastText la scompone così:</p>
 <p>In una RNN classica, lo stato viene continuamente trasformato (moltiplicato per $W$, passato per la funzione di attivazione), il che corrompe l&#39;informazione originale dopo pochi passaggi. In una LSTM, l&#39;informazione può scorrere lungo la cella di stato praticamente invariata (questo lo spiego meglio tra un attimo). La rete deve fare uno sforzo attivo per modificarla (aggiungere o rimuovere dati).</p>
 <p>Questo flusso lineare permette ai gradienti di retropropagarsi senza svanire, anche per 1000 passi temporali.</p>
 <p>Una cella LSTM controlla il flusso di informazioni tramite tre porte (gates). Ogni porta è una rete neurale con attivazione <strong>sigmoide</strong> ($\sigma$), che produce valori tra 0 (chiuso, non passa nulla) e 1 (aperto, passa tutto).</p>
-<p>L&#39;LSTM aggiunge quindi un <strong>gating</strong>: in ogni cella ci sono porte di ingresso, uscita e soprattutto <em>porta di forget</em>, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l&#39;LSTM conserva una <em>cella di stato</em> $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l&#39;azzeramento. </p>
-<p>L&#39;LSTM può così <em>&quot;ricordare&quot;</em> informazioni per più passi, decidendo autonomamente quando dimenticare. Vediamo nelle prossime sottosezioni l&#39;anatomia della cella di stato.</p>
+<p>L&#39;architettura LSTM aggiunge quindi un <strong>gating</strong>: in ogni cella ci sono porte di ingresso, uscita e soprattutto <em>porta di forget</em>, che regolano quanta informazione vecchia mantenere e quanta sovrascrivere. In pratica l&#39;LSTM conserva una <em>cella di stato</em> $c_t$ che può propagarsi (quasi) immutata se il modello lo ritiene opportuno, superando le moltiplicazioni ripetute da valori molto vicini a 0. I gradienti possono fluire attraverso $c_t$ più facilmente, evitando l&#39;azzeramento. </p>
+<p>L&#39;architettura LSTM può così <em>&quot;ricordare&quot;</em> informazioni per più passi, decidendo autonomamente quando dimenticare. Vediamo nelle prossime sottosezioni l&#39;anatomia della cella di stato.</p>
 <h4 id="a-forget-gate-la-porta-delloblio">A. Forget Gate: La porta dell&#39;oblio</h4>
 <p>Questa parte risponde alla domanda: </p>
 <blockquote>
