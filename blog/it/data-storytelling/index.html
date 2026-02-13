@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-13T16:14:12.941Z",
+    "dateModified": "2026-02-13T17:30:32.995Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1147,8 +1147,8 @@
 </div></figure><h3 id="gerarchia-della-percezione-grafica">Gerarchia della percezione grafica</h3>
 <p>Se la CLT ci dice <em>quanto</em> il cervello può processare, gli studi di <a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">William Cleveland e Robert McGill (1984)</a> ci dicono <em>come</em> il cervello decodifica le informazioni visive con maggiore o minore accuratezza. La loro ricerca ha stabilito una gerarchia fondamentale dei compiti percettivi, ordinati dal più accurato al meno accurato. </p>
 <p>Al vertice della gerarchia troviamo la <strong>posizione su una scala comune</strong>. Il cervello umano è straordinariamente abile nel confrontare la posizione di punti o barre allineati su un singolo asse (come in un bar chart o un dot plot). Questo compito percettivo permette di distinguere differenze minime con grande accuratezza. Nel loro articolo sostengono che un compito percettivo è considerato più accurato se porta a giudizi umani più vicini alle quantità reali codificate. Gli esperimenti condotti confermano che i giudizi basati sulla <strong>posizione</strong> sono significativamente più accurati rispetto a quelli basati sulla <em>lunghezza</em> o sull&#39;<em>angolo</em>.</p>
-<p><img src="../../../Assets/barplot_dotplot.svg" alt="Confronto tra barplot e dotplot">
-<em>Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.</em></p>
+<p><img src="../../../Assets/barplot_dotplot.svg" alt="Confronto tra barplot e dotplot"></p>
+<p><em>Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.</em></p>
 <p>Segue, con un leggero degrado dell&#39;accuratezza, la <strong>Posizione su scale non allineate</strong> (Positions along nonaligned scales). Questo compito si verifica quando si confrontano valori rappresentati su scale identiche ma spazialmente separate, ad esempio nei <em>small multiples</em> o in pannelli grafici affiancati (juxtaposed graphs), dove ogni pannello mantiene la propria scala.</p>
 <p>Il motivo per cui questa codifica resta più affidabile della semplice <strong>lunghezza</strong> è che la presenza della scala, anche se non condivisa fisicamente sullo stesso asse, offre all&#39;occhio ulteriori <em>visual cues</em> di riferimento. In pratica, non stiamo stimando soltanto “quanto è lunga una barra”, ma “dove cade un valore” rispetto a un contesto visivo strutturato.</p>
 <p>Un esempio classico è quello dei <strong>rettangoli incorniciati</strong>: se confronti due barre isolate, il compito percettivo è la stima della lunghezza (meno precisa); se invece inserisci le stesse barre in una cornice di riferimento, il giudizio si sposta sulla posizione dell&#39;estremità della barra rispetto al bordo superiore della cornice, quindi su una scala non allineata.</p>
@@ -1188,7 +1188,7 @@ che lega intensità percepita e intensità reale:</p>
 <p>Nella gerarchia dei compiti percettivi per dati quantitativi, la <strong>saturazione del colore</strong> (insieme all&#39;ombreggiatura) è all&#39;ultimo livello: è il metodo meno accurato per comunicare numeri, inferiore a posizione, lunghezza, area e volume.</p>
 <p>La <strong>tinta</strong> (hue: rosso, blu, verde, ecc.) è deliberatamente esclusa dalla codifica quantitativa perché non esiste un ordinamento univoco e non ambiguo &quot;dal più piccolo al più grande&quot;. Per questo motivo, la tinta è adatta <strong>unicamente</strong> a variabili categoriche, non a variabili reali continue.</p>
 <p>Applicazione pratica nelle mappe: le <strong>mappe statistiche a zone (choropleth)</strong> colorano regioni geografiche in base a un valore e quindi costringono il lettore a un compito percettivo a bassa accuratezza. Quando l&#39;obiettivo è confrontare quantità in modo preciso, è preferibile sostituirle con rappresentazioni che riportano il confronto sulla posizione (ad esempio i <strong>framed-rectangle charts</strong>), invece di affidarlo alla saturazione del colore.</p>
-<p><img src="../../../Assets/italy_choropleth_vs_framed.png" alt="Confronto Italia: da evitare (choropleth) vs meglio (framed-rectangle chart)">
+<p><img src="../../../Assets/choropleth_vs_dunn.png" alt="Confronto Italia: da evitare (choropleth) vs meglio (framed-rectangle chart)">
 <em>A sinistra: la mappa choropleth richiede confronti basati su saturazione. A destra: il framed-rectangle chart mantiene il riferimento geografico ma sposta il confronto sulla posizione del bordo superiore delle barre.</em></p>
 <h3 id="il-data-ink-ratio">Il Data-Ink ratio</h3>
 <p>Per guidare l&#39;attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare i cosiddetti <strong>attributi pre-attentivi</strong>.</p>
