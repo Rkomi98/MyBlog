@@ -58,12 +58,47 @@ Al vertice della gerarchia troviamo la **posizione su una scala comune**. Il cer
 ![Confronto tra barplot e dotplot](../Assets/barplot_dotplot.svg)
 *Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.*
 
-Segue, con un leggero degrado dell'accuratezza, la **Posizione su scale non allineate** (es. *small multiples* o pannelli di grafici affiancati). Questo compito si verifica quando si confrontano valori rappresentati su scale identiche ma spazialmente separate. Un esempio tipico è quando si confrontano dati presenti in pannelli grafici diversi affiancati (juxtaposed graphs), dove ogni pannello ha la propria scala
+Segue, con un leggero degrado dell'accuratezza, la **Posizione su scale non allineate** (Positions along nonaligned scales). Questo compito si verifica quando si confrontano valori rappresentati su scale identiche ma spazialmente separate, ad esempio nei *small multiples* o in pannelli grafici affiancati (juxtaposed graphs), dove ogni pannello mantiene la propria scala.
 
-Scendendo nella gerarchia, troviamo la **Lunghezza**, la **Direzione** e l'**Angolo**. È qui che risiede la condanna scientifica dei diagrammi a torta (Pie Charts). I pie chart costringono l'utente a giudicare angoli e aree, compiti in cui il sistema visivo umano è notoriamente impreciso, specialmente quando le porzioni sono simili o numerose.[9](https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf) Cleveland e McGill hanno dimostrato che il giudizio sull'angolo porta a errori di stima significativamente superiori rispetto al giudizio sulla posizione. Pertanto, l'uso di un pie chart in un report enterprise non è una scelta stilistica, ma un errore tecnico che riduce la leggibilità del dato.  
-Al fondo della gerarchia troviamo l'**Area**, il **Volume** e il **Colore (Saturazione/Tonalità)** per codificare grandezze quantitative. I grafici a bolle (Bubble Charts) o le mappe coroplete (Heatmaps), sebbene utili per fornire una panoramica generale, non dovrebbero mai essere utilizzati quando è richiesta precisione nel confronto dei valori, poiché la percezione dell'area non scala linearmente nella mente umana (Legge di Stevens).[9](https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf)
+Il motivo per cui questa codifica resta più affidabile della semplice **lunghezza** è che la presenza della scala, anche se non condivisa fisicamente sullo stesso asse, offre all'occhio ulteriori *visual cues* di riferimento. In pratica, non stiamo stimando soltanto “quanto è lunga una barra”, ma “dove cade un valore” rispetto a un contesto visivo strutturato.
 
-### **1.3 Attributi Pre-attentivi e Data-Ink Ratio**
+Un esempio classico è quello dei **rettangoli incorniciati**: se confronti due barre isolate, il compito percettivo è la stima della lunghezza (meno precisa); se invece inserisci le stesse barre in una cornice di riferimento, il giudizio si sposta sulla posizione dell'estremità della barra rispetto al bordo superiore della cornice, quindi su una scala non allineata.
+
+Qui entra in gioco anche la **Legge di Weber**: la cornice crea una porzione “vuota” sopra la parte piena. Quando due barre sono simili, la differenza relativa tra le porzioni vuote può risultare più ampia e quindi più facile da cogliere rispetto alla differenza tra le porzioni piene. In sintesi, anche senza un asse condiviso, un riferimento visivo coerente migliora in modo netto la precisione del confronto.
+
+![Esempio dei rettangoli incorniciati (Cleveland e McGill)](../Assets/Rectangular.png)
+*Confronto tra barre semplici (in alto) e barre incorniciate (in basso): la cornice introduce un riferimento che rafforza il giudizio percettivo.*
+
+Scendendo nella gerarchia, troviamo la **Lunghezza**, la **Direzione** e l'**Angolo**. La **lunghezza** occupa il terzo livello (a pari merito con direzione e angolo), subito dopo la posizione su scale non allineate. Sembra un compito naturale, ma i risultati sperimentali di Cleveland e McGill mostrano chiaramente che è meno affidabile della posizione.
+
+Le evidenze quantitative sono nette:
+- gli errori medi nei giudizi di lunghezza risultano circa dal 40% al 250% più alti rispetto ai giudizi di posizione;
+- il 78% dei grandi errori osservati negli esperimenti ricade nei compiti basati sulla lunghezza;
+- emerge anche un bias sistematico: quando il valore reale è circa tra il 25% e il 50% del totale, le persone tendono a stimarlo più basso di quanto sia davvero (sottostima).
+
+Nonostante questo, la lunghezza resta comunque preferibile ad **area** e **volume**. In termini psicofisici (*Legge di Stevens*, $p = k a^{\beta}$), la lunghezza ha un esponente $\beta$ vicino a 1: la percezione è quindi quasi lineare e molto meno distorta rispetto a codifiche areali o volumetriche, dove la sottostima è più marcata.
+
+Dal punto di vista del design, i casi più problematici sono:
+- **Divided bar charts (barre impilate):** solo il segmento alla base beneficia di una scala comune; i segmenti superiori richiedono confronti di lunghezza e diventano rapidamente difficili da confrontare tra categorie diverse.
+- **Curve-difference charts:** quando due serie sono rappresentate come linee, il lettore dovrebbe stimare la distanza verticale tra curve (lunghezza), ma l'occhio tende a inseguire la distanza minima locale tra i tracciati, introducendo errori anche grossolani; in pratica, è un compito percettivo quasi impossibile da svolgere con precisione.
+
+Questo spiega perché, come visto con i rettangoli incorniciati, la **posizione su scale non allineate** rende meglio che la lunghezza: quando introduci un riferimento visivo stabile, il confronto percettivo diventa più robusto. Operativamente, quando possibile conviene sostituire codifiche basate sulla lunghezza (es. molte barre impilate) con grafici che privilegiano la posizione, come i **dot chart**.
+
+Nella loro ricerca risulta evidente grafici a torta sono sconsigliati perché costringono l'osservatore a usare compiti percettivi relativamente poco accurati: **angolo** e **area**. In sintesi:
+- **Angolo:** le fette del pie chart richiedono confronti angolari, che nella gerarchia percettiva sono meno affidabili della **posizione su scala comune**.
+- **Area:** oltre all'angolo, il lettore confronta implicitamente anche le aree delle fette; questo compito è ancora meno preciso. In base alla legge psicofisica di Stevens, la percezione di area e volume tende a essere distorta (spesso sottostimata), rendendo più difficile confrontare correttamente quantità simili.
+Pertanto, l'uso di un pie chart in un report enterprise non è una scelta stilistica, ma un errore tecnico che riduce la leggibilità del dato.
+
+Al fondo della gerarchia troviamo l'**Area**, il **Volume** e il **Colore (Saturazione/Tonalità)** per codificare grandezze quantitative. Qui la differenza rispetto alla lunghezza è spiegata bene dalla legge psicofisica di Stevens 
+$$p = k a^{\beta},$$ 
+che lega intensità percepita e intensità reale:
+- **Lunghezza:** $\beta \approx 1$, quindi la percezione è quasi lineare (raddoppio fisico ≈ raddoppio percepito).
+- **Area:** $\beta < 1$, tipicamente intorno a 0,7, quindi tendiamo a sottostimare; per far apparire una forma come “doppia”, l'area reale deve crescere più del doppio.
+- **Volume:** $05\leq \beta \leq 0.7$, con sottostima ancora più forte; il giudizio di volumi 3D su supporti 2D è particolarmente debole.
+
+Implicazione pratica: grafici che codificano quantità tramite area o volume (bubble chart, pie chart, barre 3D) rendono i confronti meno precisi. Se un pie chart è già inferiore a un dot chart perché richiede giudizi su angolo/area, una codifica volumetrica peggiora ulteriormente l'errore percettivo, amplificando sottostima e ambiguità nei confronti tra valori.
+
+### Attributi Pre-attentivi e Data-Ink Ratio
 
 Per guidare l'attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare gli **Attributi Pre-attentivi**. Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa in meno di 200 millisecondi, prima ancora che intervenga l'attenzione conscia.[11](https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/) L'uso strategico del colore, ad esempio, non serve a "rendere bello" il grafico, ma a segnalare l'eccezione. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso *solo* per i mercati sotto-performanti sfrutta la pre-attenzione per dire al C-Level: "Guarda qui". Questo riduce il tempo di ricerca visiva e abbatte il carico estraneo.  
 Questo concetto si sposa perfettamente con il principio del **Data-Ink Ratio** di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all'inchiostro totale del grafico.[14](https://infovis-wiki.net/wiki/Data-Ink_Ratio)
