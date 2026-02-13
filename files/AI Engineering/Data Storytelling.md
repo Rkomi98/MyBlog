@@ -74,7 +74,6 @@ Scendendo nella gerarchia, troviamo la **Lunghezza**, la **Direzione** e l'**Ang
 Le evidenze quantitative sono nette:
 - gli errori medi nei giudizi di lunghezza risultano circa dal 40% al 250% più alti rispetto ai giudizi di posizione;
 - il 78% dei grandi errori osservati negli esperimenti ricade nei compiti basati sulla lunghezza;
-- emerge anche un bias sistematico: quando il valore reale è circa tra il 25% e il 50% del totale, le persone tendono a stimarlo più basso di quanto sia davvero (sottostima).
 
 Nonostante questo, la lunghezza resta comunque preferibile ad **area** e **volume**. In termini psicofisici (*Legge di Stevens*, $p = k a^{\beta}$), la lunghezza ha un esponente $\beta$ vicino a 1: la percezione è quindi quasi lineare e molto meno distorta rispetto a codifiche areali o volumetriche, dove la sottostima è più marcata.
 
@@ -84,23 +83,36 @@ Dal punto di vista del design, i casi più problematici sono:
 
 Questo spiega perché, come visto con i rettangoli incorniciati, la **posizione su scale non allineate** rende meglio che la lunghezza: quando introduci un riferimento visivo stabile, il confronto percettivo diventa più robusto. Operativamente, quando possibile conviene sostituire codifiche basate sulla lunghezza (es. molte barre impilate) con grafici che privilegiano la posizione, come i **dot chart**.
 
-Nella loro ricerca risulta evidente grafici a torta sono sconsigliati perché costringono l'osservatore a usare compiti percettivi relativamente poco accurati: **angolo** e **area**. In sintesi:
-- **Angolo:** le fette del pie chart richiedono confronti angolari, che nella gerarchia percettiva sono meno affidabili della **posizione su scala comune**.
-- **Area:** oltre all'angolo, il lettore confronta implicitamente anche le aree delle fette; questo compito è ancora meno preciso. In base alla legge psicofisica di Stevens, la percezione di area e volume tende a essere distorta (spesso sottostimata), rendendo più difficile confrontare correttamente quantità simili.
-Pertanto, l'uso di un pie chart in un report enterprise non è una scelta stilistica, ma un errore tecnico che riduce la leggibilità del dato.
+Per **angolo** e **direzione** il quadro è più sottile: non sono compiti equivalenti, anche se condividono lo stesso livello della gerarchia.
 
-Al fondo della gerarchia troviamo l'**Area**, il **Volume** e il **Colore (Saturazione/Tonalità)** per codificare grandezze quantitative. Qui la differenza rispetto alla lunghezza è spiegata bene dalla legge psicofisica di Stevens 
+1. **Angolo (e problema dei pie chart).**  
+I grafici a torta richiedono soprattutto giudizi angolari, ed è qui che emergono i limiti maggiori. Nel *Position-Angle experiment*, i giudizi basati sulla posizione risultano quasi due volte più accurati (fattore ~1,96) rispetto a quelli basati sull'angolo; inoltre, l'88% dei grandi errori osservati proviene proprio dai compiti angolari. Qui compare un bias sistematico di sottostima, soprattutto nella fascia 25%-50%. La conseguenza operativa che quando l'obiettivo è il confronto quantitativo, conviene sostituire il pie chart con bar chart o, meglio ancora, dot chart.
+
+2. **Direzione (slope/pendenza).**  
+Nei grafici cartesiani, la direzione è invece utile per riconoscere rapidamente pattern (linearità, non linearità, cambi di regime). Se gli stessi dati vengono ripresentati eliminando l'indizio di pendenza, la lettura della struttura complessiva diventa molto più faticosa. Detto questo, stimare con precisione un valore di pendenza resta meno accurato che leggere una posizione su scala. Per questo, quando serve accuratezza numerica, è spesso utile trasformare il problema in un compito di posizione (ad esempio calcolando le pendenze e riportandole come punti su una scala, come suggerito da Tukey in alcuni contesti diagnostici).
+
+In sintesi: l'**angolo** è un compito debole da evitare per confronti precisi (quindi pie chart da limitare), mentre la **direzione** è molto efficace per cogliere trend e forma globale dei dati. Quando però si passa dalla lettura qualitativa alla stima quantitativa, il criterio migliore resta sempre lo stesso: riportare il confronto su una **posizione su scala comune**.
+
+Al fondo della gerarchia troviamo l'**Area** e il **Volume** per codificare grandezze quantitative. Qui la differenza rispetto alla lunghezza è spiegata bene dalla legge psicofisica di Stevens 
 $$p = k a^{\beta},$$ 
 che lega intensità percepita e intensità reale:
 - **Lunghezza:** $\beta \approx 1$, quindi la percezione è quasi lineare (raddoppio fisico ≈ raddoppio percepito).
 - **Area:** $\beta < 1$, tipicamente intorno a 0,7, quindi tendiamo a sottostimare; per far apparire una forma come “doppia”, l'area reale deve crescere più del doppio.
-- **Volume:** $05\leq \beta \leq 0.7$, con sottostima ancora più forte; il giudizio di volumi 3D su supporti 2D è particolarmente debole.
+- **Volume:** $0.5 \leq \beta \leq 0.7$, con sottostima ancora più forte; il giudizio di volumi 3D su supporti 2D è particolarmente debole.
 
-Implicazione pratica: grafici che codificano quantità tramite area o volume (bubble chart, pie chart, barre 3D) rendono i confronti meno precisi. Se un pie chart è già inferiore a un dot chart perché richiede giudizi su angolo/area, una codifica volumetrica peggiora ulteriormente l'errore percettivo, amplificando sottostima e ambiguità nei confronti tra valori.
+Ergo, i grafici che codificano quantità tramite area o volume (bubble chart, pie chart, barre 3D) rendono i confronti meno precisi. Se un pie chart è già inferiore a un dot chart perché richiede giudizi su angolo/area, una codifica volumetrica peggiora ulteriormente l'errore percettivo.
 
-### Attributi Pre-attentivi e Data-Ink Ratio
+Nella gerarchia dei compiti percettivi per dati quantitativi, la **saturazione del colore** (insieme all'ombreggiatura) è all'ultimo livello: è il metodo meno accurato per comunicare numeri, inferiore a posizione, lunghezza, area e volume.
 
-Per guidare l'attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare gli **Attributi Pre-attentivi**. Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa in meno di 200 millisecondi, prima ancora che intervenga l'attenzione conscia.[11](https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/) L'uso strategico del colore, ad esempio, non serve a "rendere bello" il grafico, ma a segnalare l'eccezione. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso *solo* per i mercati sotto-performanti sfrutta la pre-attenzione per dire al C-Level: "Guarda qui". Questo riduce il tempo di ricerca visiva e abbatte il carico estraneo.  
+La **tinta** (hue: rosso, blu, verde, ecc.) è deliberatamente esclusa dalla codifica quantitativa perché non esiste un ordinamento univoco e non ambiguo "dal più piccolo al più grande". Per questo motivo, la tinta è adatta **unicamente** a variabili categoriche, non a variabili reali continue.
+
+Applicazione pratica nelle mappe: le **mappe statistiche a zone (choropleth)** colorano regioni geografiche in base a un valore e quindi costringono il lettore a un compito percettivo a bassa accuratezza. Quando l'obiettivo è confrontare quantità in modo preciso, è preferibile sostituirle con rappresentazioni che riportano il confronto sulla posizione (ad esempio i **framed-rectangle charts**), invece di affidarlo alla saturazione del colore.
+
+### Il Data-Ink ratio
+
+Per guidare l'attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare i cosiddetti **attributi pre-attentivi**.
+
+Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa in meno di 200 millisecondi, prima ancora che intervenga l'attenzione conscia.[11](https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/) L'uso strategico del colore, ad esempio, non serve a "rendere bello" il grafico, ma a segnalare l'eccezione. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso *solo* per i mercati sotto-performanti sfrutta la pre-attenzione per dire al C-Level: "Guarda qui". Questo riduce il tempo di ricerca visiva e abbatte il carico estraneo.  
 Questo concetto si sposa perfettamente con il principio del **Data-Ink Ratio** di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all'inchiostro totale del grafico.[14](https://infovis-wiki.net/wiki/Data-Ink_Ratio)
 
 $$\\text{Data-Ink Ratio} \= \\frac{\\text{Inchiostro dei Dati}}{\\text{Inchiostro Totale}}$$  
