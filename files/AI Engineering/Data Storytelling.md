@@ -56,6 +56,7 @@ Se la CLT ci dice *quanto* il cervello può processare, gli studi di [William Cl
 Al vertice della gerarchia troviamo la **posizione su una scala comune**. Il cervello umano è straordinariamente abile nel confrontare la posizione di punti o barre allineati su un singolo asse (come in un bar chart o un dot plot). Questo compito percettivo permette di distinguere differenze minime con grande accuratezza. Nel loro articolo sostengono che un compito percettivo è considerato più accurato se porta a giudizi umani più vicini alle quantità reali codificate. Gli esperimenti condotti confermano che i giudizi basati sulla **posizione** sono significativamente più accurati rispetto a quelli basati sulla *lunghezza* o sull'*angolo*.
 
 ![Confronto tra barplot e dotplot](../Assets/barplot_dotplot.svg)
+
 *Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.*
 
 Segue, con un leggero degrado dell'accuratezza, la **Posizione su scale non allineate** (Positions along nonaligned scales). Questo compito si verifica quando si confrontano valori rappresentati su scale identiche ma spazialmente separate, ad esempio nei *small multiples* o in pannelli grafici affiancati (juxtaposed graphs), dove ogni pannello mantiene la propria scala.
@@ -108,21 +109,52 @@ La **tinta** (hue: rosso, blu, verde, ecc.) è deliberatamente esclusa dalla cod
 
 Applicazione pratica nelle mappe: le **mappe statistiche a zone (choropleth)** colorano regioni geografiche in base a un valore e quindi costringono il lettore a un compito percettivo a bassa accuratezza. Quando l'obiettivo è confrontare quantità in modo preciso, è preferibile sostituirle con rappresentazioni che riportano il confronto sulla posizione (ad esempio i **framed-rectangle charts**), invece di affidarlo alla saturazione del colore.
 
-### Il Data-Ink ratio
+![Confronto Italia: da evitare (choropleth) vs meglio (framed-rectangle chart)](../Assets/choropleth_vs_dunn.png)
+*A sinistra: la mappa choropleth richiede confronti basati su saturazione. A destra: il framed-rectangle chart mantiene il riferimento geografico ma sposta il confronto sulla posizione del bordo superiore delle barre.*
+
+### Attention is all WE need
 
 Per guidare l'attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare i cosiddetti **attributi pre-attentivi**.
 
-Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa in meno di 200 millisecondi, prima ancora che intervenga l'attenzione conscia.[11](https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/) L'uso strategico del colore, ad esempio, non serve a "rendere bello" il grafico, ma a segnalare l'eccezione. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso *solo* per i mercati sotto-performanti sfrutta la pre-attenzione per dire al C-Level: "Guarda qui". Questo riduce il tempo di ricerca visiva e abbatte il carico estraneo.  
-Questo concetto si sposa perfettamente con il principio del **Data-Ink Ratio** di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all'inchiostro totale del grafico.[14](https://infovis-wiki.net/wiki/Data-Ink_Ratio)
+Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa [in meno di 200 millisecondi](https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/), prima ancora che intervenga l'attenzione conscia. L'uso strategico del colore, ad esempio, non serve a "rendere bello" il grafico, ma a *segnalare l'eccezione*. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso *solo* per i mercati sotto-performanti sfrutta la pre-attenzione per dire a chi deve leggere quel grafico: *"Guarda qui"*. Questo riduce il tempo di ricerca visiva e abbatte il **carico estraneo**.
 
-$$\\text{Data-Ink Ratio} \= \\frac{\\text{Inchiostro dei Dati}}{\\text{Inchiostro Totale}}$$  
-L'imperativo operativo è cancellare tutto ciò che non è dato (non-data-ink) e tutto ciò che è dato ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è "chartjunk" che deve essere rimosso per massimizzare il segnale rispetto al rumore.[16](https://www.holistics.io/blog/data-ink-ratio/) Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l'intera potenza cognitiva del lettore sui numeri e sui trend.
+Questo concetto si sposa perfettamente con il principio del [**Data-Ink Ratio**](https://infovis-wiki.net/wiki/Data-Ink_Ratio) di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all'inchiostro totale del grafico.
 
-## **2\. Architettura del Reporting: Strutture Narrative per l'Enterprise**
+$$\text{Data-Ink Ratio} = \frac{\text{Inchiostro dei Dati}}{\text{Inchiostro Totale}}$$
 
-Avere grafici scientificamente corretti non è sufficiente se manca una struttura logica che li connetta. La narrazione nel contesto enterprise non è il "viaggio dell'eroe", ma una argomentazione logica deduttiva o induttiva strutturata per l'efficienza decisionale.
+L'imperativo operativo è cancellare tutto ciò che non è relativo al dato (non-data-ink), ovvero che non aggiunge informazioni sui dati o che è ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è *"chartjunk"* che deve essere rimosso per massimizzare il segnale rispetto al rumore. Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l'intera potenza cognitiva del lettore sui numeri e sui trend.
 
-### **2.1 Il Principio della Piramide (Minto) e la Comunicazione Top-Down**
+[Esempi pratici]((https://www.holistics.io/blog/data-ink-ratio/)) di applicazione del principio sono:
+
+1. **Grafici a Barre (Bar Charts)**  
+  
+  - **Scenario**: un analista deve mostrare le vendite totali per regione, evidenziando che Molise sta sottoperformando.
+  - **Problemi iniziali**: griglie troppo evidenti che distraggono; colori diversi per ogni regione senza motivo; legenda ridondante; etichette degli assi ("Sales", "Region") inutili dato che il titolo spiega già il contenuto. 
+  - **Ottimizzazione proposta**:
+    - **Rimozione:** vengono eliminate le griglie e l'asse verticale, scrivendo i valori direttamente sopra le colonne. Vengono rimosse anche le etichette degli assi e la legenda.
+    - **Colore:** invece di colorare ogni barra diversamente, si usa il colore solo per la regione Sud (quella di interesse), lasciando le altre neutre. Questo attira immediatamente l'attenzione sul messaggio chiave: *"il Sud sta andando male"*.
+
+2. **Grafici a Linee (Line Charts)**  
+- **Scenario**: report sui profitti di alcune categorie di prodotti, mostrando piccole perdite in alcuni mesi.
+- **Problemi iniziali**: etichette ridondanti ("Profitto", "Mese") che sono ovvie dal contesto, aree colorate sotto la linea dello zero che occupano troppo spazio visivo ("overkill") e l'uso di una legenda separata.  
+- **Ottimizzazione proposta**:
+   - **Semplificazione:** l'area colorata viene sostituita da una linea semplice che distingue i valori positivi da quelli negativi.
+   - **Etichettatura diretta:** la legenda viene rimossa e i nomi delle categorie vengono posizionati direttamente accanto alle linee corrispondenti. Questo permette di risparmiare spazio e rendere la lettura più immediata.
+
+3. **Grafici a Torta (Pie Charts)**  
+- **Scenario**: mostrare che la categoria **Office Supplies** costituisce la maggioranza degli ordini.  
+- **Problemi iniziali**: visualizzazione delle percentuali esatte (non necessarie se la proporzione è schiacciante ed evidente); uso della legenda.
+- Ottimizzazione proposta:
+   - **Trasformazione in Doughnut Chart:** si suggerisce di passare da un grafico a torta a un grafico a ciambella. Questo riduce l'inchiostro totale usato e libera spazio al centro.
+   - **Titolo integrato:** lo spazio vuoto al centro della "ciambella" viene utilizzato per inserire il titolo o l'etichetta principale, risparmiando ulteriore spazio.
+
+In tutti gli esempi, l'obiettivo è rimuovere il *non-data-ink* (griglie, effetti 3D, colori inutili) e il *redundant data-ink* (legende doppie, etichette ovvie) per far emergere chiaramente il dato. Tuttavia, non bisogna esagerare, e bisogna assicursi che il grafico rimanga comprensibile per il pubblico di destinazione.
+
+## Come strutturare i report in ambito business
+
+Avere grafici scientificamente corretti non è sufficiente se manca una struttura logica che li connetta. La narrazione nel contesto enterprise non deve essere un'Odissea, ma una argomentazione logica deduttiva o induttiva strutturata per l'efficienza decisionale.
+
+### The Pyramid Principle (Minto) e la comunicazione Top-Down
 
 Il framework di riferimento per la comunicazione esecutiva è il **Pyramid Principle**, codificato da Barbara Minto in McKinsey. La struttura accademica tradizionale (Introduzione → Metodologia → Analisi → Conclusioni) è fallimentare nel business perché costringe il lettore ad attendere la fine per capire il punto.[18](https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/) Gli executive, operando in regime di scarsità di tempo, necessitano di una struttura rovesciata.  
 La piramide impone di iniziare con la **Governing Thought** (il Pensiero Guida o Risposta Principale). Questa è la singola idea, raccomandazione o conclusione che il report vuole veicolare. Sotto il vertice, si trovano le **Key Lines**: 3 o 4 argomenti principali che supportano logica e fattualmente il pensiero guida. Al livello base, si trova il **Support**: i dati, i grafici, le tabelle e le analisi di dettaglio che provano la validità delle Key Lines.[20](https://untools.co/minto-pyramid/)  

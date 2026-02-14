@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-13T14:04:01.786Z",
+    "dateModified": "2026-02-13T17:49:28.202Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -964,17 +964,17 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#attributi-pre-attentivi-e-data-ink-ratio">
+          <a class="post-toc__link" href="#attention-is-all-we-need">
             <span class="post-toc__number">2.3</span>
-            <span class="post-toc__text">Attributi Pre-attentivi e Data-Ink Ratio</span>
+            <span class="post-toc__text">Attention is all WE need</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#2-architettura-del-reporting-strutture-narrative-per-lenterprise">
+          <a class="post-toc__link" href="#architettura-del-reporting-strutture-narrative-per-lenterprise">
             <span class="post-toc__number">3</span>
-            <span class="post-toc__text">**2\. Architettura del Reporting: Strutture Narrative per l&#39;Enterprise**</span>
+            <span class="post-toc__text">Architettura del Reporting: Strutture Narrative per l&#39;Enterprise</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1147,8 +1147,8 @@
 </div></figure><h3 id="gerarchia-della-percezione-grafica">Gerarchia della percezione grafica</h3>
 <p>Se la CLT ci dice <em>quanto</em> il cervello può processare, gli studi di <a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">William Cleveland e Robert McGill (1984)</a> ci dicono <em>come</em> il cervello decodifica le informazioni visive con maggiore o minore accuratezza. La loro ricerca ha stabilito una gerarchia fondamentale dei compiti percettivi, ordinati dal più accurato al meno accurato. </p>
 <p>Al vertice della gerarchia troviamo la <strong>posizione su una scala comune</strong>. Il cervello umano è straordinariamente abile nel confrontare la posizione di punti o barre allineati su un singolo asse (come in un bar chart o un dot plot). Questo compito percettivo permette di distinguere differenze minime con grande accuratezza. Nel loro articolo sostengono che un compito percettivo è considerato più accurato se porta a giudizi umani più vicini alle quantità reali codificate. Gli esperimenti condotti confermano che i giudizi basati sulla <strong>posizione</strong> sono significativamente più accurati rispetto a quelli basati sulla <em>lunghezza</em> o sull&#39;<em>angolo</em>.</p>
-<p><img src="../../../Assets/barplot_dotplot.svg" alt="Confronto tra barplot e dotplot">
-<em>Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.</em></p>
+<p><img src="../../../Assets/barplot_dotplot.svg" alt="Confronto tra barplot e dotplot"></p>
+<p><em>Barplot (sinistra) e dotplot (destra): due rappresentazioni diverse dello stesso compito percettivo, la posizione su una scala comune.</em></p>
 <p>Segue, con un leggero degrado dell&#39;accuratezza, la <strong>Posizione su scale non allineate</strong> (Positions along nonaligned scales). Questo compito si verifica quando si confrontano valori rappresentati su scale identiche ma spazialmente separate, ad esempio nei <em>small multiples</em> o in pannelli grafici affiancati (juxtaposed graphs), dove ogni pannello mantiene la propria scala.</p>
 <p>Il motivo per cui questa codifica resta più affidabile della semplice <strong>lunghezza</strong> è che la presenza della scala, anche se non condivisa fisicamente sullo stesso asse, offre all&#39;occhio ulteriori <em>visual cues</em> di riferimento. In pratica, non stiamo stimando soltanto “quanto è lunga una barra”, ma “dove cade un valore” rispetto a un contesto visivo strutturato.</p>
 <p>Un esempio classico è quello dei <strong>rettangoli incorniciati</strong>: se confronti due barre isolate, il compito percettivo è la stima della lunghezza (meno precisa); se invece inserisci le stesse barre in una cornice di riferimento, il giudizio si sposta sulla posizione dell&#39;estremità della barra rispetto al bordo superiore della cornice, quindi su una scala non allineata.</p>
@@ -1160,7 +1160,6 @@
 <ul>
 <li>gli errori medi nei giudizi di lunghezza risultano circa dal 40% al 250% più alti rispetto ai giudizi di posizione;</li>
 <li>il 78% dei grandi errori osservati negli esperimenti ricade nei compiti basati sulla lunghezza;</li>
-<li>emerge anche un bias sistematico: quando il valore reale è circa tra il 25% e il 50% del totale, le persone tendono a stimarlo più basso di quanto sia davvero (sottostima).</li>
 </ul>
 <p>Nonostante questo, la lunghezza resta comunque preferibile ad <strong>area</strong> e <strong>volume</strong>. In termini psicofisici (<em>Legge di Stevens</em>, $p = k a^{\beta}$), la lunghezza ha un esponente $\beta$ vicino a 1: la percezione è quindi quasi lineare e molto meno distorta rispetto a codifiche areali o volumetriche, dove la sottostima è più marcata.</p>
 <p>Dal punto di vista del design, i casi più problematici sono:</p>
@@ -1169,17 +1168,73 @@
 <li><strong>Curve-difference charts:</strong> quando due serie sono rappresentate come linee, il lettore dovrebbe stimare la distanza verticale tra curve (lunghezza), ma l&#39;occhio tende a inseguire la distanza minima locale tra i tracciati, introducendo errori anche grossolani; in pratica, è un compito percettivo quasi impossibile da svolgere con precisione.</li>
 </ul>
 <p>Questo spiega perché, come visto con i rettangoli incorniciati, la <strong>posizione su scale non allineate</strong> rende meglio che la lunghezza: quando introduci un riferimento visivo stabile, il confronto percettivo diventa più robusto. Operativamente, quando possibile conviene sostituire codifiche basate sulla lunghezza (es. molte barre impilate) con grafici che privilegiano la posizione, come i <strong>dot chart</strong>.</p>
-<p>Nella loro ricerca risulta evidente grafici a torta sono sconsigliati perché costringono l&#39;osservatore a usare compiti percettivi relativamente poco accurati: <strong>angolo</strong> e <strong>area</strong>. In sintesi:</p>
+<p>Per <strong>angolo</strong> e <strong>direzione</strong> il quadro è più sottile: non sono compiti equivalenti, anche se condividono lo stesso livello della gerarchia.</p>
+<ol>
+<li><p><strong>Angolo (e problema dei pie chart).</strong><br>I grafici a torta richiedono soprattutto giudizi angolari, ed è qui che emergono i limiti maggiori. Nel <em>Position-Angle experiment</em>, i giudizi basati sulla posizione risultano quasi due volte più accurati (fattore ~1,96) rispetto a quelli basati sull&#39;angolo; inoltre, l&#39;88% dei grandi errori osservati proviene proprio dai compiti angolari. Qui compare un bias sistematico di sottostima, soprattutto nella fascia 25%-50%. La conseguenza operativa che quando l&#39;obiettivo è il confronto quantitativo, conviene sostituire il pie chart con bar chart o, meglio ancora, dot chart.</p>
+</li>
+<li><p><strong>Direzione (slope/pendenza).</strong><br>Nei grafici cartesiani, la direzione è invece utile per riconoscere rapidamente pattern (linearità, non linearità, cambi di regime). Se gli stessi dati vengono ripresentati eliminando l&#39;indizio di pendenza, la lettura della struttura complessiva diventa molto più faticosa. Detto questo, stimare con precisione un valore di pendenza resta meno accurato che leggere una posizione su scala. Per questo, quando serve accuratezza numerica, è spesso utile trasformare il problema in un compito di posizione (ad esempio calcolando le pendenze e riportandole come punti su una scala, come suggerito da Tukey in alcuni contesti diagnostici).</p>
+</li>
+</ol>
+<p>In sintesi: l&#39;<strong>angolo</strong> è un compito debole da evitare per confronti precisi (quindi pie chart da limitare), mentre la <strong>direzione</strong> è molto efficace per cogliere trend e forma globale dei dati. Quando però si passa dalla lettura qualitativa alla stima quantitativa, il criterio migliore resta sempre lo stesso: riportare il confronto su una <strong>posizione su scala comune</strong>.</p>
+<p>Al fondo della gerarchia troviamo l&#39;<strong>Area</strong> e il <strong>Volume</strong> per codificare grandezze quantitative. Qui la differenza rispetto alla lunghezza è spiegata bene dalla legge psicofisica di Stevens 
+$$p = k a^{\beta},$$ 
+che lega intensità percepita e intensità reale:</p>
 <ul>
-<li><strong>Angolo:</strong> le fette del pie chart richiedono confronti angolari, che nella gerarchia percettiva sono meno affidabili della <strong>posizione su scala comune</strong>.</li>
-<li><strong>Area:</strong> oltre all&#39;angolo, il lettore confronta implicitamente anche le aree delle fette; questo compito è ancora meno preciso. In base alla legge psicofisica di Stevens, la percezione di area e volume tende a essere distorta (spesso sottostimata), rendendo più difficile confrontare correttamente quantità simili.
-Pertanto, l&#39;uso di un pie chart in un report enterprise non è una scelta stilistica, ma un errore tecnico che riduce la leggibilità del dato.</li>
+<li><strong>Lunghezza:</strong> $\beta \approx 1$, quindi la percezione è quasi lineare (raddoppio fisico ≈ raddoppio percepito).</li>
+<li><strong>Area:</strong> $\beta &lt; 1$, tipicamente intorno a 0,7, quindi tendiamo a sottostimare; per far apparire una forma come “doppia”, l&#39;area reale deve crescere più del doppio.</li>
+<li><strong>Volume:</strong> $0.5 \leq \beta \leq 0.7$, con sottostima ancora più forte; il giudizio di volumi 3D su supporti 2D è particolarmente debole.</li>
 </ul>
-<p>Al fondo della gerarchia troviamo l&#39;<strong>Area</strong>, il <strong>Volume</strong> e il <strong>Colore (Saturazione/Tonalità)</strong> per codificare grandezze quantitative. I grafici a bolle (Bubble Charts) o le mappe coroplete (Heatmaps), sebbene utili per fornire una panoramica generale, non dovrebbero mai essere utilizzati quando è richiesta precisione nel confronto dei valori, poiché la percezione dell&#39;area non scala linearmente nella mente umana (Legge di Stevens).<a href="https://www.math.pku.edu.cn/teachers/xirb/Courses/biostatistics/Biostatistics2016/GraphicalPerception_Jasa1984.pdf">9</a></p>
-<h3 id="attributi-pre-attentivi-e-data-ink-ratio">Attributi Pre-attentivi e Data-Ink Ratio</h3>
-<p>Per guidare l&#39;attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare gli <strong>Attributi Pre-attentivi</strong>. Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa in meno di 200 millisecondi, prima ancora che intervenga l&#39;attenzione conscia.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">11</a> L&#39;uso strategico del colore, ad esempio, non serve a &quot;rendere bello&quot; il grafico, ma a segnalare l&#39;eccezione. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso <em>solo</em> per i mercati sotto-performanti sfrutta la pre-attenzione per dire al C-Level: &quot;Guarda qui&quot;. Questo riduce il tempo di ricerca visiva e abbatte il carico estraneo.<br>Questo concetto si sposa perfettamente con il principio del <strong>Data-Ink Ratio</strong> di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all&#39;inchiostro totale del grafico.<a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio">14</a></p>
-<p>$$\text{Data-Ink Ratio} = \frac{\text{Inchiostro dei Dati}}{\text{Inchiostro Totale}}$$<br>L&#39;imperativo operativo è cancellare tutto ciò che non è dato (non-data-ink) e tutto ciò che è dato ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è &quot;chartjunk&quot; che deve essere rimosso per massimizzare il segnale rispetto al rumore.<a href="https://www.holistics.io/blog/data-ink-ratio/">16</a> Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l&#39;intera potenza cognitiva del lettore sui numeri e sui trend.</p>
-<h2 id="2-architettura-del-reporting-strutture-narrative-per-lenterprise"><strong>2. Architettura del Reporting: Strutture Narrative per l&#39;Enterprise</strong></h2>
+<p>Ergo, i grafici che codificano quantità tramite area o volume (bubble chart, pie chart, barre 3D) rendono i confronti meno precisi. Se un pie chart è già inferiore a un dot chart perché richiede giudizi su angolo/area, una codifica volumetrica peggiora ulteriormente l&#39;errore percettivo.</p>
+<p>Nella gerarchia dei compiti percettivi per dati quantitativi, la <strong>saturazione del colore</strong> (insieme all&#39;ombreggiatura) è all&#39;ultimo livello: è il metodo meno accurato per comunicare numeri, inferiore a posizione, lunghezza, area e volume.</p>
+<p>La <strong>tinta</strong> (hue: rosso, blu, verde, ecc.) è deliberatamente esclusa dalla codifica quantitativa perché non esiste un ordinamento univoco e non ambiguo &quot;dal più piccolo al più grande&quot;. Per questo motivo, la tinta è adatta <strong>unicamente</strong> a variabili categoriche, non a variabili reali continue.</p>
+<p>Applicazione pratica nelle mappe: le <strong>mappe statistiche a zone (choropleth)</strong> colorano regioni geografiche in base a un valore e quindi costringono il lettore a un compito percettivo a bassa accuratezza. Quando l&#39;obiettivo è confrontare quantità in modo preciso, è preferibile sostituirle con rappresentazioni che riportano il confronto sulla posizione (ad esempio i <strong>framed-rectangle charts</strong>), invece di affidarlo alla saturazione del colore.</p>
+<p><img src="../../../Assets/choropleth_vs_dunn.png" alt="Confronto Italia: da evitare (choropleth) vs meglio (framed-rectangle chart)">
+<em>A sinistra: la mappa choropleth richiede confronti basati su saturazione. A destra: il framed-rectangle chart mantiene il riferimento geografico ma sposta il confronto sulla posizione del bordo superiore delle barre.</em></p>
+<h3 id="attention-is-all-we-need">Attention is all WE need</h3>
+<p>Per guidare l&#39;attenzione del decisore senza esaurire il suo carico cognitivo, il designer deve sfruttare i cosiddetti <strong>attributi pre-attentivi</strong>.</p>
+<p>Si tratta di caratteristiche visive (colore, dimensione, orientamento, movimento) che il cervello processa <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12292122/">in meno di 200 millisecondi</a>, prima ancora che intervenga l&#39;attenzione conscia. L&#39;uso strategico del colore, ad esempio, non serve a &quot;rendere bello&quot; il grafico, ma a <em>segnalare l&#39;eccezione</em>. In una dashboard di performance di vendita, usare un colore grigio neutro per tutti i dati in linea con il budget e un rosso acceso <em>solo</em> per i mercati sotto-performanti sfrutta la pre-attenzione per dire a chi deve leggere quel grafico: <em>&quot;Guarda qui&quot;</em>. Questo riduce il tempo di ricerca visiva e abbatte il <strong>carico estraneo</strong>.</p>
+<p>Questo concetto si sposa perfettamente con il principio del <a href="https://infovis-wiki.net/wiki/Data-Ink_Ratio"><strong>Data-Ink Ratio</strong></a> di Edward Tufte. Tufte definisce questo rapporto come la proporzione di inchiostro (o pixel) utilizzata per rappresentare i dati reali rispetto all&#39;inchiostro totale del grafico.</p>
+<p>$$\text{Data-Ink Ratio} = \frac{\text{Inchiostro dei Dati}}{\text{Inchiostro Totale}}$$</p>
+<p>L&#39;imperativo operativo è cancellare tutto ciò che non è relativo al dato (non-data-ink), ovvero che non aggiunge informazioni sui dati o che è ridondante. Griglie pesanti, sfondi colorati, bordi di contorno, effetti 3D: tutto questo è <em>&quot;chartjunk&quot;</em> che deve essere rimosso per massimizzare il segnale rispetto al rumore. Un grafico con un alto Data-Ink Ratio è spoglio, essenziale e focalizza l&#39;intera potenza cognitiva del lettore sui numeri e sui trend.</p>
+<p><a href="../../../(https:/www.holistics.io/blog/data-ink-ratio/)">Esempi pratici</a> di applicazione del principio sono:</p>
+<ol>
+<li><strong>Grafici a Barre (Bar Charts)</strong></li>
+</ol>
+<ul>
+<li><strong>Scenario</strong>: un analista deve mostrare le vendite totali per regione, evidenziando che Molise sta sottoperformando.</li>
+<li><strong>Problemi iniziali</strong>: griglie troppo evidenti che distraggono; colori diversi per ogni regione senza motivo; legenda ridondante; etichette degli assi (&quot;Sales&quot;, &quot;Region&quot;) inutili dato che il titolo spiega già il contenuto. </li>
+<li><strong>Ottimizzazione proposta</strong>:<ul>
+<li><strong>Rimozione:</strong> vengono eliminate le griglie e l&#39;asse verticale, scrivendo i valori direttamente sopra le colonne. Vengono rimosse anche le etichette degli assi e la legenda.</li>
+<li><strong>Colore:</strong> invece di colorare ogni barra diversamente, si usa il colore solo per la regione Sud (quella di interesse), lasciando le altre neutre. Questo attira immediatamente l&#39;attenzione sul messaggio chiave: <em>&quot;il Sud sta andando male&quot;</em>.</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><strong>Grafici a Linee (Line Charts)</strong></li>
+</ol>
+<ul>
+<li><strong>Scenario</strong>: report sui profitti di alcune categorie di prodotti, mostrando piccole perdite in alcuni mesi.</li>
+<li><strong>Problemi iniziali</strong>: etichette ridondanti (&quot;Profitto&quot;, &quot;Mese&quot;) che sono ovvie dal contesto, aree colorate sotto la linea dello zero che occupano troppo spazio visivo (&quot;overkill&quot;) e l&#39;uso di una legenda separata.  </li>
+<li><strong>Ottimizzazione proposta</strong>:<ul>
+<li><strong>Semplificazione:</strong> l&#39;area colorata viene sostituita da una linea semplice che distingue i valori positivi da quelli negativi.</li>
+<li><strong>Etichettatura diretta:</strong> la legenda viene rimossa e i nomi delle categorie vengono posizionati direttamente accanto alle linee corrispondenti. Questo permette di risparmiare spazio e rendere la lettura più immediata.</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><strong>Grafici a Torta (Pie Charts)</strong></li>
+</ol>
+<ul>
+<li><strong>Scenario</strong>: mostrare che la categoria <strong>Office Supplies</strong> costituisce la maggioranza degli ordini.  </li>
+<li><strong>Problemi iniziali</strong>: visualizzazione delle percentuali esatte (non necessarie se la proporzione è schiacciante ed evidente); uso della legenda.</li>
+<li>Ottimizzazione proposta:<ul>
+<li><strong>Trasformazione in Doughnut Chart:</strong> si suggerisce di passare da un grafico a torta a un grafico a ciambella. Questo riduce l&#39;inchiostro totale usato e libera spazio al centro.</li>
+<li><strong>Titolo integrato:</strong> lo spazio vuoto al centro della &quot;ciambella&quot; viene utilizzato per inserire il titolo o l&#39;etichetta principale, risparmiando ulteriore spazio.</li>
+</ul>
+</li>
+</ul>
+<p>In tutti gli esempi, l&#39;obiettivo è rimuovere il <em>non-data-ink</em> (griglie, effetti 3D, colori inutili) e il <em>redundant data-ink</em> (legende doppie, etichette ovvie) per far emergere chiaramente il dato. Tuttavia, non bisogna esagerare, e bisogna assicursi che il grafico rimanga comprensibile per il pubblico di destinazione.</p>
+<h2 id="architettura-del-reporting-strutture-narrative-per-lenterprise">Architettura del Reporting: Strutture Narrative per l&#39;Enterprise</h2>
 <p>Avere grafici scientificamente corretti non è sufficiente se manca una struttura logica che li connetta. La narrazione nel contesto enterprise non è il &quot;viaggio dell&#39;eroe&quot;, ma una argomentazione logica deduttiva o induttiva strutturata per l&#39;efficienza decisionale.</p>
 <h3 id="21-il-principio-della-piramide-minto-e-la-comunicazione-top-down"><strong>2.1 Il Principio della Piramide (Minto) e la Comunicazione Top-Down</strong></h3>
 <p>Il framework di riferimento per la comunicazione esecutiva è il <strong>Pyramid Principle</strong>, codificato da Barbara Minto in McKinsey. La struttura accademica tradizionale (Introduzione → Metodologia → Analisi → Conclusioni) è fallimentare nel business perché costringe il lettore ad attendere la fine per capire il punto.<a href="https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/">18</a> Gli executive, operando in regime di scarsità di tempo, necessitano di una struttura rovesciata.<br>La piramide impone di iniziare con la <strong>Governing Thought</strong> (il Pensiero Guida o Risposta Principale). Questa è la singola idea, raccomandazione o conclusione che il report vuole veicolare. Sotto il vertice, si trovano le <strong>Key Lines</strong>: 3 o 4 argomenti principali che supportano logica e fattualmente il pensiero guida. Al livello base, si trova il <strong>Support</strong>: i dati, i grafici, le tabelle e le analisi di dettaglio che provano la validità delle Key Lines.<a href="https://untools.co/minto-pyramid/">20</a><br>Questa struttura abilita una lettura efficiente: il decisore comprende immediatamente la tesi. Se si fida, può fermarsi o saltare alle azioni. Se è scettico, può scendere di un livello nella piramide per verificare l&#39;argomentazione (drill-down). È un approccio &quot;MECE&quot; (Mutually Exclusive, Collectively Exhaustive): gli argomenti devono essere distinti tra loro e coprire interamente lo spazio del problema.<a href="https://modelthinkers.com/mental-model/minto-pyramid-scqa">22</a></p>
