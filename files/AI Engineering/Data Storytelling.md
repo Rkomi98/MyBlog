@@ -156,17 +156,18 @@ Avere grafici scientificamente corretti non è sufficiente se manca una struttur
 
 ### The Pyramid Principle (Minto) e la comunicazione Top-Down
 
-Il framework di riferimento per la comunicazione esecutiva è il **Pyramid Principle**, codificato da Barbara Minto in McKinsey. La struttura accademica tradizionale (Introduzione → Metodologia → Analisi → Conclusioni) tende a essere [fallimentare nel business](https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/) perché costringe il lettore ad attendere la fine per capire il punto. Gli executive, operando in regime di scarsità di tempo, necessitano di una struttura rovesciata.  
-La piramide impone di iniziare con il **Lead (Governing Thought)**, cioè il Pensiero Guida o la Risposta Principale. Questa è la singola idea, raccomandazione o conclusione che il report vuole veicolare. Sotto il vertice, si trovano le **Key Lines**: 3 o 4 argomenti principali che supportano logica e fattualmente il pensiero guida. Al livello base, si trova il **Support**: i dati, i grafici, le tabelle e le analisi di dettaglio che provano la validità delle Key Lines.[20](https://untools.co/minto-pyramid/)  
+Il framework di riferimento per la comunicazione esecutiva è il **Pyramid Principle**, codificato da Barbara Minto in McKinsey. La struttura accademica tradizionale (Introduzione → Metodologia → Analisi → Conclusioni) tende a essere [fallimentare nel business](https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/) perché costringe il lettore ad attendere la fine per capire il punto. Conviene, per risparmiare tempo, lavorare con una struttura rovesciata. La piramide impone di iniziare con il **Lead (Governing Thought)**, cioè il Pensiero Guida o comunque la risposta principale. Questa è la singola idea, raccomandazione o conclusione che si vuole veicolare. Sotto il vertice, si trovano le **Key Lines**: 3 o 4 argomenti principali che supportano logica e fattualmente il pensiero guida. Al livello base, si trova il **Support**: i dati, i grafici, le tabelle e le analisi di dettaglio che provano la validità delle Key Lines.[20](https://untools.co/minto-pyramid/)  
 
-Questa struttura abilita una lettura efficiente: il decisore comprende immediatamente la tesi. Se si fida, può fermarsi o saltare alle azioni. Se è scettico, può scendere di un livello nella piramide per verificare l'argomentazione (drill-down). È un approccio "MECE" (Mutually Exclusive, Collectively Exhaustive): gli argomenti devono essere distinti tra loro e coprire interamente lo spazio del problema.[22](https://modelthinkers.com/mental-model/minto-pyramid-scqa)
+In questo modo si efficienta la narrativa: chi ascolta o legge comprende immediatamente la tesi. Se si fida, può fermarsi o saltare alle azioni. Se è scettico, può scendere di un livello nella piramide per verificare l'argomentazione (drill-down). 
+
+> Questo è un esempio di approccio "MECE" (Mutually Exclusive, Collectively Exhaustive): gli argomenti devono essere distinti tra loro e coprire interamente lo spazio del problema.
 
 ![Pyramid Principle](Assets/pyramid_principle_dark.svg)
 *Schema del Pyramid Principle: dal vertice con il **Lead (Governing Thought)**, ai livelli di **Key Lines** e **Support**.*
 
-### **2.2 Il Framework SCQA: Contestualizzare l'Insight**
+### 2.2 Il Framework SCQA
 
-Ogni report efficace deve rispondere a una domanda che esiste, o dovrebbe esistere, nella mente del destinatario. Il modello **SCQA (Situation, Complication, Question, Answer)** è lo standard per definire l'introduzione di un report o di una sezione.[22](https://modelthinkers.com/mental-model/minto-pyramid-scqa)
+Ogni report efficace deve rispondere a una domanda che esiste, o dovrebbe esistere, nella mente del destinatario. Il modello [**SCQA (Situation, Complication, Question, Answer)**](https://modelthinkers.com/mental-model/minto-pyramid-scqa) è lo standard per definire l'introduzione di un report o di una sezione.
 
 * **Situation (Situazione):** Descrive lo stato delle cose noto e non controverso. Serve ad allineare tutti i lettori sul contesto di partenza (es. "Nel Q3, il fatturato dell'area EMEA è stato di 50M€, in linea con lo storico").  
 * **Complication (Complicazione):** Introduce l'elemento di novità, il problema o l'opportunità che altera la situazione e crea tensione (es. "Tuttavia, il margine di contribuzione è sceso del 15% a causa dell'aumento dei costi logistici non previsti").  
