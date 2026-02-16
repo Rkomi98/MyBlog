@@ -1,0 +1,183 @@
+<svg viewBox="0 0 1300 850" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Sfondo Pagina -->
+                <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#0b1224;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#101a36;stop-opacity:1"/>
+                </linearGradient>
+
+                <!-- Box Fills -->
+                <linearGradient id="boxFill" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1"/>
+                </linearGradient>
+
+                <!-- Borders/Strokes -->
+                <linearGradient id="strokeCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1"/>
+                </linearGradient>
+
+                <linearGradient id="strokeOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#f97316;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#facc15;stop-opacity:1"/>
+                </linearGradient>
+
+                <!-- Pyramid Background Effect -->
+                <linearGradient id="pyramidGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:0.1"/> <!-- Yellowish tint heavily faded -->
+                    <stop offset="100%" style="stop-color:#fbbf24;stop-opacity:0.0"/>
+                </linearGradient>
+
+                <!-- Filters -->
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+                </filter>
+                
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+
+            <!-- 1. Background -->
+            <rect width="1300" height="850" fill="url(#bgGradient)"/>
+
+            <!-- 2. The Pyramid (Background visual metaphor) -->
+            <!-- Triangle centered behind the main content -->
+            <path d="M780 180 L480 750 L1080 750 Z" fill="url(#pyramidGradient)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="5 5" stroke-opacity="0.2"/>
+
+            <!-- 3. Left Column Text (Labels) -->
+            <!-- Group 1: Lead -->
+            <g transform="translate(50, 260)">
+                <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="18" fill="#f8fafc">Lead</text>
+                <text x="0" y="25" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">with your answer</text>
+            </g>
+
+            <!-- Group 2: Support -->
+            <g transform="translate(50, 420)">
+                <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="18" fill="#f8fafc">Support</text>
+                <text x="0" y="25" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">your answer</text>
+                <text x="0" y="45" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">with high level</text>
+                <text x="0" y="65" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">insights</text>
+            </g>
+
+            <!-- Group 3: Back up -->
+            <g transform="translate(50, 600)">
+                <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="18" fill="#f8fafc">Back up</text>
+                <text x="0" y="25" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">your insights</text>
+                <text x="0" y="45" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">with data,</text>
+                <text x="0" y="65" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">analysis,</text>
+                <text x="0" y="85" font-family="Inter, sans-serif" font-weight="400" font-size="14" fill="#cbd5f5">and evidence</text>
+            </g>
+
+            <!-- Separator Line for Sidebar -->
+            <line x1="220" y1="200" x2="220" y2="750" stroke="#334155" stroke-width="2" stroke-dasharray="4 4"/>
+
+
+            <!-- 4. CONTENT AREA (Shifted Right) -->
+            <!-- Base X center approx 780 -->
+
+            <!-- === LEVEL 1: TOP (Lead) === -->
+            <g transform="translate(280, 220)">
+                <!-- Main Box spanning width -->
+                <rect x="0" y="0" width="940" height="90" rx="12" fill="url(#boxFill)" stroke="url(#strokeOrange)" stroke-width="3" filter="url(#shadow)"/>
+                <text x="470" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="20" fill="#f8fafc">Main point you want your audience to take away</text>
+            </g>
+
+
+            <!-- === CONNECTORS L1 to L2 === -->
+            <!-- Parent Center: (280 + 470) = 750, Y = 310 -->
+            <!-- Child Centers: 
+                 Group 1 Center: 430
+                 Group 2 Center: 750
+                 Group 3 Center: 1070
+            -->
+            <path d="M750 310 L750 340 M430 340 L1070 340 M430 340 L430 380 M750 340 L750 380 M1070 340 L1070 380" stroke="#94a3b8" stroke-width="2" fill="none"/>
+
+
+            <!-- === LEVEL 2: MIDDLE (Insights) === -->
+            
+            <!-- Insight 1 (Left) -->
+            <g transform="translate(310, 380)">
+                <rect x="0" y="0" width="240" height="90" rx="12" fill="url(#boxFill)" stroke="url(#strokeCyan)" stroke-width="2" filter="url(#shadow)"/>
+                <text x="120" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="18" fill="#f8fafc">Insight 1</text>
+            </g>
+
+            <!-- Insight 2 (Center) -->
+            <g transform="translate(630, 380)">
+                <rect x="0" y="0" width="240" height="90" rx="12" fill="url(#boxFill)" stroke="url(#strokeCyan)" stroke-width="2" filter="url(#shadow)"/>
+                <text x="120" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="18" fill="#f8fafc">Insight 2</text>
+            </g>
+
+            <!-- Insight 3 (Right) -->
+            <g transform="translate(950, 380)">
+                <rect x="0" y="0" width="240" height="90" rx="12" fill="url(#boxFill)" stroke="url(#strokeCyan)" stroke-width="2" filter="url(#shadow)"/>
+                <text x="120" y="52" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="18" fill="#f8fafc">Insight 3</text>
+            </g>
+
+
+            <!-- === CONNECTORS L2 to L3 === -->
+            
+            <!-- Group 1 Connectors (Left) - Parent Center X=430 -->
+            <!-- Children X: 345, 430, 515 -->
+            <path d="M430 470 L430 500 M345 500 L515 500 M345 500 L345 540 M430 500 L430 540 M515 500 L515 540" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+
+            <!-- Group 2 Connectors (Center) - Parent Center X=750 -->
+            <!-- Children X: 665, 750, 835 -->
+            <path d="M750 470 L750 500 M665 500 L835 500 M665 500 L665 540 M750 500 L750 540 M835 500 L835 540" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+
+            <!-- Group 3 Connectors (Right) - Parent Center X=1070 -->
+            <!-- Children X: 985, 1070, 1155 -->
+            <path d="M1070 470 L1070 500 M985 500 L1155 500 M985 500 L985 540 M1070 500 L1070 540 M1155 500 L1155 540" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+
+
+            <!-- === LEVEL 3: BOTTOM (Supports/Data) === -->
+            <!-- Box Size: 75 width, 100 height. Gap 10. Total group width = 75*3 + 20 = 245 approx. -->
+
+            <!-- Group 1 -->
+            <g transform="translate(307, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 1</text>
+            </g>
+            <g transform="translate(392, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 2</text>
+            </g>
+            <g transform="translate(477, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 3</text>
+            </g>
+
+            <!-- Group 2 -->
+            <g transform="translate(627, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 1</text>
+            </g>
+            <g transform="translate(712, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 2</text>
+            </g>
+            <g transform="translate(797, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 3</text>
+            </g>
+
+            <!-- Group 3 -->
+            <g transform="translate(947, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 1</text>
+            </g>
+            <g transform="translate(1032, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 2</text>
+            </g>
+            <g transform="translate(1117, 540)">
+                <rect x="0" y="0" width="75" height="110" rx="8" fill="url(#boxFill)" stroke="#475569" stroke-width="1"/>
+                <text x="37.5" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8">Support 3</text>
+            </g>
+
+        </svg>

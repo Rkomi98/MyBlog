@@ -156,9 +156,13 @@ Avere grafici scientificamente corretti non è sufficiente se manca una struttur
 
 ### The Pyramid Principle (Minto) e la comunicazione Top-Down
 
-Il framework di riferimento per la comunicazione esecutiva è il **Pyramid Principle**, codificato da Barbara Minto in McKinsey. La struttura accademica tradizionale (Introduzione → Metodologia → Analisi → Conclusioni) è fallimentare nel business perché costringe il lettore ad attendere la fine per capire il punto.[18](https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/) Gli executive, operando in regime di scarsità di tempo, necessitano di una struttura rovesciata.  
-La piramide impone di iniziare con la **Governing Thought** (il Pensiero Guida o Risposta Principale). Questa è la singola idea, raccomandazione o conclusione che il report vuole veicolare. Sotto il vertice, si trovano le **Key Lines**: 3 o 4 argomenti principali che supportano logica e fattualmente il pensiero guida. Al livello base, si trova il **Support**: i dati, i grafici, le tabelle e le analisi di dettaglio che provano la validità delle Key Lines.[20](https://untools.co/minto-pyramid/)  
+Il framework di riferimento per la comunicazione esecutiva è il **Pyramid Principle**, codificato da Barbara Minto in McKinsey. La struttura accademica tradizionale (Introduzione → Metodologia → Analisi → Conclusioni) tende a essere [fallimentare nel business](https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/) perché costringe il lettore ad attendere la fine per capire il punto. Gli executive, operando in regime di scarsità di tempo, necessitano di una struttura rovesciata.  
+La piramide impone di iniziare con il **Lead (Governing Thought)**, cioè il Pensiero Guida o la Risposta Principale. Questa è la singola idea, raccomandazione o conclusione che il report vuole veicolare. Sotto il vertice, si trovano le **Key Lines**: 3 o 4 argomenti principali che supportano logica e fattualmente il pensiero guida. Al livello base, si trova il **Support**: i dati, i grafici, le tabelle e le analisi di dettaglio che provano la validità delle Key Lines.[20](https://untools.co/minto-pyramid/)  
+
 Questa struttura abilita una lettura efficiente: il decisore comprende immediatamente la tesi. Se si fida, può fermarsi o saltare alle azioni. Se è scettico, può scendere di un livello nella piramide per verificare l'argomentazione (drill-down). È un approccio "MECE" (Mutually Exclusive, Collectively Exhaustive): gli argomenti devono essere distinti tra loro e coprire interamente lo spazio del problema.[22](https://modelthinkers.com/mental-model/minto-pyramid-scqa)
+
+![Pyramid Principle](Assets/pyramid_principle_dark.svg)
+*Schema del Pyramid Principle: dal vertice con il **Lead (Governing Thought)**, ai livelli di **Key Lines** e **Support**.*
 
 ### **2.2 Il Framework SCQA: Contestualizzare l'Insight**
 
