@@ -42,7 +42,7 @@
     "headline": "Data Visualization masterclass - Parte 2",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-18T00:00:00.000Z",
-    "dateModified": "2026-02-18T16:55:55.833Z",
+    "dateModified": "2026-02-18T16:57:22.421Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1000,46 +1000,8 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#il-brief">
-            <span class="post-toc__number">11</span>
-            <span class="post-toc__text">Il Brief</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#la-piramide">
-            <span class="post-toc__number">12</span>
-            <span class="post-toc__text">La Piramide</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#le-4-slide">
-            <span class="post-toc__number">12.1</span>
-            <span class="post-toc__text">Le 4 Slide</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#le-basi">
-            <span class="post-toc__number">13</span>
-            <span class="post-toc__text">Le basi</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#la-pratica">
-            <span class="post-toc__number">14</span>
-            <span class="post-toc__text">La pratica</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#la-regola-doro">
-            <span class="post-toc__number">15</span>
-            <span class="post-toc__text">La regola d&#39;oro</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#risorse">
-            <span class="post-toc__number">16</span>
+            <span class="post-toc__number">11</span>
             <span class="post-toc__text">Risorse</span>
           </a>
           
@@ -1547,182 +1509,8 @@ axy.set_title(<span class="hljs-string">&#x27;Crescita YoY&#x27;</span>,fontsize
 <span class="hljs-keyword">for</span> sp <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;top&#x27;</span>,<span class="hljs-string">&#x27;right&#x27;</span>,<span class="hljs-string">&#x27;bottom&#x27;</span>,<span class="hljs-string">&#x27;left&#x27;</span>]:axy.spines[sp].set_visible(<span class="hljs-literal">False</span>)
 axy.xaxis.set_visible(<span class="hljs-literal">False</span>);axy.tick_params(left=<span class="hljs-literal">False</span>,labelsize=<span class="hljs-number">9</span>)
 plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-09.png" alt="Notebook output 9"></p>
-<hr>
-<h1 id="esercizio-finale-brief-presentazione">Esercizio Finale: Brief → Presentazione</h1>
-<h2 id="il-brief">Il Brief</h2>
 <blockquote>
-<p><em>Il board vuole capire se ha senso investire nell&#39;audiolibro. 4 slide, dati alla mano.</em></p>
-</blockquote>
-<h2 id="la-piramide">La Piramide</h2>
-<pre><code class="hljs language-nestedtext"><span class="hljs-attribute">MESSAGGIO</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Audiolibro = crescita piu alta. Triplicare investimento.</span>
-
-<span class="hljs-attribute">+-- SLIDE 1</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Il digitale cresce (stacked area %)</span>
-<span class="hljs-attribute">+-- SLIDE 2</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Audiolibro cresce 3x (indice base 100)</span>
-<span class="hljs-attribute">+-- SLIDE 3</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Dove investire (scatter penetrazione vs mercato)</span>
-<span class="hljs-attribute">+-- SLIDE 4</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Piano d&#x27;azione (tabella + proiezione)</span></code></pre><pre><code class="hljs language-python"><span class="hljs-comment"># Analisi</span>
-<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;=&#x27;</span>*<span class="hljs-number">60</span>+<span class="hljs-string">&#x27;\nANALISI AUDIOLIBRO\n&#x27;</span>+<span class="hljs-string">&#x27;=&#x27;</span>*<span class="hljs-number">60</span>)
-<span class="hljs-keyword">for</span> fmt <span class="hljs-keyword">in</span> FORMATI:
-    r23f=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==fmt)][<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-    r24f=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==fmt)][<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;\n<span class="hljs-subst">{fmt}</span>: EUR <span class="hljs-subst">{r23f/<span class="hljs-number">1e6</span>:<span class="hljs-number">.2</span>f}</span>M -&gt; EUR <span class="hljs-subst">{r24f/<span class="hljs-number">1e6</span>:<span class="hljs-number">.2</span>f}</span>M (<span class="hljs-subst">{(r24f-r23f)/r23f*<span class="hljs-number">100</span>:+<span class="hljs-number">.1</span>f}</span>%)&#x27;</span>)
-<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;\nPenetrazione audio per genere (2024):&#x27;</span>)
-a24=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==<span class="hljs-string">&#x27;Audiolibro&#x27;</span>)].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-t24=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-<span class="hljs-keyword">for</span> g,v <span class="hljs-keyword">in</span> (a24/t24*<span class="hljs-number">100</span>).sort_values(ascending=<span class="hljs-literal">False</span>).items():<span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;  <span class="hljs-subst">{g}</span>: <span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>%&#x27;</span>)</code></pre><pre><code class="hljs language-text">============================================================
-ANALISI AUDIOLIBRO
-============================================================
-
-Cartaceo: EUR 9.06M -&gt; EUR 9.55M (+5.4%)
-
-Ebook: EUR 3.28M -&gt; EUR 3.67M (+11.8%)
-
-Audiolibro: EUR 1.50M -&gt; EUR 1.91M (+27.8%)
-
-Penetrazione audio per genere (2024):
-  Young Adult: 13.0%
-  Bambini: 13.0%
-  Narrativa: 12.9%
-  Saggistica: 12.6%
-  Fantasy: 12.5%
-  Thriller: 12.5%
-  Romance: 12.4%
-  Storico: 12.3%
-  Sci-Fi: 12.2%
-  Poesia: 11.6%</code></pre><h3 id="le-4-slide">Le 4 Slide</h3>
-<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 1: Il mercato cambia</span>
-fm=(df.groupby([df[<span class="hljs-string">&#x27;data&#x27;</span>],<span class="hljs-string">&#x27;formato&#x27;</span>])[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().reset_index()
-    .pivot(index=<span class="hljs-string">&#x27;data&#x27;</span>,columns=<span class="hljs-string">&#x27;formato&#x27;</span>,values=<span class="hljs-string">&#x27;ricavo&#x27;</span>).fillna(<span class="hljs-number">0</span>))
-fmp=fm.div(fm.<span class="hljs-built_in">sum</span>(axis=<span class="hljs-number">1</span>),axis=<span class="hljs-number">0</span>)*<span class="hljs-number">100</span>
-fig,(ax1,ax2)=plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">6</span>),gridspec_kw={<span class="hljs-string">&#x27;width_ratios&#x27;</span>:[<span class="hljs-number">1.5</span>,<span class="hljs-number">1</span>]})
-ax1.stackplot(fmp.index,[fmp[<span class="hljs-string">&#x27;Cartaceo&#x27;</span>],fmp[<span class="hljs-string">&#x27;Ebook&#x27;</span>],fmp[<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]],
-    labels=[<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>],colors=[<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;#e74c3c&#x27;</span>],alpha=<span class="hljs-number">0.75</span>)
-ax1.set_ylim(<span class="hljs-number">0</span>,<span class="hljs-number">100</span>);ax1.set_ylabel(<span class="hljs-string">&#x27;% Ricavi&#x27;</span>);ax1.legend(loc=<span class="hljs-string">&#x27;center right&#x27;</span>)
-ax1.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %y&#x27;</span>))
-ds=<span class="hljs-number">100</span>-fmp.iloc[<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;Cartaceo&#x27;</span>];de=<span class="hljs-number">100</span>-fmp.iloc[-<span class="hljs-number">1</span>][<span class="hljs-string">&#x27;Cartaceo&#x27;</span>]
-ax2.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.7</span>,<span class="hljs-string">f&#x27;<span class="hljs-subst">{ds:<span class="hljs-number">.0</span>f}</span>% -&gt; <span class="hljs-subst">{de:<span class="hljs-number">.0</span>f}</span>%&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">36</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>)
-ax2.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.45</span>,<span class="hljs-string">&#x27;Quota Digitale&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">14</span>,color=<span class="hljs-string">&#x27;gray&#x27;</span>)
-ax2.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.25</span>,<span class="hljs-string">f&#x27;+<span class="hljs-subst">{de-ds:<span class="hljs-number">.0</span>f}</span> pp in 2 anni&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">12</span>,color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
-ax2.set_xlim(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);ax2.set_ylim(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);ax2.axis(<span class="hljs-string">&#x27;off&#x27;</span>)
-plt.suptitle(<span class="hljs-string">&#x27;SLIDE 1: Quota digitale in crescita costante&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,y=<span class="hljs-number">1.02</span>)
-plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-10.png" alt="Notebook output 10"></p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 2: Audiolibro cresce 3x</span>
-fig,ax=plt.subplots(figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">6</span>))
-fc={<span class="hljs-string">&#x27;Cartaceo&#x27;</span>:<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>:<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>:<span class="hljs-string">&#x27;#e74c3c&#x27;</span>}
-<span class="hljs-keyword">for</span> fmt,c <span class="hljs-keyword">in</span> fc.items():
-    s=df[df[<span class="hljs-string">&#x27;formato&#x27;</span>]==fmt].groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-    idx=s/s.iloc[<span class="hljs-number">0</span>]*<span class="hljs-number">100</span>
-    ax.plot(idx.index,idx.values,color=c,linewidth=<span class="hljs-number">3.5</span> <span class="hljs-keyword">if</span> fmt==<span class="hljs-string">&#x27;Audiolibro&#x27;</span> <span class="hljs-keyword">else</span> <span class="hljs-number">2</span>,label=fmt)
-    ax.text(idx.index[-<span class="hljs-number">1</span>],idx.values[-<span class="hljs-number">1</span>],<span class="hljs-string">f&#x27;  <span class="hljs-subst">{idx.values[-<span class="hljs-number">1</span>]:<span class="hljs-number">.0</span>f}</span>&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=c)
-ax.axhline(<span class="hljs-number">100</span>,color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,linewidth=<span class="hljs-number">1</span>)
-ax.set_title(<span class="hljs-string">&#x27;SLIDE 2: Audiolibro cresce 3x il cartaceo (base 100)&#x27;</span>,fontsize=<span class="hljs-number">13</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
-ax.set_ylabel(<span class="hljs-string">&#x27;Indice&#x27;</span>);ax.legend(fontsize=<span class="hljs-number">11</span>,loc=<span class="hljs-string">&#x27;upper left&#x27;</span>)
-ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %Y&#x27;</span>));plt.xticks(rotation=<span class="hljs-number">30</span>)
-plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-11.png" alt="Notebook output 11"></p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 3: Dove investire</span>
-a24g=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==<span class="hljs-string">&#x27;Audiolibro&#x27;</span>)].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-t24g=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-ap=a24g/t24g*<span class="hljs-number">100</span>;tg=t24g/<span class="hljs-number">1e6</span>
-sdf=pd.DataFrame({<span class="hljs-string">&#x27;mercato&#x27;</span>:tg,<span class="hljs-string">&#x27;audio_pen&#x27;</span>:ap}).dropna()
-fig,ax=plt.subplots(figsize=(<span class="hljs-number">12</span>,<span class="hljs-number">8</span>))
-ax.axhline(sdf[<span class="hljs-string">&#x27;audio_pen&#x27;</span>].median(),color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,alpha=<span class="hljs-number">0.5</span>)
-ax.axvline(sdf[<span class="hljs-string">&#x27;mercato&#x27;</span>].median(),color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,alpha=<span class="hljs-number">0.5</span>)
-<span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> sdf.index:
-    ax.scatter(sdf.loc[g,<span class="hljs-string">&#x27;mercato&#x27;</span>],sdf.loc[g,<span class="hljs-string">&#x27;audio_pen&#x27;</span>],s=<span class="hljs-number">150</span>,alpha=<span class="hljs-number">0.7</span>,zorder=<span class="hljs-number">3</span>)
-    ax.annotate(g,(sdf.loc[g,<span class="hljs-string">&#x27;mercato&#x27;</span>],sdf.loc[g,<span class="hljs-string">&#x27;audio_pen&#x27;</span>]),fontsize=<span class="hljs-number">10</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;bottom&#x27;</span>,xytext=(<span class="hljs-number">0</span>,<span class="hljs-number">8</span>),textcoords=<span class="hljs-string">&#x27;offset points&#x27;</span>)
-ax.text(<span class="hljs-number">0.98</span>,<span class="hljs-number">0.98</span>,<span class="hljs-string">&#x27;PRIORITA: grande e digitale&#x27;</span>,transform=ax.transAxes,fontsize=<span class="hljs-number">9</span>,va=<span class="hljs-string">&#x27;top&#x27;</span>,ha=<span class="hljs-string">&#x27;right&#x27;</span>,color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
-ax.text(<span class="hljs-number">0.98</span>,<span class="hljs-number">0.02</span>,<span class="hljs-string">&#x27;OPPORTUNITA: grande, poco digitale&#x27;</span>,transform=ax.transAxes,fontsize=<span class="hljs-number">9</span>,va=<span class="hljs-string">&#x27;bottom&#x27;</span>,ha=<span class="hljs-string">&#x27;right&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
-ax.set_xlabel(<span class="hljs-string">&#x27;Dimensione mercato (EUR M)&#x27;</span>);ax.set_ylabel(<span class="hljs-string">&#x27;Penetrazione audiolibro (%)&#x27;</span>)
-ax.set_title(<span class="hljs-string">&#x27;SLIDE 3: Thriller e Narrativa = dove investire in audio&#x27;</span>,fontsize=<span class="hljs-number">13</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
-plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-12.png" alt="Notebook output 12"></p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 4: Raccomandazione e proiezione</span>
-fig,(ax1,ax2)=plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">7</span>),gridspec_kw={<span class="hljs-string">&#x27;width_ratios&#x27;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">1.2</span>]})
-ax1.axis(<span class="hljs-string">&#x27;off&#x27;</span>)
-ax1.set_title(<span class="hljs-string">&#x27;Piano Audiolibro 2025&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
-actions=[[<span class="hljs-string">&#x27;AZIONE&#x27;</span>,<span class="hljs-string">&#x27;DETTAGLIO&#x27;</span>,<span class="hljs-string">&#x27;IMPATTO&#x27;</span>],
-    [<span class="hljs-string">&#x27;1. Triplicare catalogo&#x27;</span>,<span class="hljs-string">&#x27;80-&gt;240 titoli\nFocus Thriller+Narrativa&#x27;</span>,<span class="hljs-string">&#x27;EUR +1.5M&#x27;</span>],
-    [<span class="hljs-string">&#x27;2. Partnership audio&#x27;</span>,<span class="hljs-string">&#x27;Audible, Storytel&#x27;</span>,<span class="hljs-string">&#x27;Reach +200K&#x27;</span>],
-    [<span class="hljs-string">&#x27;3. Bundle cart+audio&#x27;</span>,<span class="hljs-string">&#x27;Sconto 30% bundle&#x27;</span>,<span class="hljs-string">&#x27;Cross-sell +15%&#x27;</span>],
-    [<span class="hljs-string">&#x27;4. Podcast-to-book&#x27;</span>,<span class="hljs-string">&#x27;Convertire podcast\nin audiolibri&#x27;</span>,<span class="hljs-string">&#x27;10 titoli/anno&#x27;</span>]]
-table=ax1.table(cellText=actions[<span class="hljs-number">1</span>:],colLabels=actions[<span class="hljs-number">0</span>],cellLoc=<span class="hljs-string">&#x27;left&#x27;</span>,loc=<span class="hljs-string">&#x27;center&#x27;</span>,colWidths=[<span class="hljs-number">0.35</span>,<span class="hljs-number">0.35</span>,<span class="hljs-number">0.20</span>])
-table.auto_set_font_size(<span class="hljs-literal">False</span>);table.set_fontsize(<span class="hljs-number">10</span>);table.scale(<span class="hljs-number">1</span>,<span class="hljs-number">2.5</span>)
-<span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):table[<span class="hljs-number">0</span>,j].set_facecolor(<span class="hljs-string">&#x27;#2c3e50&#x27;</span>);table[<span class="hljs-number">0</span>,j].set_text_props(color=<span class="hljs-string">&#x27;white&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
-<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,<span class="hljs-number">5</span>):
-    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):table[i,j].set_facecolor(<span class="hljs-string">&#x27;#f8f9fa&#x27;</span> <span class="hljs-keyword">if</span> i%<span class="hljs-number">2</span>==<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;white&#x27;</span>)
-    table[i,<span class="hljs-number">2</span>].set_text_props(color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
-<span class="hljs-comment"># Proiezione</span>
-ax2.set_title(<span class="hljs-string">&#x27;Proiezione con investimento 3x&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>)
-mesi=pd.date_range(<span class="hljs-string">&#x27;2023-01-01&#x27;</span>,periods=<span class="hljs-number">36</span>,freq=<span class="hljs-string">&#x27;MS&#x27;</span>)
-astorico=df[df[<span class="hljs-string">&#x27;formato&#x27;</span>]==<span class="hljs-string">&#x27;Audiolibro&#x27;</span>].groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1000</span>
-z=np.polyfit(np.arange(<span class="hljs-built_in">len</span>(astorico)),astorico.values,<span class="hljs-number">1</span>)
-proj=np.polyval(z,np.arange(<span class="hljs-number">36</span>));proj3x=proj.copy();proj3x[<span class="hljs-number">24</span>:]*=<span class="hljs-number">2.5</span>
-ax2.plot(mesi[:<span class="hljs-number">24</span>],astorico.values,<span class="hljs-string">&#x27;o-&#x27;</span>,color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,linewidth=<span class="hljs-number">2</span>,label=<span class="hljs-string">&#x27;Storico&#x27;</span>)
-ax2.plot(mesi[<span class="hljs-number">23</span>:],proj[<span class="hljs-number">23</span>:],<span class="hljs-string">&#x27;--&#x27;</span>,color=<span class="hljs-string">&#x27;#bdc3c7&#x27;</span>,linewidth=<span class="hljs-number">2</span>,label=<span class="hljs-string">&#x27;Base&#x27;</span>)
-ax2.plot(mesi[<span class="hljs-number">23</span>:],proj3x[<span class="hljs-number">23</span>:],<span class="hljs-string">&#x27;-&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,linewidth=<span class="hljs-number">3</span>,label=<span class="hljs-string">&#x27;Con 3x&#x27;</span>)
-ax2.fill_between(mesi[<span class="hljs-number">23</span>:],proj[<span class="hljs-number">23</span>:],proj3x[<span class="hljs-number">23</span>:],alpha=<span class="hljs-number">0.15</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>)
-ax2.axvline(mesi[<span class="hljs-number">23</span>],color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,alpha=<span class="hljs-number">0.5</span>)
-ax2.set_ylabel(<span class="hljs-string">&#x27;Ricavi audio (EUR K)&#x27;</span>);ax2.legend(fontsize=<span class="hljs-number">10</span>,loc=<span class="hljs-string">&#x27;upper left&#x27;</span>)
-ax2.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %y&#x27;</span>))
-plt.suptitle(<span class="hljs-string">&#x27;SLIDE 4: Investire 3x genera EUR +1.5M nel primo anno&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,y=<span class="hljs-number">1.02</span>)
-plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-13.png" alt="Notebook output 13"></p>
-<hr>
-<h1 id="recap-finale">Recap finale</h1>
-<h2 id="le-basi">Le basi</h2>
-<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
-<thead>
-<tr>
-<th>Concetto</th>
-<th>In una frase</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Pyramid Principle</td>
-<td>Parti dalla conclusione, non dai dati</td>
-</tr>
-<tr>
-<td>So What?</td>
-<td>Ogni grafico: osservazione → insight → azione</td>
-</tr>
-<tr>
-<td>Data-Ink Ratio</td>
-<td>Meno decorazione, piu dati</td>
-</tr>
-<tr>
-<td>Visual Encoding</td>
-<td>Posizione e lunghezza &gt; Area e colore</td>
-</tr>
-</tbody></table>
-</div></figure><h2 id="la-pratica">La pratica</h2>
-<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
-<thead>
-<tr>
-<th>Concetto</th>
-<th>In una frase</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Matrice decisionale</td>
-<td>Scegli il grafico dall&#39;obiettivo, non dal dato</td>
-</tr>
-<tr>
-<td>Trasformazioni</td>
-<td>Normalizza, indicizza, smooth prima di visualizzare</td>
-</tr>
-<tr>
-<td>Grafici avanzati</td>
-<td>Slope, Bump, Dumbbell, Waterfall, Waffle per casi specifici</td>
-</tr>
-<tr>
-<td>Dashboard</td>
-<td>KPI in alto, supporto al centro, dettaglio in basso</td>
-</tr>
-<tr>
-<td>Brief → Presentazione</td>
-<td>Piramide prima, dati poi, grafici alla fine</td>
-</tr>
-</tbody></table>
-</div></figure><h2 id="la-regola-doro">La regola d&#39;oro</h2>
-<blockquote>
-<p><strong>Non chiedete &quot;che grafico faccio?&quot;. Chiedete &quot;cosa devo comunicare?&quot;.</strong></p>
+<p>La regola d&#39;oro: <br><strong>Non chiedete &quot;che grafico faccio?&quot;. Chiedete &quot;cosa devo comunicare?&quot;.</strong></p>
 </blockquote>
 <h2 id="risorse">Risorse</h2>
 <ul>
