@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-18T15:43:40.777Z",
+    "dateModified": "2026-02-18T16:35:11.505Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1300,7 +1300,9 @@ che lega intensità percepita e intensità reale:</p>
 <h2 id="errori-comuni-e-paradossi-statistici">Errori comuni e paradossi statistici</h2>
 <p>L&#39;applicazione del Data Storytelling funge da meccanismo di controllo qualità (Quality Assurance). Tentando di costruire una narrazione causale, spesso emergono errori interpretativi che in una semplice tabella passerebbero inosservati.</p>
 <h3 id="il-paradosso-di-simpson-quando-laggregazione-mente">Il paradosso di Simpson: quando l&#39;aggregazione mente</h3>
-<p>Uno degli errori più pericolosi nel reporting aggregato è il <strong>Paradosso di Simpson</strong>. Si verifica quando un trend appare in diversi gruppi di dati ma scompare o si inverte quando questi gruppi vengono combinati.<a href="https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions">30</a> Questo paradosso è frequente nel marketing e nelle vendite e può portare a decisioni opposte alla realtà.<br><strong>Esempio Concreto: Performance Campagne Marketing</strong><br>Immaginiamo di dover decidere quale tra due campagne (A e B) mantenere attiva, basandoci sul Conversion Rate (CR).</p>
+<p>Uno degli errori più pericolosi nel reporting aggregato è il <strong>Paradosso di Simpson</strong>. Si verifica quando un trend appare in diversi gruppi di dati ma scompare o si inverte quando questi gruppi vengono combinati. Questo paradosso è frequente nel marketing e nelle vendite e può portare a decisioni opposte alla realtà.  </p>
+<p>Vediamo con un esempio che ho trovato in <a href="https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions">articolo online</a> di performance marketing e che rende molto l&#39;idea.</p>
+<p>Immaginiamo di dover decidere quale tra due campagne (A e B) mantenere attiva, basandoci sul Conversion Rate (CR).</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
@@ -1326,7 +1328,8 @@ che lega intensità percepita e intensità reale:</p>
 <td align="left">PERDENTE</td>
 </tr>
 </tbody></table>
-</div></figure><p>Guardando il dato aggregato, la Campagna A sembra nettamente superiore (18,4% vs 13,6%). Un manager deciderebbe di tagliare la B.<br>Tuttavia, disaggregando i dati per segmento di cliente (High Value vs Low Value), emerge una realtà diversa:</p>
+</div></figure><p>Guardando il dato aggregato, la Campagna A sembra nettamente superiore (18,4% vs 13,6%). Un manager deciderebbe di tagliare la B.  </p>
+<p>Tuttavia, disaggregando i dati per segmento di cliente (High Value vs Low Value), emerge una realtà diversa e interessante:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
@@ -1349,7 +1352,12 @@ che lega intensità percepita e intensità reale:</p>
 <td align="left"><strong>Campagna B</strong></td>
 </tr>
 </tbody></table>
-</div></figure><p>La Campagna B è superiore <em>in entrambi</em> i segmenti presi singolarmente! Perché il totale dice il contrario? Perché la Campagna A ha avuto la &quot;fortuna&quot; di avere una percentuale maggiore di traffico dal segmento <em>High Value</em> (che converte naturalmente molto di più), mentre la Campagna B è stata penalizzata ricevendo la gran parte del traffico dal segmento <em>Low Value</em>. Questo è un problema di &quot;Mix Effects&quot;.<a href="https://research.google.com/pubs/archive/42901.pdf">31</a> Senza questa disaggregazione narrativa, il report avrebbe portato a cancellare la campagna tecnicamente più performante (la B). Il Data Storytelling rigoroso impone di chiedersi sempre: &quot;C&#39;è una variabile latente (confounder) che sta distorcendo la media?&quot;.<a href="https://bookdown.org/mike/data_analysis/simpsons-paradox.html">33</a></p>
+</div></figure><p>La Campagna B è superiore <em>in entrambi</em> i segmenti presi singolarmente! Ma nasce spontanea una domanda:</p>
+<blockquote>
+<p>Perché il totale dice il contrario? </p>
+</blockquote>
+<p>Perché la Campagna A ha avuto la &quot;fortuna&quot; di avere una percentuale maggiore di traffico dal segmento <em>High Value</em> (che converte naturalmente molto di più), mentre la Campagna B è stata penalizzata ricevendo la gran parte del traffico dal segmento <em>Low Value</em>. </p>
+<p>Questo è un problema di <a href="https://research.google.com/pubs/archive/42901.pdf">&quot;Mix Effects&quot;</a>. Senza questa disaggregazione narrativa, il report avrebbe portato a cancellare la campagna tecnicamente più performante (la B). Il Data Storytelling rigoroso impone di chiedersi sempre: &quot;C&#39;è una variabile latente (confounder) che sta distorcendo la media?&quot;. Vi lascio un <a href="https://bookdown.org/mike/data_analysis/simpsons-paradox.html">modo per testarlo in R</a>.</p>
 <h3 id="32-il-churn-male-interpretato-e-il-selection-bias"><strong>3.2 Il &quot;Churn&quot; Male Interpretato e il Selection Bias</strong></h3>
 <p>Un altro classico errore operativo riguarda la metrica del <strong>Churn</strong>. Riportare un &quot;Churn Rate&quot; unico (es. 5%) è spesso fuorviante in ambito B2B Enterprise. Se l&#39;azienda perde 10 piccoli clienti che pagano 1k€ l&#39;anno, ma mantiene l&#39;unico cliente che ne paga 100k€, il <em>Customer Churn</em> sarà alto, ma il <em>Revenue Churn</em> sarà nullo o positivo (se c&#39;è upsell). Un report che non distingue tra <strong>Logo Churn</strong> e <strong>Revenue Churn</strong> (o Net Revenue Retention - NRR) crea allarmismo ingiustificato o falsa sicurezza.<a href="https://www.zendesk.com/blog/customer-churn-rate/">35</a><br>Inoltre, molti report soffrono di <strong>Selection Bias</strong> o <strong>Survivorship Bias</strong>. Analizzare la soddisfazione dei clienti basandosi solo sui ticket di supporto o sui sondaggi NPS (Net Promoter Score) introduce un bias enorme: stiamo ascoltando solo chi ha deciso di parlare o chi è rimasto cliente.<a href="https://www.omniconvert.com/what-is/selection-bias/">37</a> I clienti insoddisfatti che se ne sono andati silenziosamente sono invisibili nei dati. Un report rigoroso deve esplicitare questo caveat: &quot;L&#39;analisi riflette il sentiment dei clienti attivi e rispondenti, non della totalità della base utenti&quot;.</p>
 <h3 id="33-dashboard-senza-domanda-the-so-what-problem"><strong>3.3 Dashboard Senza Domanda (The &quot;So What?&quot; Problem)</strong></h3>
