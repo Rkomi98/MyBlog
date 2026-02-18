@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Data Storytelling | Mirko Calcaterra</title>
-  <meta name="description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…">
+  <meta name="description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…">
   <meta name="keywords" content="Data Storytelling, Data Visualization, Dashboard, Reporting, Decision Making, Mirko Calcaterra">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -23,7 +23,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/data-storytelling/">
   <meta property="og:title" content="Data Storytelling">
-  <meta property="og:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…">
+  <meta property="og:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-02-13T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -32,7 +32,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Data Storytelling">
-  <meta property="twitter:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…">
+  <meta property="twitter:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-17T18:20:15.897Z",
+    "dateModified": "2026-02-18T15:43:40.777Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…"
+    "description": "Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…"
   }
   </script>
 
@@ -940,32 +940,38 @@
         <div class="post-toc__content">
           <ul class="post-toc__list">
     <li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#introduzione">
+          <a class="post-toc__link" href="#notebook-della-masterclass">
             <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Notebook della masterclass</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#introduzione">
+            <span class="post-toc__number">2</span>
             <span class="post-toc__text">Introduzione</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#teoria-scienza-della-percezione">
-            <span class="post-toc__number">2</span>
+            <span class="post-toc__number">3</span>
             <span class="post-toc__text">Teoria: Scienza della percezione</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#la-teoria-del-carico-cognitivo-cognitive-load-theory">
-            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__number">3.1</span>
             <span class="post-toc__text">La teoria del carico cognitivo (Cognitive Load Theory)</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#gerarchia-della-percezione-grafica">
-            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__number">3.2</span>
             <span class="post-toc__text">Gerarchia della percezione grafica</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#attention-is-all-we-need">
-            <span class="post-toc__number">2.3</span>
+            <span class="post-toc__number">3.3</span>
             <span class="post-toc__text">Attention is all WE need</span>
           </a>
           
@@ -973,63 +979,63 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#come-strutturare-i-report-in-ambito-business">
-            <span class="post-toc__number">3</span>
+            <span class="post-toc__number">4</span>
             <span class="post-toc__text">Come strutturare i report in ambito business</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#the-pyramid-principle-minto-e-la-comunicazione-top-down">
-            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__number">4.1</span>
             <span class="post-toc__text">The Pyramid Principle (Minto) e la comunicazione Top-Down</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-framework-scqa">
-            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__number">4.2</span>
             <span class="post-toc__text">Il Framework SCQA</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#amazon-6-pager-e-lo-slide-cidio">
-            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__number">4.3</span>
             <span class="post-toc__text">Amazon 6-Pager e lo &quot;slide-cidio&quot;</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#struttura-operativa-del-memo">
-            <span class="post-toc__number">3.4</span>
+            <span class="post-toc__number">4.4</span>
             <span class="post-toc__text">Struttura operativa del Memo</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#executive-summary-lanatomia-della-sintesi">
-            <span class="post-toc__number">3.5</span>
-            <span class="post-toc__text">Executive Summary: L&#39;Anatomia della sintesi</span>
+          <a class="post-toc__link" href="#executive-summary-larte-della-sintesi">
+            <span class="post-toc__number">4.5</span>
+            <span class="post-toc__text">Executive Summary: L&#39;arte della sintesi</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#3-patologie-dei-dati-errori-comuni-e-paradossi-statistici">
-            <span class="post-toc__number">4</span>
-            <span class="post-toc__text">**3\. Patologie dei Dati: Errori Comuni e Paradossi Statistici**</span>
+          <a class="post-toc__link" href="#errori-comuni-e-paradossi-statistici">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Errori comuni e paradossi statistici</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#31-il-paradosso-di-simpson-quando-laggregazione-mente">
-            <span class="post-toc__number">4.1</span>
-            <span class="post-toc__text">**3.1 Il Paradosso di Simpson: Quando l&#39;Aggregazione Mente**</span>
+          <a class="post-toc__link" href="#il-paradosso-di-simpson-quando-laggregazione-mente">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Il paradosso di Simpson: quando l&#39;aggregazione mente</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#32-il-churn-male-interpretato-e-il-selection-bias">
-            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__number">5.2</span>
             <span class="post-toc__text">**3.2 Il &quot;Churn&quot; Male Interpretato e il Selection Bias**</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#33-dashboard-senza-domanda-the-so-what-problem">
-            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__number">5.3</span>
             <span class="post-toc__text">**3.3 Dashboard Senza Domanda (The &quot;So What?&quot; Problem)**</span>
           </a>
           
@@ -1037,13 +1043,13 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#4-lai-come-editor-avversariale-non-decisore">
-            <span class="post-toc__number">5</span>
+            <span class="post-toc__number">6</span>
             <span class="post-toc__text">**4\. L&#39;AI come Editor Avversariale (Non Decisore)**</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#41-prompt-engineering-per-laudit-logico">
-            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__number">6.1</span>
             <span class="post-toc__text">**4.1 Prompt Engineering per l&#39;Audit Logico**</span>
           </a>
           
@@ -1051,13 +1057,13 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#5-showcase-trasformazione-di-un-report-prima-e-dopo">
-            <span class="post-toc__number">6</span>
+            <span class="post-toc__number">7</span>
             <span class="post-toc__text">**5\. Showcase: Trasformazione di un Report (Prima e Dopo)**</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#scenario-report-q3-sales-review">
-            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__number">7.1</span>
             <span class="post-toc__text">**Scenario: Report Q3 Sales Review**</span>
           </a>
           
@@ -1065,19 +1071,19 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#6-sezione-errori-tipici-checklist-di-controllo">
-            <span class="post-toc__number">7</span>
+            <span class="post-toc__number">8</span>
             <span class="post-toc__text">**6\. Sezione Errori Tipici (Checklist di Controllo)**</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#conclusioni-e-debrief">
-            <span class="post-toc__number">8</span>
+            <span class="post-toc__number">9</span>
             <span class="post-toc__text">**Conclusioni e Debrief**</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#bibliografia">
-            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__number">9.1</span>
             <span class="post-toc__text">**Bibliografia**</span>
           </a>
           
@@ -1089,6 +1095,12 @@
       </aside>
         <div class="post-body">
           <p>In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati.</p>
+<h2 id="notebook-della-masterclass">Notebook della masterclass</h2>
+<p>Per chi vuole ho creato dei notebook con spiegazione del codice e output:</p>
+<ul>
+<li><a href="../../../blog/it/datavis-masterclass-parte-1/">Data Visualization Masterclass - Parte 1</a></li>
+<li><a href="../../../blog/it/datavis-masterclass-parte-2/">Data Visualization Masterclass - Parte 2</a></li>
+</ul>
 <h2 id="introduzione">Introduzione</h2>
 <p>Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big Data da anni ormai), le organizzazioni si trovano a fronteggiare un problema: </p>
 <blockquote>
@@ -1275,17 +1287,19 @@ che lega intensità percepita e intensità reale:</p>
 <li><strong>Appendix:</strong> contiene dati aggiuntivi, tabelle, documenti di supporto e ulteriore contesto che non rientrano nel flusso narrativo principale</li>
 </ol>
 <p>Le riunioni in Amazon iniziano con 20-30 minuti di &quot;sala studio&quot; in silenzio, dove tutti leggono il memo. Solo dopo inizia la discussione. Questo livella il campo di gioco, assicura che tutti abbiano consumato i dati e alza drammaticamente la qualità del dibattito, spostandolo dalla comprensione dei fatti all&#39;interpretazione e decisione.</p>
-<h3 id="executive-summary-lanatomia-della-sintesi">Executive Summary: L&#39;Anatomia della sintesi</h3>
-<p>L&#39;Executive Summary è spesso la parte più letta e peggio scritta. Non deve essere un &quot;teaser&quot; (&quot;in questo report vedremo...&quot;), ma uno spoiler completo. Deve poter sostituire l&#39;intero documento.<br>Una struttura efficace per l&#39;Executive Summary di un report di Data Science deve contenere quattro elementi chiave:</p>
+<h3 id="executive-summary-larte-della-sintesi">Executive Summary: L&#39;arte della sintesi</h3>
+<p>Se stai leggendo questo articolo e sei arrivato a questo punto, penso che tu ti sia trovato spesso a leggere paper o blog post lunghi. Sono altrettanto certo che, soprattutto per i paper, per decidere se scartare o leggere quel documento, ti basi soprattutto sull&#39;Executive Summary.</p>
+<p>L&#39;Executive Summary è spesso, infatti, la parte più letta e non sempre è quella meglio scritta. Non deve essere un &quot;teaser&quot; (&quot;in questo report vedremo...&quot;), ma deve essere uno spoiler completo. Deve poter sostituire l&#39;intero documento.  </p>
+<p>Una struttura efficace per l&#39;Executive Summary di un report di Data Science deve contenere <a href="https://www.diligent.com/resources/blog/executive-summary-report">quattro elementi chiave</a>:</p>
 <ol>
-<li><strong>Claim (Tesi):</strong> La conclusione principale.  </li>
-<li><strong>Evidence (Prova):</strong> Il dato statistico più forte che supporta la tesi (non tutti i dati, solo il &quot;killer stat&quot;).  </li>
-<li><strong>Caveat (Rischi/Limiti):</strong> Onestà intellettuale sui limiti dell&#39;analisi (es. &quot;Dati limitati al mercato US&quot;, &quot;Confidenza del modello al 85%&quot;). Questo aumenta la credibilità dell&#39;autore.  </li>
-<li><strong>Next Steps (Azione):</strong> Cosa si richiede al decisore (approvazione, budget, presa d&#39;atto).<a href="https://www.diligent.com/resources/blog/executive-summary-report">28</a></li>
+<li><strong>Claim (Tesi):</strong> la conclusione principale. La tesi del report e dove volete andare a parare, sfruttando tutti i dati necessari. </li>
+<li><strong>Evidence (Prova):</strong> quel risultato statistico &quot;game changing&quot; che supporta al 100% la tesi. Attenzione non tutti i dati, ma solo il &quot;killer stat&quot;, ovvero quello più forte.</li>
+<li><strong>Caveat (Rischi/Limiti):</strong> qui si deve Onestà intellettuale sui limiti dell&#39;analisi (es. &quot;Dati limitati al mercato US&quot;, &quot;Confidenza del modello al 85%&quot;). Questo aumenta la credibilità dell&#39;autore.  </li>
+<li><strong>Next Steps (Azione):</strong> Cosa si richiede al decisore (approvazione, budget, presa d&#39;atto).</li>
 </ol>
-<h2 id="3-patologie-dei-dati-errori-comuni-e-paradossi-statistici"><strong>3. Patologie dei Dati: Errori Comuni e Paradossi Statistici</strong></h2>
+<h2 id="errori-comuni-e-paradossi-statistici">Errori comuni e paradossi statistici</h2>
 <p>L&#39;applicazione del Data Storytelling funge da meccanismo di controllo qualità (Quality Assurance). Tentando di costruire una narrazione causale, spesso emergono errori interpretativi che in una semplice tabella passerebbero inosservati.</p>
-<h3 id="31-il-paradosso-di-simpson-quando-laggregazione-mente"><strong>3.1 Il Paradosso di Simpson: Quando l&#39;Aggregazione Mente</strong></h3>
+<h3 id="il-paradosso-di-simpson-quando-laggregazione-mente">Il paradosso di Simpson: quando l&#39;aggregazione mente</h3>
 <p>Uno degli errori più pericolosi nel reporting aggregato è il <strong>Paradosso di Simpson</strong>. Si verifica quando un trend appare in diversi gruppi di dati ma scompare o si inverte quando questi gruppi vengono combinati.<a href="https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions">30</a> Questo paradosso è frequente nel marketing e nelle vendite e può portare a decisioni opposte alla realtà.<br><strong>Esempio Concreto: Performance Campagne Marketing</strong><br>Immaginiamo di dover decidere quale tra due campagne (A e B) mantenere attiva, basandoci sul Conversion Rate (CR).</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
