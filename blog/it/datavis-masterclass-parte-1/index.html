@@ -42,7 +42,7 @@
     "headline": "Data Visualization masterclass - Parte 1",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-18T00:00:00.000Z",
-    "dateModified": "2026-02-18T16:48:27.653Z",
+    "dateModified": "2026-02-18T16:54:47.059Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1212,32 +1212,8 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#grafici-interattivi-con-plotly">
-            <span class="post-toc__number">19</span>
-            <span class="post-toc__text">Grafici interattivi con Plotly</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#scenario">
-            <span class="post-toc__number">20</span>
-            <span class="post-toc__text">Scenario</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#cosa-abbiamo-imparato">
-            <span class="post-toc__number">21</span>
-            <span class="post-toc__text">Cosa abbiamo imparato</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#checklist-prima-di-ogni-presentazione">
-            <span class="post-toc__number">22</span>
-            <span class="post-toc__text">Checklist prima di ogni presentazione</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#nel-prossimo-notebook-parte-2">
-            <span class="post-toc__number">23</span>
+            <span class="post-toc__number">19</span>
             <span class="post-toc__text">Nel prossimo notebook (Parte 2)</span>
           </a>
           
@@ -2327,138 +2303,6 @@ plt.suptitle(<span class="hljs-string">&#x27;Trend vendite per genere — variaz
              fontsize=<span class="hljs-number">14</span>, fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>, y=<span class="hljs-number">1.02</span>)
 plt.tight_layout()
 plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte1/datavis_masterclass_parte1-output-18.png" alt="Notebook output 18"></p>
-<h2 id="grafici-interattivi-con-plotly">Grafici interattivi con Plotly</h2>
-<pre><code class="hljs language-python"><span class="hljs-comment"># PLOTLY INTERATTIVO</span>
-lpx = (df.groupby([<span class="hljs-string">&#x27;libro_id&#x27;</span>,<span class="hljs-string">&#x27;genere&#x27;</span>,<span class="hljs-string">&#x27;collana&#x27;</span>,<span class="hljs-string">&#x27;rating_goodreads&#x27;</span>,<span class="hljs-string">&#x27;n_recensioni&#x27;</span>,<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>,<span class="hljs-string">&#x27;anno_pubblicazione&#x27;</span>])
-       .agg(ricavo_totale=(<span class="hljs-string">&#x27;ricavo&#x27;</span>,<span class="hljs-string">&#x27;sum&#x27;</span>),copie_totali=(<span class="hljs-string">&#x27;copie_vendute&#x27;</span>,<span class="hljs-string">&#x27;sum&#x27;</span>)).reset_index())
-fig = px.scatter(lpx, x=<span class="hljs-string">&#x27;n_recensioni&#x27;</span>, y=<span class="hljs-string">&#x27;ricavo_totale&#x27;</span>, color=<span class="hljs-string">&#x27;genere&#x27;</span>, size=<span class="hljs-string">&#x27;copie_totali&#x27;</span>, size_max=<span class="hljs-number">25</span>,
-    hover_data=[<span class="hljs-string">&#x27;collana&#x27;</span>,<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>,<span class="hljs-string">&#x27;rating_goodreads&#x27;</span>,<span class="hljs-string">&#x27;anno_pubblicazione&#x27;</span>],
-    title=<span class="hljs-string">&#x27;&lt;b&gt;Esplora il catalogo: ogni punto e un libro&lt;/b&gt;&lt;br&gt;&lt;i&gt;Dimensione = copie. Hover per dettagli.&lt;/i&gt;&#x27;</span>,
-    labels={<span class="hljs-string">&#x27;n_recensioni&#x27;</span>:<span class="hljs-string">&#x27;N. Recensioni&#x27;</span>,<span class="hljs-string">&#x27;ricavo_totale&#x27;</span>:<span class="hljs-string">&#x27;Ricavo (EUR)&#x27;</span>,<span class="hljs-string">&#x27;genere&#x27;</span>:<span class="hljs-string">&#x27;Genere&#x27;</span>}, opacity=<span class="hljs-number">0.6</span>)
-fig.update_layout(height=<span class="hljs-number">550</span>,template=<span class="hljs-string">&#x27;plotly_white&#x27;</span>,
-    legend=<span class="hljs-built_in">dict</span>(orientation=<span class="hljs-string">&quot;h&quot;</span>,yanchor=<span class="hljs-string">&quot;bottom&quot;</span>,y=-<span class="hljs-number">0.25</span>,xanchor=<span class="hljs-string">&quot;center&quot;</span>,x=<span class="hljs-number">0.5</span>))
-fig.show()</code></pre><hr>
-<h1 id="esercizio-guidato---dal-dato-allinsight">Esercizio Guidato - Dal Dato all&#39;Insight</h1>
-<h2 id="scenario">Scenario</h2>
-<p>Il direttore chiede: <em>&quot;Come sta andando il catalogo? Dobbiamo cambiare qualcosa?&quot;</em></p>
-<p>3 slide con il Pyramid Principle:</p>
-<pre><code class="hljs language-pgsql">MESSAGGIO: &quot;Servono 3 interventi: diversificare generi, accelerare digitale, ridurre stagionalita&quot;
-
-├── ARG <span class="hljs-number">1</span>: Concentrazione rischiosa → Pareto + Bar
-├── ARG <span class="hljs-number">2</span>: Digitale da accelerare  → <span class="hljs-keyword">Stacked</span> Area
-└── ARG <span class="hljs-number">3</span>: Stagionalita marcata   → <span class="hljs-type">Line</span> + Annotazioni</code></pre><pre><code class="hljs language-python"><span class="hljs-comment"># ANALISI RAPIDA</span>
-<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;=&quot;</span> * <span class="hljs-number">60</span>)
-<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;ANALISI RAPIDA DEL CATALOGO&quot;</span>)
-<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;=&quot;</span> * <span class="hljs-number">60</span>)
-rl = df.groupby(<span class="hljs-string">&#x27;libro_id&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().sort_values(ascending=<span class="hljs-literal">False</span>)
-t10 = <span class="hljs-built_in">int</span>(<span class="hljs-built_in">len</span>(rl)*<span class="hljs-number">0.1</span>)
-<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;\nTop 10% (<span class="hljs-subst">{t10}</span> libri) = <span class="hljs-subst">{rl.head(t10).<span class="hljs-built_in">sum</span>()/rl.<span class="hljs-built_in">sum</span>()*<span class="hljs-number">100</span>:<span class="hljs-number">.0</span>f}</span>% dei ricavi&quot;</span>)
-r23f = df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>].groupby(<span class="hljs-string">&#x27;formato&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-r24f = df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;formato&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nCrescita formati YoY:&quot;</span>)
-<span class="hljs-keyword">for</span> f <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]:
-    <span class="hljs-keyword">if</span> f <span class="hljs-keyword">in</span> r23f.index <span class="hljs-keyword">and</span> f <span class="hljs-keyword">in</span> r24f.index:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;   <span class="hljs-subst">{f}</span>: <span class="hljs-subst">{(r24f[f]-r23f[f])/r23f[f]*<span class="hljs-number">100</span>:+<span class="hljs-number">.1</span>f}</span>%&quot;</span>)
-r23g = df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-r24g = df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
-yg = ((r24g-r23g)/r23g*<span class="hljs-number">100</span>).sort_values(ascending=<span class="hljs-literal">False</span>)
-<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nGeneri YoY:&quot;</span>)
-<span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> yg.index: <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;   <span class="hljs-subst">{<span class="hljs-string">&#x27;UP&#x27;</span> <span class="hljs-keyword">if</span> yg[g]&gt;<span class="hljs-number">10</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;FLAT&#x27;</span> <span class="hljs-keyword">if</span> yg[g]&gt;<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;DOWN&#x27;</span>}</span> <span class="hljs-subst">{g}</span>: <span class="hljs-subst">{yg[g]:+<span class="hljs-number">.1</span>f}</span>%&quot;</span>)
-rm = df.groupby(df[<span class="hljs-string">&#x27;data&#x27;</span>].dt.month)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].mean()
-gap = (rm.<span class="hljs-built_in">max</span>()-rm.<span class="hljs-built_in">min</span>())/rm.mean()*<span class="hljs-number">100</span>
-<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;\nGap stagionale: <span class="hljs-subst">{gap:<span class="hljs-number">.0</span>f}</span>%&quot;</span>)</code></pre><pre><code class="hljs language-text">============================================================
-ANALISI RAPIDA DEL CATALOGO
-============================================================
-
-Top 10% (50 libri) = 40% dei ricavi
-
-Crescita formati YoY:
-   Cartaceo: +5.4%
-   Ebook: +11.8%
-   Audiolibro: +27.8%
-
-Generi YoY:
-   UP Thriller: +19.9%
-   UP Young Adult: +15.8%
-   UP Fantasy: +13.4%
-   FLAT Romance: +4.4%
-   FLAT Bambini: +4.3%
-   FLAT Sci-Fi: +4.2%
-   FLAT Narrativa: +3.5%
-   FLAT Storico: +1.1%
-   FLAT Saggistica: +0.3%
-   DOWN Poesia: -8.1%
-
-Gap stagionale: 112%</code></pre><pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 1: Concentrazione (Pareto)</span>
-fig,(ax1,ax2) = plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">6</span>),gridspec_kw={<span class="hljs-string">&#x27;width_ratios&#x27;</span>:[<span class="hljs-number">1.3</span>,<span class="hljs-number">1</span>]})
-rs = rl.values/<span class="hljs-number">1e6</span>; rc = np.cumsum(rs)/np.cumsum(rs)[-<span class="hljs-number">1</span>]*<span class="hljs-number">100</span>
-xp = np.arange(<span class="hljs-number">1</span>,<span class="hljs-built_in">len</span>(rs)+<span class="hljs-number">1</span>)/<span class="hljs-built_in">len</span>(rs)*<span class="hljs-number">100</span>
-ax1.fill_between(xp,rc,alpha=<span class="hljs-number">0.3</span>,color=<span class="hljs-string">&#x27;#3498db&#x27;</span>); ax1.plot(xp,rc,color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,linewidth=<span class="hljs-number">2</span>)
-ax1.axhline(<span class="hljs-number">80</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,linestyle=<span class="hljs-string">&#x27;--&#x27;</span>,alpha=<span class="hljs-number">0.7</span>)
-i80 = np.argmin(np.<span class="hljs-built_in">abs</span>(rc-<span class="hljs-number">80</span>)); p80 = xp[i80]
-ax1.axvline(p80,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,linestyle=<span class="hljs-string">&#x27;--&#x27;</span>,alpha=<span class="hljs-number">0.7</span>)
-ax1.annotate(<span class="hljs-string">f&#x27;Solo il <span class="hljs-subst">{p80:<span class="hljs-number">.0</span>f}</span>% dei titoli\ngenera l\&#x27;80% dei ricavi&#x27;</span>,
-    xy=(p80,<span class="hljs-number">80</span>),xytext=(p80+<span class="hljs-number">20</span>,<span class="hljs-number">60</span>),arrowprops=<span class="hljs-built_in">dict</span>(arrowstyle=<span class="hljs-string">&#x27;-&gt;&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,lw=<span class="hljs-number">2</span>),
-    fontsize=<span class="hljs-number">11</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,bbox=<span class="hljs-built_in">dict</span>(boxstyle=<span class="hljs-string">&#x27;round&#x27;</span>,facecolor=<span class="hljs-string">&#x27;#ffebee&#x27;</span>,alpha=<span class="hljs-number">0.9</span>))
-ax1.set_xlabel(<span class="hljs-string">&#x27;% Titoli&#x27;</span>); ax1.set_ylabel(<span class="hljs-string">&#x27;% Ricavi cumulati&#x27;</span>); ax1.set_xlim(<span class="hljs-number">0</span>,<span class="hljs-number">100</span>); ax1.set_ylim(<span class="hljs-number">0</span>,<span class="hljs-number">100</span>)
-
-rgen = df.groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().sort_values(ascending=<span class="hljs-literal">True</span>)/<span class="hljs-number">1e6</span>
-ax2.barh(rgen.index,rgen.values,color=[<span class="hljs-string">&#x27;#e74c3c&#x27;</span> <span class="hljs-keyword">if</span> g <span class="hljs-keyword">in</span> rgen.nlargest(<span class="hljs-number">2</span>).index <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#bdc3c7&#x27;</span> <span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> rgen.index],height=<span class="hljs-number">0.6</span>)
-<span class="hljs-keyword">for</span> i,(g,v) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(rgen.items()): ax2.text(v+<span class="hljs-number">0.1</span>,i,<span class="hljs-string">f&#x27;EUR <span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>M&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">9</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
-ax2.set_title(<span class="hljs-string">&#x27;Due generi dominano&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>)
-ax2.xaxis.set_visible(<span class="hljs-literal">False</span>)
-<span class="hljs-keyword">for</span> sp <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;bottom&#x27;</span>,<span class="hljs-string">&#x27;left&#x27;</span>]: ax2.spines[sp].set_visible(<span class="hljs-literal">False</span>)
-ax2.tick_params(left=<span class="hljs-literal">False</span>)
-plt.suptitle(<span class="hljs-string">&#x27;SLIDE 1: Concentrazione eccessiva&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,y=<span class="hljs-number">1.02</span>)
-plt.tight_layout(); plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte1/datavis_masterclass_parte1-output-19.png" alt="Notebook output 19"></p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 2: Transizione digitale</span>
-fm = (df.groupby([df[<span class="hljs-string">&#x27;data&#x27;</span>],<span class="hljs-string">&#x27;formato&#x27;</span>])[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().reset_index()
-      .pivot(index=<span class="hljs-string">&#x27;data&#x27;</span>,columns=<span class="hljs-string">&#x27;formato&#x27;</span>,values=<span class="hljs-string">&#x27;ricavo&#x27;</span>).fillna(<span class="hljs-number">0</span>)/<span class="hljs-number">1000</span>)
-fig, ax = plt.subplots(figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">6</span>))
-ax.stackplot(fm.index,[fm[<span class="hljs-string">&#x27;Cartaceo&#x27;</span>],fm[<span class="hljs-string">&#x27;Ebook&#x27;</span>],fm[<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]],
-    labels=[<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>],colors=[<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;#e74c3c&#x27;</span>],alpha=<span class="hljs-number">0.75</span>)
-ds = fm.iloc[:<span class="hljs-number">3</span>][[<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]].<span class="hljs-built_in">sum</span>().<span class="hljs-built_in">sum</span>()/fm.iloc[:<span class="hljs-number">3</span>].<span class="hljs-built_in">sum</span>().<span class="hljs-built_in">sum</span>()*<span class="hljs-number">100</span>
-de = fm.iloc[-<span class="hljs-number">3</span>:][[<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]].<span class="hljs-built_in">sum</span>().<span class="hljs-built_in">sum</span>()/fm.iloc[-<span class="hljs-number">3</span>:].<span class="hljs-built_in">sum</span>().<span class="hljs-built_in">sum</span>()*<span class="hljs-number">100</span>
-ax.set_title(<span class="hljs-string">f&#x27;SLIDE 2: Digitale dal <span class="hljs-subst">{ds:<span class="hljs-number">.0</span>f}</span>% al <span class="hljs-subst">{de:<span class="hljs-number">.0</span>f}</span>% — accelerare&#x27;</span>,fontsize=<span class="hljs-number">13</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
-ax.set_ylabel(<span class="hljs-string">&#x27;Ricavi EUR K&#x27;</span>); ax.legend(loc=<span class="hljs-string">&#x27;upper left&#x27;</span>)
-ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %Y&#x27;</span>))
-plt.xticks(rotation=<span class="hljs-number">30</span>); plt.tight_layout(); plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte1/datavis_masterclass_parte1-output-20.png" alt="Notebook output 20"></p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 3: Stagionalita</span>
-rmt = df.groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1e6</span>
-fig, ax = plt.subplots(figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">6</span>))
-ax.plot(rmt.index,rmt.values,<span class="hljs-string">&#x27;o-&#x27;</span>,color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,linewidth=<span class="hljs-number">2.5</span>)
-med = rmt.mean()
-ax.axhline(med,color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>,linestyle=<span class="hljs-string">&#x27;--&#x27;</span>,alpha=<span class="hljs-number">0.5</span>)
-ax.fill_between(rmt.index,med*<span class="hljs-number">0.9</span>,med*<span class="hljs-number">1.1</span>,alpha=<span class="hljs-number">0.1</span>,color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>)
-<span class="hljs-keyword">for</span> d,v <span class="hljs-keyword">in</span> rmt.items():
-    ax.plot(d,v,<span class="hljs-string">&#x27;o&#x27;</span>,color=<span class="hljs-string">&#x27;#27ae60&#x27;</span> <span class="hljs-keyword">if</span> v&gt;=med <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#e74c3c&#x27;</span>,markersize=<span class="hljs-number">8</span>,zorder=<span class="hljs-number">5</span>)
-ax.set_title(<span class="hljs-string">f&#x27;SLIDE 3: Gap stagionale <span class="hljs-subst">{gap:<span class="hljs-number">.0</span>f}</span>% — appiattire la curva&#x27;</span>,fontsize=<span class="hljs-number">13</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
-ax.set_ylabel(<span class="hljs-string">&#x27;Ricavi EUR M&#x27;</span>)
-ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %Y&#x27;</span>))
-plt.xticks(rotation=<span class="hljs-number">30</span>)
-ax.text(<span class="hljs-number">0.98</span>,<span class="hljs-number">0.02</span>,<span class="hljs-string">&#x27;RACCOMANDAZIONI:\n1. Promozioni Q1\n2. Bundle digitali fuori stagione\n3. Campagna &quot;leggere tutto l\&#x27;anno&quot;&#x27;</span>,
-    transform=ax.transAxes,fontsize=<span class="hljs-number">9</span>,va=<span class="hljs-string">&#x27;bottom&#x27;</span>,ha=<span class="hljs-string">&#x27;right&#x27;</span>,bbox=<span class="hljs-built_in">dict</span>(boxstyle=<span class="hljs-string">&#x27;round&#x27;</span>,facecolor=<span class="hljs-string">&#x27;#e8f5e9&#x27;</span>,alpha=<span class="hljs-number">0.9</span>))
-plt.tight_layout(); plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte1/datavis_masterclass_parte1-output-21.png" alt="Notebook output 21"></p>
-<hr>
-<h1 id="recap-e-prossimi-passi">🎓 Recap e Prossimi Passi</h1>
-<h2 id="cosa-abbiamo-imparato">Cosa abbiamo imparato</h2>
-<ol>
-<li><strong>Pyramid Principle</strong>: Comunica top-down, dalla conclusione alle evidenze</li>
-<li><strong>Framework &quot;So What?&quot;</strong>: Ogni grafico deve passare 3 livelli (osservazione → insight → azione)</li>
-<li><strong>Grammatica visuale</strong>: Posizione e lunghezza &gt; Area e colore per dati quantitativi</li>
-<li><strong>Data-Ink Ratio</strong>: Eliminate il rumore visivo</li>
-<li><strong>Catalogo grafici</strong>: Bar, Box, Violin, Scatter, Heatmap, Line, Stacked Area, Treemap</li>
-<li><strong>Tecniche</strong>: Annotazioni, colore strategico, small multiples, interattività</li>
-</ol>
-<h2 id="checklist-prima-di-ogni-presentazione">Checklist prima di ogni presentazione</h2>
-<ul>
-<li><input disabled="" type="checkbox"> Ho costruito la piramide PRIMA di fare i grafici?</li>
-<li><input disabled="" type="checkbox"> Ogni grafico ha un titolo &quot;So What?&quot; (non descrittivo)?</li>
-<li><input disabled="" type="checkbox"> Ho usato il colore per evidenziare, non per decorare?</li>
-<li><input disabled="" type="checkbox"> Il data-ink ratio è alto?</li>
-<li><input disabled="" type="checkbox"> Ogni grafico supporta un argomento specifico della piramide?</li>
-<li><input disabled="" type="checkbox"> Se rimuovo un grafico, l&#39;argomentazione ne risente?</li>
-</ul>
 <h2 id="nel-prossimo-notebook-parte-2">Nel prossimo notebook (Parte 2)</h2>
 <ul>
 <li><strong>Quando usare quale grafico</strong>: matrice decisionale basata sull&#39;obiettivo comunicativo</li>
