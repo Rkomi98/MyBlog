@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-18T16:35:11.505Z",
+    "dateModified": "2026-02-18T16:40:38.428Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1028,9 +1028,9 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#32-il-churn-male-interpretato-e-il-selection-bias">
+          <a class="post-toc__link" href="#il-churn-male-interpretato-e-il-selection-bias">
             <span class="post-toc__number">5.2</span>
-            <span class="post-toc__text">**3.2 Il &quot;Churn&quot; Male Interpretato e il Selection Bias**</span>
+            <span class="post-toc__text">Il &quot;Churn&quot; Male Interpretato e il Selection Bias</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
@@ -1358,7 +1358,7 @@ che lega intensità percepita e intensità reale:</p>
 </blockquote>
 <p>Perché la Campagna A ha avuto la &quot;fortuna&quot; di avere una percentuale maggiore di traffico dal segmento <em>High Value</em> (che converte naturalmente molto di più), mentre la Campagna B è stata penalizzata ricevendo la gran parte del traffico dal segmento <em>Low Value</em>. </p>
 <p>Questo è un problema di <a href="https://research.google.com/pubs/archive/42901.pdf">&quot;Mix Effects&quot;</a>. Senza questa disaggregazione narrativa, il report avrebbe portato a cancellare la campagna tecnicamente più performante (la B). Il Data Storytelling rigoroso impone di chiedersi sempre: &quot;C&#39;è una variabile latente (confounder) che sta distorcendo la media?&quot;. Vi lascio un <a href="https://bookdown.org/mike/data_analysis/simpsons-paradox.html">modo per testarlo in R</a>.</p>
-<h3 id="32-il-churn-male-interpretato-e-il-selection-bias"><strong>3.2 Il &quot;Churn&quot; Male Interpretato e il Selection Bias</strong></h3>
+<h3 id="il-churn-male-interpretato-e-il-selection-bias">Il &quot;Churn&quot; Male Interpretato e il Selection Bias</h3>
 <p>Un altro classico errore operativo riguarda la metrica del <strong>Churn</strong>. Riportare un &quot;Churn Rate&quot; unico (es. 5%) è spesso fuorviante in ambito B2B Enterprise. Se l&#39;azienda perde 10 piccoli clienti che pagano 1k€ l&#39;anno, ma mantiene l&#39;unico cliente che ne paga 100k€, il <em>Customer Churn</em> sarà alto, ma il <em>Revenue Churn</em> sarà nullo o positivo (se c&#39;è upsell). Un report che non distingue tra <strong>Logo Churn</strong> e <strong>Revenue Churn</strong> (o Net Revenue Retention - NRR) crea allarmismo ingiustificato o falsa sicurezza.<a href="https://www.zendesk.com/blog/customer-churn-rate/">35</a><br>Inoltre, molti report soffrono di <strong>Selection Bias</strong> o <strong>Survivorship Bias</strong>. Analizzare la soddisfazione dei clienti basandosi solo sui ticket di supporto o sui sondaggi NPS (Net Promoter Score) introduce un bias enorme: stiamo ascoltando solo chi ha deciso di parlare o chi è rimasto cliente.<a href="https://www.omniconvert.com/what-is/selection-bias/">37</a> I clienti insoddisfatti che se ne sono andati silenziosamente sono invisibili nei dati. Un report rigoroso deve esplicitare questo caveat: &quot;L&#39;analisi riflette il sentiment dei clienti attivi e rispondenti, non della totalità della base utenti&quot;.</p>
 <h3 id="33-dashboard-senza-domanda-the-so-what-problem"><strong>3.3 Dashboard Senza Domanda (The &quot;So What?&quot; Problem)</strong></h3>
 <p>Il fallimento tipico delle dashboard operative è la mancanza di una domanda di business chiara. Una schermata piena di tachimetri, numeri e grafici scollegati fallisce il &quot;So What?&quot; test. L&#39;utente guarda i dati e chiede: &quot;Quindi? È un bene o un male? Cosa devo fare?&quot;. Ogni visualizzazione deve essere una risposta. Se mostriamo le vendite per regione, l&#39;ordinamento non deve essere alfabetico (che non risponde a nulla), ma decrescente per valore (risponde a &quot;Chi vende di più?&quot;) o per scostamento dal budget (risponde a &quot;Chi sta performando peggio delle attese?&quot;). L&#39;assenza di un ordinamento semantico è un errore di design che aumenta il carico cognitivo.<a href="https://nces.ed.gov/forum/pdf/nces_table_design.pdf">39</a></p>

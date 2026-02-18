@@ -1979,13 +1979,16 @@
         
         async function displayArticles() {
             const articles = await getArticles();
-            populateCategoryFilter(articles);
+            const visibleArticles = articles.filter(article => !article.hiddenFromHome && !article.hiddenFromIndex);
+            populateCategoryFilter(visibleArticles);
             const container = document.getElementById('articles-container');
             if (!container) return;
             
             container.innerHTML = '';
             
-            const decoratedArticles = articles.map((article, index) => ({ article, index }));
+            const decoratedArticles = articles
+                .map((article, index) => ({ article, index }))
+                .filter(item => !item.article.hiddenFromHome && !item.article.hiddenFromIndex);
             
             decoratedArticles.sort((a, b) => {
                 const dateA = Date.parse(a.article.date || '');
