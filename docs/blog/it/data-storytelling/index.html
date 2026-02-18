@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Data Storytelling | Mirko Calcaterra</title>
-  <meta name="description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…">
+  <meta name="description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…">
   <meta name="keywords" content="Data Storytelling, Data Visualization, Dashboard, Reporting, Decision Making, Mirko Calcaterra">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -23,7 +23,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/data-storytelling/">
   <meta property="og:title" content="Data Storytelling">
-  <meta property="og:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…">
+  <meta property="og:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-02-13T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -32,7 +32,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Data Storytelling">
-  <meta property="twitter:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…">
+  <meta property="twitter:description" content="Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -42,7 +42,7 @@
     "headline": "Data Storytelling",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-02-13T00:00:00.000Z",
-    "dateModified": "2026-02-16T17:39:46.664Z",
+    "dateModified": "2026-02-18T16:51:38.417Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Introduzione Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big D…"
+    "description": "Data Storytelling In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati. Notebook della masterclass Per chi vuole ho creato dei notebook con spiegazione del codice e output: Dat…"
   }
   </script>
 
@@ -940,32 +940,38 @@
         <div class="post-toc__content">
           <ul class="post-toc__list">
     <li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#introduzione">
+          <a class="post-toc__link" href="#notebook-della-masterclass">
             <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Notebook della masterclass</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#introduzione">
+            <span class="post-toc__number">2</span>
             <span class="post-toc__text">Introduzione</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#teoria-scienza-della-percezione">
-            <span class="post-toc__number">2</span>
+            <span class="post-toc__number">3</span>
             <span class="post-toc__text">Teoria: Scienza della percezione</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#la-teoria-del-carico-cognitivo-cognitive-load-theory">
-            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__number">3.1</span>
             <span class="post-toc__text">La teoria del carico cognitivo (Cognitive Load Theory)</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#gerarchia-della-percezione-grafica">
-            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__number">3.2</span>
             <span class="post-toc__text">Gerarchia della percezione grafica</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#attention-is-all-we-need">
-            <span class="post-toc__number">2.3</span>
+            <span class="post-toc__number">3.3</span>
             <span class="post-toc__text">Attention is all WE need</span>
           </a>
           
@@ -973,57 +979,63 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#come-strutturare-i-report-in-ambito-business">
-            <span class="post-toc__number">3</span>
+            <span class="post-toc__number">4</span>
             <span class="post-toc__text">Come strutturare i report in ambito business</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#the-pyramid-principle-minto-e-la-comunicazione-top-down">
-            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__number">4.1</span>
             <span class="post-toc__text">The Pyramid Principle (Minto) e la comunicazione Top-Down</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#22-il-framework-scqa">
-            <span class="post-toc__number">3.2</span>
-            <span class="post-toc__text">2.2 Il Framework SCQA</span>
+          <a class="post-toc__link" href="#il-framework-scqa">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Il Framework SCQA</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#23-amazon-6-pager-la-morte-delle-slide">
-            <span class="post-toc__number">3.3</span>
-            <span class="post-toc__text">**2.3 Amazon 6-Pager: La Morte delle Slide**</span>
+          <a class="post-toc__link" href="#amazon-6-pager-e-lo-slide-cidio">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">Amazon 6-Pager e lo &quot;slide-cidio&quot;</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#24-executive-summary-anatomia-della-sintesi">
-            <span class="post-toc__number">3.4</span>
-            <span class="post-toc__text">**2.4 Executive Summary: Anatomia della Sintesi**</span>
+          <a class="post-toc__link" href="#struttura-operativa-del-memo">
+            <span class="post-toc__number">4.4</span>
+            <span class="post-toc__text">Struttura operativa del Memo</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#executive-summary-larte-della-sintesi">
+            <span class="post-toc__number">4.5</span>
+            <span class="post-toc__text">Executive Summary: L&#39;arte della sintesi</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#3-patologie-dei-dati-errori-comuni-e-paradossi-statistici">
-            <span class="post-toc__number">4</span>
-            <span class="post-toc__text">**3\. Patologie dei Dati: Errori Comuni e Paradossi Statistici**</span>
+          <a class="post-toc__link" href="#errori-comuni-e-paradossi-statistici">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Errori comuni e paradossi statistici</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#31-il-paradosso-di-simpson-quando-laggregazione-mente">
-            <span class="post-toc__number">4.1</span>
-            <span class="post-toc__text">**3.1 Il Paradosso di Simpson: Quando l&#39;Aggregazione Mente**</span>
+          <a class="post-toc__link" href="#il-paradosso-di-simpson-quando-laggregazione-mente">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Il paradosso di Simpson: quando l&#39;aggregazione mente</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#32-il-churn-male-interpretato-e-il-selection-bias">
-            <span class="post-toc__number">4.2</span>
-            <span class="post-toc__text">**3.2 Il &quot;Churn&quot; Male Interpretato e il Selection Bias**</span>
+          <a class="post-toc__link" href="#il-churn-male-interpretato-e-il-selection-bias">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">Il &quot;Churn&quot; Male Interpretato e il Selection Bias</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#33-dashboard-senza-domanda-the-so-what-problem">
-            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__number">5.3</span>
             <span class="post-toc__text">**3.3 Dashboard Senza Domanda (The &quot;So What?&quot; Problem)**</span>
           </a>
           
@@ -1031,13 +1043,13 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#4-lai-come-editor-avversariale-non-decisore">
-            <span class="post-toc__number">5</span>
+            <span class="post-toc__number">6</span>
             <span class="post-toc__text">**4\. L&#39;AI come Editor Avversariale (Non Decisore)**</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#41-prompt-engineering-per-laudit-logico">
-            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__number">6.1</span>
             <span class="post-toc__text">**4.1 Prompt Engineering per l&#39;Audit Logico**</span>
           </a>
           
@@ -1045,13 +1057,13 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#5-showcase-trasformazione-di-un-report-prima-e-dopo">
-            <span class="post-toc__number">6</span>
+            <span class="post-toc__number">7</span>
             <span class="post-toc__text">**5\. Showcase: Trasformazione di un Report (Prima e Dopo)**</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#scenario-report-q3-sales-review">
-            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__number">7.1</span>
             <span class="post-toc__text">**Scenario: Report Q3 Sales Review**</span>
           </a>
           
@@ -1059,19 +1071,19 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#6-sezione-errori-tipici-checklist-di-controllo">
-            <span class="post-toc__number">7</span>
+            <span class="post-toc__number">8</span>
             <span class="post-toc__text">**6\. Sezione Errori Tipici (Checklist di Controllo)**</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#conclusioni-e-debrief">
-            <span class="post-toc__number">8</span>
+            <span class="post-toc__number">9</span>
             <span class="post-toc__text">**Conclusioni e Debrief**</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#bibliografia">
-            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__number">9.1</span>
             <span class="post-toc__text">**Bibliografia**</span>
           </a>
           
@@ -1083,6 +1095,12 @@
       </aside>
         <div class="post-body">
           <p>In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati.</p>
+<h2 id="notebook-della-masterclass">Notebook della masterclass</h2>
+<p>Per chi vuole ho creato dei notebook con spiegazione del codice e output:</p>
+<ul>
+<li><a href="../../../blog/it/datavis-masterclass-parte-1/">Data Visualization Masterclass - Parte 1</a></li>
+<li><a href="../../../blog/it/datavis-masterclass-parte-2/">Data Visualization Masterclass - Parte 2</a></li>
+</ul>
 <h2 id="introduzione">Introduzione</h2>
 <p>Nell&#39;attuale panorama aziendale, caratterizzato da un&#39;ipertrofia di dati (si parla di Big Data da anni ormai), le organizzazioni si trovano a fronteggiare un problema: </p>
 <blockquote>
@@ -1244,39 +1262,47 @@ che lega intensità percepita e intensità reale:</p>
 </blockquote>
 <p><img src="../../../Assets/pyramid_principle_dark.svg" alt="Pyramid Principle">
 *Schema del Pyramid Principle: dal vertice con il <strong>Lead (Governing Thought)</strong>, ai livelli di <strong>Key Lines</strong> e <strong>Support</strong>.*</p>
-<h3 id="22-il-framework-scqa">2.2 Il Framework SCQA</h3>
-<p>Ogni report efficace deve rispondere a una domanda che esiste, o dovrebbe esistere, nella mente del destinatario. Il modello <a href="https://modelthinkers.com/mental-model/minto-pyramid-scqa"><strong>SCQA (Situation, Complication, Question, Answer)</strong></a> è lo standard per definire l&#39;introduzione di un report o di una sezione.</p>
+<h3 id="il-framework-scqa">Il Framework SCQA</h3>
+<p>Ogni report efficace deve rispondere a una domanda che esiste, o dovrebbe esistere, nella mente del destinatario. Il modello <a href="https://modelthinkers.com/mental-model/minto-pyramid-scqa"><strong>SCQA (Situation, Complication, Question, Answer)</strong></a> è lo standard per definire l&#39;introduzione di un report. In questa parte devono essere presti i seguenti punti:</p>
 <ul>
 <li><strong>Situation (Situazione):</strong> Descrive lo stato delle cose noto e non controverso. Serve ad allineare tutti i lettori sul contesto di partenza (es. &quot;Nel Q3, il fatturato dell&#39;area EMEA è stato di 50M€, in linea con lo storico&quot;).  </li>
 <li><strong>Complication (Complicazione):</strong> Introduce l&#39;elemento di novità, il problema o l&#39;opportunità che altera la situazione e crea tensione (es. &quot;Tuttavia, il margine di contribuzione è sceso del 15% a causa dell&#39;aumento dei costi logistici non previsti&quot;).  </li>
 <li><strong>Question (Domanda):</strong> L&#39;interrogativo implicito che sorge dalla complicazione (es. &quot;Come possiamo recuperare la marginalità nel Q4 senza compromettere i volumi?&quot;).  </li>
-<li><strong>Answer (Risposta):</strong> La tesi del report, che coincide con la <em>Governing Thought</em> della Piramide (es. &quot;Raccomandiamo una revisione immediata delle tariffe di spedizione per gli ordini sotto i 50€ e lo spostamento del mix di vendita verso il prodotto Premium&quot;).</li>
+<li><strong>Answer (Risposta):</strong> Questo punto è la tesi del report, che coincide con la <em>Governing Thought</em> della Piramide. Deve essere semplice e chiara nell&#39;introduzione e ben definita nella conclusione (es. &quot;Raccomandiamo una revisione immediata delle tariffe di spedizione per gli ordini sotto i 50€ e lo spostamento del mix di vendita verso il prodotto Premium&quot;).</li>
 </ul>
-<p>Questa sequenza trasforma un insieme di dati freddi in una storia di business rilevante, agganciando l&#39;attenzione del lettore e giustificando l&#39;esistenza stessa del report.</p>
-<h3 id="23-amazon-6-pager-la-morte-delle-slide"><strong>2.3 Amazon 6-Pager: La Morte delle Slide</strong></h3>
-<p>Nel mondo tecnologico avanzato, le slide (PowerPoint) sono spesso viste come un veicolo di comunicazione &quot;a bassa risoluzione&quot;. Jeff Bezos ha notoriamente bandito PowerPoint dalle riunioni esecutive di Amazon a favore dei &quot;Narrative Memos&quot; di 6 pagine.<a href="https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7">23</a> La ragione è cognitiva: le liste puntate (bullet points) tipiche delle slide permettono di nascondere la debolezza del pensiero. È facile scrivere &quot;• Aumento costi&quot; e &quot;• Nuovo fornitore&quot; uno sotto l&#39;altro, lasciando ambigua la relazione causale. Scrivere frasi complete, con soggetto, verbo e predicato, costringe l&#39;autore a esplicitare il nesso: &quot;L&#39;aumento dei costi è stato <em>causato</em> dall&#39;onboarding del nuovo fornitore&quot;. Se la logica è fallace, la scrittura narrativa la espone impietosamente.<a href="https://medium.com/@info_14390/the-ultimate-guide-to-amazons-6-pager-memo-method-c4b683441593">25</a><br><strong>Struttura Operativa del Memo (Template Amazon adattato):</strong></p>
+<p>Questa sequenza ha come obiettivo quello di agganciare l&#39;attenzione del lettore e giustificare l&#39;esistenza stessa del report.</p>
+<h3 id="amazon-6-pager-e-lo-slide-cidio">Amazon 6-Pager e lo &quot;slide-cidio&quot;</h3>
+<p>Nel mondo business, le slide (PowerPoint) sono spesso viste come un veicolo di comunicazione &quot;a bassa risoluzione&quot;. <a href="https://www.cnbc.com/2019/10/14/jeff-bezos-this-is-the-smartest-thing-we-ever-did-at-amazon.html">Jeff Bezos</a> ha &quot;bandito PowerPoint&quot; dalle riunioni esecutive di Amazon a favore dei <a href="https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7">&quot;Narrative Memos&quot; di 6 pagine</a>. </p>
+<p>La ragione è totalmente cognitiva: le liste puntate (bullet points), tipiche delle slide, permettono di nascondere la debolezza del pensiero. Se scriviamo &quot;• Aumento costi&quot; e &quot;• Nuovo fornitore&quot; uno sotto l&#39;altro, lasciamo all&#39;interpretazione del lettore la relazione causale a meno che non venga esplicitata dall&#39;oratore. Resta il problema che. se l&#39;oratore non mette enfasi su quel punto, il nesso causale potrebbe passare in sordina. </p>
+<p>Dall&#39;altra parte, scrivere frasi complete, con soggetto, predicato e complemento oggetto, costringe l&#39;autore a esplicitare il nesso: &quot;L&#39;aumento dei costi è stato <em>causato</em> dall&#39;onboarding del nuovo fornitore&quot;. Se la logica è fallace, la scrittura narrativa la espone in modo palese.</p>
+<h3 id="struttura-operativa-del-memo">Struttura operativa del Memo</h3>
+<p>Quella che vediamo qui non è altro che una versione adattata del template di Amazon <a href="https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7">adattato</a>:</p>
 <ol>
-<li><strong>Introduction:</strong> Contesto e scopo del documento (usando SCQA).  </li>
-<li><strong>Goals:</strong> Obiettivi SMART e metriche di successo definite a priori.  </li>
-<li><strong>Tenets:</strong> Principi guida e assunzioni non negoziabili che orientano le decisioni.  </li>
-<li><strong>State of the Business:</strong> Analisi rigorosa dei dati attuali. Qui si usano i grafici (integrati nel testo, non allegati) per stabilire la baseline.  </li>
-<li><strong>Lessons Learned:</strong> Analisi retrospettiva di cosa ha funzionato e cosa no, basata sui dati.  </li>
-<li><strong>Strategic Priorities:</strong> Il piano d&#39;azione proposto per il futuro.  </li>
-<li><strong>Appendix:</strong> Tabelle dati grezzi, grafici supplementari e dettagli tecnici (non conta nel limite delle pagine).</li>
+<li><strong>Introduction:</strong> descrive il contesto (background) e l&#39;intenzione del report (i.e. usando SCQA).</li>
+<li><strong>Goals:</strong> definisce a priori le metriche principali per valutare le varie opzioni.</li>
+<li><strong>Tenets:</strong> elenca principi guida e assunzioni rilevanti e non negoziabili che orientano le decisioni.</li>
+<li><strong>State of the business:</strong> qui si descrive la situazione attuale (&quot;as-is&quot;) dell&#39;attività o del progetto. Tabelle e grafici a supporto conviene inserirli in appendice.</li>
+<li><strong>Lessons learned:</strong> analizza cosa è accaduto in passato e cosa si è imparato da tali eventi.</li>
+<li><strong>Strategic priorities:</strong> espone il piano dettagliato per raggiungere le metriche di successo descritte nella sezione &quot;Goals&quot;</li>
+<li><strong>Appendix:</strong> contiene dati aggiuntivi, tabelle, documenti di supporto e ulteriore contesto che non rientrano nel flusso narrativo principale</li>
 </ol>
-<p>Le riunioni in Amazon iniziano con 20-30 minuti di &quot;sala studio&quot; in silenzio, dove tutti leggono il memo. Solo dopo inizia la discussione. Questo livella il campo di gioco, assicura che tutti abbiano consumato i dati e alza drammaticamente la qualità del dibattito, spostandolo dalla comprensione dei fatti all&#39;interpretazione e decisione.<a href="https://www.appeq.ai/amazon-6-pager-customer-success-leadership">24</a></p>
-<h3 id="24-executive-summary-anatomia-della-sintesi"><strong>2.4 Executive Summary: Anatomia della Sintesi</strong></h3>
-<p>L&#39;Executive Summary è spesso la parte più letta e peggio scritta. Non deve essere un &quot;teaser&quot; (&quot;in questo report vedremo...&quot;), ma uno spoiler completo. Deve poter sostituire l&#39;intero documento.<br>Una struttura efficace per l&#39;Executive Summary di un report di Data Science deve contenere quattro elementi chiave:</p>
+<p>Le riunioni in Amazon iniziano con 20-30 minuti di &quot;sala studio&quot; in silenzio, dove tutti leggono il memo. Solo dopo inizia la discussione. Questo livella il campo di gioco, assicura che tutti abbiano consumato i dati e alza drammaticamente la qualità del dibattito, spostandolo dalla comprensione dei fatti all&#39;interpretazione e decisione.</p>
+<h3 id="executive-summary-larte-della-sintesi">Executive Summary: L&#39;arte della sintesi</h3>
+<p>Se stai leggendo questo articolo e sei arrivato a questo punto, penso che tu ti sia trovato spesso a leggere paper o blog post lunghi. Sono altrettanto certo che, soprattutto per i paper, per decidere se scartare o leggere quel documento, ti basi soprattutto sull&#39;Executive Summary.</p>
+<p>L&#39;Executive Summary è spesso, infatti, la parte più letta e non sempre è quella meglio scritta. Non deve essere un &quot;teaser&quot; (&quot;in questo report vedremo...&quot;), ma deve essere uno spoiler completo. Deve poter sostituire l&#39;intero documento.  </p>
+<p>Una struttura efficace per l&#39;Executive Summary di un report di Data Science deve contenere <a href="https://www.diligent.com/resources/blog/executive-summary-report">quattro elementi chiave</a>:</p>
 <ol>
-<li><strong>Claim (Tesi):</strong> La conclusione principale.  </li>
-<li><strong>Evidence (Prova):</strong> Il dato statistico più forte che supporta la tesi (non tutti i dati, solo il &quot;killer stat&quot;).  </li>
-<li><strong>Caveat (Rischi/Limiti):</strong> Onestà intellettuale sui limiti dell&#39;analisi (es. &quot;Dati limitati al mercato US&quot;, &quot;Confidenza del modello al 85%&quot;). Questo aumenta la credibilità dell&#39;autore.  </li>
-<li><strong>Next Steps (Azione):</strong> Cosa si richiede al decisore (approvazione, budget, presa d&#39;atto).<a href="https://www.diligent.com/resources/blog/executive-summary-report">28</a></li>
+<li><strong>Claim (Tesi):</strong> la conclusione principale. La tesi del report e dove volete andare a parare, sfruttando tutti i dati necessari. </li>
+<li><strong>Evidence (Prova):</strong> quel risultato statistico &quot;game changing&quot; che supporta al 100% la tesi. Attenzione non tutti i dati, ma solo il &quot;killer stat&quot;, ovvero quello più forte.</li>
+<li><strong>Caveat (Rischi/Limiti):</strong> qui si deve Onestà intellettuale sui limiti dell&#39;analisi (es. &quot;Dati limitati al mercato US&quot;, &quot;Confidenza del modello al 85%&quot;). Questo aumenta la credibilità dell&#39;autore.  </li>
+<li><strong>Next Steps (Azione):</strong> Cosa si richiede al decisore (approvazione, budget, presa d&#39;atto).</li>
 </ol>
-<h2 id="3-patologie-dei-dati-errori-comuni-e-paradossi-statistici"><strong>3. Patologie dei Dati: Errori Comuni e Paradossi Statistici</strong></h2>
+<h2 id="errori-comuni-e-paradossi-statistici">Errori comuni e paradossi statistici</h2>
 <p>L&#39;applicazione del Data Storytelling funge da meccanismo di controllo qualità (Quality Assurance). Tentando di costruire una narrazione causale, spesso emergono errori interpretativi che in una semplice tabella passerebbero inosservati.</p>
-<h3 id="31-il-paradosso-di-simpson-quando-laggregazione-mente"><strong>3.1 Il Paradosso di Simpson: Quando l&#39;Aggregazione Mente</strong></h3>
-<p>Uno degli errori più pericolosi nel reporting aggregato è il <strong>Paradosso di Simpson</strong>. Si verifica quando un trend appare in diversi gruppi di dati ma scompare o si inverte quando questi gruppi vengono combinati.<a href="https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions">30</a> Questo paradosso è frequente nel marketing e nelle vendite e può portare a decisioni opposte alla realtà.<br><strong>Esempio Concreto: Performance Campagne Marketing</strong><br>Immaginiamo di dover decidere quale tra due campagne (A e B) mantenere attiva, basandoci sul Conversion Rate (CR).</p>
+<h3 id="il-paradosso-di-simpson-quando-laggregazione-mente">Il paradosso di Simpson: quando l&#39;aggregazione mente</h3>
+<p>Uno degli errori più pericolosi nel reporting aggregato è il <strong>Paradosso di Simpson</strong>. Si verifica quando un trend appare in diversi gruppi di dati ma scompare o si inverte quando questi gruppi vengono combinati. Questo paradosso è frequente nel marketing e nelle vendite e può portare a decisioni opposte alla realtà.  </p>
+<p>Vediamo con un esempio che ho trovato in <a href="https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions">questo blog</a> di performance marketing e che rende molto l&#39;idea.</p>
+<p>Immaginiamo di dover decidere quale tra due campagne (A e B) mantenere attiva, basandoci sul Conversion Rate (CR).</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
@@ -1302,7 +1328,8 @@ che lega intensità percepita e intensità reale:</p>
 <td align="left">PERDENTE</td>
 </tr>
 </tbody></table>
-</div></figure><p>Guardando il dato aggregato, la Campagna A sembra nettamente superiore (18,4% vs 13,6%). Un manager deciderebbe di tagliare la B.<br>Tuttavia, disaggregando i dati per segmento di cliente (High Value vs Low Value), emerge una realtà diversa:</p>
+</div></figure><p>Guardando il dato aggregato, la Campagna A sembra nettamente superiore (18,4% vs 13,6%). Un manager deciderebbe di tagliare la B.  </p>
+<p>Tuttavia, disaggregando i dati per segmento di cliente (High Value vs Low Value), emerge una realtà diversa e interessante:</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
@@ -1325,8 +1352,13 @@ che lega intensità percepita e intensità reale:</p>
 <td align="left"><strong>Campagna B</strong></td>
 </tr>
 </tbody></table>
-</div></figure><p>La Campagna B è superiore <em>in entrambi</em> i segmenti presi singolarmente! Perché il totale dice il contrario? Perché la Campagna A ha avuto la &quot;fortuna&quot; di avere una percentuale maggiore di traffico dal segmento <em>High Value</em> (che converte naturalmente molto di più), mentre la Campagna B è stata penalizzata ricevendo la gran parte del traffico dal segmento <em>Low Value</em>. Questo è un problema di &quot;Mix Effects&quot;.<a href="https://research.google.com/pubs/archive/42901.pdf">31</a> Senza questa disaggregazione narrativa, il report avrebbe portato a cancellare la campagna tecnicamente più performante (la B). Il Data Storytelling rigoroso impone di chiedersi sempre: &quot;C&#39;è una variabile latente (confounder) che sta distorcendo la media?&quot;.<a href="https://bookdown.org/mike/data_analysis/simpsons-paradox.html">33</a></p>
-<h3 id="32-il-churn-male-interpretato-e-il-selection-bias"><strong>3.2 Il &quot;Churn&quot; Male Interpretato e il Selection Bias</strong></h3>
+</div></figure><p>La Campagna B è superiore <em>in entrambi</em> i segmenti presi singolarmente! Ma nasce spontanea una domanda:</p>
+<blockquote>
+<p>Perché il totale dice il contrario? </p>
+</blockquote>
+<p>Perché la Campagna A ha avuto la &quot;fortuna&quot; di avere una percentuale maggiore di traffico dal segmento <em>High Value</em> (che converte naturalmente molto di più), mentre la Campagna B è stata penalizzata ricevendo la gran parte del traffico dal segmento <em>Low Value</em>. </p>
+<p>Questo è un problema di <a href="https://research.google.com/pubs/archive/42901.pdf">&quot;Mix Effects&quot;</a>. Senza questa disaggregazione narrativa, il report avrebbe portato a cancellare la campagna tecnicamente più performante (la B). Il Data Storytelling rigoroso impone di chiedersi sempre: &quot;C&#39;è una variabile latente (confounder) che sta distorcendo la media?&quot;. Vi lascio un <a href="https://bookdown.org/mike/data_analysis/simpsons-paradox.html">modo per testarlo in R</a>.</p>
+<h3 id="il-churn-male-interpretato-e-il-selection-bias">Il &quot;Churn&quot; Male Interpretato e il Selection Bias</h3>
 <p>Un altro classico errore operativo riguarda la metrica del <strong>Churn</strong>. Riportare un &quot;Churn Rate&quot; unico (es. 5%) è spesso fuorviante in ambito B2B Enterprise. Se l&#39;azienda perde 10 piccoli clienti che pagano 1k€ l&#39;anno, ma mantiene l&#39;unico cliente che ne paga 100k€, il <em>Customer Churn</em> sarà alto, ma il <em>Revenue Churn</em> sarà nullo o positivo (se c&#39;è upsell). Un report che non distingue tra <strong>Logo Churn</strong> e <strong>Revenue Churn</strong> (o Net Revenue Retention - NRR) crea allarmismo ingiustificato o falsa sicurezza.<a href="https://www.zendesk.com/blog/customer-churn-rate/">35</a><br>Inoltre, molti report soffrono di <strong>Selection Bias</strong> o <strong>Survivorship Bias</strong>. Analizzare la soddisfazione dei clienti basandosi solo sui ticket di supporto o sui sondaggi NPS (Net Promoter Score) introduce un bias enorme: stiamo ascoltando solo chi ha deciso di parlare o chi è rimasto cliente.<a href="https://www.omniconvert.com/what-is/selection-bias/">37</a> I clienti insoddisfatti che se ne sono andati silenziosamente sono invisibili nei dati. Un report rigoroso deve esplicitare questo caveat: &quot;L&#39;analisi riflette il sentiment dei clienti attivi e rispondenti, non della totalità della base utenti&quot;.</p>
 <h3 id="33-dashboard-senza-domanda-the-so-what-problem"><strong>3.3 Dashboard Senza Domanda (The &quot;So What?&quot; Problem)</strong></h3>
 <p>Il fallimento tipico delle dashboard operative è la mancanza di una domanda di business chiara. Una schermata piena di tachimetri, numeri e grafici scollegati fallisce il &quot;So What?&quot; test. L&#39;utente guarda i dati e chiede: &quot;Quindi? È un bene o un male? Cosa devo fare?&quot;. Ogni visualizzazione deve essere una risposta. Se mostriamo le vendite per regione, l&#39;ordinamento non deve essere alfabetico (che non risponde a nulla), ma decrescente per valore (risponde a &quot;Chi vende di più?&quot;) o per scostamento dal budget (risponde a &quot;Chi sta performando peggio delle attese?&quot;). L&#39;assenza di un ordinamento semantico è un errore di design che aumenta il carico cognitivo.<a href="https://nces.ed.gov/forum/pdf/nces_table_design.pdf">39</a></p>

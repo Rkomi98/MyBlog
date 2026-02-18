@@ -88,6 +88,9 @@ function mergeMetadata(posts, metadata) {
     };
     const titles = matchedEntry?.titles ?? {};
     const keywords = matchedEntry?.keywords ?? '';
+    const hiddenFromIndex = Boolean(matchedEntry?.hiddenFromIndex);
+    const hiddenFromHome = Boolean(matchedEntry?.hiddenFromHome);
+    const showTocNumbers = matchedEntry?.showTocNumbers !== false;
 
     for (const [lang, langData] of Object.entries(post.languages)) {
       const overrideTitle = titles[lang];
@@ -115,6 +118,9 @@ function mergeMetadata(posts, metadata) {
       readTime,
       titles,
       keywords,
+      hiddenFromIndex,
+      hiddenFromHome,
+      showTocNumbers,
     };
   }
 
@@ -148,6 +154,8 @@ async function writeManifest(posts, outputDir) {
       icon: post.meta?.icon ?? null,
       category: post.meta?.category ?? null,
       categoryLabels: post.meta?.categoryLabels ?? null,
+      hiddenFromIndex: post.meta?.hiddenFromIndex ?? false,
+      hiddenFromHome: post.meta?.hiddenFromHome ?? false,
       languages,
     };
   });

@@ -1,6 +1,13 @@
 # Data Storytelling
 In questo articolo ho voluto approfondire alcuni principi che stanno alla base della data visualization e del modo di comunicare i dati.
 
+## Notebook della masterclass
+
+Per chi vuole ho creato dei notebook con spiegazione del codice e output:
+
+- [Data Visualization Masterclass - Parte 1](/blog/it/datavis-masterclass-parte-1/)
+- [Data Visualization Masterclass - Parte 2](/blog/it/datavis-masterclass-parte-2/)
+
 ## Introduzione
 
 Nell'attuale panorama aziendale, caratterizzato da un'ipertrofia di dati (si parla di Big Data da anni ormai), le organizzazioni si trovano a fronteggiare un problema: 
@@ -165,50 +172,59 @@ In questo modo si efficienta la narrativa: chi ascolta o legge comprende immedia
 ![Pyramid Principle](Assets/pyramid_principle_dark.svg)
 *Schema del Pyramid Principle: dal vertice con il **Lead (Governing Thought)**, ai livelli di **Key Lines** e **Support**.*
 
-### 2.2 Il Framework SCQA
+### Il Framework SCQA
 
-Ogni report efficace deve rispondere a una domanda che esiste, o dovrebbe esistere, nella mente del destinatario. Il modello [**SCQA (Situation, Complication, Question, Answer)**](https://modelthinkers.com/mental-model/minto-pyramid-scqa) è lo standard per definire l'introduzione di un report o di una sezione.
-
+Ogni report efficace deve rispondere a una domanda che esiste, o dovrebbe esistere, nella mente del destinatario. Il modello [**SCQA (Situation, Complication, Question, Answer)**](https://modelthinkers.com/mental-model/minto-pyramid-scqa) è lo standard per definire l'introduzione di un report. In questa parte devono essere presti i seguenti punti:
 * **Situation (Situazione):** Descrive lo stato delle cose noto e non controverso. Serve ad allineare tutti i lettori sul contesto di partenza (es. "Nel Q3, il fatturato dell'area EMEA è stato di 50M€, in linea con lo storico").  
 * **Complication (Complicazione):** Introduce l'elemento di novità, il problema o l'opportunità che altera la situazione e crea tensione (es. "Tuttavia, il margine di contribuzione è sceso del 15% a causa dell'aumento dei costi logistici non previsti").  
 * **Question (Domanda):** L'interrogativo implicito che sorge dalla complicazione (es. "Come possiamo recuperare la marginalità nel Q4 senza compromettere i volumi?").  
-* **Answer (Risposta):** La tesi del report, che coincide con la *Governing Thought* della Piramide (es. "Raccomandiamo una revisione immediata delle tariffe di spedizione per gli ordini sotto i 50€ e lo spostamento del mix di vendita verso il prodotto Premium").
+* **Answer (Risposta):** Questo punto è la tesi del report, che coincide con la *Governing Thought* della Piramide. Deve essere semplice e chiara nell'introduzione e ben definita nella conclusione (es. "Raccomandiamo una revisione immediata delle tariffe di spedizione per gli ordini sotto i 50€ e lo spostamento del mix di vendita verso il prodotto Premium").
 
-Questa sequenza trasforma un insieme di dati freddi in una storia di business rilevante, agganciando l'attenzione del lettore e giustificando l'esistenza stessa del report.
+Questa sequenza ha come obiettivo quello di agganciare l'attenzione del lettore e giustificare l'esistenza stessa del report.
 
-### **2.3 Amazon 6-Pager: La Morte delle Slide**
+### Amazon 6-Pager e lo "slide-cidio"
 
-Nel mondo tecnologico avanzato, le slide (PowerPoint) sono spesso viste come un veicolo di comunicazione "a bassa risoluzione". Jeff Bezos ha notoriamente bandito PowerPoint dalle riunioni esecutive di Amazon a favore dei "Narrative Memos" di 6 pagine.[23](https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7) La ragione è cognitiva: le liste puntate (bullet points) tipiche delle slide permettono di nascondere la debolezza del pensiero. È facile scrivere "• Aumento costi" e "• Nuovo fornitore" uno sotto l'altro, lasciando ambigua la relazione causale. Scrivere frasi complete, con soggetto, verbo e predicato, costringe l'autore a esplicitare il nesso: "L'aumento dei costi è stato *causato* dall'onboarding del nuovo fornitore". Se la logica è fallace, la scrittura narrativa la espone impietosamente.[25](https://medium.com/@info_14390/the-ultimate-guide-to-amazons-6-pager-memo-method-c4b683441593)  
-**Struttura Operativa del Memo (Template Amazon adattato):**
+Nel mondo business, le slide (PowerPoint) sono spesso viste come un veicolo di comunicazione "a bassa risoluzione". [Jeff Bezos](https://www.cnbc.com/2019/10/14/jeff-bezos-this-is-the-smartest-thing-we-ever-did-at-amazon.html) ha "bandito PowerPoint" dalle riunioni esecutive di Amazon a favore dei ["Narrative Memos" di 6 pagine](https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7). 
 
-1. **Introduction:** Contesto e scopo del documento (usando SCQA).  
-2. **Goals:** Obiettivi SMART e metriche di successo definite a priori.  
-3. **Tenets:** Principi guida e assunzioni non negoziabili che orientano le decisioni.  
-4. **State of the Business:** Analisi rigorosa dei dati attuali. Qui si usano i grafici (integrati nel testo, non allegati) per stabilire la baseline.  
-5. **Lessons Learned:** Analisi retrospettiva di cosa ha funzionato e cosa no, basata sui dati.  
-6. **Strategic Priorities:** Il piano d'azione proposto per il futuro.  
-7. **Appendix:** Tabelle dati grezzi, grafici supplementari e dettagli tecnici (non conta nel limite delle pagine).
+La ragione è totalmente cognitiva: le liste puntate (bullet points), tipiche delle slide, permettono di nascondere la debolezza del pensiero. Se scriviamo "• Aumento costi" e "• Nuovo fornitore" uno sotto l'altro, lasciamo all'interpretazione del lettore la relazione causale a meno che non venga esplicitata dall'oratore. Resta il problema che. se l'oratore non mette enfasi su quel punto, il nesso causale potrebbe passare in sordina. 
 
-Le riunioni in Amazon iniziano con 20-30 minuti di "sala studio" in silenzio, dove tutti leggono il memo. Solo dopo inizia la discussione. Questo livella il campo di gioco, assicura che tutti abbiano consumato i dati e alza drammaticamente la qualità del dibattito, spostandolo dalla comprensione dei fatti all'interpretazione e decisione.[24](https://www.appeq.ai/amazon-6-pager-customer-success-leadership)
+Dall'altra parte, scrivere frasi complete, con soggetto, predicato e complemento oggetto, costringe l'autore a esplicitare il nesso: "L'aumento dei costi è stato *causato* dall'onboarding del nuovo fornitore". Se la logica è fallace, la scrittura narrativa la espone in modo palese.
 
-### **2.4 Executive Summary: Anatomia della Sintesi**
+### Struttura operativa del Memo
+Quella che vediamo qui non è altro che una versione adattata del template di Amazon [adattato](https://medium.com/@info_14390/the-amazon-6-pager-memo-better-than-powerpoint-c2a63835b8a7):
 
-L'Executive Summary è spesso la parte più letta e peggio scritta. Non deve essere un "teaser" ("in questo report vedremo..."), ma uno spoiler completo. Deve poter sostituire l'intero documento.  
-Una struttura efficace per l'Executive Summary di un report di Data Science deve contenere quattro elementi chiave:
+1. **Introduction:** descrive il contesto (background) e l'intenzione del report (i.e. usando SCQA).
+2. **Goals:** definisce a priori le metriche principali per valutare le varie opzioni.
+3. **Tenets:** elenca principi guida e assunzioni rilevanti e non negoziabili che orientano le decisioni.
+4. **State of the business:** qui si descrive la situazione attuale ("as-is") dell'attività o del progetto. Tabelle e grafici a supporto conviene inserirli in appendice.
+5. **Lessons learned:** analizza cosa è accaduto in passato e cosa si è imparato da tali eventi.
+6. **Strategic priorities:** espone il piano dettagliato per raggiungere le metriche di successo descritte nella sezione "Goals"
+7. **Appendix:** contiene dati aggiuntivi, tabelle, documenti di supporto e ulteriore contesto che non rientrano nel flusso narrativo principale
 
-1. **Claim (Tesi):** La conclusione principale.  
-2. **Evidence (Prova):** Il dato statistico più forte che supporta la tesi (non tutti i dati, solo il "killer stat").  
-3. **Caveat (Rischi/Limiti):** Onestà intellettuale sui limiti dell'analisi (es. "Dati limitati al mercato US", "Confidenza del modello al 85%"). Questo aumenta la credibilità dell'autore.  
-4. **Next Steps (Azione):** Cosa si richiede al decisore (approvazione, budget, presa d'atto).[28](https://www.diligent.com/resources/blog/executive-summary-report)
+Le riunioni in Amazon iniziano con 20-30 minuti di "sala studio" in silenzio, dove tutti leggono il memo. Solo dopo inizia la discussione. Questo livella il campo di gioco, assicura che tutti abbiano consumato i dati e alza drammaticamente la qualità del dibattito, spostandolo dalla comprensione dei fatti all'interpretazione e decisione.
 
-## **3\. Patologie dei Dati: Errori Comuni e Paradossi Statistici**
+### Executive Summary: L'arte della sintesi
+
+Se stai leggendo questo articolo e sei arrivato a questo punto, penso che tu ti sia trovato spesso a leggere paper o blog post lunghi. Sono altrettanto certo che, soprattutto per i paper, per decidere se scartare o leggere quel documento, ti basi soprattutto sull'Executive Summary.
+
+L'Executive Summary è spesso, infatti, la parte più letta e non sempre è quella meglio scritta. Non deve essere un "teaser" ("in questo report vedremo..."), ma deve essere uno spoiler completo. Deve poter sostituire l'intero documento.  
+
+Una struttura efficace per l'Executive Summary di un report di Data Science deve contenere [quattro elementi chiave](https://www.diligent.com/resources/blog/executive-summary-report):
+1. **Claim (Tesi):** la conclusione principale. La tesi del report e dove volete andare a parare, sfruttando tutti i dati necessari. 
+2. **Evidence (Prova):** quel risultato statistico "game changing" che supporta al 100% la tesi. Attenzione non tutti i dati, ma solo il "killer stat", ovvero quello più forte.
+3. **Caveat (Rischi/Limiti):** qui si deve Onestà intellettuale sui limiti dell'analisi (es. "Dati limitati al mercato US", "Confidenza del modello al 85%"). Questo aumenta la credibilità dell'autore.  
+4. **Next Steps (Azione):** Cosa si richiede al decisore (approvazione, budget, presa d'atto).
+
+## Errori comuni e paradossi statistici
 
 L'applicazione del Data Storytelling funge da meccanismo di controllo qualità (Quality Assurance). Tentando di costruire una narrazione causale, spesso emergono errori interpretativi che in una semplice tabella passerebbero inosservati.
 
-### **3.1 Il Paradosso di Simpson: Quando l'Aggregazione Mente**
+### Il paradosso di Simpson: quando l'aggregazione mente
 
-Uno degli errori più pericolosi nel reporting aggregato è il **Paradosso di Simpson**. Si verifica quando un trend appare in diversi gruppi di dati ma scompare o si inverte quando questi gruppi vengono combinati.[30](https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions) Questo paradosso è frequente nel marketing e nelle vendite e può portare a decisioni opposte alla realtà.  
-**Esempio Concreto: Performance Campagne Marketing**  
+Uno degli errori più pericolosi nel reporting aggregato è il **Paradosso di Simpson**. Si verifica quando un trend appare in diversi gruppi di dati ma scompare o si inverte quando questi gruppi vengono combinati. Questo paradosso è frequente nel marketing e nelle vendite e può portare a decisioni opposte alla realtà.  
+
+Vediamo con un esempio che ho trovato in [questo blog](https://www.revlitix.com/blog/simpsons-paradox-for-marketing-analysts-a-guide-to-avoiding-the-road-to-distorted-assumptions) di performance marketing e che rende molto l'idea.
+
 Immaginiamo di dover decidere quale tra due campagne (A e B) mantenere attiva, basandoci sul Conversion Rate (CR).
 
 | Campagna | Visite Totali | Conversioni Totali | Conversion Rate (CR) | Decisione Apparente |
@@ -217,16 +233,22 @@ Immaginiamo di dover decidere quale tra due campagne (A e B) mantenere attiva, b
 | **Campagna B** | 3300 | 450 | 13,6% | PERDENTE |
 
 Guardando il dato aggregato, la Campagna A sembra nettamente superiore (18,4% vs 13,6%). Un manager deciderebbe di tagliare la B.  
-Tuttavia, disaggregando i dati per segmento di cliente (High Value vs Low Value), emerge una realtà diversa:
+
+Tuttavia, disaggregando i dati per segmento di cliente (High Value vs Low Value), emerge una realtà diversa e interessante:
 
 | Segmento | Campagna A (CR) | Campagna B (CR) | Vincitore Reale |
 | :---- | :---- | :---- | :---- |
 | **High Value** (Alta propensione) | 58,0% (290/500) | **60,0%** (180/300) | **Campagna B** |
 | **Low Value** (Bassa propensione) | 8,5% (170/2000) | **9,0%** (270/3000) | **Campagna B** |
 
-La Campagna B è superiore *in entrambi* i segmenti presi singolarmente\! Perché il totale dice il contrario? Perché la Campagna A ha avuto la "fortuna" di avere una percentuale maggiore di traffico dal segmento *High Value* (che converte naturalmente molto di più), mentre la Campagna B è stata penalizzata ricevendo la gran parte del traffico dal segmento *Low Value*. Questo è un problema di "Mix Effects".[31](https://research.google.com/pubs/archive/42901.pdf) Senza questa disaggregazione narrativa, il report avrebbe portato a cancellare la campagna tecnicamente più performante (la B). Il Data Storytelling rigoroso impone di chiedersi sempre: "C'è una variabile latente (confounder) che sta distorcendo la media?".[33](https://bookdown.org/mike/data_analysis/simpsons-paradox.html)
+La Campagna B è superiore *in entrambi* i segmenti presi singolarmente! Ma nasce spontanea una domanda:
+> Perché il totale dice il contrario? 
 
-### **3.2 Il "Churn" Male Interpretato e il Selection Bias**
+Perché la Campagna A ha avuto la "fortuna" di avere una percentuale maggiore di traffico dal segmento *High Value* (che converte naturalmente molto di più), mentre la Campagna B è stata penalizzata ricevendo la gran parte del traffico dal segmento *Low Value*. 
+
+Questo è un problema di ["Mix Effects"](https://research.google.com/pubs/archive/42901.pdf). Senza questa disaggregazione narrativa, il report avrebbe portato a cancellare la campagna tecnicamente più performante (la B). Il Data Storytelling rigoroso impone di chiedersi sempre: "C'è una variabile latente (confounder) che sta distorcendo la media?". Vi lascio un [modo per testarlo in R](https://bookdown.org/mike/data_analysis/simpsons-paradox.html).
+
+### Il "Churn" Male Interpretato e il Selection Bias
 
 Un altro classico errore operativo riguarda la metrica del **Churn**. Riportare un "Churn Rate" unico (es. 5%) è spesso fuorviante in ambito B2B Enterprise. Se l'azienda perde 10 piccoli clienti che pagano 1k€ l'anno, ma mantiene l'unico cliente che ne paga 100k€, il *Customer Churn* sarà alto, ma il *Revenue Churn* sarà nullo o positivo (se c'è upsell). Un report che non distingue tra **Logo Churn** e **Revenue Churn** (o Net Revenue Retention \- NRR) crea allarmismo ingiustificato o falsa sicurezza.[35](https://www.zendesk.com/blog/customer-churn-rate/)  
 Inoltre, molti report soffrono di **Selection Bias** o **Survivorship Bias**. Analizzare la soddisfazione dei clienti basandosi solo sui ticket di supporto o sui sondaggi NPS (Net Promoter Score) introduce un bias enorme: stiamo ascoltando solo chi ha deciso di parlare o chi è rimasto cliente.[37](https://www.omniconvert.com/what-is/selection-bias/) I clienti insoddisfatti che se ne sono andati silenziosamente sono invisibili nei dati. Un report rigoroso deve esplicitare questo caveat: "L'analisi riflette il sentiment dei clienti attivi e rispondenti, non della totalità della base utenti".

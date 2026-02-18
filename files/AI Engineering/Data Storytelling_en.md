@@ -1,6 +1,13 @@
 # Data Storytelling
 In this article, I wanted to delve into some principles that underpin data visualization and the way data is communicated.
 
+## Masterclass notebooks
+
+If you want practical notebook examples published as blog pages:
+
+- [Data Visualization Masterclass - Part 1](/blog/en/datavis-masterclass-parte-1/)
+- [Data Visualization Masterclass - Part 2](/blog/en/datavis-masterclass-parte-2/)
+
 ## Introduction
 
 In the current business landscape, characterized by a hypertrophy of data (Big Data has been a topic for years now), organizations face a problem:

@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Visualization Masterclass - Part 2 | Mirko Calcaterra</title>
+  <meta name="description" content="📊 Data Visualization Masterclass — Parte 2 Vedremo come Scegliere il grafico giusto, trasformare i dati e altre tecniche Avanzate Contesto: Notebook didattico creato la classe avanzata di Data Analysis per Mondadori. Prerequisito: Aver completato la Parte 1…">
+  <meta name="keywords" content="Data Visualization, Notebook, Data Storytelling, Masterclass, Python, Dashboard Design, Slope Chart, Waterfall, Waffle">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/datavis-masterclass-parte-2/">
+  <meta property="og:title" content="Data Visualization Masterclass - Part 2">
+  <meta property="og:description" content="📊 Data Visualization Masterclass — Parte 2 Vedremo come Scegliere il grafico giusto, trasformare i dati e altre tecniche Avanzate Contesto: Notebook didattico creato la classe avanzata di Data Analysis per Mondadori. Prerequisito: Aver completato la Parte 1…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-02-18T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="AI Engineering Path">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Data Visualization Masterclass - Part 2">
+  <meta property="twitter:description" content="📊 Data Visualization Masterclass — Parte 2 Vedremo come Scegliere il grafico giusto, trasformare i dati e altre tecniche Avanzate Contesto: Notebook didattico creato la classe avanzata di Data Analysis per Mondadori. Prerequisito: Aver completato la Parte 1…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Data Visualization Masterclass - Part 2",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-02-18T00:00:00.000Z",
+    "dateModified": "2026-02-18T16:48:27.684Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "📊 Data Visualization Masterclass — Parte 2 Vedremo come Scegliere il grafico giusto, trasformare i dati e altre tecniche Avanzate Contesto: Notebook didattico creato la classe avanzata di Data Analysis per Mondadori. Prerequisito: Aver completato la Parte 1…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+      --code-inline-bg: rgba(6, 11, 19, 0.92);
+      --code-block-bg: #050912;
+      --code-border: rgba(148, 163, 184, 0.35);
+      --code-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      --code-text: #f8fafc;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--code-text);
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .post-body pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .post-body pre {
+      background: var(--code-block-bg);
+      color: var(--code-text);
+      padding: 1.2rem 1.4rem;
+      padding-right: 3.6rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: var(--code-shadow);
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      position: relative;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      background: rgba(96, 165, 250, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .code-copy-btn__icon {
+      font-size: 0.95rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      background: rgba(248, 250, 252, 0.85);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.92);
+      color: #ffffff;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(37, 99, 235, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">📓</div>
+        <span class="post-hero__category">AI Engineering Path</span>
+        <h1 class="post-hero__title">Data Visualization Masterclass - Part 2</h1>
+        <div class="post-hero__meta">
+          <span>📅 February 18, 2026</span>
+          <span>⏱️ 16 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#i-5-obiettivi-comunicativi">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">I 5 obiettivi comunicativi</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#scenari-editoriali">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Scenari editoriali</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#log-scale">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Log scale</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#moving-average">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Moving average</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#variazione-mom-vs-yoy">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Variazione %: MoM vs YoY</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#binning">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">Binning</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#slope-chart-il-prima-e-dopo">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">Slope Chart: il prima e dopo</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#bump-chart-evoluzione-del-ranking">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">Bump Chart: evoluzione del ranking</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#waterfall-chart-decomporre-il-cambiamento">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">Waterfall Chart: decomporre il cambiamento</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#waffle-chart-un-altro-dolce-per-le-composizioni">
+            <span class="post-toc__number">10</span>
+            <span class="post-toc__text">Waffle Chart: un altro dolce per le composizioni</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#il-brief">
+            <span class="post-toc__number">11</span>
+            <span class="post-toc__text">Il Brief</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#la-piramide">
+            <span class="post-toc__number">12</span>
+            <span class="post-toc__text">La Piramide</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#le-4-slide">
+            <span class="post-toc__number">12.1</span>
+            <span class="post-toc__text">Le 4 Slide</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#le-basi">
+            <span class="post-toc__number">13</span>
+            <span class="post-toc__text">Le basi</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#la-pratica">
+            <span class="post-toc__number">14</span>
+            <span class="post-toc__text">La pratica</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#la-regola-doro">
+            <span class="post-toc__number">15</span>
+            <span class="post-toc__text">La regola d&#39;oro</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#risorse">
+            <span class="post-toc__number">16</span>
+            <span class="post-toc__text">Risorse</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <p>Vedremo come Scegliere il grafico giusto, trasformare i dati e altre tecniche Avanzate</p>
+<p><strong>Contesto:</strong> Notebook didattico creato la classe avanzata di Data Analysis per Mondadori.
+<strong>Prerequisito:</strong> Aver completato la Parte 1
+<strong>Dataset:</strong> Stesso dataset editoriale della Parte 1</p>
+<hr>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Contenuto</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>8</strong></td>
+<td>La matrice decisionale: quale grafico per quale obiettivo</td>
+</tr>
+<tr>
+<td><strong>9</strong></td>
+<td>Trasformazione dei dati per la visualizzazione</td>
+</tr>
+<tr>
+<td><strong>10</strong></td>
+<td>Grafici avanzati: Slope, Bump, Dumbbell, Waterfall, Waffle</td>
+</tr>
+<tr>
+<td><strong>11</strong></td>
+<td>Dashboard design: comporre grafici in una vista coerente</td>
+</tr>
+<tr>
+<td><strong>12</strong></td>
+<td>Esercizio finale: brief → analisi → presentazione completa</td>
+</tr>
+</tbody></table>
+</div></figure><hr>
+<h1 id="setup">Setup:</h1>
+<p>Ricreiamo il dataset dalla parte 1</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+<span class="hljs-keyword">import</span> matplotlib.ticker <span class="hljs-keyword">as</span> mticker
+<span class="hljs-keyword">import</span> matplotlib.dates <span class="hljs-keyword">as</span> mdates
+<span class="hljs-keyword">import</span> matplotlib.patches <span class="hljs-keyword">as</span> mpatches
+<span class="hljs-keyword">import</span> seaborn <span class="hljs-keyword">as</span> sns
+<span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime, timedelta
+<span class="hljs-keyword">import</span> warnings
+warnings.filterwarnings(<span class="hljs-string">&#x27;ignore&#x27;</span>)
+<span class="hljs-keyword">import</span> plotly.express <span class="hljs-keyword">as</span> px
+<span class="hljs-keyword">import</span> plotly.graph_objects <span class="hljs-keyword">as</span> go
+
+plt.rcParams[<span class="hljs-string">&#x27;figure.figsize&#x27;</span>] = (<span class="hljs-number">12</span>, <span class="hljs-number">6</span>)
+plt.rcParams[<span class="hljs-string">&#x27;figure.dpi&#x27;</span>] = <span class="hljs-number">100</span>
+plt.rcParams[<span class="hljs-string">&#x27;font.family&#x27;</span>] = <span class="hljs-string">&#x27;sans-serif&#x27;</span>
+plt.rcParams[<span class="hljs-string">&#x27;axes.spines.top&#x27;</span>] = <span class="hljs-literal">False</span>
+plt.rcParams[<span class="hljs-string">&#x27;axes.spines.right&#x27;</span>] = <span class="hljs-literal">False</span>
+sns.set_palette(<span class="hljs-string">&quot;husl&quot;</span>)
+np.random.seed(<span class="hljs-number">42</span>)
+
+GENERI = [<span class="hljs-string">&#x27;Narrativa&#x27;</span>,<span class="hljs-string">&#x27;Thriller&#x27;</span>,<span class="hljs-string">&#x27;Saggistica&#x27;</span>,<span class="hljs-string">&#x27;Fantasy&#x27;</span>,<span class="hljs-string">&#x27;Romance&#x27;</span>,<span class="hljs-string">&#x27;Storico&#x27;</span>,<span class="hljs-string">&#x27;Sci-Fi&#x27;</span>,<span class="hljs-string">&#x27;Poesia&#x27;</span>,<span class="hljs-string">&#x27;Bambini&#x27;</span>,<span class="hljs-string">&#x27;Young Adult&#x27;</span>]
+COLLANE = [<span class="hljs-string">&#x27;Oscar Mondadori&#x27;</span>,<span class="hljs-string">&#x27;Strade Blu&#x27;</span>,<span class="hljs-string">&#x27;Contemporanea&#x27;</span>,<span class="hljs-string">&#x27;Chrysalide&#x27;</span>,<span class="hljs-string">&#x27;Omnibus&#x27;</span>,<span class="hljs-string">&#x27;Piccoli Brividi&#x27;</span>,<span class="hljs-string">&#x27;Classici Moderni&#x27;</span>,<span class="hljs-string">&#x27;Voci&#x27;</span>]
+FORMATI = [<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]
+CANALI = [<span class="hljs-string">&#x27;Libreria fisica&#x27;</span>,<span class="hljs-string">&#x27;Amazon&#x27;</span>,<span class="hljs-string">&#x27;E-commerce proprio&#x27;</span>,<span class="hljs-string">&#x27;GDO&#x27;</span>,<span class="hljs-string">&#x27;Fiere/Eventi&#x27;</span>]
+GW = {<span class="hljs-string">&#x27;Narrativa&#x27;</span>:<span class="hljs-number">.22</span>,<span class="hljs-string">&#x27;Thriller&#x27;</span>:<span class="hljs-number">.18</span>,<span class="hljs-string">&#x27;Saggistica&#x27;</span>:<span class="hljs-number">.15</span>,<span class="hljs-string">&#x27;Fantasy&#x27;</span>:<span class="hljs-number">.10</span>,<span class="hljs-string">&#x27;Romance&#x27;</span>:<span class="hljs-number">.09</span>,<span class="hljs-string">&#x27;Storico&#x27;</span>:<span class="hljs-number">.08</span>,<span class="hljs-string">&#x27;Sci-Fi&#x27;</span>:<span class="hljs-number">.06</span>,<span class="hljs-string">&#x27;Poesia&#x27;</span>:<span class="hljs-number">.02</span>,<span class="hljs-string">&#x27;Bambini&#x27;</span>:<span class="hljs-number">.05</span>,<span class="hljs-string">&#x27;Young Adult&#x27;</span>:<span class="hljs-number">.05</span>}
+n_libri=<span class="hljs-number">500</span>; n_mesi=<span class="hljs-number">24</span>
+libri = pd.DataFrame({<span class="hljs-string">&#x27;libro_id&#x27;</span>:<span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,n_libri+<span class="hljs-number">1</span>),<span class="hljs-string">&#x27;titolo&#x27;</span>:[<span class="hljs-string">f&quot;Titolo_<span class="hljs-subst">{i:03d}</span>&quot;</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,n_libri+<span class="hljs-number">1</span>)],
+    <span class="hljs-string">&#x27;genere&#x27;</span>:np.random.choice(<span class="hljs-built_in">list</span>(GW.keys()),n_libri,p=<span class="hljs-built_in">list</span>(GW.values())),<span class="hljs-string">&#x27;collana&#x27;</span>:np.random.choice(COLLANE,n_libri),
+    <span class="hljs-string">&#x27;anno_pubblicazione&#x27;</span>:np.random.choice(<span class="hljs-built_in">range</span>(<span class="hljs-number">2018</span>,<span class="hljs-number">2025</span>),n_libri,p=[<span class="hljs-number">.05</span>,<span class="hljs-number">.05</span>,<span class="hljs-number">.08</span>,<span class="hljs-number">.10</span>,<span class="hljs-number">.15</span>,<span class="hljs-number">.25</span>,<span class="hljs-number">.32</span>]),
+    <span class="hljs-string">&#x27;pagine&#x27;</span>:np.random.normal(<span class="hljs-number">280</span>,<span class="hljs-number">80</span>,n_libri).astype(<span class="hljs-built_in">int</span>).clip(<span class="hljs-number">80</span>,<span class="hljs-number">800</span>),
+    <span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>:np.<span class="hljs-built_in">round</span>(np.random.uniform(<span class="hljs-number">9.90</span>,<span class="hljs-number">24.90</span>,n_libri),<span class="hljs-number">2</span>),
+    <span class="hljs-string">&#x27;rating_goodreads&#x27;</span>:np.<span class="hljs-built_in">round</span>(np.random.normal(<span class="hljs-number">3.7</span>,<span class="hljs-number">0.5</span>,n_libri).clip(<span class="hljs-number">1.5</span>,<span class="hljs-number">5.0</span>),<span class="hljs-number">1</span>),
+    <span class="hljs-string">&#x27;n_recensioni&#x27;</span>:np.random.exponential(<span class="hljs-number">150</span>,n_libri).astype(<span class="hljs-built_in">int</span>).clip(<span class="hljs-number">5</span>,<span class="hljs-number">5000</span>)})
+libri.loc[libri[<span class="hljs-string">&#x27;genere&#x27;</span>]==<span class="hljs-string">&#x27;Thriller&#x27;</span>,<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>] *= <span class="hljs-number">1.1</span>
+libri.loc[libri[<span class="hljs-string">&#x27;genere&#x27;</span>]==<span class="hljs-string">&#x27;Narrativa&#x27;</span>,<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>] *= <span class="hljs-number">1.05</span>
+libri.loc[libri[<span class="hljs-string">&#x27;genere&#x27;</span>]==<span class="hljs-string">&#x27;Poesia&#x27;</span>,<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>] *= <span class="hljs-number">0.8</span>
+libri[<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>] = libri[<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>].<span class="hljs-built_in">round</span>(<span class="hljs-number">2</span>)
+date_range = pd.date_range(<span class="hljs-string">&#x27;2023-01-01&#x27;</span>,periods=n_mesi,freq=<span class="hljs-string">&#x27;MS&#x27;</span>)
+recs = []
+<span class="hljs-keyword">for</span> _,libro <span class="hljs-keyword">in</span> libri.iterrows():
+    base={<span class="hljs-string">&#x27;Narrativa&#x27;</span>:<span class="hljs-number">120</span>,<span class="hljs-string">&#x27;Thriller&#x27;</span>:<span class="hljs-number">150</span>,<span class="hljs-string">&#x27;Saggistica&#x27;</span>:<span class="hljs-number">80</span>,<span class="hljs-string">&#x27;Fantasy&#x27;</span>:<span class="hljs-number">90</span>,<span class="hljs-string">&#x27;Romance&#x27;</span>:<span class="hljs-number">70</span>,<span class="hljs-string">&#x27;Storico&#x27;</span>:<span class="hljs-number">50</span>,<span class="hljs-string">&#x27;Sci-Fi&#x27;</span>:<span class="hljs-number">45</span>,<span class="hljs-string">&#x27;Poesia&#x27;</span>:<span class="hljs-number">15</span>,<span class="hljs-string">&#x27;Bambini&#x27;</span>:<span class="hljs-number">60</span>,<span class="hljs-string">&#x27;Young Adult&#x27;</span>:<span class="hljs-number">55</span>}[libro[<span class="hljs-string">&#x27;genere&#x27;</span>]]
+    lm=np.random.lognormal(<span class="hljs-number">0</span>,<span class="hljs-number">0.8</span>)
+    <span class="hljs-keyword">for</span> i,data <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(date_range):
+        m=data.month;stag={<span class="hljs-number">12</span>:<span class="hljs-number">1.8</span>,<span class="hljs-number">11</span>:<span class="hljs-number">1.3</span>,<span class="hljs-number">6</span>:<span class="hljs-number">1.2</span>,<span class="hljs-number">7</span>:<span class="hljs-number">1.2</span>,<span class="hljs-number">1</span>:<span class="hljs-number">0.7</span>,<span class="hljs-number">2</span>:<span class="hljs-number">0.7</span>}.get(m,<span class="hljs-number">1.0</span>)
+        trend={<span class="hljs-string">&#x27;Thriller&#x27;</span>:<span class="hljs-number">1</span>+i*<span class="hljs-number">0.015</span>,<span class="hljs-string">&#x27;Fantasy&#x27;</span>:<span class="hljs-number">1</span>+i*<span class="hljs-number">0.01</span>,<span class="hljs-string">&#x27;Young Adult&#x27;</span>:<span class="hljs-number">1</span>+i*<span class="hljs-number">0.012</span>,<span class="hljs-string">&#x27;Poesia&#x27;</span>:<span class="hljs-number">1</span>-i*<span class="hljs-number">0.008</span>,<span class="hljs-string">&#x27;Saggistica&#x27;</span>:<span class="hljs-number">1</span>-i*<span class="hljs-number">0.003</span>}.get(libro[<span class="hljs-string">&#x27;genere&#x27;</span>],<span class="hljs-number">1.0</span>)
+        <span class="hljs-keyword">for</span> fmt <span class="hljs-keyword">in</span> FORMATI:
+            fs={<span class="hljs-string">&#x27;Cartaceo&#x27;</span>:<span class="hljs-number">0.55</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>:<span class="hljs-number">0.30</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>:<span class="hljs-number">0.15</span>}[fmt]
+            <span class="hljs-keyword">if</span> fmt==<span class="hljs-string">&#x27;Ebook&#x27;</span>:fs*=(<span class="hljs-number">1</span>+i*<span class="hljs-number">0.005</span>)
+            <span class="hljs-keyword">if</span> fmt==<span class="hljs-string">&#x27;Audiolibro&#x27;</span>:fs*=(<span class="hljs-number">1</span>+i*<span class="hljs-number">0.02</span>)
+            copie=<span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>,<span class="hljs-built_in">int</span>(base*lm*stag*trend*fs*np.random.lognormal(<span class="hljs-number">0</span>,<span class="hljs-number">0.3</span>)))
+            <span class="hljs-keyword">if</span> copie&gt;<span class="hljs-number">0</span>:
+                recs.append({<span class="hljs-string">&#x27;libro_id&#x27;</span>:libro[<span class="hljs-string">&#x27;libro_id&#x27;</span>],<span class="hljs-string">&#x27;data&#x27;</span>:data,<span class="hljs-string">&#x27;formato&#x27;</span>:fmt,<span class="hljs-string">&#x27;canale&#x27;</span>:np.random.choice(CANALI,p=[<span class="hljs-number">.30</span>,<span class="hljs-number">.35</span>,<span class="hljs-number">.15</span>,<span class="hljs-number">.12</span>,<span class="hljs-number">.08</span>]),<span class="hljs-string">&#x27;copie_vendute&#x27;</span>:copie,<span class="hljs-string">&#x27;ricavo&#x27;</span>:<span class="hljs-built_in">round</span>(copie*libro[<span class="hljs-string">&#x27;prezzo_copertina&#x27;</span>]*{<span class="hljs-string">&#x27;Cartaceo&#x27;</span>:<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>:<span class="hljs-number">.65</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>:<span class="hljs-number">.55</span>}[fmt],<span class="hljs-number">2</span>)})
+vendite=pd.DataFrame(recs)
+df=vendite.merge(libri,on=<span class="hljs-string">&#x27;libro_id&#x27;</span>,how=<span class="hljs-string">&#x27;left&#x27;</span>)
+df[<span class="hljs-string">&#x27;anno&#x27;</span>]=df[<span class="hljs-string">&#x27;data&#x27;</span>].dt.year;df[<span class="hljs-string">&#x27;trimestre&#x27;</span>]=df[<span class="hljs-string">&#x27;data&#x27;</span>].dt.to_period(<span class="hljs-string">&#x27;Q&#x27;</span>).astype(<span class="hljs-built_in">str</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Dataset: <span class="hljs-subst">{<span class="hljs-built_in">len</span>(df):,}</span> record&quot;</span>)</code></pre><pre><code class="hljs language-text">Dataset: 35,904 record</code></pre><hr>
+<h1 id="la-matrice-decisionale">La Matrice Decisionale</h1>
+<p>Il grafico non si sceglie per estetica, si sceglie per obiettivo comunicativo.</p>
+<p>Ogni volta che ti trovi davanti a un dataset, la prima domanda non è &quot;che grafico faccio?&quot; ma &quot;cosa voglio che il lettore capisca?&quot;. La risposta ricade spesso in uno di questi cinque obiettivi: confronto (chi è più grande?), andamento (come cambia nel tempo?), distribuzione (come sono distribuiti i valori?), composizione (che peso ha ogni parte sul tutto?), relazione (due variabili si muovono insieme?).</p>
+<p>Il secondo parametro è il numero di elementi: un confronto tra 3 generi chiama un bar chart verticale, un confronto tra 15 chiama uno orizzontale, tra 40 un lollipop. La scala cambia la leggibilità, non solo l&#39;estetica.</p>
+<h2 id="i-5-obiettivi-comunicativi">I 5 obiettivi comunicativi</h2>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Obiettivo</th>
+<th>Domanda chiave</th>
+<th>Grafici consigliati</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Confronto</strong></td>
+<td>Qual e piu grande?</td>
+<td>Bar, Lollipop</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Andamento</strong></td>
+<td>Come cambia nel tempo?</td>
+<td>Line, Area, Slope</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Distribuzione</strong></td>
+<td>Come sono sparsi?</td>
+<td>Histo, Box, Violin</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Composizione</strong></td>
+<td>Da cosa e fatto il totale?</td>
+<td>Stacked bar, Treemap, Waffle</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Relazione</strong></td>
+<td>X e Y sono collegati?</td>
+<td>Scatter, Bubble, Heatmap</td>
+</tr>
+</tbody></table>
+</div></figure><h2 id="scenari-editoriali">Scenari editoriali</h2>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Domanda del business</th>
+<th>Obiettivo</th>
+<th>Grafico</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Quale genere vende di piu?</td>
+<td>Confronto</td>
+<td>Bar orizzontale</td>
+</tr>
+<tr>
+<td>Vendite in salita o discesa?</td>
+<td>Andamento</td>
+<td>Line chart</td>
+</tr>
+<tr>
+<td>Quanto pesa il digitale?</td>
+<td>Composizione</td>
+<td>Stacked bar 100%</td>
+</tr>
+<tr>
+<td>Legame prezzo-vendite?</td>
+<td>Relazione</td>
+<td>Scatter plot</td>
+</tr>
+<tr>
+<td>Prezzi uniformi tra generi?</td>
+<td>Distribuzione</td>
+<td>Box plot</td>
+</tr>
+<tr>
+<td>Come cambia la quota generi?</td>
+<td>Andamento+Composiz.</td>
+<td>Stacked area</td>
+</tr>
+<tr>
+<td>Chi ha guadagnato quota?</td>
+<td>Confronto (delta)</td>
+<td><strong>Slope chart</strong></td>
+</tr>
+<tr>
+<td>Chi sorpassa chi?</td>
+<td>Andamento+Ranking</td>
+<td><strong>Bump chart</strong></td>
+</tr>
+</tbody></table>
+</div></figure><p>La funzione suggerisci_grafico(obiettivo, n) formalizza queste regole in codice: non per sostituire il giudizio, ma per rendere esplicito il ragionamento che di solito resta implicito. Usatela come checklist, non come oracolo.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Funzione di suggerimento grafico</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">suggerisci_grafico</span>(<span class="hljs-params">obiettivo, n=<span class="hljs-literal">None</span></span>):
+    <span class="hljs-string">&quot;&quot;&quot;Suggerisce il grafico migliore.&quot;&quot;&quot;</span>
+    rules = {
+        <span class="hljs-string">&#x27;confronto&#x27;</span>:[(<span class="hljs-number">1</span>,<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;Bar verticale&#x27;</span>),(<span class="hljs-number">6</span>,<span class="hljs-number">15</span>,<span class="hljs-string">&#x27;Bar orizzontale&#x27;</span>),(<span class="hljs-number">16</span>,<span class="hljs-number">50</span>,<span class="hljs-string">&#x27;Lollipop&#x27;</span>),(<span class="hljs-number">51</span>,<span class="hljs-number">999</span>,<span class="hljs-string">&#x27;Treemap&#x27;</span>)],
+        <span class="hljs-string">&#x27;andamento&#x27;</span>:[(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Line chart&#x27;</span>),(<span class="hljs-number">4</span>,<span class="hljs-number">7</span>,<span class="hljs-string">&#x27;Line+highlight&#x27;</span>),(<span class="hljs-number">8</span>,<span class="hljs-number">999</span>,<span class="hljs-string">&#x27;Small multiples&#x27;</span>)],
+        <span class="hljs-string">&#x27;distribuzione&#x27;</span>:[(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Istogramma+KDE&#x27;</span>),(<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;Box/Violin&#x27;</span>),(<span class="hljs-number">6</span>,<span class="hljs-number">999</span>,<span class="hljs-string">&#x27;Ridge plot&#x27;</span>)],
+        <span class="hljs-string">&#x27;relazione&#x27;</span>:[(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Scatter&#x27;</span>),(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Bubble&#x27;</span>),(<span class="hljs-number">4</span>,<span class="hljs-number">999</span>,<span class="hljs-string">&#x27;Heatmap&#x27;</span>)]
+    }
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;\n<span class="hljs-subst">{<span class="hljs-string">&#x27;=&#x27;</span>*<span class="hljs-number">40</span>}</span>\n  OBIETTIVO: <span class="hljs-subst">{obiettivo.upper()}</span>\n<span class="hljs-subst">{<span class="hljs-string">&#x27;=&#x27;</span>*<span class="hljs-number">40</span>}</span>&quot;</span>)
+    <span class="hljs-keyword">if</span> obiettivo==<span class="hljs-string">&#x27;composizione&#x27;</span>:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;  Statico -&gt; Stacked bar 100%&#x27;</span>); <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;  Temporale -&gt; Stacked area&#x27;</span>); <span class="hljs-keyword">return</span>
+    <span class="hljs-keyword">if</span> n <span class="hljs-keyword">and</span> obiettivo <span class="hljs-keyword">in</span> rules:
+        <span class="hljs-keyword">for</span> lo,hi,chart <span class="hljs-keyword">in</span> rules[obiettivo]:
+            <span class="hljs-keyword">if</span> lo&lt;=n&lt;=hi: <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;  Con <span class="hljs-subst">{n}</span> elementi -&gt; <span class="hljs-subst">{chart}</span>&#x27;</span>); <span class="hljs-keyword">return</span> chart
+
+suggerisci_grafico(<span class="hljs-string">&#x27;confronto&#x27;</span>, <span class="hljs-number">10</span>)
+suggerisci_grafico(<span class="hljs-string">&#x27;andamento&#x27;</span>, <span class="hljs-number">2</span>)
+suggerisci_grafico(<span class="hljs-string">&#x27;distribuzione&#x27;</span>, <span class="hljs-number">4</span>)
+suggerisci_grafico(<span class="hljs-string">&#x27;composizione&#x27;</span>)
+suggerisci_grafico(<span class="hljs-string">&#x27;relazione&#x27;</span>, <span class="hljs-number">2</span>)</code></pre><pre><code class="hljs language-text">
+========================================
+  OBIETTIVO: CONFRONTO
+========================================
+  Con 10 elementi -&gt; Bar orizzontale
+
+========================================
+  OBIETTIVO: ANDAMENTO
+========================================
+  Con 2 elementi -&gt; Line chart
+
+========================================
+  OBIETTIVO: DISTRIBUZIONE
+========================================
+  Con 4 elementi -&gt; Box/Violin
+
+========================================
+  OBIETTIVO: COMPOSIZIONE
+========================================
+  Statico -&gt; Stacked bar 100%
+  Temporale -&gt; Stacked area
+
+========================================
+  OBIETTIVO: RELAZIONE
+========================================
+  Con 2 elementi -&gt; Scatter</code></pre><pre><code class="hljs language-text">&#x27;Scatter&#x27;</code></pre><hr>
+<h1 id="trasformazione-dei-dati">Trasformazione dei Dati</h1>
+<p>I dati grezzi spesso mentono per omissione: non perché siano sbagliati, ma perché la scala o la forma in cui li presenti nasconde ciò che c&#39;è dietro.</p>
+<p>Le trasformazioni non alterano i dati, ma ne rimuovono il rumore visivo che impedisce di vederli.</p>
+<ul>
+<li><strong>Log scale</strong>: i ricavi per libro seguono una distribuzione di Pareto estrema: pochi bestseller, lunghissima coda di titoli a basse vendite. In scala lineare il 90% dei libri si schiaccia a sinistra e non si vede nulla. La scala logaritmica espande i valori bassi e rivela la struttura reale della distribuzione.<blockquote>
+<p><strong>Regola pratica</strong>: se la skewness è $&gt;2$, considera la scala log o riporta la mediana invece della media.</p>
+</blockquote>
+</li>
+<li><strong>Moving average</strong>: i dati mensili di vendita sono rumorosi per definizione: stagionalità, promozioni, uscite puntuali. La media mobile separa il segnale dal rumore. A 3 mesi è reattiva ma ancora rumorosa; a 6 mesi rivela il trend strutturale. Usale insieme: l&#39;area grigia mostra la volatilità reale, la linea rossa racconta dove sta andando il mercato.</li>
+<li><strong>Variazione % MoM vs YoY</strong>: il cambio mese su mese amplifica la stagionalità e va bene per il monitoraggio operativo. Il cambio anno su anno la elimina per definizione ed è quello che interessa al management: stiamo crescendo rispetto allo stesso periodo dell&#39;anno scorso? Regola semplice: YoY per i dirigenti, MoM per chi gestisce le operazioni settimana per settimana.</li>
+<li><strong>Binning</strong>: trasformare una variabile continua (prezzo, ricavo) in categorie (fascia bassa/media/alta) permette di costruire segmenti azionabili. La scelta dei breakpoint non è neutrale: bin uguali per ampiezza funzionano su distribuzioni simmetriche; bin per quantile funzionano meglio su distribuzioni skewed come i ricavi editoriali.</li>
+</ul>
+<p><strong>Regola d&#39;oro</strong>: trasforma sempre prima di visualizzare, non invece di visualizzare. La trasformazione è uno step del ragionamento analitico, non un trucco grafico.</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Trasformazione</th>
+<th>Quando</th>
+<th>Effetto</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Normalizzazione (%)</strong></td>
+<td>Scale diverse</td>
+<td>Confrontabili</td>
+</tr>
+<tr>
+<td><strong>Log scale</strong></td>
+<td>Skewed</td>
+<td>Espande bassi</td>
+</tr>
+<tr>
+<td><strong>Moving Average</strong></td>
+<td>Rumore</td>
+<td>Mostra trend</td>
+</tr>
+<tr>
+<td><strong>Variazione %</strong></td>
+<td>Cambiamento</td>
+<td>Focus su delta</td>
+</tr>
+<tr>
+<td><strong>Binning</strong></td>
+<td>Continuo-&gt;categ.</td>
+<td>Crea gruppi</td>
+</tr>
+</tbody></table>
+</div></figure><blockquote>
+<p>📌 Distribuzione di Pareto (legge 80/20)</p>
+</blockquote>
+<blockquote>
+<p>Una distribuzione si dice &quot;paretiana&quot; quando una piccola minoranza degli elementi produce la grande maggioranza del risultato.</p>
+</blockquote>
+<p>In campo editoriale: tipicamente il 20% dei titoli genera l&#39;80% dei ricavi. Non è una legge fisica, ma un pattern empirico sorprendentemente stabile in molti mercati — musica, app store, e-commerce.</p>
+<p>La conseguenza visiva è una distribuzione fortemente asimmetrica a destra (skewed): tanti valori bassi addensati a sinistra, pochissimi valori altissimi che stirano la coda verso destra. Questo è il motivo per cui la media è un indicatore fuorviante in questi contesti — un singolo bestseller può spostarla enormemente — e la mediana o la scala logaritmica diventano strumenti essenziali.</p>
+<h2 id="log-scale">Log scale</h2>
+<pre><code class="hljs language-python"><span class="hljs-comment"># LOG SCALE</span>
+libro_ricavi = df.groupby(<span class="hljs-string">&#x27;libro_id&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+fig, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">5</span>))
+ax1.hist(libro_ricavi.values/<span class="hljs-number">1000</span>, bins=<span class="hljs-number">50</span>, color=<span class="hljs-string">&#x27;#3498db&#x27;</span>, edgecolor=<span class="hljs-string">&#x27;white&#x27;</span>, alpha=<span class="hljs-number">0.8</span>)
+ax1.set_title(<span class="hljs-string">&#x27;SCALA LINEARE: 90% schiacciato&#x27;</span>, fontsize=<span class="hljs-number">12</span>, fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>, loc=<span class="hljs-string">&#x27;left&#x27;</span>)
+ax1.set_xlabel(<span class="hljs-string">&#x27;Ricavo (EUR K)&#x27;</span>)
+ax2.hist(np.log10(libro_ricavi.values.clip(<span class="hljs-number">1</span>)), bins=<span class="hljs-number">50</span>, color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>, edgecolor=<span class="hljs-string">&#x27;white&#x27;</span>, alpha=<span class="hljs-number">0.8</span>)
+ax2.set_title(<span class="hljs-string">&#x27;SCALA LOG10: distribuzione reale&#x27;</span>, fontsize=<span class="hljs-number">12</span>, fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>, loc=<span class="hljs-string">&#x27;left&#x27;</span>)
+ax2.set_xlabel(<span class="hljs-string">&#x27;log10(Ricavo)&#x27;</span>)
+ax2.axvline(np.log10(libro_ricavi.median()), color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>, linestyle=<span class="hljs-string">&#x27;--&#x27;</span>, linewidth=<span class="hljs-number">2</span>)
+<span class="hljs-keyword">for</span> ax <span class="hljs-keyword">in</span> [ax1,ax2]: ax.spines[<span class="hljs-string">&#x27;top&#x27;</span>].set_visible(<span class="hljs-literal">False</span>); ax.spines[<span class="hljs-string">&#x27;right&#x27;</span>].set_visible(<span class="hljs-literal">False</span>)
+plt.tight_layout(); plt.show()
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;Skewness: <span class="hljs-subst">{libro_ricavi.skew():<span class="hljs-number">.1</span>f}</span> (&gt;2 = molto asimmetrica -&gt; usare log o mediana)&#x27;</span>)</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-01.png" alt="Notebook output 1"></p>
+<pre><code class="hljs language-text">Skewness: 3.9 (&gt;2 = molto asimmetrica -&gt; usare log o mediana)</code></pre><h2 id="moving-average">Moving average</h2>
+<pre><code class="hljs language-python"><span class="hljs-comment"># MOVING AVERAGE</span>
+vt = df.groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;copie_vendute&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1000</span>
+fig, ax = plt.subplots(figsize=(<span class="hljs-number">14</span>, <span class="hljs-number">6</span>))
+ax.plot(vt.index, vt.values, color=<span class="hljs-string">&#x27;#bdc3c7&#x27;</span>, linewidth=<span class="hljs-number">1</span>, alpha=<span class="hljs-number">0.7</span>, label=<span class="hljs-string">&#x27;Dati mensili&#x27;</span>)
+<span class="hljs-keyword">for</span> w,c,s <span class="hljs-keyword">in</span> [(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;--&#x27;</span>),(<span class="hljs-number">6</span>,<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,<span class="hljs-string">&#x27;-&#x27;</span>)]:
+    ma = vt.rolling(w,center=<span class="hljs-literal">True</span>).mean()
+    ax.plot(ma.index, ma.values, color=c, linewidth=<span class="hljs-number">2.5</span>, linestyle=s, label=<span class="hljs-string">f&#x27;MA <span class="hljs-subst">{w}</span> mesi&#x27;</span>)
+ax.set_title(<span class="hljs-string">&#x27;La MA 6 mesi rivela il trend nascosto&#x27;</span>, fontsize=<span class="hljs-number">13</span>, fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>, loc=<span class="hljs-string">&#x27;left&#x27;</span>, pad=<span class="hljs-number">15</span>)
+ax.set_ylabel(<span class="hljs-string">&#x27;Copie (K)&#x27;</span>); ax.legend(loc=<span class="hljs-string">&#x27;upper left&#x27;</span>)
+ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %Y&#x27;</span>)); plt.xticks(rotation=<span class="hljs-number">30</span>)
+plt.tight_layout(); plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-02.png" alt="Notebook output 2"></p>
+<h2 id="variazione-mom-vs-yoy">Variazione %: MoM vs YoY</h2>
+<pre><code class="hljs language-python"><span class="hljs-comment"># MoM vs YoY</span>
+rm = df.groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+fig, (ax1,ax2) = plt.subplots(<span class="hljs-number">2</span>,<span class="hljs-number">1</span>,figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">8</span>),sharex=<span class="hljs-literal">True</span>)
+mom = rm.pct_change()*<span class="hljs-number">100</span>
+cm = [<span class="hljs-string">&#x27;#27ae60&#x27;</span> <span class="hljs-keyword">if</span> v&gt;=<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#e74c3c&#x27;</span> <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> mom.values[<span class="hljs-number">1</span>:]]
+ax1.bar(mom.index[<span class="hljs-number">1</span>:],mom.values[<span class="hljs-number">1</span>:],color=cm,width=<span class="hljs-number">20</span>,alpha=<span class="hljs-number">0.8</span>); ax1.axhline(<span class="hljs-number">0</span>,color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,linewidth=<span class="hljs-number">0.8</span>)
+ax1.set_title(<span class="hljs-string">&#x27;MoM: alta volatilita = stagionalita&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>); ax1.set_ylabel(<span class="hljs-string">&#x27;%&#x27;</span>)
+yoy_s = rm.pct_change(<span class="hljs-number">12</span>)*<span class="hljs-number">100</span>; vy = yoy_s.dropna()
+cy = [<span class="hljs-string">&#x27;#27ae60&#x27;</span> <span class="hljs-keyword">if</span> v&gt;=<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#e74c3c&#x27;</span> <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> vy.values]
+ax2.bar(vy.index,vy.values,color=cy,width=<span class="hljs-number">20</span>,alpha=<span class="hljs-number">0.8</span>); ax2.axhline(<span class="hljs-number">0</span>,color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,linewidth=<span class="hljs-number">0.8</span>)
+ax2.set_title(<span class="hljs-string">&#x27;YoY: mostra il trend reale senza stagionalita&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>); ax2.set_ylabel(<span class="hljs-string">&#x27;%&#x27;</span>)
+<span class="hljs-keyword">for</span> ax <span class="hljs-keyword">in</span> [ax1,ax2]: ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %Y&#x27;</span>))
+plt.tight_layout(); plt.show()
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Regola: YoY per dirigenti, MoM per monitoraggio operativo.&#x27;</span>)</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-03.png" alt="Notebook output 3"></p>
+<pre><code class="hljs language-text">Regola: YoY per dirigenti, MoM per monitoraggio operativo.</code></pre><h2 id="binning">Binning</h2>
+<pre><code class="hljs language-python"><span class="hljs-comment"># BINNING</span>
+lp = df.groupby(<span class="hljs-string">&#x27;libro_id&#x27;</span>).agg(ricavo_tot=(<span class="hljs-string">&#x27;ricavo&#x27;</span>,<span class="hljs-string">&#x27;sum&#x27;</span>),genere=(<span class="hljs-string">&#x27;genere&#x27;</span>,<span class="hljs-string">&#x27;first&#x27;</span>)).reset_index()
+lp[<span class="hljs-string">&#x27;seg&#x27;</span>] = pd.cut(lp[<span class="hljs-string">&#x27;ricavo_tot&#x27;</span>],bins=[<span class="hljs-number">0</span>,<span class="hljs-number">5000</span>,<span class="hljs-number">20000</span>,<span class="hljs-number">100000</span>,<span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;inf&#x27;</span>)],labels=[<span class="hljs-string">&#x27;Flop (&lt;5K)&#x27;</span>,<span class="hljs-string">&#x27;Medio (5-20K)&#x27;</span>,<span class="hljs-string">&#x27;Buono (20-100K)&#x27;</span>,<span class="hljs-string">&#x27;Bestseller (&gt;100K)&#x27;</span>])
+fig,(ax1,ax2)=plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">6</span>))
+sc=lp[<span class="hljs-string">&#x27;seg&#x27;</span>].value_counts().sort_index(); cs=[<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,<span class="hljs-string">&#x27;#f39c12&#x27;</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;#27ae60&#x27;</span>]
+bars=ax1.bar(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(sc)),sc.values,color=cs); ax1.set_xticks(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(sc))); ax1.set_xticklabels(sc.index,fontsize=<span class="hljs-number">9</span>)
+<span class="hljs-keyword">for</span> b,v <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(bars,sc.values): ax1.text(b.get_x()+b.get_width()/<span class="hljs-number">2</span>,v+<span class="hljs-number">5</span>,<span class="hljs-string">f&#x27;<span class="hljs-subst">{v}</span> (<span class="hljs-subst">{v/<span class="hljs-built_in">len</span>(lp)*<span class="hljs-number">100</span>:<span class="hljs-number">.0</span>f}</span>%)&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">10</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+ax1.set_title(<span class="hljs-string">&#x27;Libri per segmento&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>)
+sr=lp.groupby(<span class="hljs-string">&#x27;seg&#x27;</span>)[<span class="hljs-string">&#x27;ricavo_tot&#x27;</span>].<span class="hljs-built_in">sum</span>().sort_index()/<span class="hljs-number">1e6</span>
+bars2=ax2.bar(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(sr)),sr.values,color=cs); ax2.set_xticks(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(sr))); ax2.set_xticklabels(sr.index,fontsize=<span class="hljs-number">9</span>)
+<span class="hljs-keyword">for</span> b,v <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(bars2,sr.values): ax2.text(b.get_x()+b.get_width()/<span class="hljs-number">2</span>,v+<span class="hljs-number">0.2</span>,<span class="hljs-string">f&#x27;EUR <span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>M&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">10</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+ax2.set_title(<span class="hljs-string">&#x27;Pochi bestseller = quasi tutto il fatturato&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>)
+<span class="hljs-keyword">for</span> ax <span class="hljs-keyword">in</span> [ax1,ax2]: ax.spines[<span class="hljs-string">&#x27;top&#x27;</span>].set_visible(<span class="hljs-literal">False</span>); ax.spines[<span class="hljs-string">&#x27;right&#x27;</span>].set_visible(<span class="hljs-literal">False</span>)
+plt.tight_layout(); plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-04.png" alt="Notebook output 4"></p>
+<hr>
+<h1 id="grafici-avanzati">Grafici avanzati</h1>
+<p>I grafici delle parti precedenti coprono il 90% dei casi. Questa parte copre quel 10% in cui hai bisogno di comunicare qualcosa di specifico che i grafici standard non sanno fare bene: variazioni tra due punti nel tempo, evoluzioni di ranking, decomposizioni di crescita, composizioni intuitive.</p>
+<h2 id="slope-chart-il-prima-e-dopo">Slope Chart: il prima e dopo</h2>
+<p>Questo è il grafico giusto quando hai esattamente due momenti (2023 → 2024) e vuoi mostrare chi è salito e chi è sceso. Un line chart su due soli punti per categoria. La forza è nella semplicità: l&#39;inclinazione della linea è immediatamente leggibile, e il colore (verde/rosso) aggiunge un layer di giudizio senza parole. Usalo al posto del grouped bar chart quando il movimento conta più del valore assoluto.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># SLOPE CHART: Quota 2023 vs 2024</span>
+r23=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+r24=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+sh23=(r23/r23.<span class="hljs-built_in">sum</span>()*<span class="hljs-number">100</span>).sort_values(ascending=<span class="hljs-literal">False</span>); sh24=r24/r24.<span class="hljs-built_in">sum</span>()*<span class="hljs-number">100</span>
+fig,ax=plt.subplots(figsize=(<span class="hljs-number">10</span>,<span class="hljs-number">8</span>))
+<span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> sh23.index:
+    v1,v2=sh23[g],sh24[g]; d=v2-v1
+    c=<span class="hljs-string">&#x27;#27ae60&#x27;</span> <span class="hljs-keyword">if</span> d&gt;<span class="hljs-number">0.5</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#e74c3c&#x27;</span> <span class="hljs-keyword">if</span> d&lt;-<span class="hljs-number">0.5</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#bdc3c7&#x27;</span>
+    ax.plot([<span class="hljs-number">0</span>,<span class="hljs-number">1</span>],[v1,v2],<span class="hljs-string">&#x27;o-&#x27;</span>,color=c,linewidth=<span class="hljs-number">2.5</span>,markersize=<span class="hljs-number">8</span>)
+    ax.text(-<span class="hljs-number">0.05</span>,v1,<span class="hljs-string">f&#x27;<span class="hljs-subst">{g}</span> (<span class="hljs-subst">{v1:<span class="hljs-number">.1</span>f}</span>%)&#x27;</span>,ha=<span class="hljs-string">&#x27;right&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">10</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=c)
+    ax.text(<span class="hljs-number">1.05</span>,v2,<span class="hljs-string">f&#x27;<span class="hljs-subst">{v2:<span class="hljs-number">.1</span>f}</span>% (<span class="hljs-subst">{d:+<span class="hljs-number">.1</span>f}</span>)&#x27;</span>,ha=<span class="hljs-string">&#x27;left&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">10</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=c)
+ax.set_xlim(-<span class="hljs-number">0.4</span>,<span class="hljs-number">1.4</span>);ax.set_xticks([<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]);ax.set_xticklabels([<span class="hljs-string">&#x27;2023&#x27;</span>,<span class="hljs-string">&#x27;2024&#x27;</span>],fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+ax.set_title(<span class="hljs-string">&#x27;Slope: chi guadagna e chi perde quota&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
+<span class="hljs-keyword">for</span> sp <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;top&#x27;</span>,<span class="hljs-string">&#x27;right&#x27;</span>,<span class="hljs-string">&#x27;bottom&#x27;</span>,<span class="hljs-string">&#x27;left&#x27;</span>]:ax.spines[sp].set_visible(<span class="hljs-literal">False</span>)
+ax.yaxis.set_visible(<span class="hljs-literal">False</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-05.png" alt="Notebook output 5"></p>
+<h2 id="bump-chart-evoluzione-del-ranking">Bump Chart: evoluzione del ranking</h2>
+<p>Questo è come uno slope chart, ma su $N$ periodi e con il ranking invece dei valori assoluti. Risponde alla domanda &quot;chi sorpassa chi nel tempo?&quot; in modo molto più leggibile di una tabella o di un line chart con valori assoluti. L&#39;asse Y invertito (1 in cima) è contro-intuitivo da costruire ma naturale da leggere.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># BUMP CHART: Ranking per trimestre</span>
+tr=df.groupby([<span class="hljs-string">&#x27;trimestre&#x27;</span>,<span class="hljs-string">&#x27;genere&#x27;</span>])[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().reset_index()
+tr[<span class="hljs-string">&#x27;rank&#x27;</span>]=tr.groupby(<span class="hljs-string">&#x27;trimestre&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].rank(ascending=<span class="hljs-literal">False</span>,method=<span class="hljs-string">&#x27;min&#x27;</span>)
+top6=df.groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().nlargest(<span class="hljs-number">6</span>).index
+bd=tr[tr[<span class="hljs-string">&#x27;genere&#x27;</span>].isin(top6)]
+fig,ax=plt.subplots(figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">7</span>))
+pal=<span class="hljs-built_in">dict</span>(<span class="hljs-built_in">zip</span>(top6,[<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;#27ae60&#x27;</span>,<span class="hljs-string">&#x27;#f39c12&#x27;</span>,<span class="hljs-string">&#x27;#9b59b6&#x27;</span>]))
+trimestri=<span class="hljs-built_in">sorted</span>(bd[<span class="hljs-string">&#x27;trimestre&#x27;</span>].unique())
+<span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> top6:
+    gd=bd[bd[<span class="hljs-string">&#x27;genere&#x27;</span>]==g].set_index(<span class="hljs-string">&#x27;trimestre&#x27;</span>).reindex(trimestri)
+    y=gd[<span class="hljs-string">&#x27;rank&#x27;</span>].values
+    ax.plot(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(trimestri)),y,<span class="hljs-string">&#x27;o-&#x27;</span>,color=pal[g],linewidth=<span class="hljs-number">3</span>,markersize=<span class="hljs-number">10</span>,zorder=<span class="hljs-number">3</span>)
+    ax.text(<span class="hljs-built_in">len</span>(trimestri)-<span class="hljs-number">0.7</span>,y[-<span class="hljs-number">1</span>],<span class="hljs-string">f&#x27;  <span class="hljs-subst">{g}</span>&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">11</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=pal[g])
+ax.set_xticks(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(trimestri)));ax.set_xticklabels(trimestri,fontsize=<span class="hljs-number">10</span>,rotation=<span class="hljs-number">30</span>)
+ax.set_yticks(<span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,<span class="hljs-number">7</span>));ax.set_ylabel(<span class="hljs-string">&#x27;Posizione&#x27;</span>);ax.invert_yaxis()
+ax.set_title(<span class="hljs-string">&#x27;Thriller stabile #1, Fantasy scala&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
+ax.grid(axis=<span class="hljs-string">&#x27;y&#x27;</span>,alpha=<span class="hljs-number">0.3</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-06.png" alt="Notebook output 6"></p>
+<h2 id="waterfall-chart-decomporre-il-cambiamento">Waterfall Chart: decomporre il cambiamento</h2>
+<p>Questo grafico scompone un cambiamento totale nelle sue componenti positive e negative. Risponde a &quot;la crescita di 2M€ da dove viene?&quot;: non basta sapere il risultato finale, serve vedere quali generi hanno contribuito e quali hanno sottratto. È il grafico preferito dal management per le review di performance perché racconta una storia causale, non solo un risultato.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># WATERFALL: Da 2023 a 2024</span>
+r23t=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1e6</span>
+r24t=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1e6</span>
+delta=(r24t-r23t).sort_values(ascending=<span class="hljs-literal">False</span>)
+fig,ax=plt.subplots(figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">7</span>))
+start=r23t.<span class="hljs-built_in">sum</span>()
+labels=[<span class="hljs-string">&#x27;Ricavi 2023&#x27;</span>];vals=[start];cols=[<span class="hljs-string">&#x27;#2c3e50&#x27;</span>]
+<span class="hljs-keyword">for</span> g,d <span class="hljs-keyword">in</span> delta.items():
+    labels.append(g);vals.append(d);cols.append(<span class="hljs-string">&#x27;#27ae60&#x27;</span> <span class="hljs-keyword">if</span> d&gt;=<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#e74c3c&#x27;</span>)
+labels.append(<span class="hljs-string">&#x27;Ricavi 2024&#x27;</span>);vals.append(r24t.<span class="hljs-built_in">sum</span>());cols.append(<span class="hljs-string">&#x27;#2c3e50&#x27;</span>)
+running=<span class="hljs-number">0</span>
+<span class="hljs-keyword">for</span> i,(lb,v) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(<span class="hljs-built_in">zip</span>(labels,vals)):
+    <span class="hljs-keyword">if</span> i==<span class="hljs-number">0</span>:
+        ax.bar(i,v,color=cols[i],width=<span class="hljs-number">0.6</span>);running=v
+        ax.text(i,v+<span class="hljs-number">0.3</span>,<span class="hljs-string">f&#x27;EUR <span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>M&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">9</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+    <span class="hljs-keyword">elif</span> i==<span class="hljs-built_in">len</span>(labels)-<span class="hljs-number">1</span>:
+        ax.bar(i,v,color=cols[i],width=<span class="hljs-number">0.6</span>)
+        ax.text(i,v+<span class="hljs-number">0.3</span>,<span class="hljs-string">f&#x27;EUR <span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>M&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">9</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+    <span class="hljs-keyword">else</span>:
+        ax.bar(i,v,bottom=running,color=cols[i],width=<span class="hljs-number">0.6</span>)
+        lbl=<span class="hljs-string">f&#x27;+<span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>&#x27;</span> <span class="hljs-keyword">if</span> v&gt;=<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">f&#x27;<span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>&#x27;</span>
+        yt=running+v+<span class="hljs-number">0.2</span> <span class="hljs-keyword">if</span> v&gt;=<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> running+v-<span class="hljs-number">0.3</span>
+        ax.text(i,yt,lbl,ha=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">8</span>,color=cols[i],fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+        running+=v
+        <span class="hljs-keyword">if</span> i&lt;<span class="hljs-built_in">len</span>(labels)-<span class="hljs-number">1</span>:ax.plot([i-<span class="hljs-number">0.3</span>,i+<span class="hljs-number">1.3</span>],[running,running],color=<span class="hljs-string">&#x27;gray&#x27;</span>,linewidth=<span class="hljs-number">0.5</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>)
+ax.set_xticks(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(labels)));ax.set_xticklabels(labels,fontsize=<span class="hljs-number">9</span>,rotation=<span class="hljs-number">35</span>,ha=<span class="hljs-string">&#x27;right&#x27;</span>)
+ax.set_title(<span class="hljs-string">&#x27;Waterfall: il Thriller = meta della crescita&#x27;</span>,fontsize=<span class="hljs-number">13</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-07.png" alt="Notebook output 7"></p>
+<h2 id="waffle-chart-un-altro-dolce-per-le-composizioni">Waffle Chart: un altro dolce per le composizioni</h2>
+<p>Nasce come alternativa al pie chart per mostrare composizioni. Una griglia 10×10 dove ogni cella vale l&#39;1% del totale. Meno preciso di uno stacked bar 100%, ma molto più intuitivo per audience non tecnica: &quot;30 celle su 100 sono Thriller&quot; è immediatamente comprensibile anche senza leggere le etichette.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># WAFFLE CHART</span>
+fsh=df.groupby(<span class="hljs-string">&#x27;formato&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+fp=(fsh/fsh.<span class="hljs-built_in">sum</span>()*<span class="hljs-number">100</span>).<span class="hljs-built_in">round</span>().astype(<span class="hljs-built_in">int</span>)
+fp.iloc[fp.values.argmax()]+=(<span class="hljs-number">100</span>-fp.<span class="hljs-built_in">sum</span>())
+fig,ax=plt.subplots(figsize=(<span class="hljs-number">10</span>,<span class="hljs-number">10</span>))
+cw={<span class="hljs-string">&#x27;Cartaceo&#x27;</span>:<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>:<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>:<span class="hljs-string">&#x27;#e74c3c&#x27;</span>}
+grid=[]
+<span class="hljs-keyword">for</span> fmt <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]:grid.extend([cw[fmt]]*fp[fmt])
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):
+    r,c=<span class="hljs-built_in">divmod</span>(i,<span class="hljs-number">10</span>)
+    ax.add_patch(plt.Rectangle((c,<span class="hljs-number">9</span>-r),<span class="hljs-number">0.9</span>,<span class="hljs-number">0.9</span>,facecolor=grid[i],edgecolor=<span class="hljs-string">&#x27;white&#x27;</span>,linewidth=<span class="hljs-number">2</span>))
+ax.set_xlim(-<span class="hljs-number">0.5</span>,<span class="hljs-number">10.5</span>);ax.set_ylim(-<span class="hljs-number">0.5</span>,<span class="hljs-number">10.5</span>);ax.set_aspect(<span class="hljs-string">&#x27;equal&#x27;</span>);ax.axis(<span class="hljs-string">&#x27;off&#x27;</span>)
+li=[mpatches.Patch(color=cw[f],label=<span class="hljs-string">f&#x27;<span class="hljs-subst">{f}</span>: <span class="hljs-subst">{fp[f]}</span>%&#x27;</span>) <span class="hljs-keyword">for</span> f <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]]
+ax.legend(handles=li,loc=<span class="hljs-string">&#x27;upper center&#x27;</span>,bbox_to_anchor=(<span class="hljs-number">0.5</span>,-<span class="hljs-number">0.02</span>),ncol=<span class="hljs-number">3</span>,fontsize=<span class="hljs-number">12</span>,frameon=<span class="hljs-literal">False</span>)
+ax.set_title(<span class="hljs-string">&#x27;Ogni quadratino = 1% dei ricavi&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,pad=<span class="hljs-number">15</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-08.png" alt="Notebook output 8"></p>
+<hr>
+<h1 id="dashboard-design">Dashboard Design</h1>
+<p>Un dashboard non è una raccolta di grafici. È una storia visiva strutturata, e come tale segue la stessa logica del Pyramid Principle: il messaggio principale in cima, gli argomenti di supporto al centro, le evidenze di dettaglio in basso.</p>
+<p>La struttura a tre livelli non è una convenzione estetica, deve essere funzionale.</p>
+<p>Le KPI card in alto rispondono alla domanda che ogni dirigente ha in testa prima ancora di aprire il report: &quot;stiamo andando bene o male?&quot;. I grafici nella riga centrale spiegano perché. La riga in basso fornisce il dettaglio per chi vuole verificare.</p>
+<p><strong>Principi:</strong></p>
+<ol>
+<li>KPI in alto — numeri chiave</li>
+<li>Grafici supporto al centro</li>
+<li>Dettaglio in basso</li>
+</ol>
+<p><strong>Regole:</strong></p>
+<ul>
+<li><strong>Max 6-8 grafici</strong>: Oltre quella soglia il cervello smette di leggere e inizia a scansionare. Se hai più messaggi da comunicare, hai bisogno di più dashboard, non di una più grande.</li>
+<li><strong>Palette coerente su tutto il dashboard</strong>. Se Thriller è rosso nel bar chart, deve essere rosso anche nel line chart e nell&#39;heatmap. Usare colori diversi per la stessa categoria su grafici diversi costringe il lettore a ricostruire mentalmente le corrispondenze. Un lavoro che non dovrebbe fare lui!!</li>
+<li><strong>Un solo messaggio per dashboard</strong>. Il titolo generale del dashboard deve essere un &quot;So What?&quot; esattamente come i titoli dei singoli grafici. &quot;DASHBOARD EDITORIALE — Q4 2024&quot; è un titolo descrittivo. &quot;Il catalogo cresce (+15% YoY) ma con rischi di concentrazione e stagionalità&quot; è un titolo che racconta qualcosa.</li>
+</ul>
+<pre><code class="hljs language-python"><span class="hljs-comment"># EXECUTIVE DASHBOARD</span>
+fig=plt.figure(figsize=(<span class="hljs-number">20</span>,<span class="hljs-number">14</span>))
+fig.suptitle(<span class="hljs-string">&#x27;DASHBOARD EDITORIALE - Q4 2024&#x27;</span>,fontsize=<span class="hljs-number">18</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,y=<span class="hljs-number">0.98</span>)
+fig.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.955</span>,<span class="hljs-string">&#x27;Cresce (+15% YoY) ma rischi di concentrazione e stagionalita&#x27;</span>,fontsize=<span class="hljs-number">12</span>,color=<span class="hljs-string">&#x27;gray&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>)
+gs=fig.add_gridspec(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,hspace=<span class="hljs-number">0.35</span>,wspace=<span class="hljs-number">0.3</span>,top=<span class="hljs-number">0.93</span>,bottom=<span class="hljs-number">0.05</span>,left=<span class="hljs-number">0.06</span>,right=<span class="hljs-number">0.97</span>)
+<span class="hljs-comment"># KPI</span>
+rt=df[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1e6</span>;ct=df[<span class="hljs-string">&#x27;copie_vendute&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1000</span>;nt=df[<span class="hljs-string">&#x27;libro_id&#x27;</span>].nunique()
+r23x=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>][<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>();r24x=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>][<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>();yt=(r24x-r23x)/r23x*<span class="hljs-number">100</span>
+<span class="hljs-keyword">for</span> i,(v,l,c) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>([(<span class="hljs-string">f&#x27;EUR <span class="hljs-subst">{rt:<span class="hljs-number">.1</span>f}</span>M&#x27;</span>,<span class="hljs-string">&#x27;Ricavi&#x27;</span>,<span class="hljs-string">&#x27;#2c3e50&#x27;</span>),(<span class="hljs-string">f&#x27;<span class="hljs-subst">{ct:<span class="hljs-number">.0</span>f}</span>K&#x27;</span>,<span class="hljs-string">&#x27;Copie&#x27;</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>),(<span class="hljs-string">f&#x27;<span class="hljs-subst">{nt}</span>&#x27;</span>,<span class="hljs-string">&#x27;Titoli&#x27;</span>,<span class="hljs-string">&#x27;#27ae60&#x27;</span>),(<span class="hljs-string">f&#x27;<span class="hljs-subst">{yt:+<span class="hljs-number">.1</span>f}</span>%&#x27;</span>,<span class="hljs-string">&#x27;YoY&#x27;</span>,<span class="hljs-string">&#x27;#27ae60&#x27;</span> <span class="hljs-keyword">if</span> yt&gt;<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#e74c3c&#x27;</span>)]):
+    ax=fig.add_subplot(gs[<span class="hljs-number">0</span>,i]);ax.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.6</span>,v,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">24</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=c)
+    ax.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.2</span>,l,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">11</span>,color=<span class="hljs-string">&#x27;gray&#x27;</span>);ax.set_xlim(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);ax.set_ylim(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);ax.axis(<span class="hljs-string">&#x27;off&#x27;</span>)
+<span class="hljs-comment"># Trend</span>
+axt=fig.add_subplot(gs[<span class="hljs-number">1</span>,:<span class="hljs-number">2</span>])
+<span class="hljs-keyword">for</span> fmt,c <span class="hljs-keyword">in</span> [(<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;#2c3e50&#x27;</span>),(<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>),(<span class="hljs-string">&#x27;Audiolibro&#x27;</span>,<span class="hljs-string">&#x27;#e74c3c&#x27;</span>)]:
+    s=df[df[<span class="hljs-string">&#x27;formato&#x27;</span>]==fmt].groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;copie_vendute&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1000</span>
+    axt.plot(s.index,s.values,label=fmt,color=c,linewidth=<span class="hljs-number">2</span>)
+axt.set_title(<span class="hljs-string">&#x27;Trend vendite&#x27;</span>,fontsize=<span class="hljs-number">11</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>);axt.legend(fontsize=<span class="hljs-number">8</span>)
+axt.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %y&#x27;</span>))
+<span class="hljs-comment"># Bar</span>
+axb=fig.add_subplot(gs[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>:])
+rg=df.groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().sort_values(ascending=<span class="hljs-literal">True</span>)/<span class="hljs-number">1e6</span>
+cb=[<span class="hljs-string">&#x27;#e74c3c&#x27;</span> <span class="hljs-keyword">if</span> g <span class="hljs-keyword">in</span> rg.nlargest(<span class="hljs-number">2</span>).index <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#bdc3c7&#x27;</span> <span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> rg.index]
+axb.barh(rg.index,rg.values,color=cb,height=<span class="hljs-number">0.6</span>)
+<span class="hljs-keyword">for</span> i,(g,v) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(rg.items()):axb.text(v+<span class="hljs-number">0.05</span>,i,<span class="hljs-string">f&#x27;<span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>M&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">8</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+axb.set_title(<span class="hljs-string">&#x27;Ricavi per genere&#x27;</span>,fontsize=<span class="hljs-number">11</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>)
+axb.xaxis.set_visible(<span class="hljs-literal">False</span>)
+<span class="hljs-keyword">for</span> sp <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;bottom&#x27;</span>,<span class="hljs-string">&#x27;left&#x27;</span>]:axb.spines[sp].set_visible(<span class="hljs-literal">False</span>)
+axb.tick_params(left=<span class="hljs-literal">False</span>)
+<span class="hljs-comment"># Heatmap</span>
+axh=fig.add_subplot(gs[<span class="hljs-number">2</span>,:<span class="hljs-number">2</span>])
+hd=df.groupby([df[<span class="hljs-string">&#x27;data&#x27;</span>].dt.month,<span class="hljs-string">&#x27;genere&#x27;</span>])[<span class="hljs-string">&#x27;copie_vendute&#x27;</span>].<span class="hljs-built_in">sum</span>().reset_index()
+hd.columns=[<span class="hljs-string">&#x27;mese&#x27;</span>,<span class="hljs-string">&#x27;genere&#x27;</span>,<span class="hljs-string">&#x27;copie&#x27;</span>]
+ph=hd.pivot(index=<span class="hljs-string">&#x27;genere&#x27;</span>,columns=<span class="hljs-string">&#x27;mese&#x27;</span>,values=<span class="hljs-string">&#x27;copie&#x27;</span>)
+pn=ph.div(ph.<span class="hljs-built_in">max</span>(axis=<span class="hljs-number">1</span>),axis=<span class="hljs-number">0</span>)
+sns.heatmap(pn,cmap=<span class="hljs-string">&#x27;YlOrRd&#x27;</span>,xticklabels=[<span class="hljs-string">&#x27;G&#x27;</span>,<span class="hljs-string">&#x27;F&#x27;</span>,<span class="hljs-string">&#x27;M&#x27;</span>,<span class="hljs-string">&#x27;A&#x27;</span>,<span class="hljs-string">&#x27;M&#x27;</span>,<span class="hljs-string">&#x27;G&#x27;</span>,<span class="hljs-string">&#x27;L&#x27;</span>,<span class="hljs-string">&#x27;A&#x27;</span>,<span class="hljs-string">&#x27;S&#x27;</span>,<span class="hljs-string">&#x27;O&#x27;</span>,<span class="hljs-string">&#x27;N&#x27;</span>,<span class="hljs-string">&#x27;D&#x27;</span>],ax=axh,cbar=<span class="hljs-literal">False</span>,linewidths=<span class="hljs-number">0.3</span>)
+axh.set_title(<span class="hljs-string">&#x27;Stagionalita&#x27;</span>,fontsize=<span class="hljs-number">11</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>);axh.set_ylabel(<span class="hljs-string">&#x27;&#x27;</span>);axh.tick_params(labelsize=<span class="hljs-number">8</span>)
+<span class="hljs-comment"># YoY</span>
+axy=fig.add_subplot(gs[<span class="hljs-number">2</span>,<span class="hljs-number">2</span>:])
+r23g=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+r24g=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+yg=((r24g-r23g)/r23g*<span class="hljs-number">100</span>).sort_values()
+cyy=[<span class="hljs-string">&#x27;#e74c3c&#x27;</span> <span class="hljs-keyword">if</span> v&lt;<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#bdc3c7&#x27;</span> <span class="hljs-keyword">if</span> v&lt;<span class="hljs-number">15</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;#27ae60&#x27;</span> <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> yg.values]
+axy.barh(yg.index,yg.values,color=cyy,height=<span class="hljs-number">0.6</span>);axy.axvline(<span class="hljs-number">0</span>,color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,linewidth=<span class="hljs-number">0.8</span>)
+<span class="hljs-keyword">for</span> bar,val <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(axy.patches,yg.values):
+    axy.text(val+(<span class="hljs-number">0.8</span> <span class="hljs-keyword">if</span> val&gt;=<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> -<span class="hljs-number">0.8</span>),bar.get_y()+bar.get_height()/<span class="hljs-number">2</span>,<span class="hljs-string">f&#x27;<span class="hljs-subst">{val:+<span class="hljs-number">.1</span>f}</span>%&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,ha=<span class="hljs-string">&#x27;left&#x27;</span> <span class="hljs-keyword">if</span> val&gt;=<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;right&#x27;</span>,fontsize=<span class="hljs-number">8</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+axy.set_title(<span class="hljs-string">&#x27;Crescita YoY&#x27;</span>,fontsize=<span class="hljs-number">11</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>)
+<span class="hljs-keyword">for</span> sp <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;top&#x27;</span>,<span class="hljs-string">&#x27;right&#x27;</span>,<span class="hljs-string">&#x27;bottom&#x27;</span>,<span class="hljs-string">&#x27;left&#x27;</span>]:axy.spines[sp].set_visible(<span class="hljs-literal">False</span>)
+axy.xaxis.set_visible(<span class="hljs-literal">False</span>);axy.tick_params(left=<span class="hljs-literal">False</span>,labelsize=<span class="hljs-number">9</span>)
+plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-09.png" alt="Notebook output 9"></p>
+<hr>
+<h1 id="esercizio-finale-brief-presentazione">Esercizio Finale: Brief → Presentazione</h1>
+<h2 id="il-brief">Il Brief</h2>
+<blockquote>
+<p><em>Il board vuole capire se ha senso investire nell&#39;audiolibro. 4 slide, dati alla mano.</em></p>
+</blockquote>
+<h2 id="la-piramide">La Piramide</h2>
+<pre><code class="hljs language-nestedtext"><span class="hljs-attribute">MESSAGGIO</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Audiolibro = crescita piu alta. Triplicare investimento.</span>
+
+<span class="hljs-attribute">+-- SLIDE 1</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Il digitale cresce (stacked area %)</span>
+<span class="hljs-attribute">+-- SLIDE 2</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Audiolibro cresce 3x (indice base 100)</span>
+<span class="hljs-attribute">+-- SLIDE 3</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Dove investire (scatter penetrazione vs mercato)</span>
+<span class="hljs-attribute">+-- SLIDE 4</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Piano d&#x27;azione (tabella + proiezione)</span></code></pre><pre><code class="hljs language-python"><span class="hljs-comment"># Analisi</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;=&#x27;</span>*<span class="hljs-number">60</span>+<span class="hljs-string">&#x27;\nANALISI AUDIOLIBRO\n&#x27;</span>+<span class="hljs-string">&#x27;=&#x27;</span>*<span class="hljs-number">60</span>)
+<span class="hljs-keyword">for</span> fmt <span class="hljs-keyword">in</span> FORMATI:
+    r23f=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2023</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==fmt)][<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+    r24f=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==fmt)][<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;\n<span class="hljs-subst">{fmt}</span>: EUR <span class="hljs-subst">{r23f/<span class="hljs-number">1e6</span>:<span class="hljs-number">.2</span>f}</span>M -&gt; EUR <span class="hljs-subst">{r24f/<span class="hljs-number">1e6</span>:<span class="hljs-number">.2</span>f}</span>M (<span class="hljs-subst">{(r24f-r23f)/r23f*<span class="hljs-number">100</span>:+<span class="hljs-number">.1</span>f}</span>%)&#x27;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;\nPenetrazione audio per genere (2024):&#x27;</span>)
+a24=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==<span class="hljs-string">&#x27;Audiolibro&#x27;</span>)].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+t24=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+<span class="hljs-keyword">for</span> g,v <span class="hljs-keyword">in</span> (a24/t24*<span class="hljs-number">100</span>).sort_values(ascending=<span class="hljs-literal">False</span>).items():<span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;  <span class="hljs-subst">{g}</span>: <span class="hljs-subst">{v:<span class="hljs-number">.1</span>f}</span>%&#x27;</span>)</code></pre><pre><code class="hljs language-text">============================================================
+ANALISI AUDIOLIBRO
+============================================================
+
+Cartaceo: EUR 9.06M -&gt; EUR 9.55M (+5.4%)
+
+Ebook: EUR 3.28M -&gt; EUR 3.67M (+11.8%)
+
+Audiolibro: EUR 1.50M -&gt; EUR 1.91M (+27.8%)
+
+Penetrazione audio per genere (2024):
+  Young Adult: 13.0%
+  Bambini: 13.0%
+  Narrativa: 12.9%
+  Saggistica: 12.6%
+  Fantasy: 12.5%
+  Thriller: 12.5%
+  Romance: 12.4%
+  Storico: 12.3%
+  Sci-Fi: 12.2%
+  Poesia: 11.6%</code></pre><h3 id="le-4-slide">Le 4 Slide</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 1: Il mercato cambia</span>
+fm=(df.groupby([df[<span class="hljs-string">&#x27;data&#x27;</span>],<span class="hljs-string">&#x27;formato&#x27;</span>])[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>().reset_index()
+    .pivot(index=<span class="hljs-string">&#x27;data&#x27;</span>,columns=<span class="hljs-string">&#x27;formato&#x27;</span>,values=<span class="hljs-string">&#x27;ricavo&#x27;</span>).fillna(<span class="hljs-number">0</span>))
+fmp=fm.div(fm.<span class="hljs-built_in">sum</span>(axis=<span class="hljs-number">1</span>),axis=<span class="hljs-number">0</span>)*<span class="hljs-number">100</span>
+fig,(ax1,ax2)=plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">6</span>),gridspec_kw={<span class="hljs-string">&#x27;width_ratios&#x27;</span>:[<span class="hljs-number">1.5</span>,<span class="hljs-number">1</span>]})
+ax1.stackplot(fmp.index,[fmp[<span class="hljs-string">&#x27;Cartaceo&#x27;</span>],fmp[<span class="hljs-string">&#x27;Ebook&#x27;</span>],fmp[<span class="hljs-string">&#x27;Audiolibro&#x27;</span>]],
+    labels=[<span class="hljs-string">&#x27;Cartaceo&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>],colors=[<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;#e74c3c&#x27;</span>],alpha=<span class="hljs-number">0.75</span>)
+ax1.set_ylim(<span class="hljs-number">0</span>,<span class="hljs-number">100</span>);ax1.set_ylabel(<span class="hljs-string">&#x27;% Ricavi&#x27;</span>);ax1.legend(loc=<span class="hljs-string">&#x27;center right&#x27;</span>)
+ax1.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %y&#x27;</span>))
+ds=<span class="hljs-number">100</span>-fmp.iloc[<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;Cartaceo&#x27;</span>];de=<span class="hljs-number">100</span>-fmp.iloc[-<span class="hljs-number">1</span>][<span class="hljs-string">&#x27;Cartaceo&#x27;</span>]
+ax2.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.7</span>,<span class="hljs-string">f&#x27;<span class="hljs-subst">{ds:<span class="hljs-number">.0</span>f}</span>% -&gt; <span class="hljs-subst">{de:<span class="hljs-number">.0</span>f}</span>%&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">36</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>)
+ax2.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.45</span>,<span class="hljs-string">&#x27;Quota Digitale&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">14</span>,color=<span class="hljs-string">&#x27;gray&#x27;</span>)
+ax2.text(<span class="hljs-number">0.5</span>,<span class="hljs-number">0.25</span>,<span class="hljs-string">f&#x27;+<span class="hljs-subst">{de-ds:<span class="hljs-number">.0</span>f}</span> pp in 2 anni&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">12</span>,color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+ax2.set_xlim(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);ax2.set_ylim(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);ax2.axis(<span class="hljs-string">&#x27;off&#x27;</span>)
+plt.suptitle(<span class="hljs-string">&#x27;SLIDE 1: Quota digitale in crescita costante&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,y=<span class="hljs-number">1.02</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-10.png" alt="Notebook output 10"></p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 2: Audiolibro cresce 3x</span>
+fig,ax=plt.subplots(figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">6</span>))
+fc={<span class="hljs-string">&#x27;Cartaceo&#x27;</span>:<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,<span class="hljs-string">&#x27;Ebook&#x27;</span>:<span class="hljs-string">&#x27;#3498db&#x27;</span>,<span class="hljs-string">&#x27;Audiolibro&#x27;</span>:<span class="hljs-string">&#x27;#e74c3c&#x27;</span>}
+<span class="hljs-keyword">for</span> fmt,c <span class="hljs-keyword">in</span> fc.items():
+    s=df[df[<span class="hljs-string">&#x27;formato&#x27;</span>]==fmt].groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+    idx=s/s.iloc[<span class="hljs-number">0</span>]*<span class="hljs-number">100</span>
+    ax.plot(idx.index,idx.values,color=c,linewidth=<span class="hljs-number">3.5</span> <span class="hljs-keyword">if</span> fmt==<span class="hljs-string">&#x27;Audiolibro&#x27;</span> <span class="hljs-keyword">else</span> <span class="hljs-number">2</span>,label=fmt)
+    ax.text(idx.index[-<span class="hljs-number">1</span>],idx.values[-<span class="hljs-number">1</span>],<span class="hljs-string">f&#x27;  <span class="hljs-subst">{idx.values[-<span class="hljs-number">1</span>]:<span class="hljs-number">.0</span>f}</span>&#x27;</span>,va=<span class="hljs-string">&#x27;center&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,color=c)
+ax.axhline(<span class="hljs-number">100</span>,color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,linewidth=<span class="hljs-number">1</span>)
+ax.set_title(<span class="hljs-string">&#x27;SLIDE 2: Audiolibro cresce 3x il cartaceo (base 100)&#x27;</span>,fontsize=<span class="hljs-number">13</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
+ax.set_ylabel(<span class="hljs-string">&#x27;Indice&#x27;</span>);ax.legend(fontsize=<span class="hljs-number">11</span>,loc=<span class="hljs-string">&#x27;upper left&#x27;</span>)
+ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %Y&#x27;</span>));plt.xticks(rotation=<span class="hljs-number">30</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-11.png" alt="Notebook output 11"></p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 3: Dove investire</span>
+a24g=df[(df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>)&amp;(df[<span class="hljs-string">&#x27;formato&#x27;</span>]==<span class="hljs-string">&#x27;Audiolibro&#x27;</span>)].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+t24g=df[df[<span class="hljs-string">&#x27;anno&#x27;</span>]==<span class="hljs-number">2024</span>].groupby(<span class="hljs-string">&#x27;genere&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()
+ap=a24g/t24g*<span class="hljs-number">100</span>;tg=t24g/<span class="hljs-number">1e6</span>
+sdf=pd.DataFrame({<span class="hljs-string">&#x27;mercato&#x27;</span>:tg,<span class="hljs-string">&#x27;audio_pen&#x27;</span>:ap}).dropna()
+fig,ax=plt.subplots(figsize=(<span class="hljs-number">12</span>,<span class="hljs-number">8</span>))
+ax.axhline(sdf[<span class="hljs-string">&#x27;audio_pen&#x27;</span>].median(),color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,alpha=<span class="hljs-number">0.5</span>)
+ax.axvline(sdf[<span class="hljs-string">&#x27;mercato&#x27;</span>].median(),color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,alpha=<span class="hljs-number">0.5</span>)
+<span class="hljs-keyword">for</span> g <span class="hljs-keyword">in</span> sdf.index:
+    ax.scatter(sdf.loc[g,<span class="hljs-string">&#x27;mercato&#x27;</span>],sdf.loc[g,<span class="hljs-string">&#x27;audio_pen&#x27;</span>],s=<span class="hljs-number">150</span>,alpha=<span class="hljs-number">0.7</span>,zorder=<span class="hljs-number">3</span>)
+    ax.annotate(g,(sdf.loc[g,<span class="hljs-string">&#x27;mercato&#x27;</span>],sdf.loc[g,<span class="hljs-string">&#x27;audio_pen&#x27;</span>]),fontsize=<span class="hljs-number">10</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,ha=<span class="hljs-string">&#x27;center&#x27;</span>,va=<span class="hljs-string">&#x27;bottom&#x27;</span>,xytext=(<span class="hljs-number">0</span>,<span class="hljs-number">8</span>),textcoords=<span class="hljs-string">&#x27;offset points&#x27;</span>)
+ax.text(<span class="hljs-number">0.98</span>,<span class="hljs-number">0.98</span>,<span class="hljs-string">&#x27;PRIORITA: grande e digitale&#x27;</span>,transform=ax.transAxes,fontsize=<span class="hljs-number">9</span>,va=<span class="hljs-string">&#x27;top&#x27;</span>,ha=<span class="hljs-string">&#x27;right&#x27;</span>,color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+ax.text(<span class="hljs-number">0.98</span>,<span class="hljs-number">0.02</span>,<span class="hljs-string">&#x27;OPPORTUNITA: grande, poco digitale&#x27;</span>,transform=ax.transAxes,fontsize=<span class="hljs-number">9</span>,va=<span class="hljs-string">&#x27;bottom&#x27;</span>,ha=<span class="hljs-string">&#x27;right&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+ax.set_xlabel(<span class="hljs-string">&#x27;Dimensione mercato (EUR M)&#x27;</span>);ax.set_ylabel(<span class="hljs-string">&#x27;Penetrazione audiolibro (%)&#x27;</span>)
+ax.set_title(<span class="hljs-string">&#x27;SLIDE 3: Thriller e Narrativa = dove investire in audio&#x27;</span>,fontsize=<span class="hljs-number">13</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-12.png" alt="Notebook output 12"></p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># SLIDE 4: Raccomandazione e proiezione</span>
+fig,(ax1,ax2)=plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">7</span>),gridspec_kw={<span class="hljs-string">&#x27;width_ratios&#x27;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">1.2</span>]})
+ax1.axis(<span class="hljs-string">&#x27;off&#x27;</span>)
+ax1.set_title(<span class="hljs-string">&#x27;Piano Audiolibro 2025&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>,pad=<span class="hljs-number">15</span>)
+actions=[[<span class="hljs-string">&#x27;AZIONE&#x27;</span>,<span class="hljs-string">&#x27;DETTAGLIO&#x27;</span>,<span class="hljs-string">&#x27;IMPATTO&#x27;</span>],
+    [<span class="hljs-string">&#x27;1. Triplicare catalogo&#x27;</span>,<span class="hljs-string">&#x27;80-&gt;240 titoli\nFocus Thriller+Narrativa&#x27;</span>,<span class="hljs-string">&#x27;EUR +1.5M&#x27;</span>],
+    [<span class="hljs-string">&#x27;2. Partnership audio&#x27;</span>,<span class="hljs-string">&#x27;Audible, Storytel&#x27;</span>,<span class="hljs-string">&#x27;Reach +200K&#x27;</span>],
+    [<span class="hljs-string">&#x27;3. Bundle cart+audio&#x27;</span>,<span class="hljs-string">&#x27;Sconto 30% bundle&#x27;</span>,<span class="hljs-string">&#x27;Cross-sell +15%&#x27;</span>],
+    [<span class="hljs-string">&#x27;4. Podcast-to-book&#x27;</span>,<span class="hljs-string">&#x27;Convertire podcast\nin audiolibri&#x27;</span>,<span class="hljs-string">&#x27;10 titoli/anno&#x27;</span>]]
+table=ax1.table(cellText=actions[<span class="hljs-number">1</span>:],colLabels=actions[<span class="hljs-number">0</span>],cellLoc=<span class="hljs-string">&#x27;left&#x27;</span>,loc=<span class="hljs-string">&#x27;center&#x27;</span>,colWidths=[<span class="hljs-number">0.35</span>,<span class="hljs-number">0.35</span>,<span class="hljs-number">0.20</span>])
+table.auto_set_font_size(<span class="hljs-literal">False</span>);table.set_fontsize(<span class="hljs-number">10</span>);table.scale(<span class="hljs-number">1</span>,<span class="hljs-number">2.5</span>)
+<span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):table[<span class="hljs-number">0</span>,j].set_facecolor(<span class="hljs-string">&#x27;#2c3e50&#x27;</span>);table[<span class="hljs-number">0</span>,j].set_text_props(color=<span class="hljs-string">&#x27;white&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,<span class="hljs-number">5</span>):
+    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):table[i,j].set_facecolor(<span class="hljs-string">&#x27;#f8f9fa&#x27;</span> <span class="hljs-keyword">if</span> i%<span class="hljs-number">2</span>==<span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;white&#x27;</span>)
+    table[i,<span class="hljs-number">2</span>].set_text_props(color=<span class="hljs-string">&#x27;#27ae60&#x27;</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>)
+<span class="hljs-comment"># Proiezione</span>
+ax2.set_title(<span class="hljs-string">&#x27;Proiezione con investimento 3x&#x27;</span>,fontsize=<span class="hljs-number">12</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,loc=<span class="hljs-string">&#x27;left&#x27;</span>)
+mesi=pd.date_range(<span class="hljs-string">&#x27;2023-01-01&#x27;</span>,periods=<span class="hljs-number">36</span>,freq=<span class="hljs-string">&#x27;MS&#x27;</span>)
+astorico=df[df[<span class="hljs-string">&#x27;formato&#x27;</span>]==<span class="hljs-string">&#x27;Audiolibro&#x27;</span>].groupby(<span class="hljs-string">&#x27;data&#x27;</span>)[<span class="hljs-string">&#x27;ricavo&#x27;</span>].<span class="hljs-built_in">sum</span>()/<span class="hljs-number">1000</span>
+z=np.polyfit(np.arange(<span class="hljs-built_in">len</span>(astorico)),astorico.values,<span class="hljs-number">1</span>)
+proj=np.polyval(z,np.arange(<span class="hljs-number">36</span>));proj3x=proj.copy();proj3x[<span class="hljs-number">24</span>:]*=<span class="hljs-number">2.5</span>
+ax2.plot(mesi[:<span class="hljs-number">24</span>],astorico.values,<span class="hljs-string">&#x27;o-&#x27;</span>,color=<span class="hljs-string">&#x27;#2c3e50&#x27;</span>,linewidth=<span class="hljs-number">2</span>,label=<span class="hljs-string">&#x27;Storico&#x27;</span>)
+ax2.plot(mesi[<span class="hljs-number">23</span>:],proj[<span class="hljs-number">23</span>:],<span class="hljs-string">&#x27;--&#x27;</span>,color=<span class="hljs-string">&#x27;#bdc3c7&#x27;</span>,linewidth=<span class="hljs-number">2</span>,label=<span class="hljs-string">&#x27;Base&#x27;</span>)
+ax2.plot(mesi[<span class="hljs-number">23</span>:],proj3x[<span class="hljs-number">23</span>:],<span class="hljs-string">&#x27;-&#x27;</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>,linewidth=<span class="hljs-number">3</span>,label=<span class="hljs-string">&#x27;Con 3x&#x27;</span>)
+ax2.fill_between(mesi[<span class="hljs-number">23</span>:],proj[<span class="hljs-number">23</span>:],proj3x[<span class="hljs-number">23</span>:],alpha=<span class="hljs-number">0.15</span>,color=<span class="hljs-string">&#x27;#e74c3c&#x27;</span>)
+ax2.axvline(mesi[<span class="hljs-number">23</span>],color=<span class="hljs-string">&#x27;gray&#x27;</span>,linestyle=<span class="hljs-string">&#x27;:&#x27;</span>,alpha=<span class="hljs-number">0.5</span>)
+ax2.set_ylabel(<span class="hljs-string">&#x27;Ricavi audio (EUR K)&#x27;</span>);ax2.legend(fontsize=<span class="hljs-number">10</span>,loc=<span class="hljs-string">&#x27;upper left&#x27;</span>)
+ax2.xaxis.set_major_formatter(mdates.DateFormatter(<span class="hljs-string">&#x27;%b %y&#x27;</span>))
+plt.suptitle(<span class="hljs-string">&#x27;SLIDE 4: Investire 3x genera EUR +1.5M nel primo anno&#x27;</span>,fontsize=<span class="hljs-number">14</span>,fontweight=<span class="hljs-string">&#x27;bold&#x27;</span>,y=<span class="hljs-number">1.02</span>)
+plt.tight_layout();plt.show()</code></pre><p><img src="../../../Assets/Notebook/generated/datavis_masterclass_parte2/datavis_masterclass_parte2-output-13.png" alt="Notebook output 13"></p>
+<hr>
+<h1 id="recap-finale">Recap finale</h1>
+<h2 id="le-basi">Le basi</h2>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Concetto</th>
+<th>In una frase</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pyramid Principle</td>
+<td>Parti dalla conclusione, non dai dati</td>
+</tr>
+<tr>
+<td>So What?</td>
+<td>Ogni grafico: osservazione → insight → azione</td>
+</tr>
+<tr>
+<td>Data-Ink Ratio</td>
+<td>Meno decorazione, piu dati</td>
+</tr>
+<tr>
+<td>Visual Encoding</td>
+<td>Posizione e lunghezza &gt; Area e colore</td>
+</tr>
+</tbody></table>
+</div></figure><h2 id="la-pratica">La pratica</h2>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Concetto</th>
+<th>In una frase</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Matrice decisionale</td>
+<td>Scegli il grafico dall&#39;obiettivo, non dal dato</td>
+</tr>
+<tr>
+<td>Trasformazioni</td>
+<td>Normalizza, indicizza, smooth prima di visualizzare</td>
+</tr>
+<tr>
+<td>Grafici avanzati</td>
+<td>Slope, Bump, Dumbbell, Waterfall, Waffle per casi specifici</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>KPI in alto, supporto al centro, dettaglio in basso</td>
+</tr>
+<tr>
+<td>Brief → Presentazione</td>
+<td>Piramide prima, dati poi, grafici alla fine</td>
+</tr>
+</tbody></table>
+</div></figure><h2 id="la-regola-doro">La regola d&#39;oro</h2>
+<blockquote>
+<p><strong>Non chiedete &quot;che grafico faccio?&quot;. Chiedete &quot;cosa devo comunicare?&quot;.</strong></p>
+</blockquote>
+<h2 id="risorse">Risorse</h2>
+<ul>
+<li><strong>The Pyramid Principle</strong> — Barbara Minto</li>
+<li><strong>Storytelling with Data</strong> — Cole Nussbaumer Knaflic</li>
+<li><strong>The Visual Display of Quantitative Information</strong> — Edward Tufte</li>
+<li><strong>Fundamentals of Data Visualization</strong> — Claus Wilke (gratis online)</li>
+</ul>
+<hr>
+<p><em>&quot;The greatest value of a picture is when it forces us to notice what we never expected to see.&quot;</em> — John Tukey</p>
+<blockquote>
+<p>Notebook sorgente: <a href="../../../Assets/Notebook/datavis_masterclass_parte2.ipynb">datavis_masterclass_parte2.ipynb</a></p>
+</blockquote>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/datavis-masterclass-parte-2/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true') {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">📋</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          pre.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
+      enhanceCodeBlocks();
+      initToc();
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>

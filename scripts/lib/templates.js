@@ -70,7 +70,7 @@ function assignTocNumbers(nodes, prefix) {
   });
 }
 
-function renderTocList(nodes, isRoot = true) {
+function renderTocList(nodes, isRoot = true, showNumbers = true) {
   if (!nodes?.length) {
     return '';
   }
@@ -79,11 +79,11 @@ function renderTocList(nodes, isRoot = true) {
   return `<ul class="${listClass}">
     ${nodes
       .map((node) => {
-        const childHtml = renderTocList(node.children, false);
+        const childHtml = renderTocList(node.children, false, showNumbers);
         const depth = Math.max(0, node.level - 2);
         return `<li class="post-toc__item" data-depth="${depth}">
           <a class="post-toc__link" href="#${node.id}">
-            <span class="post-toc__number">${escapeHtml(node.number ?? '')}</span>
+            ${showNumbers ? `<span class="post-toc__number">${escapeHtml(node.number ?? '')}</span>` : ''}
             <span class="post-toc__text">${escapeHtml(node.text)}</span>
           </a>
           ${childHtml}
@@ -135,7 +135,8 @@ const sharedStyles = `
 export function renderBlogIndex({ posts, relativeRoot }) {
   const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
   const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
-  const postsPayload = posts.map((post) => {
+  const visiblePosts = posts.filter((post) => !post.meta?.hiddenFromIndex);
+  const postsPayload = visiblePosts.map((post) => {
     const languages = {};
     for (const [lang, langData] of Object.entries(post.languages)) {
       languages[lang] = {
@@ -854,7 +855,8 @@ export function renderBlogDetail({
   const icon = post.meta?.icon ?? '📝';
 
   const tocTree = buildTocTree(headings);
-  const tocListHtml = renderTocList(tocTree);
+  const showTocNumbers = post.meta?.showTocNumbers !== false;
+  const tocListHtml = renderTocList(tocTree, true, showTocNumbers);
   const tocLabels =
     language === 'it'
       ? { title: 'Indice', open: 'Mostra indice', close: 'Nascondi indice' }
