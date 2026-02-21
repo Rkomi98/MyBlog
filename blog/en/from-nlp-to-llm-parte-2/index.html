@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From classic NLP models to LLMs (Part 2) | Mirko Calcaterra</title>
+  <meta name="description" content="From classic NLP models to LLMs (Part 2) &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to open)&lt;/summary This article is still a work in progress and under editorial review. Some paragraphs may be incomplete or change signifi…">
+  <meta name="keywords" content="NLP, LLM, GPT, Mistral, Mirko Calcaterra, Deep Learning, Natural Language Processing, Transformer">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/from-nlp-to-llm-parte-2/">
+  <meta property="og:title" content="From classic NLP models to LLMs (Part 2)">
+  <meta property="og:description" content="From classic NLP models to LLMs (Part 2) &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to open)&lt;/summary This article is still a work in progress and under editorial review. Some paragraphs may be incomplete or change signifi…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-02-21T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="AI Engineering Path">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="From classic NLP models to LLMs (Part 2)">
+  <meta property="twitter:description" content="From classic NLP models to LLMs (Part 2) &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to open)&lt;/summary This article is still a work in progress and under editorial review. Some paragraphs may be incomplete or change signifi…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "From classic NLP models to LLMs (Part 2)",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-02-21T00:00:00.000Z",
+    "dateModified": "2026-02-21T14:41:27.624Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "From classic NLP models to LLMs (Part 2) &lt;details class=&quot;postwarning&quot; &lt;summary&lt;strongArticle under review&lt;/strong (click to open)&lt;/summary This article is still a work in progress and under editorial review. Some paragraphs may be incomplete or change signifi…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0f172a;
+      --bg-secondary: #111c33;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-strong: rgba(15, 23, 42, 0.9);
+      --border: rgba(148, 163, 184, 0.24);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5f5;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-strong: #38bdf8;
+      --shadow-lg: 0 28px 60px -36px rgba(15, 23, 42, 0.9);
+      --code-inline-bg: rgba(6, 11, 19, 0.92);
+      --code-block-bg: #050912;
+      --code-border: rgba(148, 163, 184, 0.35);
+      --code-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      --code-text: #f8fafc;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(248, 250, 252, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-strong: #1d4ed8;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(14, 165, 233, 0.08) 60%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .post-hero__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(96, 165, 250, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.04rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--code-text);
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .post-body pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #7dd79d;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #facc15;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #f472b6;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .post-body pre {
+      background: var(--code-block-bg);
+      color: var(--code-text);
+      padding: 1.2rem 1.4rem;
+      padding-right: 3.6rem;
+      border-radius: 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      box-shadow: var(--code-shadow);
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      position: relative;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      background: rgba(96, 165, 250, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.85);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .code-copy-btn__icon {
+      font-size: 0.95rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      background: rgba(248, 250, 252, 0.85);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      background: rgba(34, 197, 94, 0.92);
+      color: #ffffff;
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 18px;
+      margin: 2.2rem 0;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(37, 99, 235, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">AI Engineering Path</span>
+        <h1 class="post-hero__title">From classic NLP models to LLMs (Part 2)</h1>
+        <div class="post-hero__meta">
+          <span>📅 February 21, 2026</span>
+          <span>⏱️ 66 min</span>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#introduction">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Introduction</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#the-transformer-revolution">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">The Transformer revolution</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#llm-as-system-components-not-just-models">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">LLM as _system components_, not just models</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <details class="post-warning">
+<summary><strong>Article under review</strong> (click to open)</summary>
+
+<p>This article is still a work in progress and under editorial review. Some paragraphs may be incomplete or change significantly in the coming weeks.</p>
+</details>
+
+<p>Welcome to the third installment of the journey to becoming a GeoAI engineer. In this article, we continue talking about history and will focus on how we came to talk about GPT, Gemini &amp; co. and where we started. Not only that, don&#39;t worry!</p>
+<p>Enjoy the read!</p>
+<h2 id="introduction">Introduction</h2>
+<p>If in part 1 we saw the foundations (statistical models, classic embeddings, RNN/LSTM/GRU), and which problems remained even with the first neural networks, here we analyze what allowed the real leap: we enter the <strong>Transformer</strong> era and see why it completely changed the world of text understanding.</p>
+<p>From this point on, we are no longer just talking about &quot;better models&quot;, but about <strong>scalability</strong>, <strong>large-scale pre-training</strong>, and the birth of modern <strong>LLMs</strong>. In practice: how we moved from slow recurrent networks with limited memory to systems capable of handling broad contexts, generalizing human language better, and becoming the basis for tools like ChatGPT, Gemini, and the like.</p>
+<p>The goal of this part is twofold: to understand the key technical concepts (self-attention, scaling, differences between model families) and, above all, to read LLMs with a technical mindset, i.e., as <strong>system components</strong> to be integrated with retrieval, tools, guardrails, and observability.</p>
+<p>We then close with the more practical part: real structural limits (hallucinations, grounding, costs, fragility) and the connection to the context of this path, namely the Geoinformatics field. Enough talk, let&#39;s begin!</p>
+<h2 id="the-transformer-revolution">The Transformer revolution</h2>
+<p>In 2017, Vaswani et al. published <a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental"><em>&quot;Attention Is All You Need&quot;</em></a>, introducing the <strong>Transformer</strong>, an architecture that completely eliminates recurrence in favor of a generalized <strong>self-attention</strong> mechanism<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including">[16]</a>. This conceptually simple change triggered a revolution: the Transformer proved it could scale much better, be trained in parallel, and achieve superior performance on tasks like translation in a fraction of the training time of recurrent models<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training">[17]</a>.</p>
+<p>Let&#39;s look at the key concepts of the Transformer:</p>
+<ul>
+<li><strong>Self-Attention:</strong> it is the heart of everything. In a self-attention layer, each position/token in the sequence <strong>&quot;pays attention&quot;</strong> to all others to decide which words are most relevant for interpreting that position. Technically, for each token <em>i</em>, a <strong>query vector</strong> $q_i$ is calculated and, for each potential reference <em>j</em>, a <strong>key vector</strong> $k_j$ (both obtained by projecting the initial embeddings). An affinity score $s_{ij} = q_i \cdot k_j$ is calculated (higher if word <em>j</em> is relevant for interpreting <em>i</em>). These scores activate a weighted sum of the <strong>values</strong> $v_j$ (another projection of each token) to produce the output for position <em>i</em>. In formula:</li>
+</ul>
+<p>$$ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V $$</p>
+<p>where $Q$ is the query matrix of all tokens, $K$ of the keys, $V$ of the values, and $\sqrt{d_k}$ is a normalization factor (dimension of the key vectors). The softmax produces weights that highlight the positions most similar to the query. The result is that the output for token <em>i</em> is a combination of the representations of <em>all</em> other tokens, <strong>weighted</strong> based on relevance. For example, in <em>&quot;She put down the glass because it was</em> <em>fragile.&quot;</em>, the word <em>&quot;fragile&quot;</em> as a query will assign high attention to <em>&quot;glass&quot;</em> and much less to <em>&quot;she&quot;</em>, successfully resolving the reference of <em>&quot;it was fragile&quot;</em><a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,%E2%80%9D">[18]</a>.</p>
+<ul>
+<li><strong>Multi-Head Attention:</strong> instead of a single Q,K,V projection, the Transformer performs several in parallel (<em>multi-head</em>). Each <em>head</em> is like an attention channel that can focus on a different type of relationship (e.g., one head might focus on subject-verb syntactic relationships, another on pronominal coreferences, etc.). The results from different heads (operating on reduced dimensional subspaces) are concatenated and linearly combined. This enriches the expressive capacity: the model can <strong>simultaneously</strong> consider multiple dependency aspects for each token<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order">[19]</a>.</li>
+<li><strong>Positional Encoding:</strong> a &quot;disadvantage&quot; of pure self-attention is that it treats inputs as an unordered set - if we swap two tokens, the attention scores change, but the architecture has no intrinsic information about sequential position. For this reason, a <strong>positional encoding</strong> (fixed sinusoidal or learned) is added to each initial embedding. Thus, the input vectors contain both the meaning of the word and its absolute/relative position. In this way, the network can distinguish &quot;the cat ate the mouse&quot; from &quot;the mouse ate the cat&quot; based on positional offsets<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,are%20added%20to%20preserve%20order">[20]</a>.</li>
+<li><strong>Encoder-Decoder vs variants:</strong> The original model is Encoder-Decoder: an <strong>Encoder</strong> reads the input sequence (e.g., sentence in the original language) producing contextual representations; a <strong>Decoder</strong> generates the output sequence (e.g., translated sentence) one token at a time, &quot;looking&quot; at both the internal states of the encoder (via <em>cross-attention</em> between decoder and encoder) and the tokens already generated (via autoregressive self-attn with a future mask). Today, simplified configurations exist: <strong>BERT</strong>-type models use only the encoder (bidirectional self-attention on the entire input, for comprehension tasks), while <strong>GPT</strong>-type models use only the decoder (unidirectional, autoregressive self-attention, for text generation)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Original%20architecture%3A">[21]</a>.</li>
+</ul>
+<p><strong>Why the Transformer scales (and changed everything):</strong></p>
+<ul>
+<li><em>Total parallelization:</em> Unlike an RNN, the Transformer has no sequential dependencies <em>within</em> each layer. Each self-attention layer can process <strong>all tokens in parallel</strong> through optimized matrix operations on GPUs/TensorCores. Sequential dependency remains only in the decoder&#39;s autoregression during <strong>inference</strong> (step-by-step generation), but during <em>training</em>, even the decoder can be trained in parallel using masks (the entire output sequence &quot;shifted&quot; as input). In fact, whereas before analyzing 10 words required 10 steps one after another, now I can perform 1 step that covers 10 positions with attention. The efficiency gain is enormous, especially on long sequences<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order">[22]</a><a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,of%20sequential%20computation%2C%20however%2C%20remains">[23]</a>. Transformers trained on gigantic datasets became feasible <em>only thanks to</em> this feature.</li>
+<li><em>Effortless long-range:</em> In a single attention layer, each token can interact <em>directly</em> with any other, even at a distance of 50 positions, <em>with a single step</em>. In an RNN, connecting distant tokens requires many steps and gradients might vanish along the way. The Transformer, instead, calculates global dependencies <strong>in one go</strong>. This leads to naturally capturing long-term relationships (e.g., who is the subject of a distant verb, long-distance agreements, etc.) much better than RNNs. Formally, in Transformers, the number of operations required to connect any two positions is constant (1 per layer, or a few layers for higher-order relationships)<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=hidden%20representations%20in%20parallel%20for,as%20described%20in%20section%C2%A0%2016">[24]</a>, while in an RNN it is proportional to their distance in the sequence.</li>
+<li><em>Greater expressivity:</em> The combination of multi-head attention and position-wise feed-forward (each layer also has an FFN network that individually processes each position after attention) provides the model with an enormous representation capacity. A Transformer with sufficient heads and layers can effectively simulate even sequential operations, but it has the freedom to learn very different structures (e.g., topological orderings of words to represent the syntax tree, etc.). The community has discovered that Transformers tend to spontaneously learn things like <em>grammatical patterns</em>, <em>semantic relationships</em>, and even perform <em>latent forms of reasoning</em> when scaled. In short, their generalization capacity as size increases is superior to that of previous models.</li>
+</ul>
+<p><strong>RNN vs Transformer - summary comparison:</strong></p>
+<ul>
+<li><em>Parallelism:</em> RNNs process 1 token at a time (difficult to parallelize), Transformers process N tokens in parallel (much more efficient on modern hardware)<a href="https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental">[14]</a>.</li>
+<li><em>Long-term memory:</em> RNNs/LSTMs store in the hidden vector with potential attenuation, Transformers with self-attention look directly at every relevant part of the sequence (theoretically infinite context, limited only by the manageable input length).</li>
+<li><em>Complexity:</em> The cost of self-attention grows $O(N^2)$ with length (because it compares every pair of tokens). This is more expensive than an RNN ($O(N)$ per step), but the trade-off is widely offset by parallel execution. On short/medium sequences, the Transformer is significantly faster for the same resources; on <em>very</em> long sequences (e.g., thousands of tokens), it can become heavy in memory and time, but many <em>sparse attention</em> algorithms have been introduced to mitigate this.</li>
+<li><em>Data needed:</em> In general, Transformers have more parameters and flexibility, so they tend to require a lot of data to express their potential. Fortunately, the era of big data has provided immense corpora; furthermore, self-supervised training (language modeling) has made it possible to use practically the entire internet as data.</li>
+<li><em>Modular architecture:</em> The Transformer is easier to distribute across GPU clusters (each layer is a series of standard matrix operations). Moreover, it is modular: parts can be replaced (e.g., different attention schemes, different pos. encoding) without overhauling everything. This has led to an ecosystem of rapid variants and improvements.</li>
+</ul>
+<p><strong>Conceptual schema (step-by-step) of a Transformer encoder layer:</strong><br>1. <strong>Input Embedding + Positional Encoding:</strong> a position vector is added to each token.<br>2. <strong>Self-Attention (multi-head):</strong> $Q,K,V$ are calculated for each token and attention is computed. Each token &quot;collects&quot; relevant information from other tokens. (In the autoregressive decoder, a mask would be applied to prevent peeking at the future).<br>3. <strong>Add &amp; Norm:</strong> there is a residual skip connection that adds the original input of the attention to its output, followed by layer normalization. This helps gradient flow and stability (the model basically learns a sort of identity + corrections).<br>4. <strong>Feed-Forward Network (FFN):</strong> an MLP applied separately to each position (same network for all tokens). Usually 2 layers with ReLU/GELU, expands and contracts dimension (e.g., from d_model=512 to 2048 and back). It serves to introduce non-linearity and mix the information synthesized by the attention.<br>5. <strong>Add &amp; Norm:</strong> another residual connection adding the FFN input (which was the output of the attn sublayer) to the FFN output, then normalization.</p>
+<p>A stack of N such layers forms the Encoder. In the Decoder, each layer additionally has a <em>cross-attention</em> block after the self-attn, where the <em>queries</em> come from the previous decoder layer and the <em>keys/values</em> from the final output of the Encoder</p>
+<ul>
+<li><strong>Auto-encoder models (BERT-type):</strong> use only the encoder part of the Transformer and are trained with <em>bidirectional</em> tasks such as <strong>Masked Language Modeling (MLM)</strong>. In BERT (Devlin et al., 2018), 15% of the input words are randomly masked and the model must predict them by looking <em>both to the left and to the right</em> (thus fully exploiting bidirectional attention)<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=BERT%20is%20trained%20on%20two,clever%20tasks">[27]</a>. Furthermore, BERT was also trained with an auxiliary task of <em>Next Sentence Prediction</em> (deciding if two sentences were in sequence in the original text), encouraging discourse understanding<a href="https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=1,it%20learn%20relationships%20between%20sentences">[28]</a>. BERT provided powerful contextual embeddings that, with light fine-tuning, radically improved dozens of NLP tasks (from classification to QA to NER). These models are not designed for arbitrary generation (they lack an autoregressive decoder), but they excel in <strong>comprehension</strong> and in producing representations to be used as input for simple classifiers. BERT was a watershed: within a few months, practically every NLP benchmark was dominated by BERT variants. Among these: <em>RoBERTa</em> (2019, better trained and without NSP), <em>ALBERT</em> (2019, smaller thanks to factorization and sharing), <em>DistilBERT</em> (2019, compressed), etc.</li>
+</ul>
+<p>Subsequently, attention shifted increasingly toward <strong>large generative models</strong>, particularly with the release of GPT-3. The community discovered that <em>scaling model size and data leads to substantial and sometimes qualitatively new improvements</em>. This was formalized in the <strong>Scaling Laws</strong> by Kaplan et al. (OpenAI 2020): <em>perplexity</em> (a measure of language model goodness) decreases following approximately a power law as parameters, data, and compute used increase<a href="https://arxiv.org/abs/2001.08361#:~:text=,efficient%20training%20involves">[29]</a>. No sign of saturation appeared on the horizon: <em>bigger is better</em>. In other words, if you double parameters (and proportionally data and computation), the error drops in a predictable way (albeit with slightly diminishing returns). This encouraged a <strong>&quot;gigantism&quot;</strong> in models: GPT-3 with 175B was followed by even larger models like <strong>Megatron-Turing NLG</strong> (Microsoft-Nvidia, 530B, 2021) and various Chinese models with 200+ billion parameters.</p>
+<p>However, in 2022, a study by DeepMind (<strong>Chinchilla</strong> by Hoffmann et al.) recalibrated the perspective: it was discovered that many LLMs were <em>under-trained</em> relative to their size. Chinchilla (70B parameters) was trained with 4 times more data than that used for GPT-3, showing superior performance to GPT-3 despite being &lt; half the parameters, because it had better utilized the compute budget<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,Transformers%20to%2022%20Billion%20Parameters">[30]</a>. In practice, for a fixed <em>compute</em> budget, there is an optimal balance between model size and the number of training tokens: models that are too large trained on too little data do not reach their potential; it is better to reduce parameters and extend training. This led to a shift: not just increasing parameters, but ensuring there is <em>much more data</em> (which is a problem, because after scraping the entire textual internet, synthetic or multimodal data are needed to continue).</p>
+<p><strong>Emergent Abilities:</strong> A fascinating phenomenon observed with LLMs is the appearance of capabilities <em>not present in smaller models</em>. Wei et al. (2022) have cataloged various <strong>emergent abilities</strong> that arise beyond certain parameter/data thresholds<a href="https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up">[31]</a>. For example, models under 10B parameters fail to perform simple arithmetic calculations or multi-step logical reasoning, while models like GPT-3 (175B) manage to do 3-digit additions, zero-shot translations, explain jokes, write simple code, etc. These abilities <em>do not scale linearly</em> but seem to activate suddenly when the model surpasses a &quot;critical point&quot; of knowledge and generalization. There is debate as to why—some say they actually emerge gradually but become measurable beyond a certain noise level; others that models begin to perform <em>meta-learning</em>. The fact remains that very large LLMs show qualitatively different behaviors: they can follow instructions (<strong>instruction following</strong>), plan reasoning via <em>chain-of-thought</em>, interface with tools if properly instructed, etc., while small models tend to return disconnected sentences or fail to grasp more complex tasks.</p>
+<p><strong>&quot;Bigger is better&quot; - until when?</strong> The push to scale has brought enormous progress, but it does not solve <em>all</em> problems. Beyond the computational cost (training GPT-3 cost on the order of millions of $, GPT-4 even more), there are <strong>practical limits</strong>: huge models are difficult to update, deploy, and run with low latency. Furthermore, some weaknesses (e.g., tendency to <em>hallucinate</em> facts, bias) persist even as the model grows—simply put, large models hallucinate more convincingly 😅. Studies like Chinchilla suggest that there is no need to increase parameters infinitely if they cannot be fed with adequate data. Today, much research focuses on <em>efficient scaling</em>: better data selection, specialized architectures for long contexts (Transformers with sparse or recurrent attention), <strong>smaller but specialized</strong> models (the emerging so-called <strong>Small Language Models</strong>). An example is <strong>Alpaca</strong> (Stanford, 2023): a model of only 7 billion parameters (based on LLaMA) that, with instruction fine-tuning, manages to behave similarly to ChatGPT on many common requests—indicating that with the right specialization, a 100B monster is not always needed to deliver value.</p>
+<p>In conclusion, from 2018 to today we have moved from Transformers with ~110M parameters (BERT-base) to LLMs with hundreds of billions. This <strong>scaling</strong> has unlocked latent capabilities and opened up new applications. But it has also highlighted problems of <strong>alignment</strong> (avoiding toxic outputs, ensuring truthfulness) and <strong>efficiency</strong>. This brings us to the current context, where an LLM is rarely used &quot;alone&quot;: it is integrated into broader systems to be made reliable, updatable, and useful in real-world application contexts.</p>
+<h2 id="llm-as-system-components-not-just-models">LLM as <em>system components</em>, not just models</h2>
+<p>A modern AI engineer knows that using a powerful <strong>&quot;raw&quot; and isolated</strong> LLM is often not enough. Today, LLMs are typically encapsulated in broader architectures where other components mitigate their limits and enhance their capabilities. Here are the main roles and integrations:</p>
+<ul>
+<li><p><strong>Prompt Engineering and formatting:</strong> The <em>prompt</em> is the immediate interface with an LLM. Since these models are <em>task-agnostic</em> (they do not have a predefined goal beyond generating plausible text), the user must define the <strong>instruction</strong> or question clearly and often include <em>additional context and examples</em>. Designing good prompts is an art: e.g., providing the desired format in the request, or concatenating a short example conversation that shows the model how it should respond. For complex systems, prompts are sometimes constructed automatically by combining various pieces (instructions, retrieved knowledge, conversation memory, etc.) - this is referred to as prompt <strong>orchestration</strong>. Good prompt engineering can improve reliability and precision without touching the underlying model. In production, prompts must also be <strong>version-managed</strong>: small changes (an extra sentence, a different example) can significantly alter the output. Therefore, logging and testing on prompts are needed to ensure that behavior remains stable as prompts vary and potentially across different model versions.</p>
+</li>
+<li><p><strong>Retrieval-Augmented Generation (RAG):</strong> One of the major problems with LLMs is that their <em>knowledge</em> is static (limited to training data) and sometimes inaccurate. The RAG technique seeks to <strong>ground</strong> the LLM in up-to-date and factual information by integrating a <em>retrieval</em> component into the loop. In practice, when faced with a question or task, the system first performs a search in an external knowledge base (documents, databases, web) and then constructs a prompt that includes the found content as <strong>context</strong> for the LLM. The LLM is then guided to formulate the response based on that context instead of internal knowledge alone<a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static">[32]</a>. For example, if we ask: <em>&quot;What is the inflation rate in Italy this year?&quot;</em>, a base LLM (trained until 2021) can only guess and risks hallucinating; with RAG, the system will search reliable sources for the latest data and provide them to the model, which will summarize them correctly. <strong>Benefits:</strong> RAG addresses both the problem of stale knowledge (because it inserts updated info) and reduces hallucinations (the model is &quot;grounded&quot; in explicit sources)<a href="https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=LLMs%27%20knowledge,to%20two%20key%20issues">[33]</a>. Furthermore, it allows for smaller LLMs with limited general knowledge but integrated with extensive <strong>external memories</strong>. Many &quot;LLM-enabled&quot; applications (such as chatbots on company documentation, customer support assistants, Q&amp;A engines on specific data) use RAG: they &quot;break down&quot; the user prompt into queries for a search engine (often on a <strong>vector database</strong> with semantic embeddings of documents) and package the results into a final prompt for the LLM.</p>
+</li>
+<li><p><strong>Tool use and API calling:</strong> Next-generation LLMs can be seen as linguistic &quot;brains&quot; that reason but have no direct interaction with the outside world (other than text). To extend their capabilities, they are equipped with the faculty to <strong>call external tools</strong>. For example, an LLM integrated into an assistant could, upon request, invoke: calculators, weather services, SQL databases, Python functions, search engines, etc. This requires an architecture that intercepts when the model &quot;decides&quot; to use a tool. Various approaches exist: one is the <strong>ReAct</strong> (Reason+Act) pattern, in which the model explicitly produces a <em>chain-of-thought</em> and action commands (e.g., Search(&quot;latest inflation news Italy&quot;)), which the system executes, then returns the result to the model to allow it to continue generation<a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=decision,and%20coordinate%20with%20other%20agents">[34]</a><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=Overview%20of%20LLM,to%20the%20LLM%20prompt%20through">[35]</a>. Another approach is to provide the LLM with a list of available functions (with relative documentation in the prompt) and have it emit a special syntax when it wants to invoke them (see e.g., <em>OpenAI function calling</em> or <em>LangChain tools</em>). The key idea is that the LLM acts as an intelligent <strong>controller</strong>: it understands which tool is needed and with which parameters, delegates the sub-task, and then incorporates the response into its flow. This enormously increases reliability on tasks where the pure LLM would be weak: precise mathematical calculations, data lookup, real-time web interactions, image manipulation, etc. In practice, the LLM transitions from a <em>soloist</em> to an <em>orchestrator</em> of a network of services.</p>
+</li>
+<li><p><strong>Agents (LLM-driven agents):</strong> An <em>agent</em> is a more complex system that combines the mechanisms above (memory, search, tools) to pursue higher-level goals autonomously. An LLM agent typically: receives a goal (e.g., <em>&quot;Book a flight from Milan to New York for next Friday under €500&quot;</em>), then plans a series of actions (searches for flights, compares prices, perhaps asks the user for confirmation, and finally calls the booking API). During this process, the LLM might need to <strong>iterate</strong>: reflect on partial results, update the plan, handle errors (e.g., no flight under €500, relax constraints). Implementing reliable agents requires care: the model must be provided with a sort of <em>loop</em> where it can generate thoughts and actions in cycles until it reaches a termination condition. Furthermore, it is necessary to ensure it does not take unwanted steps. Frameworks like <strong>LangChain</strong>, <strong>Microsoft Semantic Kernel</strong>, or <strong>Hugging Face transformers agent</strong> provide abstractions for building agents with LLMs, defining available tools and managing the prompt cycle with action results. This is a frontier field, but it promises AI systems that are more <strong>autonomous and proactive</strong> in solving complex problems by breaking them down into sub-problems (much like we humans would). A core principle that has also emerged in OpenAI/AWS guides is: <em>&quot;an LLM alone is not enough for intelligent and reliable behavior; it needs to be embedded in a structured workflow with planning, memory, tools...&quot;</em><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=decision,and%20coordinate%20with%20other%20agents">[34]</a><a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,building%20robust%2C%20extensible%2C%20and%20intelligent">[36]</a>.</p>
+</li>
+<li><p><strong>Quality control, safety, and observability:</strong> By integrating LLMs into larger systems, we also have the opportunity to introduce <strong>verification</strong> and <strong>monitoring</strong> modules. For example, after the LLM generates a response, we could have a <strong>validation</strong> step (another model or a set of rules checks if the response meets certain criteria: no prohibited content, no missing info, correct format, etc.). Or implement a <strong>self-reflection</strong> loop: the model re-reads its response and evaluates whether it seems coherent and correct (additional <em>chain-of-thought</em> or <em>vote/verify</em> techniques). In production, it is crucial to have <strong>telemetry</strong>: measuring latency of LLM calls, number of tokens used, parsing error rates, etc. <strong>LLM observability</strong> tools are used to track not only classic metrics but also indicators such as: frequency of detected hallucinations, cost trends (tokens per request), types of requests made by the user, and user feedback. All of this falls under <strong>ML-Ops for LLMs</strong> (sometimes called LLMOps). You can&#39;t really put a conversational model in the hands of millions of users without adequate logging and monitoring: &quot;things can get weird in production&quot; - spiking latencies, out-of-policy outputs after an update, runaway costs, etc<a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=experiences,after%20a%20minor%20prompt%20change">[37]</a><a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1.%20Latency%2C%20cost%2C%20and%20third,dependencies">[38]</a>. An AI Engineer must implement <strong>guardrails and alerts</strong>: for example, if the usage rate of a tool (external API) called by the agent suddenly rises abnormally, there might be a prompt injection in progress; or if the average response time increases, perhaps the model is &quot;reasoning&quot; too long on certain queries (maybe malicious users are providing inputs to stress it). LLM observability means being able to <em>see inside</em> these dynamics and react<a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=Engineering%20teams%20need%20more%20than,built%20to%20handle%20AI%20workloads">[39]</a><a href="https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1,and%20scoring%20of%20LLM%20responses">[40]</a>.</p>
+</li>
+</ul>
+<p>In summary, <strong>today an LLM in production is rarely bare-bones</strong>. It is wrapped in a layer of <strong>engineered prompts</strong>, with possible <strong>retrieval</strong> for updated knowledge, the ability to call external <strong>tools</strong>, and <strong>control</strong> modules. All this for reasons of:</p>
+<ul>
+<li><strong>Latency &amp; cost:</strong> minimizing useless tokens (optimized short prompts<a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,the%20entire%20history%20every%20time">[41]</a>, caching frequent responses<a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,logic%20and%20cache%20invalidation%20strategy">[42]</a>, making the model do only what is necessary and delegating the rest). For example, if I know that 90% of user queries are simple, I could use a smaller/cheaper model for those and call the large model only for the difficult 10%<a href="https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=%2A%20Model%20right,com">[43]</a>. Or <em>summarize</em> the conversation in the background to avoid passing the entire context every time (reducing tokens, thus cost, and latency).</li>
+<li><strong>Reliability:</strong> using tools for tasks where the LLM is weak (calculation, real-time data), retrieval to improve factual accuracy, validation to prevent incorrect outputs. This increases confidence that the system responds correctly and decreases risks (e.g., if the LLM hallucinates a financial figure, we could mitigate this by requiring it to <em>always</em> cite a knowledge document: no document = the model must say &quot;I don&#39;t know&quot;).</li>
+<li><strong>Maintainability:</strong> by keeping the pieces separate, I can update the knowledge base without having to re-train the model; I can modify prompts or add new tools if requirements change. It is a more modular and engineerable approach compared to seeing the LLM as a monolith.</li>
+<li><strong>Observability:</strong> a component-based design allows logging the interactions between them. I can see which document was fetched in RAG, which tool was called and with what input, and of course the user-model conversation. These logs help diagnose problems: if the LLM gives strange answers, perhaps the knowledge document passed was wrong or the prompt has degraded. Without this visibility, an LLM is a black box that &quot;occasionally goes haywire&quot; and you don&#39;t know why.</li>
+</ul>
+<pre><code class="hljs language-markdown">In conclusion, the <span class="hljs-emphasis">_system view_</span> of an LLM is like <span class="hljs-strong">**a linguistic brain inserted into a body with sensors and actuators**</span>: the LLM provides general cognitive abilities (understanding, reasoning, language), but it needs &quot;eyes and ears&quot; (search modules, databases) and &quot;hands&quot; (APIs to act) to be truly useful and reliable in the real world.
+
+<span class="hljs-section">## Limiti strutturali dei LLM</span>
+
+Despite the miracles they seem to perform, current LLMs have important <span class="hljs-strong">**intrinsic limits**</span>. Understanding them is crucial because many usage challenges arise from these limits, which are not solved simply by &quot;training a bit better&quot; but require architectural or system interventions (as seen above). The main ones are:
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Hallucinations:**</span> An LLM &quot;hallucinates&quot; when it invents information that does not correspond to factual reality, even while expressing it convincingly. Example: you ask a model to list an author&#x27;s works and it inserts 2 non-existent books among the correct titles, without blinking. Why does this happen? At a fundamental level, the training of an LLM pushes it to <span class="hljs-emphasis">_predict the next most probable word_</span>, not to verify truth. If a name often appears associated with certain facts in the training data, the model will repeat them even if they are false in that specific case. Furthermore, when pushed out of distribution (a question about something it has never read about), the model <span class="hljs-strong">**still tends to give an answer<span class="hljs-emphasis">_, because that is how it is trained (penalized if it does not produce output). It does not have a &quot;verified&quot; knowledge base
+
+- **Difficulty of incremental updates:** Linked to the previous point, LLMs **do not have a separable memory** that is easily updatable. If a country&#x27;s capital changes, a classic DB-based system modifies a row in a table and all future queries reflect the change. An LLM, on the other hand, has &quot;knowledge&quot; imprinted in the synaptic weights of a massive network: to update one piece of information, you would need to retrain (extremely expensive) or attempt neuronal editing/local fine-tuning techniques. But these interventions are risky: _</span>catastrophic forgetting_ (you change one piece of information and unknowingly ruin others connected to it), <span class="hljs-emphasis">_overfitting_</span> (the model starts repeating the updated training phrase and loses fluidity), etc. In short, LLMs **</span>are not designed as updatable knowledge bases<span class="hljs-strong">**, but as static statistical models. Here too, RAG is a patch: you keep the knowledge in an external DB and make the model use it, so you update the DB and the model &quot;knows&quot; things again. But the model itself remains static; if you ask it without providing updated context, it will give you the old information. In critical applications, this is a major limitation (think of medical assistants that must keep up with guidelines, or news chatbots… you can&#x27;t retrain GPT-4 every day with the news).
+- **</span>Bias and toxicity:** LLMs learn from training data, which includes large portions of the Internet, social media, books… Unfortunately, this data contains <span class="hljs-strong">**cultural biases, stereotypes, hate speech, disinformation**</span>, and so on. As a result, the model internalizes them and, if not filtered, can reproduce or even amplify them. There are documented cases of models generating racist or sexist outputs when provoked. Companies have introduced <span class="hljs-strong">**fine-tuning with Human Feedback (RLHF)**</span> techniques and filters to mitigate these problems (for example, ChatGPT has a moderate &quot;default personality&quot; and refuses certain content). But it is a <span class="hljs-emphasis">_post hoc_</span> mitigation. Intrinsically, if you ask an LLM to impersonate a certain toxic role or explore in an unfiltered manner, the original biases can emerge. Furthermore, even on non-toxic things, LLMs can have subtle biases: e.g., a tendency to name more male inventors than female, or assuming Western contexts as default in stories, etc. These reflect the datasets (more content on historical men, etc.). <span class="hljs-strong">**Correcting bias after training**</span> is difficult: you must either filter incoming data (proactive censorship, but risks reducing diversity) or apply penalties via RL (risks ruining knowledge). It is an active field of research. As an engineer, you must be aware of this: <span class="hljs-emphasis">_never_</span> assume that the LLM is neutral or free of prejudice. It must be tested and monitored, especially on sensitive outputs (e.g., advice in the medical-legal field).
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Adversarial fragility and inconsistency:**</span> LLMs can be surprisingly <span class="hljs-strong">**sensitive to small changes**</span> in the prompt. For example, reversing the order of two sentences in the question can sometimes lead to different answers. Or adding a superfluous detail can confuse the model. There are also <span class="hljs-emphasis">_prompt injection_</span> attacks: if the user inserts something like &quot;Forget previous instructions. \[Malicious instruction\]&quot; into their input, some models might obey and violate the original constraints. This vulnerability arises from the fact that the model does not have a strong concept of <span class="hljs-emphasis">_higher-level truth_</span> or <span class="hljs-emphasis">_permissions_</span>: every input is text to be continued, so if the input contained &quot;The following is a malicious prompt: ...&quot; the model might incorporate it into its internal narrative. In short, <span class="hljs-strong">**they lack formal robustness**</span>. Even internal logical consistency is not guaranteed: they can contradict themselves, or provide two different answers to paraphrased questions. For an engineer, this means you need to put up <span class="hljs-strong">**safety nets**</span>: e.g., validate answers through separate models/verifiers, do not trust blindly on matters of correctness. A/B testing of prompts and behavioral <span class="hljs-emphasis">_unit tests_</span> for the model are also desirable to understand how it responds to various phrasings, and to choose the least unstable ones.
+
+<span class="hljs-strong">**Why are these intrinsic limits?**</span> Ultimately, because they derive from the very nature of language models. An LLM is trained to compress the statistics of a massive corpus of text into its parameters. It has no direct perception of the world nor a causal model of the world (only linguistic correlations). Therefore, it cannot know if a statement is <span class="hljs-emphasis">_true_</span>, it can only judge if it is <span class="hljs-emphasis">_probable_</span>. Bias and toxicity are present because they are present in human data and the model has no ethical values of its own—unless we insert them through additional objectives. Inconsistency and fragility derive from not having reliable symbolic reasoning: even if advanced models show traces of logic, at their core they do not perform symbolic inference, so they can fall into contradiction or be misled.
+
+These limits <span class="hljs-emphasis">_are not bugs that can be fixed with a patch_</span>, but foundational aspects. This means that when we design systems with LLMs, we must <span class="hljs-strong">**build around**</span> them to mitigate them. For example, for up-to-date knowledge (grounding) we use RAG; for hallucinations, we can have a search engine double-check the response or provide sources; for bias/toxicity, we put moderation filters and style definitions in the prompt; for inconsistency, we use agents that double-check responses or segment problems into easier sub-problems.
+
+In the future, new architectures (e.g., deeper integration with knowledge bases, or multi-modal models that <span class="hljs-emphasis">_see_</span> and <span class="hljs-emphasis">_act_</span> in the environment) may reduce these limits. But as of 2026, those who use LLMs must do so with awareness of these <span class="hljs-emphasis">_intrinsic uncertainties_</span>, adopting an &quot;AI safety&quot; mindset: never let an LLM make irreversible decisions without supervision, and structure products so that it is possible to intervene if (when) something goes wrong.
+
+<span class="hljs-section">## Connection with your GEO &amp; Disaster Response path</span>
+
+Let&#x27;s now turn to the use case that interests you: applying these technologies in the geospatial and disaster response field (earthquakes, natural disasters, etc.). This sector combines <span class="hljs-emphasis">_multi-modal_</span> data (texts, maps, satellite images, sensors) and requires both <span class="hljs-strong">**precise quantitative analysis**</span> (e.g., detecting damage from images) and <span class="hljs-strong">**synthesis and reasoning capabilities**</span> (e.g., drafting a situation report, making inferences about risks). LLMs can play a valuable role, but <span class="hljs-strong">**they must be correctly integrated**</span> with existing geospatial workflows. Let&#x27;s look at some scenarios:
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**LLM + RAG for post-earthquake reports:**</span> Imagine that after a strong earthquake you need to quickly create a report summarizing the damage, the most affected areas, the state of infrastructure, and possible actions. Various sources are available: fire department reports, geolocated social media posts, satellite images with collapse analysis, GIS databases with buildings and population. An LLM alone <span class="hljs-emphasis">_knows_</span> nothing about the earthquake (unless trained on past events, but not on the new one). However, we could use it as a <span class="hljs-strong">**language generation engine**</span> by feeding it specific event data. With a RAG approach, the system can retrieve, for example: <span class="hljs-emphasis">_&quot;textual reports from the fire department in the last 12h&quot;_</span>, <span class="hljs-emphasis">_&quot;results of automatic analysis from images (X buildings collapsed in area Y)&quot;_</span>, <span class="hljs-emphasis">_&quot;lists of blocked roads from live maps&quot;_</span>. This information is inserted (perhaps in an already summarized form) into the prompt, and the LLM is tasked with drafting a <span class="hljs-strong">**coherent and readable report**</span> for, for example, the authorities. The LLM excels at <span class="hljs-strong">**connecting the dots**</span>: it can take the list of facts and transform it into a narrative: &quot;In the northern part of the city (District XX), approximately 30 buildings have collapsed, with the highest concentrations of damage along Via Alfa and Via Beta. Rescue teams have saved 12 people from the rubble and report at least 5 missing. The bridge over the river is impassable, temporarily isolating the Gamma hamlet...&quot;. Without an LLM, a human operator would have to manually write this summary by integrating many sources; with the LLM, the operator can focus on verifying and correcting, instead of writing from scratch. <span class="hljs-strong">**Important:**</span> as seen, here the LLM must be <span class="hljs-emphasis">_grounded_</span> to real data: we don&#x27;t want it to invent numbers of missing persons! Therefore, we provide precise figures and details via RAG, and perhaps ask the model to cite sources (if the output is for internal use only). In this way, the LLM does well what it knows how to do—language and textual reasoning—but does not act &quot;in the absence of information.&quot;
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**LLM + agents for emergency decision support:**</span> In crisis situations, a decision-maker might query an AI system with complex questions, such as <span class="hljs-emphasis">_&quot;Where should we concentrate USAR teams based on reports and damage data?&quot;_</span>. Responding requires: understanding the question (linguistic task), having data (geospatial and textual), and reasoning by combining <span class="hljs-emphasis">_criteria_</span> (for example: USAR teams = urban search and rescue, so they are needed where collapsed buildings and potential trapped population are highest). A single static model would struggle. But we can build an <span class="hljs-strong">**LLM agent**</span> equipped with tools: one that queries a GIS database for the number of collapsed buildings per zone, one that reads the latest incoming SOS messages, and one that consults the registry of already deployed teams. The agent can create a plan like: 1) obtain a collapse density map; 2) obtain a list of reports of trapped people; 3) cross-reference by zone; 4) propose priorities. Steps 1) and 2) are done via tools (for example, by calling a geospatial API that returns data, or executing a query on an emergency knowledge graph). Then the LLM itself can generate a response like: <span class="hljs-emphasis">_&quot;The areas with the greatest need for USAR seem to be A and B. In neighborhood A (20 collapsed buildings, ~50 people reported under rubble) there is currently only one operational team; I suggest sending at least two more. In neighborhood B (15 collapses, 30 people reported) the situation is similar. Areas C and D have fewer collapses or already have sufficient coverage.&quot;_</span>. This is <span class="hljs-strong">**decision support**</span>: the LLM does not make the decision but provides a reasoned and quickly readable analysis, integrating disparate data (GIS + reports + resource status). This allows the person in charge to confirm and act much faster. Again, the LLM here acts as an <span class="hljs-strong">**intelligent collector**</span>: it manipulates data with reasoning and presents it effectively.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**LLM as a &quot;cognitive interface&quot; over Remote Sensing (RS) models:**</span> In satellite imagery analysis or remote sensing, we often obtain technical results: classification maps, confusion matrices, damage percentages per cell, etc. An LLM can help translate these raw outputs into <span class="hljs-strong">**human-usable insights**</span>. For example, a computer vision model processes post-disaster images and produces shapefiles with polygons of flooded areas and a severity indicator per area as output. An LLM could take these results (converted into structured text) and generate a <span class="hljs-strong">**briefing**</span>: <span class="hljs-emphasis">_&quot;Satellite analyses indicate extensive flooding along the Delta River: approximately 45 km² of territory are flooded. The municipalities of X and Y are particularly affected, where water has covered ~30% and ~45% of the urban area, respectively. The industrial area of Y is entirely submerged with possible release of substances into the water. The main infrastructures affected include the SP123 and the Z railway, both of which are interrupted.&quot;_</span>. Note how many deductions and aggregations are included: the LLM can describe the total area (summing polygons), convert that information into an impactful sentence, identify municipalities within the polygons (cross-referencing coordinates with names via a GIS tool in the backend), and mention affected infrastructure (if it has vector data on roads and railways, it can cross-reference them). In short, we use it as an <span class="hljs-emphasis">_intelligent report generator_</span> that sits on top of numerical models. <span class="hljs-strong">**What should the LLM not do?**</span> It should not perform the image <span class="hljs-emphasis">_segmentation_</span> itself! To recognize flooded pixels, there is a specialized vision model that works on rasters and perhaps uses convolutional networks or other architectures. The LLM does not have direct visual perception (unless using a multimodal model, but currently, for precision tasks, dedicated models are better). Therefore, the rule is: leave the quantitative &quot;pixel-wise&quot; work to RS models (they are trained for high accuracy on that), and use the LLM to <span class="hljs-strong">**connect those results with knowledge and present them**</span>. An LLM can, for example, explain why a certain flooding pattern is dangerous (&quot;this area was already prone to landslides; the flood makes it unstable&quot;), something a pure RS model does not do.
+
+<span class="hljs-strong">**Multimodality (text ↔ images ↔ geospatial):**</span> It is worth noting that the current trend is towards models capable of ingesting multiple forms of data. For example, <span class="hljs-emphasis">_GPT-4_</span> has vision capabilities: you can give it an image and it produces text about it. There are models like <span class="hljs-strong">**CLIP**</span> and <span class="hljs-strong">**BLIP**</span> that connect vision and language. For geospatial data, works are emerging that integrate georeferenced graphs with LLMs (e.g., GraphRAG in geospatial). So in the not-too-distant future, you could have a <span class="hljs-emphasis">_multimodal LLM_</span> that directly takes both maps and texts. Already today, services like <span class="hljs-strong">**Google&#x27;s PaLM-E**</span> aim to unite vision, language, and robotics. In the context of disasters, imagine giving the model both the damage map and localized tweets: a multimodal model could directly combine them and explain the situation to you. We are at the beginning of this—for now, the modular approach (vision model + LLM) is more practical. But keep an eye on research, because tools like <span class="hljs-strong">**Imagen (Google)**</span> or <span class="hljs-strong">**Kosmos-1 (Microsoft)**</span> are building bridges between visual data and LLMs.
+
+<span class="hljs-strong">**What an LLM <span class="hljs-emphasis">_must not do_</span> in geospatial/DR:**</span> as already mentioned, do not entrust an LLM with the <span class="hljs-strong">**technical precision**</span> that requires dedicated algorithms. If you need to get the latitude/longitude of an address, use a geocoding API, don&#x27;t ask the model to invent it! If you need to calculate the magnitude of an earthquake from seismographic data, you need physical formulas, not an LLM&#x27;s &quot;opinion&quot;. LLMs have no guarantees of numerical accuracy or scientific rigor. Therefore, the <span class="hljs-emphasis">_core_</span> parts of analysis (detecting damage, calculating extents, exact counting) must be done with deterministic methods or specialized ML models. LLMs instead excel in: <span class="hljs-strong">**synthesis, high-level correlation, communication, Q&amp;A**</span>. Furthermore, they are excellent at filling general knowledge gaps: if in a report you also need to explain concepts (e.g., what a seismic fault is, or what the effects of soil liquefaction are), the LLM can generate those paragraphs by drawing on its trained knowledge.
+
+<span class="hljs-strong">**Integration with existing GEO pipelines:**</span> You could imagine your system as: data ingestion pipeline (satellites, sensors, open data) → analytical models (CV for images, GIS computations, etc.) → <span class="hljs-strong">**LLM layer**</span> for output to the user. During the design phase, define the API between the analytical layer and the LLM well. It is often convenient to structure the data in a textual format understandable to the model (e.g., bullet points or JSON), also including explanations. For example, instead of throwing in raw numbers, you could say: &quot;Road X: interrupted (collapsed bridge)&quot;. This way, the LLM already knows that road X is interrupted and why, and can easily include it in its narrative, perhaps reasoning &quot;collapsed bridge → that municipality to the north is isolated&quot;. If you only gave &quot;road X status: 0&quot;, it would have to infer the meaning of 0, which is much harder. Therefore, doing some <span class="hljs-strong">**data preprocessing for LLMs**</span> is useful: converting technical results into simple sentences or statements.
+
+<span class="hljs-strong">**Cross-validation:**</span> in safety-critical areas (disasters are), an LLM must not be the only voice. <span class="hljs-emphasis">_Ensemble_</span> approaches can be used: have the LLM generate the report, then have another LLM proofread it, asking to highlight contradictions or possible errors, and finally have a human-in-the-loop (an operator) who verifies key points. Or generate two versions (perhaps with different temperatures or different prompts) and compare. In short, use the LLM as an assistant, not as an oracle.
+
+In conclusion on GEO &amp; Disaster Response: an LLM can act as an <span class="hljs-strong">**intelligent collector and communicator**</span> on top of geospatial data. Think of it as a <span class="hljs-strong">**virtual analyst**</span> who knows a bit of everything (thanks to general training) and who can be instructed to use your specific data to produce analysis and reports. It frees you from having to manually interpret every map and every table, proposing an integrated picture. But you, as an engineer, set up the ecosystem: specialized models to extract info from raw data, well-organized databases, and then the appropriately harnessed LLM (targeted prompts, RAG, tools) to stitch everything together. This way, you exploit the best of both worlds—the quantitative accuracy of geo models and the <span class="hljs-emphasis">_linguistic intelligence_</span> of LLMs.
+
+<span class="hljs-section">## Conclusions and evolutionary conceptual map</span>
+
+To recap what we have seen, we present a <span class="hljs-strong">**conceptual map**</span> of the NLP → LLM evolution, and some guidelines for an AI Engineer on what is fundamental to master and what can be (relatively) neglected:
+
+<span class="hljs-section">### Summary conceptual map (NLP → LLM)</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Statistical era (1990s - early 2000s):**</span> Approaches based on simple probability models and manual features. Examples: <span class="hljs-emphasis">_n-grams_</span> for language modeling[<span class="hljs-string">\[2\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third), Markov models (HMMs) for sequential tagging, <span class="hljs-emphasis">_bag-of-words + TF-IDF_</span> for IR and classification. <span class="hljs-strong">**Limitations:**</span> no understanding of meaning, context limited to a few words, require many observations to cover rare cases[<span class="hljs-string">\[3\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations). Engineers had to design features (keyword lists, regex patterns, etc.). Obsolete today except for fast baselines.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Early neural networks for NLP (2000s - early 2010s):**</span> Introduction of <span class="hljs-strong">**feed-forward**</span> networks for language models (Bengio et al. 2003) and especially <span class="hljs-strong">**word embeddings**</span> (Mikolov 2013)[<span class="hljs-string">\[45\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Researchers%3A%20Tomas%20Mikolov%20et%20al,%28GloVe%2C%202014). Here the focus is on representing words in dense vectors that capture semantic similarity (famous <span class="hljs-emphasis">_king-man+woman=queen_</span>[<span class="hljs-string">\[5\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D)). Neural models begin to outperform word counters, partially solving sparsity. <span class="hljs-strong">**However**</span>, these models do not yet model entire sentences well: embeddings are static, and feed-forward networks had a limited window context (e.g., 5 words). The <span class="hljs-emphasis">_&quot;pre-training + fine-tuning&quot;_</span> paradigm emerges in a primitive version: general embeddings are pre-trained, then used in models for specific tasks.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Sequence modeling with RNNs (2014-2016):**</span> The need for broader context leads to the massive adoption of <span class="hljs-strong">**RNNs, LSTMs, and GRUs**</span>. <span class="hljs-emphasis">_Sequence-to-sequence_</span> with attention (Bahdanau et al. 2014) revolutionizes machine translation: an LSTM encoder encodes the source sentence, an LSTM decoder generates the target sentence, with <span class="hljs-strong">**attention**</span> acting as a flexible bridge (at the time, attention was a specific mechanism, not the entire architecture). LSTMs dominate many applications - e.g., speech synthesis, image captioning (image captioning combined CNN+LSTM). <span class="hljs-strong">**Problems solved:**</span> short-term memory, word order, variable lengths. <span class="hljs-strong">**Remaining problems:**</span> difficulty with very long dependencies (LSTM improves but doesn&#x27;t work miracles for entire paragraphs)[<span class="hljs-string">\[8\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to), non-parallel and slow training[<span class="hljs-string">\[46\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,The%20fundamental), many tricks needed to avoid divergence (clipping, orthogonal initializations, etc.). In this phase, models began to have a few tens of millions of parameters and GPU training became standard in NLP.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**The Transformer (2017):**</span> <span class="hljs-emphasis">_Game changer_</span>. Introduces multi-head self-attention and abandons recursion[<span class="hljs-string">\[16\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including). Result: models that are faster to train, scale to massive data, and capture global context better than LSTMs. In a few months, it replaces LSTMs in translation, then in practically every sequential task. Libraries like Tensor2Tensor and later Hugging Face accelerate adoption. Encoder-only Transformer models (BERT, 2018) and decoder-only (GPT, 2018) usher in the era of <span class="hljs-strong">**pre-trained language models**</span>.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Large-scale pre-training (2018-2019):**</span> With BERT and GPT, the potential of training models on massive amounts of generic text and then reusing them is seen. BERT achieves SOTA on 11 NLP tasks with minimal fine-tuning - the &quot;ImageNet moment&quot; for NLP. GPT-2 shows fluid and coherent text generation like never before (to the point that OpenAI was initially reluctant to release it entirely, fearing abuse). The open community replicates BERT easily (see RoBERTa), while GPT-2 remains somewhat exclusive due to training costs. <span class="hljs-strong">**ULMFiT**</span> (Howard &amp; Ruder) also appears, showing universal fine-tuning. The base models BERT-base (110M parameters) and GPT-2 (1.5B parameters) already seemed large… but it was only the beginning.
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Large Language Models emerge (2020-2021):**</span> OpenAI releases <span class="hljs-strong">**GPT-3 (175 billion)**</span>[<span class="hljs-string">\[26\</span>]](https://arxiv.org/abs/2005.14165#:~:text=language%20models%20greatly%20improves%20task,several%20tasks%20that%20require%20on), demonstrating that <span class="hljs-emphasis">*scaling*</span> by an order of magnitude yields impressive zero-shot/few-shot capabilities. The concept of <span class="hljs-strong">**prompting**</span> spreads as an alternative to fine-tuning: GPT-3 solves tasks described in the prompt without changing weights. Other big labs follow: Google Brain with <span class="hljs-strong">**PaLM (540B)**</span>, NVIDIA/Microsoft with Megatron-Turing (530B). Sparse architectures are also explored (Switch Transformers with gating to reach trillions of effective parameters, Mixture-of-Experts), but dense ones like GPT-3 dominate. <span class="hljs-strong">**Emergent abilities**</span> become a research topic - large models show language understanding, basic arithmetic and logical reasoning, and programming, which small models did not show[<span class="hljs-string">\[31\</span>]](https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up). In parallel, DeepMind publishes <span class="hljs-strong">**Gopher (280B)**</span> and an analysis
+
+<span class="hljs-bullet">-</span> The <span class="hljs-strong">**architectural foundations**</span>: how a Transformer works (self-attention, multi-head, etc.)[<span class="hljs-string">\[47\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Core%20ideas%3A), differences between RNNs and Transformers[<span class="hljs-string">\[14\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental), what encoders vs decoders are. Not necessarily knowing how to derive the equations by hand, but understanding the <span class="hljs-emphasis">_data flow_</span> and why it is efficient. This helps in debugging tensor dimensions, understanding shape errors, and reasoning about limitations (e.g., why a 2k token context model cannot accept 10k tokens without modifications).
+<span class="hljs-bullet">-</span> The concept of <span class="hljs-strong">**pre-training vs fine-tuning vs prompting**</span>: knowing that models like GPT/BERT are pre-trained on massive corpora with a generic objective, then can be <span class="hljs-emphasis">_fine-tuned_</span> (updating weights) on specific tasks or <span class="hljs-emphasis">_prompted_</span> with appropriate instructions. This influences design choices: if you have little specific data, prompt engineering might be better than weight fine-tuning, etc.
+<span class="hljs-bullet">-</span> Knowing the <span class="hljs-strong">**main model families**</span> and what they offer: BERT (encoder, bidirectional, excellent for understanding), GPT (decoder, generative), T5 (&quot;unified&quot; text-to-text encoder-decoder), and some open models like GPT-neo/Llama, Bloom. Not so much the implementation details, but the conceptual differences: an AI engineer must know how to choose &quot;for this task I need a generative model (e.g., completion/assistant) vs a classification model (e.g., info extraction).&quot;
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Limitations and failure modes**</span> of LLMs: <span class="hljs-emphasis">_hallucination_</span>, <span class="hljs-emphasis">_bias_</span>, <span class="hljs-emphasis">_context length limit_</span>, etc., and relative mitigations[<span class="hljs-string">\[33\</span>]](https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=LLMs%27%20knowledge,to%20two%20key%20issues)[<span class="hljs-string">\[38\</span>]](https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1.%20Latency%2C%20cost%2C%20and%20third,dependencies). This is essential for designing robust systems: if you know an LLM can invent things, set up checks; if you know it cannot process inputs &gt; 4096 tokens, you must think about chunking or special long-form models.
+<span class="hljs-bullet">-</span> The principles of <span class="hljs-strong">**Retrieval-Augmented Generation**</span>: even if you don&#x27;t implement the vectorization algorithm yourself, you must understand how a vector database can integrate, how to embed queries and documents, and what cosine similarity is. And above all, <span class="hljs-emphasis">_when RAG is needed_</span>: knowledge-intensive situations with up-to-date info[<span class="hljs-string">\[32\</span>]](https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static). Practical examples: chatbots for documentation (the model alone doesn&#x27;t know precise answers, RAG is needed). Also know the limits: if documents are long, the model might not use them well if there are too many; if the query embedding fails, the model responds blankly. Therefore, test end-to-end pipelines.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Tool/Agents patterns**</span>: Familiarity with at least one library (LangChain, etc.) to orchestrate LLMs with tools. It is not necessary to know the details of an agent algorithm like ReAct, but <span class="hljs-emphasis">_yes_</span>, you should know how the LLM can execute iterative steps and call functions[<span class="hljs-string">\[48\</span>]](https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,and%20coordinate%20with%20other%20agents)[<span class="hljs-string">\[35\</span>]](https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=Overview%20of%20LLM,to%20the%20LLM%20prompt%20through). It is also very useful to know how to read an agent&#x27;s &quot;chain-of-thought&quot; logs for debugging.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Practical prompt engineering:**</span> Knowing how to formulate prompts for various scenarios (e.g., role prompt, few-shot with examples, delimiting context with special tokens, etc.). Knowing tricks like: <span class="hljs-emphasis">_&quot;Think step by step&quot;_</span> to encourage reasoning, or providing structured instructions (&quot;Respond with JSON containing fields X, Y, Z&quot;). This has become almost a programming skill. An AI engineer must iterate on the prompt to improve output and watch out for <span class="hljs-emphasis">_injections_</span> from user input. In short, consider the prompt as part of the application code.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**MLOps for LLMs:**</span> Even if not in detail, basic concepts: logging, monitoring cost and latency[<span class="hljs-string">\[49\</span>]](https://www.braintrust.dev/articles/top-10-llm-observability-tools-2025#:~:text=Each%20integration%20serves%20production%20AI,evaluation%20metrics%2C%20production%20alerting%2C), regression tests (if I change the model or prompt, do I have test cases to compare responses?), version management (model v1 vs v2, how to rollout). And knowing how to use tools like the OpenAI Evaluation framework or prompt testing suites.
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Ethics and policy:**</span> Do not ignore AI Ethics aspects. An AI Engineer must at least know the model usage guidelines (avoiding discriminatory outputs, protecting sensitive user data, etc.). And know how to implement moderation filters (e.g., using moderation APIs on outputs, or dedicated models that classify generated text). This is both for social responsibility and to avoid legal or reputational trouble.
+
+<span class="hljs-strong">**What can be (relatively) ignored / delegated:**</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Mathematical details of backpropagation and derivation:**</span> How BPTT works exactly, formally proving the vanishing gradient, or deriving the attention equation by hand with pen and paper—as an engineer, you can consider this background. Qualitative intuition is enough in most cases. In practice, libraries and papers already implement everything; you need to understand the effect (e.g., <span class="hljs-emphasis">_&quot;the gradient vanishes if the sequence is too long&quot;_</span>[<span class="hljs-string">\[8\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to), <span class="hljs-emphasis">_&quot;attention weighs relevant terms&quot;_</span>), but you don&#x27;t need to know how to prove the why from scratch.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Outdated models:**</span> Don&#x27;t spend too much time mastering Naive Bayes, HMM, Markov n-grams, or even classic algorithms like CRF, SVM applied to text—unless you are working on a very low-resource case where a simple model might suffice. Today, a small fine-tuned Transformer or an LLM via API almost always outperforms them, so knowing HMM theory is more historical than practical knowledge. (It is still useful to be aware of them for general culture and to understand terms found in old systems, but you will rarely implement them in new projects).
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Implementing models from scratch:**</span> It is not efficient to recreate a Transformer layer by layer if proven libraries exist (Hugging Face Transformers, PyTorch Lightning, etc.). Unless you are doing architectural research, an engineer can use pre-trained models and APIs. Therefore, you can &quot;ignore&quot; low-level code (like writing multi-head attention manually, with all the dimensioning). Better to focus on <span class="hljs-emphasis">_how to integrate_</span> the model into the broader pipeline.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**All models released on the market:**</span> There are dozens of variants (ALBERT, XLNet, ELECTRA, DeBERTa, GPT-NeoX, etc.). You don&#x27;t need to know them all in detail. It is useful to know macro-categories and maybe 1-2 names per category as examples. When you need a specific one, you can research it at the time. Focus on general ideas: e.g., &quot;ELECTRA pre-trains as a discriminator instead of a masked generator, for efficiency&quot;—concept ok, but you don&#x27;t have to remember every detail. In practice, today you will use either mainstream models (BERT, GPT-3, etc.) or models trained specifically on your data (in which case you follow a known architecture). Minor differences between architectures matter little for usage.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**In-depth linguistic theory:**</span> Knowing what POS tagging is, what a syntactic dependency is, is useful. But you don&#x27;t need a PhD in computational linguistics. Many classic linguistic concepts (formal grammars, etc.) have been implicitly incorporated into neural models. Once, grammar and semantics had to be hand-coded; today the model learns it. So, for example, you might never have to manually implement a syntactic parser if you use LLMs for textual analysis. Focus instead on how to evaluate outputs (BLEU metric, Rouge, etc.) and on practical notions (tokenization, etc.).
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Pushing the SOTA to the limit:**</span> If your goal is to build functional systems, it is not necessary to achieve top absolute accuracy on a benchmark with elaborate fine-tuning. Often a pre-trained model out-of-the-box + some prompt engineering already gives excellent results for products. Sometimes &quot;good enough&quot; wins over &quot;perfect but complicated&quot;. Therefore, you can ignore micro-optimizations like &quot;should I use Adafactor with linear decay vs AdamW with cosine schedule?&quot; unless you are training models yourself. If you use APIs like OpenAI, these choices are abstracted away. (Of course, if you <span class="hljs-emphasis">_train_</span> models, then yes, you must take care of hyperparameters—but that is more the work of an ML researcher than a system implementer).
+
+In summary, an AI Engineer must be <span class="hljs-strong">**T-shaped**</span>: broad knowledge of the landscape (from bag-of-words to LLMs, to understand existing solutions) but depth in those technologies that are essential today (Transformer and its evolutions, and how to put them into production). They can easily do without historical details and rigorous theoretical proofs, as long as they understand the <span class="hljs-emphasis">_why_</span> and <span class="hljs-emphasis">_when_</span> of each technique.
+
+<span class="hljs-section">### Fundamental sources to really study</span>
+
+We close with some recommended sources (papers and blogs) that I consider fundamental for consolidating the knowledge discussed and staying updated:
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Tomas Mikolov et al. (2013), &quot;Efficient Estimation of Word Representations in Vector Space&quot;**</span>[<span class="hljs-string">\[5\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D)[<span class="hljs-string">\[4\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A) - <span class="hljs-emphasis">_(Paper)_</span> Introduces <span class="hljs-strong">**word2vec**</span>. A milestone that explains the concept of distributed embedding and two algorithms (CBOW, Skip-gram). Relevant because it lays the foundation for the idea of dense representations that is still at the heart of language models today.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Sepp Hochreiter &amp; Jürgen Schmidhuber (1997), &quot;Long Short-Term Memory&quot;**</span>[<span class="hljs-string">\[50\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=functions,deal%20with%20vanishing%20gradients%20and) - <span class="hljs-emphasis">_(Paper)_</span> Proposes the <span class="hljs-strong">**LSTM**</span> architecture to overcome the vanishing gradient in RNNs. It is a technical paper, but reading at least the introduction and understanding the components (input/forget/output gates) helps to understand how the concept of <span class="hljs-emphasis">_memory over time_</span> was born. Useful for historical retrospection and because LSTMs are still used in some specific contexts.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Vaswani et al. (2017), &quot;Attention Is All You Need&quot;**</span>[<span class="hljs-string">\[16\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including)[<span class="hljs-string">\[17\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training) - <span class="hljs-emphasis">_(Paper)_</span> An absolute must-read. Introduces the <span class="hljs-strong">**Transformer**</span>. Explains self-attention, multi-head, positional encoding, and shows results on translation. It is the foundation of everything that came after. After reading it, the concept of attention will become much clearer and the reason for the breakthrough will be appreciated. (It also contains some implementation details like <span class="hljs-emphasis">_scaled dot-product_</span>, useful to know).
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Brown et al. (2020), &quot;Language Models are Few-Shot Learners&quot; (GPT-3 paper)**</span>[<span class="hljs-string">\[26\</span>]](https://arxiv.org/abs/2005.14165#:~:text=language%20models%20greatly%20improves%20task,several%20tasks%20that%20require%20on)[<span class="hljs-string">\[25\</span>]](https://arxiv.org/abs/2005.14165#:~:text=approaches.%20Specifically%2C%20we%20train%20GPT,At%20the%20same%20time%2C%20we) - <span class="hljs-emphasis">_(Paper)_</span> The abstract and some key sections show what happens when a model is scaled to 175 billion parameters. Introduced the phenomenon of <span class="hljs-strong">**few-shot learning**</span> within the prompt. Reading this paper helps to understand the emergent capabilities of LLMs and also the limits (they have an honest section on where GPT-3 fails)[<span class="hljs-string">\[51\</span>]](https://arxiv.org/abs/2005.14165#:~:text=demonstrations%20specified%20purely%20via%20text,evaluators%20have%20difficulty%20distinguishing%20from). It is long, but I recommend focusing on the descriptive parts and the tables of examples.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Jared Kaplan et al. (2020), &quot;Scaling Laws for Neural Language Models&quot;**</span>[<span class="hljs-string">\[29\</span>]](https://arxiv.org/abs/2001.08361#:~:text=,efficient%20training%20involves) - <span class="hljs-emphasis">_(Paper)_</span> A work by OpenAI that quantified how increasing model/data/compute causes the error to decrease in a predictable way. It is useful for gaining the intuition that bigger = better (up to certain limits) and concepts like <span class="hljs-emphasis">_compute-optimal_</span>. Even if you don&#x27;t follow all the formulas, the message is clear: there is an efficient way to choose model size vs. data. This informed choices such as those of Chinchilla.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Hoffmann et al. (2022), &quot;Training Compute-Optimal Large Language Models&quot; (Chinchilla)**</span>[<span class="hljs-string">\[30\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,Transformers%20to%2022%20Billion%20Parameters) - <span class="hljs-emphasis">_(Paper)_</span> Important because it rectifies the scaling laws by considering the trade-off between parameters and tokens. Shows that a 70B model trained with 4x tokens beats an under-trained 175B model. A must-read to understand that it&#x27;s not enough to accumulate parameters; they also need to be <span class="hljs-emphasis">_fed_</span> sufficiently. There are very instructive graphs on perplexity as quantities vary. Concept of &quot;compute-optimal&quot; LLM.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Wei et al. (2022), &quot;Emergent Abilities of Large Language Models&quot;**</span>[<span class="hljs-string">\[31\</span>]](https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up) - <span class="hljs-emphasis">_(Paper)_</span> Essay (also in the form of a blog post on Google Research) that catalogs various <span class="hljs-emphasis">_emergent skills_</span> that appeared beyond a certain scale, e.g., compositionality, multimodality, etc. It is useful for being aware of the differences between medium models and giant models. Also useful at a conceptual level: it discusses what an emergent ability is and which hypotheses explain the phenomenon. For an AI eng, it helps motivate <span class="hljs-emphasis">_why_</span> large models have value (they do things qualitatively differently, not just a bit better than usual).
+
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Lewis et al. (2020), &quot;Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks&quot;**</span>[<span class="hljs-string">\[32\</span>]](https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static) - <span class="hljs-emphasis">_(Paper)_</span> Proposes the <span class="hljs-strong">**RAG**</span> framework. It is the theoretical foundation behind many modern QA systems. It shows how to combine a document index with a neural generator. By reading it, you will understand the RAG architecture (encoders for queries and documents, top-k selection, conditioned generation) and see results on QA where the model with retrieval significantly outperforms one without. Fundamental for those who want to implement or improve <span class="hljs-emphasis">_LLM + knowledge base_</span> systems.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Akanksha Sinha (2025), &quot;From N-grams to Transformers: Tracing the Evolution of Language Models&quot;**</span>[<span class="hljs-string">\[52\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=5,Broader%2C%20Multimodal)[<span class="hljs-string">\[53\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20scale%20matters%3A) - <span class="hljs-emphasis">_(Blog)_</span> A Medium article that summarizes a path similar to ours, including historical context. It is useful because it is written in a conversational style, touching on N-grams, Word2Vec, RNNs, Transformers, and Scaling, in a ~6-minute read. It can serve as a quick review or to explain the evolution to non-specialist colleagues (it also features images and analogies). A light read that nonetheless reinforces chronological understanding.
+<span class="hljs-bullet">-</span> <span class="hljs-strong">**Jay Alammar (2018), &quot;The Illustrated Transformer&quot;**</span>[<span class="hljs-string">\[54\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,language%20models%20and%20their%20implications) - <span class="hljs-emphasis">_(Blog/Tutorial)_</span> A visual, step-by-step explanation of the Transformer. Alammar is known for his blogs with excellent diagrams and illustrations (in this post, he represents query-key-value with colored diagrams, etc.). It is highly recommended if you want to gain an <span class="hljs-emphasis">_intuition_</span> for what happens inside attention without getting lost in algebra. After reading it, concepts like multi-head and residual connections become much more concrete. It is also a perfect resource to recommend to students or colleagues in training.
+
+<span class="hljs-emphasis">_(These sources cover theory and practice. Obviously, the literature is vast; other honorable mentions: Chris Olah&#x27;s blog - e.g., &quot;Understanding LSTM Networks&quot; - for intuitive explanations of LSTMs; the OpenAI blog &quot;Better Language Models and Their Implications&quot; (2019) discussing GPT-2 and risks; the GPT-4 technical report (2023) to understand the capabilities and limitations of the most advanced model; and the Papers with Code website to stay updated on new SOTAs. But the 10 above offer an excellent foundation.)_</span>
+
+<span class="hljs-strong">**Closing:**</span> The revolution from classic NLP models to LLMs has combined solid theoretical foundations (neural networks, attention, probability) with a large-scale engineering vision (immense datasets, GPU infrastructures, system integration). As an AI Engineer, understanding this evolution allows you to make informed choices about <span class="hljs-emphasis">_which model to use, how to train or integrate it, what limitations to consider,_</span> and ultimately how to build <span class="hljs-strong">**effective and reliable AI systems**</span>. We are only at the beginning of this new era: models will continue to evolve (perhaps becoming more multimodal, more efficient, more specialized), but the principles you have learned here will help you navigate the rapidly changing landscape of linguistic AI. Good luck on your GEO &amp; Disaster Response path—with this knowledge, you will be able to make the most of LLMs to truly make a difference in critical and socially impactful applications!
+
+<span class="hljs-section">## Bibliography</span>
+
+[<span class="hljs-string">\[1\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A) [<span class="hljs-string">\[2\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=N,words%20to%20guess%20the%20third) [<span class="hljs-string">\[3\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations) [<span class="hljs-string">\[4\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20mattered%3A) [<span class="hljs-string">\[5\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,France%20%2B%20Italy%20%3D%20Rome%E2%80%9D) [<span class="hljs-string">\[18\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,%E2%80%9D) [<span class="hljs-string">\[19\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order) [<span class="hljs-string">\[20\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,are%20added%20to%20preserve%20order) [<span class="hljs-string">\[21\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Original%20architecture%3A) [<span class="hljs-string">\[22\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=%2A%20Self,are%20added%20to%20preserve%20order) [<span class="hljs-string">\[30\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,Transformers%20to%2022%20Billion%20Parameters) [<span class="hljs-string">\[45\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Researchers%3A%20Tomas%20Mikolov%20et%20al,%28GloVe%2C%202014) [<span class="hljs-string">\[47\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Core%20ideas%3A) [<span class="hljs-string">\[52\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=5,Broader%2C%20Multimodal) [<span class="hljs-string">\[53\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20scale%20matters%3A) [<span class="hljs-string">\[54\</span>]](https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,language%20models%20and%20their%20implications) From N-Grams to Transformers: Tracing the Evolution of Language Models | by Akanksha Sinha | Medium
+
+<span class="language-xml">&lt;https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba&gt;</span>
+
+[<span class="hljs-string">\[6\</span>]](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=Word2Vec%3A) [<span class="hljs-string">\[7\</span>]](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=%2A%20,%28River%20edge) [<span class="hljs-string">\[27\</span>]](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=BERT%20is%20trained%20on%20two,clever%20tasks) [<span class="hljs-string">\[28\</span>]](https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16#:~:text=1,it%20learn%20relationships%20between%20sentences) Beyond &quot;One-Word, One-Meaning&quot;: Contextual Embeddings - DEV Community
+
+<span class="language-xml">&lt;https://dev.to/mshojaei77/beyond-one-word-one-meaning-contextual-embeddings-4g16&gt;</span>
+
+[<span class="hljs-string">\[8\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=You%20can%20see%C2%A0that%20the%20,Vanishing%20gradients%20aren%E2%80%99t%20exclusive%20to) [<span class="hljs-string">\[9\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=In%20previous%20parts%20of%20the,between%20words%20that%20are%20several) [<span class="hljs-string">\[10\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=It%20is%20easy%20to%20imagine,it%E2%80%99s%20not%20obvious%20when%20they) [<span class="hljs-string">\[11\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=parameters%2C%20we%20could%20get%20exploding,Your) [<span class="hljs-string">\[12\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=use%20Long%20Short,deal%20with%20vanishing%20gradients%20and) [<span class="hljs-string">\[13\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=perhaps%20most%20widely%20used%20models,deal%20with%20vanishing%20gradients%20and) [<span class="hljs-string">\[50\</span>]](https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/#:~:text=functions,deal%20with%20vanishing%20gradients%20and) Recurrent Neural Networks Tutorial, Part 3 - Backpropagation Through Time and Vanishing Gradients · Denny&#x27;s Blog
+
+<span class="language-xml">&lt;https://dennybritz.com/posts/wildml/recurrent-neural-networks-tutorial-part-3/&gt;</span>
+
+[<span class="hljs-string">\[14\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental) [<span class="hljs-string">\[16\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=The%20dominant%20sequence%20transduction%20models,the%20existing%20best%20results%2C%20including) [<span class="hljs-string">\[17\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training) [<span class="hljs-string">\[23\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,of%20sequential%20computation%2C%20however%2C%20remains) [<span class="hljs-string">\[24\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=hidden%20representations%20in%20parallel%20for,as%20described%20in%20section%C2%A0%2016) [<span class="hljs-string">\[46\</span>]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=input%20and%20output%20sequences,The%20fundamental) \[1706.03762\] Attention Is All You Need
+
+<span class="language-xml">&lt;https://ar5iv.labs.arxiv.org/html/1706.03762&gt;</span>
+
+[<span class="hljs-string">\[15\</span>]](https://d2l.ai/chapter<span class="hljs-emphasis">_recurrent-neural-networks/bptt.html#:~:text=Alternatively%2C%20we%20can%20truncate%20the,simpler%20and%20more%20stable%20models) 9.7. Backpropagation Through Time - Dive into Deep Learning 1.0.3 documentation
+
+<span class="language-xml">&lt;https://d2l.ai/chapter_recurrent-neural-networks/bptt.html&gt;</span>
+
+[<span class="hljs-string">\[25\</span>]](https://arxiv.org/abs/2005.14165#:~:text=approaches.%20Specifically%2C%20we%20train%20GPT,At%20the%20same%20time%2C%20we) [<span class="hljs-string">\[26\</span>]](https://arxiv.org/abs/2005.14165#:~:text=language%20models%20greatly%20improves%20task,several%20tasks%20that%20require%20on) [<span class="hljs-string">\[51\</span>]](https://arxiv.org/abs/2005.14165#:~:text=demonstrations%20specified%20purely%20via%20text,evaluators%20have%20difficulty%20distinguishing%20from) \[2005.14165\] Language Models are Few-Shot Learners
+
+<span class="language-xml">&lt;https://arxiv.org/abs/2005.14165&gt;</span>
+
+[<span class="hljs-string">\[29\</span>]](https://arxiv.org/abs/2001.08361#:~:text=,efficient%20training%20involves) \[2001.08361\] Scaling Laws for Neural Language Models
+
+<span class="language-xml">&lt;https://arxiv.org/abs/2001.08361&gt;</span>
+
+[<span class="hljs-string">\[31\</span>]](https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/#:~:text=Explainer%20cset,and%20training%20data%20scale%20up) Emergent Abilities in Large Language Models: An Explainer
+
+<span class="language-xml">&lt;https://cset.georgetown.edu/article/emergent-abilities-in-large-language-models-an-explainer/&gt;</span>
+
+[<span class="hljs-string">\[32\</span>]](https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=Retrieval%20augmented%20generation%20,LLM%20training%20data%20remaining%20static) [<span class="hljs-string">\[33\</span>]](https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=LLMs%27%20knowledge,to%20two%20key%20issues) [<span class="hljs-string">\[44\</span>]](https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/#:~:text=,called%20hallucination) Retrieval augmented generation: Keeping LLMs relevant and current - Stack Overflow
+
+<span class="language-xml">&lt;https://stackoverflow.blog/2023/10/18/retrieval-augmented-generation-keeping-llms-relevant-and-current/&gt;</span>
+
+[<span class="hljs-string">\[34\</span>]](https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=decision,and%20coordinate%20with%20other%20agents) [<span class="hljs-string">\[35\</span>]](https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=Overview%20of%20LLM,to%20the%20LLM%20prompt%20through) [<span class="hljs-string">\[36\</span>]](https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,building%20robust%2C%20extensible%2C%20and%20intelligent) [<span class="hljs-string">\[48\</span>]](https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf#:~:text=To%20perform%20complex%20tasks%20reliably%2C,and%20coordinate%20with%20other%20agents) AWS Prescriptive Guidance - Agentic AI patterns and workflows on AWS
+
+<span class="language-xml">&lt;https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/agentic-ai-patterns/agentic-ai-patterns.pdf&gt;</span>
+
+[<span class="hljs-string">\[37\</span>]](https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=experiences,after%20a%20minor%20prompt%20change) [<span class="hljs-string">\[38\</span>]](https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1.%20Latency%2C%20cost%2C%20and%20third,dependencies) [<span class="hljs-string">\[39\</span>]](https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=Engineering%20teams%20need%20more%20than,built%20to%20handle%20AI%20workloads) [<span class="hljs-string">\[40\</span>]](https://www.honeycomb.io/resources/getting-started/what-is-llm-observability#:~:text=1,and%20scoring%20of%20LLM%20responses) What Is LLM Observability and Monitoring? | Honeycomb
+
+<span class="language-xml">&lt;https://www.honeycomb.io/resources/getting-started/what-is-llm-observability&gt;</span>
+
+[<span class="hljs-string">\[41\</span>]](https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,the%20entire%20history%20every%20time) [<span class="hljs-string">\[42\</span>]](https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=,logic%20and%20cache%20invalidation%20strategy) [<span class="hljs-string">\[43\</span>]](https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems#:~:text=%2A%20Model%20right,com) FinOps in the Age of AI: A CPO&#x27;s Guide to LLM Workflows, RAG, AI Agents, and Agentic Systems
+
+<span class="language-xml">&lt;https://www.finout.io/blog/finops-in-the-age-of-ai-a-cpos-guide-to-llm-workflows-rag-ai-agents-and-agentic-systems&gt;</span>
+
+[<span class="hljs-string">\[49\</span>]](https://www.braintrust.dev/articles/top-10-llm-observability-tools-2025#:~:text=Each%20integration%20serves%20production%20AI,evaluation%20metrics%2C%20production%20alerting%2C) Top 10 LLM observability tools: Complete guide for 2025 - Braintrust
+
+<span class="language-xml">&lt;https://www.braintrust.dev/articles/top-10-llm-observability-tools-2025&gt;</span></span></code></pre>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/from-nlp-to-llm-parte-2/index.html";
+    (function() {
+      const body = document.body;
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true') {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">📋</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          pre.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
+      enhanceCodeBlocks();
+      initToc();
+      applyTheme(initialTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>
