@@ -57,7 +57,7 @@ export async function ensureEnglishTranslation(inputPath, { logger = console } =
 }
 
 function getGeminiConfig() {
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3-flash-preview';
   const inferredVersion = /^gemini-2/i.test(model) ? 'v1' : 'v1beta';
   const apiVersion = process.env.GEMINI_API_VERSION || inferredVersion;
   const endpoint = `https://generativelanguage.googleapis.com/${apiVersion}/models/${model}:generateContent`;
@@ -135,14 +135,23 @@ async function translateChunk(
       'Keep headings, numbering, references, and tables consistent so the parts can be concatenated.'
     : null;
 
+  const systemPrompt = [
+    'You are an expert Italian-to-English technical editor and translator.',
+    'Your output must read like natural, idiomatic English written by a human technical writer.',
+    'Translate meaning and intent, not Italian word order.',
+    'Avoid literal calques and awkward phrasing.',
+    'If an Italian sentence is long or heavy, split or restructure it for readability while preserving meaning.',
+    'Preserve the author tone: clear, practical, and conversational when appropriate.',
+    'Preserve Markdown structure exactly: heading levels, lists, tables, blockquotes, links, images, emphasis, and line breaks where meaningful.',
+    'Do not translate code blocks, inline code, commands, file paths, identifiers, URLs, or YAML keys.',
+    'Keep technical terminology consistent across chunks.',
+    'Keep heading levels and numbering unchanged; use natural English sentence case for headings.',
+    'Do not add commentary or explanations. Return only translated Markdown.',
+  ].join('\n');
+
   const prompt = [
-    'You are a professional technical translator.',
     chunkContext,
     'Translate the following Markdown content from Italian to English.',
-    'Preserve the original Markdown structure, code blocks, formatting, images, links, and emphasis.',
-    'Keep heading capitalization and numbering exactly as in the Italian source (do not convert to Title Case or camel case).',
-    'Use sentence case in English headings unless the Italian heading explicitly uses a different casing.',
-    'Do not add commentary or explanations. Return only the translated Markdown.',
     '',
     markdown,
   ]
@@ -161,6 +170,9 @@ async function translateChunk(
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: systemPrompt }],
+          },
           contents: [
             {
               role: 'user',
