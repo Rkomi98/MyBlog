@@ -379,7 +379,7 @@ Instead of asking AI to "write a report," the analyst should provide the report 
 
 This approach keeps the human at the center of the decision ("Human-in-the-loop"), using AI to enhance rigor and reduce errors of distraction or confirmation biases.
 
-## **Conclusions and Debrief**
+## Conclusions
 
 The adoption of Data Storytelling in an enterprise context is not a one-off training project, but a cultural paradigm shift. It means moving the organization from a culture of *data transmission* to a culture of *meaning sharing*.  
 For technology and business leaders, the operational steps are clear:
