@@ -47,40 +47,69 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
     body {
       margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 65%), var(--bg-primary);
+      position: relative;
+      font-family: 'Charter', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
       color: var(--text-primary);
       transition: background 0.3s ease, color 0.3s ease;
-      --bg-primary: #0f172a;
-      --bg-secondary: #111c33;
-      --bg-card: rgba(15, 23, 42, 0.75);
-      --border: rgba(148, 163, 184, 0.24);
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --border: rgba(148, 163, 184, 0.2);
       --text-primary: #e2e8f0;
-      --text-secondary: #cbd5f5;
+      --text-secondary: #cbd5e1;
       --text-muted: #94a3b8;
-      --accent: #60a5fa;
-      --accent-strong: #38bdf8;
-      --shadow-lg: 0 24px 45px -32px rgba(15, 23, 42, 0.85);
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --shadow-lg: 0 24px 45px -32px rgba(2, 6, 23, 0.85);
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
     }
     body[data-theme="light"] {
-      --bg-primary: #f8fafc;
+      --bg-primary: #f6f8f7;
       --bg-secondary: #ffffff;
-      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-card: rgba(255, 255, 255, 0.96);
       --border: rgba(148, 163, 184, 0.18);
       --text-primary: #0f172a;
       --text-secondary: #334155;
       --text-muted: #64748b;
-      --accent: #2563eb;
-      --accent-strong: #1d4ed8;
-      --shadow-lg: 0 24px 45px -30px rgba(15, 23, 42, 0.12);
-      background: radial-gradient(120% 120% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%), var(--bg-primary);
+      --accent: #059669;
+      --accent-strong: #047857;
+      --shadow-lg: 0 24px 45px -30px rgba(15, 23, 42, 0.14);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .site-header__inner,
+    .header-controls,
+    .lang-btn,
+    .theme-toggle,
+    .filters,
+    .filter label,
+    .filter select,
+    .post-card-meta,
+    .post-card-footer,
+    footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .hero h1,
+    .post-card-title {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
     }
     a {
       color: inherit;
@@ -180,8 +209,8 @@
       color: #f8fafc;
     }
     body[data-theme="dark"] .theme-toggle {
-      background: rgba(37, 99, 235, 0.2);
-      border-color: rgba(37, 99, 235, 0.3);
+      background: rgba(16, 185, 129, 0.18);
+      border-color: rgba(16, 185, 129, 0.35);
     }
     main.page {
       max-width: 1100px;
@@ -233,7 +262,7 @@
     }
     .filter select:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.22);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
     }
     .posts-grid {
       display: grid;
@@ -286,13 +315,13 @@
       gap: 0.4rem;
       padding: 0.35rem 0.9rem;
       border-radius: 999px;
-      background: rgba(99, 102, 241, 0.18);
+      background: rgba(16, 185, 129, 0.16);
       color: var(--accent);
       font-weight: 600;
       letter-spacing: 0.01em;
     }
     body[data-theme="light"] .post-card-category {
-      background: rgba(37, 99, 235, 0.12);
+      background: rgba(5, 150, 105, 0.12);
     }
     .post-card-date {
       color: var(--text-muted);
