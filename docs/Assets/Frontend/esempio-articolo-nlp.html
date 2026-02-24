@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html class="dark" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dai modelli NLP classici ai LLM (Parte 2) - Topographic Tech</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0F172A",
+                        "background-dark": "#0B1120",
+                        "background-light": "#f6f8f7",
+                        "surface": "#1E293B",
+                        "text-main": "#E2E8F0",
+                        "text-muted": "#94A3B8",
+                        "accent": "#10B981",
+                        "code-bg": "#0F172A",
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "serif": ["Charter", "serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .code-scroll::-webkit-scrollbar { height: 6px; }
+        .code-scroll::-webkit-scrollbar-track { background: #0F172A; }
+        .code-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .code-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .topographic-bg {
+            background-color: #0B1120;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-text-main font-serif antialiased min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-primary">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full z-50 h-[2px] bg-surface">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-600 w-[0%] shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-150"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background-dark/80 border-b border-white/5 transition-all duration-300">
+        <div class="flex items-center justify-between px-4 py-3 max-w-2xl mx-auto">
+            <a href="/" class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+                <span class="material-symbols-outlined text-2xl">arrow_back</span>
+            </a>
+            <div class="flex items-center gap-3">
+                <button class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+                    <span class="material-symbols-outlined text-xl">more_vert</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative px-6 pb-32 max-w-2xl mx-auto topographic-bg">
+
+        <!-- Article Header -->
+        <header class="pt-8 pb-8 space-y-6">
+            <!-- Warning Box -->
+            <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-6">
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-yellow-400 text-xl">warning</span>
+                    <div>
+                        <p class="text-sm font-mono text-yellow-400 font-medium mb-1">Articolo in revisione</p>
+                        <p class="text-sm text-text-muted">Questo articolo è ancora in lavorazione e sotto revisione editoriale. Alcuni paragrafi potrebbero risultare incompleti o cambiare in modo significativo nelle prossime settimane.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded tracking-wide">AI</span>
+                <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded tracking-wide">NLP</span>
+                <span class="px-2 py-1 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-mono rounded tracking-wide">LLM</span>
+                <span class="px-2 py-1 bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-mono rounded tracking-wide">TRANSFORMER</span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-3xl md:text-4xl font-mono font-bold leading-tight text-white tracking-tight">
+                Dai modelli NLP classici ai LLM (Parte 2)
+            </h1>
+
+            <!-- Author -->
+            <div class="flex items-center gap-3 py-2 border-l-2 border-accent pl-3">
+                <div class="h-10 w-10 rounded-full bg-surface border border-white/10 overflow-hidden relative flex items-center justify-center">
+                    <span class="material-symbols-outlined text-text-muted">person</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-mono text-white font-medium">Marco Calcaterra</span>
+                    <span class="text-xs font-sans text-text-muted">Feb 2026 • 25 min read</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Article Body -->
+        <article class="space-y-6 text-lg leading-relaxed text-gray-300 font-serif">
+
+            <!-- Intro -->
+            <p>
+                Benvenuti alla terza puntata del percorso per come diventare un 
+                <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">GeoAI engineer</span>. 
+                In quest'articolo continuiamo a parlare di storia e ci focalizzeremo sul come siamo arrivati a parlare di 
+                GPT, Gemini & co. e da dove siamo partiti.
+            </p>
+
+            <!-- Section H2 -->
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">
+                Introduzione
+            </h2>
+
+            <p>
+                Se nella parte 1 abbiamo visto le fondamenta (modelli statistici, embedding classici, RNN/LSTM/GRU), 
+                e quali problemi erano rimasti anche con le prime reti neurali, qui analizziamo ciò che ha permesso 
+                il vero e proprio salto: entriamo nell'era <strong class="text-white">Transformer</strong> e vediamo 
+                perché ha cambiato completamente il mondo della comprensione del testo.
+            </p>
+
+            <p>
+                Da questo punto in poi non parliamo più solo di "modelli migliori", ma di 
+                <span class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded text-accent">scalabilità</span>, 
+                <span class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded text-accent">pre-training su larga scala</span> 
+                e nascita dei moderni <strong class="text-white">LLM</strong>. In pratica: come siamo passati da reti 
+                ricorrenti lente e con memoria limitata a sistemi capaci di gestire contesti ampi, generalizzare meglio 
+                il linguaggio umano e diventare la base di strumenti come ChatGPT, Gemini e simili.
+            </p>
+
+            <!-- Blockquote -->
+            <div class="bg-surface/50 border-l-2 border-blue-500 pl-4 py-2 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    "L'obiettivo è leggere gli LLM con una mentalità tecnica, cioè come 
+                    <strong>componenti di sistema</strong> da integrare con retrieval, tool, guardrail e osservabilità."
+                </p>
+            </div>
+
+            <!-- Section H2 -->
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">
+                La rivoluzione del Transformer
+            </h2>
+
+            <p>
+                Nel 2017 Vaswani et al. pubblicano 
+                <a href="https://arxiv.org/abs/1706.03762" class="text-accent hover:text-white transition-colors underline decoration-accent/50 hover:decoration-white">
+                    "Attention Is All You Need"
+                </a>, 
+                introducendo il <strong class="text-white">Transformer</strong>, un'architettura che elimina 
+                completamente la ricorrenza a favore di un meccanismo di 
+                <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">self-attention</span> generalizzato.
+            </p>
+
+            <!-- Code Block: Python -->
+            <div class="relative my-8 group">
+                <div class="absolute -top-3 right-4 bg-surface border border-white/10 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-accent shadow-lg z-10">
+                    PYTHON
+                </div>
+                <div class="bg-code-bg rounded-lg border border-white/5 overflow-hidden shadow-2xl">
+                    <div class="flex items-center px-4 py-2 bg-white/5 border-b border-white/5">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                        </div>
+                        <span class="ml-4 text-xs font-mono text-text-muted">self_attention.py</span>
+                        <button onclick="copyCode(this)" class="ml-auto text-text-muted hover:text-white transition-colors" title="Copia codice">
+                            <span class="material-symbols-outlined text-sm">content_copy</span>
+                        </button>
+                    </div>
+                    <div class="p-4 overflow-x-auto code-scroll">
+                        <pre class="font-mono text-[13px] leading-6 tab-4 text-gray-300"><code><span class="text-purple-400">import</span> numpy <span class="text-purple-400">as</span> np
+
+<span class="text-purple-400">def</span> <span class="text-blue-400">scaled_dot_product_attention</span>(Q, K, V, mask=<span class="text-purple-400">None</span>):
+    <span class="text-text-muted">"""
+    Self-attention: Q(query), K(key), V(value)
+    Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) * V
+    """</span>
+    d_k = Q.shape[-<span class="text-orange-400">1</span>]
+    
+    <span class="text-text-muted"># MatMul Q e K^T, scala per stabilità</span>
+    scores = np.dot(Q, K.T) / np.sqrt(d_k)
+    
+    <span class="text-purple-400">if</span> mask <span class="text-purple-400">is not None</span>:
+        scores = np.where(mask, -<span class="text-orange-400">1e9</span>, scores)
+    
+    <span class="text-text-muted"># Softmax su ultima dimensione</span>
+    attention_weights = np.exp(scores) / np.sum(np.exp(scores), axis=-<span class="text-orange-400">1</span>, keepdims=<span class="text-purple-400">True</span>)
+    
+    <span class="text-purple-400">return</span> np.dot(attention_weights, V), attention_weights</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista puntata -->
+            <p class="text-white font-mono text-sm mb-2">Concetti chiave del Transformer:</p>
+            <ul class="space-y-2 list-disc list-inside marker:text-accent">
+                <li><strong class="text-white">Self-Attention:</strong> è il cuore di tutto. Ogni token "presta attenzione" a tutti gli altri.</li>
+                <li><strong class="text-white">Multi-Head Attention:</strong> diverse proiezioni in parallelo per catturare relazioni diverse.</li>
+                <li><strong class="text-white">Positional Encoding:</strong> mantiene l'informazione sulla posizione sequenziale.</li>
+                <li><strong class="text-white">Encoder-Decoder:</strong> varianti come BERT (solo encoder) e GPT (solo decoder).</li>
+            </ul>
+
+            <!-- Formula matematica -->
+            <p>
+                La formula fondamentale dell'attenzione:
+            </p>
+            <div class="bg-surface/30 border border-white/10 rounded-lg p-4 my-4 text-center">
+                <code class="font-mono text-accent text-lg">
+                    Attention(Q, K, V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>) · V
+                </code>
+            </div>
+
+            <!-- Blockquote nota tecnica -->
+            <div class="bg-surface/50 border-l-2 border-green-500 pl-4 py-2 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    <span class="material-symbols-outlined text-green-400 text-sm align-middle mr-1">lightbulb</span>
+                    Il fattore <span class="font-mono text-accent">√d<sub>k</sub></span> previene che i punteggi 
+                    diventino troppo grandi con dimensioni elevate, mantenendo la softmax stabile.
+                </p>
+            </div>
+
+            <!-- Section H2 -->
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">
+                Dai Transformer ai LLM
+            </h2>
+
+            <p>
+                Con il Transformer come nuovo blocco fondamentale, il passo successivo è stato 
+                <strong class="text-white">scalare modelli e dataset</strong> a livelli prima impensabili. 
+                Sono emerse due grandi famiglie:
+            </p>
+
+            <!-- Due colonne concettuali -->
+            <div class="grid md:grid-cols-2 gap-4 my-6">
+                <div class="bg-surface/50 border border-white/10 rounded-lg p-4">
+                    <h3 class="font-mono text-accent text-sm mb-2">🔄 Autoregressivi (GPT)</h3>
+                    <p class="text-sm text-gray-400">
+                        Predicono il prossimo token. GPT-2 (1.5B params), GPT-3 (175B params). 
+                        Few-shot learning emergente.
+                    </p>
+                </div>
+                <div class="bg-surface/50 border border-white/10 rounded-lg p-4">
+                    <h3 class="font-mono text-blue-400 text-sm mb-2">🔍 Auto-encoder (BERT)</h3>
+                    <p class="text-sm text-gray-400">
+                        Masked Language Modeling. Bidirezionali, ottimi per comprensione.
+                        RoBERTa, ALBERT, DistilBERT.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Code Block: Config JSON -->
+            <div class="relative my-8 group">
+                <div class="absolute -top-3 right-4 bg-surface border border-white/10 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-green-400 shadow-lg z-10">
+                    JSON
+                </div>
+                <div class="bg-code-bg rounded-lg border border-white/5 overflow-hidden shadow-2xl">
+                    <div class="flex items-center px-4 py-2 bg-white/5 border-b border-white/5">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                        </div>
+                        <span class="ml-4 text-xs font-mono text-text-muted">scaling_comparison.json</span>
+                        <button onclick="copyCode(this)" class="ml-auto text-text-muted hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-sm">content_copy</span>
+                        </button>
+                    </div>
+                    <div class="p-4 overflow-x-auto code-scroll">
+                        <pre class="font-mono text-[13px] leading-6 text-gray-300"><code>{
+  <span class="text-green-400">"models"</span>: [
+    { <span class="text-green-400">"name"</span>: <span class="text-yellow-400">"GPT-2"</span>, <span class="text-green-400">"params"</span>: <span class="text-orange-400">"1.5B"</span>, <span class="text-green-400">"year"</span>: <span class="text-orange-400">2019</span> },
+    { <span class="text-green-400">"name"</span>: <span class="text-yellow-400">"GPT-3"</span>, <span class="text-green-400">"params"</span>: <span class="text-orange-400">"175B"</span>, <span class="text-green-400">"year"</span>: <span class="text-orange-400">2020</span> },
+    { <span class="text-green-400">"name"</span>: <span class="text-yellow-400">"Chinchilla"</span>, <span class="text-green-400">"params"</span>: <span class="text-orange-400">"70B"</span>, <span class="text-green-400">"tokens"</span>: <span class="text-orange-400">"1.4T"</span> },
+    { <span class="text-green-400">"name"</span>: <span class="text-yellow-400">"GPT-4"</span>, <span class="text-green-400">"params"</span>: <span class="text-yellow-400">"unknown"</span>, <span class="text-green-400">"multimodal"</span>: <span class="text-purple-400">true</span> }
+  ],
+  <span class="text-green-400">"scaling_law"</span>: <span class="text-yellow-400">"L ∝ N^(-α) · D^(-β) · C^(-γ)"</span>
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section H2 -->
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">
+                Limiti strutturali dei LLM
+            </h2>
+
+            <p>
+                Nonostante i miracoli che sembrano fare, gli LLM attuali hanno 
+                <strong class="text-white">limiti intrinseci</strong> importanti:
+            </p>
+
+            <!-- Lista numerata -->
+            <ol class="space-y-3 list-decimal list-inside marker:text-accent marker:font-mono">
+                <li>
+                    <strong class="text-white">Allucinazioni:</strong> inventano informazioni convincenti ma false. 
+                    Il training spinge a <em>predire la parola più probabile</em>, non a verificare verità.
+                </li>
+                <li>
+                    <strong class="text-white">Assenza di grounding:</strong> ragionano solo sul testo, 
+                    senza percezione diretta della realtà fisica.
+                </li>
+                <li>
+                    <strong class="text-white">Difficoltà di aggiornamento:</strong> la conoscenza è statica nei pesi. 
+                    RAG è la soluzione pratica più comune.
+                </li>
+                <li>
+                    <strong class="text-white">Bias e tossicità:</strong> interiorizzano pregiudizi dai dati di training.
+                </li>
+                <li>
+                    <strong class="text-white">Fragilità adversarial:</strong> sensibili a piccoli cambiamenti nel prompt.
+                </li>
+            </ol>
+
+            <!-- Warning Block -->
+            <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-4 my-6">
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-red-400 text-xl">error</span>
+                    <div>
+                        <p class="text-sm font-mono text-red-400 font-medium mb-1">Safety Critical</p>
+                        <p class="text-sm text-text-muted">
+                            Questi limiti <strong class="text-white">non sono bug risolvibili con una patch</strong>, 
+                            ma aspetti fondanti. Quando progetti sistemi con LLM devi 
+                            <span class="text-accent">costruire attorno</span> per mitigarli.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section H2 -->
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">
+                Collegamento con il percorso GEO & Disaster Response
+            </h2>
+
+            <p>
+                Nel contesto geospaziale e di risposta ai disastri, gli LLM possono giocare un ruolo prezioso 
+                come <strong class="text-white">collettore intelligente e comunicatore</strong> sopra i dati geospaziali.
+            </p>
+
+            <!-- Esempio pratico -->
+            <div class="bg-surface/50 border border-white/10 rounded-lg p-4 my-6">
+                <h3 class="font-mono text-accent text-sm mb-3">📍 Esempio: Report post-terremoto</h3>
+                <p class="text-sm text-gray-400 mb-3">
+                    Con approccio <span class="font-mono text-accent">RAG</span>, il sistema recupera:
+                </p>
+                <ul class="space-y-1 text-sm text-gray-400 list-disc list-inside marker:text-accent">
+                    <li>Rapporti testuali dei vigili del fuoco</li>
+                    <li>Analisi automatica da immagini satellitari</li>
+                    <li>Elenchi di strade bloccate da mappe live</li>
+                </ul>
+                <p class="text-sm text-gray-400 mt-3 italic">
+                    "Nella zona nord della città (Quartiere XX), risultano crollati circa 30 edifici, 
+                    con le maggiori concentrazioni di danni lungo Via Alfa e Via Beta..."
+                </p>
+            </div>
+
+            <!-- Blockquote finale -->
+            <div class="bg-surface/50 border-l-2 border-accent pl-4 py-2 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    "Pensate agli LLM come a un <strong>analista virtuale</strong> che conosce un po' di tutto 
+                    e può essere istruito a usare i vostri dati specifici per produrre analisi e report."
+                </p>
+            </div>
+
+            <!-- Bottom Spacer -->
+            <div class="h-12"></div>
+
+        </article>
+    </main>
+
+    <!-- Floating Action Bar -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div class="flex items-center gap-1 p-1.5 bg-surface/80 backdrop-blur-md border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="toggleBookmark()">
+                <span class="material-symbols-outlined text-xl" id="bookmark-icon">bookmark</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Salva</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="shareArticle()">
+                <span class="material-symbols-outlined text-xl">ios_share</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Condividi</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="adjustFontSize()">
+                <span class="material-symbols-outlined text-xl">format_size</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Testo</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface border border-white/10 text-white px-4 py-2 rounded-lg shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+        <span id="toast-message">Messaggio</span>
+    </div>
+
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + "%";
+        });
+
+        // Copy Code
+        function copyCode(button) {
+            const codeBlock = button.closest('.bg-code-bg').querySelector('code');
+            const text = codeBlock.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Codice copiato!');
+            });
+        }
+
+        // Bookmark
+        let isBookmarked = false;
+        function toggleBookmark() {
+            isBookmarked = !isBookmarked;
+            const icon = document.getElementById('bookmark-icon');
+            icon.textContent = isBookmarked ? 'bookmark_added' : 'bookmark';
+            icon.classList.toggle('text-accent', isBookmarked);
+            showToast(isBookmarked ? 'Salvato nei preferiti' : 'Rimosso dai preferiti');
+        }
+
+        // Share
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.querySelector('h1').textContent,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Link copiato negli appunti');
+            }
+        }
+
+        // Font Size
+        let fontSizeLevel = 1;
+        const fontSizes = ['text-base', 'text-lg', 'text-xl'];
+        function adjustFontSize() {
+            const article = document.querySelector('article');
+            article.classList.remove(...fontSizes);
+            fontSizeLevel = (fontSizeLevel + 1) % fontSizes.length;
+            article.classList.add(fontSizes[fontSizeLevel]);
+            showToast('Dimensione testo: ' + ['Piccola', 'Normale', 'Grande'][fontSizeLevel]);
+        }
+
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>

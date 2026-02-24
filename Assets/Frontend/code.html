@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Article Reader - Topographic Tech</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0F172A", // Deep Slate
+                        "background-dark": "#0B1120", // Main app bg
+                        "background-light": "#f6f8f7", // Fallback light
+                        "surface": "#1E293B", // Cards
+                        "text-main": "#E2E8F0", // Main Reading Text
+                        "text-muted": "#94A3B8", // Metadata
+                        "accent": "#10B981", // Emerald
+                        "code-bg": "#0F172A", 
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "serif": ["Charter", "serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "4px",
+                        "lg": "12px",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for code blocks */
+        .code-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+        .code-scroll::-webkit-scrollbar-track {
+            background: #0F172A; 
+        }
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        .code-scroll::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+
+        /* Topographic pattern simulation */
+        .topographic-bg {
+            background-color: #0B1120;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-text-main font-serif antialiased min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-primary">
+<!-- Sticky Progress Bar -->
+<div class="fixed top-0 left-0 w-full z-50 h-[2px] bg-surface">
+<div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 w-[35%] shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+</div>
+<!-- Header / Navigation -->
+<header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background-dark/80 border-b border-white/5 transition-all duration-300">
+<div class="flex items-center justify-between px-4 py-3 max-w-2xl mx-auto">
+<button class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-3">
+<button class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Article Content -->
+<main class="relative px-6 pb-32 max-w-2xl mx-auto topographic-bg">
+<!-- Article Header -->
+<div class="pt-8 pb-8 space-y-6">
+<!-- Tags -->
+<div class="flex gap-2 mb-4">
+<span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded tracking-wide">PYTHON</span>
+<span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded tracking-wide">GEOSPATIAL</span>
+</div>
+<!-- Title -->
+<h1 class="text-3xl md:text-4xl font-mono font-bold leading-tight text-white tracking-tight">
+                Optimizing Voronoi Tessellations in Python
+            </h1>
+<!-- Author Metadata -->
+<div class="flex items-center gap-3 py-2 border-l-2 border-accent pl-3">
+<div class="h-10 w-10 rounded-full bg-surface border border-white/10 overflow-hidden relative">
+<img alt="Author Portrait" class="object-cover w-full h-full" data-alt="Close up portrait of a smiling woman with dark hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5az4cGs-nbENvzMD2C7CZ8MHc3HOvq3XhBfQB2Twss1CxB3itTbNmBe_QhhllPM79x_Xtcxr-rZCDIsx0N8X6cpuwSzz5x7izmtJxptbR5D5NjUSlvd-f89g62ImgZpEiHE1lM8SMU79Hzfv73-wGASOxEPuF6eRLoRDBkT90TTA4fWbOetAx9nPBCX65O2FIuWTMxTJ6CUyzywMDO7nIaZlfqmMH6IX__l342HobMZqz-KQnxk24NB-REuwH7E8TDZp6WI6jFQ"/>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-mono text-white font-medium">Elena Ross</span>
+<span class="text-xs font-sans text-text-muted">Oct 24 • 7 min read</span>
+</div>
+</div>
+</div>
+<!-- Article Body -->
+<article class="space-y-6 text-lg leading-relaxed text-gray-300 font-serif">
+<p>
+                Spatial partitioning is a cornerstone of modern geospatial analysis. When dealing with large datasets of urban infrastructure, the ability to rapidly determine proximity polygons—specifically <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">Voronoi regions</span>—becomes critical for performance.
+            </p>
+<p>
+                In this deep dive, we'll explore how to leverage SciPy's spatial algorithms to generate these tessellations efficiently, moving beyond simple Euclidean distance calculations to more robust, production-ready implementations.
+            </p>
+<!-- Code Block Component -->
+<div class="relative my-8 group">
+<!-- Floating Language Badge -->
+<div class="absolute -top-3 right-4 bg-surface border border-white/10 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-accent shadow-lg z-10">
+                    PYTHON
+                </div>
+<!-- Code Container -->
+<div class="bg-code-bg rounded-lg border border-white/5 overflow-hidden shadow-2xl">
+<div class="flex items-center px-4 py-2 bg-white/5 border-b border-white/5">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+<div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+</div>
+<span class="ml-4 text-xs font-mono text-text-muted">generate_regions.py</span>
+</div>
+<div class="p-4 overflow-x-auto code-scroll">
+<pre class="font-mono text-[13px] leading-6 tab-4 text-gray-300"><code><span class="text-purple-400">import</span> numpy <span class="text-purple-400">as</span> np
+<span class="text-purple-400">from</span> scipy.spatial <span class="text-purple-400">import</span> Voronoi
+
+<span class="text-text-muted"># Generate random control points</span>
+points = np.random.rand(<span class="text-orange-400">10</span>, <span class="text-orange-400">2</span>)
+
+<span class="text-text-muted"># Compute Voronoi tessellation</span>
+vor = Voronoi(points)
+
+<span class="text-purple-400">def</span> <span class="text-blue-400">compute_polygons</span>(vor_obj):
+    regions, vertices = vor_obj.regions, vor_obj.vertices
+    <span class="text-purple-400">return</span> [vertices[region] <span class="text-purple-400">for</span> region <span class="text-purple-400">in</span> regions]</code></pre>
+</div>
+</div>
+<!-- Interaction for saving -->
+<button class="absolute bottom-4 right-4 p-2 bg-accent/10 hover:bg-accent/20 text-accent rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-lg">bookmark_add</span>
+</button>
+</div>
+<p>
+                The standard implementation often fails at edge cases—literally. Points on the convex hull of your dataset can result in infinite regions. To handle this in a real-world mapping application like Mapbox or Leaflet, we need to bound the diagram.
+            </p>
+<!-- Data Map Image -->
+<figure class="my-10 relative">
+<div class="rounded-lg overflow-hidden border border-white/10 bg-surface shadow-xl">
+<img alt="Abstract geometric data visualization with glowing nodes and connected lines representing a network graph" class="w-full h-auto object-cover opacity-80" data-alt="Abstract geometric data visualization with glowing nodes and connected lines representing a network graph" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGePz_hL1Q3RX2lUdyhR082bMeUdX0W8Dn-_sy9fGUnT1bGCOg1XK0P5yv_8vwjZXaE7j385F7BM4NFJDnm13TtArs2S-TXhqh2l6IxvwfSjpupsS_6UwGiG3p5bMaT0MGcJ1yz4VSIeDF0SurDJN94qTx0xKeivpab_hUOzEmKZMDm2S3rsiGu91uCMkbB8CjLLWS5_QnoyLFnJPr0mnexeu9teAoZlwY4qEPNeLoTirN5c9HHonqDK7g-QI9c2zw2nZRWRGTKA"/>
+<!-- Gradient Overlay for style -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent pointer-events-none"></div>
+</div>
+<figcaption class="mt-3 text-center font-mono text-xs text-text-muted tracking-wider">
+                    FIGURE 1: UNBOUNDED VORONOI REGIONS ON A 10K NODESET
+                </figcaption>
+</figure>
+<h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Handling Infinite Regions</h2>
+<p>
+                The complexity of the algorithm is generally <span class="font-mono text-sm bg-surface px-1.5 py-0.5 rounded text-accent">O(n log n)</span>. However, rendering these on a mobile device requires clipping the infinite polygons to a bounding box. 
+            </p>
+<p>
+                By reconstructing the ridges and verifying vertex indices, we can close the polygons manually. This ensures that when we overlay this on a heatmap, we don't get artifacts bleeding off the screen edges.
+            </p>
+<!-- Another Small Code Snippet -->
+<div class="bg-surface/50 border-l-2 border-blue-500 pl-4 py-2 my-6">
+<p class="font-sans text-sm italic text-gray-400">
+                    "Geometric precision is not just about accuracy; it's about the aesthetic of the code that produces it."
+                </p>
+</div>
+<p>
+                Next, let's look at how we can colorize these regions based on population density data using a perceptually uniform colormap like Viridis or Magma.
+            </p>
+<!-- Bottom Spacer for FAB -->
+<div class="h-12"></div>
+</article>
+</main>
+<!-- Floating Action Bar (Bottom) -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+<div class="flex items-center gap-1 p-1.5 bg-surface/80 backdrop-blur-md border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+<button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative">
+<span class="material-symbols-outlined text-xl">bookmark</span>
+<span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Save</span>
+</button>
+<div class="w-px h-6 bg-white/10"></div>
+<button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative">
+<span class="material-symbols-outlined text-xl">ios_share</span>
+<span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Share</span>
+</button>
+<div class="w-px h-6 bg-white/10"></div>
+<button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative">
+<span class="material-symbols-outlined text-xl">format_size</span>
+<span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Text</span>
+</button>
+</div>
+</div>
+</body></html>
