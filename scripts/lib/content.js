@@ -1,9 +1,13 @@
 import path from 'path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import fs from 'fs-extra';
 import fg from 'fast-glob';
 import slugify from 'slugify';
 import { extractSummary, extractTitle } from './markdown.js';
 import { ensureEnglishTranslation } from './translation.js';
+
+const execFileAsync = promisify(execFile);
 
 function toPosix(input) {
   return input.split(path.sep).join('/');
@@ -31,6 +35,29 @@ async function addLanguageData(post, lang, fileInfo) {
     relativePath: fileInfo.relativePath,
     modifiedTime: stats.mtime,
   };
+}
+
+async function getLastGitAuthorDate(filePath, rootDir, logger = console) {
+  const relativePath = path.relative(rootDir, filePath);
+
+  try {
+    const { stdout } = await execFileAsync(
+      'git',
+      ['log', '-1', '--format=%aI', '--', relativePath],
+      { cwd: rootDir },
+    );
+
+    const date = stdout.trim();
+    if (!date) {
+      return null;
+    }
+
+    const parsed = new Date(date);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  } catch (error) {
+    logger.debug?.(`[content] Could not read git date for ${relativePath}: ${error.message}`);
+    return null;
+  }
 }
 
 export async function collectPosts({
@@ -106,10 +133,18 @@ export async function collectPosts({
 
     if (entry.languages.it) {
       await addLanguageData(post, 'it', entry.languages.it);
+      const gitDate = await getLastGitAuthorDate(entry.languages.it.absolutePath, rootDir, logger);
+      if (gitDate) {
+        post.languages.it.modifiedTime = gitDate;
+      }
     }
 
     if (entry.languages.en) {
       await addLanguageData(post, 'en', entry.languages.en);
+      const gitDate = await getLastGitAuthorDate(entry.languages.en.absolutePath, rootDir, logger);
+      if (gitDate) {
+        post.languages.en.modifiedTime = gitDate;
+      }
     }
 
     const slugSeed =
