@@ -7,7 +7,7 @@ Questo articolo è ancora in lavorazione e sotto revisione editoriale. Alcuni pa
 
 </details>
 
-Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest'articolo continuiamo a parlare di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini & co. e da dove siamo partiti. Non solo, non ti preoccupare!
+Benvenuti alla terza puntata del percorso per come diventare un GeoAI engineer. In quest'articolo continuiamo a parlare di storia e ci focalizzeremo sul come siamo arrivati a parlare di GPT, Gemini & co., e da dove siamo partiti. Ma non solo, non ti preoccupare!
 
 Buona lettura!
 
