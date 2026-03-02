@@ -25,7 +25,7 @@ Chiudiamo poi con la parte più pratica, ovvero analizzando quali sono i limiti 
 
 Nel 2017 Vaswani et al. pubblicano [_"Attention Is All You Need"_](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=Recurrent%20models%20typically%20factor%20computation,The%20fundamental), introducendo il **Transformer**, un'architettura che elimina completamente la ricorrenza a favore di un meccanismo di **self-attention** generalizzato. Questo cambiamento concettualmente semplice ha innescato una rivoluzione: il Transformer ha dimostrato di poter scalare molto meglio, essere addestrato in parallelo e raggiungere performance superiori su compiti come la traduzione in una frazione del tempo di training dei modelli ricorrenti[\[17\]](https://ar5iv.labs.arxiv.org/html/1706.03762#:~:text=mechanism,small%20fraction%20of%20the%20training).
 
-![Schema concettuale di un Transformer](../Assets/Transformers.png)
+![Schema concettuale di un Transformer](../Assets/Transformer_Architecture_Dark.svg)
 _Figura 01: Schema concettuale dell'architettura Transformer. Essa elimina la ricorrenza e sfrutta la self-attention multi-head e positional encoding per catturare le relazioni tra i token. (Fonte: realizzazione personale, ispirato a Vaswani et al. 2017)_
 
 
