@@ -7,9 +7,9 @@ index plus per-language article pages under `blog/`.
 ## Prerequisites
 
 - Node.js 18 or newer (Node 18+ provides the native `fetch` API used for translations).
-- A `.env` file with `GOOGLE_API_KEY` pointing to a Gemini Flash API key (already provided).  
+- A `.env` or `env` file with `GOOGLE_API_KEY` pointing to a Gemini Flash API key.  
   Optional overrides:
-  - `GEMINI_MODEL` (default `gemini-3-flash-preview`)
+  - `GEMINI_MODEL` (default `gemini-2.5-flash-lite`)
   - `GEMINI_API_VERSION` (default `v1` when the model starts with `gemini-2`, otherwise `v1beta`)
   - `GEMINI_SAFETY_THRESHOLD` (default `BLOCK_ONLY_HIGH`)
   - `GEMINI_SAFETY_CATEGORIES` (comma-separated; default `HARM_CATEGORY_DANGEROUS_CONTENT,HARM_CATEGORY_HARASSMENT,HARM_CATEGORY_HATE_SPEECH,HARM_CATEGORY_CIVIC_INTEGRITY`)

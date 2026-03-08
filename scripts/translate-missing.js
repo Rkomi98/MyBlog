@@ -1,8 +1,8 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
+import { loadProjectEnv } from './lib/env.js';
 import { ensureEnglishTranslation } from './lib/translation.js';
 
 async function translateMissing() {
@@ -10,7 +10,7 @@ async function translateMissing() {
   const __dirname = path.dirname(__filename);
   const rootDir = path.resolve(__dirname, '..');
 
-  dotenv.config({ path: path.join(rootDir, '.env') });
+  await loadProjectEnv({ rootDir, logger: console });
 
   const filesDir = path.join(rootDir, 'files');
   const italianFiles = await fg(['**/*.md', '!**/*_en.md', '!Old docs/**', '!old docs/**'], {

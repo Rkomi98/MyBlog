@@ -1,8 +1,8 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs-extra';
-import dotenv from 'dotenv';
 import { collectPosts } from './lib/content.js';
+import { loadProjectEnv } from './lib/env.js';
 import { renderBlogDetail, renderBlogIndex } from './lib/templates.js';
 import { loadBlogMetadata } from './lib/postMetadata.js';
 
@@ -207,7 +207,7 @@ async function build() {
   const __dirname = path.dirname(__filename);
   const rootDir = path.resolve(__dirname, '..');
 
-  dotenv.config({ path: path.join(rootDir, '.env') });
+  await loadProjectEnv({ rootDir, logger: console });
 
   const distDir = path.join(rootDir, 'dist');
   await fs.emptyDir(distDir);

@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
+import { loadProjectEnv } from './env.js';
 
 function toPosix(input) {
   return input.split(path.sep).join('/');
@@ -13,6 +14,8 @@ function redactKey(key) {
 }
 
 export async function ensureEnglishTranslation(inputPath, { logger = console } = {}) {
+  await loadProjectEnv({ rootDir: process.cwd(), logger });
+
   const itPath = path.resolve(inputPath);
   const dir = path.dirname(itPath);
   const basename = path.basename(itPath, '.md');
@@ -57,7 +60,7 @@ export async function ensureEnglishTranslation(inputPath, { logger = console } =
 }
 
 function getGeminiConfig() {
-  const model = process.env.GEMINI_MODEL || 'gemini-3-flash-preview';
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
   const inferredVersion = /^gemini-2/i.test(model) ? 'v1' : 'v1beta';
   const apiVersion = process.env.GEMINI_API_VERSION || inferredVersion;
   const endpoint = `https://generativelanguage.googleapis.com/${apiVersion}/models/${model}:generateContent`;

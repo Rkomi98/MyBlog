@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Ethics e Data Governance per GenAI enterprise, agenti e MCP | Mirko Calcaterra</title>
+  <meta name="description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
+  <meta name="keywords" content="">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/ai-ethics-e-data-governance-per-genai-enterprise-agenti-e-mcp/">
+  <meta property="og:title" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP">
+  <meta property="og:description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-03-08T13:41:36.967Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="Generale">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP">
+  <meta property="twitter:description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "AI Ethics e Data Governance per GenAI enterprise, agenti e MCP",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-03-08T13:41:36.967Z",
+    "dateModified": "2026-03-08T13:37:49.011Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      position: relative;
+      font-family: 'Charter', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --bg-card-strong: rgba(11, 17, 32, 0.92);
+      --border: rgba(148, 163, 184, 0.2);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --surface: #1e293b;
+      --shadow-lg: 0 28px 60px -36px rgba(2, 6, 23, 0.9);
+      --code-inline-bg: rgba(30, 41, 59, 0.88);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.2);
+      --code-shadow: 0 12px 32px rgba(2, 6, 23, 0.45);
+      --code-text: #cbd5e1;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f6f8f7;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(255, 255, 255, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #059669;
+      --accent-strong: #047857;
+      --surface: #f1f5f9;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.16);
+      --code-inline-bg: rgba(226, 232, 240, 0.9);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.24);
+      --code-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 16;
+      width: 100%;
+      height: 2px;
+      background: rgba(148, 163, 184, 0.25);
+    }
+    .reading-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #22c55e 55%, #2dd4bf 100%);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+      transition: width 0.1s ease-out;
+    }
+    .site-header__inner,
+    .site-nav,
+    .lang-btn,
+    .theme-toggle,
+    .post-toc,
+    footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-hero__title,
+    .post-body h2,
+    .post-body h3,
+    .post-body h4,
+    .post-body .post-warning summary,
+    .post-toc__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(5, 150, 105, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(5, 150, 105, 0.08);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(15, 23, 42, 0.55) 70%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 22%, rgba(16, 185, 129, 0.18) 0%, transparent 56%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.13);
+      color: var(--accent-strong);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__author {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--accent);
+    }
+    .post-hero__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      object-fit: cover;
+      background: var(--surface);
+    }
+    .post-hero__author-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .post-hero__author-name {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .post-hero__author-meta {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.12rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body ul li::marker,
+    .post-body ol li::marker {
+      color: var(--accent);
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 0.75rem 1.2rem;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      background: rgba(30, 41, 59, 0.45);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.98rem;
+      font-style: italic;
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--accent-strong);
+      padding: 0.15rem 0.42rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+    }
+    .post-code-card pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--code-text);
+    }
+    .post-body pre {
+      margin: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+    .post-code-card pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: var(--code-text);
+    }
+    .post-code-card {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-code-card__language {
+      position: absolute;
+      right: 1rem;
+      top: -0.62rem;
+      z-index: 2;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      color: var(--accent-strong);
+      text-transform: uppercase;
+    }
+    .post-code-card__frame {
+      background: var(--code-block-bg);
+      border-radius: 12px;
+      border: 1px solid var(--code-border);
+      box-shadow: var(--code-shadow);
+      overflow: hidden;
+    }
+    .post-code-card__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.48rem 0.78rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-code-card__window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      flex: 0 0 auto;
+    }
+    .post-code-card__window-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .post-code-card__window-dot--red {
+      background: rgba(248, 113, 113, 0.25);
+      border-color: rgba(248, 113, 113, 0.6);
+    }
+    .post-code-card__window-dot--yellow {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .post-code-card__window-dot--green {
+      background: rgba(74, 222, 128, 0.22);
+      border-color: rgba(74, 222, 128, 0.65);
+    }
+    .post-code-card__filename {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-code-card__body {
+      padding: 0.95rem 1rem;
+      overflow-x: auto;
+    }
+    .post-code-card__body::-webkit-scrollbar {
+      height: 6px;
+    }
+    .post-code-card__body::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #c084fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #4ade80;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #fb923c;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .code-copy-btn {
+      margin-left: auto;
+      background: transparent;
+      color: var(--text-muted);
+      border: 0;
+      border-radius: 999px;
+      padding: 0.25rem 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .code-copy-btn__icon {
+      font-size: 0.88rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      color: var(--text-muted);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 2.2rem 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: var(--surface);
+      opacity: 0.88;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+        font-size: 1.04rem;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-hero__author {
+        gap: 0.7rem;
+      }
+      .post-hero__author-meta {
+        font-size: 0.78rem;
+      }
+      .post-code-card__header {
+        padding: 0.45rem 0.6rem;
+      }
+      .post-code-card__filename {
+        max-width: 36vw;
+      }
+      .code-copy-btn__text {
+        display: none;
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-theme="dark">
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="reading-progress-bar"></div>
+  </div>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">📝</div>
+        <span class="post-hero__category">Generale</span>
+        <h1 class="post-hero__title">AI Ethics e Data Governance per GenAI enterprise, agenti e MCP</h1>
+        <div class="post-hero__author">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
+          <div class="post-hero__author-text">
+            <span class="post-hero__author-name">Mirko Calcaterra</span>
+            <span class="post-hero__author-meta">8 marzo 2026 • 27 min</span>
+          </div>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#executive-synthesis">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Executive synthesis</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#data-policy-dei-principali-provider-e-strumenti">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Data policy dei principali provider e strumenti</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tabella-comparativa-sintetica">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">Tabella comparativa sintetica</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#differenze-api-vs-consumer-vs-stack-agentico-il-cambio-operativo-che-conta">
+            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__text">Differenze API vs consumer vs “stack agentico” (il cambio operativo che conta)</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#mcp-e-superficie-di-esposizione-nei-workflow-multi-componente">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">MCP e superficie di esposizione nei workflow multi-componente</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#il-flusso-dato-modello-tool-callmcp-risposta-azione-e-cosa-vede-chi">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#rischi-reali-vs-timori-generici-con-prove">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Rischi reali vs timori generici (con prove)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#differenza-di-rischio-readonly-vs-write-vs-manda-dati-fuori">
+            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__text">Differenza di rischio: read‑only vs write vs “manda dati fuori”</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#classificazione-del-rischio-e-gestione-dei-dati-nei-workflow-ai">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Classificazione del rischio e gestione dei dati nei workflow AI</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tassonomia-pragmatica-e-impatto-sulle-scelte">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Tassonomia pragmatica e impatto sulle scelte</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#livelli-di-rischio-per-tipologia-di-workflow">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Livelli di rischio per tipologia di workflow</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tecniche-difensive-che-spostano-lago-non-cosmetiche">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">Tecniche difensive che “spostano l’ago” (non cosmetiche)</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#governance-pratica-per-agenti-ai-e-integrazioni-mcp">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Governance pratica per agenti AI e integrazioni MCP</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#controlli-chiave-e-perch-funzionano-davvero">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Controlli chiave e perché funzionano davvero</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#humanintheloop-dove-conta">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">Human‑in‑the‑loop dove conta</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#logging-e-audit-trail-cosa-loggare-e-cosa-no">
+            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__text">Logging e audit trail: cosa loggare (e cosa no)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tabella-controlli-raccomandati-per-criticit">
+            <span class="post-toc__number">5.4</span>
+            <span class="post-toc__text">Tabella controlli raccomandati per criticità</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#eu-ai-act-e-accountability-nei-sistemi-generativi-e-agentici">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">EU AI Act e accountability nei sistemi generativi e agentici</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#stato-e-milestone-utile-per-pianificazione-20262027">
+            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__text">Stato e milestone (utile per pianificazione 2026–2027)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#quando-un-workflow-con-agenti-rischia-di-diventare-highrisk-lettura-operativa">
+            <span class="post-toc__number">6.2</span>
+            <span class="post-toc__text">Quando un workflow con agenti rischia di diventare “high‑risk” (lettura operativa)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#obblighi-di-trasparenza-tracciabilit-e-human-oversight-come-si-traducono-in-scelte">
+            <span class="post-toc__number">6.3</span>
+            <span class="post-toc__text">Obblighi di trasparenza, tracciabilità e human oversight: come si traducono in scelte</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#accountability-lungo-la-catena-developer-data-team-management-fornitori">
+            <span class="post-toc__number">6.4</span>
+            <span class="post-toc__text">Accountability lungo la catena (developer → data team → management → fornitori)</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#bias-e-fairness-in-advertising-automation-e-adtech">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">Bias e fairness in advertising automation e adtech</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#evidenze-empiriche-e-casi-documentati">
+            <span class="post-toc__number">7.1</span>
+            <span class="post-toc__text">Evidenze empiriche e casi documentati</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#distinzione-utile-bias-nei-dati-vs-bias-osservato-vs-bias-nellottimizzazione">
+            <span class="post-toc__number">7.2</span>
+            <span class="post-toc__text">Distinzione utile (bias nei dati vs bias osservato vs bias nell’ottimizzazione)</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#metriche-e-governance-pratica-per-advertising-automation">
+            <span class="post-toc__number">7.3</span>
+            <span class="post-toc__text">Metriche e governance pratica per advertising automation</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#governance-come-vantaggio-competitivo-e-angoli-narrativi-per-il-blog">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">Governance come vantaggio competitivo e angoli narrativi per il blog</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tre-possibili-angoli-narrativi-per-larticolo">
+            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__text">Tre possibili angoli narrativi per l’articolo</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#idee-controintuitive-emerse-dalla-ricerca">
+            <span class="post-toc__number">8.2</span>
+            <span class="post-toc__text">Idee controintuitive emerse dalla ricerca</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#domande-aperte-su-cui-vale-prendere-posizione">
+            <span class="post-toc__number">8.3</span>
+            <span class="post-toc__text">Domande aperte su cui vale prendere posizione</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <p>Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il problema non è tanto l&#39;utilizzo di questi dati per il training (come molti pensano), ma ci sono molte altre cose da considerare!</p>
+<h2 id="executive-synthesis">Executive synthesis</h2>
+<p>La tesi centrale che emerge dalle fonti più solide che ho consultato è controintuitiva ma di carattere operativo: nei sistemi di GenAI aziendali il rischio principale non è <em>“se il provider allena il modello coi nostri dati”</em> (importante ma spesso gestibile), bensì <em>“dove transitano e dove si sedimentano i dati lungo la catena modello → tool → integrazioni → log”</em>. </p>
+<p>In altre parole, la <em>data policy</em> del provider è solo il primo anello: la superficie di esposizione reale cresce quando introduciamo <strong>workflows agentici, MCP server, tool call, memoria, retrieval, automazioni multi-componente e connettori verso SaaS/DB</strong>. Questa catena crea un “data exhaust” distribuito: prompt e allegati, contesto recuperato (RAG), argomenti delle tool invocation, output dei tool, artefatti temporanei (cache, sandbox, file), audit log e telemetria.</p>
+<blockquote>
+<p><strong>Data exhaust</strong> significa l’insieme dei dati generati come sottoprodotto delle attività digitali, anche quando non sono il dato “principale” che volevi raccogliere. Alcuni esempi sono i log di navigazione, click e tempi di permanenza, cronologia delle ricerche, dati di posizione, metadata di utilizzo di app o servizi</p>
+</blockquote>
+<p>Molti provider dichiarano “no training by default” per le offerte business, ma <strong>continuano a esistere retention tecniche e retention di sicurezza</strong> (abuse monitoring, policy enforcement, incident response), con eccezioni e differenze tra endpoint/feature che un team tecnico deve conoscere per evitare sorprese in produzione. OpenAI, per esempio, distingue tra <em>abuse monitoring logs</em> (fino a 30 giorni di default) e <em>application state</em> che alcuni endpoint conservano fino a cancellazione esplicita; inoltre evidenzia che i dati inviati a MCP server remoti sono soggetti alle policy del terzo. citeturn1view0turn18view2</p>
+<p>Da qui discendono quattro evidenze operative.</p>
+<p>La prima: <strong>API ≠ interfaccia consumer</strong>. In più ecosistemi, l’uso via API (soprattutto “paid/enterprise”) è governato da termini e controlli più stringenti rispetto alle UI consumer. Google lo formalizza esplicitamente: nelle <em>Unpaid Services</em> (es. quota non pagata o AI Studio non legato a billing) i dati possono essere usati per “provide, improve, develop” con anche revisione umana; nelle <em>Paid Services</em> dichiara che prompt e risposte non sono usati per migliorare i prodotti e sono trattati sotto DPA. citeturn14view0 Anche OpenAI ribadisce che per i servizi business (ChatGPT Business/Enterprise/Edu e API) non allena sui dati “by default”, mentre sui servizi individual può farlo salvo opt-out. citeturn18view3turn18view2 Anthropic separa nettamente consumer vs commerciale: le modifiche 2025 su training/retention riguardano Free/Pro/Max, mentre non si applicano a Claude for Work (Team/Enterprise) e API sotto Commercial Terms. citeturn5search0turn9view0</p>
+<p>La seconda: <strong>“opt‑out” non significa “i dati non esistono più”</strong>. In tutti gli stack seri, anche con opt-out dal training, rimangono motivazioni legittime per trattare e trattenere dati: sicurezza, anti-abuso, obblighi legali, debug affidabilità. OpenAI chiarisce che i <em>Temporary Chats</em> non addestrano e sono cancellati entro 30 giorni, ma possono essere revisionati per monitoraggio abusi. citeturn18view0turn18view3 Anthropic, per i prodotti commerciali, parla di cancellazione backend entro 30 giorni e di retention più lunga se contenuti sono flaggati come violazioni della Usage Policy (fino a 2 anni, punteggi fino a 7). citeturn9view0 Google Gemini Apps consumer segnala che la revisione umana può comportare retention fino a 3 anni di chat selezionate, anche se l’utente cancella attività. citeturn12view0</p>
+<p>La terza: <strong>gli agenti trasformano la governance da “policy documento” a “policy eseguibile”</strong>. Quando un modello può fare tool call, la conversazione diventa un <em>programma</em> che muove credenziali e dati. Le fonti MCP e di sicurezza sono esplicite: MCP introduce rischi “classici” (SSRF, code execution, OAuth confusion) e “nuovi” (token passthrough, session hijacking prompt injection, compromissione di server locali) e prescrive mitigazioni come consent per-client, validazione redirect URI e minimizzazione degli scope. citeturn30view0 Non è teoria: nel 2025–2026 compaiono vulnerabilità con CVE legate a implementazioni MCP e tooling (es. RCE su mcp-remote; RCE su MCP Inspector; vulnerabilità Cursor/MCP con possibile command injection e RCE). citeturn31search6turn31search15turn31search0</p>
+<p>La quarta: <strong>la normativa (EU AI Act) è un acceleratore se la traduciamo in scelte architetturali e di processo</strong>. Le fonti UE confermano entrata in vigore (1 agosto 2024) e applicazione “a scaglioni” fino al 2027; inoltre indicano che divieti (unacceptable risk) e obblighi per i modelli di AI “general-purpose” sono già applicabili, mentre molte regole high‑risk scattano 2026–2027. citeturn21search2turn22view0 In pratica: se un workflow agentico tocca domini Annex III (es. lavoro, istruzione, credito, accesso a servizi essenziali) o agisce come componente di un prodotto regolato, la strategia migliore non è “blocchiamo l’AI”, ma <strong>costruiamo tracciabilità, human oversight reale, data governance e controllo delle dipendenze</strong>.</p>
+<p><strong>Rischi più rilevanti (priorità pratica)</strong>: (1) <em>data exfiltration</em> via tool (prompt injection indiretta + tool con permessi eccessivi), (2) compromissione/supply chain di MCP server (locali o remoti) con esecuzione di comandi o accesso a sorgenti interne, (3) logging/retention non intenzionale (feature non ZDR-eligible, cache, conversation state), (4) responsabilità distribuita opaca tra provider-modello, piattaforma agentica, MCP server, SaaS target e team interno. citeturn30view0turn31search6turn1view0turn32search3</p>
+<p><strong>Takeaway operativi per team tecnici e azienda</strong>: mappare il <em>data path</em> end-to-end (non solo il provider), classificare i dati per “dove possono andare” (UI/API/tools), adottare <em>least privilege</em> e scope minimization come default, mettere <em>human‑in‑the‑loop</em> sulle azioni irreversibili, e rendere auditabili tool call e decisioni dell’agente. Questo è coerente con NIST AI RMF (Govern/Map/Measure/Manage) e con l’approccio “AI management system” di ISO/IEC 42001. citeturn23search4turn23search1</p>
+<h2 id="data-policy-dei-principali-provider-e-strumenti">Data policy dei principali provider e strumenti</h2>
+<p>Qui l’obiettivo è rispondere alla domanda che in azienda arriva sempre uguale ma con sottotesto diverso: <strong>“dove finiscono davvero i dati?”</strong>. La risposta utile è: finiscono <strong>in più posti</strong>, con differenze forti tra piani e superfici (consumer UI, workspace business, API, agentic tooling).</p>
+<h3 id="tabella-comparativa-sintetica">Tabella comparativa sintetica</h3>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Provider / superficie</th>
+<th>Training o model improvement (default)</th>
+<th>Opt‑out: significato operativo</th>
+<th>Retention e log (punti da sapere)</th>
+<th>Data residency (realtà vs aspettative)</th>
+<th>Caveat “da squadra tecnica”</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>OpenAI ChatGPT (workspace personale: Free/Plus/Pro)</strong></td>
+<td>Può usare contenuti per training; l’utente può disattivare “Improve the model for everyone”. citeturn18view1turn18view3</td>
+<td>Opt‑out vale <strong>per le nuove conversazioni</strong>: disattiva uso per training, non “annulla” trattamenti per sicurezza/abuso. citeturn18view1turn18view0</td>
+<td><em>Temporary Chat</em> cancellata entro 30 giorni e non usata per training; possibile review per abusi. citeturn18view0turn18view3</td>
+<td>Non è un’offerta “residency-first” nella UI consumer; se serve controllo geografico serio si passa a offerte/business o API con controlli dedicati. citeturn1view0turn18view2</td>
+<td>Attenzione a: allegati, GPTs, connettori; l’opt‑out non elimina rischi di leakage via tool/integrations. citeturn0search8turn30view0</td>
+</tr>
+<tr>
+<td><strong>OpenAI ChatGPT Business / Enterprise / Edu</strong></td>
+<td>“No training by default” su input/output. citeturn18view2turn18view3</td>
+<td>Opt‑out è di fatto lo standard; resta possibile opt‑in tramite meccanismi espliciti (feedback/Playground) per alcuni casi API. citeturn18view3turn0search9</td>
+<td>Enterprise privacy: controlli su retention (esplicitati per Enterprise/Healthcare/Edu). citeturn18view2</td>
+<td>Dipende dalle opzioni contrattuali e controlli di piattaforma; per API esistono anche “data residency controls” configurabili a progetto con limiti e “system data” fuori regione. citeturn1view0</td>
+<td>“No training” ≠ “no logging”: servono policy interne su cosa può entrare e come si logga lato vostro (SIEM/observability).</td>
+</tr>
+<tr>
+<td><strong>OpenAI API Platform</strong></td>
+<td>Dal 1 marzo 2023: dati API non usati per training <strong>salvo opt‑in esplicito</strong>. citeturn1view0turn18view3</td>
+<td>Opt‑in è un’azione <strong>attiva</strong>; default è opt‑out per organizzazioni. citeturn0search9turn18view3</td>
+<td><em>Abuse monitoring logs</em> fino a 30 giorni di default; possibili opzioni “Modified Abuse Monitoring” / “Zero Data Retention” con approvazione. Alcuni endpoint conservano <em>application state</em> “until deleted”. citeturn1view0</td>
+<td>“Data residency controls” a livello progetto: customer content “stored at rest” in regione selezionata <strong>solo dove serve persistenza</strong>; “system data” può stare fuori. citeturn1view0</td>
+<td>Se usi tool esterni (es. MCP server remoto), i dati escono dal perimetro OpenAI e seguono la policy del terzo. citeturn1view0</td>
+</tr>
+<tr>
+<td><strong>OpenAI Codex (agente di coding, local + cloud)</strong></td>
+<td>Per Business/Enterprise/Edu: stessa logica “no training by default”; per Plus/Pro: conversazioni possono essere usate salvo training off. citeturn20view1turn18view3</td>
+<td>Opt‑out dipende dal piano/workspace e dalle impostazioni ChatGPT (data controls). citeturn20view1turn18view1</td>
+<td>Differenza critica: attività “cloud” può entrare in canali di compliance (es. Compliance API), mentre uso locale no. citeturn20view1</td>
+<td>Per residenza/retention: riferimento a “Data Retention &amp; Residency policies” e controlli workspace; verificare per superficie (web/cloud vs locale). citeturn20view1turn1view0</td>
+<td>Codex Security collega repo GitHub e lavora in sandbox isolata con patch per review umana: è già un pattern di governance (human review). citeturn20view0</td>
+</tr>
+<tr>
+<td><strong>Anthropic Claude consumer (Free/Pro/Max)</strong></td>
+<td>Dal 2025 l’utente sceglie se abilitare uso dei dati per training/model improvement; se abilita, retention fino a 5 anni. citeturn5search0</td>
+<td>Opt‑out (o mancata scelta) incide su <strong>nuove o “resumed”</strong> chat/sessions; cancellare una conversazione la esclude dal training futuro. citeturn5search0</td>
+<td>Se non si abilita training: retention “esistente” 30 giorni (consumer). citeturn5search0</td>
+<td>Non descritta come residency configurabile nella consumer UI nelle fonti qui usate; per requisiti forti si passa a canali commerciali/API. citeturn9view0turn16view0</td>
+<td>La principale fonte di rischio in azienda è lo “shadow use” di account consumer per dati di lavoro. citeturn5search0turn9view0</td>
+</tr>
+<tr>
+<td><strong>Anthropic Claude for Work + API (Commercial)</strong></td>
+<td>Per il commerciale: retention e uso dati descritti separatamente; per “Anthropic on Vertex” i termini indicano che non può addestrare su Customer Content. citeturn9view0turn8view0</td>
+<td>Opt‑out dal training è sostanzialmente incorporato nei termini commerciali (salvo accordi specifici); esistono accordi ZDR per endpoint idonei. citeturn10view0turn9view0</td>
+<td>API: input/output cancellati entro 30 giorni (con eccezioni: Files API, accordi ZDR, enforcement UP, legge). Violazioni UP: retention fino a 2 anni (e score fino a 7). citeturn9view0turn10view0</td>
+<td>Data residency su Claude API: controllo <em>inference_geo</em> (“global” o “us”) e vincoli workspace; <em>workspace geo</em> oggi solo “us”. citeturn16view0</td>
+<td>ZDR non copre tutto: console/workbench e varie feature no; anche in ZDR rimane possibilità di retention per violazioni UP/legge. citeturn10view0turn9view0</td>
+</tr>
+<tr>
+<td><strong>Google Gemini Apps (consumer)</strong></td>
+<td>Dati usati per fornire e migliorare servizi; revisori umani possono vedere alcune chat; avvertenza: non inserire confidenziale. citeturn12view0</td>
+<td>Controlli (Keep Activity) influenzano personalizzazione e log, ma alcune elaborazioni per rispondere e proteggere Google restano anche con Keep Activity off. citeturn12view0</td>
+<td>Default auto-delete 18 mesi (configurabile); chat revisionate conservate fino a 3 anni anche se si elimina attività. citeturn12view0</td>
+<td>Non è pensata come soluzione di data residency enterprise.</td>
+<td>Rischio tipico: dipendenti che usano Gemini consumer per lavoro → dati sotto regole consumer.</td>
+</tr>
+<tr>
+<td><strong>Google Workspace with Gemini (business/edu/public sector)</strong></td>
+<td>Dichiarazione esplicita: contenuti non usati per training “outside your domain” senza permesso; niente human review. citeturn13view0turn11search16</td>
+<td>La governance è in mano agli admin (abilitare/disabilitare, history, retention, audit). citeturn13view0turn11search14</td>
+<td>“Gemini in Workspace” prompt/response non trattenuti dopo sessione; Gemini app (come servizio Workspace) può essere trattenuta fino a 36 mesi (admin). Conversation history off: salvataggio fino a 72 ore. citeturn13view0</td>
+<td>Si appoggia a modello Google Workspace e CDPA; esistono controlli (es. client-side encryption) che possono limitare accesso a contenuti cifrati. citeturn13view0</td>
+<td>È un buon esempio di governance come abilitatore: audit log, Vault, controlli retention, firewall settings. citeturn13view0turn11search14</td>
+</tr>
+<tr>
+<td><strong>Google Gemini Developer API vs Vertex AI (Cloud)</strong></td>
+<td>Gemini API: <em>Unpaid</em> può essere usato per miglioramento con human review; <em>Paid</em> non usa prompt/risposte per migliorare prodotti e opera sotto DPA. citeturn14view0turn14view1</td>
+<td>“Zero data retention” richiede evitare feature che impongono storage (es. grounding Search/Maps 30 giorni) e gestire store/cached content. citeturn14view1turn14view3</td>
+<td>Vertex AI: caching in-memory 24h (RAM) per performance; grounding Search/Maps conserva 30 giorni e non è disattivabile (salvo alternative enterprise). citeturn14view3turn11search6</td>
+<td>Vertex AI ha data residency per dati at-rest nella location selezionata e documentazione dedicata. citeturn11search6turn14view3</td>
+<td>La distinzione “developer quickstart” vs produzione è spesso qui: prototipo su Unpaid/AI Studio può violare policy dati interne. citeturn14view0</td>
+</tr>
+<tr>
+<td><strong>Cursor (IDE + agent, non provider)</strong></td>
+<td>Con Privacy Mode/ZDR: code e prompt non sono memorizzati/usati per training dai provider; Cursor dichiara accordi ZDR con provider chiave per Enterprise (OpenAI, Anthropic, Google Vertex, xAI). citeturn17search1turn17search4</td>
+<td>Opt‑out “reale” dipende dalla modalità e dal flusso: alcune feature (memories/sync) possono richiedere storage su server Cursor (anche se non training). citeturn17search7turn17search13</td>
+<td>Cursor chiarisce due cose cruciali: (1) anche con BYOK le richieste passano dal backend Cursor per prompt building; (2) la ZDR Cursor <strong>non si applica</strong> quando usi la tua API key: vale la policy del provider scelto. citeturn17search6turn17search0</td>
+<td>Data residency dipende dall’infrastruttura Cursor e provider; la security page descrive hosting e terze parti (es. AWS, Baseten, Together) e condizioni di retention per “Share Data”. citeturn17search13turn17search0</td>
+<td>Cursor integra MCP e raccomanda cautela: “capire cosa fa un server prima di installarlo”. citeturn17search2turn17search5</td>
+</tr>
+</tbody></table>
+</div></figure><h3 id="differenze-api-vs-consumer-vs-stack-agentico-il-cambio-operativo-che-conta">Differenze API vs consumer vs “stack agentico” (il cambio operativo che conta)</h3>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Aspetto</th>
+<th>Consumer UI (chat app)</th>
+<th>Business workspace (suite enterprise)</th>
+<th>API (build)</th>
+<th>Stack agentico (tools/MCP/automazioni)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Controllo “training”</td>
+<td>Spesso opt‑out a livello utente (toggle) con comportamento non retroattivo. citeturn18view1turn5search0</td>
+<td>Tipicamente “no training by default” con garanzie contrattuali e controlli admin. citeturn18view2turn13view0</td>
+<td>Tipicamente no training di default e opt‑in esplicito (ma dipende da “paid/unpaid” e contratti). citeturn1view0turn14view0</td>
+<td>Il problema non è solo training: tool call può inviare dati a terzi; la governance deve coprire <em>routing</em> e <em>permissions</em>. citeturn1view0turn30view0</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>Può essere lunga e influenzata da activity settings / feedback / human review. citeturn12view0turn18view0</td>
+<td>Admin decide retention/histories/audit; spesso più trasparente. citeturn13view0turn18view2</td>
+<td>Log e state sono granulari per endpoint/feature; ZDR spesso “parziale” (alcune feature non eleggibili). citeturn1view0turn14view1</td>
+<td>Tool e MCP aggiungono nuove retention: log tool, audit trail, stored credentials, sandbox artifacts, caches. citeturn30view0turn31search6</td>
+</tr>
+<tr>
+<td>Data residency</td>
+<td>Raramente personalizzabile.</td>
+<td>Più probabile via offerte enterprise (Workspace/Cloud). citeturn11search6turn13view0</td>
+<td>Possibile ma con limiti (es. “system data” fuori regione; feature che forzano storage). citeturn1view0turn14view3</td>
+<td>MCP server può stare ovunque: la residency “vera” diventa un problema di supply chain e rete. citeturn30view0turn31search6</td>
+</tr>
+</tbody></table>
+</div></figure><p><strong>Consenso e ambiguità tra provider (da esplicitare in articolo)</strong>: c’è un forte consenso sul “no training by default” per le offerte business/API <em>pagate/contrattuali</em> (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). citeturn18view2turn14view0turn9view0 L’ambiguità sta nei dettagli: differenze tra endpoint/feature, definizioni (training vs abuse monitoring vs model improvement), eccezioni (policy violations, grounding Search/Maps, human review su consumer), e soprattutto nel fatto che <strong>integrazioni e MCP spostano il problema fuori dal perimetro del provider</strong>. citeturn1view0turn30view0</p>
+<h2 id="mcp-e-superficie-di-esposizione-nei-workflow-multi-componente">MCP e superficie di esposizione nei workflow multi-componente</h2>
+<p>MCP nasce per un obiettivo legittimo: <strong>connettere gli assistenti ai sistemi “dove vivono i dati”</strong> (repository, tool aziendali, ambienti di sviluppo) con un protocollo standard. citeturn25view1turn29search7 Architetturalmente, MCP introduce un pattern <em>client–host–server</em> e scambi di contesto e tool su sessioni stateful (basate su JSON‑RPC). citeturn29search4turn29search8</p>
+<h3 id="il-flusso-dato-modello-tool-callmcp-risposta-azione-e-cosa-vede-chi">Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi</h3>
+<p>Un modo concreto per descriverlo in azienda è ragionare per “punti di transito”:</p>
+<ol>
+<li><strong>Input</strong> (prompt utente + contesto): può includere dati aziendali, segreti, personal data, frammenti di file. Questo materiale finisce nel provider LLM, ma spesso anche in caching, log di abuso o conversation state a seconda dell’endpoint/feature. citeturn1view0turn14view3  </li>
+<li><strong>Decisione del modello</strong>: il modello decide di chiamare un tool; qui il rischio è che istruzioni malevole siano interpretate come comandi (prompt injection, soprattutto indiretta). Microsoft descrive l’indirect prompt injection come input “non fidato” che il modello scambia per istruzioni, con impatti da esfiltrazione a azioni non volute con le credenziali dell’utente. citeturn32search3turn32search11  </li>
+<li><strong>Tool invocation</strong>: payload verso MCP server (argomenti, query, filtri, ID, eventualmente pezzi di contesto). Qui <strong>il server MCP vede ciò che invii</strong>; se è remoto o di terze parti, stai letteralmente esportando dati fuori perimetro. OpenAI lo esplicita: i server MCP (remote MCP server tool) sono terze parti e i dati seguono la loro retention. citeturn1view0  </li>
+<li><strong>Tool response</strong>: può contenere dati sensibili (query result, file content, token, error stack). Se inserita nel contesto del modello, rientra nel perimetro del provider e nei suoi log. citeturn1view0turn14view1  </li>
+<li><strong>Azione</strong>: se il tool scrive (update DB, crea ticket, invia messaggi, merge PR), il rischio passa da “leakage” a “impatti operativi” (integrità, disponibilità, frodi).</li>
+</ol>
+<h3 id="rischi-reali-vs-timori-generici-con-prove">Rischi reali vs timori generici (con prove)</h3>
+<p><strong>Prompt injection e indirect prompt injection</strong> non sono un rischio ipotetico: esistono benchmark e misurazioni che mostrano vulnerabilità diffuse in agenti tool‑integrated (InjecAgent; BIPIA; Agent Security Bench). citeturn32search0turn32search8turn32search2 OWASP continua a classificare prompt injection come rischio primario per LLM apps e descrive scenari di data exfiltration quando output non è validato. citeturn24search15turn24search3</p>
+<p><strong>Tool poisoning / supply chain MCP</strong> è già entrato nel mondo “CVE e advisory”. Esempi ad alto segnale:</p>
+<ul>
+<li><strong>mcp-remote</strong>: advisory GitHub per CVE‑2025‑6514 su OS command injection quando ci si connette a MCP server non fidato (RCE). citeturn31search6  </li>
+<li><strong>MCP Inspector</strong>: CVE‑2025‑49596 (NVD) per RCE dovuta a mancanza di autenticazione tra client e proxy. citeturn31search15  </li>
+<li><strong>Cursor</strong>: NVD descrive CVE‑2025‑61591 (versioni 1.7 e sotto) con impersonazione di MCP server e command injection/possibile RCE nel contesto MCP+OAuth. citeturn31search0  </li>
+<li><strong>GitHub MCP server</strong>: write‑up tecnico (Invariant Labs) e issue GitHub che descrivono possibilità di accesso a dati di repo privati sfruttando flussi MCP/OAuth/token scope. citeturn31search1turn31search4</li>
+</ul>
+<p><strong>Il punto chiave per l’articolo</strong>: l’ansia generica “l’AI ci ruba i dati” è troppo vaga. Il rischio concreto è più meccanico: <em>un agente con un tool può essere indotto a fare richieste sbagliate con i tuoi privilegi</em>.</p>
+<h3 id="differenza-di-rischio-readonly-vs-write-vs-manda-dati-fuori">Differenza di rischio: read‑only vs write vs “manda dati fuori”</h3>
+<p>MCP stesso insiste su <em>scope minimization</em> e su anti‑pattern come <em>token passthrough</em>, perché rompono accountability e confini di fiducia. citeturn30view0 Operativamente:</p>
+<ul>
+<li><strong>Solo lettura (read)</strong>: rischio primario = data leakage/esfiltrazione (soprattutto se il tool può leggere molto e il modello decide cosa estrarre).  </li>
+<li><strong>Scrittura (write)</strong>: rischio primario = manipolazione e danni (integrità), escalation e azioni irreversibili.  </li>
+<li><strong>Egress verso servizi esterni</strong>: rischio primario = uscita dal perimetro legale/contrattuale (DPA, residency) e difficoltà di audit.</li>
+</ul>
+<p>Queste non sono categorie astratte: sono la base per decidere <em>quando</em> serve approvazione umana e <em>quali</em> scope concedere.</p>
+<h2 id="classificazione-del-rischio-e-gestione-dei-dati-nei-workflow-ai">Classificazione del rischio e gestione dei dati nei workflow AI</h2>
+<p>La classificazione dati “tradizionale” (pubblico / interno / riservato / sensibile) funziona ancora, ma va adattata: non basta più stabilire <em>chi può leggere</em>, bisogna stabilire <strong>quale superficie AI può trattare quel dato</strong> (consumer UI, business workspace, API, agenti con tool, agenti con MCP remoto).</p>
+<h3 id="tassonomia-pragmatica-e-impatto-sulle-scelte">Tassonomia pragmatica e impatto sulle scelte</h3>
+<p>Una versione enterprise-friendly (minima ma utile) può essere:</p>
+<p><strong>Pubblico</strong> (open web, comunicati), <strong>Interno</strong> (processi, KPI non pubblici), <strong>Riservato</strong> (IP, contratti, dati clienti), <strong>Sensibile</strong> (PII, dati particolari, segreti, credenziali). Questo si collega direttamente a scelte di piano e superficie:</p>
+<ul>
+<li>Se il dato è <strong>Riservato/Sensibile</strong>, l’uso di superfici consumer dove i dati possono essere usati per miglioramento e con revisione umana è in genere incompatibile con policy interne: Google Gemini Apps consumer avverte esplicitamente di non inserire confidenziale se non lo si vuole esposto a revisori e miglioramento. citeturn12view0  </li>
+<li>Per la stessa categoria, le offerte business/API pagate tipicamente offrono impegni più solidi: OpenAI “no training by default” per Business/Enterprise/API; Google “Paid Services” Gemini API; Workspace privacy hub; Anthropic retention commerciale. citeturn18view2turn14view0turn13view0turn9view0</li>
+</ul>
+<h3 id="livelli-di-rischio-per-tipologia-di-workflow">Livelli di rischio per tipologia di workflow</h3>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Dati che tipicamente transitano</th>
+<th>Rischi dominanti</th>
+<th>Livello rischio (indicativo)</th>
+<th>Note operative</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chat “stateless”, senza tool</td>
+<td>Prompt e output; eventuali allegati</td>
+<td>Leakage nel provider/log/retention; errori/hallucinations</td>
+<td>Medio (dipende dal dato)</td>
+<td>Riduci contesto, usa workspace business/API pagata per dati non pubblici. citeturn18view3turn14view0</td>
+</tr>
+<tr>
+<td>RAG read‑only (retrieval controllato)</td>
+<td>Query, chunk recuperati, output</td>
+<td>Data exfiltration via prompt injection indiretta; over‑retrieval</td>
+<td>Medio–Alto</td>
+<td>Benchmark su IPI mostra che tool‑integrated agents sono vulnerabili; serve retrieval minimization e confini. citeturn32search0turn32search3</td>
+</tr>
+<tr>
+<td>Agente con tool read‑only (ticketing, repo, doc)</td>
+<td>Argomenti tool call, risultati, metadati</td>
+<td>Indirect prompt injection + leakage; token misuse</td>
+<td>Alto</td>
+<td>MCP security doc: token passthrough e SSRF come rischi concreti. citeturn30view0</td>
+</tr>
+<tr>
+<td>Agente con tool write</td>
+<td>Come sopra + modifiche a sistemi</td>
+<td>Integrity attacks, azioni non volute</td>
+<td>Molto alto</td>
+<td>Richiede human approval su azioni irreversibili e kill switch.</td>
+</tr>
+<tr>
+<td>Agente con egress verso terzi (email/SMS/webhook)</td>
+<td>Dati e contenuti inviati fuori</td>
+<td>Violazioni perimetro legale/contrattuale, data exfil</td>
+<td>Critico</td>
+<td>Approccio “deny by default” su egress; allowlist domini e payload. citeturn30view0turn33search4</td>
+</tr>
+<tr>
+<td>Multi‑agent / workflow orchestrato</td>
+<td>Stato condiviso, memory, code exec artifacts</td>
+<td>Amplificazione: più superfici, più segreti, più opportunità poisoning</td>
+<td>Critico</td>
+<td>ASB e lavori su memory poisoning (AgentPoison) mostrano una classe di attacchi su memoria/RAG. citeturn32search14turn32search2</td>
+</tr>
+</tbody></table>
+</div></figure><h3 id="tecniche-difensive-che-spostano-lago-non-cosmetiche">Tecniche difensive che “spostano l’ago” (non cosmetiche)</h3>
+<p>Qui è utile collegare controlli a standard “seri” e non a check-list di marketing. NIST AI RMF struttura le attività in Govern/Map/Measure/Manage; è una buona cornice per rendere la data governance ripetibile e auditabile. citeturn23search4turn23search0 ISO/IEC 42001 esplicita l’idea di un AI management system per stabilire e migliorare governance e gestione rischio nel tempo. citeturn23search1turn23search5</p>
+<p>In pratica, le difese che più cambiano outcome sono:</p>
+<ul>
+<li><strong>Context minimization</strong>: portare nel prompt solo ciò che serve “adesso”; è coerente con pratiche di <em>context engineering</em> orientate a non caricare interi dataset in contesto. citeturn3search25  </li>
+<li><strong>Redazione/pseudonimizzazione</strong> per dati sensibili prima del passaggio nel modello (riduce blast radius se qualcosa esce).  </li>
+<li><strong>Retrieval controllato</strong>: query policy-aware, chunking con filtri per classificazione, e “top‑k” limitato.  </li>
+<li><strong>Separazione per ambienti/tenant</strong>: dev/stage/prod con credenziali e dataset diversi; è una difesa organizzativa e tecnica compatibile con ISO 27001 (ISMS) e ISO 27701 (PIMS). citeturn24search0turn24search1  </li>
+<li><strong>ZDR dove serve, ma con realismo</strong>: sia OpenAI sia Google sia Anthropic chiariscono che “ZDR” è condizionale e feature-dependent (Search grounding, code execution, batch, cached content). citeturn1view0turn14view1turn10view0</li>
+</ul>
+<h2 id="governance-pratica-per-agenti-ai-e-integrazioni-mcp">Governance pratica per agenti AI e integrazioni MCP</h2>
+<p>La governance “che abilita” non è un PDF che dice “non usare dati sensibili”. È un insieme di <strong>vincoli eseguibili</strong> e strumenti che rendono <em>facile fare la cosa giusta</em>.</p>
+<h3 id="controlli-chiave-e-perch-funzionano-davvero">Controlli chiave e perché funzionano davvero</h3>
+<p>Il principio del <strong>minimo privilegio</strong> non è solo IAM: negli agenti significa <em>tool design</em> e <em>scope design</em>. MCP insiste su scope minimization e su proibire token passthrough perché rompe security controls e audit trail. citeturn30view0 In modo simmetrico, anche quando usi IDE agentici (es. Cursor) devi governare <strong>quali modelli</strong> e <strong>quali integrazioni</strong> sono disponibili al team (model/integration management), altrimenti la variabilità individuale diventa rischio sistemico. citeturn17search8turn17search5</p>
+<p>Il pattern più efficace in ambienti enterprise è: <strong>tool “narrow”, composabili, con policy per azione</strong>:</p>
+<ul>
+<li>tool read‑only granulari (es. “read_ticket(id)” invece di “search_all_tickets(query)” senza limiti);</li>
+<li>tool write separati e protetti (es. “create_pr” con approvazione o run in sandbox);</li>
+<li>tool egress (email/webhook) dietro allowlist e policy di payload.</li>
+</ul>
+<p>Questo riduce sia prompt injection sia danni da allucinazione: l’agente può sbagliare, ma in un recinto più piccolo.</p>
+<h3 id="humanintheloop-dove-conta">Human‑in‑the‑loop dove conta</h3>
+<p>La fonte MCP elenca scenari di attacco che bypassano consenso (confused deputy) e prescrive consent e validazioni; ma nel mondo agentico il “consenso” non è una schermata una tantum: è <strong>approvazione per azione</strong> quando l’impatto è alto. citeturn30view0 È la stessa logica che OpenAI Codex Security applica: propone patch e PR ma richiede review umana e non modifica codice automaticamente. citeturn20view0</p>
+<h3 id="logging-e-audit-trail-cosa-loggare-e-cosa-no">Logging e audit trail: cosa loggare (e cosa no)</h3>
+<p>È un equilibrio: loggare troppo può creare un nuovo data lake sensibile; loggare troppo poco distrugge accountability. MCP sottolinea che pratiche scorrette sui token danneggiano proprio audit e investigazione. citeturn30view0</p>
+<p>Un criterio pragmatico: loggare <strong>metadati e decisioni</strong>, e minimizzare contenuti:</p>
+<ul>
+<li>log dei tool invocati, timestamp, identità, scope, outcome, ma non per forza la risposta completa se contiene dati sensibili;</li>
+<li>hashing/ID per correlazione;</li>
+<li>vaulting dei segreti e rotazione.</li>
+</ul>
+<p>Sui segreti, le “incident class” MCP è ormai chiara: token exposure e secret mismanagement sono rischi strutturali negli ambienti MCP/agentici (esiste persino un progetto OWASP “MCP Top 10” focalizzato su token/secret exposure). citeturn31search8</p>
+<h3 id="tabella-controlli-raccomandati-per-criticit">Tabella controlli raccomandati per criticità</h3>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Criticità del workflow</th>
+<th>Controlli minimi</th>
+<th>Controlli raccomandati</th>
+<th>Controlli “hard mode” (per ambienti critici)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bassa (dati pubblici, no tool)</td>
+<td>Policy uso, training opt‑out dove disponibile</td>
+<td>Workspace business o API pagata; prompt minimization</td>
+<td>DLP su input/output; monitoring anomalo</td>
+</tr>
+<tr>
+<td>Media (interno, RAG read‑only)</td>
+<td>Retrieval minimization, separazione ambienti</td>
+<td>Redazione/pseudonimizzazione; allowlist fonti; eval su leakage</td>
+<td>“Untrusted content” sandbox; guardrail contro IPI (es. pattern Microsoft) citeturn32search3turn32search11</td>
+</tr>
+<tr>
+<td>Alta (tool read‑only su sistemi aziendali)</td>
+<td>Least privilege su tool; token scoping</td>
+<td>Policy engine su tool call; auditing; rate limit; blocco token passthrough citeturn30view0</td>
+<td>Isolation rete; attestation MCP server; scanning supply chain (CVE) citeturn31search6turn31search15</td>
+</tr>
+<tr>
+<td>Critica (tool write/egress/multi‑agent)</td>
+<td>Human approval per azioni irreversibili; kill switch</td>
+<td>Segregazione prod; break‑glass; rollback; incident playbook</td>
+<td>Formal change management; “two‑person rule” su azioni ad alto impatto; continuous red teaming (ASB/bench) citeturn32search2turn23search3</td>
+</tr>
+</tbody></table>
+</div></figure><h2 id="eu-ai-act-e-accountability-nei-sistemi-generativi-e-agentici">EU AI Act e accountability nei sistemi generativi e agentici</h2>
+<h3 id="stato-e-milestone-utile-per-pianificazione-20262027">Stato e milestone (utile per pianificazione 2026–2027)</h3>
+<p>Fonti UE: AI Act entrato in vigore il 1 agosto 2024. citeturn21search2turn21search5 L’entrata in applicazione è graduale fino al 2 agosto 2027; una fonte EUR‑Lex (documento 2025) ribadisce che divieti e obblighi per i modelli general‑purpose sono già applicabili, mentre molte prescrizioni high‑risk scattano 2026–2027. citeturn22view0</p>
+<h3 id="quando-un-workflow-con-agenti-rischia-di-diventare-highrisk-lettura-operativa">Quando un workflow con agenti rischia di diventare “high‑risk” (lettura operativa)</h3>
+<p>Per un’azienda che usa GenAI, la domanda non è “il modello è potente?”, ma <strong>“in quale processo decisionale lo metto?”</strong>. L’AI Act è basato sul rischio e (nelle sintesi EUR‑Lex) evidenzia requisiti e obblighi più pesanti per gli high‑risk, oltre a trasparenza e documentazione per general‑purpose AI. citeturn21search1turn21search9</p>
+<p>Una regola pratica per i decision maker: un sistema agentico tende verso high‑risk quando:</p>
+<ul>
+<li>supporta o automatizza decisioni in aree sensibili (HR, credito, istruzione, accesso a servizi essenziali);</li>
+<li>produce output che diventa <em>input vincolante</em> (non solo “assistivo”) per una decisione che impatta diritti o opportunità;</li>
+<li>è integrato in prodotti o servizi soggetti a obblighi di sicurezza/conformità.</li>
+</ul>
+<p><strong>Implicazione architetturale</strong>: se sei in queste aree, devi progettare <em>human oversight</em> come componente, non come “bottone in UI”.</p>
+<h3 id="obblighi-di-trasparenza-tracciabilit-e-human-oversight-come-si-traducono-in-scelte">Obblighi di trasparenza, tracciabilità e human oversight: come si traducono in scelte</h3>
+<p>Il compromesso vincente è trattare la conformità come “design constraints”:</p>
+<ul>
+<li><strong>tracciabilità</strong> = audit log delle tool invocation, versione dei prompt/policy, dataset e retrieval source, e capability del modello (modello/versione). MCP evidenzia che audit trail si rompe con token passthrough e confini di fiducia confusi. citeturn30view0  </li>
+<li><strong>documentazione</strong> = non un documento statico, ma un “bill of materials” dell’agente: quali MCP server, quali scope, quali dati, quali ambienti, quali controlli e fallback.  </li>
+<li><strong>human oversight</strong> = gating su azioni high‑impact (approvazione, limite di spend, kill switch).</li>
+</ul>
+<h3 id="accountability-lungo-la-catena-developer-data-team-management-fornitori">Accountability lungo la catena (developer → data team → management → fornitori)</h3>
+<p>Nella pratica enterprise, la responsabilità è <em>stratificata</em>:</p>
+<ul>
+<li><strong>Team tecnici (dev/ML/data)</strong>: implementano controlli, scoping, logging; scelgono endpoint/feature che determinano retention (es. feature non ZDR‑eligible; grounding con storage 30 giorni). citeturn1view0turn14view1  </li>
+<li><strong>Product/innovation/management</strong>: decidono “dove” l’agente è usato e quanto è autonomo (quindi rischio).  </li>
+<li><strong>Fornitori e terze parti</strong>: introducono superficie supply chain; esistono CVE reali su componenti MCP e strumenti (mcp-remote, MCP Inspector, Cursor). citeturn31search6turn31search15turn31search0</li>
+</ul>
+<p>Il <em>takeaway legale‑operativo</em> più utile per l’articolo: <strong>l’audit trail è una protezione legale tanto quanto tecnica</strong>. Se non puoi dimostrare “quale agente ha fatto cosa, con quali permessi e perché”, non hai governance: hai speranza.</p>
+<h2 id="bias-e-fairness-in-advertising-automation-e-adtech">Bias e fairness in advertising automation e adtech</h2>
+<p>Qui la ricerca evidenzia un punto che spesso sorprende i team: <strong>anche con targeting “neutrale”, la delivery può diventare non neutrale</strong> perché ottimizza obiettivi economici (costo, conversioni) e usa segnali correlati a caratteristiche protette.</p>
+<h3 id="evidenze-empiriche-e-casi-documentati">Evidenze empiriche e casi documentati</h3>
+<ul>
+<li><strong>Discriminazione “through optimization”</strong>: Ali et al. (2019) mostrano che la delivery su Facebook può essere “skewed” lungo linee di genere e razza per annunci di lavoro e housing <em>anche quando i parametri di targeting sono inclusivi</em>, a causa di dinamiche di ottimizzazione e predizioni di “relevance”. citeturn33search2turn33search10  </li>
+<li><strong>Bias per crowding‑out</strong>: Lambrecht &amp; Tucker (2019) trovano che un algoritmo che ottimizza cost‑effectiveness può consegnare annunci STEM “gender‑neutral” in modo apparentemente discriminatorio perché alcune audience (es. donne più giovani) sono più costose e quindi vengono “crowded out”. citeturn33search5turn33search9  </li>
+<li><strong>Enforcement e regolazione</strong>: il DOJ (USA) nel 2022 ha ottenuto un settlement con Meta su pratiche di advertising housing: la descrizione del caso include l’uso di sistemi che trovano utenti “simili” basandosi su caratteristiche protette e impegni a cambiare sistemi di delivery per affrontare disparità. citeturn33search8turn33search0  </li>
+<li><strong>Guida istituzionale</strong>: HUD ha pubblicato guidance su applicazione del Fair Housing Act alla pubblicità su piattaforme digitali, includendo l’uso di sistemi automatizzati e AI per targeting/delivery. citeturn33search4</li>
+</ul>
+<h3 id="distinzione-utile-bias-nei-dati-vs-bias-osservato-vs-bias-nellottimizzazione">Distinzione utile (bias nei dati vs bias osservato vs bias nell’ottimizzazione)</h3>
+<p>In adtech conviene separare tre livelli:</p>
+<ul>
+<li><strong>Bias nei dati di training</strong> (es. modelli che apprendono correlazioni storiche).</li>
+<li><strong>Bias nei dati osservati dal sistema</strong> (feedback loop: chi vede l’annuncio genera conversioni che rinforzano la delivery).</li>
+<li><strong>Bias nella funzione obiettivo</strong> (ottimizzazione di CPA/ROAS che implicitamente privilegia audience meno costose o più “predette” convertire).</li>
+</ul>
+<p>Le evidenze sopra (Ali et al.; Lambrecht &amp; Tucker) sostengono soprattutto il terzo punto: <strong>il bias può emergere come proprietà dell’ottimizzazione</strong>, non come “intenzione” dell’inserzionista. citeturn33search2turn33search5</p>
+<h3 id="metriche-e-governance-pratica-per-advertising-automation">Metriche e governance pratica per advertising automation</h3>
+<p>Non esiste una metrica unica, ma in pratica serve misurare:</p>
+<ul>
+<li><em>delivery skew</em> (distribuzione per gruppi) e <em>outcome skew</em> (conversioni/allocazione budget),</li>
+<li>drift e feedback loop (cambiamenti nel tempo),</li>
+<li>vincoli di fairness come requirement di prodotto (non come afterthought).</li>
+</ul>
+<p><strong>Governance operativa</strong>: fissare “guardrail di equity” come constraint di ottimizzazione, introdurre audit periodici (anche con sampling), e documentare razionalmente tradeoff (performance vs fairness) invece di negarli.</p>
+<h2 id="governance-come-vantaggio-competitivo-e-angoli-narrativi-per-il-blog">Governance come vantaggio competitivo e angoli narrativi per il blog</h2>
+<p>Le fonti mostrano un trend: i vendor stanno spostando la conversazione da “fidati” a “controlla”: controlli admin, retention configurabile, audit log, data residency, ZDR condizionale. Questo è già posizionamento competitivo:</p>
+<ul>
+<li>OpenAI enfatizza ownership e controllo (no training by default, retention controls, SOC2, encryption). citeturn18view2turn1view0  </li>
+<li>Google Workspace with Gemini mette al centro controlli enterprise (Vault, audit logs, retention per admin, niente human review, no training fuori dominio). citeturn13view0turn11search14  </li>
+<li>Anthropic introduce controlli come ZDR e data residency per inference (anche se limitata a US al momento) e documenta retention commerciale con eccezioni chiare. citeturn10view0turn16view0turn9view0  </li>
+<li>Cursor, lato IDE agentico, si muove verso “hooks” e integrazione con tooling di sicurezza e compliance per governance nel loop dell’agente. citeturn17search19</li>
+</ul>
+<p>Questo supporta una tesi forte per il blog: <strong>la governance non è il freno dell’adozione; è il motivo per cui l’adozione può essere scalata senza paura</strong>. È coerente con NIST AI RMF (gestione rischio come parte del valore) citeturn23search0turn23search4 e con best practice di governance in framework enterprise (es. Microsoft Cloud Adoption Framework che esplicita integrazione tra AI risk, cybersecurity e privacy governance). citeturn33search3turn33search7</p>
+<h3 id="tre-possibili-angoli-narrativi-per-larticolo">Tre possibili angoli narrativi per l’articolo</h3>
+<p><strong>Angolo “Il mito del training: il rischio vero è la toolchain”</strong><br>Messaggio: molte aziende litigano su opt‑out e training, ma gli incidenti più pericolosi arrivano dalla <em>tool surface</em>: MCP server non fidati, OAuth confusion, SSRF, RCE in componenti agentici. Supporto: MCP Security Best Practices + CVE reali (mcp-remote, MCP Inspector, Cursor) + benchmark IPI. citeturn30view0turn31search6turn31search15turn32search0<br>Posizione: l’articolo può sostenere che la governance deve spostarsi “a valle” del modello, verso tool permissions e data egress.</p>
+<p><strong>Angolo “Dove finiscono davvero i dati: una mappa per team tecnici”</strong><br>Messaggio: i dati finiscono in log di abuso, conversation state, cache, sandbox, storage del tool, audit trail interno, e nelle policy di terzi. Supporto: OpenAI “your data” (abuse monitoring vs application state; nota su MCP server terzi; data residency con limiti), Google ZDR (grounding obbliga 30 giorni), Anthropic retention (30 giorni + eccezioni). citeturn1view0turn14view1turn9view0<br>Posizione: offrire una checklist non come elenco, ma come “data plane diagram” che ogni team dovrebbe disegnare prima di andare live.</p>
+<p><strong>Angolo “Governance come acceleratore: trasformare compliance in self‑service”</strong><br>Messaggio: enterprise adoption accelera quando dai ai team confini chiari (quali strumenti sì/no, quali modelli sì/no, quali dati dove), e automatizzi controlli (policy enforcement, hooks, audit). Supporto: Workspace privacy hub (controlli, audit), OpenAI enterprise privacy (fine‑grained access, retention controls), Cursor hooks, Microsoft guidance per governance e agent policies. citeturn13view0turn18view2turn17search19turn33search7<br>Posizione: sostenere che “compliance reattiva” crea shadow AI; “governance proattiva” crea adozione tracciabile.</p>
+<h3 id="idee-controintuitive-emerse-dalla-ricerca">Idee controintuitive emerse dalla ricerca</h3>
+<p>La prima: <strong>ZDR non è “un interruttore”, è un insieme di compatibilità per feature</strong>. Se attivi grounding Search/Maps, alcune piattaforme dichiarano storage 30 giorni non disattivabile; se usi code execution/sandbox, spesso non è ZDR-eligible. citeturn14view1turn10view0turn1view0<br>La seconda: <strong>data residency spesso non copre “system data” o flussi causati da terzi</strong> (es. tool esterni, MCP server, endpoint globali). citeturn1view0turn14view3turn30view0<br>La terza: <strong>il rischio di discriminazione in advertising può emergere “per ottimizzazione”, non per targeting</strong>. citeturn33search2turn33search5</p>
+<h3 id="domande-aperte-su-cui-vale-prendere-posizione">Domande aperte su cui vale prendere posizione</h3>
+<ul>
+<li>Se prompt injection è (parzialmente) “architetturale”, la strategia giusta è: <strong>accettare rischio residuo e ridurre privilegi</strong>, non cercare una “patch finale”? (Microsoft e la letteratura su IPI indicano che la mitigazione è multi‑layer). citeturn32search3turn32search0turn30view0  </li>
+<li>Nel 2026, con AI Act che matura verso 2027, come definire in modo non burocratico “provider” e “deployer” quando l’azienda compone LLM + orchestratore + MCP server + SaaS? (La Commissione stessa segnala la necessità di linee guida su responsabilità lungo la value chain). citeturn22view0turn21search9  </li>
+<li>Qual è il <em>minimo set</em> di evidenze (log, policy, test) che rende un agente “difendibile” davanti a audit e incident response, senza costruire un data lake di conversazioni sensibili? citeturn30view0turn31search8</li>
+</ul>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/ai-ethics-e-data-governance-per-genai-enterprise-agenti-e-mcp/index.html";
+    (function() {
+      const body = document.body;
+      const readingProgressBar = document.getElementById('reading-progress-bar');
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      const codeFileExtensions = {
+        bash: 'sh',
+        shell: 'sh',
+        sh: 'sh',
+        zsh: 'zsh',
+        powershell: 'ps1',
+        python: 'py',
+        py: 'py',
+        javascript: 'js',
+        js: 'js',
+        typescript: 'ts',
+        ts: 'ts',
+        json: 'json',
+        html: 'html',
+        css: 'css',
+        scss: 'scss',
+        sass: 'sass',
+        markdown: 'md',
+        md: 'md',
+        yaml: 'yml',
+        yml: 'yml',
+        toml: 'toml',
+        dockerfile: 'dockerfile',
+        sql: 'sql',
+        c: 'c',
+        cpp: 'cpp',
+        csharp: 'cs',
+        java: 'java',
+        go: 'go',
+        rust: 'rs',
+        r: 'r',
+        swift: 'swift',
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function normaliseCodeLanguage(codeElement) {
+        if (!codeElement || !codeElement.classList) {
+          return '';
+        }
+        const languageClass = Array.from(codeElement.classList).find((className) => className.startsWith('language-'));
+        if (!languageClass) {
+          return '';
+        }
+        return languageClass.replace(/^language-/, '').trim().toLowerCase();
+      }
+      function formatCodeLanguageLabel(language) {
+        if (!language) {
+          return 'TEXT';
+        }
+        if (language.length <= 4) {
+          return language.toUpperCase();
+        }
+        return language.charAt(0).toUpperCase() + language.slice(1);
+      }
+      function buildCodeFilename(language) {
+        const extension = codeFileExtensions[language] || (language ? language : 'txt');
+        return 'snippet.' + extension;
+      }
+      function updateReadingProgress() {
+        if (!readingProgressBar) {
+          return;
+        }
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+        );
+        const maxScrollable = Math.max(1, documentHeight - viewportHeight);
+        const progress = Math.min(100, Math.max(0, (scrollTop / maxScrollable) * 100));
+        readingProgressBar.style.width = progress.toFixed(2) + '%';
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true' || pre.closest('.post-code-card')) {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const language = normaliseCodeLanguage(code);
+          const languageLabel = formatCodeLanguageLabel(language);
+          const filenameLabel = buildCodeFilename(language);
+          const wrapper = document.createElement('div');
+          wrapper.className = 'post-code-card';
+          wrapper.innerHTML =
+            '<div class="post-code-card__language">' + languageLabel + '</div>' +
+            '<div class="post-code-card__frame">' +
+              '<div class="post-code-card__header">' +
+                '<div class="post-code-card__window-controls" aria-hidden="true">' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--red"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--yellow"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--green"></span>' +
+                '</div>' +
+                '<span class="post-code-card__filename">' + filenameLabel + '</span>' +
+              '</div>' +
+              '<div class="post-code-card__body"></div>' +
+            '</div>';
+          const frame = wrapper.querySelector('.post-code-card__frame');
+          const header = wrapper.querySelector('.post-code-card__header');
+          const codeBody = wrapper.querySelector('.post-code-card__body');
+          if (!frame || !header || !codeBody) {
+            return;
+          }
+          pre.parentNode.insertBefore(wrapper, pre);
+          codeBody.appendChild(pre);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          header.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          updateReadingProgress();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+        }
+      });
+      enhanceTables();
+      enhanceCodeBlocks();
+      initToc();
+      applyTheme(initialTheme);
+      updateReadingProgress();
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', updateReadingProgress, { passive: true });
+    })();
+  </script>
+</body>
+</html>
