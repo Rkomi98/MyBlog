@@ -148,6 +148,9 @@ export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
     const code = normaliseCodeContent(rawCode);
     const info = typeof token === 'string' ? '' : token?.lang ?? '';
     const rawLang = (info || '').match(/\S+/)?.[0] ?? '';
+    if (rawLang.toLowerCase() === 'mermaid') {
+      return `<pre class="mermaid">${escapeHtml(code)}</pre>`;
+    }
     let highlighted = escapeHtml(code);
     let languageClass = rawLang ? `language-${rawLang.toLowerCase()}` : '';
     try {

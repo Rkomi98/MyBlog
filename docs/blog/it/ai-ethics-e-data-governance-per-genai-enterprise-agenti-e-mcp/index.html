@@ -25,7 +25,7 @@
   <meta property="og:title" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP">
   <meta property="og:description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
-  <meta property="article:published_time" content="2026-03-08T13:43:06.000Z">
+  <meta property="article:published_time" content="2026-03-08T18:09:13.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
   <meta property="article:section" content="Privacy">
 
@@ -41,8 +41,8 @@
     "@type": "BlogPosting",
     "headline": "AI Ethics e Data Governance per GenAI enterprise, agenti e MCP",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
-    "datePublished": "2026-03-08T13:43:06.000Z",
-    "dateModified": "2026-03-08T13:43:06.000Z",
+    "datePublished": "2026-03-08T18:09:13.000Z",
+    "dateModified": "2026-03-08T18:09:13.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -621,6 +621,114 @@
       border-radius: 0;
       overflow: visible;
     }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
+    .post-body .mermaid-diagram {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-body .mermaid-diagram pre.mermaid {
+      margin: 0;
+    }
+    .post-body .mermaid-diagram__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .mermaid-diagram__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .mermaid-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 1000;
+    }
+    .mermaid-overlay--visible {
+      display: flex;
+    }
+    .mermaid-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1280px, 94vw);
+      max-height: 88vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .mermaid-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      z-index: 2;
+    }
+    .mermaid-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .mermaid-overlay__scroll {
+      overflow: auto;
+      max-height: 88vh;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .mermaid-overlay__scroll svg {
+      max-width: none;
+      height: auto;
+    }
+    body[data-theme="light"] .post-body .mermaid-diagram__expand {
+      background: rgba(248, 250, 252, 0.92);
+    }
+    body[data-theme="light"] .mermaid-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .mermaid-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
     .post-code-card pre {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.82rem;
@@ -1055,7 +1163,16 @@
         font-size: 0.78rem;
         padding: 0.25rem 0.75rem;
       }
+      .post-body .mermaid-diagram__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
       .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+      .mermaid-overlay__scroll {
         padding: 1.8rem 1.25rem 1.5rem;
       }
     }
@@ -1073,6 +1190,93 @@
     };
   </script>
   <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      const labels = document.documentElement.lang === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full screen', close: 'Close' };
+      let overlay = null;
+      let overlayScroll = null;
+
+      const ensureOverlay = () => {
+        if (overlay) {
+          return;
+        }
+        overlay = document.createElement('div');
+        overlay.className = 'mermaid-overlay';
+        overlay.innerHTML =
+          '<div class="mermaid-overlay__content">' +
+            '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
+            '<div class="mermaid-overlay__scroll"></div>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
+        const closeButton = overlay.querySelector('.mermaid-overlay__close');
+        closeButton?.addEventListener('click', () => {
+          overlay.classList.remove('mermaid-overlay--visible');
+          document.body.classList.remove('no-scroll');
+          if (overlayScroll) {
+            overlayScroll.innerHTML = '';
+          }
+        });
+        overlay.addEventListener('click', (event) => {
+          if (event.target === overlay) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+      };
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      await mermaid.run({ querySelector: '.mermaid' });
+
+      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+        if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-diagram';
+        diagram.parentNode.insertBefore(wrapper, diagram);
+        wrapper.appendChild(diagram);
+
+        const expandButton = document.createElement('button');
+        expandButton.type = 'button';
+        expandButton.className = 'mermaid-diagram__expand';
+        expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
+        expandButton.setAttribute('aria-label', labels.expand);
+        expandButton.addEventListener('click', () => {
+          ensureOverlay();
+          if (!overlay || !overlayScroll) {
+            return;
+          }
+          overlayScroll.innerHTML = '';
+          const clone = diagram.cloneNode(true);
+          overlayScroll.appendChild(clone);
+          overlay.classList.add('mermaid-overlay--visible');
+          document.body.classList.add('no-scroll');
+        });
+        wrapper.appendChild(expandButton);
+      });
+    }
+  </script>
 </head>
 <body data-theme="dark">
   <div class="reading-progress" aria-hidden="true">
@@ -1108,7 +1312,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">8 marzo 2026 • 29 min</span>
+            <span class="post-hero__author-meta">8 marzo 2026 • 33 min</span>
           </div>
         </div>
       </section>
@@ -1150,26 +1354,44 @@
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#mcp-e-superficie-di-esposizione-nei-workflow-multi-componente">
+          <a class="post-toc__link" href="#mcp-cos">
             <span class="post-toc__number">3</span>
-            <span class="post-toc__text">MCP e superficie di esposizione nei workflow multi-componente</span>
+            <span class="post-toc__text">MCP: cos&#39;è?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#il-flusso-dato-modello-tool-callmcp-risposta-azione-e-cosa-vede-chi">
+          <a class="post-toc__link" href="#un-minimo-di-storia">
             <span class="post-toc__number">3.1</span>
-            <span class="post-toc__text">Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi</span>
+            <span class="post-toc__text">Un minimo di storia</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#ok-ma-in-pratica-a-che-serve">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Ok ma in pratica a che serve?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#caro-mcp-ma-quanto-sei-pericoloso">
+            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__text">Caro MCP, ma quanto sei pericoloso?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#il-flusso-dei-dati">
+            <span class="post-toc__number">3.4</span>
+            <span class="post-toc__text">Il flusso dei dati</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#rischi-reali-vs-timori-generici-con-prove">
-            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__number">3.5</span>
             <span class="post-toc__text">Rischi reali vs timori generici (con prove)</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#differenza-di-rischio-readonly-vs-write-vs-manda-dati-fuori">
-            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__number">3.6</span>
             <span class="post-toc__text">Differenza di rischio: read‑only vs write vs “manda dati fuori”</span>
           </a>
           
@@ -1465,8 +1687,8 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 <td>Con <a href="https://cursor.com/docs/enterprise/privacy-and-data-governance">Privacy Mode/ZDR</a>: code e prompt non sono memorizzati/usati per training dai provider; Cursor dichiara accordi ZDR con provider chiave per Enterprise (OpenAI, Anthropic, Google Vertex, xAI).</td>
 <td>Opt‑out “reale” dipende dalla modalità e dal flusso: alcune feature (memories/sync) possono richiedere storage su server Cursor (anche se non training).</td>
 <td><a href="https://cursor.com/help/models-and-usage/api-keys">Cursor</a> chiarisce due cose cruciali: (1) anche con BYOK le richieste passano dal backend Cursor per prompt building; (2) la ZDR Cursor <strong>non si applica</strong> quando usi la tua API key: vale la policy del provider scelto.</td>
-<td>Data residency dipende dall’infrastruttura Cursor e provider; la security page descrive hosting e terze parti (es. AWS, Baseten, Together) e condizioni di retention per “Share Data”. citeturn17search13turn17search0</td>
-<td>Cursor integra MCP e raccomanda cautela: “capire cosa fa un server prima di installarlo”. citeturn17search2turn17search5</td>
+<td>Data residency dipende dall’infrastruttura Cursor e provider; la <a href="https://cursor.com/security">security page</a> descrive hosting e terze parti (es. AWS, Baseten, Together) e condizioni di retention per “Share Data”.</td>
+<td>Cursor integra MCP e <a href="https://cursor.com/docs/mcp">raccomanda cautela</a>: “capire cosa fa un server prima di installarlo”.</td>
 </tr>
 </tbody></table>
 </div></figure><h3 id="differenze-api-vs-consumer-vs-stack-agentico-il-cambio-operativo-che-conta">Differenze API vs consumer vs “stack agentico” (il cambio operativo che conta)</h3>
@@ -1482,33 +1704,115 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 </thead>
 <tbody><tr>
 <td>Controllo “training”</td>
-<td>Spesso opt‑out a livello utente (toggle) con comportamento non retroattivo. citeturn18view1turn5search0</td>
-<td>Tipicamente “no training by default” con garanzie contrattuali e controlli admin. citeturn18view2turn13view0</td>
-<td>Tipicamente no training di default e opt‑in esplicito (ma dipende da “paid/unpaid” e contratti). citeturn1view0turn14view0</td>
-<td>Il problema non è solo training: tool call può inviare dati a terzi; la governance deve coprire <em>routing</em> e <em>permissions</em>. citeturn1view0turn30view0</td>
+<td>Di solito l’utente può disattivare il training dalle impostazioni, ma spesso solo per le nuove chat.</td>
+<td>In genere il training sui dati è disattivato di default, con controlli amministrativi e tutele contrattuali.</td>
+<td>In molti casi il training è disattivato di default, ma dipende dal tipo di servizio e dal contratto.</td>
+<td>Il training è solo una parte del problema: tool e integrazioni possono comunque inviare dati a sistemi terzi.</td>
 </tr>
 <tr>
 <td>Retention</td>
-<td>Può essere lunga e influenzata da activity settings / feedback / human review. citeturn12view0turn18view0</td>
-<td>Admin decide retention/histories/audit; spesso più trasparente. citeturn13view0turn18view2</td>
-<td>Log e state sono granulari per endpoint/feature; ZDR spesso “parziale” (alcune feature non eleggibili). citeturn1view0turn14view1</td>
-<td>Tool e MCP aggiungono nuove retention: log tool, audit trail, stored credentials, sandbox artifacts, caches. citeturn30view0turn31search6</td>
+<td>La conservazione può essere lunga e dipendere da cronologia, feedback e revisioni umane.</td>
+<td>La retention è di solito gestita dagli admin, con policy più chiare e strumenti di audit.</td>
+<td>La retention cambia in base a endpoint e feature: log, stato applicativo e caching non sono uguali ovunque.</td>
+<td>Tool e MCP introducono nuovi punti di conservazione: log tecnici, audit trail, credenziali, cache e artefatti temporanei.</td>
 </tr>
 <tr>
 <td>Data residency</td>
-<td>Raramente personalizzabile.</td>
-<td>Più probabile via offerte enterprise (Workspace/Cloud). citeturn11search6turn13view0</td>
-<td>Possibile ma con limiti (es. “system data” fuori regione; feature che forzano storage). citeturn1view0turn14view3</td>
-<td>MCP server può stare ovunque: la residency “vera” diventa un problema di supply chain e rete. citeturn30view0turn31search6</td>
+<td>In genere offre poco controllo sulla regione in cui i dati sono trattati o conservati.</td>
+<td>Il controllo geografico è più probabile nelle offerte enterprise, ma varia per prodotto e configurazione.</td>
+<td>La residency può essere disponibile, ma spesso con limiti: non tutti i dati o tutte le feature restano nella regione scelta.</td>
+<td>Se i server MCP o i tool esterni sono distribuiti altrove, la residency reale dipende anche da rete, fornitori e supply chain.</td>
 </tr>
 </tbody></table>
-</div></figure><p><strong>Consenso e ambiguità tra provider (da esplicitare in articolo)</strong>: c’è un forte consenso sul “no training by default” per le offerte business/API <em>pagate/contrattuali</em> (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). citeturn18view2turn14view0turn9view0 L’ambiguità sta nei dettagli: differenze tra endpoint/feature, definizioni (training vs abuse monitoring vs model improvement), eccezioni (policy violations, grounding Search/Maps, human review su consumer), e soprattutto nel fatto che <strong>integrazioni e MCP spostano il problema fuori dal perimetro del provider</strong>. citeturn1view0turn30view0</p>
-<h2 id="mcp-e-superficie-di-esposizione-nei-workflow-multi-componente">MCP e superficie di esposizione nei workflow multi-componente</h2>
-<p>MCP nasce per un obiettivo legittimo: <strong>connettere gli assistenti ai sistemi “dove vivono i dati”</strong> (repository, tool aziendali, ambienti di sviluppo) con un protocollo standard. citeturn25view1turn29search7 Architetturalmente, MCP introduce un pattern <em>client–host–server</em> e scambi di contesto e tool su sessioni stateful (basate su JSON‑RPC). citeturn29search4turn29search8</p>
-<h3 id="il-flusso-dato-modello-tool-callmcp-risposta-azione-e-cosa-vede-chi">Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi</h3>
-<p>Un modo concreto per descriverlo in azienda è ragionare per “punti di transito”:</p>
+</div></figure><p>In generale, ho notato che c’è un forte consenso sul “no training by default” per le offerte business/API <em>pagate/contrattuali</em> (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). Dall&#39;altra parte ho notato una forte <strong>ambiguità</strong> nei dettagli: non tutti i provider intendono le stesse cose per training, abuse monitoring o model improvement; inoltre esistono eccezioni legate a specifiche feature, violazioni di policy o revisione umana nei servizi consumer. A questo si aggiunge un punto che sto notando che in tanti sottovalutano: quando entrano in gioco integrazioni e MCP, una parte del trattamento dei dati esce dal perimetro diretto del provider!</p>
+<h2 id="mcp-cos">MCP: cos&#39;è?</h2>
+<p>Il <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> è uno <strong>standard aperto</strong> pensato per collegare applicazioni AI, modelli e agenti a sistemi esterni in modo uniforme.</p>
+<p><img src="../../../Assets/mcp-simple-diagram.avif" alt="Schema semplificato dell'architettura MCP"></p>
+<p>L’idea di fondo è semplice: invece di costruire un’integrazione diversa per ogni tool, database o repository, si definisce un protocollo comune con cui l’assistente può:</p>
+<ul>
+<li>leggere <strong>risorse</strong>;</li>
+<li>invocare <strong>tool</strong>;</li>
+<li>usare <strong>prompt</strong> o contesti specializzati esposti da sistemi esterni.</li>
+</ul>
+<p>La metafora più usata nella documentazione ufficiale è quella di una <strong>“porta USB-C per le applicazioni AI”</strong>: un’interfaccia standard per collegare l’assistente a ciò che sta fuori dal modello, come file locali, knowledge base, GitHub, Slack, database o API.</p>
+<h3 id="un-minimo-di-storia">Un minimo di storia</h3>
+<p>MCP è stato <a href="https://www.anthropic.com/news/model-context-protocol">presentato da Anthropic il 25 novembre 2024</a> come progetto <strong>open source</strong>, con l’obiettivo di ridurre la frammentazione delle integrazioni tra modelli e sistemi esterni. Il problema che cerca di risolvere è molto concreto: senza uno standard comune, ogni client AI deve sviluppare connettori ad hoc per ogni servizio, con costi di manutenzione elevati e regole diverse da integrazione a integrazione.</p>
+<p>Con MCP, invece, l’idea è spostarsi da un mondo di collegamenti “uno a uno” a un ecosistema più riusabile:</p>
+<ul>
+<li>i <strong>client</strong> AI imparano a parlare un protocollo comune;</li>
+<li>i <strong>server MCP</strong> espongono tool e risorse in modo standardizzato;</li>
+<li>nuove integrazioni diventano più facili da riusare anche su host diversi.</li>
+</ul>
+<p>In poco tempo MCP è diventato un punto di riferimento nell’ecosistema agentico proprio perché affronta un problema reale: dare ai modelli accesso a dati e strumenti del mondo esterno senza reinventare ogni volta il modo di collegarli.</p>
+<h3 id="ok-ma-in-pratica-a-che-serve">Ok ma in pratica a che serve?</h3>
+<p>In pratica, MCP serve quando vuoi che un assistente faccia qualcosa di più utile che “rispondere in chat”:</p>
+<ul>
+<li>consultare <strong>file locali</strong>, repository Git o documentazione interna;</li>
+<li>interrogare <strong>database</strong> o knowledge base aziendali;</li>
+<li>interagire con <strong>SaaS e API esterne</strong> come ticketing, CRM, calendari o project management;</li>
+<li>orchestrare workflow in cui il modello deve <strong>leggere, decidere e poi agire</strong>;</li>
+<li>dare a IDE e coding agent accesso controllato a <strong>terminale, file system, GitHub, CI/CD o ambienti di sviluppo</strong>.</li>
+</ul>
+<p>uesto spiega perché MCP interessa anche alle aziende: non serve solo a collegare strumenti per sviluppatori, ma a far interagire assistenti e agenti con i sistemi aziendali in cui si trovano dati, documenti e processi operativi.</p>
+<h3 id="caro-mcp-ma-quanto-sei-pericoloso">Caro MCP, ma quanto sei pericoloso?</h3>
+<p><a href="https://www.anthropic.com/news/model-context-protocol">MCP</a> nasce per un obiettivo legittimo: <strong>connettere gli assistenti ai sistemi “dove vivono i dati”</strong> (repository, tool aziendali, ambienti di sviluppo) con un protocollo standard.</p>
+<p>Dal punto di vista architetturale, MCP separa tre ruoli:</p>
+<ul>
+<li><strong>host</strong>: l’applicazione che ospita l’assistente e orchestra tutto il flusso;</li>
+<li><strong>client</strong>: il connettore creato dall’host per parlare con uno specifico server MCP;</li>
+<li><strong>server</strong>: il componente che espone tool, risorse e prompt verso l’host.</li>
+</ul>
+<p>In pratica, l’host non parla “in generale” con MCP: crea uno o più <strong>client isolati</strong>, e ciascun client mantiene una <strong>connessione separata</strong> con il proprio server MCP. Questo punto è importante perché significa che ogni integrazione ha un suo canale, una sua negoziazione di capacità e un suo perimetro di fiducia.</p>
+<p>La specifica MCP descrive infatti un’architettura <strong>client-host-server</strong>, basata su <strong>messaggi JSON-RPC 2.0</strong> e su <strong>connessioni stateful</strong>. &quot;Stateful&quot; qui significa che la connessione non è un semplice scambio stateless richiesta-risposta: durante il ciclo di vita della sessione client e server negoziano versione e capability, mantengono contesto operativo e possono scambiarsi richieste, notifiche e risultati lungo più passaggi successivi. Questo rende MCP molto potente, ma anche più delicato da governare quando entrano in gioco autenticazione, permessi, tool call e dati sensibili.</p>
+<p>Un altro aspetto cruciale è che un singolo host può parlare contemporaneamente con <strong>più server MCP diversi</strong>: alcuni locali, altri remoti. Di conseguenza, l’assistente può diventare il punto di raccordo tra file locali, database interni e API esterne. È proprio qui che il rischio cresce: non perché “MCP è pericoloso di per sé”, ma perché aumenta il numero di sistemi coinvolti, di privilegi in gioco e di passaggi in cui i dati possono transitare o fermarsi.</p>
+<pre class="mermaid">flowchart LR
+    U[&quot;Utente&quot;]
+    H[&quot;Host application
+(es. IDE, chat app, desktop client)&quot;]
+    C1[&quot;MCP Client A
+connessione isolata&quot;]
+    C2[&quot;MCP Client B
+connessione isolata&quot;]
+    LLM[&quot;LLM / provider&quot;]
+    S1[&quot;MCP Server locale
+file, git, terminale&quot;]
+    S2[&quot;MCP Server remoto
+SaaS, API, DB&quot;]
+    R1[(&quot;Risorse locali&quot;)]
+    R2[(&quot;Risorse remote&quot;)]
+
+    U --&gt;|&quot;prompt / allegati&quot;| H
+    H --&gt;|&quot;sampling / contesto&quot;| LLM
+    H --&gt; C1
+    H --&gt; C2
+    C1 &lt;--&gt;|&quot;JSON-RPC stateful session&quot;| S1
+    C2 &lt;--&gt;|&quot;JSON-RPC stateful session&quot;| S2
+    S1 &lt;--&gt; R1
+    S2 &lt;--&gt; R2
+    S1 --&gt;|&quot;tool result / resource&quot;| C1
+    S2 --&gt;|&quot;tool result / resource&quot;| C2
+    C1 --&gt; H
+    C2 --&gt; H
+    H --&gt;|&quot;risposta / azione proposta&quot;| U</pre><h3 id="il-flusso-dei-dati">Il flusso dei dati</h3>
+<p>Per capire davvero dove nasce il rischio, non basta chiedersi <em>“uso ChatGPT, Claude o Gemini?”</em>. La domanda giusta è: <strong>che percorso fa il dato, da quando entra nel sistema a quando produce una risposta o un’azione?</strong></p>
+<p>Nei workflow agentici, infatti, il dato non resta fermo in un solo punto. Può passare:</p>
+<ul>
+<li>dall’utente all’host applicativo;</li>
+<li>dall’host al provider del modello;</li>
+<li>dal modello a uno o più tool o server MCP;</li>
+<li>dai tool di nuovo al modello;</li>
+<li>e infine verso un’azione concreta su file, database, API o sistemi esterni.</li>
+</ul>
+<p>Seguire questo flusso è utile per due motivi.</p>
 <ol>
-<li><strong>Input</strong> (prompt utente + contesto): può includere dati aziendali, segreti, personal data, frammenti di file. Questo materiale finisce nel provider LLM, ma spesso anche in caching, log di abuso o conversation state a seconda dell’endpoint/feature. citeturn1view0turn14view3  </li>
+<li><p>Aiuta a capire <strong>chi vede cosa</strong> in ogni passaggio.</p>
+</li>
+<li><p>Aiuta a capire <strong>dove il dato può essere conservato, replicato, loggato o inviato fuori dal perimetro previsto</strong>.</p>
+</li>
+</ol>
+<p>Per questo conviene ragionare per “punti di transito”:</p>
+<ol>
+<li><strong>Input</strong> (prompt utente + contesto): può includere dati aziendali, segreti, personal data, frammenti di file. Questo materiale finisce nel provider LLM, ma spesso anche in caching, log di abuso o conversation state a seconda dell’endpoint/feature. </li>
 <li><strong>Decisione del modello</strong>: il modello decide di chiamare un tool; qui il rischio è che istruzioni malevole siano interpretate come comandi (prompt injection, soprattutto indiretta). Microsoft descrive l’indirect prompt injection come input “non fidato” che il modello scambia per istruzioni, con impatti da esfiltrazione a azioni non volute con le credenziali dell’utente. citeturn32search3turn32search11  </li>
 <li><strong>Tool invocation</strong>: payload verso MCP server (argomenti, query, filtri, ID, eventualmente pezzi di contesto). Qui <strong>il server MCP vede ciò che invii</strong>; se è remoto o di terze parti, stai letteralmente esportando dati fuori perimetro. OpenAI lo esplicita: i server MCP (remote MCP server tool) sono terze parti e i dati seguono la loro retention. citeturn1view0  </li>
 <li><strong>Tool response</strong>: può contenere dati sensibili (query result, file content, token, error stack). Se inserita nel contesto del modello, rientra nel perimetro del provider e nei suoi log. citeturn1view0turn14view1  </li>
@@ -1776,7 +2080,7 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
         : { expand: 'Open full view', close: 'Close' };
-      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
       const codeCopyLabels = {
         it: { copy: 'Copia', copied: 'Copiato!' },
         en: { copy: 'Copy', copied: 'Copied!' },

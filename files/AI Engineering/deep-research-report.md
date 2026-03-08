@@ -95,25 +95,127 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 
 | Aspetto | Consumer UI (chat app) | Business workspace (suite enterprise) | API (build) | Stack agentico (tools/MCP/automazioni) |
 |---|---|---|---|---|
-| Controllo “training” | Spesso opt‑out a livello utente (toggle) con comportamento non retroattivo. citeturn18view1turn5search0 | Tipicamente “no training by default” con garanzie contrattuali e controlli admin. citeturn18view2turn13view0 | Tipicamente no training di default e opt‑in esplicito (ma dipende da “paid/unpaid” e contratti). citeturn1view0turn14view0 | Il problema non è solo training: tool call può inviare dati a terzi; la governance deve coprire *routing* e *permissions*. citeturn1view0turn30view0 |
-| Retention | Può essere lunga e influenzata da activity settings / feedback / human review. citeturn12view0turn18view0 | Admin decide retention/histories/audit; spesso più trasparente. citeturn13view0turn18view2 | Log e state sono granulari per endpoint/feature; ZDR spesso “parziale” (alcune feature non eleggibili). citeturn1view0turn14view1 | Tool e MCP aggiungono nuove retention: log tool, audit trail, stored credentials, sandbox artifacts, caches. citeturn30view0turn31search6 |
-| Data residency | Raramente personalizzabile. | Più probabile via offerte enterprise (Workspace/Cloud). citeturn11search6turn13view0 | Possibile ma con limiti (es. “system data” fuori regione; feature che forzano storage). citeturn1view0turn14view3 | MCP server può stare ovunque: la residency “vera” diventa un problema di supply chain e rete. citeturn30view0turn31search6 |
+| Controllo “training” | Di solito l’utente può disattivare il training dalle impostazioni, ma spesso solo per le nuove chat. | In genere il training sui dati è disattivato di default, con controlli amministrativi e tutele contrattuali. | In molti casi il training è disattivato di default, ma dipende dal tipo di servizio e dal contratto. | Il training è solo una parte del problema: tool e integrazioni possono comunque inviare dati a sistemi terzi. |
+| Retention | La conservazione può essere lunga e dipendere da cronologia, feedback e revisioni umane. | La retention è di solito gestita dagli admin, con policy più chiare e strumenti di audit. | La retention cambia in base a endpoint e feature: log, stato applicativo e caching non sono uguali ovunque. | Tool e MCP introducono nuovi punti di conservazione: log tecnici, audit trail, credenziali, cache e artefatti temporanei. |
+| Data residency | In genere offre poco controllo sulla regione in cui i dati sono trattati o conservati. | Il controllo geografico è più probabile nelle offerte enterprise, ma varia per prodotto e configurazione. | La residency può essere disponibile, ma spesso con limiti: non tutti i dati o tutte le feature restano nella regione scelta. | Se i server MCP o i tool esterni sono distribuiti altrove, la residency reale dipende anche da rete, fornitori e supply chain. |
 
-**Consenso e ambiguità tra provider (da esplicitare in articolo)**: c’è un forte consenso sul “no training by default” per le offerte business/API *pagate/contrattuali* (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). citeturn18view2turn14view0turn9view0 L’ambiguità sta nei dettagli: differenze tra endpoint/feature, definizioni (training vs abuse monitoring vs model improvement), eccezioni (policy violations, grounding Search/Maps, human review su consumer), e soprattutto nel fatto che **integrazioni e MCP spostano il problema fuori dal perimetro del provider**. citeturn1view0turn30view0
+In generale, ho notato che c’è un forte consenso sul “no training by default” per le offerte business/API *pagate/contrattuali* (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). Dall'altra parte ho notato una forte **ambiguità** nei dettagli: non tutti i provider intendono le stesse cose per training, abuse monitoring o model improvement; inoltre esistono eccezioni legate a specifiche feature, violazioni di policy o revisione umana nei servizi consumer. A questo si aggiunge un punto che sto notando che in tanti sottovalutano: quando entrano in gioco integrazioni e MCP, una parte del trattamento dei dati esce dal perimetro diretto del provider!
 
-## MCP e superficie di esposizione nei workflow multi-componente
+## MCP: cos'è?
 
-MCP nasce per un obiettivo legittimo: **connettere gli assistenti ai sistemi “dove vivono i dati”** (repository, tool aziendali, ambienti di sviluppo) con un protocollo standard. citeturn25view1turn29search7 Architetturalmente, MCP introduce un pattern *client–host–server* e scambi di contesto e tool su sessioni stateful (basate su JSON‑RPC). citeturn29search4turn29search8
+Il [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) è uno **standard aperto** pensato per collegare applicazioni AI, modelli e agenti a sistemi esterni in modo uniforme.
 
-### Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi
+![Schema semplificato dell'architettura MCP](../Assets/mcp-simple-diagram.avif)
 
-Un modo concreto per descriverlo in azienda è ragionare per “punti di transito”:
+L’idea di fondo è semplice: invece di costruire un’integrazione diversa per ogni tool, database o repository, si definisce un protocollo comune con cui l’assistente può:
 
-1) **Input** (prompt utente + contesto): può includere dati aziendali, segreti, personal data, frammenti di file. Questo materiale finisce nel provider LLM, ma spesso anche in caching, log di abuso o conversation state a seconda dell’endpoint/feature. citeturn1view0turn14view3  
-2) **Decisione del modello**: il modello decide di chiamare un tool; qui il rischio è che istruzioni malevole siano interpretate come comandi (prompt injection, soprattutto indiretta). Microsoft descrive l’indirect prompt injection come input “non fidato” che il modello scambia per istruzioni, con impatti da esfiltrazione a azioni non volute con le credenziali dell’utente. citeturn32search3turn32search11  
-3) **Tool invocation**: payload verso MCP server (argomenti, query, filtri, ID, eventualmente pezzi di contesto). Qui **il server MCP vede ciò che invii**; se è remoto o di terze parti, stai letteralmente esportando dati fuori perimetro. OpenAI lo esplicita: i server MCP (remote MCP server tool) sono terze parti e i dati seguono la loro retention. citeturn1view0  
-4) **Tool response**: può contenere dati sensibili (query result, file content, token, error stack). Se inserita nel contesto del modello, rientra nel perimetro del provider e nei suoi log. citeturn1view0turn14view1  
-5) **Azione**: se il tool scrive (update DB, crea ticket, invia messaggi, merge PR), il rischio passa da “leakage” a “impatti operativi” (integrità, disponibilità, frodi).
+- leggere **risorse**;
+- invocare **tool**;
+- usare **prompt** o contesti specializzati esposti da sistemi esterni.
+
+La metafora più usata nella documentazione ufficiale è quella di una **“porta USB-C per le applicazioni AI”**: un’interfaccia standard per collegare l’assistente a ciò che sta fuori dal modello, come file locali, knowledge base, GitHub, Slack, database o API.
+
+### Un minimo di storia
+
+MCP è stato [presentato da Anthropic il 25 novembre 2024](https://www.anthropic.com/news/model-context-protocol) come progetto **open source**, con l’obiettivo di ridurre la frammentazione delle integrazioni tra modelli e sistemi esterni. Il problema che cerca di risolvere è molto concreto: senza uno standard comune, ogni client AI deve sviluppare connettori ad hoc per ogni servizio, con costi di manutenzione elevati e regole diverse da integrazione a integrazione.
+
+Con MCP, invece, l’idea è spostarsi da un mondo di collegamenti “uno a uno” a un ecosistema più riusabile:
+
+- i **client** AI imparano a parlare un protocollo comune;
+- i **server MCP** espongono tool e risorse in modo standardizzato;
+- nuove integrazioni diventano più facili da riusare anche su host diversi.
+
+In poco tempo MCP è diventato un punto di riferimento nell’ecosistema agentico proprio perché affronta un problema reale: dare ai modelli accesso a dati e strumenti del mondo esterno senza reinventare ogni volta il modo di collegarli.
+
+### Ok ma in pratica a che serve?
+
+In pratica, MCP serve quando vuoi che un assistente faccia qualcosa di più utile che “rispondere in chat”:
+
+- consultare **file locali**, repository Git o documentazione interna;
+- interrogare **database** o knowledge base aziendali;
+- interagire con **SaaS e API esterne** come ticketing, CRM, calendari o project management;
+- orchestrare workflow in cui il modello deve **leggere, decidere e poi agire**;
+- dare a IDE e coding agent accesso controllato a **terminale, file system, GitHub, CI/CD o ambienti di sviluppo**.
+
+uesto spiega perché MCP interessa anche alle aziende: non serve solo a collegare strumenti per sviluppatori, ma a far interagire assistenti e agenti con i sistemi aziendali in cui si trovano dati, documenti e processi operativi.
+
+### Caro MCP, ma quanto sei pericoloso?
+
+[MCP](https://www.anthropic.com/news/model-context-protocol) nasce per un obiettivo legittimo: **connettere gli assistenti ai sistemi “dove vivono i dati”** (repository, tool aziendali, ambienti di sviluppo) con un protocollo standard.
+
+Dal punto di vista architetturale, MCP separa tre ruoli:
+
+- **host**: l’applicazione che ospita l’assistente e orchestra tutto il flusso;
+- **client**: il connettore creato dall’host per parlare con uno specifico server MCP;
+- **server**: il componente che espone tool, risorse e prompt verso l’host.
+
+In pratica, l’host non parla “in generale” con MCP: crea uno o più **client isolati**, e ciascun client mantiene una **connessione separata** con il proprio server MCP. Questo punto è importante perché significa che ogni integrazione ha un suo canale, una sua negoziazione di capacità e un suo perimetro di fiducia.
+
+La specifica MCP descrive infatti un’architettura **client-host-server**, basata su **messaggi JSON-RPC 2.0** e su **connessioni stateful**. "Stateful" qui significa che la connessione non è un semplice scambio stateless richiesta-risposta: durante il ciclo di vita della sessione client e server negoziano versione e capability, mantengono contesto operativo e possono scambiarsi richieste, notifiche e risultati lungo più passaggi successivi. Questo rende MCP molto potente, ma anche più delicato da governare quando entrano in gioco autenticazione, permessi, tool call e dati sensibili.
+
+Un altro aspetto cruciale è che un singolo host può parlare contemporaneamente con **più server MCP diversi**: alcuni locali, altri remoti. Di conseguenza, l’assistente può diventare il punto di raccordo tra file locali, database interni e API esterne. È proprio qui che il rischio cresce: non perché “MCP è pericoloso di per sé”, ma perché aumenta il numero di sistemi coinvolti, di privilegi in gioco e di passaggi in cui i dati possono transitare o fermarsi.
+
+```mermaid
+flowchart LR
+    U["Utente"]
+    H["Host application
+(es. IDE, chat app, desktop client)"]
+    C1["MCP Client A
+connessione isolata"]
+    C2["MCP Client B
+connessione isolata"]
+    LLM["LLM / provider"]
+    S1["MCP Server locale
+file, git, terminale"]
+    S2["MCP Server remoto
+SaaS, API, DB"]
+    R1[("Risorse locali")]
+    R2[("Risorse remote")]
+
+    U -->|"prompt / allegati"| H
+    H -->|"sampling / contesto"| LLM
+    H --> C1
+    H --> C2
+    C1 <-->|"JSON-RPC stateful session"| S1
+    C2 <-->|"JSON-RPC stateful session"| S2
+    S1 <--> R1
+    S2 <--> R2
+    S1 -->|"tool result / resource"| C1
+    S2 -->|"tool result / resource"| C2
+    C1 --> H
+    C2 --> H
+    H -->|"risposta / azione proposta"| U
+```
+
+### Il flusso dei dati
+
+Per capire davvero dove nasce il rischio, non basta chiedersi *“uso ChatGPT, Claude o Gemini?”*. La domanda giusta è: **che percorso fa il dato, da quando entra nel sistema a quando produce una risposta o un’azione?**
+
+Nei workflow agentici, infatti, il dato non resta fermo in un solo punto. Può passare:
+
+- dall’utente all’host applicativo;
+- dall’host al provider del modello;
+- dal modello a uno o più tool o server MCP;
+- dai tool di nuovo al modello;
+- e infine verso un’azione concreta su file, database, API o sistemi esterni.
+
+Seguire questo flusso è utile per due motivi.
+
+1. Aiuta a capire **chi vede cosa** in ogni passaggio.
+
+2. Aiuta a capire **dove il dato può essere conservato, replicato, loggato o inviato fuori dal perimetro previsto**.
+
+Per questo conviene ragionare per “punti di transito”:
+
+1. **Input: il dato entra nel sistema.** Il prompt iniziale, gli allegati e il contesto recuperato possono già contenere dati aziendali, credenziali, frammenti di file o informazioni personali. Da qui in poi il dato non arriva solo al modello: a seconda della piattaforma può finire anche in **stato applicativo, caching, log tecnici o meccanismi di abuse monitoring**. Per questo non basta chiedersi se il provider faccia training oppure no: bisogna capire anche **che cosa viene conservato per far funzionare il servizio**. Fonti: [OpenAI, Data controls](https://platform.openai.com/docs/models/how-we-use-your-data); [Google Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions).
+
+2. **Decisione del modello: il momento in cui il testo può diventare azione.** Dopo aver ricevuto input e contesto, il modello può rispondere direttamente oppure decidere di chiamare un tool. Qui entra in gioco uno dei rischi più importanti dei sistemi agentici: la **prompt injection**, soprattutto quella indiretta. In questi casi il modello tratta come istruzioni affidabili contenuti che in realtà provengono da fonti esterne non fidate, come documenti, pagine web o output di altri sistemi. Microsoft descrive esplicitamente questo scenario come una vulnerabilità che può portare a **esfiltrazione di dati o azioni indesiderate**. Fonti: [Microsoft, Security planning for LLM-based applications](https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/mlops-in-openai/security/security-plan-llm-application); [Microsoft, Prompt Shields](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection).
+
+3. **Tool call / MCP: il dato esce dal perimetro del modello.** Quando il modello invoca un tool o un server MCP, invia un payload composto da argomenti, query, identificativi e talvolta parti del contesto della conversazione. Questo passaggio è cruciale perché **il server MCP vede esattamente ciò che gli viene mandato**. Se il server è remoto o gestito da terzi, il dato sta uscendo dal perimetro diretto del provider LLM e passa sotto le policy del servizio esterno. OpenAI lo dichiara chiaramente: i remote MCP server sono servizi di terze parti e i dati inviati seguono le loro policy di retention e data residency. Fonti: [OpenAI, Remote MCP](https://platform.openai.com/docs/guides/tools-remote-mcp); [OpenAI, Data controls](https://platform.openai.com/docs/models/how-we-use-your-data).
+
+4. **Tool response: il dato rientra e può circolare di nuovo.** La risposta del tool può contenere file, risultati di query, testo sensibile, token, stack trace o altri dettagli operativi. Se questa risposta viene rimessa nel contesto della conversazione, rientra nel flusso del modello e quindi può essere nuovamente soggetta a logging, stato server-side o altri meccanismi di conservazione previsti dalla piattaforma. In altre parole, il tool non è una parentesi esterna: il suo output spesso torna dentro il ciclo decisionale del sistema. Fonti: [OpenAI, Data controls](https://platform.openai.com/docs/models/how-we-use-your-data); [Google Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions).
+
+5. **Azione finale: il rischio non è più solo confidenzialità, ma impatto operativo.** Quando il tool non si limita a leggere ma può **scrivere o agire** su sistemi esterni, il problema cambia natura. Non si parla più solo di leakage o esposizione dei dati, ma di modifiche a database, apertura ticket, invio di messaggi, esecuzione di operazioni o altre azioni con effetti concreti su processi e infrastrutture. Per questo Microsoft raccomanda, nei casi più esposti a indirect prompt injection, di introdurre controlli di **human-in-the-loop** sulle azioni dei tool. Fonte: [Microsoft Defender for Cloud, AI recommendations reference](https://learn.microsoft.com/en-us/azure/defender-for-cloud/recommendations-reference-ai).
 
 ### Rischi reali vs timori generici (con prove)
 
