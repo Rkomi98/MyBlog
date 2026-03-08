@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI Ethics e Data Governance per GenAI enterprise, agenti e MCP | Mirko Calcaterra</title>
   <meta name="description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="AI Governance, Privacy, Data Governance, MCP, Agentic AI, GenAI Enterprise, Mirko Calcaterra">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
 
@@ -27,7 +27,7 @@
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-03-08T13:43:06.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
-  <meta property="article:section" content="Generale">
+  <meta property="article:section" content="Privacy">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
@@ -1101,14 +1101,14 @@
   <main class="page">
     <article class="post">
       <section class="post-hero">
-        <div class="post-hero__icon">📝</div>
-        <span class="post-hero__category">Generale</span>
+        <div class="post-hero__icon">🛡️</div>
+        <span class="post-hero__category">Privacy</span>
         <h1 class="post-hero__title">AI Ethics e Data Governance per GenAI enterprise, agenti e MCP</h1>
         <div class="post-hero__author">
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">8 marzo 2026 • 28 min</span>
+            <span class="post-hero__author-meta">8 marzo 2026 • 29 min</span>
           </div>
         </div>
       </section>
@@ -1345,13 +1345,41 @@
 <p> Le <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">fonti</a> su MCP e sicurezza segnalano sia rischi già noti, come SSRF, code execution e OAuth confusion, sia rischi più specifici degli agenti, come token passthrough, session hijacking, prompt injection e compromissione di server MCP locali o remoti. Per questo raccomandano misure concrete: consenso per singolo client, validazione delle redirect URI, minimizzazione degli scope e separazione dei privilegi.</p>
 <p> E non è un rischio solo teorico: tra 2025 e 2026 <a href="https://github.com/advisories/GHSA-6xpm-ggf7-wc3p">sono emerse vulnerabilità</a> con CVE legate a implementazioni MCP e strumenti collegati, inclusi casi di RCE e possibili command injection.</p>
 </li>
-<li><p>La <strong>normativa (EU AI Act) è un acceleratore se la traduciamo in scelte architetturali e di processo</strong>. Le fonti UE confermano entrata in vigore (1 agosto 2024) e applicazione “a scaglioni” fino al 2027; inoltre indicano che divieti (unacceptable risk) e obblighi per i modelli di AI “general-purpose” sono già applicabili, mentre molte regole high‑risk scattano 2026–2027. citeturn21search2turn22view0 In pratica: se un workflow agentico tocca domini Annex III (es. lavoro, istruzione, credito, accesso a servizi essenziali) o agisce come componente di un prodotto regolato, la strategia migliore non è “blocchiamo l’AI”, ma <strong>costruiamo tracciabilità, human oversight reale, data governance e controllo delle dipendenze</strong>.</p>
+<li><p>L’<strong>AI Act europeo</strong> non va letto solo come un vincolo normativo, ma anche come una <strong>guida pratica per progettare meglio sistemi e processi</strong>. Il <a href="https://commission.europa.eu/news-and-media/news/ai-act-enters-force-2024-08-01_en">regolamento</a> è entrato in vigore il <strong>1 agosto 2024</strong> e si applicherà in modo graduale fino al <strong>2027</strong>. Alcuni obblighi sono già rilevanti oggi, soprattutto quelli sui sistemi a rischio inaccettabile e sui modelli di AI general-purpose; molte regole sui sistemi ad alto rischio entreranno invece pienamente in vigore tra il <strong>2026</strong> e il <strong>2027</strong>.</p>
+<p> In pratica, se un workflow agentico interviene in <strong>ambiti sensibili</strong> come <em>lavoro, istruzione, credito o accesso a servizi essenziali</em>, oppure fa parte di un <strong>prodotto regolato</strong>, la domanda non dovrebbe essere “usiamo o non usiamo l’AI?”, ma <strong>come la governiamo correttamente?</strong> Questo significa progettare il sistema in modo da garantire:</p>
+<ul>
+<li><strong>tracciabilità</strong> delle decisioni e delle azioni;</li>
+<li><strong>supervisione umana effettiva</strong> nei punti critici;</li>
+<li><strong>governo dei dati</strong> lungo tutto il flusso;</li>
+<li><strong>controllo delle dipendenze tecniche</strong>, incluse integrazioni, tool e fornitori terzi.</li>
+</ul>
 </li>
 </ol>
-<p><strong>Rischi più rilevanti (priorità pratica)</strong>: (1) <em>data exfiltration</em> via tool (prompt injection indiretta + tool con permessi eccessivi), (2) compromissione/supply chain di MCP server (locali o remoti) con esecuzione di comandi o accesso a sorgenti interne, (3) logging/retention non intenzionale (feature non ZDR-eligible, cache, conversation state), (4) responsabilità distribuita opaca tra provider-modello, piattaforma agentica, MCP server, SaaS target e team interno. citeturn30view0turn31search6turn1view0turn32search3</p>
-<p><strong>Takeaway operativi per team tecnici e azienda</strong>: mappare il <em>data path</em> end-to-end (non solo il provider), classificare i dati per “dove possono andare” (UI/API/tools), adottare <em>least privilege</em> e scope minimization come default, mettere <em>human‑in‑the‑loop</em> sulle azioni irreversibili, e rendere auditabili tool call e decisioni dell’agente. Questo è coerente con NIST AI RMF (Govern/Map/Measure/Manage) e con l’approccio “AI management system” di ISO/IEC 42001. citeturn23search4turn23search1</p>
+<p>In conclusione i <strong>rischi più rilevanti</strong> da tenere sotto controllo sono:</p>
+<ul>
+<li><strong>Data exfiltration via tool</strong>: un agente può essere indotto, ad esempio tramite prompt injection indiretta, a leggere ed esportare più dati del dovuto, soprattutto se i tool hanno permessi troppo ampi.</li>
+<li><strong>Compromissione o supply chain di MCP server</strong>: un server MCP locale o remoto vulnerabile può diventare un punto di accesso per esecuzione di comandi, accesso a sorgenti interne o uso improprio delle credenziali.</li>
+<li><strong>Logging e retention non intenzionali</strong>: dati sensibili possono finire in log, cache, conversation state o feature non compatibili con approcci ZDR, anche quando il team pensa di aver “disattivato il training”.</li>
+<li><strong>Responsabilità distribuita e poco chiara</strong>: quando entrano in gioco provider del modello, piattaforme agentiche, server MCP, SaaS esterni e team interni, diventa più difficile capire chi vede cosa, chi conserva cosa e chi risponde in caso di incidente.</li>
+</ul>
+<p>I team tecnici dovrebbero quindi concentrarsi su:</p>
+<ul>
+<li><strong>Mappare il data path end-to-end</strong>: non basta sapere quale provider LLM usi; serve capire dove transitano i dati tra prompt, tool, log, cache, storage e integrazioni.</li>
+<li><strong>Classificare i dati in base alla superficie AI che può trattarli</strong>: non solo “dato sensibile o no”, ma anche “può andare in una UI consumer, in un’API business, in un agente con tool o in un MCP remoto?”.</li>
+<li><strong>Applicare least privilege e minimizzazione degli scope come default</strong>: ogni tool, token e integrazione dovrebbe avere solo i permessi strettamente necessari.</li>
+<li><strong>Inserire human-in-the-loop sulle azioni irreversibili o ad alto impatto</strong>: invio verso l’esterno, modifiche a record, scritture su sistemi, approvazioni e decisioni sensibili non dovrebbero essere lasciate in piena autonomia all’agente.</li>
+<li><strong>Rendere auditabili tool call e decisioni dell’agente</strong>: per fare governance servono log utili, ricostruibilità delle azioni e chiarezza su chi ha fatto cosa, quando e con quali permessi.</li>
+</ul>
+<p>Questa impostazione è coerente con il framework <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf">NIST AI RMF (Govern/Map/Measure/Manage)</a>.</p>
 <h2 id="data-policy-dei-principali-provider-e-strumenti">Data policy dei principali provider e strumenti</h2>
-<p>Qui l’obiettivo è rispondere alla domanda che in azienda arriva sempre uguale ma con sottotesto diverso: <strong>“dove finiscono davvero i dati?”</strong>. La risposta utile è: finiscono <strong>in più posti</strong>, con differenze forti tra piani e superfici (consumer UI, workspace business, API, agentic tooling).</p>
+<p>In questa sezione l’obiettivo è rispondere alla domanda che in azienda arriva spesso anche se in forme diverse: <strong>“dove finiscono davvero i dati?”</strong>.</p>
+<p>La verità è che i dati <strong>non finiscono in un solo posto</strong>, ma possono passare e <em>fermarsi in più sistemi diversi</em>. Inoltre, il loro trattamento cambia molto a seconda del tipo di strumento o canale con cui usi l’AI:</p>
+<ul>
+<li><strong>interfacce consumer</strong>: ChatGPT o Gemini usati come normali app/chat personali;</li>
+<li><strong>workspace business</strong>: abbonamenti aziendali con controlli admin e policy dedicate;</li>
+<li><strong>API</strong>: quando integri il modello dentro un tuo software;</li>
+<li><strong>strumenti agentici con tool</strong>: sistemi in cui il modello non si limita a rispondere, ma può anche chiamare tool, leggere file, interrogare database o usare servizi esterni.</li>
+</ul>
 <h3 id="tabella-comparativa-sintetica">Tabella comparativa sintetica</h3>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
