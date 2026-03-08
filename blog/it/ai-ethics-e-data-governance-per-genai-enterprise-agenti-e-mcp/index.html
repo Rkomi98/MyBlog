@@ -621,6 +621,17 @@
       border-radius: 0;
       overflow: visible;
     }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
     .post-code-card pre {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.82rem;
@@ -1073,6 +1084,18 @@
     };
   </script>
   <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    }
+  </script>
 </head>
 <body data-theme="dark">
   <div class="reading-progress" aria-hidden="true">
@@ -1561,35 +1584,35 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 <p>In pratica, l’host non parla “in generale” con MCP: crea uno o più <strong>client isolati</strong>, e ciascun client mantiene una <strong>connessione separata</strong> con il proprio server MCP. Questo punto è importante perché significa che ogni integrazione ha un suo canale, una sua negoziazione di capacità e un suo perimetro di fiducia.</p>
 <p>La specifica MCP descrive infatti un’architettura <strong>client-host-server</strong>, basata su <strong>messaggi JSON-RPC 2.0</strong> e su <strong>connessioni stateful</strong>. &quot;Stateful&quot; qui significa che la connessione non è un semplice scambio stateless richiesta-risposta: durante il ciclo di vita della sessione client e server negoziano versione e capability, mantengono contesto operativo e possono scambiarsi richieste, notifiche e risultati lungo più passaggi successivi. Questo rende MCP molto potente, ma anche più delicato da governare quando entrano in gioco autenticazione, permessi, tool call e dati sensibili.</p>
 <p>Un altro aspetto cruciale è che un singolo host può parlare contemporaneamente con <strong>più server MCP diversi</strong>: alcuni locali, altri remoti. Di conseguenza, l’assistente può diventare il punto di raccordo tra file locali, database interni e API esterne. È proprio qui che il rischio cresce: non perché “MCP è pericoloso di per sé”, ma perché aumenta il numero di sistemi coinvolti, di privilegi in gioco e di passaggi in cui i dati possono transitare o fermarsi.</p>
-<pre><code class="hljs language-livescript">flowchart LR
-    U[<span class="hljs-string">&quot;Utente&quot;</span>]
-    H[<span class="hljs-string">&quot;Host application
-(es. IDE, chat app, desktop client)&quot;</span>]
-    C1[<span class="hljs-string">&quot;MCP Client A
-connessione isolata&quot;</span>]
-    C2[<span class="hljs-string">&quot;MCP Client B
-connessione isolata&quot;</span>]
-    LLM[<span class="hljs-string">&quot;LLM / provider&quot;</span>]
-    S1[<span class="hljs-string">&quot;MCP Server locale
-file, git, terminale&quot;</span>]
-    S2[<span class="hljs-string">&quot;MCP Server remoto
-SaaS, API, DB&quot;</span>]
-    R1[(<span class="hljs-string">&quot;Risorse locali&quot;</span>)]
-    R2[(<span class="hljs-string">&quot;Risorse remote&quot;</span>)]
+<pre class="mermaid">flowchart LR
+    U[&quot;Utente&quot;]
+    H[&quot;Host application
+(es. IDE, chat app, desktop client)&quot;]
+    C1[&quot;MCP Client A
+connessione isolata&quot;]
+    C2[&quot;MCP Client B
+connessione isolata&quot;]
+    LLM[&quot;LLM / provider&quot;]
+    S1[&quot;MCP Server locale
+file, git, terminale&quot;]
+    S2[&quot;MCP Server remoto
+SaaS, API, DB&quot;]
+    R1[(&quot;Risorse locali&quot;)]
+    R2[(&quot;Risorse remote&quot;)]
 
-    U --&gt;|<span class="hljs-string">&quot;prompt / allegati&quot;</span>| H
-    H --&gt;|<span class="hljs-string">&quot;sampling / contesto&quot;</span>| LLM
+    U --&gt;|&quot;prompt / allegati&quot;| H
+    H --&gt;|&quot;sampling / contesto&quot;| LLM
     H --&gt; C1
     H --&gt; C2
-    C1 &lt;--&gt;|<span class="hljs-string">&quot;JSON-RPC stateful session&quot;</span>| S1
-    C2 &lt;--&gt;|<span class="hljs-string">&quot;JSON-RPC stateful session&quot;</span>| S2
+    C1 &lt;--&gt;|&quot;JSON-RPC stateful session&quot;| S1
+    C2 &lt;--&gt;|&quot;JSON-RPC stateful session&quot;| S2
     S1 &lt;--&gt; R1
     S2 &lt;--&gt; R2
-    S1 --&gt;|<span class="hljs-string">&quot;tool result / resource&quot;</span>| C1
-    S2 --&gt;|<span class="hljs-string">&quot;tool result / resource&quot;</span>| C2
+    S1 --&gt;|&quot;tool result / resource&quot;| C1
+    S2 --&gt;|&quot;tool result / resource&quot;| C2
     C1 --&gt; H
     C2 --&gt; H
-    H --&gt;|<span class="hljs-string">&quot;risposta / azione proposta&quot;</span>| U</code></pre><h3 id="il-flusso-dato-modello-tool-callmcp-risposta-azione-e-cosa-vede-chi">Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi</h3>
+    H --&gt;|&quot;risposta / azione proposta&quot;| U</pre><h3 id="il-flusso-dato-modello-tool-callmcp-risposta-azione-e-cosa-vede-chi">Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi</h3>
 <p>Un modo concreto per descriverlo in azienda è ragionare per “punti di transito”:</p>
 <ol>
 <li><strong>Input</strong> (prompt utente + contesto): può includere dati aziendali, segreti, personal data, frammenti di file. Questo materiale finisce nel provider LLM, ma spesso anche in caching, log di abuso o conversation state a seconda dell’endpoint/feature. citeturn1view0turn14view3  </li>
@@ -1860,7 +1883,7 @@ SaaS, API, DB&quot;</span>]
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
         : { expand: 'Open full view', close: 'Close' };
-      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
       const codeCopyLabels = {
         it: { copy: 'Copia', copied: 'Copiato!' },
         en: { copy: 'Copy', copied: 'Copied!' },

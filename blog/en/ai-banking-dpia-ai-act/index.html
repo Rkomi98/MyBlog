@@ -621,6 +621,17 @@
       border-radius: 0;
       overflow: visible;
     }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
     .post-code-card pre {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.82rem;
@@ -1073,6 +1084,18 @@
     };
   </script>
   <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      mermaid.run({ querySelector: '.mermaid' });
+    }
+  </script>
 </head>
 <body data-theme="dark">
   <div class="reading-progress" aria-hidden="true">
@@ -1381,7 +1404,7 @@
       const tableLabels = CURRENT_LANG === 'it'
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
         : { expand: 'Open full view', close: 'Close' };
-      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre'));
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
       const codeCopyLabels = {
         it: { copy: 'Copia', copied: 'Copiato!' },
         en: { copy: 'Copy', copied: 'Copied!' },
