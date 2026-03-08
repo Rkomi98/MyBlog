@@ -25,7 +25,7 @@
   <meta property="og:title" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP">
   <meta property="og:description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
-  <meta property="article:published_time" content="2026-03-08T13:43:06.000Z">
+  <meta property="article:published_time" content="2026-03-08T18:09:13.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
   <meta property="article:section" content="Privacy">
 
@@ -41,8 +41,8 @@
     "@type": "BlogPosting",
     "headline": "AI Ethics e Data Governance per GenAI enterprise, agenti e MCP",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
-    "datePublished": "2026-03-08T13:43:06.000Z",
-    "dateModified": "2026-03-08T13:43:06.000Z",
+    "datePublished": "2026-03-08T18:09:13.000Z",
+    "dateModified": "2026-03-08T18:09:13.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1465,8 +1465,8 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 <td>Con <a href="https://cursor.com/docs/enterprise/privacy-and-data-governance">Privacy Mode/ZDR</a>: code e prompt non sono memorizzati/usati per training dai provider; Cursor dichiara accordi ZDR con provider chiave per Enterprise (OpenAI, Anthropic, Google Vertex, xAI).</td>
 <td>Opt‑out “reale” dipende dalla modalità e dal flusso: alcune feature (memories/sync) possono richiedere storage su server Cursor (anche se non training).</td>
 <td><a href="https://cursor.com/help/models-and-usage/api-keys">Cursor</a> chiarisce due cose cruciali: (1) anche con BYOK le richieste passano dal backend Cursor per prompt building; (2) la ZDR Cursor <strong>non si applica</strong> quando usi la tua API key: vale la policy del provider scelto.</td>
-<td>Data residency dipende dall’infrastruttura Cursor e provider; la security page descrive hosting e terze parti (es. AWS, Baseten, Together) e condizioni di retention per “Share Data”. citeturn17search13turn17search0</td>
-<td>Cursor integra MCP e raccomanda cautela: “capire cosa fa un server prima di installarlo”. citeturn17search2turn17search5</td>
+<td>Data residency dipende dall’infrastruttura Cursor e provider; la <a href="https://cursor.com/security">security page</a> descrive hosting e terze parti (es. AWS, Baseten, Together) e condizioni di retention per “Share Data”.</td>
+<td>Cursor integra MCP e <a href="https://cursor.com/docs/mcp">raccomanda cautela</a>: “capire cosa fa un server prima di installarlo”.</td>
 </tr>
 </tbody></table>
 </div></figure><h3 id="differenze-api-vs-consumer-vs-stack-agentico-il-cambio-operativo-che-conta">Differenze API vs consumer vs “stack agentico” (il cambio operativo che conta)</h3>
@@ -1482,24 +1482,24 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 </thead>
 <tbody><tr>
 <td>Controllo “training”</td>
-<td>Spesso opt‑out a livello utente (toggle) con comportamento non retroattivo. citeturn18view1turn5search0</td>
-<td>Tipicamente “no training by default” con garanzie contrattuali e controlli admin. citeturn18view2turn13view0</td>
-<td>Tipicamente no training di default e opt‑in esplicito (ma dipende da “paid/unpaid” e contratti). citeturn1view0turn14view0</td>
-<td>Il problema non è solo training: tool call può inviare dati a terzi; la governance deve coprire <em>routing</em> e <em>permissions</em>. citeturn1view0turn30view0</td>
+<td>Di solito l’utente può disattivare il training dalle impostazioni, ma spesso solo per le nuove chat.</td>
+<td>In genere il training sui dati è disattivato di default, con controlli amministrativi e tutele contrattuali.</td>
+<td>In molti casi il training è disattivato di default, ma dipende dal tipo di servizio e dal contratto.</td>
+<td>Il training è solo una parte del problema: tool e integrazioni possono comunque inviare dati a sistemi terzi.</td>
 </tr>
 <tr>
 <td>Retention</td>
-<td>Può essere lunga e influenzata da activity settings / feedback / human review. citeturn12view0turn18view0</td>
-<td>Admin decide retention/histories/audit; spesso più trasparente. citeturn13view0turn18view2</td>
-<td>Log e state sono granulari per endpoint/feature; ZDR spesso “parziale” (alcune feature non eleggibili). citeturn1view0turn14view1</td>
-<td>Tool e MCP aggiungono nuove retention: log tool, audit trail, stored credentials, sandbox artifacts, caches. citeturn30view0turn31search6</td>
+<td>La conservazione può essere lunga e dipendere da cronologia, feedback e revisioni umane.</td>
+<td>La retention è di solito gestita dagli admin, con policy più chiare e strumenti di audit.</td>
+<td>La retention cambia in base a endpoint e feature: log, stato applicativo e caching non sono uguali ovunque.</td>
+<td>Tool e MCP introducono nuovi punti di conservazione: log tecnici, audit trail, credenziali, cache e artefatti temporanei.</td>
 </tr>
 <tr>
 <td>Data residency</td>
-<td>Raramente personalizzabile.</td>
-<td>Più probabile via offerte enterprise (Workspace/Cloud). citeturn11search6turn13view0</td>
-<td>Possibile ma con limiti (es. “system data” fuori regione; feature che forzano storage). citeturn1view0turn14view3</td>
-<td>MCP server può stare ovunque: la residency “vera” diventa un problema di supply chain e rete. citeturn30view0turn31search6</td>
+<td>In genere offre poco controllo sulla regione in cui i dati sono trattati o conservati.</td>
+<td>Il controllo geografico è più probabile nelle offerte enterprise, ma varia per prodotto e configurazione.</td>
+<td>La residency può essere disponibile, ma spesso con limiti: non tutti i dati o tutte le feature restano nella regione scelta.</td>
+<td>Se i server MCP o i tool esterni sono distribuiti altrove, la residency reale dipende anche da rete, fornitori e supply chain.</td>
 </tr>
 </tbody></table>
 </div></figure><p><strong>Consenso e ambiguità tra provider (da esplicitare in articolo)</strong>: c’è un forte consenso sul “no training by default” per le offerte business/API <em>pagate/contrattuali</em> (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). citeturn18view2turn14view0turn9view0 L’ambiguità sta nei dettagli: differenze tra endpoint/feature, definizioni (training vs abuse monitoring vs model improvement), eccezioni (policy violations, grounding Search/Maps, human review su consumer), e soprattutto nel fatto che <strong>integrazioni e MCP spostano il problema fuori dal perimetro del provider</strong>. citeturn1view0turn30view0</p>
