@@ -1108,7 +1108,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">8 marzo 2026 • 29 min</span>
+            <span class="post-hero__author-meta">8 marzo 2026 • 30 min</span>
           </div>
         </div>
       </section>
@@ -1380,7 +1380,11 @@
 <li><strong>API</strong>: quando integri il modello dentro un tuo software;</li>
 <li><strong>strumenti agentici con tool</strong>: sistemi in cui il modello non si limita a rispondere, ma può anche chiamare tool, leggere file, interrogare database o usare servizi esterni.</li>
 </ul>
+<p>Ho deciso di dedicare la prossima sezione ad una tabella comparativa che riprende quanto ho trattato in un precedente articolo</p>
 <h3 id="tabella-comparativa-sintetica">Tabella comparativa sintetica</h3>
+<p>Ricordiamo, prima di riassumere tutto nella tabella che &quot;<strong>No training</strong>&quot; vuol dire che il provider dichiara di non usare prompt/output per addestrare i modelli, mentre &quot;<strong>No logging</strong>&quot; significa che quei dati non vengono registrati, conservati o tracciati da nessuna parte. Attenzione perché le due cose non coincidono. </p>
+<p>In pratica: un provider può non addestrare sui tuoi dati ma può comunque registrarli o trattenerli per sicurezza, abuso, debugging, compliance o stato applicativo
+e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, APM, SIEM, OpenTelemetry, Datadog, Splunk, ecc.</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
@@ -1396,23 +1400,23 @@
 <td><strong>OpenAI ChatGPT (workspace personale: Free/Plus/Pro)</strong></td>
 <td>Può usare contenuti per training; l’<a href="https://help.openai.com/en/articles/8983130-what-if-i-want-to-keep-my-history-on-but-disable-model-training"><strong>utente può disattivare</strong></a> “Improve the model for everyone”.</td>
 <td>Opt‑out vale <a href="https://help.openai.com/en/articles/8983130-what-if-i-want-to-keep-my-history-on-but-disable-model-training"><strong>per le nuove conversazioni</strong></a>: disattiva uso per training, <strong>non</strong> “annulla” trattamenti per sicurezza/abuso.</td>
-<td><em>Temporary Chat</em> cancellata entro 30 giorni e non usata per training; possibile review per abusi. citeturn18view0turn18view3</td>
-<td>Non è un’offerta “residency-first” nella UI consumer; se serve controllo geografico serio si passa a offerte/business o API con controlli dedicati. citeturn1view0turn18view2</td>
-<td>Attenzione a: allegati, GPTs, connettori; l’opt‑out non elimina rischi di leakage via tool/integrations. citeturn0search8turn30view0</td>
+<td><a href="https://help.openai.com/en/articles/7730893-data-controls-faq#h_506371c47c"><em>Temporary Chat</em></a> cancellata entro 30 giorni e non usata per training; possibile review per abusi.</td>
+<td>Non è un’offerta “residency-first” nella UI consumer; se serve <a href="https://developers.openai.com/api/docs/guides/your-data#data-residency-controls">controllo geografico</a> serio si passa a offerte/business o API con controlli dedicati.</td>
+<td><a href="https://help.openai.com/en/articles/8554402-gpts-data-privacy-faq#h_59ac1f1363">Attenzione</a> a: allegati, GPTs, connettori; l’opt‑out <strong>non elimina rischi di leakage</strong> via tool/integrations.</td>
 </tr>
 <tr>
 <td><strong>OpenAI ChatGPT Business / Enterprise / Edu</strong></td>
-<td>“No training by default” su input/output. citeturn18view2turn18view3</td>
-<td>Opt‑out è di fatto lo standard; resta possibile opt‑in tramite meccanismi espliciti (feedback/Playground) per alcuni casi API. citeturn18view3turn0search9</td>
-<td>Enterprise privacy: controlli su retention (esplicitati per Enterprise/Healthcare/Edu). citeturn18view2</td>
-<td>Dipende dalle opzioni contrattuali e controlli di piattaforma; per API esistono anche “data residency controls” configurabili a progetto con limiti e “system data” fuori regione. citeturn1view0</td>
-<td>“No training” ≠ “no logging”: servono policy interne su cosa può entrare e come si logga lato vostro (SIEM/observability).</td>
+<td><a href="https://openai.com/enterprise-privacy/">“No training by default”</a> su input/output.</td>
+<td>Opt‑out è di fatto lo standard; resta possibile <a href="https://openai.com/enterprise-privacy/">opt‑in</a> tramite meccanismi espliciti (feedback/Playground) per alcuni casi API.</td>
+<td>Enterprise privacy: controlli su retention (esplicitati per Enterprise/Healthcare/Edu).</td>
+<td>Dipende dalle opzioni contrattuali e controlli di piattaforma; per API esistono anche “data residency controls” <a href="https://developers.openai.com/api/docs/guides/your-data#data-residency-controls">configurabili</a> a progetto con limiti e “system data” fuori regione.</td>
+<td>“No training” ≠ “no logging”: servono policy interne su cosa può entrare e come si &quot;logga&quot; lato aziendale (SIEM/observability).</td>
 </tr>
 <tr>
 <td><strong>OpenAI API Platform</strong></td>
-<td>Dal 1 marzo 2023: dati API non usati per training <strong>salvo opt‑in esplicito</strong>. citeturn1view0turn18view3</td>
-<td>Opt‑in è un’azione <strong>attiva</strong>; default è opt‑out per organizzazioni. citeturn0search9turn18view3</td>
-<td><em>Abuse monitoring logs</em> fino a 30 giorni di default; possibili opzioni “Modified Abuse Monitoring” / “Zero Data Retention” con approvazione. Alcuni endpoint conservano <em>application state</em> “until deleted”. citeturn1view0</td>
+<td>Dal <a href="https://developers.openai.com/api/docs/guides/your-data#data-residency-controls">1 marzo 2023</a>: dati API non usati per training <strong>salvo opt‑in esplicito</strong>.</td>
+<td>Opt‑in è un’azione <strong>attiva</strong>; default è opt‑out per organizzazioni.</td>
+<td><em>Abuse monitoring logs</em> fino a <a href="https://developers.openai.com/api/docs/guides/your-data#types-of-data-stored-with-the-openai-api">30 giorni di default</a>; possibili opzioni “Modified Abuse Monitoring” / “Zero Data Retention” con approvazione. Alcuni endpoint conservano <em>application state</em> “until deleted”.</td>
 <td>“Data residency controls” a livello progetto: customer content “stored at rest” in regione selezionata <strong>solo dove serve persistenza</strong>; “system data” può stare fuori. citeturn1view0</td>
 <td>Se usi tool esterni (es. MCP server remoto), i dati escono dal perimetro OpenAI e seguono la policy del terzo. citeturn1view0</td>
 </tr>
