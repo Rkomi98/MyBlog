@@ -25,7 +25,7 @@
   <meta property="og:title" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP">
   <meta property="og:description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
-  <meta property="article:published_time" content="2026-03-08T18:09:13.000Z">
+  <meta property="article:published_time" content="2026-03-08T18:52:17.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
   <meta property="article:section" content="Privacy">
 
@@ -41,8 +41,8 @@
     "@type": "BlogPosting",
     "headline": "AI Ethics e Data Governance per GenAI enterprise, agenti e MCP",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
-    "datePublished": "2026-03-08T18:09:13.000Z",
-    "dateModified": "2026-03-08T18:09:13.000Z",
+    "datePublished": "2026-03-08T18:52:17.000Z",
+    "dateModified": "2026-03-08T18:52:17.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1312,7 +1312,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">8 marzo 2026 • 33 min</span>
+            <span class="post-hero__author-meta">8 marzo 2026 • 35 min</span>
           </div>
         </div>
       </section>
@@ -1812,11 +1812,16 @@ SaaS, API, DB&quot;]
 </ol>
 <p>Per questo conviene ragionare per “punti di transito”:</p>
 <ol>
-<li><strong>Input</strong> (prompt utente + contesto): può includere dati aziendali, segreti, personal data, frammenti di file. Questo materiale finisce nel provider LLM, ma spesso anche in caching, log di abuso o conversation state a seconda dell’endpoint/feature. </li>
-<li><strong>Decisione del modello</strong>: il modello decide di chiamare un tool; qui il rischio è che istruzioni malevole siano interpretate come comandi (prompt injection, soprattutto indiretta). Microsoft descrive l’indirect prompt injection come input “non fidato” che il modello scambia per istruzioni, con impatti da esfiltrazione a azioni non volute con le credenziali dell’utente. citeturn32search3turn32search11  </li>
-<li><strong>Tool invocation</strong>: payload verso MCP server (argomenti, query, filtri, ID, eventualmente pezzi di contesto). Qui <strong>il server MCP vede ciò che invii</strong>; se è remoto o di terze parti, stai letteralmente esportando dati fuori perimetro. OpenAI lo esplicita: i server MCP (remote MCP server tool) sono terze parti e i dati seguono la loro retention. citeturn1view0  </li>
-<li><strong>Tool response</strong>: può contenere dati sensibili (query result, file content, token, error stack). Se inserita nel contesto del modello, rientra nel perimetro del provider e nei suoi log. citeturn1view0turn14view1  </li>
-<li><strong>Azione</strong>: se il tool scrive (update DB, crea ticket, invia messaggi, merge PR), il rischio passa da “leakage” a “impatti operativi” (integrità, disponibilità, frodi).</li>
+<li><p><strong>Input: il dato entra nel sistema.</strong> Il prompt iniziale, gli allegati e il contesto recuperato possono già contenere dati aziendali, credenziali, frammenti di file o informazioni personali. Da qui in poi il dato non arriva solo al modello: a seconda della piattaforma può finire anche in <strong>stato applicativo, caching, log tecnici o meccanismi di abuse monitoring</strong>. Per questo non basta chiedersi se il provider faccia training oppure no: bisogna capire anche <strong>che cosa viene conservato per far funzionare il servizio</strong>. Fonti: <a href="https://platform.openai.com/docs/models/how-we-use-your-data">OpenAI, Data controls</a>; <a href="https://ai.google.dev/gemini-api/docs/interactions">Google Gemini Interactions API</a>.</p>
+</li>
+<li><p><strong>Decisione del modello: il momento in cui il testo può diventare azione.</strong> Dopo aver ricevuto input e contesto, il modello può rispondere direttamente oppure decidere di chiamare un tool. Qui entra in gioco uno dei rischi più importanti dei sistemi agentici: la <strong>prompt injection</strong>, soprattutto quella indiretta. In questi casi il modello tratta come istruzioni affidabili contenuti che in realtà provengono da fonti esterne non fidate, come documenti, pagine web o output di altri sistemi. Microsoft descrive esplicitamente questo scenario come una vulnerabilità che può portare a <strong>esfiltrazione di dati o azioni indesiderate</strong>. Fonti: <a href="https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/mlops-in-openai/security/security-plan-llm-application">Microsoft, Security planning for LLM-based applications</a>; <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection">Microsoft, Prompt Shields</a>.</p>
+</li>
+<li><p><strong>Tool call / MCP: il dato esce dal perimetro del modello.</strong> Quando il modello invoca un tool o un server MCP, invia un payload composto da argomenti, query, identificativi e talvolta parti del contesto della conversazione. Questo passaggio è cruciale perché <strong>il server MCP vede esattamente ciò che gli viene mandato</strong>. Se il server è remoto o gestito da terzi, il dato sta uscendo dal perimetro diretto del provider LLM e passa sotto le policy del servizio esterno. OpenAI lo dichiara chiaramente: i remote MCP server sono servizi di terze parti e i dati inviati seguono le loro policy di retention e data residency. Fonti: <a href="https://platform.openai.com/docs/guides/tools-remote-mcp">OpenAI, Remote MCP</a>; <a href="https://platform.openai.com/docs/models/how-we-use-your-data">OpenAI, Data controls</a>.</p>
+</li>
+<li><p><strong>Tool response: il dato rientra e può circolare di nuovo.</strong> La risposta del tool può contenere file, risultati di query, testo sensibile, token, stack trace o altri dettagli operativi. Se questa risposta viene rimessa nel contesto della conversazione, rientra nel flusso del modello e quindi può essere nuovamente soggetta a logging, stato server-side o altri meccanismi di conservazione previsti dalla piattaforma. In altre parole, il tool non è una parentesi esterna: il suo output spesso torna dentro il ciclo decisionale del sistema. Fonti: <a href="https://platform.openai.com/docs/models/how-we-use-your-data">OpenAI, Data controls</a>; <a href="https://ai.google.dev/gemini-api/docs/interactions">Google Gemini Interactions API</a>.</p>
+</li>
+<li><p><strong>Azione finale: il rischio non è più solo confidenzialità, ma impatto operativo.</strong> Quando il tool non si limita a leggere ma può <strong>scrivere o agire</strong> su sistemi esterni, il problema cambia natura. Non si parla più solo di leakage o esposizione dei dati, ma di modifiche a database, apertura ticket, invio di messaggi, esecuzione di operazioni o altre azioni con effetti concreti su processi e infrastrutture. Per questo Microsoft raccomanda, nei casi più esposti a indirect prompt injection, di introdurre controlli di <strong>human-in-the-loop</strong> sulle azioni dei tool. Fonte: <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/recommendations-reference-ai">Microsoft Defender for Cloud, AI recommendations reference</a>.</p>
+</li>
 </ol>
 <h3 id="rischi-reali-vs-timori-generici-con-prove">Rischi reali vs timori generici (con prove)</h3>
 <p><strong>Prompt injection e indirect prompt injection</strong> non sono un rischio ipotetico: esistono benchmark e misurazioni che mostrano vulnerabilità diffuse in agenti tool‑integrated (InjecAgent; BIPIA; Agent Security Bench). citeturn32search0turn32search8turn32search2 OWASP continua a classificare prompt injection come rischio primario per LLM apps e descrive scenari di data exfiltration quando output non è validato. citeturn24search15turn24search3</p>
