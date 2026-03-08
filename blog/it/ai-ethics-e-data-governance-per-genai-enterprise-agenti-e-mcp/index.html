@@ -1108,7 +1108,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">8 marzo 2026 • 30 min</span>
+            <span class="post-hero__author-meta">8 marzo 2026 • 29 min</span>
           </div>
         </div>
       </section>
@@ -1417,62 +1417,54 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 <td>Dal <a href="https://developers.openai.com/api/docs/guides/your-data#data-residency-controls">1 marzo 2023</a>: dati API non usati per training <strong>salvo opt‑in esplicito</strong>.</td>
 <td>Opt‑in è un’azione <strong>attiva</strong>; default è opt‑out per organizzazioni.</td>
 <td><em>Abuse monitoring logs</em> fino a <a href="https://developers.openai.com/api/docs/guides/your-data#types-of-data-stored-with-the-openai-api">30 giorni di default</a>; possibili opzioni “Modified Abuse Monitoring” / “Zero Data Retention” con approvazione. Alcuni endpoint conservano <em>application state</em> “until deleted”.</td>
-<td>“Data residency controls” a livello progetto: customer content “stored at rest” in regione selezionata <strong>solo dove serve persistenza</strong>; “system data” può stare fuori. citeturn1view0</td>
-<td>Se usi tool esterni (es. MCP server remoto), i dati escono dal perimetro OpenAI e seguono la policy del terzo. citeturn1view0</td>
+<td>Data residency parziale: i dati cliente conservati in modo persistente restano nella regione scelta; alcuni dati tecnici di sistema possono restare fuori.</td>
+<td>Se usi tool esterni (es. MCP server remoto), i dati escono dal perimetro OpenAI e seguono la policy di terzi.</td>
 </tr>
 <tr>
 <td><strong>OpenAI Codex (agente di coding, local + cloud)</strong></td>
-<td>Per Business/Enterprise/Edu: stessa logica “no training by default”; per Plus/Pro: conversazioni possono essere usate salvo training off. citeturn20view1turn18view3</td>
-<td>Opt‑out dipende dal piano/workspace e dalle impostazioni ChatGPT (data controls). citeturn20view1turn18view1</td>
-<td>Differenza critica: attività “cloud” può entrare in canali di compliance (es. Compliance API), mentre uso locale no. citeturn20view1</td>
-<td>Per residenza/retention: riferimento a “Data Retention &amp; Residency policies” e controlli workspace; verificare per superficie (web/cloud vs locale). citeturn20view1turn1view0</td>
-<td>Codex Security collega repo GitHub e lavora in sandbox isolata con patch per review umana: è già un pattern di governance (human review). citeturn20view0</td>
+<td>Per Business/Enterprise/Edu: stessa logica “no training by default”; per Plus/Pro: conversazioni possono essere usate salvo <a href="https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan#h_bcd215bebc">training off</a>.</td>
+<td>Opt‑out dipende dal piano/workspace e dalle impostazioni ChatGPT (data controls).</td>
+<td>Differenza critica: attività “cloud” può entrare in canali di compliance (es. <a href="https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan#h_58f38fa942">Compliance API</a>), mentre uso locale no.</td>
+<td>Per residenza/retention: riferimento a “Data Retention &amp; Residency policies” e controlli workspace; verificare per superficie (web/cloud vs locale).</td>
+<td><a href="https://help.openai.com/en/articles/20001107-codex-security">Codex Security</a> collega repo GitHub e lavora in sandbox isolata con patch per review umana: è già un pattern di governance (human review).</td>
 </tr>
 <tr>
 <td><strong>Anthropic Claude consumer (Free/Pro/Max)</strong></td>
-<td>Dal 2025 l’utente sceglie se abilitare uso dei dati per training/model improvement; se abilita, retention fino a 5 anni. citeturn5search0</td>
-<td>Opt‑out (o mancata scelta) incide su <strong>nuove o “resumed”</strong> chat/sessions; cancellare una conversazione la esclude dal training futuro. citeturn5search0</td>
-<td>Se non si abilita training: retention “esistente” 30 giorni (consumer). citeturn5search0</td>
-<td>Non descritta come residency configurabile nella consumer UI nelle fonti qui usate; per requisiti forti si passa a canali commerciali/API. citeturn9view0turn16view0</td>
-<td>La principale fonte di rischio in azienda è lo “shadow use” di account consumer per dati di lavoro. citeturn5search0turn9view0</td>
-</tr>
-<tr>
-<td><strong>Anthropic Claude for Work + API (Commercial)</strong></td>
-<td>Per il commerciale: retention e uso dati descritti separatamente; per “Anthropic on Vertex” i termini indicano che non può addestrare su Customer Content. citeturn9view0turn8view0</td>
-<td>Opt‑out dal training è sostanzialmente incorporato nei termini commerciali (salvo accordi specifici); esistono accordi ZDR per endpoint idonei. citeturn10view0turn9view0</td>
-<td>API: input/output cancellati entro 30 giorni (con eccezioni: Files API, accordi ZDR, enforcement UP, legge). Violazioni UP: retention fino a 2 anni (e score fino a 7). citeturn9view0turn10view0</td>
-<td>Data residency su Claude API: controllo <em>inference_geo</em> (“global” o “us”) e vincoli workspace; <em>workspace geo</em> oggi solo “us”. citeturn16view0</td>
-<td>ZDR non copre tutto: console/workbench e varie feature no; anche in ZDR rimane possibilità di retention per violazioni UP/legge. citeturn10view0turn9view0</td>
+<td>Dal 2025 l’utente sceglie se abilitare uso dei dati per training/model improvement; se abilita, retention <a href="https://www.anthropic.com/news/updates-to-our-consumer-terms/">fino a 5 anni</a>.</td>
+<td>Opt‑out (o mancata scelta) incide su <strong>nuove o “resumed”</strong> chat/sessions; cancellare una conversazione la esclude dal training futuro.</td>
+<td>Se non si abilita training: retention “esistente” 30 giorni (consumer).</td>
+<td>Non descritta come residency configurabile nella consumer UI nelle fonti qui usate; per requisiti forti si passa a canali commerciali/API.</td>
+<td>La principale fonte di rischio in azienda è lo “shadow use” di account consumer per dati di lavoro.</td>
 </tr>
 <tr>
 <td><strong>Google Gemini Apps (consumer)</strong></td>
-<td>Dati usati per fornire e migliorare servizi; revisori umani possono vedere alcune chat; avvertenza: non inserire confidenziale. citeturn12view0</td>
-<td>Controlli (Keep Activity) influenzano personalizzazione e log, ma alcune elaborazioni per rispondere e proteggere Google restano anche con Keep Activity off. citeturn12view0</td>
-<td>Default auto-delete 18 mesi (configurabile); chat revisionate conservate fino a 3 anni anche se si elimina attività. citeturn12view0</td>
+<td>Dati usati per fornire e migliorare servizi; revisori umani possono vedere alcune chat; avvertenza: <a href="https://support.google.com/gemini/answer/13594961?hl=en">non inserire dati confidenziali</a>.</td>
+<td>Disattivare Keep Activity riduce personalizzazione e storico, ma non elimina tutti i trattamenti tecnici e di sicurezza.</td>
+<td>Default auto-delete 18 mesi (<a href="https://support.google.com/gemini/answer/13278892?sjid=3045145834270888171-EU&visit_id=639085884098842590-1035937818&p=pn_auto_delete&rd=1#auto_delete">configurabile</a>).</td>
 <td>Non è pensata come soluzione di data residency enterprise.</td>
-<td>Rischio tipico: dipendenti che usano Gemini consumer per lavoro → dati sotto regole consumer.</td>
+<td>Rischio tipico: dipendenti che usano Gemini consumer per lavoro, ma i dati sotto regole consumer.</td>
 </tr>
 <tr>
 <td><strong>Google Workspace with Gemini (business/edu/public sector)</strong></td>
-<td>Dichiarazione esplicita: contenuti non usati per training “outside your domain” senza permesso; niente human review. citeturn13view0turn11search16</td>
-<td>La governance è in mano agli admin (abilitare/disabilitare, history, retention, audit). citeturn13view0turn11search14</td>
-<td>“Gemini in Workspace” prompt/response non trattenuti dopo sessione; Gemini app (come servizio Workspace) può essere trattenuta fino a 36 mesi (admin). Conversation history off: salvataggio fino a 72 ore. citeturn13view0</td>
-<td>Si appoggia a modello Google Workspace e CDPA; esistono controlli (es. client-side encryption) che possono limitare accesso a contenuti cifrati. citeturn13view0</td>
-<td>È un buon esempio di governance come abilitatore: audit log, Vault, controlli retention, firewall settings. citeturn13view0turn11search14</td>
+<td><a href="https://support.google.com/gemini/answer/13278892?sjid=3045145834270888171-EU&visit_id=639085884098842590-1035937818&p=pn_auto_delete&rd=1#auto_delete">Dichiarato esplicitamente</a>: i contenuti non sono usati per training “outside your domain” senza permesso; niente human review.</td>
+<td>La governance è in mano agli admin (abilitare/disabilitare, history, retention, audit).</td>
+<td>Nel Gemini app per Workspace la cronologia è gestita dall’admin (fino a 36 mesi); se la cronologia è off, le chat possono restare fino a 72 ore.</td>
+<td>Si appoggia a modello Google Workspace e CDPA; esistono controlli (es. client-side encryption) che possono limitare accesso a contenuti cifrati.</td>
+<td>È un buon esempio di governance come abilitatore: audit log, Vault, controlli retention, firewall settings.</td>
 </tr>
 <tr>
 <td><strong>Google Gemini Developer API vs Vertex AI (Cloud)</strong></td>
-<td>Gemini API: <em>Unpaid</em> può essere usato per miglioramento con human review; <em>Paid</em> non usa prompt/risposte per migliorare prodotti e opera sotto DPA. citeturn14view0turn14view1</td>
-<td>“Zero data retention” richiede evitare feature che impongono storage (es. grounding Search/Maps 30 giorni) e gestire store/cached content. citeturn14view1turn14view3</td>
-<td>Vertex AI: caching in-memory 24h (RAM) per performance; grounding Search/Maps conserva 30 giorni e non è disattivabile (salvo alternative enterprise). citeturn14view3turn11search6</td>
-<td>Vertex AI ha data residency per dati at-rest nella location selezionata e documentazione dedicata. citeturn11search6turn14view3</td>
-<td>La distinzione “developer quickstart” vs produzione è spesso qui: prototipo su Unpaid/AI Studio può violare policy dati interne. citeturn14view0</td>
+<td><a href="https://ai.google.dev/gemini-api/terms">Gemini API</a>: <em>Unpaid</em> può essere usato per miglioramento con human review; <em>Paid</em> non usa prompt/risposte per migliorare prodotti e opera sotto DPA.</td>
+<td><a href="https://ai.google.dev/gemini-api/docs/zdr">“Zero data retention”</a> non copre tutte le feature: caching e stato server-side introducono persistenza; alcune funzioni di grounding hanno regole di conservazione specifiche (30 giorni di data retention).</td>
+<td><a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/vertex-ai-zero-data-retention">Vertex AI</a>: caching in-memory 24h (RAM) per performance; grounding Search/Maps conserva 30 giorni e non è disattivabile (salvo alternative enterprise).</td>
+<td><a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/data-residency">Vertex AI</a> ha data residency per dati at-rest nella location selezionata e documentazione dedicata.</td>
+<td>La distinzione “developer quickstart” vs produzione è spesso qui: prototipo su Unpaid/AI Studio può violare policy dati interne.</td>
 </tr>
 <tr>
 <td><strong>Cursor (IDE + agent, non provider)</strong></td>
-<td>Con Privacy Mode/ZDR: code e prompt non sono memorizzati/usati per training dai provider; Cursor dichiara accordi ZDR con provider chiave per Enterprise (OpenAI, Anthropic, Google Vertex, xAI). citeturn17search1turn17search4</td>
-<td>Opt‑out “reale” dipende dalla modalità e dal flusso: alcune feature (memories/sync) possono richiedere storage su server Cursor (anche se non training). citeturn17search7turn17search13</td>
-<td>Cursor chiarisce due cose cruciali: (1) anche con BYOK le richieste passano dal backend Cursor per prompt building; (2) la ZDR Cursor <strong>non si applica</strong> quando usi la tua API key: vale la policy del provider scelto. citeturn17search6turn17search0</td>
+<td>Con <a href="https://cursor.com/docs/enterprise/privacy-and-data-governance">Privacy Mode/ZDR</a>: code e prompt non sono memorizzati/usati per training dai provider; Cursor dichiara accordi ZDR con provider chiave per Enterprise (OpenAI, Anthropic, Google Vertex, xAI).</td>
+<td>Opt‑out “reale” dipende dalla modalità e dal flusso: alcune feature (memories/sync) possono richiedere storage su server Cursor (anche se non training).</td>
+<td><a href="https://cursor.com/help/models-and-usage/api-keys">Cursor</a> chiarisce due cose cruciali: (1) anche con BYOK le richieste passano dal backend Cursor per prompt building; (2) la ZDR Cursor <strong>non si applica</strong> quando usi la tua API key: vale la policy del provider scelto.</td>
 <td>Data residency dipende dall’infrastruttura Cursor e provider; la security page descrive hosting e terze parti (es. AWS, Baseten, Together) e condizioni di retention per “Share Data”. citeturn17search13turn17search0</td>
 <td>Cursor integra MCP e raccomanda cautela: “capire cosa fa un server prima di installarlo”. citeturn17search2turn17search5</td>
 </tr>
