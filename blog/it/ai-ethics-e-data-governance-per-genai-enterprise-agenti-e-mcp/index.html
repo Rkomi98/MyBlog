@@ -1150,9 +1150,9 @@
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#mcp-e-superficie-di-esposizione-nei-workflow-multi-componente">
+          <a class="post-toc__link" href="#caro-mcp-quanto-sei-pericoloso">
             <span class="post-toc__number">3</span>
-            <span class="post-toc__text">MCP e superficie di esposizione nei workflow multi-componente</span>
+            <span class="post-toc__text">Caro MCP, quanto sei pericoloso?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1502,9 +1502,9 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 <td>Se i server MCP o i tool esterni sono distribuiti altrove, la residency reale dipende anche da rete, fornitori e supply chain.</td>
 </tr>
 </tbody></table>
-</div></figure><p><strong>Consenso e ambiguità tra provider (da esplicitare in articolo)</strong>: c’è un forte consenso sul “no training by default” per le offerte business/API <em>pagate/contrattuali</em> (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). citeturn18view2turn14view0turn9view0 L’ambiguità sta nei dettagli: differenze tra endpoint/feature, definizioni (training vs abuse monitoring vs model improvement), eccezioni (policy violations, grounding Search/Maps, human review su consumer), e soprattutto nel fatto che <strong>integrazioni e MCP spostano il problema fuori dal perimetro del provider</strong>. citeturn1view0turn30view0</p>
-<h2 id="mcp-e-superficie-di-esposizione-nei-workflow-multi-componente">MCP e superficie di esposizione nei workflow multi-componente</h2>
-<p>MCP nasce per un obiettivo legittimo: <strong>connettere gli assistenti ai sistemi “dove vivono i dati”</strong> (repository, tool aziendali, ambienti di sviluppo) con un protocollo standard. citeturn25view1turn29search7 Architetturalmente, MCP introduce un pattern <em>client–host–server</em> e scambi di contesto e tool su sessioni stateful (basate su JSON‑RPC). citeturn29search4turn29search8</p>
+</div></figure><p>In generale, ho notato che c’è un forte consenso sul “no training by default” per le offerte business/API <em>pagate/contrattuali</em> (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). Dall&#39;altra parte ho notato una forte <strong>ambiguità</strong> nei dettagli: non tutti i provider intendono le stesse cose per training, abuse monitoring o model improvement; inoltre esistono eccezioni legate a specifiche feature, violazioni di policy o revisione umana nei servizi consumer. A questo si aggiunge un punto che sto notando che in tanti sottovalutano: quando entrano in gioco integrazioni e MCP, una parte del trattamento dei dati esce dal perimetro diretto del provider!</p>
+<h2 id="caro-mcp-quanto-sei-pericoloso">Caro MCP, quanto sei pericoloso?</h2>
+<p><a href="https://www.anthropic.com/news/model-context-protocol">MCP</a> nasce per un obiettivo legittimo: <strong>connettere gli assistenti ai sistemi “dove vivono i dati”</strong> (repository, tool aziendali, ambienti di sviluppo) con un protocollo standard. Architetturalmente, MCP introduce un pattern <em>client–host–server</em> e scambi di contesto e tool su sessioni stateful (basate su JSON‑RPC). citeturn29search4turn29search8</p>
 <h3 id="il-flusso-dato-modello-tool-callmcp-risposta-azione-e-cosa-vede-chi">Il flusso “dato → modello → tool call/MCP → risposta → azione” e cosa vede chi</h3>
 <p>Un modo concreto per descriverlo in azienda è ragionare per “punti di transito”:</p>
 <ol>
