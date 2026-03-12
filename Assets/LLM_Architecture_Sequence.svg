@@ -1,0 +1,141 @@
+<svg id="tech-diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="1000" height="650">
+            <defs>
+                <!-- Background Gradient -->
+                <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0b1224"/>
+                    <stop offset="100%" stop-color="#101a36"/>
+                </linearGradient>
+
+                <!-- Box Gradients (Stroke) -->
+                <linearGradient id="stroke-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+                <linearGradient id="stroke-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f97316"/>
+                    <stop offset="100%" stop-color="#facc15"/>
+                </linearGradient>
+
+                <!-- Drop Shadow -->
+                <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+                </filter>
+                
+                <!-- Glow Effect for Lines -->
+                <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+
+                <!-- Markers (Arrow Heads) -->
+                <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+                </marker>
+                <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#facc15"/>
+                </marker>
+            </defs>
+
+            <!-- Background -->
+            <rect width="1000" height="650" fill="url(#bg-grad)" rx="16"/>
+
+            <!-- ================= LIFELINES ================= -->
+            <!-- Attacker Lifeline -->
+            <line x1="160" y1="120" x2="160" y2="580" stroke="#facc15" stroke-width="2" stroke-dasharray="6 6" opacity="0.15"/>
+            <!-- User Lifeline (Main) -->
+            <line x1="500" y1="120" x2="500" y2="580" stroke="#38bdf8" stroke-width="3" opacity="0.4" filter="url(#glow-cyan)"/>
+            <circle cx="500" cy="580" r="4" fill="#38bdf8" opacity="0.4"/>
+            <!-- LLM Lifeline -->
+            <line x1="840" y1="120" x2="840" y2="580" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6 6" opacity="0.15"/>
+
+            <!-- ================= CONNECTIONS (BEZIER CURVES) ================= -->
+            
+            <!-- Flow 1: Attacker -> User -->
+            <path d="M 160 170 C 290 170, 420 185, 485 220" fill="none" stroke="url(#stroke-orange)" stroke-width="3" marker-end="url(#arrow-orange)" filter="url(#drop-shadow)"/>
+            
+            <!-- Flow 2: User -> LLM -->
+            <path d="M 515 280 C 640 280, 760 295, 825 330" fill="none" stroke="url(#stroke-cyan)" stroke-width="3" marker-end="url(#arrow-cyan)" filter="url(#drop-shadow)"/>
+            
+            <!-- Flow 3: LLM -> User -->
+            <path d="M 840 400 C 710 400, 580 415, 515 450" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#arrow-cyan)" filter="url(#drop-shadow)"/>
+            
+            <!-- Flow 4: User -> Attacker -->
+            <path d="M 500 510 C 370 510, 240 525, 175 560" fill="none" stroke="url(#stroke-cyan)" stroke-width="3" marker-end="url(#arrow-cyan)" filter="url(#drop-shadow)"/>
+
+            <!-- ================= TEXT LABELS (ON CURVES) ================= -->
+            
+            <!-- Label 1 -->
+            <g transform="translate(260, 160)">
+                <text x="0" y="0" font-family="Inter" font-size="14" font-weight="600" fill="#facc15" text-anchor="middle" filter="url(#drop-shadow)">
+                    Webpage (Malicious Payload)
+                </text>
+            </g>
+
+            <!-- Label 2 -->
+            <g transform="translate(630, 270)">
+                <text x="0" y="0" font-family="Inter" font-size="14" font-weight="600" text-anchor="middle" filter="url(#drop-shadow)">
+                    <tspan fill="#38bdf8">User prompt</tspan>
+                    <tspan fill="#cbd5f5"> + </tspan>
+                    <tspan fill="#facc15">Webpage</tspan>
+                </text>
+            </g>
+
+            <!-- Label 3 -->
+            <g transform="translate(740, 390)">
+                <text x="0" y="0" font-family="Inter" font-size="14" font-weight="500" fill="#cbd5f5" text-anchor="middle" filter="url(#drop-shadow)">
+                    LLM response
+                </text>
+            </g>
+
+            <!-- Label 4 -->
+            <g transform="translate(370, 500)">
+                <text x="0" y="0" font-family="Inter" font-size="14" font-weight="600" fill="#38bdf8" text-anchor="middle" filter="url(#drop-shadow)">
+                    User's data
+                </text>
+            </g>
+
+            <!-- ================= ENTITY NODES (TOP) ================= -->
+            
+            <!-- Attacker Node -->
+            <g transform="translate(70, 40)" filter="url(#drop-shadow)">
+                <rect width="180" height="64" rx="12" fill="#1f2937" stroke="url(#stroke-orange)" stroke-width="2"/>
+                <!-- Document Icon -->
+                <path d="M 25 18 L 40 18 L 47 25 L 47 46 C 47 47.104 46.104 48 45 48 L 25 48 C 23.895 48 23 47.104 23 46 L 23 20 C 23 18.895 23.895 18 25 18 Z" fill="none" stroke="#facc15" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M 40 18 L 40 25 L 47 25" fill="none" stroke="#facc15" stroke-width="2" stroke-linejoin="round"/>
+                <line x1="28" y1="30" x2="42" y2="30" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+                <line x1="28" y1="36" x2="42" y2="36" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+                <line x1="28" y1="42" x2="36" y2="42" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+                <!-- Text -->
+                <text x="65" y="32" font-family="Inter" font-size="16" font-weight="700" fill="#f8fafc">Attacker</text>
+                <text x="65" y="48" font-family="Inter" font-size="11" font-weight="400" fill="#94a3b8">External Threat</text>
+            </g>
+
+            <!-- User Node -->
+            <g transform="translate(410, 40)" filter="url(#drop-shadow)">
+                <rect width="180" height="64" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <!-- User Icon -->
+                <circle cx="45" cy="26" r="6" fill="none" stroke="#38bdf8" stroke-width="2"/>
+                <path d="M 33 46 C 33 40 38 36 45 36 C 52 36 57 40 57 46" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                <!-- Text -->
+                <text x="65" y="32" font-family="Inter" font-size="16" font-weight="700" fill="#f8fafc">User</text>
+                <text x="65" y="48" font-family="Inter" font-size="11" font-weight="400" fill="#94a3b8">Target System</text>
+            </g>
+
+            <!-- LLM Node -->
+            <g transform="translate(750, 40)" filter="url(#drop-shadow)">
+                <rect width="180" height="64" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <!-- Neural Net Icon -->
+                <circle cx="28" cy="32" r="3" fill="#38bdf8"/>
+                <circle cx="42" cy="22" r="3" fill="#38bdf8"/>
+                <circle cx="42" cy="42" r="3" fill="#38bdf8"/>
+                <circle cx="56" cy="32" r="3" fill="#38bdf8"/>
+                <line x1="31" y1="31" x2="39" y2="24" stroke="#38bdf8" stroke-width="1.5"/>
+                <line x1="31" y1="33" x2="39" y2="40" stroke="#38bdf8" stroke-width="1.5"/>
+                <line x1="45" y1="24" x2="53" y2="31" stroke="#38bdf8" stroke-width="1.5"/>
+                <line x1="45" y1="40" x2="53" y2="33" stroke="#38bdf8" stroke-width="1.5"/>
+                <!-- Text -->
+                <text x="70" y="32" font-family="Inter" font-size="16" font-weight="700" fill="#f8fafc">LLM</text>
+                <text x="70" y="48" font-family="Inter" font-size="11" font-weight="400" fill="#94a3b8">Language Model</text>
+            </g>
+            
+        </svg>
