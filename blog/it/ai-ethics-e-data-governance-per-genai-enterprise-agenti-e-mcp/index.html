@@ -25,7 +25,7 @@
   <meta property="og:title" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP">
   <meta property="og:description" content="AI Ethics e Data Governance per GenAI enterprise, agenti e MCP Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il p…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
-  <meta property="article:published_time" content="2026-03-08T18:52:17.000Z">
+  <meta property="article:published_time" content="2026-03-13T20:13:51.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
   <meta property="article:section" content="Privacy">
 
@@ -41,8 +41,8 @@
     "@type": "BlogPosting",
     "headline": "AI Ethics e Data Governance per GenAI enterprise, agenti e MCP",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
-    "datePublished": "2026-03-08T18:52:17.000Z",
-    "dateModified": "2026-03-08T18:52:17.000Z",
+    "datePublished": "2026-03-13T20:13:51.000Z",
+    "dateModified": "2026-03-13T20:13:51.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1312,7 +1312,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">8 marzo 2026 • 37 min</span>
+            <span class="post-hero__author-meta">13 marzo 2026 • 38 min</span>
           </div>
         </div>
       </section>
@@ -1390,23 +1390,23 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#differenza-di-rischio-readonly-vs-write-vs-manda-dati-fuori">
+          <a class="post-toc__link" href="#cosa-cambia-tra-readonly-write-ed-egress">
             <span class="post-toc__number">3.6</span>
-            <span class="post-toc__text">Differenza di rischio: read‑only vs write vs “manda dati fuori”</span>
+            <span class="post-toc__text">Cosa cambia tra Read‑only, write ed egress?</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#classificazione-del-rischio-e-gestione-dei-dati-nei-workflow-ai">
+          <a class="post-toc__link" href="#gestione-dei-dati-nei-workflow-ai-e-classificazione-del-rischio">
             <span class="post-toc__number">4</span>
-            <span class="post-toc__text">Classificazione del rischio e gestione dei dati nei workflow AI</span>
+            <span class="post-toc__text">Gestione dei dati nei workflow AI e classificazione del rischio</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#tassonomia-pragmatica-e-impatto-sulle-scelte">
+          <a class="post-toc__link" href="#tassonomia-e-impatto-sulle-scelte">
             <span class="post-toc__number">4.1</span>
-            <span class="post-toc__text">Tassonomia pragmatica e impatto sulle scelte</span>
+            <span class="post-toc__text">Tassonomia e impatto sulle scelte</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
@@ -1846,22 +1846,37 @@ Esistono essenzialmente due tipi di prompt injection:
 <p>I casi emersi aiutano a capire che il rischio non è astratto. Nel caso di <strong>mcp-remote</strong>, GitHub ha pubblicato un avviso di sicurezza &quot;critico&quot; a <a href="https://github.com/advisories/GHSA-6xpm-ggf7-wc3p"><strong>OS command injection</strong></a>: in certe condizioni, collegarsi a un server MCP non fidato poteva portare all’esecuzione di comandi sul sistema client. Anche il <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-49596"><strong>National Vulnerability Database</strong></a> ha evidenziato un rischio di <strong>RCE (Remote Code Execution)</strong> dovuto all’assenza di autenticazione tra client e proxy: in pratica, un attaccante poteva arrivare a far eseguire codice da remoto sul sistema bersaglio.</p>
 <p>Anche i coding agent non sono immuni. Per <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61591">Cursor</a>, la NVD segnala che un server MCP non fidato, usato con OAuth, poteva impersonare un server legittimo e inviare comandi malevoli. Il risultato poteva essere command injection e, nei casi più gravi, esecuzione di codice sul computer dell’utente.</p>
 <p>A questo si aggiungono analisi tecniche sul <a href="https://invariantlabs.ai/blog/mcp-github-vulnerability">GitHub MCP server</a>, che mostrano un rischio molto concreto: un attaccante può inserire una prompt injection in una issue di un repository pubblico e indurre l’agente, tramite il server MCP di GitHub, a leggere dati da repository privati e a farli uscire dal perimetro previsto. Nel caso descritto da Invariant Labs, l’agente viene spinto a recuperare informazioni da repo privati e a pubblicarle in una pull request su un repository pubblico.</p>
-<h3 id="differenza-di-rischio-readonly-vs-write-vs-manda-dati-fuori">Differenza di rischio: read‑only vs write vs “manda dati fuori”</h3>
-<p>MCP stesso insiste su <em>scope minimization</em> e su anti‑pattern come <em>token passthrough</em>, perché rompono accountability e confini di fiducia. citeturn30view0 Operativamente:</p>
+<h3 id="cosa-cambia-tra-readonly-write-ed-egress">Cosa cambia tra Read‑only, write ed egress?</h3>
+<p>La documentazione ufficiale di <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP</a> insiste su un punto: ai tool vanno concessi <strong>solo i permessi strettamente necessari</strong>. Per lo stesso motivo sconsiglia soluzioni apparentemente comode come il <strong>token passthrough</strong>, perché sembrano comodi ma creano problemi di sicurezza e controllo e rendono molto più difficile capire chi sta agendo, con quali privilegi e quali permessi.</p>
+<details class="post-warning">
+<summary>Cosa significa “token passthrough”?</summary>
+
+<p>Con <strong>token passthrough</strong> si intende una situazione in cui il client o l’host passa direttamente al server MCP, o a un servizio esterno, il token dell’utente o dell’applicazione invece di usare credenziali e controlli separati per quel server.</p>
+<p>In pratica, è come dire al server: “usa direttamente questo token e fai tu le chiamate al posto mio”. Il problema è che così il server riceve privilegi che non dovrebbe avere in modo così diretto.</p>
+<p>Penso sia chiaro che questo è rischioso, ma nel dubbio chiarisco il perché. In questo modo si perde chiarezza su chi sta agendo davvero. Se quel server è compromesso o malevolo, il token può essere usato per accedere a più dati o servizi del previsto.</p>
+<p>La <strong>logica raccomandata da MCP</strong> è l’opposto: ogni server dovrebbe avere autorizzazioni proprie, limitate e tracciabili, invece di riutilizzare in modo opaco il token dell’utente.</p>
+</details>
+
+<p>Tradotto in pratica, il rischio cambia a seconda del tipo di accesso che diamo al tool:</p>
 <ul>
-<li><strong>Solo lettura (read)</strong>: rischio primario = data leakage/esfiltrazione (soprattutto se il tool può leggere molto e il modello decide cosa estrarre).  </li>
-<li><strong>Scrittura (write)</strong>: rischio primario = manipolazione e danni (integrità), escalation e azioni irreversibili.  </li>
-<li><strong>Egress verso servizi esterni</strong>: rischio primario = uscita dal perimetro legale/contrattuale (DPA, residency) e difficoltà di audit.</li>
+<li><p><strong>Tool di sola lettura</strong>: il rischio principale è la <strong>fuoriuscita di dati</strong>. Se il tool può leggere molte informazioni e il modello decide autonomamente cosa recuperare, può estrarre e far circolare più dati del necessario.</p>
+</li>
+<li><p><strong>Tool di scrittura</strong>: qui il problema non è più solo vedere dati, ma <strong>modificarli o compiere azioni</strong>. Questo apre a manipolazioni, errori operativi, escalation di privilegi e operazioni irreversibili.</p>
+</li>
+<li><p><strong>Tool che inviano dati verso servizi esterni</strong>: in questo caso il rischio è che i dati <strong>escano dal perimetro previsto</strong>, con implicazioni su contratti, data residency, auditabilità e responsabilità.</p>
+</li>
 </ul>
-<p>Queste non sono categorie astratte: sono la base per decidere <em>quando</em> serve approvazione umana e <em>quali</em> scope concedere.</p>
-<h2 id="classificazione-del-rischio-e-gestione-dei-dati-nei-workflow-ai">Classificazione del rischio e gestione dei dati nei workflow AI</h2>
-<p>La classificazione dati “tradizionale” (pubblico / interno / riservato / sensibile) funziona ancora, ma va adattata: non basta più stabilire <em>chi può leggere</em>, bisogna stabilire <strong>quale superficie AI può trattare quel dato</strong> (consumer UI, business workspace, API, agenti con tool, agenti con MCP remoto).</p>
-<h3 id="tassonomia-pragmatica-e-impatto-sulle-scelte">Tassonomia pragmatica e impatto sulle scelte</h3>
+<p>Per questo questa distinzione conta davvero: non serve solo a “classificare” i tool, ma a decidere quali <strong>autorizzazioni concedere</strong>, quali azioni devono avere <strong>approvazione umana</strong> e <strong>quali integrazioni non dovrebbero mai operare in piena autonomia</strong>.</p>
+<h2 id="gestione-dei-dati-nei-workflow-ai-e-classificazione-del-rischio">Gestione dei dati nei workflow AI e classificazione del rischio</h2>
+<p>La classificazione dati più “tradizionale” (pubblico / interno / riservato / sensibile) funziona anche in questo dominio e vale anche oggi che sto scrivendo questo articolo, ma va adattata. Non basta più stabilire <em>chi può leggere</em>, bisogna stabilire <strong>quale superficie AI può trattare quel dato</strong> (consumer UI, business workspace, API, agenti con tool, agenti con MCP remoto). Ora analizziamo questo nel dettaglio</p>
+<h3 id="tassonomia-e-impatto-sulle-scelte">Tassonomia e impatto sulle scelte</h3>
 <p>Una versione enterprise-friendly (minima ma utile) può essere:</p>
 <p><strong>Pubblico</strong> (open web, comunicati), <strong>Interno</strong> (processi, KPI non pubblici), <strong>Riservato</strong> (IP, contratti, dati clienti), <strong>Sensibile</strong> (PII, dati particolari, segreti, credenziali). Questo si collega direttamente a scelte di piano e superficie:</p>
 <ul>
-<li>Se il dato è <strong>Riservato/Sensibile</strong>, l’uso di superfici consumer dove i dati possono essere usati per miglioramento e con revisione umana è in genere incompatibile con policy interne: Google Gemini Apps consumer avverte esplicitamente di non inserire confidenziale se non lo si vuole esposto a revisori e miglioramento. citeturn12view0  </li>
-<li>Per la stessa categoria, le offerte business/API pagate tipicamente offrono impegni più solidi: OpenAI “no training by default” per Business/Enterprise/API; Google “Paid Services” Gemini API; Workspace privacy hub; Anthropic retention commerciale. citeturn18view2turn14view0turn13view0turn9view0</li>
+<li><p>Se il dato è <strong>Riservato/Sensibile</strong>, l’uso di superfici consumer dove i dati possono essere usati per miglioramento e con revisione umana è in genere incompatibile con policy interne. Per esempio <a href="https://support.google.com/gemini/answer/13594961?hl=en#pn_data_usage">Google Gemini Apps</a> consumer avverte esplicitamente di <strong>non inserire confidenziale</strong> se non lo si vuole esposto a revisori e miglioramento.</p>
+</li>
+<li><p>Per la stessa categoria, le <a href="https://openai.com/enterprise-privacy/">offerte business/API</a> pagate tipicamente offrono impegni più solidi: OpenAI “no training by default” per Business/Enterprise/API; Google “Paid Services” Gemini API; Workspace privacy hub; Anthropic retention commerciale.</p>
+</li>
 </ul>
 <h3 id="livelli-di-rischio-per-tipologia-di-workflow">Livelli di rischio per tipologia di workflow</h3>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
