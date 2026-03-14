@@ -246,50 +246,71 @@ A questo si aggiungono analisi tecniche sul [GitHub MCP server](https://invarian
 
 ### Cosa cambia tra Read‑only, write ed egress?
 
-[MCP](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) stesso insiste su *scope minimization* e su anti‑pattern come *token passthrough*, perché rompono accountability e confini di fiducia. Operativamente:
+La documentazione ufficiale di [MCP](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) insiste su un punto: ai tool vanno concessi **solo i permessi strettamente necessari**. Per lo stesso motivo sconsiglia soluzioni apparentemente comode come il **token passthrough**, perché sembrano comodi ma creano problemi di sicurezza e controllo e rendono molto più difficile capire chi sta agendo, con quali privilegi e quali permessi.
 
-- **Solo lettura (read)**: rischio primario = data leakage/esfiltrazione (soprattutto se il tool può leggere molto e il modello decide cosa estrarre).  
-- **Scrittura (write)**: rischio primario = manipolazione e danni (integrità), escalation e azioni irreversibili.  
-- **Egress verso servizi esterni**: rischio primario = uscita dal perimetro legale/contrattuale (DPA, residency) e difficoltà di audit.
+<details class="post-warning">
+<summary>Cosa significa “token passthrough”?</summary>
 
-Queste non sono categorie astratte: sono la base per decidere *quando* serve approvazione umana e *quali* scope concedere.
+Con **token passthrough** si intende una situazione in cui il client o l’host passa direttamente al server MCP, o a un servizio esterno, il token dell’utente o dell’applicazione invece di usare credenziali e controlli separati per quel server.
 
-## Classificazione del rischio e gestione dei dati nei workflow AI
+In pratica, è come dire al server: “usa direttamente questo token e fai tu le chiamate al posto mio”. Il problema è che così il server riceve privilegi che non dovrebbe avere in modo così diretto.
 
-La classificazione dati “tradizionale” (pubblico / interno / riservato / sensibile) funziona ancora, ma va adattata: non basta più stabilire *chi può leggere*, bisogna stabilire **quale superficie AI può trattare quel dato** (consumer UI, business workspace, API, agenti con tool, agenti con MCP remoto).
+Penso sia chiaro che questo è rischioso, ma nel dubbio chiarisco il perché. In questo modo si perde chiarezza su chi sta agendo davvero. Se quel server è compromesso o malevolo, il token può essere usato per accedere a più dati o servizi del previsto.
 
-### Tassonomia pragmatica e impatto sulle scelte
+La **logica raccomandata da MCP** è l’opposto: ogni server dovrebbe avere autorizzazioni proprie, limitate e tracciabili, invece di riutilizzare in modo opaco il token dell’utente.
+</details>
+
+Tradotto in pratica, il rischio cambia a seconda del tipo di accesso che diamo al tool:
+
+- **Tool di sola lettura**: il rischio principale è la **fuoriuscita di dati**. Se il tool può leggere molte informazioni e il modello decide autonomamente cosa recuperare, può estrarre e far circolare più dati del necessario.
+
+- **Tool di scrittura**: qui il problema non è più solo vedere dati, ma **modificarli o compiere azioni**. Questo apre a manipolazioni, errori operativi, escalation di privilegi e operazioni irreversibili.
+
+- **Tool che inviano dati verso servizi esterni**: in questo caso il rischio è che i dati **escano dal perimetro previsto**, con implicazioni su contratti, data residency, auditabilità e responsabilità.
+
+Per questo questa distinzione conta davvero: non serve solo a “classificare” i tool, ma a decidere quali **autorizzazioni concedere**, quali azioni devono avere **approvazione umana** e **quali integrazioni non dovrebbero mai operare in piena autonomia**.
+
+## Gestione dei dati nei workflow AI e classificazione del rischio
+
+La classificazione dati più “tradizionale” (pubblico / interno / riservato / sensibile) funziona anche in questo dominio e vale anche oggi che sto scrivendo questo articolo, ma va adattata. Non basta più stabilire *chi può leggere*, bisogna stabilire **quale superficie AI può trattare quel dato** (consumer UI, business workspace, API, agenti con tool, agenti con MCP remoto). Ora analizziamo questo nel dettaglio
+
+### Tassonomia e impatto sulle scelte
 
 Una versione enterprise-friendly (minima ma utile) può essere:
 
 **Pubblico** (open web, comunicati), **Interno** (processi, KPI non pubblici), **Riservato** (IP, contratti, dati clienti), **Sensibile** (PII, dati particolari, segreti, credenziali). Questo si collega direttamente a scelte di piano e superficie:
 
-- Se il dato è **Riservato/Sensibile**, l’uso di superfici consumer dove i dati possono essere usati per miglioramento e con revisione umana è in genere incompatibile con policy interne: Google Gemini Apps consumer avverte esplicitamente di non inserire confidenziale se non lo si vuole esposto a revisori e miglioramento. citeturn12view0  
-- Per la stessa categoria, le offerte business/API pagate tipicamente offrono impegni più solidi: OpenAI “no training by default” per Business/Enterprise/API; Google “Paid Services” Gemini API; Workspace privacy hub; Anthropic retention commerciale. citeturn18view2turn14view0turn13view0turn9view0  
+- Se il dato è **Riservato/Sensibile**, l’uso di superfici consumer dove i dati possono essere usati per miglioramento e con revisione umana è in genere incompatibile con policy interne. Per esempio [Google Gemini Apps](https://support.google.com/gemini/answer/13594961?hl=en#pn_data_usage) consumer avverte esplicitamente di **non inserire confidenziale** se non lo si vuole esposto a revisori e miglioramento.
+
+- Per la stessa categoria, le [offerte business/API](https://openai.com/enterprise-privacy/) pagate tipicamente offrono impegni più solidi: OpenAI “no training by default” per Business/Enterprise/API; Google “Paid Services” Gemini API; Workspace privacy hub; Anthropic retention commerciale.  
 
 ### Livelli di rischio per tipologia di workflow
 
-| Workflow | Dati che tipicamente transitano | Rischi dominanti | Livello rischio (indicativo) | Note operative |
+Dato che ho visto un autentico caos quando si parla di "rischio associato all'AI", facciamo un po' di chiarezza.
+| Workflow | Dati tipici | Rischi | Livello rischio | Note |
 |---|---|---|---|---|
-| Chat “stateless”, senza tool | Prompt e output; eventuali allegati | Leakage nel provider/log/retention; errori/hallucinations | Medio (dipende dal dato) | Riduci contesto, usa workspace business/API pagata per dati non pubblici. citeturn18view3turn14view0 |
-| RAG read‑only (retrieval controllato) | Query, chunk recuperati, output | Data exfiltration via prompt injection indiretta; over‑retrieval | Medio–Alto | Benchmark su IPI mostra che tool‑integrated agents sono vulnerabili; serve retrieval minimization e confini. citeturn32search0turn32search3 |
-| Agente con tool read‑only (ticketing, repo, doc) | Argomenti tool call, risultati, metadati | Indirect prompt injection + leakage; token misuse | Alto | MCP security doc: token passthrough e SSRF come rischi concreti. citeturn30view0 |
-| Agente con tool write | Come sopra + modifiche a sistemi | Integrity attacks, azioni non volute | Molto alto | Richiede human approval su azioni irreversibili e kill switch. |
-| Agente con egress verso terzi (email/SMS/webhook) | Dati e contenuti inviati fuori | Violazioni perimetro legale/contrattuale, data exfil | Critico | Approccio “deny by default” su egress; allowlist domini e payload. citeturn30view0turn33search4 |
-| Multi‑agent / workflow orchestrato | Stato condiviso, memory, code exec artifacts | Amplificazione: più superfici, più segreti, più opportunità poisoning | Critico | ASB e lavori su memory poisoning (AgentPoison) mostrano una classe di attacchi su memoria/RAG. citeturn32search14turn32search2 |
+| Chat “stateless”, senza tool | Prompt e output; eventuali allegati | Esposizione dei dati nel provider, nei log o nella retention tecnica; errori e hallucinations | Medio (dipende dal dato) | Il rischio esiste anche senza tool: conviene ridurre il contesto e usare offerte [business](https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/) quando i dati non sono pubblici. |
+| RAG read‑only | Query, chunk recuperati, output | Data exfiltration via indirect prompt injection; retrieval eccessivo di contenuti non necessari | Medio–Alto | [OWASP](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) tratta la prompt injection come vettore primario di esfiltrazione negli LLM app, e [Microsoft](https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks) mostra come input non fidati in documenti o fonti esterne possano indurre il sistema a recuperare o far uscire dati non previsti. In pratica: va limitato ciò che il retriever può vedere e restituire. |
+| Agente con tool read‑only (ticketing, repo, doc) | Argomenti tool call, risultati, metadati | Indirect prompt injection, leakage, uso improprio di token o permessi | Alto | La [security guide di MCP](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) richiama rischi concreti come token passthrough e SSRF: anche un tool in “solo lettura” può diventare un punto di "fuga di dati". |
+| Agente con tool write | Come sopra + modifiche a sistemi | Azioni non volute, manipolazione di dati, danni operativi | Molto alto | Qui non basta limitare i dati: servono approvazione umana sulle azioni irreversibili, permessi stretti e la possibilità di bloccare rapidamente agente o tool in caso di comportamento anomalo. |
+| Agente con egress verso terzi (email/SMS/webhook) | Dati e contenuti inviati fuori | Uscita dal perimetro previsto, data exfiltration, problemi contrattuali e di audit | Critico | Se il sistema può inviare dati verso l’esterno, il rischio cresce molto: conviene applicare un approccio `deny by default`, con allowlist di domini, payload e destinazioni. |
+| Multi‑agent / workflow orchestrato | Stato condiviso, memoria, artefatti di esecuzione | Amplificazione del rischio: più superfici, più segreti, più punti di poisoning o compromissione | Critico | I lavori su [Agent Security Bench](https://arxiv.org/abs/2410.02644) e [AgentPoison](https://arxiv.org/abs/2502.02558) mostrano che memoria condivisa e orchestrazione multi-step introducono nuove opportunità di attacco. |
 
-### Tecniche difensive che “spostano l’ago” (non cosmetiche)
+### Ok ma come mi difendo?
 
-Qui è utile collegare controlli a standard “seri” e non a check-list di marketing. NIST AI RMF struttura le attività in Govern/Map/Measure/Manage; è una buona cornice per rendere la data governance ripetibile e auditabile. citeturn23search4turn23search0 ISO/IEC 42001 esplicita l’idea di un AI management system per stabilire e migliorare governance e gestione rischio nel tempo. citeturn23search1turn23search5
+Una volta capiti i rischi ora dobbiamo anche trovare soluzioni. Ricordiamo che prevenire è meglio che curare, per cui partirei proprio dai controlli, collegandoli a standard “seri”, o meglio ben definiti. 
+
+[NIST AI RMF](https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf) struttura le attività in Govern/Map/Measure/Manage; è una buona cornice per rendere la data governance ripetibile e auditabile. [ISO/IEC 42001](https://www.iso.org/standard/42001) esplicita l’idea di un AI management system per stabilire e migliorare governance e gestione rischio nel tempo.
 
 In pratica, le difese che più cambiano outcome sono:
-- **Context minimization**: portare nel prompt solo ciò che serve “adesso”; è coerente con pratiche di *context engineering* orientate a non caricare interi dataset in contesto. citeturn3search25  
-- **Redazione/pseudonimizzazione** per dati sensibili prima del passaggio nel modello (riduce blast radius se qualcosa esce).  
-- **Retrieval controllato**: query policy-aware, chunking con filtri per classificazione, e “top‑k” limitato.  
-- **Separazione per ambienti/tenant**: dev/stage/prod con credenziali e dataset diversi; è una difesa organizzativa e tecnica compatibile con ISO 27001 (ISMS) e ISO 27701 (PIMS). citeturn24search0turn24search1  
-- **ZDR dove serve, ma con realismo**: sia OpenAI sia Google sia Anthropic chiariscono che “ZDR” è condizionale e feature-dependent (Search grounding, code execution, batch, cached content). citeturn1view0turn14view1turn10view0
 
-## Governance pratica per agenti AI e integrazioni MCP
+- **Context minimization**: portare nel prompt solo ciò che serve per risolvere quel compito; è coerente con pratiche di [*context engineering*](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) orientate a non caricare interi dataset in contesto.  
+- **Redazione/pseudonimizzazione** per dati sensibili prima del passaggio nel modello (riduce <span class="inline-note">blast radius<button type="button" class="inline-note__trigger" aria-label="Spiega blast radius">*</button><span class="inline-note__popup"><strong>Blast radius</strong> indica quanto si estendono gli effetti di un errore, di un attacco o di un malfunzionamento. In pratica: se il blast radius è piccolo, il problema resta confinato; se è grande, il danno si propaga a più dati, sistemi o utenti.</span></span> se qualcosa esce).  
+- **Retrieval controllato**: non basta “fare RAG”, bisogna farlo bene. In pratica significa limitare ciò che il sistema può recuperare, usare query coerenti con le policy interne, filtrare i contenuti in base alla classificazione dei dati e restituire solo i chunk davvero necessari. Anche un semplice limite sul `top-k` aiuta: meno documenti inutili entrano nel contesto, meno aumentano rumore, leakage e possibilità che il modello usi informazioni che non servivano davvero.  
+- **Separazione per ambienti e tenant**: dev, stage e produzione non dovrebbero condividere gli stessi dataset, gli stessi segreti o le stesse credenziali. Questo vale ancora di più nei sistemi AI, dove un errore di configurazione o una prompt injection in ambiente sbagliato può propagarsi molto in fretta. Separare ambienti e tenant serve proprio a contenere l’impatto: se qualcosa va storto in sviluppo, non deve toccare dati reali o sistemi produttivi. È una misura tecnica e organizzativa coerente con standard come [ISO 27001](https://www.iso.org/standard/27001) e ISO 27701.
+- **ZDR dove serve, ma con realismo**: “Zero Data Retention” è utile, ma non va trattato come una formula magica. Le documentazioni di [OpenAI](https://platform.openai.com/docs/models/how-we-use-your-data), [Google](https://ai.google.dev/gemini-api/docs/zdr) e [Anthropic](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) chiariscono tutte, in modi diversi, che la ZDR dipende dalle feature usate e non copre automaticamente tutto. Alcune funzioni introducono comunque persistenza, stato server-side o regole specifiche di conservazione. Quindi la domanda corretta non è “abbiamo la ZDR, siamo a posto?”, ma “quali feature stiamo usando e quali dati restano comunque memorizzati?”.
+
+## Governance per agenti AI
 
 La governance “che abilita” non è un PDF che dice “non usare dati sensibili”. È un insieme di **vincoli eseguibili** e strumenti che rendono *facile fare la cosa giusta*.
 
@@ -326,7 +347,7 @@ Sui segreti, le “incident class” MCP è ormai chiara: token exposure e secre
 | Bassa (dati pubblici, no tool) | Policy uso, training opt‑out dove disponibile | Workspace business o API pagata; prompt minimization | DLP su input/output; monitoring anomalo |
 | Media (interno, RAG read‑only) | Retrieval minimization, separazione ambienti | Redazione/pseudonimizzazione; allowlist fonti; eval su leakage | “Untrusted content” sandbox; guardrail contro IPI (es. pattern Microsoft) citeturn32search3turn32search11 |
 | Alta (tool read‑only su sistemi aziendali) | Least privilege su tool; token scoping | Policy engine su tool call; auditing; rate limit; blocco token passthrough citeturn30view0 | Isolation rete; attestation MCP server; scanning supply chain (CVE) citeturn31search6turn31search15 |
-| Critica (tool write/egress/multi‑agent) | Human approval per azioni irreversibili; kill switch | Segregazione prod; break‑glass; rollback; incident playbook | Formal change management; “two‑person rule” su azioni ad alto impatto; continuous red teaming (ASB/bench) citeturn32search2turn23search3 |
+| Critica (tool write/egress/multi‑agent) | Human approval per azioni irreversibili; blocco rapido di agente o tool | Segregazione prod; break‑glass; rollback; incident playbook | Formal change management; “two‑person rule” su azioni ad alto impatto; continuous red teaming (ASB/bench) citeturn32search2turn23search3 |
 
 ## EU AI Act e accountability nei sistemi generativi e agentici
 
@@ -350,7 +371,7 @@ Una regola pratica per i decision maker: un sistema agentico tende verso high‑
 Il compromesso vincente è trattare la conformità come “design constraints”:
 - **tracciabilità** = audit log delle tool invocation, versione dei prompt/policy, dataset e retrieval source, e capability del modello (modello/versione). MCP evidenzia che audit trail si rompe con token passthrough e confini di fiducia confusi. citeturn30view0  
 - **documentazione** = non un documento statico, ma un “bill of materials” dell’agente: quali MCP server, quali scope, quali dati, quali ambienti, quali controlli e fallback.  
-- **human oversight** = gating su azioni high‑impact (approvazione, limite di spend, kill switch).
+- **human oversight** = gating su azioni high‑impact (approvazione, limite di spesa, possibilità di bloccare rapidamente agente o tool).
 
 ### Accountability lungo la catena (developer → data team → management → fornitori)
 
