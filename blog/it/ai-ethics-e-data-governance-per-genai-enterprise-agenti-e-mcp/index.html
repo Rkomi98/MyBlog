@@ -1404,7 +1404,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">14 marzo 2026 • 45 min</span>
+            <span class="post-hero__author-meta">14 marzo 2026 • 46 min</span>
           </div>
         </div>
       </section>
@@ -1566,9 +1566,9 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#obblighi-di-trasparenza-tracciabilit-e-human-oversight-come-si-traducono-in-scelte">
+          <a class="post-toc__link" href="#come-si-traducono-gli-obblighi">
             <span class="post-toc__number">6.3</span>
-            <span class="post-toc__text">Obblighi di trasparenza, tracciabilità e human oversight: come si traducono in scelte</span>
+            <span class="post-toc__text">Come si traducono gli obblighi?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
@@ -2129,14 +2129,14 @@ Allo stesso tempo, però, loggare tutto indiscriminatamente può creare un nuovo
 <ul>
 <li>supporta o automatizza decisioni in ambiti sensibili come HR, credito, istruzione o accesso a servizi essenziali;</li>
 <li>produce un output che non resta solo “consultivo”, ma diventa un input realmente vincolante per una decisione;</li>
-<li>è integrato in prodotti o servizi già soggetti a obblighi di sicurezza, qualità o conformità.</li>
+<li>è integrato in prodotti o servizi già soggetti a obblighi di sicurezza, qualità (o conformità).</li>
 </ul>
-<p>L’implicazione architetturale è molto concreta: se ti muovi in queste aree, <strong>human oversight</strong> e controlli di processo non possono essere un’aggiunta cosmetica. Devono essere parte del disegno del sistema.</p>
-<h3 id="obblighi-di-trasparenza-tracciabilit-e-human-oversight-come-si-traducono-in-scelte">Obblighi di trasparenza, tracciabilità e human oversight: come si traducono in scelte</h3>
-<p>Il modo più utile per leggere questi obblighi è trattarli come <strong>vincoli di progettazione</strong>, non come burocrazia da aggiungere alla fine. Se fai così, trasparenza, tracciabilità e supervisione umana smettono di essere parole astratte e diventano decisioni tecniche.</p>
+<p>L’implicazione architetturale è molto concreta: se ti muovi in queste aree, <strong>human oversight</strong> e controlli di processo non possono essere un qualcosa inserito in modo facoltativo, ma devono essere parte del progetto generale del sistema.</p>
+<h3 id="come-si-traducono-gli-obblighi">Come si traducono gli obblighi?</h3>
+<p>Il modo più utile per leggere questi obblighi è trattarli come <strong>vincoli di progettazione</strong>. Se fai così, <strong>tracciabilità e supervisione umana</strong> smettono di essere parole astratte (o solo filosofiche, come le ha definite una volta un mio cliente) e diventano decisioni. Vediamo ora cosa di traducono:</p>
 <ul>
-<li><strong>Tracciabilità</strong>: significa poter ricostruire quali tool sono stati invocati, con quali scope, su quali dati e con quale esito. Qui il collegamento con MCP è diretto: la guida di sicurezza insiste sul fatto che anti-pattern come il token passthrough peggiorano proprio audit e chiarezza delle responsabilità. Fonte: <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a>.</li>
-<li><strong>Documentazione</strong>: non dovrebbe essere un PDF generico, ma una specie di <span class="inline-note">bill of materials<button type="button" class="inline-note__trigger" aria-label="Spiega bill of materials"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Bill of materials</strong> qui significa un inventario chiaro dei componenti del sistema: quali modelli usi, quali server MCP, quali scope, quali dati, quali ambienti, quali fallback e quali controlli di sicurezza.</span></span> dell’agente. In altre parole: una mappa concreta di componenti, permessi, dati e dipendenze.</li>
+<li><strong>Tracciabilità</strong>: significa poter ricostruire quali tool sono stati invocati, con quali scope, su quali dati e con quale esito. Qui il collegamento con MCP viene da se. Infatti la <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">guida di sicurezza</a> insiste sul fatto che anti-pattern come il token passthrough peggiorano proprio audit e chiarezza delle responsabilità.</li>
+<li><strong>Documentazione</strong>: bisogna prestare molta attenzione alla documentazione (come ben sapranno i programmatori che mi stanno leggendo). Quello che serve è una specie di <span class="inline-note">bill of materials<button type="button" class="inline-note__trigger" aria-label="Spiega bill of materials"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Bill of materials</strong> qui significa un inventario chiaro dei componenti del sistema: quali modelli usi, quali server MCP, quali scope, quali dati, quali ambienti, quali fallback e quali controlli di sicurezza.</span></span> dell’agente. In altre parole: una mappa con un po&#39; di tutto (componenti, permessi, dati e dipendenze, ecc).</li>
 <li><strong>Human oversight</strong>: non vuol dire “tenere un umano da qualche parte nel processo”, ma decidere in quali punti il sistema deve fermarsi e chiedere conferma prima di compiere azioni ad alto impatto, come invii esterni, modifiche irreversibili o decisioni che incidono su persone e processi.</li>
 </ul>
 <h3 id="accountability-lungo-la-catena-developer-data-team-management-fornitori">Accountability lungo la catena (developer → data team → management → fornitori)</h3>
