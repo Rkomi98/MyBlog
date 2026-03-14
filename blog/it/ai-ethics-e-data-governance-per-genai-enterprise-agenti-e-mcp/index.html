@@ -1371,7 +1371,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">14 marzo 2026 • 44 min</span>
+            <span class="post-hero__author-meta">14 marzo 2026 • 45 min</span>
           </div>
         </div>
       </section>
@@ -1507,17 +1507,17 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#controlli-da-attivare-in-base-alla-criticit">
+          <a class="post-toc__link" href="#controlli-fcriticit">
             <span class="post-toc__number">5.4</span>
-            <span class="post-toc__text">Controlli da attivare in base alla criticità</span>
+            <span class="post-toc__text">Controlli = f(criticità)</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#eu-ai-act-e-accountability-nei-sistemi-generativi-e-agentici">
+          <a class="post-toc__link" href="#eu-ai-act-e-accountability">
             <span class="post-toc__number">6</span>
-            <span class="post-toc__text">EU AI Act e accountability nei sistemi generativi e agentici</span>
+            <span class="post-toc__text">EU AI Act e accountability</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -2025,50 +2025,55 @@ Esistono essenzialmente due tipi di prompt injection:
 <h3 id="logging-utile-ma-non-invasivo">Logging: utile ma non invasivo</h3>
 <p>Il terzo principio è la tracciabilità. Se non sai quale agente ha chiamato quale tool, con quali scope e con quale esito, non hai davvero governance di tutto il sistema. La tua è solo una speranza che tutto vada bene (o una fiducia nell&#39;AI, chiamala come vuoi).
 Allo stesso tempo, però, loggare tutto indiscriminatamente può creare un nuovo archivio pieno di dati sensibili. La soluzione non è scegliere tra “tutto” e “niente”, ma come sempre la soluzione sta nel mezzo (ricordiamo che &quot;In medio stat virtus&quot;).</p>
-<p>Un criterio molto pragmatico consiste nel loggare <strong>decisioni e metadati</strong>, minimizzando i contenuti. In pratica:</p>
+<p>Un criterio semplice per provare ad ovviare a questo consiste nel loggare <strong>decisioni e metadati</strong>, minimizzando i contenuti. Sembra semplice a dirsi, in pratica solo:</p>
 <ul>
 <li>log dei tool invocati, timestamp, identità del client o dell’utente, scope usati ed esito;</li>
 <li>ID o hash per correlare eventi senza duplicare dati sensibili;</li>
 <li>gestione dei segreti in vault con rotazione regolare, invece di lasciarli sparsi in log o configurazioni.</li>
 </ul>
-<p>Qui può essere utile parlare di <span class="inline-note">audit trail<button type="button" class="inline-note__trigger" aria-label="Spiega audit trail"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Audit trail</strong> significa una traccia ricostruibile di ciò che è successo: chi ha fatto cosa, quando, con quali permessi e con quale risultato. Serve sia per indagare gli incidenti, sia per dimostrare che i controlli erano davvero in funzione.</span></span>. La stessa guida MCP spiega che token troppo ampi o passati nel modo sbagliato peggiorano proprio questo punto: rendono più difficile capire chi ha agito davvero e con quali privilegi. Fonte: <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a>.</p>
-<h3 id="controlli-da-attivare-in-base-alla-criticit">Controlli da attivare in base alla criticità</h3>
-<p>Quello che segue non va letto come una checklist rigida, ma come una traccia pratica. Più cresce l’autonomia dell’agente, più devono crescere anche i controlli.</p>
+<p>Qui può essere utile parlare di <span class="inline-note">audit trail<button type="button" class="inline-note__trigger" aria-label="Spiega audit trail"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Audit trail</strong> significa una traccia ricostruibile di ciò che è successo: chi ha fatto cosa, quando, con quali permessi e con quale risultato. Serve sia per indagare gli incidenti, sia per dimostrare che i controlli erano davvero in funzione.</span></span>. La stessa <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">guida MCP</a> spiega che token troppo ampi o passati nel modo sbagliato peggiorano proprio questo punto: rendono più difficile capire chi ha agito e soprattutto con quali privilegi/ruoli.</p>
+<h3 id="controlli-fcriticit">Controlli = f(criticità)</h3>
+<p>Il punto, in fondo, è semplice: <strong>i controlli da attivare dipendono dal tipo di workflow che stai costruendo</strong>. Per questo, più che parlare in astratto di “criticità”, secondo me è più chiaro ragionare per scenario: cosa fa l’agente, perché quel caso è rischioso, quali controlli sono il minimo sindacale e quali fonti giustificano quella scelta.</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
-<th>Criticità del workflow</th>
-<th>Controlli minimi</th>
-<th>Controlli raccomandati</th>
-<th>Controlli rafforzati per ambienti critici</th>
+<th>Scenario</th>
+<th>Livello</th>
+<th>Perché il rischio cresce</th>
+<th>Controlli prioritari</th>
+<th>Fonti</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Bassa (dati pubblici, nessun tool)</td>
-<td>Policy d’uso, training opt-out dove disponibile</td>
-<td>Workspace business o API pagata; prompt minimization</td>
-<td>DLP su input/output; monitoraggio anomalo</td>
+<td>Chat con dati pubblici, senza tool</td>
+<td>Basso</td>
+<td>Il modello non agisce su sistemi esterni e non accede a fonti interne; il rischio resta soprattutto su retention, logging e qualità dell’output.</td>
+<td>Policy d’uso, prompt minimization, opt-out/training controls dove disponibili, preferenza per workspace business o API pagata quando i dati non sono pubblici.</td>
+<td><a href="https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/">OpenAI, How your data is used</a></td>
 </tr>
 <tr>
-<td>Media (interno, RAG read-only)</td>
-<td>Retrieval minimization; separazione ambienti</td>
-<td>Redazione/pseudonimizzazione; allowlist delle fonti; test su leakage</td>
-<td>Trattare i contenuti recuperati come non fidati; guardrail contro indirect prompt injection sul modello Microsoft</td>
+<td>Workflow interno con RAG read-only</td>
+<td>Medio</td>
+<td>Il sistema recupera contenuti interni: il rischio non è tanto “scrivere”, quanto recuperare troppo, recuperare male o farsi influenzare da contenuti non fidati.</td>
+<td>Retrieval minimization, separazione ambienti, redazione/pseudonimizzazione, allowlist delle fonti, test specifici su leakage e indirect prompt injection.</td>
+<td><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP LLM01 Prompt Injection</a>; <a href="https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks">Microsoft MSRC on indirect prompt injection</a></td>
 </tr>
 <tr>
-<td>Alta (tool read-only su sistemi aziendali)</td>
-<td>Least privilege sui tool; token scoping</td>
-<td>Policy engine sulle tool call; audit; rate limit; blocco del token passthrough</td>
-<td>Isolamento di rete; verifica dei server MCP; scanning della supply chain e dei CVE</td>
+<td>Agente con tool read-only su sistemi aziendali</td>
+<td>Alto</td>
+<td>Anche se il tool non scrive, può leggere dati interni, usare token e interrogare sistemi sensibili: la superficie di esfiltrazione cresce molto.</td>
+<td>Least privilege sui tool, token scoping, policy sulle tool call, audit trail, rate limit, blocco del token passthrough, verifica dei server MCP.</td>
+<td><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a></td>
 </tr>
 <tr>
-<td>Critica (tool write, egress o workflow multi-agent)</td>
-<td>Approvazione umana sulle azioni irreversibili; possibilità di bloccare rapidamente agente o tool</td>
-<td>Segregazione forte tra ambienti; rollback; incident playbook</td>
-<td>Change management formale; doppia approvazione sulle azioni ad alto impatto; red teaming continuo</td>
+<td>Agente con tool write, egress o workflow multi-agent</td>
+<td>Critico</td>
+<td>Qui l’agente può modificare sistemi, inviare dati all’esterno o propagare errori lungo più step e più componenti. Il problema non è più solo leakage, ma impatto operativo vero.</td>
+<td>Approvazione umana sulle azioni irreversibili, possibilità di bloccare rapidamente agente o tool, segregazione forte tra ambienti, rollback, incident playbook, red teaming continuo.</td>
+<td><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a>; <a href="https://arxiv.org/abs/2410.02644">Agent Security Bench</a></td>
 </tr>
 </tbody></table>
-</div></figure><h2 id="eu-ai-act-e-accountability-nei-sistemi-generativi-e-agentici">EU AI Act e accountability nei sistemi generativi e agentici</h2>
+</div></figure><h2 id="eu-ai-act-e-accountability">EU AI Act e accountability</h2>
 <h3 id="stato-e-milestone-utile-per-pianificazione-20262027">Stato e milestone (utile per pianificazione 2026–2027)</h3>
 <p>L’<a href="https://commission.europa.eu/news-and-media/news/ai-act-enters-force-2024-08-01_en">AI Act</a> è entrato in vigore il <strong>1 agosto 2024</strong>, ma non va letto come una norma che “arriva tutta insieme”. La sua applicazione è graduale e si distribuisce fino al <strong>2 agosto 2027</strong>. La sintesi più utile di <a href="https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence-in-the-eu.html">EUR-Lex</a> ricorda un punto importante: alcune regole sono già entrate in gioco, mentre altre diventano pienamente operative in momenti successivi, soprattutto per i sistemi ad alto rischio e per i modelli general-purpose.</p>
 <h3 id="quando-un-workflow-con-agenti-rischia-di-diventare-highrisk-lettura-operativa">Quando un workflow con agenti rischia di diventare “high‑risk” (lettura operativa)</h3>
