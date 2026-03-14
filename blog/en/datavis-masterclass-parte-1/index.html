@@ -600,12 +600,23 @@
       line-height: 1;
       cursor: pointer;
       padding: 0;
-      margin: 0;
+      margin: 0 0 0 0.08rem;
       vertical-align: super;
-      font-size: 0.82em;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
     }
     .post-body .inline-note__trigger:hover {
       color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
     }
     .post-body .inline-note__popup {
       position: absolute;

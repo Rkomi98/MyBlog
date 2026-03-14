@@ -600,12 +600,23 @@
       line-height: 1;
       cursor: pointer;
       padding: 0;
-      margin: 0;
+      margin: 0 0 0 0.08rem;
       vertical-align: super;
-      font-size: 0.82em;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
     }
     .post-body .inline-note__trigger:hover {
       color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
     }
     .post-body .inline-note__popup {
       position: absolute;
@@ -1360,7 +1371,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">14 marzo 2026 • 42 min</span>
+            <span class="post-hero__author-meta">14 marzo 2026 • 43 min</span>
           </div>
         </div>
       </section>
@@ -1895,7 +1906,7 @@ Esistono essenzialmente due tipi di prompt injection:
 <p>Anche i coding agent non sono immuni. Per <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61591">Cursor</a>, la NVD segnala che un server MCP non fidato, usato con OAuth, poteva impersonare un server legittimo e inviare comandi malevoli. Il risultato poteva essere command injection e, nei casi più gravi, esecuzione di codice sul computer dell’utente.</p>
 <p>A questo si aggiungono analisi tecniche sul <a href="https://invariantlabs.ai/blog/mcp-github-vulnerability">GitHub MCP server</a>, che mostrano un rischio molto concreto: un attaccante può inserire una prompt injection in una issue di un repository pubblico e indurre l’agente, tramite il server MCP di GitHub, a leggere dati da repository privati e a farli uscire dal perimetro previsto. Nel caso descritto da Invariant Labs, l’agente viene spinto a recuperare informazioni da repo privati e a pubblicarle in una pull request su un repository pubblico.</p>
 <h3 id="cosa-cambia-tra-readonly-write-ed-egress">Cosa cambia tra Read‑only, write ed egress?</h3>
-<p>La documentazione ufficiale di <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP</a> insiste su un punto: ai tool vanno concessi <strong>solo i permessi strettamente necessari</strong>. Per lo stesso motivo sconsiglia soluzioni apparentemente comode come il <strong>token passthrough</strong>, perché sembrano comodi ma creano problemi di sicurezza e controllo e rendono molto più difficile capire chi sta agendo, con quali privilegi e quali permessi.</p>
+<p>La documentazione ufficiale di <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP</a> insiste su un punto: ai tool vanno concessi <strong>solo i permessi strettamente necessari</strong>. Per lo stesso motivo sconsiglia soluzioni apparentemente comode come <span class="inline-note"><strong>token passthrough</strong><button type="button" class="inline-note__trigger" aria-label="Spiega token passthrough"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Token passthrough</strong> indica una situazione in cui il client o l’host passa direttamente al server MCP, o a un servizio esterno, il token dell’utente o dell’applicazione invece di usare credenziali e controlli separati per quel server. Sembra comodo, ma allarga i privilegi, complica l’audit e rende meno chiaro chi sta agendo davvero.</span></span>, perché sembrano comodi ma creano problemi di sicurezza e controllo e rendono molto più difficile capire chi sta agendo, con quali privilegi e quali permessi.</p>
 <details class="post-warning">
 <summary>Cosa significa “token passthrough”?</summary>
 
@@ -1987,7 +1998,7 @@ Esistono essenzialmente due tipi di prompt injection:
 <p>In pratica, le difese che più cambiano outcome sono:</p>
 <ul>
 <li><strong>Context minimization</strong>: portare nel prompt solo ciò che serve per risolvere quel compito; è coerente con pratiche di <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"><em>context engineering</em></a> orientate a non caricare interi dataset in contesto.  </li>
-<li><strong>Redazione/pseudonimizzazione</strong> per dati sensibili prima del passaggio nel modello (riduce <span class="inline-note">blast radius<button type="button" class="inline-note__trigger" aria-label="Spiega blast radius">*</button><span class="inline-note__popup"><strong>Blast radius</strong> indica quanto si estendono gli effetti di un errore, di un attacco o di un malfunzionamento. In pratica: se il blast radius è piccolo, il problema resta confinato; se è grande, il danno si propaga a più dati, sistemi o utenti.</span></span> se qualcosa esce).  </li>
+<li><strong>Redazione/pseudonimizzazione</strong> per dati sensibili prima del passaggio nel modello (riduce <span class="inline-note">blast radius<button type="button" class="inline-note__trigger" aria-label="Spiega blast radius"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Blast radius</strong> indica quanto si estendono gli effetti di un errore, di un attacco o di un malfunzionamento. In pratica: se il blast radius è piccolo, il problema resta confinato; se è grande, il danno si propaga a più dati, sistemi o utenti.</span></span> se qualcosa esce).  </li>
 <li><strong>Retrieval controllato</strong>: non basta “fare RAG”, bisogna farlo bene. In pratica significa limitare ciò che il sistema può recuperare, usare query coerenti con le policy interne, filtrare i contenuti in base alla classificazione dei dati e restituire solo i chunk davvero necessari. Anche un semplice limite sul <code>top-k</code> aiuta: meno documenti inutili entrano nel contesto, meno aumentano rumore, leakage e possibilità che il modello usi informazioni che non servivano davvero.  </li>
 <li><strong>Separazione per ambienti e tenant</strong>: dev, stage e produzione non dovrebbero condividere gli stessi dataset, gli stessi segreti o le stesse credenziali. Questo vale ancora di più nei sistemi AI, dove un errore di configurazione o una prompt injection in ambiente sbagliato può propagarsi molto in fretta. Separare ambienti e tenant serve proprio a contenere l’impatto: se qualcosa va storto in sviluppo, non deve toccare dati reali o sistemi produttivi. È una misura tecnica e organizzativa coerente con standard come <a href="https://www.iso.org/standard/27001">ISO 27001</a> e ISO 27701.</li>
 <li><strong>ZDR dove serve, ma con realismo</strong>: “Zero Data Retention” è utile, ma non va trattato come una formula magica. Le documentazioni di <a href="https://platform.openai.com/docs/models/how-we-use-your-data">OpenAI</a>, <a href="https://ai.google.dev/gemini-api/docs/zdr">Google</a> e <a href="https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to">Anthropic</a> chiariscono tutte, in modi diversi, che la ZDR dipende dalle feature usate e non copre automaticamente tutto. Alcune funzioni introducono comunque persistenza, stato server-side o regole specifiche di conservazione. Quindi la domanda corretta non è “abbiamo la ZDR, siamo a posto?”, ma “quali feature stiamo usando e quali dati restano comunque memorizzati?”.</li>
@@ -2000,7 +2011,7 @@ Esistono essenzialmente due tipi di prompt injection:
 <li>come ricostruiamo in modo affidabile cosa è successo se qualcosa va storto.</li>
 </ul>
 <h3 id="i-controlli-che-contano-davvero">I controlli che contano davvero</h3>
-<p>Il primo principio è il più semplice, ma anche quello che spesso manca: <strong>l’agente non dovrebbe avere più poteri del necessario</strong>. Nella <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">documentazione ufficiale MCP</a> questo si traduce in <em>scope minimization</em>: permessi stretti, separati per funzione, senza <span class="inline-note">scope omnibus<button type="button" class="inline-note__trigger" aria-label="Spiega scope omnibus"><em></button><span class="inline-note__popup"><strong>Scope omnibus</strong> indica un insieme di permessi troppo ampio e generico, che concede più accesso del necessario. In pratica è il contrario del minimo privilegio: invece di dare solo ciò che serve, si apre tutto “per comodità”.</span></span> e senza <span class="inline-note">anti-pattern<button type="button" class="inline-note__trigger" aria-label="Spiega anti-pattern"></em></button><span class="inline-note__popup"><strong>Anti-pattern</strong> indica una soluzione apparentemente comoda o veloce, ma considerata cattiva pratica perché introduce problemi strutturali. Nel caso MCP, il token passthrough è un anti-pattern perché sembra pratico, ma peggiora sicurezza, audit e controllo dei privilegi.</span></span> come il <strong>token passthrough</strong>, che la guida considera esplicitamente vietato perché rompe controlli di sicurezza, responsabilità e chiarezza nei log.</p>
+<p>Il primo principio è il più semplice, ma anche quello che spesso manca: <strong>l’agente non dovrebbe avere più poteri del necessario</strong>. Nella <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">documentazione ufficiale MCP</a> questo si traduce in <em>scope minimization</em>: permessi stretti, separati per funzione, senza <span class="inline-note">scope omnibus<button type="button" class="inline-note__trigger" aria-label="Spiega scope omnibus"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Scope omnibus</strong> indica un insieme di permessi troppo ampio e generico, che concede più accesso del necessario. In pratica è il contrario del minimo privilegio: invece di dare solo ciò che serve, si apre tutto “per comodità”.</span></span> e senza <span class="inline-note">anti-pattern<button type="button" class="inline-note__trigger" aria-label="Spiega anti-pattern"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Anti-pattern</strong> indica una soluzione apparentemente comoda o veloce, ma considerata cattiva pratica perché introduce problemi strutturali. Nel caso MCP, il token passthrough è un anti-pattern perché sembra pratico, ma peggiora sicurezza, audit e controllo dei privilegi.</span></span> come il <strong>token passthrough</strong>, che la guida considera esplicitamente vietato perché rompe controlli di sicurezza, responsabilità e chiarezza nei log.</p>
 <p>Questo ha una conseguenza molto concreta sul design dei tool: in ambienti enterprise funzionano meglio tool <strong>stretti, componibili e specifici per azione</strong>. Per esempio:</p>
 <ul>
 <li>meglio un tool come <code>read_ticket(id)</code> che un tool generico che può leggere “tutti i ticket” senza limiti;</li>
@@ -2019,7 +2030,7 @@ Esistono essenzialmente due tipi di prompt injection:
 <li>ID o hash per correlare eventi senza duplicare dati sensibili;</li>
 <li>gestione dei segreti in vault con rotazione regolare, invece di lasciarli sparsi in log o configurazioni.</li>
 </ul>
-<p>Qui può essere utile parlare di <span class="inline-note">audit trail<button type="button" class="inline-note__trigger" aria-label="Spiega audit trail">*</button><span class="inline-note__popup"><strong>Audit trail</strong> significa una traccia ricostruibile di ciò che è successo: chi ha fatto cosa, quando, con quali permessi e con quale risultato. Serve sia per indagare gli incidenti, sia per dimostrare che i controlli erano davvero in funzione.</span></span>. La stessa guida MCP spiega che token troppo ampi o passati nel modo sbagliato peggiorano proprio questo punto: rendono più difficile capire chi ha agito davvero e con quali privilegi. Fonte: <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a>.</p>
+<p>Qui può essere utile parlare di <span class="inline-note">audit trail<button type="button" class="inline-note__trigger" aria-label="Spiega audit trail"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Audit trail</strong> significa una traccia ricostruibile di ciò che è successo: chi ha fatto cosa, quando, con quali permessi e con quale risultato. Serve sia per indagare gli incidenti, sia per dimostrare che i controlli erano davvero in funzione.</span></span>. La stessa guida MCP spiega che token troppo ampi o passati nel modo sbagliato peggiorano proprio questo punto: rendono più difficile capire chi ha agito davvero e con quali privilegi. Fonte: <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a>.</p>
 <h3 id="controlli-da-attivare-in-base-alla-criticit">Controlli da attivare in base alla criticità</h3>
 <p>Quello che segue non va letto come una checklist rigida, ma come una traccia pratica. Più cresce l’autonomia dell’agente, più devono crescere anche i controlli.</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
@@ -2058,31 +2069,32 @@ Esistono essenzialmente due tipi di prompt injection:
 </tbody></table>
 </div></figure><h2 id="eu-ai-act-e-accountability-nei-sistemi-generativi-e-agentici">EU AI Act e accountability nei sistemi generativi e agentici</h2>
 <h3 id="stato-e-milestone-utile-per-pianificazione-20262027">Stato e milestone (utile per pianificazione 2026–2027)</h3>
-<p>Fonti UE: AI Act entrato in vigore il 1 agosto 2024. citeturn21search2turn21search5 L’entrata in applicazione è graduale fino al 2 agosto 2027; una fonte EUR‑Lex (documento 2025) ribadisce che divieti e obblighi per i modelli general‑purpose sono già applicabili, mentre molte prescrizioni high‑risk scattano 2026–2027. citeturn22view0</p>
+<p>L’<a href="https://commission.europa.eu/news-and-media/news/ai-act-enters-force-2024-08-01_en">AI Act</a> è entrato in vigore il <strong>1 agosto 2024</strong>, ma non va letto come una norma che “arriva tutta insieme”. La sua applicazione è graduale e si distribuisce fino al <strong>2 agosto 2027</strong>. La sintesi più utile di <a href="https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence-in-the-eu.html">EUR-Lex</a> ricorda un punto importante: alcune regole sono già entrate in gioco, mentre altre diventano pienamente operative in momenti successivi, soprattutto per i sistemi ad alto rischio e per i modelli general-purpose.</p>
 <h3 id="quando-un-workflow-con-agenti-rischia-di-diventare-highrisk-lettura-operativa">Quando un workflow con agenti rischia di diventare “high‑risk” (lettura operativa)</h3>
-<p>Per un’azienda che usa GenAI, la domanda non è “il modello è potente?”, ma <strong>“in quale processo decisionale lo metto?”</strong>. L’AI Act è basato sul rischio e (nelle sintesi EUR‑Lex) evidenzia requisiti e obblighi più pesanti per gli high‑risk, oltre a trasparenza e documentazione per general‑purpose AI. citeturn21search1turn21search9</p>
-<p>Una regola pratica per i decision maker: un sistema agentico tende verso high‑risk quando:</p>
+<p>Per un’azienda che usa GenAI, la domanda giusta non è “quanto è bravo il modello?”, ma <strong>in quale processo decisionale lo stiamo inserendo</strong>. L’AI Act segue una logica chiaramente <strong>risk-based</strong>: più un sistema può incidere su sicurezza, diritti fondamentali o accesso a opportunità essenziali, più gli obblighi diventano seri. La sintesi <a href="https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence-in-the-eu.html">EUR-Lex</a> elenca tra le aree ad alto rischio, per esempio, occupazione, istruzione, servizi essenziali, giustizia, infrastrutture critiche e credito.</p>
+<p>Qui può essere utile chiarire cosa si intende per <span class="inline-note">high-risk<button type="button" class="inline-note__trigger" aria-label="Spiega high-risk"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>High-risk</strong> non significa semplicemente “tecnologia potente”. Significa un uso dell’AI che, per contesto e impatto, può incidere in modo rilevante su sicurezza, diritti o opportunità delle persone. È il tipo di sistema per cui la norma richiede controlli, documentazione e supervisione molto più stringenti.</span></span>.</p>
+<p>In pratica, un workflow agentico si avvicina a questa logica quando:</p>
 <ul>
-<li>supporta o automatizza decisioni in aree sensibili (HR, credito, istruzione, accesso a servizi essenziali);</li>
-<li>produce output che diventa <em>input vincolante</em> (non solo “assistivo”) per una decisione che impatta diritti o opportunità;</li>
-<li>è integrato in prodotti o servizi soggetti a obblighi di sicurezza/conformità.</li>
+<li>supporta o automatizza decisioni in ambiti sensibili come HR, credito, istruzione o accesso a servizi essenziali;</li>
+<li>produce un output che non resta solo “consultivo”, ma diventa un input realmente vincolante per una decisione;</li>
+<li>è integrato in prodotti o servizi già soggetti a obblighi di sicurezza, qualità o conformità.</li>
 </ul>
-<p><strong>Implicazione architetturale</strong>: se sei in queste aree, devi progettare <em>human oversight</em> come componente, non come “bottone in UI”.</p>
+<p>L’implicazione architetturale è molto concreta: se ti muovi in queste aree, <strong>human oversight</strong> e controlli di processo non possono essere un’aggiunta cosmetica. Devono essere parte del disegno del sistema.</p>
 <h3 id="obblighi-di-trasparenza-tracciabilit-e-human-oversight-come-si-traducono-in-scelte">Obblighi di trasparenza, tracciabilità e human oversight: come si traducono in scelte</h3>
-<p>Il compromesso vincente è trattare la conformità come “design constraints”:</p>
+<p>Il modo più utile per leggere questi obblighi è trattarli come <strong>vincoli di progettazione</strong>, non come burocrazia da aggiungere alla fine. Se fai così, trasparenza, tracciabilità e supervisione umana smettono di essere parole astratte e diventano decisioni tecniche.</p>
 <ul>
-<li><strong>tracciabilità</strong> = audit log delle tool invocation, versione dei prompt/policy, dataset e retrieval source, e capability del modello (modello/versione). MCP evidenzia che audit trail si rompe con token passthrough e confini di fiducia confusi. citeturn30view0  </li>
-<li><strong>documentazione</strong> = non un documento statico, ma un “bill of materials” dell’agente: quali MCP server, quali scope, quali dati, quali ambienti, quali controlli e fallback.  </li>
-<li><strong>human oversight</strong> = gating su azioni high‑impact (approvazione, limite di spesa, possibilità di bloccare rapidamente agente o tool).</li>
+<li><strong>Tracciabilità</strong>: significa poter ricostruire quali tool sono stati invocati, con quali scope, su quali dati e con quale esito. Qui il collegamento con MCP è diretto: la guida di sicurezza insiste sul fatto che anti-pattern come il token passthrough peggiorano proprio audit e chiarezza delle responsabilità. Fonte: <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a>.</li>
+<li><strong>Documentazione</strong>: non dovrebbe essere un PDF generico, ma una specie di <span class="inline-note">bill of materials<button type="button" class="inline-note__trigger" aria-label="Spiega bill of materials"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Bill of materials</strong> qui significa un inventario chiaro dei componenti del sistema: quali modelli usi, quali server MCP, quali scope, quali dati, quali ambienti, quali fallback e quali controlli di sicurezza.</span></span> dell’agente. In altre parole: una mappa concreta di componenti, permessi, dati e dipendenze.</li>
+<li><strong>Human oversight</strong>: non vuol dire “tenere un umano da qualche parte nel processo”, ma decidere in quali punti il sistema deve fermarsi e chiedere conferma prima di compiere azioni ad alto impatto, come invii esterni, modifiche irreversibili o decisioni che incidono su persone e processi.</li>
 </ul>
 <h3 id="accountability-lungo-la-catena-developer-data-team-management-fornitori">Accountability lungo la catena (developer → data team → management → fornitori)</h3>
-<p>Nella pratica enterprise, la responsabilità è <em>stratificata</em>:</p>
+<p>Qui entra in gioco un altro termine che vale la pena esplicitare: <span class="inline-note">accountability<button type="button" class="inline-note__trigger" aria-label="Spiega accountability"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Accountability</strong> significa poter attribuire in modo chiaro responsabilità, decisioni e controlli. In pratica: sapere chi ha deciso cosa, con quali informazioni, con quali permessi e con quali conseguenze.</span></span>. Nei sistemi agentici la responsabilità non è concentrata in un solo punto, ma distribuita lungo la catena.</p>
 <ul>
-<li><strong>Team tecnici (dev/ML/data)</strong>: implementano controlli, scoping, logging; scelgono endpoint/feature che determinano retention (es. feature non ZDR‑eligible; grounding con storage 30 giorni). citeturn1view0turn14view1  </li>
-<li><strong>Product/innovation/management</strong>: decidono “dove” l’agente è usato e quanto è autonomo (quindi rischio).  </li>
-<li><strong>Fornitori e terze parti</strong>: introducono superficie supply chain; esistono CVE reali su componenti MCP e strumenti (mcp-remote, MCP Inspector, Cursor). citeturn31search6turn31search15turn31search0</li>
+<li><strong>Team tecnici</strong>: definiscono tool, scope, logging, ambienti e feature; in pratica decidono gran parte dei vincoli tecnici che influenzano sicurezza e retention.</li>
+<li><strong>Product, innovation e management</strong>: decidono dove usare l’agente, quanto renderlo autonomo e quanto impatto affidargli.</li>
+<li><strong>Fornitori e terze parti</strong>: aggiungono superfici di rischio, soprattutto quando entrano in gioco componenti MCP, API esterne, tool remoti o supply chain vulnerabile.</li>
 </ul>
-<p>Il <em>takeaway legale‑operativo</em> più utile per l’articolo: <strong>l’audit trail è una protezione legale tanto quanto tecnica</strong>. Se non puoi dimostrare “quale agente ha fatto cosa, con quali permessi e perché”, non hai governance: hai speranza.</p>
+<p>Il punto più utile, dal lato operativo e anche legale, è questo: <strong>l’audit trail non serve solo ai tecnici, serve anche a dimostrare che il sistema era governato davvero</strong>. Se dopo un incidente non puoi mostrare quale agente ha fatto cosa, con quali permessi e in quale contesto, non hai una governance verificabile. Hai solo una fiducia implicita nel fatto che tutto sia andato bene.</p>
 <h2 id="bias-e-fairness-in-advertising-automation-e-adtech">Bias e fairness in advertising automation e adtech</h2>
 <p>Qui la ricerca evidenzia un punto che spesso sorprende i team: <strong>anche con targeting “neutrale”, la delivery può diventare non neutrale</strong> perché ottimizza obiettivi economici (costo, conversioni) e usa segnali correlati a caratteristiche protette.</p>
 <h3 id="evidenze-empiriche-e-casi-documentati">Evidenze empiriche e casi documentati</h3>
