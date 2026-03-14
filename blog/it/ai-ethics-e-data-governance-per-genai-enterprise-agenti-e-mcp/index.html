@@ -585,6 +585,54 @@
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
     }
+    .post-body .inline-note {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.15rem;
+    }
+    .post-body .inline-note__trigger {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      vertical-align: super;
+      font-size: 0.82em;
+    }
+    .post-body .inline-note__trigger:hover {
+      color: var(--accent-strong);
+    }
+    .post-body .inline-note__popup {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.6rem);
+      width: min(360px, 80vw);
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-lg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      z-index: 8;
+      display: none;
+    }
+    .post-body .inline-note__popup strong {
+      color: var(--text-primary);
+    }
+    .post-body .inline-note--open .inline-note__popup {
+      display: block;
+    }
+    body[data-theme="light"] .post-body .inline-note__popup {
+      background: rgba(255, 255, 255, 0.98);
+    }
     .post-body blockquote {
       margin: 2rem 0;
       padding: 0.75rem 1.2rem;
@@ -1312,7 +1360,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">13 marzo 2026 • 38 min</span>
+            <span class="post-hero__author-meta">13 marzo 2026 • 39 min</span>
           </div>
         </div>
       </section>
@@ -1416,17 +1464,17 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#tecniche-difensive-che-spostano-lago-non-cosmetiche">
+          <a class="post-toc__link" href="#ok-ma-come-mi-difendo">
             <span class="post-toc__number">4.3</span>
-            <span class="post-toc__text">Tecniche difensive che “spostano l’ago” (non cosmetiche)</span>
+            <span class="post-toc__text">Ok ma come mi difendo?</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#governance-pratica-per-agenti-ai-e-integrazioni-mcp">
+          <a class="post-toc__link" href="#governance-per-agenti-ai">
             <span class="post-toc__number">5</span>
-            <span class="post-toc__text">Governance pratica per agenti AI e integrazioni MCP</span>
+            <span class="post-toc__text">Governance per agenti AI</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1879,70 +1927,72 @@ Esistono essenzialmente due tipi di prompt injection:
 </li>
 </ul>
 <h3 id="livelli-di-rischio-per-tipologia-di-workflow">Livelli di rischio per tipologia di workflow</h3>
+<p>Dato che ho visto un autentico caos quando si parla di &quot;rischio associato all&#39;AI&quot;, facciamo un po&#39; di chiarezza.</p>
 <figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
 <thead>
 <tr>
 <th>Workflow</th>
-<th>Dati che tipicamente transitano</th>
-<th>Rischi dominanti</th>
-<th>Livello rischio (indicativo)</th>
-<th>Note operative</th>
+<th>Dati tipici</th>
+<th>Rischi</th>
+<th>Livello rischio</th>
+<th>Note</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Chat “stateless”, senza tool</td>
 <td>Prompt e output; eventuali allegati</td>
-<td>Leakage nel provider/log/retention; errori/hallucinations</td>
+<td>Esposizione dei dati nel provider, nei log o nella retention tecnica; errori e hallucinations</td>
 <td>Medio (dipende dal dato)</td>
-<td>Riduci contesto, usa workspace business/API pagata per dati non pubblici. citeturn18view3turn14view0</td>
+<td>Il rischio esiste anche senza tool: conviene ridurre il contesto e usare offerte <a href="https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/">business</a> quando i dati non sono pubblici.</td>
 </tr>
 <tr>
-<td>RAG read‑only (retrieval controllato)</td>
+<td>RAG read‑only</td>
 <td>Query, chunk recuperati, output</td>
-<td>Data exfiltration via prompt injection indiretta; over‑retrieval</td>
+<td>Data exfiltration via indirect prompt injection; retrieval eccessivo di contenuti non necessari</td>
 <td>Medio–Alto</td>
-<td>Benchmark su IPI mostra che tool‑integrated agents sono vulnerabili; serve retrieval minimization e confini. citeturn32search0turn32search3</td>
+<td><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP</a> tratta la prompt injection come vettore primario di esfiltrazione negli LLM app, e <a href="https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks">Microsoft</a> mostra come input non fidati in documenti o fonti esterne possano indurre il sistema a recuperare o far uscire dati non previsti. In pratica: va limitato ciò che il retriever può vedere e restituire.</td>
 </tr>
 <tr>
 <td>Agente con tool read‑only (ticketing, repo, doc)</td>
 <td>Argomenti tool call, risultati, metadati</td>
-<td>Indirect prompt injection + leakage; token misuse</td>
+<td>Indirect prompt injection, leakage, uso improprio di token o permessi</td>
 <td>Alto</td>
-<td>MCP security doc: token passthrough e SSRF come rischi concreti. citeturn30view0</td>
+<td>La <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">security guide di MCP</a> richiama rischi concreti come token passthrough e SSRF: anche un tool in “solo lettura” può diventare un punto di &quot;fuga di dati&quot;.</td>
 </tr>
 <tr>
 <td>Agente con tool write</td>
 <td>Come sopra + modifiche a sistemi</td>
-<td>Integrity attacks, azioni non volute</td>
+<td>Azioni non volute, manipolazione di dati, danni operativi</td>
 <td>Molto alto</td>
-<td>Richiede human approval su azioni irreversibili e kill switch.</td>
+<td>Qui non basta limitare i dati: servono approvazione umana sulle azioni irreversibili, permessi stretti e la possibilità di bloccare rapidamente agente o tool in caso di comportamento anomalo.</td>
 </tr>
 <tr>
 <td>Agente con egress verso terzi (email/SMS/webhook)</td>
 <td>Dati e contenuti inviati fuori</td>
-<td>Violazioni perimetro legale/contrattuale, data exfil</td>
+<td>Uscita dal perimetro previsto, data exfiltration, problemi contrattuali e di audit</td>
 <td>Critico</td>
-<td>Approccio “deny by default” su egress; allowlist domini e payload. citeturn30view0turn33search4</td>
+<td>Se il sistema può inviare dati verso l’esterno, il rischio cresce molto: conviene applicare un approccio <code>deny by default</code>, con allowlist di domini, payload e destinazioni.</td>
 </tr>
 <tr>
 <td>Multi‑agent / workflow orchestrato</td>
-<td>Stato condiviso, memory, code exec artifacts</td>
-<td>Amplificazione: più superfici, più segreti, più opportunità poisoning</td>
+<td>Stato condiviso, memoria, artefatti di esecuzione</td>
+<td>Amplificazione del rischio: più superfici, più segreti, più punti di poisoning o compromissione</td>
 <td>Critico</td>
-<td>ASB e lavori su memory poisoning (AgentPoison) mostrano una classe di attacchi su memoria/RAG. citeturn32search14turn32search2</td>
+<td>I lavori su <a href="https://arxiv.org/abs/2410.02644">Agent Security Bench</a> e <a href="https://arxiv.org/abs/2502.02558">AgentPoison</a> mostrano che memoria condivisa e orchestrazione multi-step introducono nuove opportunità di attacco.</td>
 </tr>
 </tbody></table>
-</div></figure><h3 id="tecniche-difensive-che-spostano-lago-non-cosmetiche">Tecniche difensive che “spostano l’ago” (non cosmetiche)</h3>
-<p>Qui è utile collegare controlli a standard “seri” e non a check-list di marketing. NIST AI RMF struttura le attività in Govern/Map/Measure/Manage; è una buona cornice per rendere la data governance ripetibile e auditabile. citeturn23search4turn23search0 ISO/IEC 42001 esplicita l’idea di un AI management system per stabilire e migliorare governance e gestione rischio nel tempo. citeturn23search1turn23search5</p>
+</div></figure><h3 id="ok-ma-come-mi-difendo">Ok ma come mi difendo?</h3>
+<p>Una volta capiti i rischi ora dobbiamo anche trovare soluzioni. Ricordiamo che prevenire è meglio che curare, per cui partirei proprio dai controlli, collegandoli a standard “seri”, o meglio ben definiti. </p>
+<p><a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf">NIST AI RMF</a> struttura le attività in Govern/Map/Measure/Manage; è una buona cornice per rendere la data governance ripetibile e auditabile. <a href="https://www.iso.org/standard/42001">ISO/IEC 42001</a> esplicita l’idea di un AI management system per stabilire e migliorare governance e gestione rischio nel tempo.</p>
 <p>In pratica, le difese che più cambiano outcome sono:</p>
 <ul>
-<li><strong>Context minimization</strong>: portare nel prompt solo ciò che serve “adesso”; è coerente con pratiche di <em>context engineering</em> orientate a non caricare interi dataset in contesto. citeturn3search25  </li>
-<li><strong>Redazione/pseudonimizzazione</strong> per dati sensibili prima del passaggio nel modello (riduce blast radius se qualcosa esce).  </li>
+<li><strong>Context minimization</strong>: portare nel prompt solo ciò che serve per risolvere quel compito; è coerente con pratiche di <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"><em>context engineering</em></a> orientate a non caricare interi dataset in contesto.  </li>
+<li><strong>Redazione/pseudonimizzazione</strong> per dati sensibili prima del passaggio nel modello (riduce <span class="inline-note">blast radius<button type="button" class="inline-note__trigger" aria-label="Spiega blast radius">*</button><span class="inline-note__popup"><strong>Blast radius</strong> indica quanto si estendono gli effetti di un errore, di un attacco o di un malfunzionamento. In pratica: se il blast radius è piccolo, il problema resta confinato; se è grande, il danno si propaga a più dati, sistemi o utenti.</span></span> se qualcosa esce).  </li>
 <li><strong>Retrieval controllato</strong>: query policy-aware, chunking con filtri per classificazione, e “top‑k” limitato.  </li>
-<li><strong>Separazione per ambienti/tenant</strong>: dev/stage/prod con credenziali e dataset diversi; è una difesa organizzativa e tecnica compatibile con ISO 27001 (ISMS) e ISO 27701 (PIMS). citeturn24search0turn24search1  </li>
-<li><strong>ZDR dove serve, ma con realismo</strong>: sia OpenAI sia Google sia Anthropic chiariscono che “ZDR” è condizionale e feature-dependent (Search grounding, code execution, batch, cached content). citeturn1view0turn14view1turn10view0</li>
+<li><strong>Separazione per ambienti/tenant</strong>: dev/stage/prod con credenziali e dataset diversi; è una difesa organizzativa e tecnica compatibile con <a href="https://www.iso.org/standard/27001">ISO 27001</a> (ISMS) e ISO 27701 (PIMS).</li>
+<li><strong>ZDR dove serve, ma con realismo</strong>: sia OpenAI sia Google sia Anthropic chiariscono che “ZDR” è condizionale e feature-dependent (Search grounding, code execution, batch, cached content).</li>
 </ul>
-<h2 id="governance-pratica-per-agenti-ai-e-integrazioni-mcp">Governance pratica per agenti AI e integrazioni MCP</h2>
+<h2 id="governance-per-agenti-ai">Governance per agenti AI</h2>
 <p>La governance “che abilita” non è un PDF che dice “non usare dati sensibili”. È un insieme di <strong>vincoli eseguibili</strong> e strumenti che rendono <em>facile fare la cosa giusta</em>.</p>
 <h3 id="controlli-chiave-e-perch-funzionano-davvero">Controlli chiave e perché funzionano davvero</h3>
 <p>Il principio del <strong>minimo privilegio</strong> non è solo IAM: negli agenti significa <em>tool design</em> e <em>scope design</em>. MCP insiste su scope minimization e su proibire token passthrough perché rompe security controls e audit trail. citeturn30view0 In modo simmetrico, anche quando usi IDE agentici (es. Cursor) devi governare <strong>quali modelli</strong> e <strong>quali integrazioni</strong> sono disponibili al team (model/integration management), altrimenti la variabilità individuale diventa rischio sistemico. citeturn17search8turn17search5</p>
@@ -1994,7 +2044,7 @@ Esistono essenzialmente due tipi di prompt injection:
 </tr>
 <tr>
 <td>Critica (tool write/egress/multi‑agent)</td>
-<td>Human approval per azioni irreversibili; kill switch</td>
+<td>Human approval per azioni irreversibili; blocco rapido di agente o tool</td>
 <td>Segregazione prod; break‑glass; rollback; incident playbook</td>
 <td>Formal change management; “two‑person rule” su azioni ad alto impatto; continuous red teaming (ASB/bench) citeturn32search2turn23search3</td>
 </tr>
@@ -2016,7 +2066,7 @@ Esistono essenzialmente due tipi di prompt injection:
 <ul>
 <li><strong>tracciabilità</strong> = audit log delle tool invocation, versione dei prompt/policy, dataset e retrieval source, e capability del modello (modello/versione). MCP evidenzia che audit trail si rompe con token passthrough e confini di fiducia confusi. citeturn30view0  </li>
 <li><strong>documentazione</strong> = non un documento statico, ma un “bill of materials” dell’agente: quali MCP server, quali scope, quali dati, quali ambienti, quali controlli e fallback.  </li>
-<li><strong>human oversight</strong> = gating su azioni high‑impact (approvazione, limite di spend, kill switch).</li>
+<li><strong>human oversight</strong> = gating su azioni high‑impact (approvazione, limite di spesa, possibilità di bloccare rapidamente agente o tool).</li>
 </ul>
 <h3 id="accountability-lungo-la-catena-developer-data-team-management-fornitori">Accountability lungo la catena (developer → data team → management → fornitori)</h3>
 <p>Nella pratica enterprise, la responsabilità è <em>stratificata</em>:</p>
@@ -2114,6 +2164,7 @@ Esistono essenzialmente due tipi di prompt injection:
         ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
         : { expand: 'Open full view', close: 'Close' };
       const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
+      const inlineNotes = Array.from(document.querySelectorAll('.post-body .inline-note'));
       const codeCopyLabels = {
         it: { copy: 'Copia', copied: 'Copiato!' },
         en: { copy: 'Copy', copied: 'Copied!' },
@@ -2324,6 +2375,45 @@ Esistono essenzialmente due tipi di prompt injection:
         const progress = Math.min(100, Math.max(0, (scrollTop / maxScrollable) * 100));
         readingProgressBar.style.width = progress.toFixed(2) + '%';
       }
+      function closeInlineNotes() {
+        inlineNotes.forEach((note) => {
+          note.classList.remove('inline-note--open');
+          const trigger = note.querySelector('.inline-note__trigger');
+          if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      function initInlineNotes() {
+        if (!inlineNotes.length) {
+          return;
+        }
+        inlineNotes.forEach((note, index) => {
+          const trigger = note.querySelector('.inline-note__trigger');
+          const popup = note.querySelector('.inline-note__popup');
+          if (!trigger || !popup) {
+            return;
+          }
+          const popupId = popup.id || ('inline-note-popup-' + index);
+          popup.id = popupId;
+          trigger.setAttribute('aria-controls', popupId);
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const isOpen = note.classList.contains('inline-note--open');
+            closeInlineNotes();
+            if (!isOpen) {
+              note.classList.add('inline-note--open');
+              trigger.setAttribute('aria-expanded', 'true');
+            }
+          });
+          popup.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
+        });
+        document.addEventListener('click', closeInlineNotes);
+      }
       function enhanceCodeBlocks() {
         if (!codeBlocks.length) {
           return;
@@ -2493,9 +2583,11 @@ Esistono essenzialmente due tipi di prompt injection:
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
           closeTableOverlay();
+          closeInlineNotes();
         }
       });
       enhanceTables();
+      initInlineNotes();
       enhanceCodeBlocks();
       initToc();
       applyTheme(initialTheme);
