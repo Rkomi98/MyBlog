@@ -970,6 +970,34 @@
       opacity: 0.88;
       box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
     }
+    .post-body .article-figure {
+      margin: 2.4rem 0;
+    }
+    .post-body .article-figure img {
+      width: 100%;
+      display: block;
+      margin: 0;
+    }
+    .post-body .article-figure figcaption {
+      margin-top: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .post-body .article-figure figcaption strong {
+      color: var(--text-primary);
+    }
+    .post-body .article-figure--wide {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1500px, calc(100vw - 4rem));
+      max-width: none;
+    }
+    body[data-theme="light"] .post-body .article-figure figcaption {
+      color: var(--text-muted);
+    }
     .post-body .table-wrapper {
       margin: 2rem 0;
       border-radius: 18px;
@@ -1183,6 +1211,11 @@
       .post-body {
         padding: 1.9rem 1.5rem;
         font-size: 1.04rem;
+      }
+      .post-body .article-figure--wide {
+        left: auto;
+        transform: none;
+        width: 100%;
       }
       .site-header__inner {
         flex-direction: column;
@@ -1786,7 +1819,11 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 </div></figure><p>In generale, ho notato che c’è un forte consenso sul “no training by default” per le offerte business/API <em>pagate/contrattuali</em> (OpenAI Enterprise privacy; Google Paid Services; Anthropic commerciale). Dall&#39;altra parte ho notato una forte <strong>ambiguità</strong> nei dettagli: non tutti i provider intendono le stesse cose per training, abuse monitoring o model improvement; inoltre esistono eccezioni legate a specifiche feature, violazioni di policy o revisione umana nei servizi consumer. A questo si aggiunge un punto che sto notando che in tanti sottovalutano: quando entrano in gioco integrazioni e MCP, una parte del trattamento dei dati esce dal perimetro diretto del provider!</p>
 <h2 id="mcp-cos">MCP: cos&#39;è?</h2>
 <p>Il <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> è uno <strong>standard aperto</strong> pensato per collegare applicazioni AI, modelli e agenti a sistemi esterni in modo uniforme.</p>
-<p><img src="../../../Assets/mcp-simple-diagram.avif" alt="Schema semplificato dell'architettura MCP"></p>
+<figure class="article-figure">
+  <img src="../Assets/mcp-simple-diagram.avif" alt="Schema semplificato dell'architettura MCP">
+  <figcaption><strong>Figure 01.</strong> Schema semplificato di MCP tratto dalla documentazione ufficiale del <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer">Model Context Protocol</a>.</figcaption>
+</figure>
+
 <p>L’idea di fondo è semplice: invece di costruire un’integrazione diversa per ogni tool, database o repository, si definisce un protocollo comune con cui l’assistente può:</p>
 <ul>
 <li>leggere <strong>risorse</strong>;</li>
@@ -1876,7 +1913,11 @@ SaaS, API, DB&quot;]
 <li><p><strong>Il momento in cui il testo può diventare azione.</strong> Dopo aver ricevuto input e contesto, il modello non si limita necessariamente a “capire” il testo: può usarlo per decidere <strong>che cosa fare dopo</strong>, ad esempio rispondere, interrogare un tool, leggere un file o inviare una richiesta a un sistema esterno. È qui che compare uno dei rischi più importanti dei workflow agentici: la <strong>prompt injection</strong>. Il problema nasce quando il modello interpreta come istruzioni affidabili contenuti che in realtà arrivano da fonti non fidate, come un documento, una pagina web, una email, un commento in un ticket o l’output di un altro tool. Microsoft descrive questo scenario come una forma di attacco che può portare a <strong>esfiltrazione di dati, bypass dei controlli e azioni indesiderate eseguite con i privilegi dell’utente o dell’applicazione</strong>. Fonti: <a href="https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks">Microsoft Security Response Center, How Microsoft defends against indirect prompt injection attacks</a>; <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection">Microsoft, Prompt Shields</a>.</p>
 </li>
 </ol>
-<p><img src="../../../Assets/LLM_Architecture_Sequence.svg" alt="Schema del flusso in un'architettura LLM con tool e sistemi esterni"></p>
+<figure class="article-figure">
+  <img src="../Assets/LLM_Architecture_Sequence.svg" alt="Schema del flusso in un'architettura LLM con tool e sistemi esterni">
+  <figcaption><strong>Figure 02.</strong> Schema del flusso in un'architettura LLM con tool e sistemi esterni, usato qui per visualizzare il passaggio dato → modello → tool → risposta → azione.</figcaption>
+</figure>
+
 <details class="post-warning" open>
 <summary>Per chi non sa cosa significa fare prompt injection👇🏻</summary>
 Esistono essenzialmente due tipi di prompt injection:
@@ -2073,7 +2114,12 @@ Allo stesso tempo, però, loggare tutto indiscriminatamente può creare un nuovo
 <td><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">MCP Security Best Practices</a>; <a href="https://arxiv.org/abs/2410.02644">Agent Security Bench</a></td>
 </tr>
 </tbody></table>
-</div></figure><h2 id="eu-ai-act-e-accountability">EU AI Act e accountability</h2>
+</div></figure><figure class="article-figure article-figure--wide">
+  <img src="../Assets/LLM_Agent_Architecture.svg" alt="Architettura di un agente LLM con memoria, pianificazione, osservazione, tool e punti di attacco">
+  <figcaption><strong>Figure 03.</strong> Revisione grafica dell'architettura di un agente LLM realizzata per questo articolo a partire dallo schema concettuale discusso in <a href="https://arxiv.org/abs/2410.02644" target="_blank" rel="noopener noreferrer">Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-based Agents</a> di Hanrong Zhang, Jingyuan Huang, Kai Mei, Yifei Yao, Zhenting Wang, Chenlu Zhan, Hongwei Wang e Yongfeng Zhang.</figcaption>
+</figure>
+
+<h2 id="eu-ai-act-e-accountability">EU AI Act e accountability</h2>
 <h3 id="cosa-dice-e-cosa-ci-aspettiamo">Cosa dice e cosa ci aspettiamo?</h3>
 <p>L’<a href="https://commission.europa.eu/news-and-media/news/ai-act-enters-force-2024-08-01_en">AI Act</a> è entrato in vigore il <strong>1 agosto 2024</strong>, ma non va letto come una norma che “arriva tutta insieme”. La sua applicazione è graduale e si distribuisce fino al <strong>2 agosto 2027</strong>. La sintesi più utile di <a href="https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence-in-the-eu.html">EUR-Lex</a> ricorda un punto importante: alcune regole sono già entrate in gioco, mentre altre diventano pienamente operative in momenti successivi, soprattutto per i sistemi ad alto rischio e per i modelli general-purpose.</p>
 <h3 id="cos-un-sistema-ad-alto-rischio">Cos&#39;è un sistema ad alto rischio?</h3>

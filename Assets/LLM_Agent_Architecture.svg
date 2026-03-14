@@ -1,0 +1,302 @@
+<svg id="tech-diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1250 850" width="1250" height="850">
+            <defs>
+                <!-- Background Gradient -->
+                <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0b1224"/>
+                    <stop offset="100%" stop-color="#101a36"/>
+                </linearGradient>
+
+                <!-- Box Gradients (Stroke) -->
+                <linearGradient id="stroke-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+
+                <!-- Drop Shadow Filters -->
+                <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+                </filter>
+                <filter id="shadow-light" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.4"/>
+                </filter>
+                
+                <!-- Glow Effects -->
+                <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="5" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+                <filter id="glow-attack" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feComponentTransfer in="blur" result="glow">
+                        <feFuncA type="linear" slope="0.8"/>
+                    </feComponentTransfer>
+                    <feComposite in="SourceGraphic" in2="glow" operator="over"/>
+                </filter>
+
+                <!-- Absolute Fixed Size Markers (Arrow Heads) -->
+                <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto" markerUnits="userSpaceOnUse">
+                    <path d="M 0 2 L 8 5 L 0 8 z" fill="#38bdf8"/>
+                </marker>
+                <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto" markerUnits="userSpaceOnUse">
+                    <path d="M 0 2 L 8 5 L 0 8 z" fill="#64748b"/>
+                </marker>
+                <marker id="arrow-attack" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+                    <path d="M 0 2 L 8 5 L 0 8 z" fill="#ef4444"/>
+                </marker>
+                <marker id="arrow-attack-rev" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                    <path d="M 10 2 L 2 5 L 10 8 z" fill="#ef4444"/>
+                </marker>
+
+                <!-- Clean Crossed Swords Icon Component -->
+                <g id="icon-attack-clean">
+                    <!-- Sword 1: Bottom-Left to Top-Right -->
+                    <line x1="-8" y1="8" x2="8" y2="-8" stroke="#cbd5f5" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="-6" y1="2" x2="-2" y2="6" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Sword 2: Bottom-Right to Top-Left -->
+                    <line x1="8" y1="8" x2="-8" y2="-8" stroke="#cbd5f5" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="6" y1="2" x2="2" y2="6" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+                </g>
+            </defs>
+
+            <!-- 1. Base Background -->
+            <rect width="1250" height="850" fill="url(#bg-grad)" rx="20"/>
+
+            <!-- 2. ZONES / BOUNDARIES -->
+            <!-- Agent Framework Boundary -->
+            <rect x="40" y="80" width="870" height="700" fill="#0f172a" opacity="0.4" rx="24"/>
+            <rect x="40" y="80" width="870" height="700" fill="none" stroke="#1e293b" stroke-width="3" stroke-dasharray="12 8" rx="24"/>
+            <g transform="translate(60, 50)">
+                <rect x="0" y="0" width="260" height="40" rx="8" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="1.5" filter="url(#drop-shadow)"/>
+                <path d="M 20 18 L 20 14 C 20 12 24 12 24 14 L 24 18 M 12 22 L 32 22 C 34 22 36 24 36 26 L 36 34 C 36 36 34 38 32 38 L 12 38 C 10 38 8 36 8 34 L 8 26 C 8 24 10 22 12 22 Z" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="16" cy="28" r="2" fill="#38bdf8"/>
+                <circle cx="28" cy="28" r="2" fill="#38bdf8"/>
+                <line x1="18" y1="33" x2="26" y2="33" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                <text x="45" y="26" font-family="Inter" font-size="16" font-weight="600" fill="#f8fafc">LLM Agent Framework</text>
+            </g>
+
+            <!-- External Environment Boundary -->
+            <rect x="940" y="80" width="280" height="700" fill="#0f172a" opacity="0.2" rx="24"/>
+            <rect x="940" y="80" width="280" height="700" fill="none" stroke="#1e293b" stroke-width="3" stroke-dasharray="12 8" rx="24"/>
+            <g transform="translate(960, 50)">
+                <rect x="0" y="0" width="240" height="40" rx="8" fill="#1e293b" stroke="#94a3b8" stroke-width="1.5" filter="url(#drop-shadow)"/>
+                <circle cx="22" cy="20" r="10" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                <ellipse cx="22" cy="20" rx="4" ry="10" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                <line x1="12" y1="20" x2="32" y2="20" stroke="#94a3b8" stroke-width="2"/>
+                <text x="45" y="26" font-family="Inter" font-size="16" font-weight="600" fill="#cbd5f5">External Environment</text>
+            </g>
+
+            <!-- 3. CONNECTIONS / PATHS (Perfectly matched to original image) -->
+            
+            <!-- User -> System Prompt (Vertical Up) -->
+            <path d="M 160 510 L 160 240" fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arrow-gray)" filter="url(#shadow-light)"/>
+            
+            <!-- System Prompt -> LLM -->
+            <path d="M 250 185 L 350 185" fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arrow-gray)" filter="url(#shadow-light)"/>
+            
+            <!-- User -> LLM (Prompt) -->
+            <path d="M 250 555 C 330 555, 300 230, 350 230" fill="none" stroke="url(#stroke-cyan)" stroke-width="3.5" marker-end="url(#arrow-cyan)" filter="url(#shadow-light)"/>
+            
+            <!-- Memory -> LLM (Memory Retrieval - Vertical Up) -->
+            <path d="M 430 490 L 430 280" fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arrow-gray)" filter="url(#shadow-light)"/>
+            
+            <!-- LLM -> Planning -->
+            <path d="M 500 190 L 690 190" fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arrow-gray)" filter="url(#shadow-light)"/>
+            
+            <!-- Planning -> Action (Vertical Down) -->
+            <path d="M 780 240 L 780 530" fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arrow-gray)" filter="url(#shadow-light)"/>
+            
+            <!-- Action -> Tools (Curved Up-Right) -->
+            <path d="M 860 570 C 930 570, 930 250, 970 250" fill="none" stroke="url(#stroke-cyan)" stroke-width="3.5" marker-end="url(#arrow-cyan)" filter="url(#shadow-light)"/>
+            
+            <!-- Tools -> Observation (Vertical Down) -->
+            <path d="M 1070 330 L 1070 510" fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arrow-gray)" filter="url(#shadow-light)"/>
+            
+            <!-- Observation -> Memory (Bottom Loop) -->
+            <path d="M 1070 620 L 1070 700 Q 1070 720 1050 720 L 490 720 Q 470 720 470 700 L 470 660" fill="none" stroke="url(#stroke-cyan)" stroke-width="3.5" marker-end="url(#arrow-cyan)" filter="url(#shadow-light)"/>
+            
+            <!-- Action <-> Short-term Memory (Thoughts / Re-thinking) -->
+            <path d="M 690 560 L 670 560" fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow-gray)"/>
+            <path d="M 670 580 L 690 580" fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow-gray)"/>
+            
+            <!-- Short-term -> Long-term Memory (Dashed arrow) -->
+            <path d="M 490 570 L 420 570" fill="none" stroke="#64748b" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#arrow-gray)"/>
+
+            <!-- PATH LABELS -->
+            <text x="290" y="420" font-family="Inter" font-size="16" font-weight="700" fill="#38bdf8" filter="url(#drop-shadow)">Prompt</text>
+            <text x="445" y="380" font-family="Inter" font-size="14" font-weight="500" fill="#cbd5f5" filter="url(#drop-shadow)">Memory</text>
+            <text x="445" y="400" font-family="Inter" font-size="14" font-weight="500" fill="#cbd5f5" filter="url(#drop-shadow)">Retrieval</text>
+            
+            <!-- Cloud Icon & Thoughts Texts -->
+            <path d="M 610 525 C 600 525, 600 510, 610 510 C 615 500, 630 500, 635 510 C 645 510, 645 525, 635 525 Z" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="635" y="555" font-family="Inter" font-size="14" font-weight="500" fill="#cbd5f5" filter="url(#drop-shadow)">Thoughts</text>
+            <text x="635" y="605" font-family="Inter" font-size="14" font-weight="500" fill="#cbd5f5" filter="url(#drop-shadow)">Re-thinking</text>
+            
+            <text x="1085" y="425" font-family="Inter" font-size="16" font-weight="600" fill="#f8fafc" filter="url(#drop-shadow)">Response</text>
+
+
+            <!-- 4. ATTACK VECTORS (Faithful positioning) -->
+            
+            <!-- Direct Prompt Injection (Attacks the User box/input line) -->
+            <g transform="translate(60, 560)">
+                <text x="0" y="-30" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Direct</text>
+                <text x="0" y="-15" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Prompt</text>
+                <text x="0" y="0" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Injection</text>
+                <use href="#icon-attack-clean" x="-10" y="10"/>
+                <line x1="10" y1="20" x2="60" y2="20" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-attack)" filter="url(#glow-attack)"/>
+            </g>
+
+            <!-- PoT Backdoor Attack (Between User and System Prompt) -->
+            <g transform="translate(190, 375)">
+                <line x1="-30" y1="-30" x2="-30" y2="30" stroke="#ef4444" stroke-width="2.5" marker-start="url(#arrow-attack-rev)" marker-end="url(#arrow-attack)" filter="url(#glow-attack)"/>
+                <use href="#icon-attack-clean" x="-10" y="-10"/>
+                <rect x="10" y="-20" width="110" height="40" fill="#0b1224" rx="6" opacity="0.8"/>
+                <text x="20" y="-5" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" filter="url(#drop-shadow)">PoT Backdoor</text>
+                <text x="20" y="15" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" filter="url(#drop-shadow)">Attack</text>
+            </g>
+
+            <!-- Memory Poisoning Attack (Attacks return Observation line) -->
+            <g transform="translate(800, 700)">
+                <text x="0" y="-10" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Memory</text>
+                <text x="0" y="5" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Poisoning</text>
+                <text x="0" y="20" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Attack</text>
+                <use href="#icon-attack-clean" x="-50" y="0"/>
+                <line x1="-30" y1="20" x2="-80" y2="20" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-attack)" filter="url(#glow-attack)"/>
+            </g>
+
+            <!-- Indirect Prompt Injection (Attacks the Observation box) -->
+            <g transform="translate(880, 560)">
+                <text x="0" y="-15" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Indirect</text>
+                <text x="0" y="0" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Prompt</text>
+                <text x="0" y="15" font-family="Inter" font-size="13" font-weight="700" fill="#ef4444" text-anchor="middle" filter="url(#drop-shadow)">Injection</text>
+                <use href="#icon-attack-clean" x="-10" y="25"/>
+                <line x1="10" y1="35" x2="80" y2="35" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-attack)" filter="url(#glow-attack)"/>
+            </g>
+
+
+            <!-- 5. NODES / COMPONENTS -->
+
+            <!-- Predefined System Prompt -->
+            <g transform="translate(70, 140)" filter="url(#drop-shadow)">
+                <rect width="180" height="90" rx="16" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                <path d="M 25 30 C 25 20, 60 20, 60 30 C 60 40, 25 40, 25 30 Z" fill="none" stroke="#38bdf8" stroke-width="2"/>
+                <rect x="25" y="45" width="35" height="25" rx="4" fill="none" stroke="#facc15" stroke-width="2"/>
+                <circle cx="35" cy="55" r="3" fill="#facc15"/>
+                <circle cx="50" cy="55" r="3" fill="#facc15"/>
+                <text x="80" y="35" font-family="Inter" font-size="15" font-weight="600" fill="#f8fafc">Predefined</text>
+                <text x="80" y="55" font-family="Inter" font-size="15" font-weight="600" fill="#f8fafc">System</text>
+                <text x="80" y="75" font-family="Inter" font-size="15" font-weight="600" fill="#f8fafc">Prompt</text>
+            </g>
+
+            <!-- User -->
+            <g transform="translate(70, 510)" filter="url(#drop-shadow)">
+                <rect width="180" height="90" rx="16" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="45" cy="35" r="12" fill="none" stroke="#38bdf8" stroke-width="2"/>
+                <path d="M 25 65 C 25 50, 65 50, 65 65" fill="none" stroke="#38bdf8" stroke-width="2"/>
+                <rect x="30" y="50" width="30" height="20" rx="2" fill="#0f172a" stroke="#facc15" stroke-width="1.5"/>
+                <line x1="25" y1="70" x2="65" y2="70" stroke="#facc15" stroke-width="2"/>
+                <!-- Green checkmark on user -->
+                <circle cx="60" cy="25" r="8" fill="#22c55e"/>
+                <path d="M 56 25 L 59 28 L 64 22" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+                <text x="85" y="55" font-family="Inter" font-size="20" font-weight="700" fill="#f8fafc">User</text>
+            </g>
+
+            <!-- LLM Brain -->
+            <g transform="translate(360, 130)" filter="url(#drop-shadow)">
+                <circle cx="70" cy="70" r="70" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="3" filter="url(#glow-cyan)"/>
+                <path d="M 55 40 C 35 40, 35 70, 55 100 C 75 100, 105 85, 105 60 C 105 35, 75 40, 55 40 Z" fill="none" stroke="#38bdf8" stroke-width="2"/>
+                <circle cx="80" cy="60" r="8" fill="#c084fc" filter="url(#glow-cyan)"/>
+                <line x1="80" y1="68" x2="70" y2="80" stroke="#38bdf8" stroke-width="2"/>
+                <circle cx="70" cy="80" r="4" fill="#38bdf8"/>
+                <line x1="80" y1="52" x2="60" y2="50" stroke="#38bdf8" stroke-width="2"/>
+                <circle cx="60" cy="50" r="4" fill="#38bdf8"/>
+                <text x="70" y="64" font-family="Inter" font-size="12" font-weight="700" fill="#f8fafc" text-anchor="middle">AI</text>
+                <text x="70" y="165" font-family="Inter" font-size="22" font-weight="700" fill="#f8fafc" text-anchor="middle">LLM</text>
+            </g>
+
+            <!-- Memory Container -->
+            <g transform="translate(280, 490)">
+                <rect width="380" height="160" rx="20" fill="#1e293b" stroke="#f43f5e" stroke-width="2" stroke-dasharray="10 5" filter="url(#drop-shadow)"/>
+                
+                <!-- Long-term Memory -->
+                <g transform="translate(20, 30)">
+                    <rect x="0" y="0" width="60" height="16" rx="4" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+                    <rect x="0" y="20" width="60" height="16" rx="4" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+                    <rect x="0" y="40" width="60" height="16" rx="4" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+                    <circle cx="10" cy="8" r="2" fill="#38bdf8"/><circle cx="20" cy="8" r="2" fill="#38bdf8"/>
+                    <circle cx="10" cy="28" r="2" fill="#38bdf8"/><circle cx="20" cy="28" r="2" fill="#38bdf8"/>
+                    <ellipse cx="60" cy="50" rx="25" ry="10" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+                    <path d="M 35 50 L 35 80 C 35 90, 85 90, 85 80 L 85 50" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+                    <path d="M 35 65 C 35 75, 85 75, 85 65" fill="none" stroke="#ca8a04" stroke-width="2"/>
+                    <text x="45" y="110" font-family="Inter" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Long-term</text>
+                    <text x="45" y="130" font-family="Inter" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Memory</text>
+                </g>
+
+                <!-- Short-term Memory -->
+                <g transform="translate(220, 30)">
+                    <rect x="0" y="0" width="90" height="24" rx="4" fill="#22c55e" stroke="#166534" stroke-width="2"/>
+                    <rect x="10" y="6" width="12" height="12" fill="#0f172a"/>
+                    <rect x="26" y="6" width="12" height="12" fill="#0f172a"/>
+                    <rect x="42" y="6" width="12" height="12" fill="#0f172a"/>
+                    <rect x="58" y="6" width="12" height="12" fill="#0f172a"/>
+                    
+                    <rect x="0" y="34" width="90" height="24" rx="4" fill="#22c55e" stroke="#166534" stroke-width="2"/>
+                    <rect x="10" y="40" width="12" height="12" fill="#0f172a"/>
+                    <rect x="26" y="40" width="12" height="12" fill="#0f172a"/>
+                    <rect x="42" y="40" width="12" height="12" fill="#0f172a"/>
+                    <rect x="58" y="40" width="12" height="12" fill="#0f172a"/>
+                    
+                    <text x="45" y="110" font-family="Inter" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Short-term</text>
+                    <text x="45" y="130" font-family="Inter" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Memory</text>
+                </g>
+            </g>
+
+            <!-- Planning -->
+            <g transform="translate(700, 140)" filter="url(#drop-shadow)">
+                <rect width="160" height="100" rx="16" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                <rect x="50" y="15" width="60" height="70" rx="4" fill="#0f172a" stroke="#cbd5f5" stroke-width="2"/>
+                <path d="M 60 15 L 60 10 C 60 8, 100 8, 100 10 L 100 15" fill="none" stroke="#facc15" stroke-width="2"/>
+                <line x1="60" y1="35" x2="70" y2="35" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/> <line x1="78" y1="35" x2="95" y2="35" stroke="#64748b" stroke-width="2"/>
+                <line x1="60" y1="50" x2="70" y2="50" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/> <line x1="78" y1="50" x2="95" y2="50" stroke="#64748b" stroke-width="2"/>
+                <line x1="60" y1="65" x2="70" y2="65" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/> <line x1="78" y1="65" x2="95" y2="65" stroke="#64748b" stroke-width="2"/>
+                <path d="M 105 30 L 75 70 L 70 80 L 80 75 L 110 35 Z" fill="#f97316" stroke="#ea580c" stroke-width="1.5"/>
+                <text x="80" y="125" font-family="Inter" font-size="18" font-weight="700" fill="#f8fafc" text-anchor="middle">Planning</text>
+            </g>
+
+            <!-- Action -->
+            <g transform="translate(700, 540)" filter="url(#drop-shadow)">
+                <rect width="160" height="60" rx="30" fill="#3b0764" stroke="#d946ef" stroke-width="2.5"/>
+                <path d="M 125 35 L 135 45 L 130 45 L 130 55 L 125 55 L 125 45 L 120 45 Z" fill="#0b1224" stroke="#f8fafc" stroke-width="1.5" transform="rotate(-30 125 45)"/>
+                <text x="80" y="37" font-family="Inter" font-size="20" font-weight="800" fill="#f8fafc" text-anchor="middle">ACTION</text>
+                <text x="80" y="90" font-family="Inter" font-size="18" font-weight="700" fill="#f8fafc" text-anchor="middle">Action</text>
+            </g>
+
+            <!-- Tools -->
+            <g transform="translate(980, 180)" filter="url(#drop-shadow)">
+                <rect width="180" height="150" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                <circle cx="50" cy="45" r="18" fill="#3b82f6"/>
+                <path d="M 45 50 L 55 40 L 58 43 L 48 53 Z" fill="#f8fafc"/>
+                <path d="M 42 47 L 52 37 L 55 40 L 45 50 Z" fill="#ef4444"/>
+                <path d="M 110 30 C 130 30, 140 40, 140 50 C 140 60, 125 65, 120 70 L 115 75 L 115 65 C 105 65, 95 55, 95 45 C 95 35, 100 30, 110 30 Z" fill="#22c55e"/>
+                <path d="M 125 90 C 125 80, 140 80, 140 90 C 140 100, 125 115, 125 115 C 125 115, 110 100, 110 90 C 110 80, 125 80, 125 90 Z" fill="#facc15"/>
+                <circle cx="125" cy="90" r="5" fill="#ef4444"/>
+                <circle cx="50" cy="100" r="15" fill="#facc15"/>
+                <path d="M 45 95 Q 50 105 55 95" fill="none" stroke="#ca8a04" stroke-width="2"/>
+                <text x="90" y="175" font-family="Inter" font-size="18" font-weight="700" fill="#f8fafc" text-anchor="middle">Tools</text>
+            </g>
+
+            <!-- Observation -->
+            <g transform="translate(980, 520)" filter="url(#drop-shadow)">
+                <rect width="180" height="100" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="30" y1="30" x2="60" y2="30" stroke="#cbd5f5" stroke-width="3" stroke-linecap="round"/>
+                <line x1="30" y1="45" x2="80" y2="45" stroke="#cbd5f5" stroke-width="3" stroke-linecap="round"/>
+                <line x1="30" y1="60" x2="50" y2="60" stroke="#cbd5f5" stroke-width="3" stroke-linecap="round"/>
+                <rect x="40" y="70" width="10" height="20" fill="#3b82f6"/>
+                <rect x="55" y="60" width="10" height="30" fill="#facc15"/>
+                <rect x="70" y="50" width="10" height="40" fill="#22c55e"/>
+                <circle cx="110" cy="45" r="22" fill="none" stroke="#38bdf8" stroke-width="5"/>
+                <circle cx="110" cy="45" r="8" fill="#38bdf8"/>
+                <line x1="125" y1="60" x2="145" y2="80" stroke="#f97316" stroke-width="10" stroke-linecap="round"/>
+                <text x="90" y="125" font-family="Inter" font-size="18" font-weight="700" fill="#f8fafc" text-anchor="middle">Observation</text>
+            </g>
+
+        </svg>
