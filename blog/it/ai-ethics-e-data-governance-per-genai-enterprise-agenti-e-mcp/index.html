@@ -1404,7 +1404,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">14 marzo 2026 • 46 min</span>
+            <span class="post-hero__author-meta">14 marzo 2026 • 44 min</span>
           </div>
         </div>
       </section>
@@ -1572,61 +1572,29 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#accountability-lungo-la-catena-developer-data-team-management-fornitori">
+          <a class="post-toc__link" href="#fuori-il-colpevole">
             <span class="post-toc__number">6.4</span>
-            <span class="post-toc__text">Accountability lungo la catena (developer → data team → management → fornitori)</span>
+            <span class="post-toc__text">Fuori il colpevole</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#bias-e-fairness-in-advertising-automation-e-adtech">
+          <a class="post-toc__link" href="#conclusione">
             <span class="post-toc__number">7</span>
-            <span class="post-toc__text">Bias e fairness in advertising automation e adtech</span>
+            <span class="post-toc__text">Conclusione</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#evidenze-empiriche-e-casi-documentati">
+          <a class="post-toc__link" href="#i-tre-angoli-narrativi-che-larticolo-mette-davvero-in-luce">
             <span class="post-toc__number">7.1</span>
-            <span class="post-toc__text">Evidenze empiriche e casi documentati</span>
+            <span class="post-toc__text">I tre angoli narrativi che l’articolo mette davvero in luce</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#distinzione-utile-bias-nei-dati-vs-bias-osservato-vs-bias-nellottimizzazione">
+          <a class="post-toc__link" href="#le-tre-domande-che-secondo-me-restano-aperte">
             <span class="post-toc__number">7.2</span>
-            <span class="post-toc__text">Distinzione utile (bias nei dati vs bias osservato vs bias nell’ottimizzazione)</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#metriche-e-governance-pratica-per-advertising-automation">
-            <span class="post-toc__number">7.3</span>
-            <span class="post-toc__text">Metriche e governance pratica per advertising automation</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#governance-come-vantaggio-competitivo-e-angoli-narrativi-per-il-blog">
-            <span class="post-toc__number">8</span>
-            <span class="post-toc__text">Governance come vantaggio competitivo e angoli narrativi per il blog</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#tre-possibili-angoli-narrativi-per-larticolo">
-            <span class="post-toc__number">8.1</span>
-            <span class="post-toc__text">Tre possibili angoli narrativi per l’articolo</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#idee-controintuitive-emerse-dalla-ricerca">
-            <span class="post-toc__number">8.2</span>
-            <span class="post-toc__text">Idee controintuitive emerse dalla ricerca</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#domande-aperte-su-cui-vale-prendere-posizione">
-            <span class="post-toc__number">8.3</span>
-            <span class="post-toc__text">Domande aperte su cui vale prendere posizione</span>
+            <span class="post-toc__text">Le tre domande che secondo me restano aperte</span>
           </a>
           
         </li>
@@ -2137,62 +2105,34 @@ Allo stesso tempo, però, loggare tutto indiscriminatamente può creare un nuovo
 <ul>
 <li><strong>Tracciabilità</strong>: significa poter ricostruire quali tool sono stati invocati, con quali scope, su quali dati e con quale esito. Qui il collegamento con MCP viene da se. Infatti la <a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">guida di sicurezza</a> insiste sul fatto che anti-pattern come il token passthrough peggiorano proprio audit e chiarezza delle responsabilità.</li>
 <li><strong>Documentazione</strong>: bisogna prestare molta attenzione alla documentazione (come ben sapranno i programmatori che mi stanno leggendo). Quello che serve è una specie di <span class="inline-note">bill of materials<button type="button" class="inline-note__trigger" aria-label="Spiega bill of materials"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Bill of materials</strong> qui significa un inventario chiaro dei componenti del sistema: quali modelli usi, quali server MCP, quali scope, quali dati, quali ambienti, quali fallback e quali controlli di sicurezza.</span></span> dell’agente. In altre parole: una mappa con un po&#39; di tutto (componenti, permessi, dati e dipendenze, ecc).</li>
-<li><strong>Human oversight</strong>: non vuol dire “tenere un umano da qualche parte nel processo”, ma decidere in quali punti il sistema deve fermarsi e chiedere conferma prima di compiere azioni ad alto impatto, come invii esterni, modifiche irreversibili o decisioni che incidono su persone e processi.</li>
+<li><strong>Human oversight</strong>: significa semplicemente decidere in quali punti il sistema deve fermarsi e chiedere conferma prima di compiere azioni ad alto impatto, come invii di messaggi esterni, o modifiche irreversibili o magari decisioni che incidono su persone e/o altri processi.</li>
 </ul>
-<h3 id="accountability-lungo-la-catena-developer-data-team-management-fornitori">Accountability lungo la catena (developer → data team → management → fornitori)</h3>
-<p>Qui entra in gioco un altro termine che vale la pena esplicitare: <span class="inline-note">accountability<button type="button" class="inline-note__trigger" aria-label="Spiega accountability"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Accountability</strong> significa poter attribuire in modo chiaro responsabilità, decisioni e controlli. In pratica: sapere chi ha deciso cosa, con quali informazioni, con quali permessi e con quali conseguenze.</span></span>. Nei sistemi agentici la responsabilità non è concentrata in un solo punto, ma distribuita lungo la catena.</p>
+<h3 id="fuori-il-colpevole">Fuori il colpevole</h3>
+<p>Siamo arrivati quasi alla fine, ovvero al discorso della responsabilità o più in generale l&#39;<span class="inline-note">accountability<button type="button" class="inline-note__trigger" aria-label="Spiega accountability"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Accountability</strong> significa poter attribuire in modo chiaro responsabilità, decisioni e controlli. In pratica: sapere chi ha deciso cosa, con quali informazioni, con quali permessi e con quali conseguenze.</span></span>. Nei sistemi agentici la responsabilità è diluita lungo tutta la catena.</p>
 <ul>
 <li><strong>Team tecnici</strong>: definiscono tool, scope, logging, ambienti e feature; in pratica decidono gran parte dei vincoli tecnici che influenzano sicurezza e retention.</li>
 <li><strong>Product, innovation e management</strong>: decidono dove usare l’agente, quanto renderlo autonomo e quanto impatto affidargli.</li>
-<li><strong>Fornitori e terze parti</strong>: aggiungono superfici di rischio, soprattutto quando entrano in gioco componenti MCP, API esterne, tool remoti o supply chain vulnerabile.</li>
+<li><strong>Fornitori e terze parti</strong>: aggiungono superfici di rischio, soprattutto quando entrano in gioco componenti MCP, API esterne, tool remoti o più in generale una supply chain vulnerabile.</li>
 </ul>
-<p>Il punto più utile, dal lato operativo e anche legale, è questo: <strong>l’audit trail non serve solo ai tecnici, serve anche a dimostrare che il sistema era governato davvero</strong>. Se dopo un incidente non puoi mostrare quale agente ha fatto cosa, con quali permessi e in quale contesto, non hai una governance verificabile. Hai solo una fiducia implicita nel fatto che tutto sia andato bene.</p>
-<h2 id="bias-e-fairness-in-advertising-automation-e-adtech">Bias e fairness in advertising automation e adtech</h2>
-<p>Qui la ricerca evidenzia un punto che spesso sorprende i team: <strong>anche con targeting “neutrale”, la delivery può diventare non neutrale</strong> perché ottimizza obiettivi economici (costo, conversioni) e usa segnali correlati a caratteristiche protette.</p>
-<h3 id="evidenze-empiriche-e-casi-documentati">Evidenze empiriche e casi documentati</h3>
-<ul>
-<li><strong>Discriminazione “through optimization”</strong>: Ali et al. (2019) mostrano che la delivery su Facebook può essere “skewed” lungo linee di genere e razza per annunci di lavoro e housing <em>anche quando i parametri di targeting sono inclusivi</em>, a causa di dinamiche di ottimizzazione e predizioni di “relevance”. citeturn33search2turn33search10  </li>
-<li><strong>Bias per crowding‑out</strong>: Lambrecht &amp; Tucker (2019) trovano che un algoritmo che ottimizza cost‑effectiveness può consegnare annunci STEM “gender‑neutral” in modo apparentemente discriminatorio perché alcune audience (es. donne più giovani) sono più costose e quindi vengono “crowded out”. citeturn33search5turn33search9  </li>
-<li><strong>Enforcement e regolazione</strong>: il DOJ (USA) nel 2022 ha ottenuto un settlement con Meta su pratiche di advertising housing: la descrizione del caso include l’uso di sistemi che trovano utenti “simili” basandosi su caratteristiche protette e impegni a cambiare sistemi di delivery per affrontare disparità. citeturn33search8turn33search0  </li>
-<li><strong>Guida istituzionale</strong>: HUD ha pubblicato guidance su applicazione del Fair Housing Act alla pubblicità su piattaforme digitali, includendo l’uso di sistemi automatizzati e AI per targeting/delivery. citeturn33search4</li>
-</ul>
-<h3 id="distinzione-utile-bias-nei-dati-vs-bias-osservato-vs-bias-nellottimizzazione">Distinzione utile (bias nei dati vs bias osservato vs bias nell’ottimizzazione)</h3>
-<p>In adtech conviene separare tre livelli:</p>
-<ul>
-<li><strong>Bias nei dati di training</strong> (es. modelli che apprendono correlazioni storiche).</li>
-<li><strong>Bias nei dati osservati dal sistema</strong> (feedback loop: chi vede l’annuncio genera conversioni che rinforzano la delivery).</li>
-<li><strong>Bias nella funzione obiettivo</strong> (ottimizzazione di CPA/ROAS che implicitamente privilegia audience meno costose o più “predette” convertire).</li>
-</ul>
-<p>Le evidenze sopra (Ali et al.; Lambrecht &amp; Tucker) sostengono soprattutto il terzo punto: <strong>il bias può emergere come proprietà dell’ottimizzazione</strong>, non come “intenzione” dell’inserzionista. citeturn33search2turn33search5</p>
-<h3 id="metriche-e-governance-pratica-per-advertising-automation">Metriche e governance pratica per advertising automation</h3>
-<p>Non esiste una metrica unica, ma in pratica serve misurare:</p>
-<ul>
-<li><em>delivery skew</em> (distribuzione per gruppi) e <em>outcome skew</em> (conversioni/allocazione budget),</li>
-<li>drift e feedback loop (cambiamenti nel tempo),</li>
-<li>vincoli di fairness come requirement di prodotto (non come afterthought).</li>
-</ul>
-<p><strong>Governance operativa</strong>: fissare “guardrail di equity” come constraint di ottimizzazione, introdurre audit periodici (anche con sampling), e documentare razionalmente tradeoff (performance vs fairness) invece di negarli.</p>
-<h2 id="governance-come-vantaggio-competitivo-e-angoli-narrativi-per-il-blog">Governance come vantaggio competitivo e angoli narrativi per il blog</h2>
-<p>Le fonti mostrano un trend: i vendor stanno spostando la conversazione da “fidati” a “controlla”: controlli admin, retention configurabile, audit log, data residency, ZDR condizionale. Questo è già posizionamento competitivo:</p>
-<ul>
-<li>OpenAI enfatizza ownership e controllo (no training by default, retention controls, SOC2, encryption). citeturn18view2turn1view0  </li>
-<li>Google Workspace with Gemini mette al centro controlli enterprise (Vault, audit logs, retention per admin, niente human review, no training fuori dominio). citeturn13view0turn11search14  </li>
-<li>Anthropic introduce controlli come ZDR e data residency per inference (anche se limitata a US al momento) e documenta retention commerciale con eccezioni chiare. citeturn10view0turn16view0turn9view0  </li>
-<li>Cursor, lato IDE agentico, si muove verso “hooks” e integrazione con tooling di sicurezza e compliance per governance nel loop dell’agente. citeturn17search19</li>
-</ul>
-<p>Questo supporta una tesi forte per il blog: <strong>la governance non è il freno dell’adozione; è il motivo per cui l’adozione può essere scalata senza paura</strong>. È coerente con NIST AI RMF (gestione rischio come parte del valore) citeturn23search0turn23search4 e con best practice di governance in framework enterprise (es. Microsoft Cloud Adoption Framework che esplicita integrazione tra AI risk, cybersecurity e privacy governance). citeturn33search3turn33search7</p>
-<h3 id="tre-possibili-angoli-narrativi-per-larticolo">Tre possibili angoli narrativi per l’articolo</h3>
-<p><strong>Angolo “Il mito del training: il rischio vero è la toolchain”</strong><br>Messaggio: molte aziende litigano su opt‑out e training, ma gli incidenti più pericolosi arrivano dalla <em>tool surface</em>: MCP server non fidati, OAuth confusion, SSRF, RCE in componenti agentici. Supporto: MCP Security Best Practices + CVE reali (mcp-remote, MCP Inspector, Cursor) + benchmark IPI. citeturn30view0turn31search6turn31search15turn32search0<br>Posizione: l’articolo può sostenere che la governance deve spostarsi “a valle” del modello, verso tool permissions e data egress.</p>
-<p><strong>Angolo “Dove finiscono davvero i dati: una mappa per team tecnici”</strong><br>Messaggio: i dati finiscono in log di abuso, conversation state, cache, sandbox, storage del tool, audit trail interno, e nelle policy di terzi. Supporto: OpenAI “your data” (abuse monitoring vs application state; nota su MCP server terzi; data residency con limiti), Google ZDR (grounding obbliga 30 giorni), Anthropic retention (30 giorni + eccezioni). citeturn1view0turn14view1turn9view0<br>Posizione: offrire una checklist non come elenco, ma come “data plane diagram” che ogni team dovrebbe disegnare prima di andare live.</p>
-<p><strong>Angolo “Governance come acceleratore: trasformare compliance in self‑service”</strong><br>Messaggio: enterprise adoption accelera quando dai ai team confini chiari (quali strumenti sì/no, quali modelli sì/no, quali dati dove), e automatizzi controlli (policy enforcement, hooks, audit). Supporto: Workspace privacy hub (controlli, audit), OpenAI enterprise privacy (fine‑grained access, retention controls), Cursor hooks, Microsoft guidance per governance e agent policies. citeturn13view0turn18view2turn17search19turn33search7<br>Posizione: sostenere che “compliance reattiva” crea shadow AI; “governance proattiva” crea adozione tracciabile.</p>
-<h3 id="idee-controintuitive-emerse-dalla-ricerca">Idee controintuitive emerse dalla ricerca</h3>
-<p>La prima: <strong>ZDR non è “un interruttore”, è un insieme di compatibilità per feature</strong>. Se attivi grounding Search/Maps, alcune piattaforme dichiarano storage 30 giorni non disattivabile; se usi code execution/sandbox, spesso non è ZDR-eligible. citeturn14view1turn10view0turn1view0<br>La seconda: <strong>data residency spesso non copre “system data” o flussi causati da terzi</strong> (es. tool esterni, MCP server, endpoint globali). citeturn1view0turn14view3turn30view0<br>La terza: <strong>il rischio di discriminazione in advertising può emergere “per ottimizzazione”, non per targeting</strong>. citeturn33search2turn33search5</p>
-<h3 id="domande-aperte-su-cui-vale-prendere-posizione">Domande aperte su cui vale prendere posizione</h3>
-<ul>
-<li>Se prompt injection è (parzialmente) “architetturale”, la strategia giusta è: <strong>accettare rischio residuo e ridurre privilegi</strong>, non cercare una “patch finale”? (Microsoft e la letteratura su IPI indicano che la mitigazione è multi‑layer). citeturn32search3turn32search0turn30view0  </li>
-<li>Nel 2026, con AI Act che matura verso 2027, come definire in modo non burocratico “provider” e “deployer” quando l’azienda compone LLM + orchestratore + MCP server + SaaS? (La Commissione stessa segnala la necessità di linee guida su responsabilità lungo la value chain). citeturn22view0turn21search9  </li>
-<li>Qual è il <em>minimo set</em> di evidenze (log, policy, test) che rende un agente “difendibile” davanti a audit e incident response, senza costruire un data lake di conversazioni sensibili? citeturn30view0turn31search8</li>
-</ul>
+<p>Il punto più utile, dal lato operativo e anche legale, è questo: <strong>l’audit trail non serve solo ai tecnici, serve anche a dimostrare che il sistema era governato/gestito bene</strong>.</p>
+<h2 id="conclusione">Conclusione</h2>
+<p>Se devo tirare le fila di tutto l&#39;articolo, il punto che mi sembra più importante è questo: <strong>la governance non deve essere visto come un problema dell’adozione dell’AI, ma la condizione necessaria e quella che rende la rende sostenibile</strong>. Finché un modello resta una chat isolata, molte promesse commerciali possono ancora sembrare sufficienti. Quando però il modello entra in workflow in produzione, usa tool, tocca dei dati interni, legge repository, interroga database o compie azioni verso l’esterno, il focus DEVE essere sui controlli che noi abbiamo in queste pipeline.</p>
+<p>Ed è qui che entra in gioco sia la data governance che poi l&#39;AI governance. Questo vuol dire decidere prima quali dati possono entrare, quali tool possono essere invocati, con quali scope, con quali approvazioni, con quali log, con quale separazione tra ambienti e con quale capacità di fermare il sistema quando qualcosa non torna. In altre parole: la vera maturità non è usare l’agente più autonomo possibile, ma <strong>costruire un perimetro abbastanza chiaro da rendere quell’autonomia affidabile</strong>. Mi viene in mente ad bambino che stiamo educando. Penso che nessuno di voi lascerebbe ad un bambino di 8 anni la liberà di guidare la propria macchina, ma magari per compiti meno pericolosi (o forse meglio, meno critici) ci possiamo fidare. Il punto è solo definire il perimetro di fiducia nei confronti degli strumenti.</p>
+<p>Il punto interessante è che questo sta già diventando anche un elemento competitivo. I vendor principali (che ho menzionato a inizio articolo) non vendono più solo “modelli potenti”, ma soprattutto offrono <strong>controlli</strong>: alcuni esempi sono la retention configurabile, audit log, policy admin, data residency, ZDR dove possibile, integrazione con sicurezza e compliance. Segno che il mercato enterprise, molto pragmaticamente, ha già capito una cosa: senza governance cresce la paura, con governance cresce l’adozione.</p>
+<h3 id="i-tre-angoli-narrativi-che-larticolo-mette-davvero-in-luce">I tre angoli narrativi che l’articolo mette davvero in luce</h3>
+<p><strong>1. Il mito del training: il rischio vero è la toolchain.</strong><br>Una parte enorme della discussione pubblica continua a ruotare intorno a opt-out, training e model improvement. Sono temi importanti, ma non esauriscono il problema. Quando iniziano tool call, MCP, OAuth, storage del tool e integrazioni con sistemi terzi, il rischio si sposta più a valle: non è solo “se il modello impara dai miei dati”, ma <strong>che cosa l’agente può fare con i miei privilegi e dove quei dati possono finire davvero</strong>.</p>
+<p><strong>2. Dove finiscono davvero i dati: serve una mappa, non una promessa.</strong><br>Una delle cose che secondo me emerge con più forza è che i dati non finiscono in un solo posto. Passano dal modello, ma anche da log tecnici, stato applicativo, cache, sandbox, audit trail, storage dei tool e policy di terze parti. Per questo una policy generica non basta. Ogni team che mette in produzione un workflow AI dovrebbe sapere disegnare il proprio percorso del dato end-to-end, altrimenti parla di rischio in modo troppo astratto.</p>
+<p><strong>3. Governance come acceleratore, non come burocrazia.</strong><br>Il vero vantaggio competitivo non sta nel lasciare tutto aperto, ma nel fare in modo che i team possano muoversi dentro confini chiari. Se dici in anticipo quali modelli si usano, quali tool sono ammessi, quali dati non devono entrare, quando serve approvazione umana e quali evidenze vanno conservate, riduci attrito, riduci shadow AI e rendi l’adozione molto più veloce. La compliance reattiva blocca. La governance progettata bene abilita.</p>
+<h3 id="le-tre-domande-che-secondo-me-restano-aperte">Le tre domande che secondo me restano aperte</h3>
+<ol>
+<li><p><strong>Se la prompt injection è in parte un problema architetturale, ha ancora senso inseguire la “patch finale”?</strong><br>Tutto quello che abbiamo visto porta nella direzione opposta: non esiste una singola difesa risolutiva. La strategia più seria sembra essere accettare un rischio residuo e lavorare su più strati insieme: privilegi minimi, confini chiari, approvazioni, validazione degli output e riduzione dell’egress.</p>
+</li>
+<li><p><strong>Quando un’azienda compone modello, orchestratore, MCP server e SaaS esterni, chi è davvero responsabile di cosa?</strong><br>Dal punto di vista teorico è facile parlare di provider, deployer e terze parti. Dal punto di vista operativo molto meno. Più la catena si frammenta, più diventa necessario documentare responsabilità, dipendenze e passaggi del dato in modo molto più preciso di quanto molte organizzazioni facciano oggi.</p>
+</li>
+<li><p><strong>Qual è il minimo set di controlli che rende un agente difendibile senza trasformarlo in un mostro ingestibile?</strong><br>Questa, secondo me, è la domanda più pratica di tutte. Non serve raccogliere ogni conversazione o costruire un lago infinito di log sensibili. Serve capire qual è il punto di equilibrio: abbastanza evidenze da poter fare audit, incident response e accountability, ma non così tanta retention da creare un nuovo problema di rischio e governance.</p>
+</li>
+</ol>
+<p>Se dovessi sintetizzare tutto in una frase sola, direi questa: <strong>la differenza tra un agente “impressionante” e un agente davvero adottabile, in azienda, la fa quasi sempre la qualità della governance che gli costruisci intorno</strong>.</p>
         </div>
       </section>
     </article>
