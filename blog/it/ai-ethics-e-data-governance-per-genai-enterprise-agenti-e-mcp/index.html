@@ -1404,7 +1404,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">14 marzo 2026 • 44 min</span>
+            <span class="post-hero__author-meta">14 marzo 2026 • 43 min</span>
           </div>
         </div>
       </section>
@@ -1584,21 +1584,7 @@
             <span class="post-toc__number">7</span>
             <span class="post-toc__text">Conclusione</span>
           </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#i-tre-angoli-narrativi-che-larticolo-mette-davvero-in-luce">
-            <span class="post-toc__number">7.1</span>
-            <span class="post-toc__text">I tre angoli narrativi che l’articolo mette davvero in luce</span>
-          </a>
           
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#le-tre-domande-che-secondo-me-restano-aperte">
-            <span class="post-toc__number">7.2</span>
-            <span class="post-toc__text">Le tre domande che secondo me restano aperte</span>
-          </a>
-          
-        </li>
-  </ul>
         </li>
   </ul>
         </div>
@@ -2118,21 +2104,11 @@ Allo stesso tempo, però, loggare tutto indiscriminatamente può creare un nuovo
 <h2 id="conclusione">Conclusione</h2>
 <p>Se devo tirare le fila di tutto l&#39;articolo, il punto che mi sembra più importante è questo: <strong>la governance non deve essere visto come un problema dell’adozione dell’AI, ma la condizione necessaria e quella che rende la rende sostenibile</strong>. Finché un modello resta una chat isolata, molte promesse commerciali possono ancora sembrare sufficienti. Quando però il modello entra in workflow in produzione, usa tool, tocca dei dati interni, legge repository, interroga database o compie azioni verso l’esterno, il focus DEVE essere sui controlli che noi abbiamo in queste pipeline.</p>
 <p>Ed è qui che entra in gioco sia la data governance che poi l&#39;AI governance. Questo vuol dire decidere prima quali dati possono entrare, quali tool possono essere invocati, con quali scope, con quali approvazioni, con quali log, con quale separazione tra ambienti e con quale capacità di fermare il sistema quando qualcosa non torna. In altre parole: la vera maturità non è usare l’agente più autonomo possibile, ma <strong>costruire un perimetro abbastanza chiaro da rendere quell’autonomia affidabile</strong>. Mi viene in mente ad bambino che stiamo educando. Penso che nessuno di voi lascerebbe ad un bambino di 8 anni la liberà di guidare la propria macchina, ma magari per compiti meno pericolosi (o forse meglio, meno critici) ci possiamo fidare. Il punto è solo definire il perimetro di fiducia nei confronti degli strumenti.</p>
-<p>Il punto interessante è che questo sta già diventando anche un elemento competitivo. I vendor principali (che ho menzionato a inizio articolo) non vendono più solo “modelli potenti”, ma soprattutto offrono <strong>controlli</strong>: alcuni esempi sono la retention configurabile, audit log, policy admin, data residency, ZDR dove possibile, integrazione con sicurezza e compliance. Segno che il mercato enterprise, molto pragmaticamente, ha già capito una cosa: senza governance cresce la paura, con governance cresce l’adozione.</p>
-<h3 id="i-tre-angoli-narrativi-che-larticolo-mette-davvero-in-luce">I tre angoli narrativi che l’articolo mette davvero in luce</h3>
-<p><strong>1. Il mito del training: il rischio vero è la toolchain.</strong><br>Una parte enorme della discussione pubblica continua a ruotare intorno a opt-out, training e model improvement. Sono temi importanti, ma non esauriscono il problema. Quando iniziano tool call, MCP, OAuth, storage del tool e integrazioni con sistemi terzi, il rischio si sposta più a valle: non è solo “se il modello impara dai miei dati”, ma <strong>che cosa l’agente può fare con i miei privilegi e dove quei dati possono finire davvero</strong>.</p>
-<p><strong>2. Dove finiscono davvero i dati: serve una mappa, non una promessa.</strong><br>Una delle cose che secondo me emerge con più forza è che i dati non finiscono in un solo posto. Passano dal modello, ma anche da log tecnici, stato applicativo, cache, sandbox, audit trail, storage dei tool e policy di terze parti. Per questo una policy generica non basta. Ogni team che mette in produzione un workflow AI dovrebbe sapere disegnare il proprio percorso del dato end-to-end, altrimenti parla di rischio in modo troppo astratto.</p>
-<p><strong>3. Governance come acceleratore, non come burocrazia.</strong><br>Il vero vantaggio competitivo non sta nel lasciare tutto aperto, ma nel fare in modo che i team possano muoversi dentro confini chiari. Se dici in anticipo quali modelli si usano, quali tool sono ammessi, quali dati non devono entrare, quando serve approvazione umana e quali evidenze vanno conservate, riduci attrito, riduci shadow AI e rendi l’adozione molto più veloce. La compliance reattiva blocca. La governance progettata bene abilita.</p>
-<h3 id="le-tre-domande-che-secondo-me-restano-aperte">Le tre domande che secondo me restano aperte</h3>
-<ol>
-<li><p><strong>Se la prompt injection è in parte un problema architetturale, ha ancora senso inseguire la “patch finale”?</strong><br>Tutto quello che abbiamo visto porta nella direzione opposta: non esiste una singola difesa risolutiva. La strategia più seria sembra essere accettare un rischio residuo e lavorare su più strati insieme: privilegi minimi, confini chiari, approvazioni, validazione degli output e riduzione dell’egress.</p>
-</li>
-<li><p><strong>Quando un’azienda compone modello, orchestratore, MCP server e SaaS esterni, chi è davvero responsabile di cosa?</strong><br>Dal punto di vista teorico è facile parlare di provider, deployer e terze parti. Dal punto di vista operativo molto meno. Più la catena si frammenta, più diventa necessario documentare responsabilità, dipendenze e passaggi del dato in modo molto più preciso di quanto molte organizzazioni facciano oggi.</p>
-</li>
-<li><p><strong>Qual è il minimo set di controlli che rende un agente difendibile senza trasformarlo in un mostro ingestibile?</strong><br>Questa, secondo me, è la domanda più pratica di tutte. Non serve raccogliere ogni conversazione o costruire un lago infinito di log sensibili. Serve capire qual è il punto di equilibrio: abbastanza evidenze da poter fare audit, incident response e accountability, ma non così tanta retention da creare un nuovo problema di rischio e governance.</p>
-</li>
-</ol>
-<p>Se dovessi sintetizzare tutto in una frase sola, direi questa: <strong>la differenza tra un agente “impressionante” e un agente davvero adottabile, in azienda, la fa quasi sempre la qualità della governance che gli costruisci intorno</strong>.</p>
+<p>Il punto interessante è che questo sta già diventando anche un elemento competitivo. I vendor principali (che ho menzionato a inizio articolo) non vendono più solo “modelli potenti”, ma soprattutto offrono <strong>controlli</strong>: alcuni esempi sono la retention configurabile, audit log, un controllo sulla data residency, e ZDR quando e dove possibile. Questo è un segno che il mercato enterprise ha già capito una cosa: solo con una buona governance può crescere l’adozione.</p>
+<p>Voglio chiudere questo articolo lasciandoti un paio di domande:</p>
+<p><strong>Quando un’azienda compone modello, orchestratore, MCP server e SaaS esterni, chi è davvero responsabile di cosa?</strong><br>   Dal punto di vista teorico è facile parlare di provider, deployer e terze parti. Dal punto di vista più pratico molto meno. Più la catena si frammenta, più diventa necessario documentare responsabilità, dipendenze e passaggi del dato in modo molto più preciso di quanto molte organizzazioni facciano oggi.</p>
+<p><strong>Qual è il minimo set di controlli che rende un agente difendibile senza trasformarlo in un mostro ingestibile?</strong><br>   Questa, secondo me, è la domanda più pratica di tutte. Non serve raccogliere ogni conversazione o costruire un lago infinito di log sensibili. Serve capire qual è il punto di equilibrio (ed è proprio questo il problema): abbastanza evidenze da poter fare audit, incident response e accountability, ma non così tanta retention da creare un nuovo problema di rischio e governance.</p>
+<p>Se dovessi sintetizzare tutto in una frase sola, direi questa: per avere un agente <em>davvero</em> <strong>adottabile in azienda</strong>, la <strong>qualità della governance</strong> che gli costruisci intorno è <strong>fondamentale</strong>.</p>
         </div>
       </section>
     </article>
