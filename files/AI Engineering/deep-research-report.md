@@ -91,7 +91,7 @@ e in più potresti loggare tu stesso quei dati nel tuo stack: app log, trace, AP
 | **Google Gemini Developer API vs Vertex AI (Cloud)** | [Gemini API](https://ai.google.dev/gemini-api/terms): *Unpaid* può essere usato per miglioramento con human review; *Paid* non usa prompt/risposte per migliorare prodotti e opera sotto DPA. | [“Zero data retention”](https://ai.google.dev/gemini-api/docs/zdr) non copre tutte le feature: caching e stato server-side introducono persistenza; alcune funzioni di grounding hanno regole di conservazione specifiche (30 giorni di data retention). | [Vertex AI](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/vertex-ai-zero-data-retention): caching in-memory 24h (RAM) per performance; grounding Search/Maps conserva 30 giorni e non è disattivabile (salvo alternative enterprise). | [Vertex AI](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/data-residency) ha data residency per dati at-rest nella location selezionata e documentazione dedicata. | La distinzione “developer quickstart” vs produzione è spesso qui: prototipo su Unpaid/AI Studio può violare policy dati interne. |
 | **Cursor (IDE + agent, non provider)** | Con [Privacy Mode/ZDR](https://cursor.com/docs/enterprise/privacy-and-data-governance): code e prompt non sono memorizzati/usati per training dai provider; Cursor dichiara accordi ZDR con provider chiave per Enterprise (OpenAI, Anthropic, Google Vertex, xAI). | Opt‑out “reale” dipende dalla modalità e dal flusso: alcune feature (memories/sync) possono richiedere storage su server Cursor (anche se non training). | [Cursor](https://cursor.com/help/models-and-usage/api-keys) chiarisce due cose cruciali: (1) anche con BYOK le richieste passano dal backend Cursor per prompt building; (2) la ZDR Cursor **non si applica** quando usi la tua API key: vale la policy del provider scelto. | Data residency dipende dall’infrastruttura Cursor e provider; la [security page](https://cursor.com/security) descrive hosting e terze parti (es. AWS, Baseten, Together) e condizioni di retention per “Share Data”. | Cursor integra MCP e [raccomanda cautela](https://cursor.com/docs/mcp): “capire cosa fa un server prima di installarlo”. |
 
-### Differenze API vs consumer vs “stack agentico” (il cambio operativo che conta)
+### API vs consumer vs “stack agentico”
 
 | Aspetto | Consumer UI (chat app) | Business workspace (suite enterprise) | API (build) | Stack agentico (tools/MCP/automazioni) |
 |---|---|---|---|---|
@@ -105,7 +105,10 @@ In generale, ho notato che c’è un forte consenso sul “no training by defaul
 
 Il [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) è uno **standard aperto** pensato per collegare applicazioni AI, modelli e agenti a sistemi esterni in modo uniforme.
 
-![Schema semplificato dell'architettura MCP](../Assets/mcp-simple-diagram.avif)
+<figure class="article-figure">
+  <img src="../Assets/mcp-simple-diagram.avif" alt="Schema semplificato dell'architettura MCP">
+  <figcaption><strong>Figure 01.</strong> Schema semplificato di MCP tratto dalla documentazione ufficiale del <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer">Model Context Protocol</a>.</figcaption>
+</figure>
 
 L’idea di fondo è semplice: invece di costruire un’integrazione diversa per ogni tool, database o repository, si definisce un protocollo comune con cui l’assistente può:
 
@@ -211,7 +214,10 @@ Per questo conviene ragionare per “punti di transito”:
 
 2. **Il momento in cui il testo può diventare azione.** Dopo aver ricevuto input e contesto, il modello non si limita necessariamente a “capire” il testo: può usarlo per decidere **che cosa fare dopo**, ad esempio rispondere, interrogare un tool, leggere un file o inviare una richiesta a un sistema esterno. È qui che compare uno dei rischi più importanti dei workflow agentici: la **prompt injection**. Il problema nasce quando il modello interpreta come istruzioni affidabili contenuti che in realtà arrivano da fonti non fidate, come un documento, una pagina web, una email, un commento in un ticket o l’output di un altro tool. Microsoft descrive questo scenario come una forma di attacco che può portare a **esfiltrazione di dati, bypass dei controlli e azioni indesiderate eseguite con i privilegi dell’utente o dell’applicazione**. Fonti: [Microsoft Security Response Center, How Microsoft defends against indirect prompt injection attacks](https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks); [Microsoft, Prompt Shields](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection).
 
-![Schema del flusso in un'architettura LLM con tool e sistemi esterni](../Assets/LLM_Architecture_Sequence.svg)
+<figure class="article-figure">
+  <img src="../Assets/LLM_Architecture_Sequence.svg" alt="Schema del flusso in un'architettura LLM con tool e sistemi esterni">
+  <figcaption><strong>Figure 02.</strong> Schema del flusso in un'architettura LLM con tool e sistemi esterni, usato qui per visualizzare il passaggio dato → modello → tool → risposta → azione.</figcaption>
+</figure>
 
 <details class="post-warning" open>
 <summary>Per chi non sa cosa significa fare prompt injection👇🏻</summary>
@@ -246,7 +252,7 @@ A questo si aggiungono analisi tecniche sul [GitHub MCP server](https://invarian
 
 ### Cosa cambia tra Read‑only, write ed egress?
 
-La documentazione ufficiale di [MCP](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) insiste su un punto: ai tool vanno concessi **solo i permessi strettamente necessari**. Per lo stesso motivo sconsiglia soluzioni apparentemente comode come il **token passthrough**, perché sembrano comodi ma creano problemi di sicurezza e controllo e rendono molto più difficile capire chi sta agendo, con quali privilegi e quali permessi.
+La documentazione ufficiale di [MCP](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) insiste su un punto: ai tool vanno concessi **solo i permessi strettamente necessari**. Per lo stesso motivo sconsiglia soluzioni apparentemente comode come <span class="inline-note"><strong>token passthrough</strong><button type="button" class="inline-note__trigger" aria-label="Spiega token passthrough"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Token passthrough</strong> indica una situazione in cui il client o l’host passa direttamente al server MCP, o a un servizio esterno, il token dell’utente o dell’applicazione invece di usare credenziali e controlli separati per quel server. Sembra comodo, ma allarga i privilegi, complica l’audit e rende meno chiaro chi sta agendo davvero.</span></span>, perché sembrano comodi ma creano problemi di sicurezza e controllo e rendono molto più difficile capire chi sta agendo, con quali privilegi e quali permessi.
 
 <details class="post-warning">
 <summary>Cosa significa “token passthrough”?</summary>
@@ -270,7 +276,7 @@ Tradotto in pratica, il rischio cambia a seconda del tipo di accesso che diamo a
 
 Per questo questa distinzione conta davvero: non serve solo a “classificare” i tool, ma a decidere quali **autorizzazioni concedere**, quali azioni devono avere **approvazione umana** e **quali integrazioni non dovrebbero mai operare in piena autonomia**.
 
-## Gestione dei dati nei workflow AI e classificazione del rischio
+## Data Governance
 
 La classificazione dati più “tradizionale” (pubblico / interno / riservato / sensibile) funziona anche in questo dominio e vale anche oggi che sto scrivendo questo articolo, ma va adattata. Non basta più stabilire *chi può leggere*, bisogna stabilire **quale superficie AI può trattare quel dato** (consumer UI, business workspace, API, agenti con tool, agenti con MCP remoto). Ora analizziamo questo nel dettaglio
 
@@ -305,144 +311,118 @@ Una volta capiti i rischi ora dobbiamo anche trovare soluzioni. Ricordiamo che p
 In pratica, le difese che più cambiano outcome sono:
 
 - **Context minimization**: portare nel prompt solo ciò che serve per risolvere quel compito; è coerente con pratiche di [*context engineering*](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) orientate a non caricare interi dataset in contesto.  
-- **Redazione/pseudonimizzazione** per dati sensibili prima del passaggio nel modello (riduce <span class="inline-note">blast radius<button type="button" class="inline-note__trigger" aria-label="Spiega blast radius">*</button><span class="inline-note__popup"><strong>Blast radius</strong> indica quanto si estendono gli effetti di un errore, di un attacco o di un malfunzionamento. In pratica: se il blast radius è piccolo, il problema resta confinato; se è grande, il danno si propaga a più dati, sistemi o utenti.</span></span> se qualcosa esce).  
+- **Redazione/pseudonimizzazione** per dati sensibili prima del passaggio nel modello (riduce <span class="inline-note">blast radius<button type="button" class="inline-note__trigger" aria-label="Spiega blast radius"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Blast radius</strong> indica quanto si estendono gli effetti di un errore, di un attacco o di un malfunzionamento. In pratica: se il blast radius è piccolo, il problema resta confinato; se è grande, il danno si propaga a più dati, sistemi o utenti.</span></span> se qualcosa esce).  
 - **Retrieval controllato**: non basta “fare RAG”, bisogna farlo bene. In pratica significa limitare ciò che il sistema può recuperare, usare query coerenti con le policy interne, filtrare i contenuti in base alla classificazione dei dati e restituire solo i chunk davvero necessari. Anche un semplice limite sul `top-k` aiuta: meno documenti inutili entrano nel contesto, meno aumentano rumore, leakage e possibilità che il modello usi informazioni che non servivano davvero.  
 - **Separazione per ambienti e tenant**: dev, stage e produzione non dovrebbero condividere gli stessi dataset, gli stessi segreti o le stesse credenziali. Questo vale ancora di più nei sistemi AI, dove un errore di configurazione o una prompt injection in ambiente sbagliato può propagarsi molto in fretta. Separare ambienti e tenant serve proprio a contenere l’impatto: se qualcosa va storto in sviluppo, non deve toccare dati reali o sistemi produttivi. È una misura tecnica e organizzativa coerente con standard come [ISO 27001](https://www.iso.org/standard/27001) e ISO 27701.
 - **ZDR dove serve, ma con realismo**: “Zero Data Retention” è utile, ma non va trattato come una formula magica. Le documentazioni di [OpenAI](https://platform.openai.com/docs/models/how-we-use-your-data), [Google](https://ai.google.dev/gemini-api/docs/zdr) e [Anthropic](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) chiariscono tutte, in modi diversi, che la ZDR dipende dalle feature usate e non copre automaticamente tutto. Alcune funzioni introducono comunque persistenza, stato server-side o regole specifiche di conservazione. Quindi la domanda corretta non è “abbiamo la ZDR, siamo a posto?”, ma “quali feature stiamo usando e quali dati restano comunque memorizzati?”.
 
-## Governance per agenti AI
+## AI Governance
 
-La governance “che abilita” non è un PDF che dice “non usare dati sensibili”. È un insieme di **vincoli eseguibili** e strumenti che rendono *facile fare la cosa giusta*.
+La governance, in un sistema agentico, non è un documento che dice in modo generico “attenzione ai dati sensibili”. È la traduzione di quella policy in **permessi, approvazioni, confini tecnici e tracciabilità**. In pratica, una governance utile deve rispondere ad almeno tre domande:
 
-### Controlli chiave e perché funzionano davvero
+- quali tool può usare l’agente;
+- quali azioni può eseguire da solo e quali no;
+- come ricostruiamo in modo affidabile cosa è successo se qualcosa va storto.
 
-Il principio del **minimo privilegio** non è solo IAM: negli agenti significa *tool design* e *scope design*. MCP insiste su scope minimization e su proibire token passthrough perché rompe security controls e audit trail. citeturn30view0 In modo simmetrico, anche quando usi IDE agentici (es. Cursor) devi governare **quali modelli** e **quali integrazioni** sono disponibili al team (model/integration management), altrimenti la variabilità individuale diventa rischio sistemico. citeturn17search8turn17search5
+### I controlli che contano davvero
 
-Il pattern più efficace in ambienti enterprise è: **tool “narrow”, composabili, con policy per azione**:
-- tool read‑only granulari (es. “read_ticket(id)” invece di “search_all_tickets(query)” senza limiti);
-- tool write separati e protetti (es. “create_pr” con approvazione o run in sandbox);
-- tool egress (email/webhook) dietro allowlist e policy di payload.
+Il primo principio è il più semplice, ma anche quello che spesso manca: **l’agente non dovrebbe avere più poteri del necessario**. Nella [documentazione ufficiale MCP](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) questo si traduce in *scope minimization*: permessi stretti, separati per funzione, senza <span class="inline-note">scope omnibus<button type="button" class="inline-note__trigger" aria-label="Spiega scope omnibus"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Scope omnibus</strong> indica un insieme di permessi troppo ampio e generico, che concede più accesso del necessario. In pratica è il contrario del minimo privilegio: invece di dare solo ciò che serve, si apre tutto “per comodità”.</span></span> e senza <span class="inline-note">anti-pattern<button type="button" class="inline-note__trigger" aria-label="Spiega anti-pattern"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Anti-pattern</strong> indica una soluzione apparentemente comoda o veloce, ma considerata in realtà una cattiva pratica perché introduce problemi strutturali. Nel caso MCP, il token passthrough è un anti-pattern perché sembra pratico, ma peggiora sicurezza, audit e controllo dei privilegi.</span></span> come il **token passthrough**, che la guida considera esplicitamente vietato perché rompe controlli di sicurezza, responsabilità e chiarezza nei log.
 
-Questo riduce sia prompt injection sia danni da allucinazione: l’agente può sbagliare, ma in un recinto più piccolo.
+Questo ha una conseguenza molto concreta sul design dei tool: in ambienti enterprise funzionano meglio tool **stretti, componibili e specifici per azione**. Per esempio:
 
-### Human‑in‑the‑loop dove conta
+- meglio un tool come `read_ticket(id)` che un tool generico che può leggere “tutti i ticket” senza limiti;
+- meglio separare i tool di sola lettura da quelli che scrivono o modificano sistemi;
+- meglio mettere email, webhook o altri canali di uscita dietro allowlist e controlli di payload.
 
-La fonte MCP elenca scenari di attacco che bypassano consenso (confused deputy) e prescrive consent e validazioni; ma nel mondo agentico il “consenso” non è una schermata una tantum: è **approvazione per azione** quando l’impatto è alto. citeturn30view0 È la stessa logica che OpenAI Codex Security applica: propone patch e PR ma richiede review umana e non modifica codice automaticamente. citeturn20view0
+Il motivo è semplice: l’agente può anche sbagliare, ma se il confine che abbiamo definito è piccolo, anche il danno resta più contenuto.
 
-### Logging e audit trail: cosa loggare (e cosa no)
+### Approvazione umana dove l’impatto è alto
 
-È un equilibrio: loggare troppo può creare un nuovo data lake sensibile; loggare troppo poco distrugge accountability. MCP sottolinea che pratiche scorrette sui token danneggiano proprio audit e investigazione. citeturn30view0
+Il secondo principio è che non tutte le azioni vanno trattate allo stesso modo. La guida MCP insiste su consenso per-client, validazione delle <span class="inline-note">redirect URI<button type="button" class="inline-note__trigger" aria-label="Spiega redirect URI"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Redirect URI</strong> è l’indirizzo verso cui il sistema rimanda l’utente dopo un passaggio di autenticazione o autorizzazione. Validarla significa assicurarsi che il token o il risultato del login tornino davvero a una destinazione prevista e fidata, non a un endpoint controllato da un possibile attaccante.</span></span> e altri controlli che servono a non confondere identità e privilegi nei <span class="inline-note">flussi OAuth<button type="button" class="inline-note__trigger" aria-label="Spiega flussi OAuth"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Flussi OAuth</strong> sono i passaggi con cui un’app ottiene il permesso di agire per conto di un utente o di un altro servizio, senza dover conoscere direttamente la sua password. In pratica servono a delegare accessi tramite token, ma se sono progettati male possono confondere identità e responsabilità.</span></span>. Portato nel mondo agentico, questo significa una cosa molto pratica: **le azioni ad alto impatto non dovrebbero partire in piena autonomia**. Se l’agente deve scrivere su un sistema, inviare dati all’esterno, creare una pull request o modificare configurazioni sensibili, ha senso chiedere un passaggio umano di approvazione.
 
-Un criterio pragmatico: loggare **metadati e decisioni**, e minimizzare contenuti:
-- log dei tool invocati, timestamp, identità, scope, outcome, ma non per forza la risposta completa se contiene dati sensibili;
-- hashing/ID per correlazione;
-- vaulting dei segreti e rotazione.
+È la stessa logica che [OpenAI descrive per Codex](https://openai.com/index/introducing-codex/): il sistema lavora in ambiente isolato, produce evidenze verificabili delle proprie azioni e lascia all’utente la revisione finale prima dell’integrazione.
 
-Sui segreti, le “incident class” MCP è ormai chiara: token exposure e secret mismanagement sono rischi strutturali negli ambienti MCP/agentici (esiste persino un progetto OWASP “MCP Top 10” focalizzato su token/secret exposure). citeturn31search8
+### Logging: utile ma non invasivo
 
-### Tabella controlli raccomandati per criticità
+Il terzo principio è la tracciabilità. Se non sai quale agente ha chiamato quale tool, con quali scope e con quale esito, non hai davvero governance di tutto il sistema. La tua è solo una speranza che tutto vada bene (o una fiducia nell'AI, chiamala come vuoi).
+Allo stesso tempo, però, loggare tutto indiscriminatamente può creare un nuovo archivio pieno di dati sensibili. La soluzione non è scegliere tra “tutto” e “niente”, ma come sempre la soluzione sta nel mezzo (ricordiamo che "In medio stat virtus").
 
-| Criticità del workflow | Controlli minimi | Controlli raccomandati | Controlli “hard mode” (per ambienti critici) |
-|---|---|---|---|
-| Bassa (dati pubblici, no tool) | Policy uso, training opt‑out dove disponibile | Workspace business o API pagata; prompt minimization | DLP su input/output; monitoring anomalo |
-| Media (interno, RAG read‑only) | Retrieval minimization, separazione ambienti | Redazione/pseudonimizzazione; allowlist fonti; eval su leakage | “Untrusted content” sandbox; guardrail contro IPI (es. pattern Microsoft) citeturn32search3turn32search11 |
-| Alta (tool read‑only su sistemi aziendali) | Least privilege su tool; token scoping | Policy engine su tool call; auditing; rate limit; blocco token passthrough citeturn30view0 | Isolation rete; attestation MCP server; scanning supply chain (CVE) citeturn31search6turn31search15 |
-| Critica (tool write/egress/multi‑agent) | Human approval per azioni irreversibili; blocco rapido di agente o tool | Segregazione prod; break‑glass; rollback; incident playbook | Formal change management; “two‑person rule” su azioni ad alto impatto; continuous red teaming (ASB/bench) citeturn32search2turn23search3 |
+Un criterio semplice per provare ad ovviare a questo consiste nel loggare **decisioni e metadati**, minimizzando i contenuti. Sembra semplice a dirsi, in pratica solo:
 
-## EU AI Act e accountability nei sistemi generativi e agentici
+- log dei tool invocati, timestamp, identità del client o dell’utente, scope usati ed esito;
+- ID o hash per correlare eventi senza duplicare dati sensibili;
+- gestione dei segreti in vault con rotazione regolare, invece di lasciarli sparsi in log o configurazioni.
 
-### Stato e milestone (utile per pianificazione 2026–2027)
+Qui può essere utile parlare di <span class="inline-note">audit trail<button type="button" class="inline-note__trigger" aria-label="Spiega audit trail"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Audit trail</strong> significa una traccia ricostruibile di ciò che è successo: chi ha fatto cosa, quando, con quali permessi e con quale risultato. Serve sia per indagare gli incidenti, sia per dimostrare che i controlli erano davvero in funzione.</span></span>. La stessa [guida MCP](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) spiega che token troppo ampi o passati nel modo sbagliato peggiorano proprio questo punto: rendono più difficile capire chi ha agito e soprattutto con quali privilegi/ruoli.
 
-Fonti UE: AI Act entrato in vigore il 1 agosto 2024. citeturn21search2turn21search5 L’entrata in applicazione è graduale fino al 2 agosto 2027; una fonte EUR‑Lex (documento 2025) ribadisce che divieti e obblighi per i modelli general‑purpose sono già applicabili, mentre molte prescrizioni high‑risk scattano 2026–2027. citeturn22view0
+### Controlli = f(criticità)
 
-### Quando un workflow con agenti rischia di diventare “high‑risk” (lettura operativa)
+Il punto, in fondo, è semplice: **i controlli da attivare dipendono dal tipo di workflow che stai costruendo**. Per questo, più che parlare in astratto di “criticità”, secondo me è più chiaro ragionare per scenario: cosa fa l’agente, perché quel caso è rischioso, quali controlli sono il minimo sindacale e quali fonti giustificano quella scelta.
 
-Per un’azienda che usa GenAI, la domanda non è “il modello è potente?”, ma **“in quale processo decisionale lo metto?”**. L’AI Act è basato sul rischio e (nelle sintesi EUR‑Lex) evidenzia requisiti e obblighi più pesanti per gli high‑risk, oltre a trasparenza e documentazione per general‑purpose AI. citeturn21search1turn21search9
+| Scenario | Livello | Perché il rischio cresce | Controlli prioritari | Fonti |
+|---|---|---|---|---|
+| Chat con dati pubblici, senza tool | Basso | Il modello non agisce su sistemi esterni e non accede a fonti interne; il rischio resta soprattutto su retention, logging e qualità dell’output. | Policy d’uso, prompt minimization, opt-out/training controls dove disponibili, preferenza per workspace business o API pagata quando i dati non sono pubblici. | [OpenAI, How your data is used](https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/) |
+| Workflow interno con RAG read-only | Medio | Il sistema recupera contenuti interni: il rischio non è tanto “scrivere”, quanto recuperare troppo, recuperare male o farsi influenzare da contenuti non fidati. | Retrieval minimization, separazione ambienti, redazione/pseudonimizzazione, allowlist delle fonti, test specifici su leakage e indirect prompt injection. | [OWASP LLM01 Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/); [Microsoft MSRC on indirect prompt injection](https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks) |
+| Agente con tool read-only su sistemi aziendali | Alto | Anche se il tool non scrive, può leggere dati interni, usare token e interrogare sistemi sensibili: la superficie di esfiltrazione cresce molto. | Least privilege sui tool, token scoping, policy sulle tool call, audit trail, rate limit, blocco del token passthrough, verifica dei server MCP. | [MCP Security Best Practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) |
+| Agente con tool write, egress o workflow multi-agent | Critico | Qui l’agente può modificare sistemi, inviare dati all’esterno o propagare errori lungo più step e più componenti. Il problema non è più solo leakage, ma può avere un bell'impatto che non oso immaginare. | Approvazione umana sulle azioni irreversibili, possibilità di bloccare rapidamente agente o tool, segregazione forte tra ambienti, rollback, incident playbook, red teaming continuo. | [MCP Security Best Practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices); [Agent Security Bench](https://arxiv.org/abs/2410.02644) |
 
-Una regola pratica per i decision maker: un sistema agentico tende verso high‑risk quando:
-- supporta o automatizza decisioni in aree sensibili (HR, credito, istruzione, accesso a servizi essenziali);
-- produce output che diventa *input vincolante* (non solo “assistivo”) per una decisione che impatta diritti o opportunità;
-- è integrato in prodotti o servizi soggetti a obblighi di sicurezza/conformità.
+<figure class="article-figure">
+  <img src="../Assets/LLM_Agent_Architecture.svg" alt="Architettura di un agente LLM con memoria, pianificazione, osservazione, tool e punti di attacco">
+  <figcaption><strong>Figure 03.</strong> Revisione grafica dell'architettura di un agente LLM realizzata per questo articolo a partire dallo schema concettuale discusso in <a href="https://arxiv.org/abs/2410.02644" target="_blank" rel="noopener noreferrer">Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-based Agents</a> di Hanrong Zhang, Jingyuan Huang, Kai Mei, Yifei Yao, Zhenting Wang, Chenlu Zhan, Hongwei Wang e Yongfeng Zhang.</figcaption>
+</figure>
 
-**Implicazione architetturale**: se sei in queste aree, devi progettare *human oversight* come componente, non come “bottone in UI”.
+## EU AI Act e accountability
 
-### Obblighi di trasparenza, tracciabilità e human oversight: come si traducono in scelte
+### Cosa dice e cosa ci aspettiamo?
 
-Il compromesso vincente è trattare la conformità come “design constraints”:
-- **tracciabilità** = audit log delle tool invocation, versione dei prompt/policy, dataset e retrieval source, e capability del modello (modello/versione). MCP evidenzia che audit trail si rompe con token passthrough e confini di fiducia confusi. citeturn30view0  
-- **documentazione** = non un documento statico, ma un “bill of materials” dell’agente: quali MCP server, quali scope, quali dati, quali ambienti, quali controlli e fallback.  
-- **human oversight** = gating su azioni high‑impact (approvazione, limite di spesa, possibilità di bloccare rapidamente agente o tool).
+L’[AI Act](https://commission.europa.eu/news-and-media/news/ai-act-enters-force-2024-08-01_en) è entrato in vigore il **1 agosto 2024**, ma non va letto come una norma che “arriva tutta insieme”. La sua applicazione è graduale e si distribuisce fino al **2 agosto 2027**. La sintesi più utile di [EUR-Lex](https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence-in-the-eu.html) ricorda un punto importante: alcune regole sono già entrate in gioco, mentre altre diventano pienamente operative in momenti successivi, soprattutto per i sistemi ad alto rischio e per i modelli general-purpose.
 
-### Accountability lungo la catena (developer → data team → management → fornitori)
+### Cos'è un sistema ad alto rischio?
 
-Nella pratica enterprise, la responsabilità è *stratificata*:
-- **Team tecnici (dev/ML/data)**: implementano controlli, scoping, logging; scelgono endpoint/feature che determinano retention (es. feature non ZDR‑eligible; grounding con storage 30 giorni). citeturn1view0turn14view1  
-- **Product/innovation/management**: decidono “dove” l’agente è usato e quanto è autonomo (quindi rischio).  
-- **Fornitori e terze parti**: introducono superficie supply chain; esistono CVE reali su componenti MCP e strumenti (mcp-remote, MCP Inspector, Cursor). citeturn31search6turn31search15turn31search0  
+Per un’azienda che usa GenAI, la domanda giusta non deve essere “quanto è bravo il modello a rispondere ai miei problemi?”, ma **in quale processo decisionale lo stiamo inserendo**. L’AI Act segue una logica chiaramente **risk-based**: più un sistema può influenzare decisioni che toccano sicurezza o accesso a dati "delicati", più aumentano obblighi e responsabilità e quindi ovviamente i vari controlli annessi. La sintesi [EUR-Lex](https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence-in-the-eu.html) elenca tra le aree ad alto rischio, per esempio, occupazione, istruzione, servizi essenziali, giustizia, infrastrutture critiche e credito.
 
-Il *takeaway legale‑operativo* più utile per l’articolo: **l’audit trail è una protezione legale tanto quanto tecnica**. Se non puoi dimostrare “quale agente ha fatto cosa, con quali permessi e perché”, non hai governance: hai speranza.
+Qui può essere utile chiarire cosa si intende per <span class="inline-note">high-risk<button type="button" class="inline-note__trigger" aria-label="Spiega high-risk"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>High-risk</strong> non significa semplicemente “tecnologia potente”. Significa un uso dell’AI che, per contesto e impatto, può incidere in modo rilevante su sicurezza, diritti o opportunità delle persone. È il tipo di sistema per cui la norma richiede controlli, documentazione e supervisione molto più stringenti.</span></span>.
 
-## Bias e fairness in advertising automation e adtech
+In pratica, un workflow agentico si avvicina a questa logica quando:
 
-Qui la ricerca evidenzia un punto che spesso sorprende i team: **anche con targeting “neutrale”, la delivery può diventare non neutrale** perché ottimizza obiettivi economici (costo, conversioni) e usa segnali correlati a caratteristiche protette.
+- supporta o automatizza decisioni in ambiti sensibili come HR, credito, istruzione o accesso a servizi essenziali;
+- produce un output che non resta solo “consultivo”, ma diventa un input realmente vincolante per una decisione;
+- è integrato in prodotti o servizi già soggetti a obblighi di sicurezza, qualità (o conformità).
 
-### Evidenze empiriche e casi documentati
+L’implicazione architetturale è molto concreta: se ti muovi in queste aree, **human oversight** e controlli di processo non possono essere un qualcosa inserito in modo facoltativo, ma devono essere parte del progetto generale del sistema.
 
-- **Discriminazione “through optimization”**: Ali et al. (2019) mostrano che la delivery su Facebook può essere “skewed” lungo linee di genere e razza per annunci di lavoro e housing *anche quando i parametri di targeting sono inclusivi*, a causa di dinamiche di ottimizzazione e predizioni di “relevance”. citeturn33search2turn33search10  
-- **Bias per crowding‑out**: Lambrecht & Tucker (2019) trovano che un algoritmo che ottimizza cost‑effectiveness può consegnare annunci STEM “gender‑neutral” in modo apparentemente discriminatorio perché alcune audience (es. donne più giovani) sono più costose e quindi vengono “crowded out”. citeturn33search5turn33search9  
-- **Enforcement e regolazione**: il DOJ (USA) nel 2022 ha ottenuto un settlement con Meta su pratiche di advertising housing: la descrizione del caso include l’uso di sistemi che trovano utenti “simili” basandosi su caratteristiche protette e impegni a cambiare sistemi di delivery per affrontare disparità. citeturn33search8turn33search0  
-- **Guida istituzionale**: HUD ha pubblicato guidance su applicazione del Fair Housing Act alla pubblicità su piattaforme digitali, includendo l’uso di sistemi automatizzati e AI per targeting/delivery. citeturn33search4  
+### Come si traducono gli obblighi?
 
-### Distinzione utile (bias nei dati vs bias osservato vs bias nell’ottimizzazione)
+Il modo più utile per leggere questi obblighi è trattarli come **vincoli di progettazione**. Se fai così, **tracciabilità e supervisione umana** smettono di essere parole astratte (o solo filosofiche, come le ha definite una volta un mio cliente) e diventano decisioni. Vediamo ora cosa di traducono:
 
-In adtech conviene separare tre livelli:
-- **Bias nei dati di training** (es. modelli che apprendono correlazioni storiche).
-- **Bias nei dati osservati dal sistema** (feedback loop: chi vede l’annuncio genera conversioni che rinforzano la delivery).
-- **Bias nella funzione obiettivo** (ottimizzazione di CPA/ROAS che implicitamente privilegia audience meno costose o più “predette” convertire).
+- **Tracciabilità**: significa poter ricostruire quali tool sono stati invocati, con quali scope, su quali dati e con quale esito. Qui il collegamento con MCP viene da se. Infatti la [guida di sicurezza](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) insiste sul fatto che anti-pattern come il token passthrough peggiorano proprio audit e chiarezza delle responsabilità.
+- **Documentazione**: bisogna prestare molta attenzione alla documentazione (come ben sapranno i programmatori che mi stanno leggendo). Quello che serve è una specie di <span class="inline-note">bill of materials<button type="button" class="inline-note__trigger" aria-label="Spiega bill of materials"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Bill of materials</strong> qui significa un inventario chiaro dei componenti del sistema: quali modelli usi, quali server MCP, quali scope, quali dati, quali ambienti, quali fallback e quali controlli di sicurezza.</span></span> dell’agente. In altre parole: una mappa con un po' di tutto (componenti, permessi, dati e dipendenze, ecc).
+- **Human oversight**: significa semplicemente decidere in quali punti il sistema deve fermarsi e chiedere conferma prima di compiere azioni ad alto impatto, come invii di messaggi esterni, o modifiche irreversibili o magari decisioni che incidono su persone e/o altri processi.
 
-Le evidenze sopra (Ali et al.; Lambrecht & Tucker) sostengono soprattutto il terzo punto: **il bias può emergere come proprietà dell’ottimizzazione**, non come “intenzione” dell’inserzionista. citeturn33search2turn33search5
+### Fuori il colpevole
 
-### Metriche e governance pratica per advertising automation
+Siamo arrivati quasi alla fine, ovvero al discorso della responsabilità o più in generale l'<span class="inline-note">accountability<button type="button" class="inline-note__trigger" aria-label="Spiega accountability"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Accountability</strong> significa poter attribuire in modo chiaro responsabilità, decisioni e controlli. In pratica: sapere chi ha deciso cosa, con quali informazioni, con quali permessi e con quali conseguenze.</span></span>. Nei sistemi agentici la responsabilità è diluita lungo tutta la catena.
 
-Non esiste una metrica unica, ma in pratica serve misurare:
-- *delivery skew* (distribuzione per gruppi) e *outcome skew* (conversioni/allocazione budget),
-- drift e feedback loop (cambiamenti nel tempo),
-- vincoli di fairness come requirement di prodotto (non come afterthought).
+- **Team tecnici**: definiscono tool, scope, logging, ambienti e feature; in pratica decidono gran parte dei vincoli tecnici che influenzano sicurezza e retention.
+- **Product, innovation e management**: decidono dove usare l’agente, quanto renderlo autonomo e quanto impatto affidargli.
+- **Fornitori e terze parti**: aggiungono superfici di rischio, soprattutto quando entrano in gioco componenti MCP, API esterne, tool remoti o più in generale una supply chain vulnerabile.
 
-**Governance operativa**: fissare “guardrail di equity” come constraint di ottimizzazione, introdurre audit periodici (anche con sampling), e documentare razionalmente tradeoff (performance vs fairness) invece di negarli.
+Il punto più utile, dal lato operativo e anche legale, è questo: **l’audit trail non serve solo ai tecnici, serve anche a dimostrare che il sistema era governato/gestito bene**.
 
-## Governance come vantaggio competitivo e angoli narrativi per il blog
+## Conclusione
 
-Le fonti mostrano un trend: i vendor stanno spostando la conversazione da “fidati” a “controlla”: controlli admin, retention configurabile, audit log, data residency, ZDR condizionale. Questo è già posizionamento competitivo:
-- OpenAI enfatizza ownership e controllo (no training by default, retention controls, SOC2, encryption). citeturn18view2turn1view0  
-- Google Workspace with Gemini mette al centro controlli enterprise (Vault, audit logs, retention per admin, niente human review, no training fuori dominio). citeturn13view0turn11search14  
-- Anthropic introduce controlli come ZDR e data residency per inference (anche se limitata a US al momento) e documenta retention commerciale con eccezioni chiare. citeturn10view0turn16view0turn9view0  
-- Cursor, lato IDE agentico, si muove verso “hooks” e integrazione con tooling di sicurezza e compliance per governance nel loop dell’agente. citeturn17search19  
+Se devo tirare le fila di tutto l'articolo, il punto che mi sembra più importante è questo: **la governance non deve essere visto come un problema dell’adozione dell’AI, ma la condizione necessaria e quella che rende la rende sostenibile**. Finché un modello resta una chat isolata, molte promesse commerciali possono ancora sembrare sufficienti. Quando però il modello entra in workflow in produzione, usa tool, tocca dei dati interni, legge repository, interroga database o compie azioni verso l’esterno, il focus DEVE essere sui controlli che noi abbiamo in queste pipeline.
 
-Questo supporta una tesi forte per il blog: **la governance non è il freno dell’adozione; è il motivo per cui l’adozione può essere scalata senza paura**. È coerente con NIST AI RMF (gestione rischio come parte del valore) citeturn23search0turn23search4 e con best practice di governance in framework enterprise (es. Microsoft Cloud Adoption Framework che esplicita integrazione tra AI risk, cybersecurity e privacy governance). citeturn33search3turn33search7
+Ed è qui che entra in gioco sia la data governance che poi l'AI governance. Questo vuol dire decidere prima quali dati possono entrare, quali tool possono essere invocati, con quali scope, con quali approvazioni, con quali log, con quale separazione tra ambienti e con quale capacità di fermare il sistema quando qualcosa non torna. In altre parole: la vera maturità non è usare l’agente più autonomo possibile, ma **costruire un perimetro abbastanza chiaro da rendere quell’autonomia affidabile**. Mi viene in mente ad bambino che stiamo educando. Penso che nessuno di voi lascerebbe ad un bambino di 8 anni la liberà di guidare la propria macchina, ma magari per compiti meno pericolosi (o forse meglio, meno critici) ci possiamo fidare. Il punto è solo definire il perimetro di fiducia nei confronti degli strumenti.
 
-### Tre possibili angoli narrativi per l’articolo
+Il punto interessante è che questo sta già diventando anche un elemento competitivo. I vendor principali (che ho menzionato a inizio articolo) non vendono più solo “modelli potenti”, ma soprattutto offrono **controlli**: alcuni esempi sono la retention configurabile, audit log, un controllo sulla data residency, e ZDR quando e dove possibile. Questo è un segno che il mercato enterprise ha già capito una cosa: solo con una buona governance può crescere l’adozione.
 
-**Angolo “Il mito del training: il rischio vero è la toolchain”**  
-Messaggio: molte aziende litigano su opt‑out e training, ma gli incidenti più pericolosi arrivano dalla *tool surface*: MCP server non fidati, OAuth confusion, SSRF, RCE in componenti agentici. Supporto: MCP Security Best Practices + CVE reali (mcp-remote, MCP Inspector, Cursor) + benchmark IPI. citeturn30view0turn31search6turn31search15turn32search0  
-Posizione: l’articolo può sostenere che la governance deve spostarsi “a valle” del modello, verso tool permissions e data egress.
+Voglio chiudere questo articolo lasciandoti un paio di domande:
 
-**Angolo “Dove finiscono davvero i dati: una mappa per team tecnici”**  
-Messaggio: i dati finiscono in log di abuso, conversation state, cache, sandbox, storage del tool, audit trail interno, e nelle policy di terzi. Supporto: OpenAI “your data” (abuse monitoring vs application state; nota su MCP server terzi; data residency con limiti), Google ZDR (grounding obbliga 30 giorni), Anthropic retention (30 giorni + eccezioni). citeturn1view0turn14view1turn9view0  
-Posizione: offrire una checklist non come elenco, ma come “data plane diagram” che ogni team dovrebbe disegnare prima di andare live.
+**Quando un’azienda compone modello, orchestratore, MCP server e SaaS esterni, chi è davvero responsabile di cosa?**  
+   Dal punto di vista teorico è facile parlare di provider, deployer e terze parti. Dal punto di vista più pratico molto meno. Più la catena si frammenta, più diventa necessario documentare responsabilità, dipendenze e passaggi del dato in modo molto più preciso di quanto molte organizzazioni facciano oggi.
 
-**Angolo “Governance come acceleratore: trasformare compliance in self‑service”**  
-Messaggio: enterprise adoption accelera quando dai ai team confini chiari (quali strumenti sì/no, quali modelli sì/no, quali dati dove), e automatizzi controlli (policy enforcement, hooks, audit). Supporto: Workspace privacy hub (controlli, audit), OpenAI enterprise privacy (fine‑grained access, retention controls), Cursor hooks, Microsoft guidance per governance e agent policies. citeturn13view0turn18view2turn17search19turn33search7  
-Posizione: sostenere che “compliance reattiva” crea shadow AI; “governance proattiva” crea adozione tracciabile.
+**Qual è il minimo set di controlli che rende un agente difendibile senza trasformarlo in un mostro ingestibile?**  
+   Questa, secondo me, è la domanda più pratica di tutte. Non serve raccogliere ogni conversazione o costruire un lago infinito di log sensibili. Serve capire qual è il punto di equilibrio (ed è proprio questo il problema): abbastanza evidenze da poter fare audit, incident response e accountability, ma non così tanta retention da creare un nuovo problema di rischio e governance.
 
-### Idee controintuitive emerse dalla ricerca
-
-La prima: **ZDR non è “un interruttore”, è un insieme di compatibilità per feature**. Se attivi grounding Search/Maps, alcune piattaforme dichiarano storage 30 giorni non disattivabile; se usi code execution/sandbox, spesso non è ZDR-eligible. citeturn14view1turn10view0turn1view0  
-La seconda: **data residency spesso non copre “system data” o flussi causati da terzi** (es. tool esterni, MCP server, endpoint globali). citeturn1view0turn14view3turn30view0  
-La terza: **il rischio di discriminazione in advertising può emergere “per ottimizzazione”, non per targeting**. citeturn33search2turn33search5
-
-### Domande aperte su cui vale prendere posizione
-
-- Se prompt injection è (parzialmente) “architetturale”, la strategia giusta è: **accettare rischio residuo e ridurre privilegi**, non cercare una “patch finale”? (Microsoft e la letteratura su IPI indicano che la mitigazione è multi‑layer). citeturn32search3turn32search0turn30view0  
-- Nel 2026, con AI Act che matura verso 2027, come definire in modo non burocratico “provider” e “deployer” quando l’azienda compone LLM + orchestratore + MCP server + SaaS? (La Commissione stessa segnala la necessità di linee guida su responsabilità lungo la value chain). citeturn22view0turn21search9  
-- Qual è il *minimo set* di evidenze (log, policy, test) che rende un agente “difendibile” davanti a audit e incident response, senza costruire un data lake di conversazioni sensibili? citeturn30view0turn31search8
+Se dovessi sintetizzare tutto in una frase sola, direi questa: per avere un agente *davvero* **adottabile in azienda**, la **qualità della governance** che gli costruisci intorno è **fondamentale**.

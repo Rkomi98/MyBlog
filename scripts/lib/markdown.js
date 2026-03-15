@@ -71,6 +71,22 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+function resolveHtmlAttributePaths(markdown, relativeRoot) {
+  if (!markdown || typeof markdown !== 'string') {
+    return markdown;
+  }
+
+  return markdown.replace(
+    /\b(href|src)=("([^"]*)"|'([^']*)')/gi,
+    (match, attribute, quotedValue, doubleQuotedValue, singleQuotedValue) => {
+      const original = doubleQuotedValue ?? singleQuotedValue ?? '';
+      const resolved = resolveRelativeLink(original, relativeRoot);
+      const quote = quotedValue[0];
+      return `${attribute}=${quote}${resolved}${quote}`;
+    }
+  );
+}
+
 function highlightCode(code, language) {
   const normalised = (language || '').trim().toLowerCase();
   if (normalised && hljs.getLanguage(normalised)) {
@@ -106,6 +122,7 @@ function generateSlug(value, registry) {
 }
 
 export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
+  const resolvedMarkdown = resolveHtmlAttributePaths(markdown, relativeRoot);
   const renderer = new marked.Renderer();
   const originalImage = renderer.image.bind(renderer);
   const originalLink = renderer.link.bind(renderer);
@@ -166,7 +183,7 @@ export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
     return `<pre><code class="${classes}">${highlighted}</code></pre>`;
   };
 
-  const html = marked.parse(markdown, {
+  const html = marked.parse(resolvedMarkdown, {
     mangle: false,
     gfm: true,
     renderer,

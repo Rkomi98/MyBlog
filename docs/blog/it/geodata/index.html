@@ -600,12 +600,23 @@
       line-height: 1;
       cursor: pointer;
       padding: 0;
-      margin: 0;
+      margin: 0 0 0 0.08rem;
       vertical-align: super;
-      font-size: 0.82em;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
     }
     .post-body .inline-note__trigger:hover {
       color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
     }
     .post-body .inline-note__popup {
       position: absolute;
@@ -959,6 +970,34 @@
       opacity: 0.88;
       box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
     }
+    .post-body .article-figure {
+      margin: 2.4rem 0;
+    }
+    .post-body .article-figure img {
+      width: 100%;
+      display: block;
+      margin: 0;
+    }
+    .post-body .article-figure figcaption {
+      margin-top: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .post-body .article-figure figcaption strong {
+      color: var(--text-primary);
+    }
+    .post-body .article-figure--wide {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1500px, calc(100vw - 4rem));
+      max-width: none;
+    }
+    body[data-theme="light"] .post-body .article-figure figcaption {
+      color: var(--text-muted);
+    }
     .post-body .table-wrapper {
       margin: 2rem 0;
       border-radius: 18px;
@@ -1172,6 +1211,11 @@
       .post-body {
         padding: 1.9rem 1.5rem;
         font-size: 1.04rem;
+      }
+      .post-body .article-figure--wide {
+        left: auto;
+        transform: none;
+        width: 100%;
       }
       .site-header__inner {
         flex-direction: column;
@@ -1873,7 +1917,7 @@ dove $c$ è la velocità della luce. </p>
 <p>🎮 <strong>Simulazione interattiva.</strong> Vuoi vedere come cambiano le Delay Doppler Map al variare di vento, quota e angolo di incidenza? Prova la <a href="../../../Assets/simulations/ddm/index.html">simulazione DDM GNSS-R</a> basata sul modello qui descritto.</p>
 </blockquote>
 <iframe
-  src="../../../Assets/simulations/ddm/index.html"
+  src="../../../../../Assets/simulations/ddm/index.html"
   title="Simulazione Delay Doppler Map GNSS-R"
   loading="lazy"
   style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -1977,7 +2021,7 @@ dove $c$ è la velocità della luce. </p>
 <p>La relazione tra la deformazione $d$ e la fase &quot;srotolata&quot; (unwrapped) è <sup>13</sup>:</p>
 <p>$$d = \frac{\lambda}{4\pi} \Delta \phi_{unwrapped}$$</p>
 <p>Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una frangia di interferenza ($2\pi$) corrisponde a uno spostamento di circa 2.8 cm.<sup>14</sup></p>
-<img src="../../../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
+<img src="../../../../../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
 _Figura 01: Frange interferometriche e deformazione misurata: esempio di interferogramma. Le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar_
 
 
@@ -2047,7 +2091,7 @@ _Figura 01: Frange interferometriche e deformazione misurata: esempio di interfe
 <p>Questa è la condizione fisica di partenza ed esprime il fatto che l&#39;energia registrata dal sensore pancromatico (a banda larga) dovrebbe idealmente corrispondere alla somma pesata delle energie registrate dalle bande multispettrali (a banda stretta) che ricadono nel suo intervallo spettrale.</p>
 <p>I  coefficienti $\alpha_i$  rappresentano i pesi spettrali. Poiché il sensore pancromatico non ha una sensibilità piatta (cioè non &quot;vede&quot; tutti i colori con la stessa efficienza), ogni banda multispettrale contribuisce al segnale Pan in modo diverso. Ad esempio, se il sensore Pan è molto sensibile al rosso e poco al blu, il peso $\alpha_i$ del canale rosso sarà maggiore.</p>
 <p>Di seguito un <a href="https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/">esempio di applicazione</a> del pansharpening.<sup>21</sup></p>
-<img src="../../../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
+<img src="../../../../../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
 Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la risoluzione geometrica estrema consente di distinguere singoli edifici e infrastrutture urbane._
 
 
@@ -2071,7 +2115,7 @@ ed è ampiamente utilizzato per quantificare la densità e il vigore della coper
 <h4 id="fisica-e-indici-spettrali">Fisica e indici spettrali</h4>
 <p>Sfrutta le firme spettrali distintive dei materiali. Ad esempio, la clorofilla assorbe nel rosso e riflette fortemente nel NIR. </p>
 <p>L&#39;uso di bande nello SWIR è fondamentale per discriminare la neve dalle nuvole e per monitorare lo stress idrico della vegetazione.</p>
-<img src="../../../Assets/PanvsMulti.png" alt="Confronto tra immagine pancromatica e multispettrale su uno stesso quartiere urbano" title="Differenze tra banda pancromatica e composito multispettrale">
+<img src="../../../../../Assets/PanvsMulti.png" alt="Confronto tra immagine pancromatica e multispettrale su uno stesso quartiere urbano" title="Differenze tra banda pancromatica e composito multispettrale">
 _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il relativo composito multispettrale: il pancromatico cattura il dettaglio geometrico, mentre il multispettrale preserva la variazione cromatica utile per indici come NDVI e SWIR per discriminare materiali._
 
 
@@ -2104,7 +2148,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 </li>
 </ul>
 <figure>
-  <img src="../../../Assets/Sea.png" alt="Colori dell'oceano determinati dai costituenti in acqua" title="Colori dell'oceano determinati dai costituenti in acqua">
+  <img src="../../../../../Assets/Sea.png" alt="Colori dell'oceano determinati dai costituenti in acqua" title="Colori dell'oceano determinati dai costituenti in acqua">
   <figcaption>
     Il colore dell'oceano è una funzione della luce che viene assorbita o diffusa in presenza dei costituenti disciolti o sospesi nell'acqua. <sup>26</sup>
   </figcaption>
@@ -2125,7 +2169,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <p>🎮 <strong>Simulazione spettrale.</strong> Metti a confronto visivamente le modalità pancromatica, multispettrale e iperspettrale e osserva come cambiano risoluzione spaziale, spettro campionato e informazioni tematiche. Puoi aprirla a schermo intero dalla <a href="../../../Assets/simulations/spectral/index.html">pagina dedicata</a>.</p>
 </blockquote>
 <iframe
-  src="../../../Assets/simulations/spectral/index.html"
+  src="../../../../../Assets/simulations/spectral/index.html"
   title="Simulazione Sensori Spettrali"
   loading="lazy"
   style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -2190,7 +2234,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <p>🎮 <strong>Simulazione TIR interattiva.</strong> Ripercorri la pipeline completa (fotoni → DN → radianza → inversione di Planck) e osserva come emissività e atmosfera spostano la temperatura di brillanza rispetto alla temperatura reale.</p>
 </blockquote>
 <iframe
-  src="../../../Assets/simulations/tir/index.html"
+  src="../../../../../Assets/simulations/tir/index.html"
   title="Simulazione TIR: radianza e temperatura"
   loading="lazy"
   style="width: 100%; min-height: 960px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -2205,7 +2249,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <p>Ad esempio, l’acqua liquida ha bassa emissività in banda microwaves, quindi l’oceano freddo appare “scuro” (basso $T_B$) rispetto a terra; il contrasto tra polarizzazioni $H$ e $V$ su un suolo varia con l’umidità (suolo bagnato = maggiore emissività e minore differenza). I radiometri multispettrali a microonde tipicamente misurano a frequenze come 6.9 GHz, 10 GHz, 18 GHz, 23 GHz, 36 GHz, 89 GHz (alcuni fino a 166 GHz), spesso con due polarizzazioni ($H$ e $V$) per ciascuna.</p>
 <p>Frequenze basse ($L-$band ~1.4 GHz) penetrano più in profondità nel suolo, utili per umidità; frequenze alte ($K/Ka-$band) son più sensibili a vapore e pioggia. Nelle bande attorno a righe di assorbimento atmosferico (es. 22 GHz vapore acqueo, 60 GHz ossigeno) si può dedurre la temperatura e il contenuto di gas per strati atmosferici (sondaggio a microonde). </p>
 <figure>
-  <img src="../../../Assets/Passive.png" alt="Schema di radiometria passiva in microonde" title="Schema di radiometria passiva in microonde">
+  <img src="../../../../../Assets/Passive.png" alt="Schema di radiometria passiva in microonde" title="Schema di radiometria passiva in microonde">
   <figcaption>
     Sensore passivo in banda microonde: misura l'emissione naturale, modulata da emissività, temperatura e atmosfera.
   </figcaption>
@@ -2243,7 +2287,7 @@ _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il
 <p>GRACE quindi misura gravity anomalies e, ripetendo mese dopo mese, può rilevare variazioni temporali del campo gravitazionale</p>
 </blockquote>
 <p>Un’altra tecnica è il <strong>gravimetro a gradiometro</strong> (usato da GOCE): sensori accelerometrici misurano direttamente il gradiente del campo lungo direzioni diverse. In breve, le missioni misurano parametri come: combinazioni lineari delle seconde derivate del potenziale gravitazionale (gradiometria), distanza inter-satellitare (GRACE) o perturbazioni orbitali (dalle quali si invertiscono armoniche sferiche del campo di gravità). I risultati finali sono modelli del geoide (superficie equipotenziale media) e mappe di anomalie gravitazionali (in mGal) statiche e tempo-varianti, o serie temporali di masse equivalenti variabili (come spessore di acqua).</p>
-<img src="../../../Assets/geoid.jpg" alt="Modello del geoide terrestre derivato dalle missioni GOCE e GRACE" title="Il geoide terrestre, superficie equipotenziale media ottenuta dalle missioni di gravimetria come GOCE e GRACE">
+<img src="../../../../../Assets/geoid.jpg" alt="Modello del geoide terrestre derivato dalle missioni GOCE e GRACE" title="Il geoide terrestre, superficie equipotenziale media ottenuta dalle missioni di gravimetria come GOCE e GRACE">
 _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la distribuzione spaziale delle anomalie gravitazionali che questi satelliti misurano e monitorano nel tempo_
 
 
