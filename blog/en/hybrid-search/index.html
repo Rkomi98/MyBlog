@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid search: are two signals better than one? | Mirko Calcaterra</title>
+  <meta name="description" content="Hybrid search: are two signals better than one? Let’s start with a point I feel strongly about: semantic search has not made keyword search obsolete. I want to emphasize this because I have seen too many people believe the opposite, especially those new to th…">
+  <meta name="keywords" content="Hybrid Search, BM25, Semantic Search, Retrieval, RAG, AI Engineering, Mirko Calcaterra">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/hybrid-search/">
+  <meta property="og:title" content="Hybrid search: are two signals better than one?">
+  <meta property="og:description" content="Hybrid search: are two signals better than one? Let’s start with a point I feel strongly about: semantic search has not made keyword search obsolete. I want to emphasize this because I have seen too many people believe the opposite, especially those new to th…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-03-21T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="AI Engineering Path">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Hybrid search: are two signals better than one?">
+  <meta property="twitter:description" content="Hybrid search: are two signals better than one? Let’s start with a point I feel strongly about: semantic search has not made keyword search obsolete. I want to emphasize this because I have seen too many people believe the opposite, especially those new to th…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Hybrid search: are two signals better than one?",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-03-21T00:00:00.000Z",
+    "dateModified": "2026-03-21T16:19:19.519Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "Hybrid search: are two signals better than one? Let’s start with a point I feel strongly about: semantic search has not made keyword search obsolete. I want to emphasize this because I have seen too many people believe the opposite, especially those new to th…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      position: relative;
+      font-family: 'Charter', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --bg-card-strong: rgba(11, 17, 32, 0.92);
+      --border: rgba(148, 163, 184, 0.2);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --surface: #1e293b;
+      --shadow-lg: 0 28px 60px -36px rgba(2, 6, 23, 0.9);
+      --code-inline-bg: rgba(30, 41, 59, 0.88);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.2);
+      --code-shadow: 0 12px 32px rgba(2, 6, 23, 0.45);
+      --code-text: #cbd5e1;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f6f8f7;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(255, 255, 255, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #059669;
+      --accent-strong: #047857;
+      --surface: #f1f5f9;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.16);
+      --code-inline-bg: rgba(226, 232, 240, 0.9);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.24);
+      --code-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 16;
+      width: 100%;
+      height: 2px;
+      background: rgba(148, 163, 184, 0.25);
+    }
+    .reading-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #22c55e 55%, #2dd4bf 100%);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+      transition: width 0.1s ease-out;
+    }
+    .site-header__inner,
+    .site-nav,
+    .lang-btn,
+    .theme-toggle,
+    .post-toc,
+    footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-hero__title,
+    .post-body h2,
+    .post-body h3,
+    .post-body h4,
+    .post-body .post-warning summary,
+    .post-toc__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(5, 150, 105, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(5, 150, 105, 0.08);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(15, 23, 42, 0.55) 70%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 22%, rgba(16, 185, 129, 0.18) 0%, transparent 56%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.13);
+      color: var(--accent-strong);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__author {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--accent);
+    }
+    .post-hero__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      object-fit: cover;
+      background: var(--surface);
+    }
+    .post-hero__author-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .post-hero__author-name {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .post-hero__author-meta {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.12rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body ul li::marker,
+    .post-body ol li::marker {
+      color: var(--accent);
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body .inline-note {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.15rem;
+    }
+    .post-body .inline-note__trigger {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      margin: 0 0 0 0.08rem;
+      vertical-align: super;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
+    }
+    .post-body .inline-note__trigger:hover {
+      color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
+    }
+    .post-body .inline-note__popup {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.6rem);
+      width: min(360px, 80vw);
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-lg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      z-index: 8;
+      display: none;
+    }
+    .post-body .inline-note__popup strong {
+      color: var(--text-primary);
+    }
+    .post-body .inline-note--open .inline-note__popup {
+      display: block;
+    }
+    body[data-theme="light"] .post-body .inline-note__popup {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 0.75rem 1.2rem;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      background: rgba(30, 41, 59, 0.45);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.98rem;
+      font-style: italic;
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--accent-strong);
+      padding: 0.15rem 0.42rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+    }
+    .post-code-card pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--code-text);
+    }
+    .post-body pre {
+      margin: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
+    .post-body .mermaid-diagram {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-body .mermaid-diagram pre.mermaid {
+      margin: 0;
+    }
+    .post-body .mermaid-diagram__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .mermaid-diagram__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .mermaid-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 1000;
+    }
+    .mermaid-overlay--visible {
+      display: flex;
+    }
+    .mermaid-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1280px, 94vw);
+      max-height: 88vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .mermaid-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      z-index: 2;
+    }
+    .mermaid-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .mermaid-overlay__scroll {
+      overflow: auto;
+      max-height: 88vh;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .mermaid-overlay__scroll svg {
+      max-width: none;
+      height: auto;
+    }
+    body[data-theme="light"] .post-body .mermaid-diagram__expand {
+      background: rgba(248, 250, 252, 0.92);
+    }
+    body[data-theme="light"] .mermaid-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .mermaid-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-code-card pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: var(--code-text);
+    }
+    .post-code-card {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-code-card__language {
+      position: absolute;
+      right: 1rem;
+      top: -0.62rem;
+      z-index: 2;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      color: var(--accent-strong);
+      text-transform: uppercase;
+    }
+    .post-code-card__frame {
+      background: var(--code-block-bg);
+      border-radius: 12px;
+      border: 1px solid var(--code-border);
+      box-shadow: var(--code-shadow);
+      overflow: hidden;
+    }
+    .post-code-card__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.48rem 0.78rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-code-card__window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      flex: 0 0 auto;
+    }
+    .post-code-card__window-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .post-code-card__window-dot--red {
+      background: rgba(248, 113, 113, 0.25);
+      border-color: rgba(248, 113, 113, 0.6);
+    }
+    .post-code-card__window-dot--yellow {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .post-code-card__window-dot--green {
+      background: rgba(74, 222, 128, 0.22);
+      border-color: rgba(74, 222, 128, 0.65);
+    }
+    .post-code-card__filename {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-code-card__body {
+      padding: 0.95rem 1rem;
+      overflow-x: auto;
+    }
+    .post-code-card__body::-webkit-scrollbar {
+      height: 6px;
+    }
+    .post-code-card__body::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #c084fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #4ade80;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #fb923c;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .code-copy-btn {
+      margin-left: auto;
+      background: transparent;
+      color: var(--text-muted);
+      border: 0;
+      border-radius: 999px;
+      padding: 0.25rem 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .code-copy-btn__icon {
+      font-size: 0.88rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      color: var(--text-muted);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 2.2rem 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: var(--surface);
+      opacity: 0.88;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .article-figure {
+      margin: 2.4rem 0;
+    }
+    .post-body .article-figure img {
+      width: 100%;
+      display: block;
+      margin: 0;
+    }
+    .post-body .article-figure figcaption {
+      margin-top: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .post-body .article-figure figcaption strong {
+      color: var(--text-primary);
+    }
+    .post-body .article-figure--wide {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1500px, calc(100vw - 4rem));
+      max-width: none;
+    }
+    body[data-theme="light"] .post-body .article-figure figcaption {
+      color: var(--text-muted);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+        font-size: 1.04rem;
+      }
+      .post-body .article-figure--wide {
+        left: auto;
+        transform: none;
+        width: 100%;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-hero__author {
+        gap: 0.7rem;
+      }
+      .post-hero__author-meta {
+        font-size: 0.78rem;
+      }
+      .post-code-card__header {
+        padding: 0.45rem 0.6rem;
+      }
+      .post-code-card__filename {
+        max-width: 36vw;
+      }
+      .code-copy-btn__text {
+        display: none;
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .post-body .mermaid-diagram__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+      .mermaid-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      const labels = document.documentElement.lang === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full screen', close: 'Close' };
+      let overlay = null;
+      let overlayScroll = null;
+
+      const ensureOverlay = () => {
+        if (overlay) {
+          return;
+        }
+        overlay = document.createElement('div');
+        overlay.className = 'mermaid-overlay';
+        overlay.innerHTML =
+          '<div class="mermaid-overlay__content">' +
+            '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
+            '<div class="mermaid-overlay__scroll"></div>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
+        const closeButton = overlay.querySelector('.mermaid-overlay__close');
+        closeButton?.addEventListener('click', () => {
+          overlay.classList.remove('mermaid-overlay--visible');
+          document.body.classList.remove('no-scroll');
+          if (overlayScroll) {
+            overlayScroll.innerHTML = '';
+          }
+        });
+        overlay.addEventListener('click', (event) => {
+          if (event.target === overlay) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+      };
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      await mermaid.run({ querySelector: '.mermaid' });
+
+      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+        if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-diagram';
+        diagram.parentNode.insertBefore(wrapper, diagram);
+        wrapper.appendChild(diagram);
+
+        const expandButton = document.createElement('button');
+        expandButton.type = 'button';
+        expandButton.className = 'mermaid-diagram__expand';
+        expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
+        expandButton.setAttribute('aria-label', labels.expand);
+        expandButton.addEventListener('click', () => {
+          ensureOverlay();
+          if (!overlay || !overlayScroll) {
+            return;
+          }
+          overlayScroll.innerHTML = '';
+          const clone = diagram.cloneNode(true);
+          overlayScroll.appendChild(clone);
+          overlay.classList.add('mermaid-overlay--visible');
+          document.body.classList.add('no-scroll');
+        });
+        wrapper.appendChild(expandButton);
+      });
+    }
+  </script>
+</head>
+<body data-theme="dark">
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="reading-progress-bar"></div>
+  </div>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">AI Engineering Path</span>
+        <h1 class="post-hero__title">Hybrid search: are two signals better than one?</h1>
+        <div class="post-hero__author">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
+          <div class="post-hero__author-text">
+            <span class="post-hero__author-name">Mirko Calcaterra</span>
+            <span class="post-hero__author-meta">March 21, 2026 • 32 min</span>
+          </div>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#when-a-retrieval-system-depends-on-a-single-signal">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">When a retrieval system depends on a single signal</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#how-keyword-search-works-and-why-it-is-still-incredibly-strong">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">How keyword search works and why it is still incredibly strong</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#why-semantic-search-was-created-and-where-it-truly-helps">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Why semantic search was created and where it truly helps</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#hybrid-search-is-not-a-compromise-it-is-an-architecture">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Hybrid search is not a compromise, it is an architecture</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#sparse-retrieval-is-not-just-bm25">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Sparse retrieval is not just BM25</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#hybrid-retrieval-and-reranking-are-different-things">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Hybrid retrieval and reranking are different things</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#why-this-topic-has-returned-to-the-spotlight">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">Why this topic has returned to the spotlight</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#how-providers-interpret-hybrid-search">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">How providers interpret hybrid search</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#elasticsearch-the-most-complete-the-most-layered">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Elasticsearch: the most complete, the most layered</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#opensearch-the-open-source-alternative-with-a-different-approach-to-fusion">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">OpenSearch: The open-source alternative with a different approach to fusion</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#pinecone-sparse-and-dense-in-the-same-vector-space">
+            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__text">Pinecone: Sparse and dense in the same vector space</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#qdrant-multi-vector-with-server-side-composable-pipelines">
+            <span class="post-toc__number">5.4</span>
+            <span class="post-toc__text">Qdrant: multi-vector with server-side composable pipelines</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#weaviate-the-vector-database-born-hybrid">
+            <span class="post-toc__number">5.5</span>
+            <span class="post-toc__text">Weaviate: the vector database born hybrid</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#azure-ai-search-the-most-complete-out-of-the-box-pipeline">
+            <span class="post-toc__number">5.6</span>
+            <span class="post-toc__text">Azure AI Search: the most complete out-of-the-box pipeline</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#conceptual-families">
+            <span class="post-toc__number">5.7</span>
+            <span class="post-toc__text">Conceptual families</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#secondary-providers-in-brief">
+            <span class="post-toc__number">5.8</span>
+            <span class="post-toc__text">Secondary providers in brief</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#how-to-build-a-concrete-hybrid-pipeline">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">How to build a concrete hybrid pipeline</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#measuring-retrieval-quality-seriously">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">Measuring retrieval quality, seriously</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#costs-in-order-of-importance">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">Costs, in order of importance</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#computational-cost-comes-first">
+            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__text">Computational cost comes first</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#commercial-cost-depends-on-the-model">
+            <span class="post-toc__number">8.2</span>
+            <span class="post-toc__text">Commercial cost depends on the model</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#the-cost-of-error-is-what-no-one-budgets-for">
+            <span class="post-toc__number">8.3</span>
+            <span class="post-toc__text">The cost of error is what no one budgets for</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#the-design-principle-behind-hybrid-search">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">The design principle behind hybrid search</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <p>Let’s start with a point I feel strongly about: semantic search has not made keyword search obsolete. I want to emphasize this because I have seen too many people believe the opposite, especially those new to the topic of retrieval in recent years. Dismissing keyword search as &quot;old stuff&quot; is an oversimplification, and that simplification will eventually come at a cost.</p>
+<p>The real point is this: every retrieval strategy makes specific, predictable, and often complementary errors. Hybrid search exists because someone looked at these errors closely and realized that relying on a single signal is a vulnerability that a serious system cannot afford.</p>
+<p>This article is not a competition to pick a winner between keyword and semantic search. The goal is to understand <strong>what errors different retrieval signals make</strong>, why they make them, and how to build a system that combines them without one canceling out the other. To make this more manageable, we will use a guiding case study: a retrieval system for a cooking app—a engine that must retrieve recipes, ingredients, regional variations, and nutritional information based on user queries. It is a familiar domain, but one with enough complexity to reveal the real limits of each approach.</p>
+<h2 id="when-a-retrieval-system-depends-on-a-single-signal">When a retrieval system depends on a single signal</h2>
+<p>Imagine you are building the search engine for a recipe app. You have a database with thousands of Italian recipes, each with a title, list of ingredients, instructions, regional variations, and notes. A user searches for &quot;pasta e fagioli.&quot; With keyword search, for example using BM25 (we will see what that consists of later), the result is immediate and precise: all recipes that contain those exact terms, ordered by statistical relevance. It works well.</p>
+<p>But another user searches for &quot;a hearty first course for winter with legumes.&quot; Here, keyword search struggles: no recipe literally contains that phrase. &quot;Pasta e fagioli&quot; is exactly what they need, but the system doesn&#39;t know that because it doesn&#39;t understand that &quot;hearty first course for winter with legumes&quot; and &quot;pasta e fagioli&quot; are <strong>potentially</strong> talking about the same thing.</p>
+<p>So, you introduce a semantic search based on embeddings. The system now understands that the query is semantically close to recipes with legumes and winter soups. Among the individual dishes it finds, &quot;pasta e fagioli&quot; appears in the results. Problem solved? Not entirely.</p>
+<p>The next day, a user searches for &quot;recipe with &#39;nduja,&quot; and the semantic search returns recipes with spicy salami, Calabrian chili, or spicy sauces. These dishes are semantically close to the concept of &#39;nduja, but the user specifically wanted &#39;nduja as an ingredient, not the generic concept of &quot;spicy Calabrian.&quot; Or, they search for &quot;flourless caprese cake,&quot; and the system also returns the classic caprese cake because embeddings capture the semantic proximity between the two recipes but do not grasp the negation with the same precision. Or, they search for a specific intolerance code like &quot;E471,&quot; and the semantic search doesn&#39;t know what to do with that token.</p>
+<p>These are not bugs. They are the structural <span class="inline-note"><strong>failure modes</strong><button type="button" class="inline-note__trigger" aria-label="Explain failure modes"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Failure modes</strong> refers to the typical and predictable ways in which a system fails. In practice: not random errors, but recurring patterns of error that emerge because every approach has structural limitations.</span></span> of each individual approach. And hybrid search is born precisely from this: the realization that keyword and semantic search fail in different, often complementary ways, and that a robust system must be able to triangulate.</p>
+<h2 id="how-keyword-search-works-and-why-it-is-still-incredibly-strong">How keyword search works and why it is still incredibly strong</h2>
+<p>Classic keyword search is based on BM25, an algorithm derived from TF-IDF but with two important refinements: term frequency saturation, so that repeating a word twenty times does not multiply the score by twenty, and document length normalization, so that a long document is not penalized simply because it contains more terms.</p>
+<p><a href="https://medium.com/@noumannawaz/lesson-8-hybrid-retrieval-bm25-dense-bac3c702318b">BM25 works on an <strong>inverted index</strong>: a data structure that maps every term to the list of documents containing it, along with frequencies and positions.</a> It is a technology with decades of optimization behind it and is extremely efficient. It does not require GPUs, scales well, and returns results in a few milliseconds even on corpora of millions of documents.</p>
+<p>In our culinary app, BM25 is unbeatable when the query contains exact terms that appear in the recipes. &quot;Carbonara,&quot; &quot;porcini mushroom risotto,&quot; &quot;eggless tiramisu&quot;: these are all queries where a direct lexical match is exactly what is needed. If a user searches for a specific, perhaps uncommon ingredient like &quot;anchovy extract&quot; or &quot;bottarga,&quot; BM25 precisely finds the documents containing those terms. It is fast, predictable, and the results are explainable: you can always explain why a document was retrieved.</p>
+<p>However, the failure modes of keyword search are well-documented. <strong>Vocabulary mismatch</strong> is the most significant: if the user uses words different from those in the document, the system finds nothing. &quot;Escarole&quot; and &quot;curly endive&quot; are the same vegetable, but to BM25, they are two completely different strings. <strong>Synonym blindness</strong> is a specific case of this: &quot;car&quot; and &quot;automobile&quot; are strangers to an inverted index. More generally, BM25 lacks any semantic understanding: &quot;a quick dinner dish&quot; will not match any recipe because no recipe describes itself with those exact words.</p>
+<p>There is also a subtle problem of <strong>exact match bias</strong>: BM25 may return documents that contain the query terms in irrelevant contexts. If the phrase &quot;this is not a carbonara&quot; appears in the instructions for a cake, that recipe might appear in the results for &quot;carbonara.&quot; The term is there, but the context is not.</p>
+<h2 id="why-semantic-search-was-created-and-where-it-truly-helps">Why semantic search was created and where it truly helps</h2>
+<p>Semantic search was created to overcome vocabulary mismatch. The idea is to represent both queries and documents as vectors in a high-dimensional <strong>vector space</strong>—typically 768 or 1536 dimensions—where geometric proximity corresponds to similarity in meaning.</p>
+<p>An embedding model, typically a transformer like BERT or its derivatives, reads text and compresses it into a dense vector of decimal numbers. This process occurs for both documents at indexing time and for the query at search time. <a href="https://mbrenndoerfer.com/writing/dense-passage-retrieval-retrieval-augmented-generation-rag">Retrieval consists of finding the document vectors closest to the query vector using metrics such as cosine similarity or dot product.</a></p>
+<p>To perform this on millions of documents within a reasonable timeframe, <strong>approximate nearest neighbors</strong> (ANN) algorithms are used, the most common of which is HNSW (Hierarchical Navigable Small World). HNSW builds a multi-layered navigable graph where each node is a vector and edges connect nearby vectors. The search starts at the top levels, where the graph is sparse, and descends toward denser levels, progressively approaching the nearest neighbors. It is &quot;approximate&quot; because it does not guarantee finding the perfect neighbor, but in practice, recall is very high and latency is in the 10–50 millisecond range.</p>
+<p>In our culinary app, semantic search shines when the query is conceptual. &quot;A light dish for summer&quot; retrieves salads, carpaccios, and gazpacho, even if none of these recipes contain those words. &quot;Something sweet with almonds&quot; finds caprese cake, cantuccini, and almond paste. The system understands the intent, not just the terms.</p>
+<p><a href="https://chamomile.ai/challenges-dense-retrieval/">The failure modes of semantic search are equally real and often underestimated. The most insidious is <strong>semantic drift</strong>: the system retrieves documents that are in the same semantic neighborhood as the query but do not answer the question.</a> Searching for &quot;pesto pasta&quot; might also return recipes for salsa verde, chimichurri, or other herb-based sauces because the embeddings capture the conceptual proximity between these preparations. These are plausible but incorrect results.</p>
+<p>Then there is <strong>entity confusion</strong>: &quot;recipes with apples&quot; might return recipes that mention Apple in the context of tech-food, because the embedding vector merges different meanings into a single representation. And there is <strong>blindness to specific tokens</strong>: codes, acronyms, infrequent proper names, numbers, and allergen identifiers like &quot;E471&quot; are poorly represented in the vector space. A general-purpose model has not learned to assign weight to those tokens.</p>
+<p><a href="https://chamomile.ai/challenges-dense-retrieval/">A more subtle problem is <strong>negation blindness</strong>. &quot;Caprese cake without chocolate&quot; and &quot;chocolate caprese cake&quot; produce very similar embeddings because models capture thematic proximity but struggle to encode &quot;without&quot; as an inversion of meaning.</a> In practice, this means that semantic search can return results that explicitly contradict the query.</p>
+<h2 id="hybrid-search-is-not-a-compromise-it-is-an-architecture">Hybrid search is not a compromise, it is an architecture</h2>
+<p>With this context in mind, hybrid search stops being a &quot;checkbox&quot; feature and becomes a design choice. It is not about simply mixing a bit of keyword search with a bit of semantics; it is about recognizing that these two signals have complementary error profiles and building a system that combines them in a controlled manner.</p>
+<p><a href="https://www.elastic.co/what-is/hybrid-search">In technical terms, a hybrid search pipeline executes at least two retrievers in parallel: one <strong>sparse</strong> (typically BM25 on an inverted index) and one <strong>dense</strong> (vector search on an HNSW index), then merges the results into a single list.</a> The fusion step is critical, and there are two main families of approaches.</p>
+<p><a href="https://medium.com/thinking-sand/hybrid-search-with-bm25-and-rank-fusion-for-accurate-results-456a70305dc5"><strong>Score fusion</strong> normalizes the scores from both retrievers onto a common scale and combines them using a weighted average.</a> The typical formula is: final_score = α × sparse_score + (1-α) × dense_score, where α is a weight calibrated to your specific dataset. The advantage is that it preserves magnitude information: a document that dominates a retriever with a very high score is treated differently than one that is just above the threshold. The problem is that normalization is difficult. BM25 scores are unbounded and depend on corpus statistics, while cosine similarity ranges from -1 to 1. Bringing them onto the same scale using min-max requires knowing the extreme values, which are not always available in a distributed system. Furthermore, the weight α must be calibrated on labeled data; you need at least 50–100 annotated queries to obtain a reasonable value.</p>
+<p><a href="https://medium.com/thinking-sand/hybrid-search-with-bm25-and-rank-fusion-for-accurate-results-456a70305dc5"><strong>Rank fusion</strong>, and in particular Reciprocal Rank Fusion (RRF), ignores scores entirely and works only on the ranking positions.</a> The formula is elegant: for each document, the RRF score is the sum of 1/(k + rank) for every list in which the document appears, where k is a smoothing constant (typically 60). A document that appears in the first position in both lists gets a high score; one that appears in only one list gets a lower one. The constant k controls how quickly the importance of the position decays. The great advantage of RRF is that it requires no calibration: it works reasonably well as a zero-config default because it does not need to normalize incomparable scores. The limitation is that it discards information: a document that is first in the vector list by a huge margin is treated the same as one that is first by a hair.</p>
+<p>In our culinary app, the pipeline works like this: the user searches for &quot;pasta e ceci alla romana.&quot; BM25 retrieves recipes that contain those exact terms. Vector search retrieves semantically related recipes, such as &quot;pasta e ceci with rosemary&quot; or &quot;Lazio-style chickpea soup,&quot; even if they do not contain &quot;alla romana.&quot; The fusion step combines them: recipes appearing in both lists rise to the top, while those appearing in only one list remain but with a lower score. The result is more robust than either signal taken individually.</p>
+<h3 id="sparse-retrieval-is-not-just-bm25">Sparse retrieval is not just BM25</h3>
+<p>It is worth pausing on a distinction that is often overlooked: when we talk about sparse retrieval, we do not just mean classic BM25. <a href="https://www.pinecone.io/learn/splade/">There is a family of models called <strong>learned sparse representations</strong>, the most well-known of which is SPLADE (Sparse Lexical and Expansion Model). SPLADE uses a transformer to produce a sparse representation of the text—a vector with many zero dimensions and a few non-zero values—but unlike BM25, these dimensions are learned by the neural network and include terms that do not appear in the original text.</a> If the document mentions &quot;automobile,&quot; SPLADE might also activate the dimensions corresponding to &quot;car,&quot; &quot;vehicle,&quot; or &quot;driving.&quot; This solves the vocabulary mismatch while keeping the sparse structure compatible with inverted indexes.</p>
+<p><a href="https://blog.premai.io/hybrid-search-for-rag-bm25-splade-and-vector-search-combined/">In practice, SPLADE is sparse in form but semantic in content. It lives in the same infrastructure as BM25 (the inverted index), but with learned weights and vocabulary expansion.</a> It is not keyword search, and it is not dense retrieval: it is sparse retrieval with semantic capabilities. Some providers, such as Elasticsearch with ELSER, have developed their own proprietary sparse models following this intuition.</p>
+<h3 id="hybrid-retrieval-and-reranking-are-different-things">Hybrid retrieval and reranking are different things</h3>
+<p>Another fundamental distinction to keep in mind: hybrid retrieval and reranking are not the same thing, even though they often appear in the same pipeline. Hybrid retrieval combines the results of multiple retrievers during the retrieval phase. Reranking happens afterward, taking the candidates already retrieved and reordering them using a more powerful model.</p>
+<p><a href="https://www.pinecone.io/learn/series/rag/rerankers/">The most effective rerankers are <strong>cross-encoders</strong>: models that take the concatenated query-document pair as input and produce a single relevance score. Unlike the bi-encoders used in dense retrieval, where the query and document are encoded separately, the cross-encoder can model fine-grained interactions between query terms and document terms across all transformer layers.</a> This makes them much more accurate but also much slower: they must perform a full inference for every pair, making them viable only for the top 20–50 candidates, not for millions of documents.</p>
+<p>This is where the challenge lies: <strong>a reranker can only reorder what the retrieval has already found</strong>. If the retrieval fails to find a relevant document, no amount of reranking can fix it. This is why recall is won during the retrieval phase and precision during the reranking phase. Consequently, a well-designed pipeline often includes both: hybrid retrieval to maximize recall, followed by reranking to refine precision.</p>
+<p><a href="https://markaicode.com/bge-reranker-cross-encoder-reranking-rag/">Among the most widely used rerankers today are BAAI&#39;s bge-reranker-v2-m3 (open source, 278 million parameters, excellent multilingual performance), Cohere Rerank 3.5 (managed API, reliable in production), and the Elastic Rerank and Jina AI models integrated into the Elasticsearch ecosystem.</a> The computational cost is in the range of 80–350 milliseconds on a CPU for a batch of 20–50 candidates, dropping to 50–100 milliseconds on a GPU.</p>
+<h3 id="why-this-topic-has-returned-to-the-spotlight">Why this topic has returned to the spotlight</h3>
+<p>It is worth mentioning why hybrid search has exploded as a topic in recent years. The answer lies in RAG (Retrieval-Augmented Generation) systems: pipelines that retrieve documents from a knowledge base and pass them to a large language model to generate responses. In a RAG system, the quality of the retrieval determines the quality of the generation. If the retrieval misses relevant documents, the model generates hallucinated or incomplete answers. If it retrieves misleading documents, the model integrates them uncritically into the response.</p>
+<p>This has made retrieval a critical component in a new way: it is no longer just about showing a list of results to a human user who can evaluate them, but about providing context to a system that will consume it automatically. The requirements have shifted: for classic search, precision is paramount because the user sees the results directly and incorrect ones are immediately obvious; for RAG, recall is even more important, because the model can filter out noise but cannot invent information it has not received. Hybrid search, by combining multiple signals to maximize recall without sacrificing too much precision, has become the de facto standard for production RAG systems.</p>
+<h2 id="how-providers-interpret-hybrid-search">How providers interpret hybrid search</h2>
+<p>Every provider has made different design choices regarding how to implement hybrid search, and these choices reflect their history and architectural vision. Understanding these differences is more useful than any feature comparison table.</p>
+<h3 id="elasticsearch-the-most-complete-the-most-layered">Elasticsearch: the most complete, the most layered</h3>
+<p>Elasticsearch is arguably the most mature system for hybrid search today, the result of an evolution rooted in its DNA as a full-text search engine. Architecturally, it combines <strong>BM25 on an inverted index with kNN search on dense vectors</strong> and, optionally, <strong>ELSER</strong> (Elastic Learned Sparse Encoder), a proprietary sparse model that functions as a sort of internal SPLADE within the Elastic ecosystem.</p>
+<p><a href="https://www.elastic.co/docs/solutions/search/retrievers-overview">The heart of the system is the <strong>retriever framework</strong>, available since version 8.16: a composable tree structure where each node is a retriever, and composite retrievers can nest leaf retrievers to arbitrary depths. In a single API call, you can define: retrieve with BM25, retrieve with kNN, merge with RRF, then re-rank with a cross-encoder. Everything happens server-side, with no client-side logic required.</a></p>
+<p><a href="https://www.elastic.co/what-is/hybrid-search">There are two merging options: <strong>RRF</strong>, which is robust and requires no calibration, and a more recent <strong>linear retriever</strong> that combines normalized scores using weights per retriever.</a> The linear retriever is more accurate when weights are correctly calibrated, but it requires labeled data for calibration.</p>
+<p>Elasticsearch has invested heavily in reranking. It features an internal reranking model (Elastic Rerank, based on DeBERTa v3, with <strong>184 million parameters</strong> that internal benchmarks suggest compete with 2-billion-parameter models), integrations with Cohere and Jina AI, and support for custom models uploaded via Eland.</p>
+<p><a href="https://softwaredoug.com/blog/2025/02/08/elasticsearch-hybrid-search">Control is granular: weights for retrievers, fusion parameters, and filtering for both pre- and post-vector search (with a documented pitfall: filtering in a <code>bool</code>/<code>filter</code> context acts as a post-filter on kNN, not a pre-filter, which can unexpectedly return zero results).</a> The downside is complexity: Elasticsearch exposes many knobs, and it is easy to use them incorrectly.</p>
+<p>Pricing on Elastic Cloud is consumption-based, measured in VCU (Virtual Compute Units); ML nodes for ELSER require at least 4 GB of RAM, while reranking requires at least 8 GB. Self-hosting is possible under the AGPL license, with infrastructure costs depending on scale.</p>
+<h3 id="opensearch-the-open-source-alternative-with-a-different-approach-to-fusion">OpenSearch: The open-source alternative with a different approach to fusion</h3>
+<p><a href="https://docs.opensearch.org/latest/vector-search/ai-search/hybrid-search/index/">OpenSearch implements hybrid search through the <strong>Neural Search plugin</strong>, included by default since version 2.4, and a dedicated query type (<code>hybrid</code>) introduced in 2.11.</a> The architecture differs from Elasticsearch: fusion does not occur through a composable retriever, but through a <strong>search pipeline</strong> that intercepts results between the query and fetch phases.</p>
+<p><a href="https://docs.opensearch.org/latest/search-plugins/search-pipelines/normalization-processor/">OpenSearch&#39;s strength lies in its variety of normalization and score-combination options. It offers three normalization techniques (min-max, L2, z-score) and three combination methods (arithmetic, geometric, and harmonic mean), plus RRF as of version 2.19.</a> In total, it offers <strong>more possible combinations than Elasticsearch</strong> for fine-tuning score-based fusion.</p>
+<p>The trade-off is that configuration requires more boilerplate: you must create an ingestion pipeline for embedding generation, a search pipeline for fusion, and register the ML models. Weights are defined in the pipeline, not the query, meaning different weight configurations require different pipelines.</p>
+<p>Regarding reranking, OpenSearch supports cross-encoders deployed via ML Commons and connectors to Amazon Bedrock and Cohere. <a href="https://opensearch.org/blog/introducing-common-filter-support-for-hybrid-search-queries/">Version 3.0 introduced native support for common filters in hybrid queries, eliminating the need to manually duplicate filters in every sub-query.</a></p>
+<p><a href="https://cloudchipr.com/blog/aws-opensearch-pricing">Pricing for AWS OpenSearch Service starts at approximately <strong>$350 per month</strong> for the minimum serverless configuration (2 OCU in high availability).</a> Self-hosting is free under the Apache 2.0 license.</p>
+<h3 id="pinecone-sparse-and-dense-in-the-same-vector-space">Pinecone: Sparse and dense in the same vector space</h3>
+<p>Pinecone takes a radically different approach: it lacks a traditional BM25 engine. It treats everything as vectors. <a href="https://www.pinecone.io/guides/search/hybrid-search">Hybrid search is achieved in two ways: a <strong>single hybrid index</strong> where each record contains both a dense and a sparse vector (generated by a BM25 encoder or SPLADE), or <strong>two separate indexes</strong>—one dense and one sparse—whose results are combined client-side.</a></p>
+<p><a href="https://www.pinecone.io/guides/indexes/pods/query-sparse-dense-vectors">In the single hybrid index, Pinecone treats the sparse-dense pair as a single vector and calculates the dot product across the entire dimensional space. There is no server-side alpha parameter: the balance between signals is achieved by scaling the vector values client-side before the query.</a> It works, but it is less elegant than server-side solutions.</p>
+<p><a href="https://www.pinecone.io/guides/search/hybrid-search">An important detail regarding serverless infrastructure: on serverless indexes, <strong>Pinecone retrieves by dense vectors first and then re-ranks with sparse vectors</strong>, which means the sparse signal has less influence than the nominal alpha parameter would suggest.</a></p>
+<p>For the two-index approach, which Pinecone calls &quot;cascading retrieval,&quot; combination occurs via a reranker rather than score fusion. <a href="https://www.pinecone.io/blog/cascading-retrieval-with-multi-vector-representations/">Pinecone has explicitly stated that reranking outperforms heuristics like RRF and offers integrated managed rerankers: <code>pinecone-rerank-v0</code>, Cohere Rerank 3.5, and <code>bge-reranker-v2-m3</code>, all hosted on Pinecone servers.</a></p>
+<p>Pricing is consumption-based: Read Units are based on the namespace size per query ($16 per million RUs in the Standard plan), Write Units are for ingestion, and storage is approximately $0.33 per GB per month. Costs scale with query volume, which can become significant at high traffic levels.</p>
+<h3 id="qdrant-multi-vector-with-server-side-composable-pipelines">Qdrant: multi-vector with server-side composable pipelines</h3>
+<p><a href="https://qdrant.tech/documentation/concepts/hybrid-queries/">Qdrant is built on a <strong>multi-vector per point</strong> architecture: each record can hold multiple vectors with different names, dimensions, and metrics. A single point can contain a dense vector for semantic search, a sparse vector for BM25, and even ColBERT vectors for late-interaction reranking.</a></p>
+<p><a href="https://qdrant.tech/course/essentials/day-3/hybrid-search/">Hybrid search is implemented via the <strong>prefetch</strong> mechanism in the Query API: each prefetch is an independent sub-query that retrieves candidates from a specific vector, and the results are merged server-side using RRF or DBSF (Distribution-Based Score Fusion). Prefetches can be nested to build arbitrary multi-stage pipelines, all within a single API call.</a></p>
+<p><a href="https://qdrant.tech/course/essentials/day-3/sparse-vectors/">A key strength: since version 1.7, <strong>sparse search is exact</strong>, not approximate, thanks to a dedicated inverted index. There is zero recall loss for lexical matching.</a> As of 1.15.2, BM25 conversion happens natively server-side using the IDF modifier. <a href="https://qdrant.tech/blog/qdrant-1.16.x/">Since 1.16, prefetch weights are configurable in RRF, and the constant k is customizable.</a></p>
+<p><a href="https://qdrant.tech/documentation/advanced-tutorials/reranking-hybrid-search/">The lack of hosted cross-encoder rerankers is a limitation: reranking is performed via ColBERT vectors in the prefetch (a late-interaction model that is faster but less precise than a pure cross-encoder) or via external services.</a> Written in Rust with SIMD acceleration, Qdrant is among the highest performers in pure latency benchmarks.</p>
+<p><a href="https://qdrant.tech/pricing/">Pricing for Qdrant Cloud is based on infrastructure (vCPU, RAM, disk) with no per-query costs: once the cluster is provisioned, queries are unlimited.</a> Self-hosting is free under the Apache 2.0 license.</p>
+<h3 id="weaviate-the-vector-database-born-hybrid">Weaviate: the vector database born hybrid</h3>
+<p><a href="https://weaviate.io/blog/hybrid-search-explained">Weaviate started as a vector database and added BM25 as a complement. Hybrid search combines <strong>BM25F</strong> (a variant of BM25 with field-level boosting) and <strong>dense vector search</strong> in a single operation. The <strong>alpha</strong> parameter controls the balance: alpha=1 is pure vector search, alpha=0 is pure BM25, and alpha=0.5 is the balanced default.</a></p>
+<p><a href="https://weaviate.io/developers/weaviate/concepts/search/hybrid-search">The evolution of its fusion algorithms is instructive. Initially, Weaviate used simple summation. Since version 1.20, it has introduced two options: <strong>rankedFusion</strong> (rank-based, similar to RRF) and <strong>relativeScoreFusion</strong> (normalizes actual scores and combines them with a weighted average). Since 1.24, relativeScoreFusion has become the default because it preserves more information than rank-based fusion.</a></p>
+<p><a href="https://weaviate.io/blog/hybrid-search-for-web-developers">Weaviate does not natively support sparse vectors like SPLADE: the keyword component is exclusively classic BM25 on an inverted index.</a> This is a limitation if you want to use learned sparse retrieval, but for most use cases, native BM25 is sufficient.</p>
+<p>Regarding reranking, Weaviate integrates modules for Cohere Rerank, Jina AI, Voyage AI, and self-hosted transformers. Native multi-tenancy (supporting over 50,000 tenants per node) is a strong differentiator for SaaS applications. <a href="https://particula.tech/blog/weaviate-pricing-free-tier-guide">Pricing for Weaviate Cloud starts at <strong>$45 per month</strong> for the Flex plan, calculated based on stored vector dimensions.</a> Self-hosting is free under the BSD-3 license.</p>
+<h3 id="azure-ai-search-the-most-complete-out-of-the-box-pipeline">Azure AI Search: the most complete out-of-the-box pipeline</h3>
+<p>Azure AI Search is the only provider on this list that began as a traditional enterprise search service and added vector capabilities later. This background is reflected in a multi-stage pipeline that is arguably the most complete available without writing custom orchestration code.</p>
+<p>The standard pipeline consists of three stages. First: <strong>BM25 and vector search</strong> in parallel. <a href="https://learn.microsoft.com/en-us/azure/search/hybrid-search-ranking">Second: fusion using <strong>RRF</strong> (the only available fusion method; score fusion is not supported). Third: <strong>semantic ranker</strong>, a reranker based on models derived from Microsoft Bing that re-ranks the top 50 results using multilingual deep learning.</a> The semantic ranker is more than just a reranker: it also extracts captions and can return direct answers extracted from documents. A fourth stage, <strong>agentic retrieval</strong>, is currently in preview; it decomposes complex queries into sub-queries, executes them in parallel, and merges the results.</p>
+<p><a href="https://learn.microsoft.com/en-us/azure/search/hybrid-search-ranking">Control over the BM25/vector balance is indirect: there is no alpha parameter, but you can assign a <strong>weight</strong> to each vector query and control how many BM25 results feed into the fusion process using the maxTextRecallSize parameter.</a></p>
+<p>Pricing is based on Search Units (replica × partition), starting at approximately <strong>$75 per month</strong> for the Basic tier. The semantic ranker incurs an additional cost per query after the free quota is exhausted. Standard queries (full-text and vector) are included in the unit cost. The tight integration with Azure OpenAI and the broader Azure ecosystem makes Azure AI Search a natural choice for organizations already within that ecosystem, though it does introduce significant vendor lock-in.</p>
+<h3 id="conceptual-families">Conceptual families</h3>
+<p>Beyond individual providers, it is useful to group approaches into three families.</p>
+<p>The first is <strong>keyword + dense vectors</strong>: traditional BM25 on an inverted index combined with ANN search on embeddings. This is the approach taken by Weaviate, Azure AI Search, and the most common configuration for Elasticsearch and OpenSearch. The advantage is conceptual simplicity and proven infrastructure; the limitation is that the keyword component lacks semantic capabilities.</p>
+<p><a href="https://www.emergentmind.com/topics/dense-sparse-hybrid-retrieval">The second is <strong>dense + sparse retrieval</strong>: dense vectors combined with learned sparse vectors (such as SPLADE or similar). This is the approach used by Pinecone (sparse-dense index), Qdrant (multi-vector with native sparse support), and Elasticsearch with ELSER.</a> The advantage is that learned sparse retrieval solves the vocabulary mismatch problem without sacrificing the efficiency of the inverted index; the limitation is the added complexity of generating and managing two types of embeddings.</p>
+<p>The third is <strong>multi-stage retrieval with fusion and reranking</strong>: multi-stage pipelines where fusion is followed by reranking using a more powerful model. Azure AI Search with the semantic ranker, Elasticsearch with the full retriever framework, and Qdrant with nested prefetches fall into this category. In practice, this configuration yields the best results, but it is also the most complex to configure, evaluate, and maintain.</p>
+<h3 id="secondary-providers-in-brief">Secondary providers in brief</h3>
+<p><a href="https://redis.io/blog/revamping-context-oriented-retrieval-with-hybrid-search-in-redis-84/"><strong>Redis</strong> (with Redis Stack) introduced the FT.HYBRID command in version 8.4, which merges BM25 and vector search into a single command with support for RRF and linear combination.</a> Its strength is sub-millisecond in-memory speed; the limitation is that everything must reside in RAM, and ranking options are less sophisticated.</p>
+<p><a href="https://blog.vespa.ai/improving-zero-shot-ranking-with-vespa-part-two/"><strong>Vespa</strong> is arguably the most powerful and flexible system for hybrid search, used in production by Perplexity AI for its entire retrieval layer. Its <strong>phased ranking</strong> system (first-phase, second-phase, global-phase) with arbitrary ranking expressions in tensor algebra has no equivalent. It can execute ONNX models, ColBERT MaxSim, and cross-encoders, all within the serving layer.</a> It natively supports BM25, HNSW, SPLADE, and any custom model. However, operational complexity is high: it requires learning YQL, rank-profiles, cluster configuration, and specific concepts like weakAnd and match-features.</p>
+<p><a href="https://zilliz.com/learn/hybrid-search-combining-text-and-image"><strong>Milvus/Zilliz</strong> has supported multi-vector fields (dense and sparse) in the same collection since version 2.4, with fusion via WeightedRanker or RRFRanker. It recently added a built-in BM25 function that generates sparse vectors from text without external preprocessing.</a> It is a pure vector database with a distributed architecture that separates compute and storage, performing well in ANN tasks but offering less sophisticated ranking options than Vespa or Elasticsearch.</p>
+<p><strong>Typesense</strong> offers hybrid search as an automatic combination of keyword and vector search whenever a query includes both text fields and auto-embedding fields. The fusion is rank-based, using an alpha parameter (defaulting to 0.3 for vector and 0.7 for keyword). Its strength lies in its extreme simplicity: a single binary with no dependencies, deployment in minutes, and automatic typo tolerance. Its limitation is less flexibility in the fusion process and the lack of native reranking.</p>
+<h2 id="how-to-build-a-concrete-hybrid-pipeline">How to build a concrete hybrid pipeline</h2>
+<p>Let’s return to our cooking app and build a concrete hybrid pipeline, step by step.</p>
+<p>The first step is <strong>chunking</strong>. Recipes are structured documents: title, ingredient list, instructions, notes, and variations. Intelligent chunking does not cut at a fixed size but respects the structure: the title and ingredients form one chunk, the instructions another, and the notes yet another. Each chunk carries metadata (recipe title, region, category, preparation time) that will be useful for filtering. The ideal size is between 300 and 500 words per chunk, with a 10–20% overlap to ensure context is not lost at the boundaries.</p>
+<p>The second step is <strong>dual indexing</strong>. For each chunk, two representations are generated: the inverted index for BM25, which the database builds automatically from the text terms, and the dense vector, generated by passing the text through an embedding model. If the provider supports it, a third signal is added: a sparse vector (ELSER in Elasticsearch, or sparse via SPLADE or BM25 encoder in Pinecone/Qdrant). Metadata is indexed as filterable fields.</p>
+<p>The third step is the <strong>query pipeline</strong>. When a user searches for &quot;pasta e ceci alla romana,&quot; the pipeline executes a BM25 query on the text and a kNN search on the query vector in parallel. The results are merged, typically using RRF as the default starting point. Then, optionally, the top 20–50 candidates are passed to a cross-encoder reranker that reorders them with greater precision. Finally, the top 5–10 results are returned to the user or passed to the LLM in the case of a RAG system.</p>
+<p>The fourth step, often overlooked, is <strong>filtering</strong>. In our app, the user might have set filters for &quot;gluten-free,&quot; &quot;preparation time under 30 minutes,&quot; or &quot;Campanian cuisine.&quot; These filters must be applied before the vector search (pre-filtering), not after; otherwise, you risk retrieving candidates that will be discarded later, degrading the effective recall. Most modern providers support pre-filtering for both BM25 and kNN, but implementations vary and the pitfalls are real.</p>
+<p><a href="https://qdrant.tech/course/essentials/day-3/hybrid-search-demo/">In pseudo-code, a complete pipeline on Qdrant might look something like this: a single call to the Query API with two prefetches (one sparse with native BM25 and one dense), a filter on region and category, RRF fusion with weights of 2.0 for dense and 1.0 for sparse, and a limit of 10 results.</a> <a href="https://www.elastic.co/docs/reference/elasticsearch/rest-apis/retrievers/text-similarity-reranker-retriever">On Elasticsearch, the same logic is expressed with a retriever tree: a <code>text_similarity_reranker</code> that wraps an <code>rrf</code> which in turn wraps a standard retriever (BM25) and a <code>knn</code> retriever, with a common filter and reranking on the text field.</a></p>
+<h2 id="measuring-retrieval-quality-seriously">Measuring retrieval quality, seriously</h2>
+<p>Saying &quot;it works better&quot; without metrics is just an opinion. And opinions don&#39;t scale. To evaluate a hybrid search pipeline, you need precise metrics, and you need to understand what they actually measure.</p>
+<p><strong>Precision@k</strong> measures how many of the top k results are relevant. If 7 out of 10 results are pertinent, the precision@10 is 0.7. It is a simple metric, but it does not account for position: a relevant result in the tenth position is worth the same as one in the first. For classic search, where the user sees the list, precision is very important because incorrect results are immediately visible and degrade trust.</p>
+<p><strong>Recall@k</strong> measures how many of the total relevant documents appear in the top k results. If there are 20 pertinent recipes in the database and we retrieve 15 in the top 50, the recall@50 is 0.75. For RAG systems, recall is often the most critical metric: the model can filter out noise, but it cannot invent information that was not provided to it.</p>
+<p><strong>MRR</strong> (Mean Reciprocal Rank) measures how quickly the first relevant result appears, averaged across all queries. If the first correct result is in the second position, the reciprocal rank is 0.5; if it is in the first position, it is 1.0. MRR is the right metric when the user acts on the first good result, such as in a chatbot or a question-answering system.</p>
+<p><strong>NDCG</strong> (Normalized Discounted Cumulative Gain) is the most sophisticated metric: it accounts for both graded relevance (a result can be &quot;highly relevant,&quot; &quot;partially relevant,&quot; or &quot;not relevant&quot;) and position (relevant results at the top of the list are logarithmically more valuable than those at the bottom). NDCG@10 is the standard benchmark for retrieval systems, used in the MTEB leaderboard and the BEIR benchmark. A hybrid search system should always be evaluated using NDCG@10 in addition to recall@k.</p>
+<p>There is a substantial difference between evaluation for classic search and for RAG. Classic metrics (MRR, NDCG, MAP) assume that user attention decays monotonically with position. However, LLMs do not read results sequentially: they exhibit a <strong>&quot;lost in the middle&quot;</strong> effect, where accuracy is high for the first and last documents in the context but degrades for those in the middle. This means that classic metrics do not fully capture the impact of retrieval on generation quality. For RAG, it is useful to supplement retrieval metrics with end-to-end metrics like faithfulness and answer relevancy, which can be measured using frameworks like RAGAS or DeepEval.</p>
+<p>Building an evaluation dataset is an investment that pays off. Start with 50–100 queries representative of real users, annotate relevance judgments for the retrieved documents (binary or graded), and calculate metric values as a baseline. Every change to the pipeline—whether it is a change in the embedding model, an adjustment to fusion weights, or the addition of a reranker—is evaluated against this baseline. Without this process, you are navigating blindly.</p>
+<h2 id="costs-in-order-of-importance">Costs, in order of importance</h2>
+<h3 id="computational-cost-comes-first">Computational cost comes first</h3>
+<p>The most significant cost of hybrid search is not the provider&#39;s price: it is the computational cost of running two retrievers instead of one, maintaining two indices, and optionally adding a reranker.</p>
+<p><strong>Indexing</strong> is the heaviest task during setup. Building an inverted index for BM25 is relatively inexpensive, even on a CPU. Building an HNSW index for dense vectors is significantly more expensive: it requires generating embeddings (which necessitates a GPU or paid API) and building the HNSW graph, which is CPU-intensive. To give an order of magnitude, indexing 24 million PubMed abstracts using only BM25 on Elasticsearch takes about 156 minutes on 16 cores; adding embeddings can double or triple that time.</p>
+<p><strong>Storage</strong> is the ongoing cost. <a href="https://qdrant.tech/articles/sparse-embeddings-ecommerce-part-1/">An inverted index is compact, the result of decades of optimization. A vector index with 768-dimension float32 vectors occupies about <strong>3 KB per document</strong>, plus the overhead of the HNSW graph, which typically multiplies that by 1.5–2x.</a> For 10 million documents, we are talking about roughly 30–60 GB just for the vectors. Maintaining both indices costs 2–3 times the storage of a single one. Quantization (scalar, binary, product) can significantly reduce this cost with limited loss in accuracy.</p>
+<p><strong>Query latency</strong> is the cost perceived by the user. A pure BM25 query takes 10–80 milliseconds. A pure kNN search takes 10–50 milliseconds. A hybrid query with fusion, executed in parallel, takes the maximum of the two plus a negligible fusion overhead for RRF: typically <strong>50–150 milliseconds</strong> total. Adding a cross-encoder reranker on the top 20–50 candidates adds 80–350 milliseconds on a CPU, or 50–100 milliseconds on a GPU. For most applications, these latencies are acceptable, but for very high-throughput applications, the cost of reranking can become the bottleneck.</p>
+<h3 id="commercial-cost-depends-on-the-model">Commercial cost depends on the model</h3>
+<p>Provider pricing models are so different that a direct comparison is misleading without specifying the use case.</p>
+<p><strong>Infrastructure-based</strong> providers (Qdrant Cloud, Weaviate Cloud, self-hosted Elasticsearch, self-hosted OpenSearch) charge for allocated resources: CPU, RAM, and disk. Queries are unlimited once the cluster is provisioned. This model favors high-volume query workloads.</p>
+<p><strong>Consumption-based</strong> providers (Pinecone Serverless, Elastic Cloud Serverless, AWS OpenSearch Serverless) charge per operation or per unit of compute consumed. This model favors workloads with variable or low volumes but can become expensive as traffic increases.</p>
+<p><strong>Additional costs</strong> that are often overlooked include: embedding generation (API models like those from OpenAI cost about $0.02–$0.13 per million tokens), reranking (Cohere Rerank costs $1 per thousand searches), and the Azure AI Search semantic ranker, which has a per-query cost after the free tier.</p>
+<p>As a rough point of reference: a minimum configuration on Qdrant Cloud starts with the free tier (1 GB RAM); <a href="https://weaviate.io/pricing">Weaviate Cloud starts at $45 per month</a>; Azure AI Search Basic starts at approximately $75 per month; <a href="https://cloudchipr.com/blog/aws-opensearch-pricing">AWS OpenSearch Serverless starts at approximately $350 per month</a>; and Pinecone Standard starts at $50 per month plus usage-based costs.</p>
+<h3 id="the-cost-of-error-is-what-no-one-budgets-for">The cost of error is what no one budgets for</h3>
+<p>The most subtle cost is that of retrieval error. In a RAG system, a retrieval process that misses relevant documents produces incomplete answers or hallucinations. A retrieval process that pulls in misleading documents produces plausible but incorrect answers, which are worse than no answer at all. In our culinary app, returning a recipe with undeclared allergens because the retrieval failed to apply a filter is a concrete risk.</p>
+<p>Choosing a solution that is too simple—such as a single retriever without reranking or a single signal without fusion—may seem like a way to save on complexity, but the cost manifests in the quality of the results. <a href="https://medium.com/@akanshak/the-critical-role-of-rerankers-in-rag-98309f52abe5">Companies that have added reranking to their RAG pipelines have reported a <strong>25% reduction in token usage</strong> and associated costs, because the context provided to the model is more precise and requires less supporting material.</a></p>
+<p>On the other hand, over-engineering is a real risk. Adding complexity without evaluation creates opaque systems where problems are difficult to diagnose. The rule of thumb is: start with BM25 + dense + RRF as a baseline, measure, and add complexity (reranking, calibrated weights, learned sparse) only when the metrics justify it.</p>
+<h2 id="the-design-principle-behind-hybrid-search">The design principle behind hybrid search</h2>
+<p>Hybrid search is not just a checkbox feature. It is a design principle: do not trust a single signal. Every retrieval method has predictable failure modes, and the intelligent combination of different signals produces a system that is more robust than any single component.</p>
+<p>If there is one takeaway, it is this: keyword search is not dead, semantic search is not magic, and hybrid search is not just the sum of the two. It is an architecture that acknowledges the imperfection of every signal and transforms it into resilience. How you implement it—with which provider, which fusion, and which weights—depends on your domain, volume, budget, and tolerance for error. But the &quot;why&quot; is universal: systems that depend on a single retrieval signal are fragile, and sooner or later, you pay for that fragility.</p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/hybrid-search/index.html";
+    (function() {
+      const body = document.body;
+      const readingProgressBar = document.getElementById('reading-progress-bar');
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
+      const inlineNotes = Array.from(document.querySelectorAll('.post-body .inline-note'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      const codeFileExtensions = {
+        bash: 'sh',
+        shell: 'sh',
+        sh: 'sh',
+        zsh: 'zsh',
+        powershell: 'ps1',
+        python: 'py',
+        py: 'py',
+        javascript: 'js',
+        js: 'js',
+        typescript: 'ts',
+        ts: 'ts',
+        json: 'json',
+        html: 'html',
+        css: 'css',
+        scss: 'scss',
+        sass: 'sass',
+        markdown: 'md',
+        md: 'md',
+        yaml: 'yml',
+        yml: 'yml',
+        toml: 'toml',
+        dockerfile: 'dockerfile',
+        sql: 'sql',
+        c: 'c',
+        cpp: 'cpp',
+        csharp: 'cs',
+        java: 'java',
+        go: 'go',
+        rust: 'rs',
+        r: 'r',
+        swift: 'swift',
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function normaliseCodeLanguage(codeElement) {
+        if (!codeElement || !codeElement.classList) {
+          return '';
+        }
+        const languageClass = Array.from(codeElement.classList).find((className) => className.startsWith('language-'));
+        if (!languageClass) {
+          return '';
+        }
+        return languageClass.replace(/^language-/, '').trim().toLowerCase();
+      }
+      function formatCodeLanguageLabel(language) {
+        if (!language) {
+          return 'TEXT';
+        }
+        if (language.length <= 4) {
+          return language.toUpperCase();
+        }
+        return language.charAt(0).toUpperCase() + language.slice(1);
+      }
+      function buildCodeFilename(language) {
+        const extension = codeFileExtensions[language] || (language ? language : 'txt');
+        return 'snippet.' + extension;
+      }
+      function updateReadingProgress() {
+        if (!readingProgressBar) {
+          return;
+        }
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+        );
+        const maxScrollable = Math.max(1, documentHeight - viewportHeight);
+        const progress = Math.min(100, Math.max(0, (scrollTop / maxScrollable) * 100));
+        readingProgressBar.style.width = progress.toFixed(2) + '%';
+      }
+      function closeInlineNotes() {
+        inlineNotes.forEach((note) => {
+          note.classList.remove('inline-note--open');
+          const trigger = note.querySelector('.inline-note__trigger');
+          if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      function initInlineNotes() {
+        if (!inlineNotes.length) {
+          return;
+        }
+        inlineNotes.forEach((note, index) => {
+          const trigger = note.querySelector('.inline-note__trigger');
+          const popup = note.querySelector('.inline-note__popup');
+          if (!trigger || !popup) {
+            return;
+          }
+          const popupId = popup.id || ('inline-note-popup-' + index);
+          popup.id = popupId;
+          trigger.setAttribute('aria-controls', popupId);
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const isOpen = note.classList.contains('inline-note--open');
+            closeInlineNotes();
+            if (!isOpen) {
+              note.classList.add('inline-note--open');
+              trigger.setAttribute('aria-expanded', 'true');
+            }
+          });
+          popup.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
+        });
+        document.addEventListener('click', closeInlineNotes);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true' || pre.closest('.post-code-card')) {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const language = normaliseCodeLanguage(code);
+          const languageLabel = formatCodeLanguageLabel(language);
+          const filenameLabel = buildCodeFilename(language);
+          const wrapper = document.createElement('div');
+          wrapper.className = 'post-code-card';
+          wrapper.innerHTML =
+            '<div class="post-code-card__language">' + languageLabel + '</div>' +
+            '<div class="post-code-card__frame">' +
+              '<div class="post-code-card__header">' +
+                '<div class="post-code-card__window-controls" aria-hidden="true">' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--red"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--yellow"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--green"></span>' +
+                '</div>' +
+                '<span class="post-code-card__filename">' + filenameLabel + '</span>' +
+              '</div>' +
+              '<div class="post-code-card__body"></div>' +
+            '</div>';
+          const frame = wrapper.querySelector('.post-code-card__frame');
+          const header = wrapper.querySelector('.post-code-card__header');
+          const codeBody = wrapper.querySelector('.post-code-card__body');
+          if (!frame || !header || !codeBody) {
+            return;
+          }
+          pre.parentNode.insertBefore(wrapper, pre);
+          codeBody.appendChild(pre);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          header.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          updateReadingProgress();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+          closeInlineNotes();
+        }
+      });
+      enhanceTables();
+      initInlineNotes();
+      enhanceCodeBlocks();
+      initToc();
+      applyTheme(initialTheme);
+      updateReadingProgress();
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', updateReadingProgress, { passive: true });
+    })();
+  </script>
+</body>
+</html>
