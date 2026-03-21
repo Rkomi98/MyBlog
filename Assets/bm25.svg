@@ -1,0 +1,178 @@
+<?xml version="1.0" standalone="no"?>
+<svg id="bm25-diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780">
+            <defs>
+                <!-- Gradienti Sfondo -->
+                <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0b1224"/>
+                    <stop offset="100%" stop-color="#101a36"/>
+                </linearGradient>
+
+                <!-- Gradienti Stroke Box -->
+                <linearGradient id="stroke-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+
+                <linearGradient id="stroke-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f97316"/>
+                    <stop offset="100%" stop-color="#facc15"/>
+                </linearGradient>
+
+                <!-- Effetti Ombra -->
+                <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+                </filter>
+                
+                <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="8" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+
+                <!-- Markers per Frecce -->
+                <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/>
+                </marker>
+                <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316"/>
+                </marker>
+
+                <!-- Pattern Griglia -->
+                <pattern id="dot-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1.5" fill="#38bdf8" opacity="0.07"/>
+                </pattern>
+            </defs>
+
+            <!-- Sfondo -->
+            <rect width="1000" height="780" fill="url(#bg-grad)"/>
+            <rect width="1000" height="780" fill="url(#dot-grid)"/>
+
+            <!-- ================= CONNESSIONI (Bézier Curves) ================= -->
+            <g fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                
+                <!-- Livello 1 -> Livello 2 -->
+                <path d="M 200 150 C 200 200, 150 200, 150 250" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.8"/>
+                <path d="M 420 150 C 420 200, 250 200, 250 250" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+                <path d="M 580 150 C 580 200, 750 200, 750 250" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+                <path d="M 750 150 C 750 200, 550 200, 550 250" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.8"/>
+                <path d="M 850 150 C 850 200, 850 200, 850 250" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.8"/>
+
+                <!-- Livello 2 -> Livello 3 (Engine) -->
+                <path d="M 200 350 C 200 390, 260 390, 260 430" stroke="#38bdf8" marker-end="url(#arrow-cyan)"/>
+                <path d="M 500 350 C 500 390, 500 390, 500 430" stroke="#38bdf8" marker-end="url(#arrow-cyan)"/>
+                <path d="M 800 350 C 800 390, 740 390, 740 430" stroke="#38bdf8" marker-end="url(#arrow-cyan)"/>
+
+                <!-- Engine -> Score (Orange) -->
+                <path d="M 500 590 L 500 645" stroke="#f97316" stroke-width="3" marker-end="url(#arrow-orange)" filter="url(#glow-cyan)"/>
+            </g>
+
+            <!-- ================= NODI / BOXES ================= -->
+
+            <!-- ROW 1: INPUTS -->
+            <g transform="translate(70, 50)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <rect x="15" y="15" width="30" height="18" rx="4" fill="#38bdf8" fill-opacity="0.2"/>
+                <text x="30" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">IN</text>
+                
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Input Query (Q)</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Query inserita dall'utente</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#94a3b8" text-anchor="middle">Termini estratti: q₁, q₂, ..., qₙ</text>
+            </g>
+
+            <g transform="translate(370, 50)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <rect x="15" y="15" width="40" height="18" rx="4" fill="#64748b" fill-opacity="0.3"/>
+                <text x="35" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#cbd5f5" text-anchor="middle">DATA</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Corpus Statistics</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">N = Totale documenti nel dataset</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#94a3b8" text-anchor="middle">avgdl = Lunghezza media doc.</text>
+            </g>
+
+            <g transform="translate(670, 50)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <rect x="15" y="15" width="30" height="18" rx="4" fill="#38bdf8" fill-opacity="0.2"/>
+                <text x="30" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">IN</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Target Document (D)</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Documento da valutare</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#94a3b8" text-anchor="middle">|D| = N° di termini nel documento</text>
+            </g>
+
+            <!-- ROW 2: PROCESSING -->
+            <g transform="translate(70, 250)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#38bdf8"/>
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Inv. Document Freq. (IDF)</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Valuta la rarità del termine qᵢ</text>
+                <text x="130" y="72" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Alta = Termine specifico/chiave</text>
+                <text x="130" y="88" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Bassa = Termine comune (stop-word)</text>
+            </g>
+
+            <g transform="translate(370, 250)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#38bdf8"/>
+                
+                <rect x="220" y="10" width="30" height="20" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-width="1"/>
+                <text x="235" y="24" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">k₁</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">TF &amp; Saturation</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Frequenza del termine nel Doc</text>
+                <text x="130" y="72" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Parametro k₁ (tipico 1.2 - 2.0)</text>
+                <text x="130" y="88" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Satura l'impatto di TF eccessive</text>
+            </g>
+
+            <g transform="translate(670, 250)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#38bdf8"/>
+                
+                <rect x="220" y="10" width="30" height="20" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-width="1"/>
+                <text x="235" y="24" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">b</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Length Normalization</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Bilancia documenti lunghi/corti</text>
+                <text x="130" y="72" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Parametro b (tipico 0.75)</text>
+                <text x="130" y="88" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">b=1 (Max norm) / b=0 (No norm)</text>
+            </g>
+
+            <!-- ROW 3: ENGINE -->
+            <g transform="translate(180, 430)" filter="url(#shadow)">
+                <rect width="640" height="160" rx="16" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                
+                <circle cx="80" cy="0" r="5" fill="#38bdf8"/>
+                <circle cx="320" cy="0" r="5" fill="#38bdf8"/>
+                <circle cx="560" cy="0" r="5" fill="#38bdf8"/>
+
+                <text x="320" y="30" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#f8fafc" text-anchor="middle" letter-spacing="1">BM25 SCORING ENGINE</text>
+                <text x="320" y="50" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#94a3b8" text-anchor="middle">Aggregazione e calcolo pesato del relevance score</text>
+
+                <g transform="translate(0, 30)">
+                    <text x="130" y="65" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#f8fafc" text-anchor="end">Score(D, Q) =</text>
+                    
+                    <text x="150" y="80" font-family="Inter, sans-serif" font-size="48" fill="#38bdf8">∑</text>
+                    <text x="165" y="40" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">n</text>
+                    <text x="165" y="100" font-family="Inter, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">i=1</text>
+                    
+                    <text x="210" y="65" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#f8fafc">IDF(qᵢ) ·</text>
+
+                    <text x="440" y="45" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#cbd5f5" text-anchor="middle">TF(qᵢ) · (k₁ + 1)</text>
+                    
+                    <line x1="290" y1="58" x2="590" y2="58" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                    
+                    <text x="440" y="82" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#cbd5f5" text-anchor="middle">TF(qᵢ) + k₁ · (1 - b + b · (|D| / avgdl))</text>
+                </g>
+            </g>
+
+            <!-- ROW 4: OUTPUT -->
+            <g transform="translate(370, 650)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="16" fill="#1f2937" stroke="url(#stroke-orange)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#f97316"/>
+                
+                <rect x="110" y="12" width="40" height="18" rx="4" fill="#f97316" fill-opacity="0.2"/>
+                <text x="130" y="25" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#f97316" text-anchor="middle">OUT</text>
+
+                <text x="130" y="48" font-family="Inter, sans-serif" font-size="16" font-weight="700" fill="#f8fafc" text-anchor="middle">Final Relevance Score</text>
+                <text x="130" y="68" font-family="Inter, sans-serif" font-size="13" font-weight="400" fill="#cbd5f5" text-anchor="middle">Punteggio di pertinenza (Rank)</text>
+                <text x="130" y="86" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#94a3b8" text-anchor="middle">Utilizzato per ordinare i documenti</text>
+            </g>
+
+        </svg>
