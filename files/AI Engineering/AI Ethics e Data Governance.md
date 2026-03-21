@@ -1,4 +1,4 @@
-# AI Ethics e Data Governance per GenAI enterprise, agenti e MCP
+# AI Ethics e Data Governance
 Prima di iniziare con questo lungo articolo, faccio un passo indietro e spiego perché è nato questo articolo. Sento sempre più persone preoccupate per i dati che forniscono su questi chatbot. Il problema non è tanto l'utilizzo di questi dati per il training (come molti pensano), ma ci sono molte altre cose da considerare!
 
 ## Executive synthesis
@@ -426,3 +426,63 @@ Voglio chiudere questo articolo lasciandoti un paio di domande:
    Questa, secondo me, è la domanda più pratica di tutte. Non serve raccogliere ogni conversazione o costruire un lago infinito di log sensibili. Serve capire qual è il punto di equilibrio (ed è proprio questo il problema): abbastanza evidenze da poter fare audit, incident response e accountability, ma non così tanta retention da creare un nuovo problema di rischio e governance.
 
 Se dovessi sintetizzare tutto in una frase sola, direi questa: per avere un agente *davvero* **adottabile in azienda**, la **qualità della governance** che gli costruisci intorno è **fondamentale**.
+
+## Bibliografia
+
+### Provider, privacy e data retention
+
+- [OpenAI, Your data](https://developers.openai.com/api/docs/guides/your-data)
+- [OpenAI, How your data is used to improve model performance](https://openai.com/policies/how-your-data-is-used-to-improve-model-performance/)
+- [OpenAI, Enterprise privacy](https://openai.com/enterprise-privacy/)
+- [OpenAI Help, What if I want to keep my history on but disable model training?](https://help.openai.com/en/articles/8983130-what-if-i-want-to-keep-my-history-on-but-disable-model-training)
+- [OpenAI Help, Data Controls FAQ](https://help.openai.com/en/articles/7730893-data-controls-faq#h_506371c47c)
+- [OpenAI Help, GPTs Data Privacy FAQ](https://help.openai.com/en/articles/8554402-gpts-data-privacy-faq#h_59ac1f1363)
+- [OpenAI Help, Using Codex with your ChatGPT plan](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan#h_bcd215bebc)
+- [OpenAI Help, Codex Security](https://help.openai.com/en/articles/20001107-codex-security)
+- [OpenAI, Introducing Codex](https://openai.com/index/introducing-codex/)
+- [Anthropic, Updates to our consumer terms](https://www.anthropic.com/news/updates-to-our-consumer-terms)
+- [Anthropic Privacy Center, How long do you store my organization's data?](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data)
+- [Anthropic Privacy Center, Zero data retention scope](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to)
+- [Google AI for Developers, Gemini API Terms](https://ai.google.dev/gemini-api/terms)
+- [Google AI for Developers, Zero data retention](https://ai.google.dev/gemini-api/docs/zdr)
+- [Google Support, Gemini Apps data usage](https://support.google.com/gemini/answer/13594961?hl=en#pn_data_usage)
+- [Google Support, Gemini Apps activity and retention settings](https://support.google.com/gemini/answer/13278892?sjid=3045145834270888171-EU&visit_id=639085884098842590-1035937818&p=pn_auto_delete&rd=1#auto_delete)
+- [Google Cloud, Vertex AI zero data retention](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/vertex-ai-zero-data-retention)
+- [Google Cloud, Vertex AI data residency](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/data-residency)
+- [Cursor, Privacy and data governance](https://cursor.com/docs/enterprise/privacy-and-data-governance)
+- [Cursor, API keys and backend routing](https://cursor.com/help/models-and-usage/api-keys)
+- [Cursor, Security](https://cursor.com/security)
+
+### MCP, agenti e tool security
+
+- [Model Context Protocol, Documentation](https://modelcontextprotocol.io/)
+- [Model Context Protocol, Security best practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices)
+- [Anthropic, Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
+- [OpenAI Platform, Remote MCP](https://platform.openai.com/docs/guides/tools-remote-mcp)
+- [OpenAI Platform, Model data use](https://platform.openai.com/docs/models/how-we-use-your-data)
+- [Google AI for Developers, Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions)
+- [Microsoft Security Response Center, How Microsoft defends against indirect prompt injection attacks](https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks)
+- [Microsoft Learn, Prompt Shields](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection)
+- [Microsoft Learn, Defender for Cloud AI recommendations reference](https://learn.microsoft.com/en-us/azure/defender-for-cloud/recommendations-reference-ai)
+- [OWASP GenAI, LLM01: Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+- [GitHub Advisory Database, GHSA-6xpm-ggf7-wc3p](https://github.com/advisories/GHSA-6xpm-ggf7-wc3p)
+- [NVD, CVE-2025-49596](https://nvd.nist.gov/vuln/detail/CVE-2025-49596)
+- [NVD, CVE-2025-61591](https://nvd.nist.gov/vuln/detail/CVE-2025-61591)
+- [Invariant Labs, GitHub MCP server vulnerability analysis](https://invariantlabs.ai/blog/mcp-github-vulnerability)
+- [Cursor, MCP documentation](https://cursor.com/docs/mcp)
+
+### Paper, benchmark e framework
+
+- [NIST AI RMF 1.0](https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf)
+- [ISO/IEC 42001](https://www.iso.org/standard/42001)
+- [ISO/IEC 27001](https://www.iso.org/standard/27001)
+- [Anthropic Engineering, Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+- [Many-shot Jailbreaking](https://arxiv.org/abs/2403.02691)
+- [Prompt Injection Attack against LLM-integrated Applications](https://arxiv.org/abs/2407.12784)
+- [Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-based Agents](https://arxiv.org/abs/2410.02644)
+- [AgentPoison: Red-teaming LLM Agents via Memory or Knowledge Base Poisoning](https://arxiv.org/abs/2502.02558)
+
+### Regolazione e accountability
+
+- [European Commission, AI Act enters into force](https://commission.europa.eu/news-and-media/news/ai-act-enters-force-2024-08-01_en)
+- [EUR-Lex, Rules for trustworthy artificial intelligence in the EU](https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence-in-the-eu.html)
