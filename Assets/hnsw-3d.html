@@ -119,7 +119,7 @@
 
             <p>
                 Quando un embedding model trasforma un testo in un vettore da 1536 dimensioni, il problema che segue è 
-                trovare — tra milioni di vettori — quelli più simili a una query. Farlo confrontando ogni vettore uno per uno 
+                trovare, tra milioni di vettori, quelli più simili a una query. Farlo confrontando ogni vettore uno per uno 
                 sarebbe impraticabile. <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">HNSW</span> 
                 risolve questo problema costruendo un grafo navigabile a più livelli, ispirato alle skip list.
             </p>
@@ -236,7 +236,7 @@
             <p>
                 La parola chiave è <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">approssimato</span>: 
                 HNSW non garantisce di trovare il vicino perfetto in senso assoluto, ma in pratica la recall supera spesso 
-                il 95-99% con latenze nell'ordine dei 10–50 ms, anche su indici da decine di milioni di vettori. È il cuore 
+                il 95-99% con latenze nell'ordine dei 10–50 ms, anche su indici da decine di milioni di vettori. Questo sta alla base del successo di sistemi come <strong class="text-white">Faiss</strong>, <strong class="text-white">Weaviate</strong>, 
                 di sistemi come <strong class="text-white">Faiss</strong>, <strong class="text-white">Weaviate</strong>, 
                 <strong class="text-white">Qdrant</strong> e <strong class="text-white">pgvector</strong>.
             </p>
@@ -244,7 +244,7 @@
             <div class="bg-surface/50 border-l-2 border-accent pl-4 py-2 my-6">
                 <p class="font-sans text-sm italic text-gray-400">
                     Il parametro M controlla il numero massimo di archi per nodo. Più alto è M, più alta è la recall 
-                    ma anche il consumo di memoria. ef_construction regola la qualità del grafo in fase di indicizzazione.
+                    ma anche il consumo di memoria. Il parametro ef_construction regola la qualità del grafo in fase di indicizzazione.
                 </p>
             </div>
 
