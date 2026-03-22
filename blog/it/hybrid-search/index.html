@@ -42,7 +42,7 @@
     "headline": "Hybrid search: is two better than one?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-03-21T00:00:00.000Z",
-    "dateModified": "2026-03-21T16:11:12.000Z",
+    "dateModified": "2026-03-22T00:00:44.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1404,7 +1404,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">21 marzo 2026 • 34 min</span>
+            <span class="post-hero__author-meta">21 marzo 2026 • 35 min</span>
           </div>
         </div>
       </section>
@@ -1598,23 +1598,23 @@
 <details class="post-warning">
 <summary><strong>Approfondimento matematico su BM25</strong> (clicca per espandere)</summary>
 
-<p>Se vuoi vedere la parte più formale, il punteggio BM25 di un documento $D$ rispetto a una query $Q$ si può scrivere così:</p>
+<p>Se vuoi proprio vedere dove stanno, nella formula, le intuizioni di cui stiamo parlando, BM25 per un documento $D$ e una query $Q$ si può scrivere così:</p>
 <p>$$
 \text{BM25}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i,D)\cdot(k_1+1)}{f(q_i,D)+k_1\cdot\left(1-b+b\cdot\dfrac{|D|}{\text{avgdl}}\right)}
 $$</p>
-<p>Qui dentro ci sono quattro idee semplici ma importanti:</p>
+<p>Quello che conta davvero, però, non è memorizzarla a memoria. È capire cosa sta facendo:</p>
 <ul>
-<li><strong>Somma sui termini della query</strong>: BM25 calcola un contributo separato per ogni termine della query e poi li somma. Se cerchi &quot;pasta carbonara&quot;, il punteggio finale è la combinazione del contributo di &quot;pasta&quot; e di &quot;carbonara&quot;.</li>
-<li><strong>IDF$(q_i)$</strong>: misura quanto un termine è raro nel corpus. Più il termine è raro, più pesa nel punteggio. In una collezione di ricette, &quot;ricetta&quot; conta poco; &quot;guanciale&quot; o &quot;&#39;nduja&quot; molto di più.</li>
-<li><strong>$f(q_i,D)$ e $k_1$</strong>: $f(q_i,D)$ conta quante volte il termine compare nel documento, ma BM25 non cresce in modo lineare. Applica una <strong>saturazione</strong>: la prima occorrenza vale tanto, la seconda meno, la decima quasi niente. Il parametro $k_1$ controlla quanto rapidamente questa saturazione avviene.</li>
-<li><strong>$b$, $|D|$ e avgdl</strong>: questa parte corregge per la lunghezza del documento. Un documento lungo contiene naturalmente più parole, quindi anche più match casuali. BM25 compensa questo effetto confrontando la lunghezza del documento $|D|$ con la lunghezza media del corpus, <code>avgdl</code>.</li>
+<li><strong>Somma sui termini della query</strong>: BM25 non assegna un punteggio “in blocco”. Valuta ogni termine della query separatamente e poi somma i contributi. Se cerchi &quot;pasta carbonara&quot;, il documento prende un po&#39; di punteggio da &quot;pasta&quot; e un po&#39; da &quot;carbonara&quot;.</li>
+<li><strong>IDF$(q_i)$</strong>: è la parte che dice &quot;questo termine quanto discrimina davvero?&quot;. Se un termine compare ovunque, pesa poco. Se compare in pochi documenti, pesa molto di più. In un corpus di ricette, &quot;ricetta&quot; serve a poco; &quot;guanciale&quot; o &quot;&#39;nduja&quot; spostano parecchio.</li>
+<li><strong>$f(q_i,D)$ e $k_1$</strong>: qui entra in gioco quante volte il termine compare nel documento. Ma BM25 non cade nella trappola del &quot;più volte compare, meglio è&quot;. Fa crescere il punteggio con una logica di <strong>saturazione</strong>: le prime occorrenze contano molto, poi il guadagno marginale cala. $k_1$ controlla proprio questa curva.</li>
+<li><strong>$b$, $|D|$ e avgdl</strong>: questa parte serve a non favorire automaticamente i documenti lunghi. Un testo lungo ha più parole, quindi ha anche più probabilità di contenere certi termini. BM25 corregge questo effetto confrontando la lunghezza del documento $|D|$ con la lunghezza media del corpus, <code>avgdl</code>.</li>
 </ul>
-<p>La formula dell&#39;IDF di solito viene scritta così:</p>
+<p>Se vuoi vedere anche l&#39;IDF in forma esplicita, di solito viene scritto così:</p>
 <p>$$
 \text{IDF}(q_i) = \ln\left(\frac{N - n(q_i) + 0.5}{n(q_i) + 0.5} + 1\right)
 $$</p>
 <p>dove $N$ è il numero totale di documenti nel corpus e $n(q_i)$ è il numero di documenti che contengono il termine $q_i$.</p>
-<p>In pratica, BM25 cerca un equilibrio molto intelligente: premia i termini rari, considera le ripetizioni senza farsene ingannare, e impedisce che i documenti più lunghi vincano solo perché contengono più testo.</p>
+<p>Tradotto in modo molto meno elegante ma più utile: BM25 prova a tenere insieme tre cose che in retrieval si pestano continuamente i piedi. Vuole dare peso ai termini davvero informativi, vuole riconoscere che un termine presente più volte conta, ma non all&#39;infinito, e vuole evitare che un documento vinca solo perché è più lungo degli altri. È per questo che, ancora oggi, resta un baseline così difficile da battere.</p>
 </details>
 
 <p>Nella nostra app culinaria, BM25 è imbattibile quando la query contiene termini esatti che compaiono nelle ricette. &quot;Carbonara&quot;, &quot;risotto ai funghi porcini&quot;, &quot;tiramisù senza uova&quot;: tutte query dove il match lessicale diretto è esattamente ciò che serve. Se l&#39;utente cerca un ingrediente specifico, magari poco comune come &quot;colatura di alici&quot; o &quot;bottarga di muggine&quot;, BM25 trova precisamente i documenti che contengono quei termini. È veloce, prevedibile, e i risultati sono spiegabili: puoi sempre dire perché un documento è stato recuperato.</p>
