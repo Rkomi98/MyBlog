@@ -1,0 +1,189 @@
+<?xml version="1.0" standalone="no"?>
+<svg id="semantic-search-diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 830">
+            <defs>
+                <!-- Gradienti Sfondo -->
+                <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0b1224"/>
+                    <stop offset="100%" stop-color="#101a36"/>
+                </linearGradient>
+
+                <!-- Gradienti Stroke Box -->
+                <linearGradient id="stroke-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+
+                <linearGradient id="stroke-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f97316"/>
+                    <stop offset="100%" stop-color="#facc15"/>
+                </linearGradient>
+
+                <!-- Effetti Ombra -->
+                <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+                </filter>
+                
+                <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="8" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+
+                <!-- Markers per Frecce -->
+                <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/>
+                </marker>
+                <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316"/>
+                </marker>
+
+                <!-- Pattern Griglia -->
+                <pattern id="dot-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1.5" fill="#38bdf8" opacity="0.07"/>
+                </pattern>
+            </defs>
+
+            <!-- Sfondo -->
+            <rect width="1000" height="830" fill="url(#bg-grad)"/>
+            <rect width="1000" height="830" fill="url(#dot-grid)"/>
+
+            <!-- ================= CONNESSIONI (Bézier Curves) ================= -->
+            <g fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                
+                <!-- Colonna Sinistra (Query Flow) -->
+                <path d="M 280 140 C 280 165, 280 165, 280 190" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.8"/>
+                <path d="M 280 290 C 280 315, 280 315, 280 340" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.8"/>
+
+                <!-- Colonna Destra (Document Indexing Flow) -->
+                <path d="M 720 140 C 720 165, 720 165, 720 190" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+                <path d="M 720 290 C 720 315, 720 315, 720 340" stroke="#38bdf8" marker-end="url(#arrow-cyan)" opacity="0.6"/>
+
+                <!-- Convergenza verso il Motore di Similarità (Curve Fluide) -->
+                <path d="M 280 440 C 280 490, 420 450, 420 510" stroke="#38bdf8" marker-end="url(#arrow-cyan)"/>
+                <path d="M 720 440 C 720 490, 580 450, 580 510" stroke="#38bdf8" marker-end="url(#arrow-cyan)"/>
+
+                <!-- Engine -> Output (Orange) -->
+                <path d="M 500 630 C 500 655, 500 655, 500 680" stroke="#f97316" stroke-width="3" marker-end="url(#arrow-orange)" filter="url(#glow-cyan)"/>
+            </g>
+
+            <!-- ================= NODI / BOXES ================= -->
+
+            <!-- ROW 1: INPUTS (Y=40) -->
+            <!-- 1. Input Query -->
+            <g transform="translate(150, 40)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <rect x="15" y="15" width="30" height="18" rx="4" fill="#38bdf8" fill-opacity="0.2"/>
+                <text x="30" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">IN</text>
+                
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Input Query</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Testo in linguaggio naturale</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Es: "Miglior database vettoriale?"</text>
+            </g>
+
+            <!-- 2. Document Corpus -->
+            <g transform="translate(590, 40)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <rect x="15" y="15" width="40" height="18" rx="4" fill="#64748b" fill-opacity="0.3"/>
+                <text x="35" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#cbd5f5" text-anchor="middle">DATA</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Document Corpus</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Dataset / Base di conoscenza</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Articoli, FAQ, Documentazione</text>
+            </g>
+
+            <!-- ROW 2: EMBEDDING MODELS (Y=190) -->
+            <!-- 3. Query Encoder -->
+            <g transform="translate(150, 190)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#38bdf8"/>
+                
+                <rect x="15" y="15" width="50" height="18" rx="4" fill="#8b5cf6" fill-opacity="0.2"/>
+                <text x="40" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#a78bfa" text-anchor="middle">MODEL</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Embedding Model</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Transformer (es. BERT, OpenAI)</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Mappa la query in spazio denso</text>
+            </g>
+
+            <!-- 4. Document Encoder -->
+            <g transform="translate(590, 190)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#38bdf8"/>
+                
+                <rect x="15" y="15" width="50" height="18" rx="4" fill="#8b5cf6" fill-opacity="0.2"/>
+                <text x="40" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#a78bfa" text-anchor="middle">MODEL</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Embedding Model</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Condivide i pesi (Siamese Net)</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Indexing offline (Batch Process)</text>
+            </g>
+
+            <!-- ROW 3: VECTORS & STORAGE (Y=340) -->
+            <!-- 5. Query Vector -->
+            <g transform="translate(150, 340)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#38bdf8"/>
+                
+                <rect x="15" y="15" width="56" height="18" rx="4" fill="#38bdf8" fill-opacity="0.2"/>
+                <text x="43" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">VECTOR</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Query Embedding (q⃗)</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Vettore denso N-dimensionale</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Es: [0.12, -0.45, 0.89, ...]</text>
+            </g>
+
+            <!-- 6. Vector Database -->
+            <g transform="translate(590, 340)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="12" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#38bdf8"/>
+                
+                <rect x="15" y="15" width="30" height="18" rx="4" fill="#10b981" fill-opacity="0.2"/>
+                <text x="30" y="28" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#34d399" text-anchor="middle">DB</text>
+
+                <text x="130" y="30" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="middle">Vector Database</text>
+                <text x="130" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#cbd5f5" text-anchor="middle">Milvus, Pinecone, FAISS, Qdrant</text>
+                <text x="130" y="75" font-family="Inter, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">Indice HNSW (Approx Nearest Nbr)</text>
+            </g>
+
+            <!-- ROW 4: ENGINE (Y=510) -->
+            <!-- 7. Cosine Similarity Engine -->
+            <g transform="translate(250, 510)" filter="url(#shadow)">
+                <rect width="500" height="120" rx="16" fill="#1e293b" stroke="url(#stroke-cyan)" stroke-width="2"/>
+                
+                <!-- Connection points per curve di Bezier -->
+                <circle cx="170" cy="0" r="5" fill="#38bdf8"/>
+                <circle cx="330" cy="0" r="5" fill="#38bdf8"/>
+
+                <text x="250" y="30" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#f8fafc" text-anchor="middle" letter-spacing="1">COSINE SIMILARITY ENGINE</text>
+                <text x="250" y="50" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#94a3b8" text-anchor="middle">Calcola la vicinanza angolare tra i vettori nello spazio semantico</text>
+
+                <!-- Formula Centrata -->
+                <g transform="translate(140, 65)">
+                    <text x="0" y="22" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#f8fafc" text-anchor="end">sim(q, d) =</text>
+                    
+                    <!-- Numeratore -->
+                    <text x="110" y="10" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#cbd5f5" text-anchor="middle">q · d</text>
+                    
+                    <!-- Linea Frazione -->
+                    <line x1="20" y1="18" x2="200" y2="18" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                    
+                    <!-- Denominatore -->
+                    <text x="110" y="40" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#cbd5f5" text-anchor="middle">||q|| ||d||</text>
+                </g>
+            </g>
+
+            <!-- ROW 5: OUTPUT (Y=680) -->
+            <!-- 8. Final Results -->
+            <g transform="translate(370, 680)" filter="url(#shadow)">
+                <rect width="260" height="100" rx="16" fill="#1f2937" stroke="url(#stroke-orange)" stroke-width="2"/>
+                <circle cx="130" cy="0" r="5" fill="#f97316"/>
+                
+                <!-- Output Icon/Badge (Centrato) -->
+                <rect x="110" y="12" width="40" height="18" rx="4" fill="#f97316" fill-opacity="0.2"/>
+                <text x="130" y="25" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#f97316" text-anchor="middle">OUT</text>
+
+                <text x="130" y="48" font-family="Inter, sans-serif" font-size="16" font-weight="700" fill="#f8fafc" text-anchor="middle">Top-K Semantic Results</text>
+                <text x="130" y="68" font-family="Inter, sans-serif" font-size="13" font-weight="400" fill="#cbd5f5" text-anchor="middle">Documenti semanticamente affini</text>
+                <text x="130" y="86" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#94a3b8" text-anchor="middle">Risolve il problema dei sinonimi</text>
+            </g>
+
+        </svg>

@@ -36,20 +36,20 @@ BM25 lavora su un [**indice invertito**](https://medium.com/@noumannawaz/lesson-
 <details class="post-warning">
 <summary><strong>Approfondimento matematico su BM25</strong> (clicca per espandere)</summary>
 
-Se vuoi vedere la parte più formale, il punteggio BM25 di un documento $D$ rispetto a una query $Q$ si può scrivere così:
+Se vuoi proprio vedere dove stanno, nella formula, le intuizioni di cui stiamo parlando, BM25 per un documento $D$ e una query $Q$ si può scrivere così:
 
 $$
 \text{BM25}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i,D)\cdot(k_1+1)}{f(q_i,D)+k_1\cdot\left(1-b+b\cdot\dfrac{|D|}{\text{avgdl}}\right)}
 $$
 
-Qui dentro ci sono quattro idee semplici ma importanti:
+Quello che conta davvero, però, non è memorizzarla a memoria. È capire cosa sta facendo:
 
-- **Somma sui termini della query**: BM25 calcola un contributo separato per ogni termine della query e poi li somma. Se cerchi "pasta carbonara", il punteggio finale è la combinazione del contributo di "pasta" e di "carbonara".
-- **IDF$(q_i)$**: misura quanto un termine è raro nel corpus. Più il termine è raro, più pesa nel punteggio. In una collezione di ricette, "ricetta" conta poco; "guanciale" o "'nduja" molto di più.
-- **$f(q_i,D)$ e $k_1$**: $f(q_i,D)$ conta quante volte il termine compare nel documento, ma BM25 non cresce in modo lineare. Applica una **saturazione**: la prima occorrenza vale tanto, la seconda meno, la decima quasi niente. Il parametro $k_1$ controlla quanto rapidamente questa saturazione avviene.
-- **$b$, $|D|$ e avgdl**: questa parte corregge per la lunghezza del documento. Un documento lungo contiene naturalmente più parole, quindi anche più match casuali. BM25 compensa questo effetto confrontando la lunghezza del documento $|D|$ con la lunghezza media del corpus, `avgdl`.
+- **Somma sui termini della query**: BM25 non assegna un punteggio “in blocco”. Valuta ogni termine della query separatamente e poi somma i contributi. Se cerchi "pasta carbonara", il documento prende un po' di punteggio da "pasta" e un po' da "carbonara".
+- **IDF$(q_i)$**: è la parte che dice "questo termine quanto discrimina davvero?". Se un termine compare ovunque, pesa poco. Se compare in pochi documenti, pesa molto di più. In un corpus di ricette, "ricetta" serve a poco; "guanciale" o "'nduja" spostano parecchio.
+- **$f(q_i,D)$ e $k_1$**: qui entra in gioco quante volte il termine compare nel documento. Ma BM25 non cade nella trappola del "più volte compare, meglio è". Fa crescere il punteggio con una logica di **saturazione**: le prime occorrenze contano molto, poi il guadagno marginale cala. $k_1$ controlla proprio questa curva.
+- **$b$, $|D|$ e avgdl**: questa parte serve a non favorire automaticamente i documenti lunghi. Un testo lungo ha più parole, quindi ha anche più probabilità di contenere certi termini. BM25 corregge questo effetto confrontando la lunghezza del documento $|D|$ con la lunghezza media del corpus, `avgdl`.
 
-La formula dell'IDF di solito viene scritta così:
+Se vuoi vedere anche l'IDF in forma esplicita, di solito viene scritto così:
 
 $$
 \text{IDF}(q_i) = \ln\left(\frac{N - n(q_i) + 0.5}{n(q_i) + 0.5} + 1\right)
@@ -57,26 +57,42 @@ $$
 
 dove $N$ è il numero totale di documenti nel corpus e $n(q_i)$ è il numero di documenti che contengono il termine $q_i$.
 
-In pratica, BM25 cerca un equilibrio molto intelligente: premia i termini rari, considera le ripetizioni senza farsene ingannare, e impedisce che i documenti più lunghi vincano solo perché contengono più testo.
+Tradotto in modo molto meno elegante ma più utile: BM25 prova a tenere insieme tre cose che in retrieval si pestano continuamente i piedi. Vuole dare peso ai termini davvero informativi, vuole riconoscere che un termine presente più volte conta, ma non all'infinito, e vuole evitare che un documento vinca solo perché è più lungo degli altri. È per questo che, ancora oggi, resta un baseline così difficile da battere.
 </details>
 
-Nella nostra app culinaria, BM25 è imbattibile quando la query contiene termini esatti che compaiono nelle ricette. "Carbonara", "risotto ai funghi porcini", "tiramisù senza uova": tutte query dove il match lessicale diretto è esattamente ciò che serve. Se l'utente cerca un ingrediente specifico, magari poco comune come "colatura di alici" o "bottarga di muggine", BM25 trova precisamente i documenti che contengono quei termini. È veloce, prevedibile, e i risultati sono spiegabili: puoi sempre dire perché un documento è stato recuperato.
+Nella nostra app culinaria, BM25 è imbattibile quando la query contiene termini esatti che compaiono nelle ricette. "Carbonara", "risotto ai funghi porcini", "tiramisù senza uova": tutte query dove il match lessicale diretto è esattamente ciò che serve. Se l'utente cerca un ingrediente specifico, magari poco comune come "colatura di alici" o "bottarga di muggine", BM25 trova precisamente i documenti che contengono quei termini. È veloce, prevedibile, e i risultati sono spiegabili: puoi sempre dire perché un documento è stato recuperato <span class="inline-note"><button type="button" class="inline-note__trigger" aria-label="Spiega perché BM25 è spiegabile"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Perché è spiegabile?</strong> Perché il recupero dipende da segnali osservabili: quali termini della query compaiono nel documento, quante volte compaiono, quanto quei termini sono rari nel corpus e quanto pesa la lunghezza del documento. In altre parole, puoi risalire ai fattori che hanno prodotto il punteggio senza dover interpretare qualcosa di complesso, tipo uno spazio vettoriale denso. Ma non è ancora il momento di parlarne 😜</span></span>.
 
-I failure modes della keyword search sono però ben documentati. Il **vocabulary mismatch** è il più importante: se l'utente usa parole diverse da quelle nel documento, il sistema non trova nulla. "Scarola" e "indivia riccia" sono la stessa verdura, ma per BM25 sono due stringhe completamente diverse. La **cecità ai sinonimi** è un caso particolare: "macchina" e "automobile" sono estranei per un indice invertito. E più in generale, BM25 non ha alcuna comprensione semantica: "un piatto veloce per la cena" non matcha con nessuna ricetta perché nessuna ricetta si descrive con quelle parole esatte.
+I failure modes della keyword search sono però ben noti. Sicuramente il **vocabulary mismatch** è il più importante: se l'utente usa parole diverse da quelle nel documento, il sistema non trova nulla. "Scarola" e "indivia riccia" sono la stessa verdura, ma per BM25 sono due stringhe completamente diverse. Più in generale, BM25 non ha alcuna comprensione semantica: "un piatto veloce per la cena" non matcha con nessuna ricetta perché nessuna ricetta si descrive con quelle parole esatte.
 
 C'è anche un problema sottile di **exact match bias**: BM25 può restituire documenti che contengono i termini della query in contesti irrilevanti. Se nel procedimento di una torta compare la frase "questa non è una carbonara", quella ricetta potrebbe apparire nei risultati per "carbonara". Il termine c'è, il contesto no.
 
-## Perché è nata la semantic search e dove davvero aiuta
+### Semantic search
 
 La semantic search nasce per superare il vocabulary mismatch. L'idea è rappresentare sia le query che i documenti come vettori in uno **spazio vettoriale** ad alta dimensionalità, tipicamente 768 o 1536 dimensioni, dove la vicinanza geometrica corrisponde alla vicinanza di significato.
+
+<figure class="article-figure">
+  <img src="../Assets/semantic_search_architecture_dark.svg" alt="Architettura semplificata della semantic search con embedding di query e documenti, indicizzazione vettoriale e retrieval per similarità">
+  <figcaption><strong>Figure 02.</strong> Schema semplificato della semantic search: documenti e query vengono trasformati in embedding nello stesso spazio vettoriale, indicizzati in un motore ANN e confrontati tramite similarità per recuperare i candidati più vicini.</figcaption>
+</figure>
 
 Un modello di embedding, in genere un transformer come BERT o derivati, legge un testo e lo comprime in un vettore denso di numeri decimali. Questo processo avviene sia per i documenti, al momento dell'indicizzazione, sia per la query, al momento della ricerca. [Il retrieval consiste nel trovare i vettori dei documenti più vicini al vettore della query, usando metriche come la similarità coseno o il prodotto scalare.](https://mbrenndoerfer.com/writing/dense-passage-retrieval-retrieval-augmented-generation-rag)
 
 Per farlo su milioni di documenti in tempi ragionevoli si usano algoritmi di **approximate nearest neighbors** (ANN), il più diffuso dei quali è HNSW (Hierarchical Navigable Small World). HNSW costruisce un grafo navigabile a più livelli dove ogni nodo è un vettore e gli archi collegano vettori vicini. La ricerca parte dai livelli alti, dove il grafo è sparse, e scende verso livelli più densi, avvicinandosi progressivamente ai vicini più prossimi. È approssimato perché non garantisce di trovare il vicino perfetto, ma in pratica la recall è molto alta e la latenza è nell'ordine dei 10-50 millisecondi.
 
+> 🎮 **Simulazione interattiva.** Qui sotto puoi seguire la navigazione di HNSW livello per livello: la query entra dall'alto, attraversa i nodi più promettenti e il terminale spiega in tempo reale cosa sta succedendo a ogni step.
+
+<iframe
+  src="../../../Assets/hnsw-3d.html"
+  title="Simulazione interattiva HNSW con navigazione a livelli e terminale esplicativo"
+  loading="lazy"
+  style="width: 100%; min-height: 980px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
+></iframe>
+
+_Figure 03: Simulazione interattiva del search path di HNSW. La query parte dai layer più sparsi, usa i collegamenti lunghi per raggiungere rapidamente la zona semantica corretta e poi scende nei layer più densi, dove il terminale mostra i confronti locali che portano alla scelta del nearest neighbor approssimato._
+
 Nella nostra app culinaria, la semantic search brilla quando la query è concettuale. "Un piatto leggero per l'estate" recupera insalate, carpacci, gazpacho, anche se nessuna di queste ricette contiene quelle parole. "Qualcosa di dolce con le mandorle" trova la torta caprese, i cantuccini, la pasta di mandorle. Il sistema capisce l'intento, non solo i termini.
 
-[I failure modes della semantic search sono altrettanto reali e spesso sottovalutati. Il più insidioso è la **deriva semantica**: il sistema recupera documenti che sono nello stesso quartiere semantico della query ma non rispondono alla domanda.](https://chamomile.ai/challenges-dense-retrieval/) Cercando "pasta al pesto" potresti ottenere anche ricette con salsa verde, chimichurri, o altre salse a base di erbe, perché gli embeddings catturano la vicinanza concettuale tra queste preparazioni. Sono risultati plausibili ma sbagliati.
+I failure modes della semantic search sono altrettanto comuni e spesso sottovalutati. Il più insidioso è la [**deriva semantica**](https://chamomile.ai/challenges-dense-retrieval/): il sistema recupera documenti che sono nello stesso "quartiere semantico" della query ma non rispondono alla domanda. Cercando "pasta al pesto" potresti ottenere anche ricette con salsa verde, chimichurri, o altre salse a base di erbe, perché gli embeddings catturano la vicinanza concettuale tra queste preparazioni. Sono risultati plausibili ma sbagliati.
 
 C'è poi la **confusione tra entità**: "ricette con mele" potrebbe restituire ricette che menzionano Apple in un contesto di cucina tech-food, perché il vettore di embedding fonde i diversi significati in una rappresentazione unica. E la **cecità ai token specifici**: codici, sigle, nomi propri poco frequenti, numeri, identificatori di allergeni come "E471" sono mal rappresentati nello spazio vettoriale. Un modello generalista non ha imparato a dare peso a quei token.
 
