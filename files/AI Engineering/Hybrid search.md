@@ -1,28 +1,64 @@
 # Hybrid search: due segnali valgono più di uno?
 
+## Introduzione
+
 Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si avvicina al tema del retrieval in questi ultimi anni. Liquidare la ricerca per parole chiave come "roba vecchia" semplifica troppo le cose, e quella semplificazione prima o poi si paga.
 
 Il punto vero è un altro: ogni strategia di retrieval commette errori specifici, prevedibili e spesso complementari. La hybrid search esiste perché qualcuno ha guardato questi errori con attenzione e ha capito che dipendere da un solo segnale è una fragilità che un sistema serio non può permettersi.
 
 Questo articolo non è una gara per eleggere un vincitore tra keyword e semantic search. Il punto è capire **quali errori fanno i diversi segnali di retrieval**, perché li fanno, e come si costruisce un sistema che li combina senza che uno annulli l'altro. Per rendere tutto più maneggiabile useremo un caso guida: un sistema di retrieval dietro un'app culinaria, un motore che deve recuperare ricette, ingredienti, varianti regionali e informazioni nutrizionali a partire dalle domande degli utenti. Un dominio familiare, ma con abbastanza complessità da far emergere i limiti reali di ogni approccio.
 
-## Quando un sistema di retrieval dipende da un solo segnale
+## Estrarre le info con un solo metodo
 
-Immagina di costruire il motore di ricerca per un'app di ricette. Hai un database con migliaia di ricette italiane, ognuna con titolo, lista di ingredienti, procedimento, varianti regionali e note. Un utente cerca "pasta e fagioli". Con una keyword search, per esempio usando BM25, il risultato è immediato e preciso: tutte le ricette che contengono esattamente quei termini, ordinate per rilevanza statistica. Funziona bene.
+Ogni volta che penso a questo problema, penso al caso in un posto di lavoro in cui c'è una persona senior con un vecchio che metodo che funziona e uno junior che ha un metodo totalmente diverso che funziona quando l'altro fallisce (e viceversa). Ecco entrambi i metodi funzionano o falliscono in base al dominio di applicazione e in base a qual è l'obiettivo finale. Ecco, la ricerca per parole e semantica sono esattamente i metodi del profilo senior e quello junior, possono eccellere sulle cose che l'altro fa fatica a fare.
 
-Ma un altro utente cerca "un primo sostanzioso per l'inverno con i legumi". Qui la keyword search è in difficoltà: nessuna ricetta contiene letteralmente quella frase. La pasta e fagioli è esattamente quello che serve, ma il sistema non lo sa, perché non capisce che "primo sostanzioso per l'inverno con i legumi" e "pasta e fagioli" parlano della stessa cosa.
+Immagina di costruire il motore di ricerca per un'app di ricette. Hai un database con migliaia di ricette italiane, ognuna con titolo, lista di ingredienti, procedimento, varianti regionali e note. Un utente cerca "pasta e fagioli". Con una keyword search, per esempio usando BM25 (dopo vedremo in cosa consiste), il risultato è immediato e preciso: tutte le ricette che contengono esattamente quei termini, ordinate per rilevanza statistica. Funziona bene.
 
-Allora introduci una semantic search basata su embeddings. Il sistema ora capisce che la query è semanticamente vicina a ricette con legumi, brodi invernali, piatti unici. La pasta e fagioli appare nei risultati. Problema risolto? Non del tutto.
+Ma un altro utente cerca "un primo sostanzioso per l'inverno con i legumi". Qui la keyword search è in difficoltà: nessuna ricetta contiene letteralmente quella frase. La pasta e fagioli è esattamente quello che serve, ma il sistema non lo sa, perché non capisce che "primo sostanzioso per l'inverno con i legumi" e "pasta e fagioli" parlano **potenzialmente** della stessa cosa.
+
+Allora introduci una semantic search basata su embeddings. Il sistema ora capisce che la query è semanticamente vicina a ricette con legumi e a brodi invernali. Tra i singoli piatti che trova, la pasta e fagioli appare nei risultati. Problema risolto? Non del tutto.
 
 Il giorno dopo un utente cerca "ricetta con 'nduja" e la semantic search gli restituisce ricette con salame piccante, peperoncino calabrese, sughi piccanti. Sono piatti semanticamente vicini al concetto di 'nduja, ma l'utente voleva specificamente la 'nduja come ingrediente, non il concetto generico di "piccante calabrese". Oppure cerca "torta caprese senza farina" e il sistema restituisce anche la torta caprese classica, perché gli embeddings catturano la vicinanza semantica tra le due ricette ma non colgono la negazione con la stessa precisione. O ancora, cerca un codice specifico per intolleranze come "E471", e la semantic search non sa che farsene di quel token.
 
-Questi non sono bug. Sono i **failure modes** strutturali di ogni singolo approccio. E la hybrid search nasce precisamente da qui: dalla constatazione che keyword e semantic search sbagliano in modi diversi, spesso complementari, e che un sistema robusto deve poter triangolare.
+Questi non sono bug. Sono i <span class="inline-note"><strong>failure modes</strong><button type="button" class="inline-note__trigger" aria-label="Spiega failure modes"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Failure modes</strong> indica i modi tipici e prevedibili in cui un sistema fallisce. In pratica: non errori casuali, ma pattern ricorrenti di errore che emergono perché ogni approccio ha dei limiti strutturali.</span></span> strutturali di ogni singolo approccio. E la hybrid search nasce precisamente da qui: dalla constatazione che keyword e semantic search sbagliano in modi diversi, spesso complementari, e che un sistema robusto deve poter triangolare.
 
-## Come funziona la keyword search e perché è ancora fortissima
+### Come funziona la keyword search e perché è ancora fortissima
 
-La keyword search classica si fonda su BM25, un algoritmo che discende da TF-IDF ma con due raffinamenti importanti: la saturazione della frequenza dei termini, per cui ripetere una parola venti volte non moltiplica venti volte il punteggio, e la normalizzazione per lunghezza del documento, per cui un documento lungo non viene penalizzato solo perché contiene più termini.
+La keyword search classica si fonda su BM25, un algoritmo che discende da TF-IDF (ne abbiamo parlato in un precedente articolo) ma con due raffinamenti importanti: la *saturazione della frequenza dei termini*, per cui ripetere una parola venti volte non moltiplica venti volte il punteggio, e la *normalizzazione per lunghezza del documento*, per cui un documento lungo non viene penalizzato solo perché contiene più termini.
 
-[BM25 lavora su un **indice invertito**: una struttura dati che mappa ogni termine alla lista dei documenti che lo contengono, con frequenze e posizioni.](https://medium.com/@noumannawaz/lesson-8-hybrid-retrieval-bm25-dense-bac3c702318b) È una tecnologia con decenni di ottimizzazione alle spalle, estremamente efficiente. Non richiede GPU, scala bene, e restituisce risultati in pochi millisecondi anche su corpora di milioni di documenti.
+<figure class="article-figure">
+  <img src="../Assets/bm25.svg" alt="Schema semplificato del funzionamento di BM25 nella keyword search">
+  <figcaption><strong>Figure 01.</strong> Schema semplificato di BM25: la rilevanza cresce con il match dei termini della query, ma viene corretta tenendo conto sia della frequenza dei termini sia della lunghezza del documento.</figcaption>
+</figure>
+
+BM25 lavora su un [**indice invertito**](https://medium.com/@noumannawaz/lesson-8-hybrid-retrieval-bm25-dense-bac3c702318b): una struttura dati che mappa ogni termine alla lista dei documenti che lo contengono, con frequenze e posizioni. È una tecnologia con decenni di ottimizzazione alle spalle, estremamente efficiente. Non richiede GPU, scala bene, e restituisce risultati in pochi millisecondi anche su un insieme di milioni di documenti. Se vuoi un approfondimento matematico te lo lascio qui 👇🏻.
+
+<details class="post-warning">
+<summary><strong>Approfondimento matematico su BM25</strong> (clicca per espandere)</summary>
+
+Se vuoi vedere la parte più formale, il punteggio BM25 di un documento $D$ rispetto a una query $Q$ si può scrivere così:
+
+$$
+\text{BM25}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i,D)\cdot(k_1+1)}{f(q_i,D)+k_1\cdot\left(1-b+b\cdot\dfrac{|D|}{\text{avgdl}}\right)}
+$$
+
+Qui dentro ci sono quattro idee semplici ma importanti:
+
+- **Somma sui termini della query**: BM25 calcola un contributo separato per ogni termine della query e poi li somma. Se cerchi "pasta carbonara", il punteggio finale è la combinazione del contributo di "pasta" e di "carbonara".
+- **IDF$(q_i)$**: misura quanto un termine è raro nel corpus. Più il termine è raro, più pesa nel punteggio. In una collezione di ricette, "ricetta" conta poco; "guanciale" o "'nduja" molto di più.
+- **$f(q_i,D)$ e $k_1$**: $f(q_i,D)$ conta quante volte il termine compare nel documento, ma BM25 non cresce in modo lineare. Applica una **saturazione**: la prima occorrenza vale tanto, la seconda meno, la decima quasi niente. Il parametro $k_1$ controlla quanto rapidamente questa saturazione avviene.
+- **$b$, $|D|$ e avgdl**: questa parte corregge per la lunghezza del documento. Un documento lungo contiene naturalmente più parole, quindi anche più match casuali. BM25 compensa questo effetto confrontando la lunghezza del documento $|D|$ con la lunghezza media del corpus, `avgdl`.
+
+La formula dell'IDF di solito viene scritta così:
+
+$$
+\text{IDF}(q_i) = \ln\left(\frac{N - n(q_i) + 0.5}{n(q_i) + 0.5} + 1\right)
+$$
+
+dove $N$ è il numero totale di documenti nel corpus e $n(q_i)$ è il numero di documenti che contengono il termine $q_i$.
+
+In pratica, BM25 cerca un equilibrio molto intelligente: premia i termini rari, considera le ripetizioni senza farsene ingannare, e impedisce che i documenti più lunghi vincano solo perché contengono più testo.
+</details>
 
 Nella nostra app culinaria, BM25 è imbattibile quando la query contiene termini esatti che compaiono nelle ricette. "Carbonara", "risotto ai funghi porcini", "tiramisù senza uova": tutte query dove il match lessicale diretto è esattamente ciò che serve. Se l'utente cerca un ingrediente specifico, magari poco comune come "colatura di alici" o "bottarga di muggine", BM25 trova precisamente i documenti che contengono quei termini. È veloce, prevedibile, e i risultati sono spiegabili: puoi sempre dire perché un documento è stato recuperato.
 
@@ -236,7 +272,7 @@ Scegliere una soluzione troppo semplice, un solo retriever senza reranking, un s
 
 Dall'altra parte, la sovra-ingegnerizzazione è un rischio reale. Aggiungere complessità senza valutazione produce sistemi opachi dove i problemi sono difficili da diagnosticare. La regola pratica è: parti con BM25 + dense + RRF come baseline, misura, e aggiungi complessità (reranking, pesi calibrati, sparse appreso) solo quando le metriche lo giustificano.
 
-## Il principio di progettazione dietro la hybrid search
+## Conclusione
 
 La hybrid search non è una feature da checkbox. È un principio di progettazione: non fidarti di un solo segnale. Ogni metodo di retrieval ha failure modes prevedibili, e la combinazione intelligente di segnali diversi produce un sistema più robusto di qualsiasi singolo componente.
 
