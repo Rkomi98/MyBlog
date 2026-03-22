@@ -81,13 +81,11 @@
     <!-- Header -->
     <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background-dark/80 border-b border-white/5">
         <div class="flex items-center justify-between px-4 py-3 max-w-3xl mx-auto">
-            <a href="/" class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+            <a href="../blog/it/hybrid-search/index.html" aria-label="Torna all'articolo sulla hybrid search" class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
                 <span class="material-symbols-outlined text-2xl">arrow_back</span>
             </a>
             <span class="font-mono text-sm text-text-muted">HNSW — Navigare vettori a strati</span>
-            <button class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
-                <span class="material-symbols-outlined text-xl">more_vert</span>
-            </button>
+            <div class="w-8 h-8" aria-hidden="true"></div>
         </div>
     </header>
 
@@ -119,7 +117,7 @@
 
             <p>
                 Quando un embedding model trasforma un testo in un vettore da 1536 dimensioni, il problema che segue è 
-                trovare — tra milioni di vettori — quelli più simili a una query. Farlo confrontando ogni vettore uno per uno 
+                trovare, tra milioni di vettori, quelli più simili a una query. Farlo confrontando ogni vettore uno per uno 
                 sarebbe impraticabile. <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">HNSW</span> 
                 risolve questo problema costruendo un grafo navigabile a più livelli, ispirato alle skip list.
             </p>
@@ -236,7 +234,7 @@
             <p>
                 La parola chiave è <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">approssimato</span>: 
                 HNSW non garantisce di trovare il vicino perfetto in senso assoluto, ma in pratica la recall supera spesso 
-                il 95-99% con latenze nell'ordine dei 10–50 ms, anche su indici da decine di milioni di vettori. È il cuore 
+                il 95-99% con latenze nell'ordine dei 10–50 ms, anche su indici da decine di milioni di vettori. Questo sta alla base del successo di sistemi come <strong class="text-white">Faiss</strong>, <strong class="text-white">Weaviate</strong>, 
                 di sistemi come <strong class="text-white">Faiss</strong>, <strong class="text-white">Weaviate</strong>, 
                 <strong class="text-white">Qdrant</strong> e <strong class="text-white">pgvector</strong>.
             </p>
@@ -244,7 +242,7 @@
             <div class="bg-surface/50 border-l-2 border-accent pl-4 py-2 my-6">
                 <p class="font-sans text-sm italic text-gray-400">
                     Il parametro M controlla il numero massimo di archi per nodo. Più alto è M, più alta è la recall 
-                    ma anche il consumo di memoria. ef_construction regola la qualità del grafo in fase di indicizzazione.
+                    ma anche il consumo di memoria. Il parametro ef_construction regola la qualità del grafo in fase di indicizzazione.
                 </p>
             </div>
 

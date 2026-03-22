@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html class="dark" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Reciprocal Rank Fusion — come si fondono i ranking</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0F172A",
+                        "background-dark": "#0B1120",
+                        "surface": "#1E293B",
+                        "text-main": "#E2E8F0",
+                        "text-muted": "#94A3B8",
+                        "accent": "#10B981",
+                        "code-bg": "#0F172A",
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "serif": ["Charter", "serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "4px",
+                        "lg": "12px",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .topographic-bg {
+            background-color: #0B1120;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0F172A; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        /* doc card */
+        .doc-card {
+            transition: transform 0.35s cubic-bezier(.22,.68,0,1.2), box-shadow 0.3s ease, opacity 0.3s ease;
+        }
+        .doc-card.highlighted {
+            transform: scale(1.04);
+            box-shadow: 0 0 0 2px #10B981, 0 8px 24px rgba(16,185,129,0.25);
+        }
+        .doc-card.dimmed { opacity: 0.28; }
+
+        /* animated score pill */
+        @keyframes popIn {
+            0%   { transform: scale(0.5); opacity: 0; }
+            70%  { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .score-pop { animation: popIn 0.45s cubic-bezier(.22,.68,0,1.2) both; }
+
+        /* rank badge */
+        .rank-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* fused row */
+        .fused-row {
+            transition: all 0.4s ease;
+        }
+
+        /* slider track */
+        input[type=range] {
+            -webkit-appearance: none;
+            height: 4px; border-radius: 4px;
+            background: #1E293B;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: #10B981; cursor: pointer;
+            border: 2px solid #0B1120;
+        }
+
+        /* step highlight for formula cells */
+        .formula-cell {
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .formula-cell.active {
+            background: rgba(16,185,129,0.12) !important;
+            color: #6ee7b7 !important;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-12px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .slide-in { animation: slideIn 0.35s ease both; }
+    </style>
+</head>
+<body class="bg-background-dark text-text-main font-serif antialiased min-h-screen topographic-bg selection:bg-accent selection:text-primary">
+    <main class="relative px-4 py-6 max-w-3xl mx-auto">
+        <div class="space-y-6" id="sim-root">
+
+            <!-- Query box -->
+            <div class="flex items-start gap-3 bg-surface/60 border border-white/10 rounded-lg px-4 py-3">
+                <span class="material-symbols-outlined text-accent mt-0.5 text-lg shrink-0">search</span>
+                <div>
+                    <span class="font-mono text-[10px] text-text-muted uppercase tracking-widest block mb-1">query utente</span>
+                    <span class="font-sans text-sm text-white">"Come funziona la ricerca per similarità nei vector database?"</span>
+                </div>
+            </div>
+
+            <!-- k slider -->
+            <div class="flex items-center gap-4 bg-surface/40 border border-white/5 rounded-lg px-4 py-3">
+                <span class="font-mono text-sm text-text-muted w-4">k</span>
+                <input type="range" id="k-slider" min="1" max="120" value="60" class="flex-1">
+                <span class="font-mono text-sm text-accent w-10 text-right" id="k-value">60</span>
+                <div class="text-xs font-mono text-text-muted ml-2 hidden md:block">
+                    basso = top-rank più pesante &nbsp;|&nbsp; alto = ranking più piatto
+                </div>
+            </div>
+
+            <!-- Three columns: BM25 | formula | Vector -->
+            <div class="grid grid-cols-[1fr_auto_1fr] gap-3 items-start">
+
+                <!-- BM25 -->
+                <div>
+                    <div class="mb-2 flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+                        <span class="font-mono text-xs text-amber-400 tracking-wide">BM25</span>
+                        <span class="font-mono text-[10px] text-text-muted ml-auto">keyword</span>
+                    </div>
+                    <div class="space-y-1.5" id="list-bm25"></div>
+                </div>
+
+                <!-- center arrow -->
+                <div class="flex flex-col items-center justify-center pt-8 gap-2 px-2">
+                    <span class="material-symbols-outlined text-text-muted text-2xl">merge</span>
+                    <span class="font-mono text-[10px] text-text-muted text-center leading-tight">RRF<br/>fusion</span>
+                </div>
+
+                <!-- Vector -->
+                <div>
+                    <div class="mb-2 flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                        <span class="font-mono text-xs text-blue-400 tracking-wide">VECTOR</span>
+                        <span class="font-mono text-[10px] text-text-muted ml-auto">semantico</span>
+                    </div>
+                    <div class="space-y-1.5" id="list-vector"></div>
+                </div>
+
+            </div>
+
+            <!-- Formula breakdown for selected doc -->
+            <div id="formula-box" class="hidden rounded-lg border border-white/5 overflow-hidden bg-code-bg">
+                <div class="flex items-center px-4 py-2 bg-white/5 border-b border-white/5">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                    </div>
+                    <span class="ml-4 text-xs font-mono text-text-muted">rrf_score.py</span>
+                </div>
+                <div class="p-4 font-mono text-[13px] leading-7" id="formula-content"></div>
+            </div>
+
+            <!-- Fused ranking -->
+            <div>
+                <div class="mb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-accent text-base">leaderboard</span>
+                    <span class="font-mono text-sm text-accent tracking-wide">Ranking fuso</span>
+                    <span class="ml-auto font-mono text-[10px] text-text-muted">RRF(k=<span id="k-label-fused">60</span>)</span>
+                </div>
+                <div class="space-y-2" id="fused-list"></div>
+            </div>
+
+        </div>
+    </main>
+
+<script>
+// ===================== RRF DATA =====================
+// 6 documents, each with an emoji/icon + title
+const DOCS = [
+    { id: 'A', emoji: '🦜', title: 'LangChain e gli agenti LLM',     color: 'amber' },
+    { id: 'B', emoji: '🔍', title: 'BM25: come funziona il TF-IDF',  color: 'sky' },
+    { id: 'C', emoji: '🧠', title: 'Embeddings e cosine similarity',  color: 'purple' },
+    { id: 'D', emoji: '⚡', title: 'RAG in produzione',               color: 'orange' },
+    { id: 'E', emoji: '🗃️', title: 'Vector database a confronto',     color: 'teal' },
+    { id: 'F', emoji: '📐', title: 'Transformer: attention mechanism', color: 'rose' },
+];
+
+// Rankings: array of doc IDs, position 0 = rank 1
+const BM25_ORDER   = ['B', 'D', 'A', 'F', 'C', 'E'];
+const VECTOR_ORDER = ['C', 'A', 'E', 'D', 'F', 'B'];
+
+const COLOR_MAP = {
+    amber:  { bg: 'bg-amber-500/10',  border: 'border-amber-500/20',  text: 'text-amber-400',  badge: 'bg-amber-500/20' },
+    sky:    { bg: 'bg-sky-500/10',    border: 'border-sky-500/20',    text: 'text-sky-400',    badge: 'bg-sky-500/20' },
+    purple: { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', badge: 'bg-purple-500/20' },
+    orange: { bg: 'bg-orange-500/10', border: 'border-orange-500/20', text: 'text-orange-400', badge: 'bg-orange-500/20' },
+    teal:   { bg: 'bg-teal-500/10',   border: 'border-teal-500/20',   text: 'text-teal-400',   badge: 'bg-teal-500/20' },
+    rose:   { bg: 'bg-rose-500/10',   border: 'border-rose-500/20',   text: 'text-rose-400',   badge: 'bg-rose-500/20' },
+};
+
+let selectedDoc = null;
+let k = 60;
+
+function getDoc(id) { return DOCS.find(d => d.id === id); }
+function getRank(id, list) { return list.indexOf(id) + 1; } // 1-based
+
+function rrfScore(id, k) {
+    const r1 = getRank(id, BM25_ORDER);
+    const r2 = getRank(id, VECTOR_ORDER);
+    return 1 / (k + r1) + 1 / (k + r2);
+}
+
+function computeFused(k) {
+    return DOCS.map(d => ({ id: d.id, score: rrfScore(d.id, k) }))
+               .sort((a, b) => b.score - a.score);
+}
+
+// ===================== RENDER =====================
+function renderList(containerId, order, listColor, listName) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    order.forEach((id, i) => {
+        const doc = getDoc(id);
+        const c = COLOR_MAP[doc.color];
+        const rank = i + 1;
+        const isSelected = selectedDoc === id;
+        const isOtherSelected = selectedDoc && selectedDoc !== id;
+
+        const div = document.createElement('div');
+        div.className = `doc-card flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer ${c.bg} ${c.border} ${isSelected ? 'highlighted' : ''} ${isOtherSelected ? 'dimmed' : ''}`;
+        div.dataset.id = id;
+
+        div.innerHTML = `
+            <span class="rank-badge ${c.badge} ${c.text}">${rank}</span>
+            <span class="text-base leading-none">${doc.emoji}</span>
+            <span class="font-sans text-xs text-gray-300 flex-1 leading-tight">${doc.title}</span>
+            <span class="font-mono text-[10px] text-text-muted shrink-0">
+                <span class="formula-cell px-1 rounded" id="fc-${listName}-${id}">
+                    1/(${k}+${rank})
+                </span>
+            </span>
+        `;
+        div.addEventListener('click', () => toggleSelect(id));
+        el.appendChild(div);
+    });
+}
+
+function renderFused(k) {
+    const fused = computeFused(k);
+    const el = document.getElementById('fused-list');
+    el.innerHTML = '';
+    const maxScore = fused[0].score;
+
+    fused.forEach((item, i) => {
+        const doc = getDoc(item.id);
+        const c = COLOR_MAP[doc.color];
+        const isSelected = selectedDoc === item.id;
+        const isOtherSelected = selectedDoc && selectedDoc !== item.id;
+        const pct = (item.score / maxScore) * 100;
+
+        const div = document.createElement('div');
+        div.className = `fused-row slide-in flex items-center gap-3 px-3 py-2.5 rounded-lg border ${c.bg} ${c.border} ${isSelected ? 'ring-2 ring-accent' : ''} ${isOtherSelected ? 'opacity-30' : ''}`;
+        div.style.animationDelay = `${i * 0.04}s`;
+        div.dataset.id = item.id;
+        div.innerHTML = `
+            <span class="rank-badge ${c.badge} ${c.text}">${i+1}</span>
+            <span class="text-base">${doc.emoji}</span>
+            <div class="flex-1 min-w-0">
+                <div class="font-sans text-xs text-gray-300 truncate">${doc.title}</div>
+                <div class="mt-1 h-1 rounded-full bg-white/5 overflow-hidden">
+                    <div class="h-full rounded-full ${c.text.replace('text-','bg-')} opacity-70 transition-all duration-500"
+                         style="width:${pct.toFixed(1)}%"></div>
+                </div>
+            </div>
+            <span class="font-mono text-xs ${c.text} shrink-0 score-pop" style="animation-delay:${i*0.04}s">
+                ${item.score.toFixed(4)}
+            </span>
+        `;
+        div.addEventListener('click', () => toggleSelect(item.id));
+        el.appendChild(div);
+    });
+
+    document.getElementById('k-label-fused').textContent = k;
+}
+
+function renderFormulaBox() {
+    const box = document.getElementById('formula-box');
+    const content = document.getElementById('formula-content');
+    if (!selectedDoc) { box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+
+    const doc = getDoc(selectedDoc);
+    const r1 = getRank(selectedDoc, BM25_ORDER);
+    const r2 = getRank(selectedDoc, VECTOR_ORDER);
+    const s1 = (1 / (k + r1)).toFixed(5);
+    const s2 = (1 / (k + r2)).toFixed(5);
+    const tot = rrfScore(selectedDoc, k).toFixed(5);
+
+    content.innerHTML = `
+<span class="text-text-muted"># RRF score per: ${doc.emoji} ${doc.title}</span>
+<br>
+<span class="text-purple-400">k</span> <span class="text-gray-300">= ${k}</span>
+<br><br>
+<span class="text-text-muted"># BM25 rank ${r1}</span>
+<br>
+<span class="text-blue-400">bm25_contrib</span> <span class="text-gray-300">= </span><span class="text-accent">1 / (${k} + ${r1})</span><span class="text-gray-300"> = </span><span class="text-amber-400">${s1}</span>
+<br><br>
+<span class="text-text-muted"># Vector rank ${r2}</span>
+<br>
+<span class="text-blue-400">vec_contrib</span> &nbsp;<span class="text-gray-300">= </span><span class="text-accent">1 / (${k} + ${r2})</span><span class="text-gray-300"> = </span><span class="text-sky-400">${s2}</span>
+<br><br>
+<span class="text-blue-400">rrf_score</span> &nbsp;&nbsp;&nbsp;<span class="text-gray-300">= </span><span class="text-amber-400">${s1}</span><span class="text-gray-300"> + </span><span class="text-sky-400">${s2}</span><span class="text-gray-300"> = </span><span class="text-accent font-bold">${tot}</span>
+    `;
+}
+
+function renderAll() {
+    renderList('list-bm25',   BM25_ORDER,   'amber', 'bm25');
+    renderList('list-vector', VECTOR_ORDER, 'sky',   'vec');
+    renderFused(k);
+    renderFormulaBox();
+}
+
+function toggleSelect(id) {
+    selectedDoc = selectedDoc === id ? null : id;
+    renderAll();
+}
+
+// k slider
+const kSlider = document.getElementById('k-slider');
+const kValue  = document.getElementById('k-value');
+kSlider.addEventListener('input', () => {
+    k = parseInt(kSlider.value);
+    kValue.textContent = k;
+    renderAll();
+});
+
+// Init
+renderAll();
+</script>
+</body>
+</html>
