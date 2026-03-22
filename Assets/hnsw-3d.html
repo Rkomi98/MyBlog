@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html class="dark" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>HNSW — Navigare vettori a strati</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0F172A",
+                        "background-dark": "#0B1120",
+                        "surface": "#1E293B",
+                        "text-main": "#E2E8F0",
+                        "text-muted": "#94A3B8",
+                        "accent": "#10B981",
+                        "code-bg": "#0F172A",
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "serif": ["Charter", "serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "4px",
+                        "lg": "12px",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .topographic-bg {
+            background-color: #0B1120;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        canvas { display: block; }
+        .layer-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px;
+        }
+        .step-btn {
+            transition: all 0.2s;
+        }
+        .step-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+        #log-panel::-webkit-scrollbar { width: 4px; }
+        #log-panel::-webkit-scrollbar-track { background: #0F172A; }
+        #log-panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .log-entry { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .pulse-ring {
+            animation: pulseRing 1.2s ease-out infinite;
+        }
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-text-main font-serif antialiased min-h-screen topographic-bg selection:bg-accent selection:text-primary">
+
+    <!-- Progress bar -->
+    <div class="fixed top-0 left-0 w-full z-50 h-[2px] bg-surface">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-600 w-[0%] shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-150"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background-dark/80 border-b border-white/5">
+        <div class="flex items-center justify-between px-4 py-3 max-w-3xl mx-auto">
+            <a href="/" class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+                <span class="material-symbols-outlined text-2xl">arrow_back</span>
+            </a>
+            <span class="font-mono text-sm text-text-muted">HNSW — Navigare vettori a strati</span>
+            <button class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+                <span class="material-symbols-outlined text-xl">more_vert</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="relative px-4 pb-32 max-w-3xl mx-auto">
+
+        <!-- Article header -->
+        <header class="pt-8 pb-6 space-y-5">
+            <div class="flex flex-wrap gap-2">
+                <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded tracking-wide">VECTOR SEARCH</span>
+                <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded tracking-wide">ANN</span>
+                <span class="px-2 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded tracking-wide">SIMULAZIONE</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-mono font-bold leading-tight text-white tracking-tight">
+                HNSW: come un grafo a strati trova i tuoi vicini
+            </h1>
+            <div class="flex items-center gap-3 py-2 border-l-2 border-accent pl-3">
+                <div class="h-10 w-10 rounded-full bg-surface border border-white/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-accent">person</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-mono text-white font-medium">Mirko Calcaterra</span>
+                    <span class="text-xs font-sans text-text-muted">Marzo 2026 • simulazione interattiva</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Article body -->
+        <article class="space-y-6 text-lg leading-relaxed text-gray-300 font-serif" id="article-content">
+
+            <p>
+                Quando un embedding model trasforma un testo in un vettore da 1536 dimensioni, il problema che segue è 
+                trovare — tra milioni di vettori — quelli più simili a una query. Farlo confrontando ogni vettore uno per uno 
+                sarebbe impraticabile. <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">HNSW</span> 
+                risolve questo problema costruendo un grafo navigabile a più livelli, ispirato alle skip list.
+            </p>
+
+            <div class="bg-surface/50 border-l-2 border-blue-500 pl-4 py-2 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    La ricerca parte dai livelli alti, dove il grafo è sparse, e scende verso livelli più densi, 
+                    avvicinandosi progressivamente ai vicini più prossimi. È approssimato, ma la recall in pratica è altissima 
+                    e la latenza è nell'ordine dei 10–50 millisecondi.
+                </p>
+            </div>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">La simulazione</h2>
+
+            <p>
+                Ogni punto è un vettore nello spazio. I tre livelli rappresentano la gerarchia del grafo: il livello 2 
+                (in alto) ha pochi nodi fortemente connessi, il livello 0 (in basso) ha tutti i nodi con connessioni locali 
+                dense. La stella rossa è la query. Premi <strong class="text-white">Step</strong> per seguire la discesa 
+                passo per passo, oppure <strong class="text-white">Auto</strong> per vederla in automatico.
+            </p>
+
+        </article>
+
+        <!-- ===== SIMULAZIONE ===== -->
+        <div class="mt-8 space-y-4">
+
+            <!-- Canvas container -->
+            <div class="relative rounded-lg border border-white/10 overflow-hidden bg-primary shadow-2xl" style="height: 480px;">
+                <canvas id="hnsw-canvas" style="width:100%; height:100%;"></canvas>
+
+                <!-- Layer badges overlay -->
+                <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
+                    <div class="layer-badge bg-purple-500/15 border border-purple-500/30 text-purple-300">
+                        <div class="w-2 h-2 rounded-full bg-purple-400"></div>
+                        Layer 2 — sparse
+                    </div>
+                    <div class="layer-badge bg-blue-500/15 border border-blue-500/30 text-blue-300">
+                        <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                        Layer 1 — intermedio
+                    </div>
+                    <div class="layer-badge bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
+                        <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+                        Layer 0 — denso
+                    </div>
+                </div>
+
+                <!-- Query legend -->
+                <div class="absolute top-3 right-3 pointer-events-none">
+                    <div class="layer-badge bg-red-500/15 border border-red-500/30 text-red-300">
+                        <span class="text-red-400">★</span>
+                        query
+                    </div>
+                </div>
+
+                <!-- Current layer indicator -->
+                <div class="absolute bottom-3 left-3 pointer-events-none">
+                    <div id="current-layer-badge" class="layer-badge bg-white/5 border border-white/10 text-text-muted opacity-0">
+                        <span class="material-symbols-outlined text-sm">moving</span>
+                        <span id="current-layer-text">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center gap-3 flex-wrap">
+                <button id="btn-step" class="step-btn flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 rounded font-mono text-sm transition-all">
+                    <span class="material-symbols-outlined text-base">skip_next</span>
+                    Step
+                </button>
+                <button id="btn-auto" class="step-btn flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 rounded font-mono text-sm transition-all">
+                    <span class="material-symbols-outlined text-base" id="auto-icon">play_arrow</span>
+                    <span id="auto-label">Auto</span>
+                </button>
+                <button id="btn-reset" class="step-btn flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 text-text-muted hover:text-white hover:bg-white/10 rounded font-mono text-sm transition-all">
+                    <span class="material-symbols-outlined text-base">restart_alt</span>
+                    Reset
+                </button>
+                <div class="ml-auto flex items-center gap-2 text-xs font-mono text-text-muted">
+                    <span class="material-symbols-outlined text-sm">drag_pan</span>
+                    trascina per ruotare
+                </div>
+            </div>
+
+            <!-- Log panel -->
+            <div class="rounded-lg border border-white/5 overflow-hidden bg-code-bg">
+                <div class="flex items-center px-4 py-2 bg-white/5 border-b border-white/5">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                    </div>
+                    <span class="ml-4 text-xs font-mono text-text-muted">search.log</span>
+                </div>
+                <div id="log-panel" class="p-4 h-40 overflow-y-auto font-mono text-[13px] leading-6 space-y-1">
+                    <div class="text-text-muted">// premi Step o Auto per avviare la ricerca</div>
+                </div>
+            </div>
+
+        </div>
+        <!-- ===== END SIMULAZIONE ===== -->
+
+        <!-- Article continuation -->
+        <article class="space-y-6 text-lg leading-relaxed text-gray-300 font-serif mt-10" id="article-content-2">
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-4 mb-4">Perché funziona</h2>
+
+            <p>
+                La struttura a livelli riduce drasticamente il numero di confronti necessari. Al livello 2, pochi nodi 
+                molto connessi permettono di fare "salti lunghi" verso la zona giusta dello spazio. Scendendo al livello 0, 
+                il grafo diventa denso e la ricerca si fa granulare, trovando il vettore più vicino alla query 
+                con precisione locale.
+            </p>
+
+            <p>
+                La parola chiave è <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">approssimato</span>: 
+                HNSW non garantisce di trovare il vicino perfetto in senso assoluto, ma in pratica la recall supera spesso 
+                il 95-99% con latenze nell'ordine dei 10–50 ms, anche su indici da decine di milioni di vettori. È il cuore 
+                di sistemi come <strong class="text-white">Faiss</strong>, <strong class="text-white">Weaviate</strong>, 
+                <strong class="text-white">Qdrant</strong> e <strong class="text-white">pgvector</strong>.
+            </p>
+
+            <div class="bg-surface/50 border-l-2 border-accent pl-4 py-2 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    Il parametro M controlla il numero massimo di archi per nodo. Più alto è M, più alta è la recall 
+                    ma anche il consumo di memoria. ef_construction regola la qualità del grafo in fase di indicizzazione.
+                </p>
+            </div>
+
+            <div class="h-8"></div>
+        </article>
+
+    </main>
+
+    <!-- Floating Action Bar -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div class="flex items-center gap-1 p-1.5 bg-surface/80 backdrop-blur-md border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="toggleBookmark()">
+                <span class="material-symbols-outlined text-xl" id="bookmark-icon">bookmark</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Salva</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="shareArticle()">
+                <span class="material-symbols-outlined text-xl">ios_share</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Condividi</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="adjustFontSize()">
+                <span class="material-symbols-outlined text-xl">format_size</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Testo</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface border border-white/10 text-white px-4 py-2 rounded-lg shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+        <span id="toast-message">Messaggio</span>
+    </div>
+
+<script>
+// ===================== PROGRESS BAR =====================
+window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    document.getElementById('progress-bar').style.width = ((winScroll / height) * 100) + "%";
+});
+
+// ===================== HNSW SIMULATION =====================
+const canvas = document.getElementById('hnsw-canvas');
+const ctx = canvas.getContext('2d');
+
+// --- Responsive canvas size ---
+function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    draw();
+}
+window.addEventListener('resize', resizeCanvas);
+
+// --- 3D projection ---
+let rotX = 0.35, rotY = -0.55;
+let isDragging = false, lastMouse = {x:0, y:0};
+
+function project(x, y, z, W, H) {
+    // Rotate around Y
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const x1 = x * cosY - z * sinY;
+    const z1 = x * sinY + z * cosY;
+    // Rotate around X
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    const y1 = y * cosX - z1 * sinX;
+    const z2 = y * sinX + z1 * cosX;
+    // Perspective
+    const fov = 600;
+    const scale = fov / (fov + z2 + 200);
+    return {
+        sx: W/2 + x1 * scale * 1.1,
+        sy: H/2 + y1 * scale * 1.1,
+        scale: scale,
+        depth: z2
+    };
+}
+
+// --- Graph data ---
+// Layers: 0 = base (dense), 1 = mid, 2 = top (sparse)
+// Each node: {id, x, y, z_base, layers:[0,1,2 subset], label}
+// z is assigned per layer so layers appear stacked
+
+const LAYER_Z = {2: -180, 1: -10, 0: 160}; // negative = "back", positive = "front" in our rotated view
+const LAYER_COLORS = {
+    2: {node:'#a78bfa', edge:'rgba(167,139,250,0.25)', active:'#c4b5fd'},
+    1: {node:'#60a5fa', edge:'rgba(96,165,250,0.25)', active:'#93c5fd'},
+    0: {node:'#34d399', edge:'rgba(52,211,153,0.25)', active:'#6ee7b7'},
+};
+
+// 14 nodes, spread in 2D plane, each appears in specific layers
+const nodes = [
+    {id:0,  x:-220, y:-80,  layers:[0,1,2], label:'N0'},
+    {id:1,  x:-90,  y:-150, layers:[0,1],   label:'N1'},
+    {id:2,  x: 60,  y:-170, layers:[0,1,2], label:'N2'},
+    {id:3,  x: 190, y:-90,  layers:[0],     label:'N3'},
+    {id:4,  x: 220, y: 30,  layers:[0,1],   label:'N4'},
+    {id:5,  x: 150, y: 160, layers:[0,1,2], label:'N5'},
+    {id:6,  x: 20,  y: 200, layers:[0],     label:'N6'},
+    {id:7,  x:-110, y: 180, layers:[0,1],   label:'N7'},
+    {id:8,  x:-210, y: 80,  layers:[0],     label:'N8'},
+    {id:9,  x:-40,  y:-30,  layers:[0,1],   label:'N9'},
+    {id:10, x: 100, y: 60,  layers:[0],     label:'N10'},
+    {id:11, x:-150, y: 30,  layers:[0],     label:'N11'},
+    {id:12, x: 60,  y:-50,  layers:[0],     label:'N12'},
+    {id:13, x:-30,  y: 110, layers:[0],     label:'N13'},
+];
+
+// Edges per layer: [a,b]
+const edges = {
+    2: [[0,2],[2,5],[0,5]],
+    1: [[0,1],[1,2],[2,4],[4,5],[5,7],[7,9],[9,1],[2,9],[4,9]],
+    0: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,0],[9,1],[9,2],[9,12],[10,4],[10,5],[10,12],[11,8],[11,0],[11,13],[13,7],[13,6],[12,3],[6,13]]
+};
+
+// Query point (not in graph)
+const query = {x: 80, y: -90};
+
+// Entry point for search (always N0 in layer 2)
+// Search steps: describe the greedy descent
+// Each step: {layer, current, visited, neighbors_checked, best, direction_to}
+function buildSearchSteps() {
+    const steps = [];
+
+    // ---- LAYER 2 ----
+    // Start at N0 (entry), check neighbors [N2, N5]
+    steps.push({
+        layer: 2,
+        current: 0,
+        visited: [0],
+        checking: [],
+        best: 0,
+        note: "Layer 2 — entro dal nodo di ingresso N0",
+        phase: 'enter'
+    });
+    // Check N2
+    steps.push({
+        layer: 2,
+        current: 0,
+        visited: [0],
+        checking: [2],
+        best: 0,
+        note: "Layer 2 — controllo vicino N2: più vicino alla query!",
+        phase: 'check'
+    });
+    // Move to N2
+    steps.push({
+        layer: 2,
+        current: 2,
+        visited: [0, 2],
+        checking: [],
+        best: 2,
+        note: "Layer 2 — mi sposto in N2, più vicino alla query",
+        phase: 'move'
+    });
+    // Check N5 from N2
+    steps.push({
+        layer: 2,
+        current: 2,
+        visited: [0, 2],
+        checking: [5],
+        best: 2,
+        note: "Layer 2 — controllo N5: più lontano, rimango in N2",
+        phase: 'check'
+    });
+    // Layer 2 done
+    steps.push({
+        layer: 2,
+        current: 2,
+        visited: [0, 2],
+        checking: [],
+        best: 2,
+        note: "Layer 2 — best local: N2. Scendo al Layer 1",
+        phase: 'descend'
+    });
+
+    // ---- LAYER 1 ----
+    steps.push({
+        layer: 1,
+        current: 2,
+        visited: [2],
+        checking: [],
+        best: 2,
+        note: "Layer 1 — entro da N2 (proiettato dal layer superiore)",
+        phase: 'enter'
+    });
+    steps.push({
+        layer: 1,
+        current: 2,
+        visited: [2],
+        checking: [1, 4, 9],
+        best: 2,
+        note: "Layer 1 — controllo vicini N1, N4, N9",
+        phase: 'check'
+    });
+    steps.push({
+        layer: 1,
+        current: 9,
+        visited: [2, 9],
+        checking: [],
+        best: 9,
+        note: "Layer 1 — N9 è il più vicino alla query, mi sposto",
+        phase: 'move'
+    });
+    steps.push({
+        layer: 1,
+        current: 9,
+        visited: [2, 9],
+        checking: [1, 2, 12],
+        best: 9,
+        note: "Layer 1 — da N9 controllo N1, N2, N12",
+        phase: 'check'
+    });
+    steps.push({
+        layer: 1,
+        current: 12,
+        visited: [2, 9, 12],
+        checking: [],
+        best: 12,
+        note: "Layer 1 — N12 ancora più vicino! Mi sposto",
+        phase: 'move'
+    });
+    steps.push({
+        layer: 1,
+        current: 12,
+        visited: [2, 9, 12],
+        checking: [],
+        best: 12,
+        note: "Layer 1 — nessun miglioramento possibile. Scendo al Layer 0",
+        phase: 'descend'
+    });
+
+    // ---- LAYER 0 ----
+    steps.push({
+        layer: 0,
+        current: 12,
+        visited: [12],
+        checking: [],
+        best: 12,
+        note: "Layer 0 — entro da N12. Scansione locale densa",
+        phase: 'enter'
+    });
+    steps.push({
+        layer: 0,
+        current: 12,
+        visited: [12],
+        checking: [3, 9, 10],
+        best: 12,
+        note: "Layer 0 — controllo N3, N9, N10",
+        phase: 'check'
+    });
+    steps.push({
+        layer: 0,
+        current: 10,
+        visited: [12, 10],
+        checking: [],
+        best: 10,
+        note: "Layer 0 — N10 è più vicino! Mi sposto",
+        phase: 'move'
+    });
+    steps.push({
+        layer: 0,
+        current: 10,
+        visited: [12, 10],
+        checking: [4, 5, 12],
+        best: 10,
+        note: "Layer 0 — da N10 controllo N4, N5, N12 — nessuno batte N10",
+        phase: 'check'
+    });
+    steps.push({
+        layer: 0,
+        current: 10,
+        visited: [12, 10],
+        checking: [],
+        best: 10,
+        note: "Layer 0 — ottimum locale trovato: N10 ✓ — RICERCA COMPLETATA",
+        phase: 'done'
+    });
+
+    return steps;
+}
+
+const searchSteps = buildSearchSteps();
+let currentStep = -1;
+let autoInterval = null;
+
+// ---- Draw ----
+function draw() {
+    const W = canvas.width / window.devicePixelRatio;
+    const H = canvas.height / window.devicePixelRatio;
+    ctx.clearRect(0, 0, W, H);
+
+    const step = currentStep >= 0 ? searchSteps[currentStep] : null;
+    const activeLayer = step ? step.layer : null;
+
+    // Draw all 3 layers, back to front
+    const layerOrder = [2, 1, 0]; // draw 2 first (back), 0 last (front)
+
+    // Compute projected positions for all node x layer combos
+    const proj = {};
+    for (const node of nodes) {
+        for (const l of node.layers) {
+            const z = LAYER_Z[l];
+            proj[`${node.id}_${l}`] = project(node.x, node.y, z, W, H);
+        }
+    }
+    const qProj = {};
+    for (const l of [0,1,2]) {
+        qProj[l] = project(query.x, query.y, LAYER_Z[l], W, H);
+    }
+
+    for (const layer of layerOrder) {
+        const color = LAYER_COLORS[layer];
+        const isActive = activeLayer === layer;
+        const dimmed = activeLayer !== null && !isActive;
+        const alpha = dimmed ? 0.18 : 1.0;
+
+        // Draw layer plane (faint rectangle)
+        const corners = [[-260,-200],[ 260,-200],[260,200],[-260,200]].map(([x,y]) => {
+            return project(x, y, LAYER_Z[layer], W, H);
+        });
+        ctx.save();
+        ctx.globalAlpha = dimmed ? 0.04 : 0.07;
+        ctx.fillStyle = color.node;
+        ctx.beginPath();
+        ctx.moveTo(corners[0].sx, corners[0].sy);
+        for (let i=1;i<4;i++) ctx.lineTo(corners[i].sx, corners[i].sy);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = dimmed ? 0.06 : 0.15;
+        ctx.strokeStyle = color.node;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        ctx.restore();
+
+        // Edges
+        ctx.save();
+        ctx.globalAlpha = alpha * (isActive ? 0.35 : 0.18);
+        ctx.strokeStyle = color.node;
+        ctx.lineWidth = isActive ? 1.2 : 0.8;
+        for (const [a, b] of edges[layer]) {
+            const pa = proj[`${a}_${layer}`];
+            const pb = proj[`${b}_${layer}`];
+            if (!pa || !pb) continue;
+            ctx.beginPath();
+            ctx.moveTo(pa.sx, pa.sy);
+            ctx.lineTo(pb.sx, pb.sy);
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        // Nodes
+        for (const node of nodes) {
+            if (!node.layers.includes(layer)) continue;
+            const p = proj[`${node.id}_${layer}`];
+            const r = 5 * p.scale + 1;
+
+            let nodeAlpha = alpha;
+            let nodeColor = color.node;
+            let isChecking = step && step.layer === layer && step.checking && step.checking.includes(node.id);
+            let isCurrent = step && step.layer === layer && step.current === node.id;
+            let isVisited = step && step.layer === layer && step.visited && step.visited.includes(node.id);
+            let isDone = step && step.phase === 'done' && step.best === node.id && layer === 0;
+
+            if (isDone) {
+                nodeColor = '#fbbf24';
+                nodeAlpha = 1;
+                // glow
+                ctx.save();
+                ctx.globalAlpha = 0.3;
+                for (let gr = 20; gr > 0; gr -= 4) {
+                    ctx.beginPath();
+                    ctx.arc(p.sx, p.sy, r + gr * p.scale, 0, Math.PI*2);
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.fill();
+                }
+                ctx.restore();
+            } else if (isCurrent) {
+                nodeColor = '#ffffff';
+                nodeAlpha = 1;
+                ctx.save();
+                ctx.globalAlpha = 0.25;
+                ctx.beginPath(); ctx.arc(p.sx, p.sy, r*3, 0, Math.PI*2);
+                ctx.fillStyle = color.active; ctx.fill();
+                ctx.restore();
+            } else if (isChecking) {
+                nodeColor = '#fcd34d';
+                nodeAlpha = 0.9;
+            } else if (isVisited && layer === activeLayer) {
+                nodeColor = color.active;
+                nodeAlpha = 0.7;
+            }
+
+            ctx.save();
+            ctx.globalAlpha = nodeAlpha;
+            ctx.beginPath();
+            ctx.arc(p.sx, p.sy, r, 0, Math.PI*2);
+            ctx.fillStyle = nodeColor;
+            ctx.fill();
+            if (isCurrent || isDone) {
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+
+            // Label
+            ctx.globalAlpha = nodeAlpha * 0.75;
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = `${Math.max(9, 10 * p.scale)}px JetBrains Mono`;
+            ctx.fillText(node.label, p.sx + r + 2, p.sy - r);
+            ctx.restore();
+
+            // Draw line from current to checking nodes
+            if (isChecking && step && step.layer === layer) {
+                const curProj = proj[`${step.current}_${layer}`];
+                if (curProj) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.5;
+                    ctx.strokeStyle = '#fcd34d';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(curProj.sx, curProj.sy);
+                    ctx.lineTo(p.sx, p.sy);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.restore();
+                }
+            }
+        }
+
+        // Query star (show on active layer only, or all if no step)
+        if (!step || step.layer === layer) {
+            const qp = qProj[layer];
+            ctx.save();
+            ctx.globalAlpha = step ? 1 : 0.5;
+            drawStar(ctx, qp.sx, qp.sy, 5, 10 * qp.scale, 5 * qp.scale, '#ef4444');
+            ctx.restore();
+        }
+
+        // Layer label
+        const lp = project(270, -210, LAYER_Z[layer], W, H);
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.5;
+        ctx.fillStyle = color.node;
+        ctx.font = `bold 11px JetBrains Mono`;
+        ctx.fillText(`L${layer}`, lp.sx, lp.sy);
+        ctx.restore();
+    }
+
+    // If done, draw line from best to query in layer 0
+    if (step && step.phase === 'done') {
+        const bp = proj[`${step.best}_0`];
+        const qp = qProj[0];
+        if (bp && qp) {
+            ctx.save();
+            ctx.globalAlpha = 0.7;
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 4]);
+            ctx.beginPath();
+            ctx.moveTo(bp.sx, bp.sy);
+            ctx.lineTo(qp.sx, qp.sy);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+        }
+    }
+}
+
+function drawStar(ctx, cx, cy, spikes, outerR, innerR, color) {
+    let rot = (Math.PI / 2) * 3;
+    const step = Math.PI / spikes;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerR);
+    for (let i = 0; i < spikes; i++) {
+        ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+        rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+        rot += step;
+    }
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+}
+
+// ---- Log ----
+const logPanel = document.getElementById('log-panel');
+function addLog(step) {
+    const colors = {2:'text-purple-400', 1:'text-blue-400', 0:'text-emerald-400'};
+    const phases = {enter:'→', check:'?', move:'↗', descend:'⬇', done:'✓'};
+    const icon = phases[step.phase] || '·';
+    const layerCol = colors[step.layer];
+    const div = document.createElement('div');
+    div.className = 'log-entry flex gap-3';
+    div.innerHTML = `<span class="${layerCol} font-bold w-6 text-center">${icon}</span><span class="text-gray-300">${step.note}</span>`;
+    logPanel.appendChild(div);
+    logPanel.scrollTop = logPanel.scrollHeight;
+}
+function clearLog() {
+    logPanel.innerHTML = '<div class="text-text-muted">// premi Step o Auto per avviare la ricerca</div>';
+}
+
+// ---- Current layer badge ----
+function updateLayerBadge(step) {
+    const badge = document.getElementById('current-layer-badge');
+    const text = document.getElementById('current-layer-text');
+    if (!step) { badge.style.opacity = '0'; return; }
+    const names = {2:'navigando Layer 2', 1:'navigando Layer 1', 0:'navigando Layer 0'};
+    text.textContent = names[step.layer];
+    badge.style.opacity = '1';
+    if (step.phase === 'done') {
+        badge.style.opacity = '1';
+        text.textContent = '✓ risultato trovato: N10';
+    }
+}
+
+// ---- Step logic ----
+function doStep() {
+    if (currentStep >= searchSteps.length - 1) return;
+    currentStep++;
+    const step = searchSteps[currentStep];
+    addLog(step);
+    updateLayerBadge(step);
+    draw();
+    if (currentStep === searchSteps.length - 1) {
+        stopAuto();
+        document.getElementById('btn-step').disabled = true;
+    }
+}
+
+function resetSim() {
+    stopAuto();
+    currentStep = -1;
+    clearLog();
+    updateLayerBadge(null);
+    document.getElementById('btn-step').disabled = false;
+    draw();
+}
+
+// ---- Auto ----
+let autoRunning = false;
+function startAuto() {
+    if (autoRunning) return;
+    autoRunning = true;
+    document.getElementById('auto-icon').textContent = 'pause';
+    document.getElementById('auto-label').textContent = 'Pausa';
+    autoInterval = setInterval(() => {
+        doStep();
+        if (currentStep >= searchSteps.length - 1) stopAuto();
+    }, 1200);
+}
+function stopAuto() {
+    autoRunning = false;
+    clearInterval(autoInterval);
+    document.getElementById('auto-icon').textContent = 'play_arrow';
+    document.getElementById('auto-label').textContent = 'Auto';
+}
+
+document.getElementById('btn-step').addEventListener('click', doStep);
+document.getElementById('btn-reset').addEventListener('click', resetSim);
+document.getElementById('btn-auto').addEventListener('click', () => {
+    if (autoRunning) stopAuto(); else startAuto();
+});
+
+// ---- Drag to rotate ----
+canvas.addEventListener('mousedown', e => {
+    isDragging = true;
+    lastMouse = {x: e.clientX, y: e.clientY};
+});
+window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const dx = e.clientX - lastMouse.x;
+    const dy = e.clientY - lastMouse.y;
+    rotY += dx * 0.008;
+    rotX += dy * 0.008;
+    rotX = Math.max(-1.2, Math.min(1.2, rotX));
+    lastMouse = {x: e.clientX, y: e.clientY};
+    draw();
+});
+window.addEventListener('mouseup', () => { isDragging = false; });
+
+canvas.addEventListener('touchstart', e => {
+    isDragging = true;
+    lastMouse = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+}, {passive:true});
+window.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const dx = e.touches[0].clientX - lastMouse.x;
+    const dy = e.touches[0].clientY - lastMouse.y;
+    rotY += dx * 0.008;
+    rotX += dy * 0.008;
+    rotX = Math.max(-1.2, Math.min(1.2, rotX));
+    lastMouse = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+    draw();
+}, {passive:true});
+window.addEventListener('touchend', () => { isDragging = false; });
+
+// ---- Init ----
+resizeCanvas();
+
+// ===================== BLOG SCRIPTS =====================
+window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    document.getElementById('progress-bar').style.width = ((winScroll / height) * 100) + "%";
+});
+
+let isBookmarked = false;
+function toggleBookmark() {
+    isBookmarked = !isBookmarked;
+    const icon = document.getElementById('bookmark-icon');
+    icon.textContent = isBookmarked ? 'bookmark_added' : 'bookmark';
+    icon.classList.toggle('text-accent', isBookmarked);
+    showToast(isBookmarked ? 'Salvato nei preferiti' : 'Rimosso dai preferiti');
+}
+
+function shareArticle() {
+    if (navigator.share) {
+        navigator.share({ title: 'HNSW — Navigare vettori a strati', url: window.location.href });
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        showToast('Link copiato negli appunti');
+    }
+}
+
+let fontSizeLevel = 1;
+const fontSizes = ['text-base', 'text-lg', 'text-xl'];
+function adjustFontSize() {
+    const articles = document.querySelectorAll('#article-content, #article-content-2');
+    fontSizeLevel = (fontSizeLevel + 1) % fontSizes.length;
+    articles.forEach(a => { a.classList.remove(...fontSizes); a.classList.add(fontSizes[fontSizeLevel]); });
+    showToast('Dimensione testo: ' + ['Piccola', 'Normale', 'Grande'][fontSizeLevel]);
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-message').textContent = message;
+    toast.classList.remove('opacity-0'); toast.classList.add('opacity-100');
+    setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0'); }, 2000);
+}
+</script>
+</body>
+</html>

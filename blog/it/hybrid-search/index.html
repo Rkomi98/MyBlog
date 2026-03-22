@@ -1404,7 +1404,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">21 marzo 2026 • 37 min</span>
+            <span class="post-hero__author-meta">21 marzo 2026 • 36 min</span>
           </div>
         </div>
       </section>
@@ -1622,76 +1622,24 @@ $$</p>
 <p>C&#39;è anche un problema sottile di <strong>exact match bias</strong>: BM25 può restituire documenti che contengono i termini della query in contesti irrilevanti. Se nel procedimento di una torta compare la frase &quot;questa non è una carbonara&quot;, quella ricetta potrebbe apparire nei risultati per &quot;carbonara&quot;. Il termine c&#39;è, il contesto no.</p>
 <h3 id="semantic-search">Semantic search</h3>
 <p>La semantic search nasce per superare il vocabulary mismatch. L&#39;idea è rappresentare sia le query che i documenti come vettori in uno <strong>spazio vettoriale</strong> ad alta dimensionalità, tipicamente 768 o 1536 dimensioni, dove la vicinanza geometrica corrisponde alla vicinanza di significato.</p>
+<figure class="article-figure">
+  <img src="../../../Assets/semantic_search_architecture_dark.svg" alt="Architettura semplificata della semantic search con embedding di query e documenti, indicizzazione vettoriale e retrieval per similarità">
+  <figcaption><strong>Figure 02.</strong> Schema semplificato della semantic search: documenti e query vengono trasformati in embedding nello stesso spazio vettoriale, indicizzati in un motore ANN e confrontati tramite similarità per recuperare i candidati più vicini.</figcaption>
+</figure>
+
 <p>Un modello di embedding, in genere un transformer come BERT o derivati, legge un testo e lo comprime in un vettore denso di numeri decimali. Questo processo avviene sia per i documenti, al momento dell&#39;indicizzazione, sia per la query, al momento della ricerca. <a href="https://mbrenndoerfer.com/writing/dense-passage-retrieval-retrieval-augmented-generation-rag">Il retrieval consiste nel trovare i vettori dei documenti più vicini al vettore della query, usando metriche come la similarità coseno o il prodotto scalare.</a></p>
 <p>Per farlo su milioni di documenti in tempi ragionevoli si usano algoritmi di <strong>approximate nearest neighbors</strong> (ANN), il più diffuso dei quali è HNSW (Hierarchical Navigable Small World). HNSW costruisce un grafo navigabile a più livelli dove ogni nodo è un vettore e gli archi collegano vettori vicini. La ricerca parte dai livelli alti, dove il grafo è sparse, e scende verso livelli più densi, avvicinandosi progressivamente ai vicini più prossimi. È approssimato perché non garantisce di trovare il vicino perfetto, ma in pratica la recall è molto alta e la latenza è nell&#39;ordine dei 10-50 millisecondi.</p>
-<details class="post-warning">
-<summary><strong>Simulazione concreta: come HNSW trova il vicino giusto</strong> (clicca e apri gli step)</summary>
+<blockquote>
+<p>🎮 <strong>Simulazione interattiva.</strong> Qui sotto puoi seguire la navigazione di HNSW livello per livello: la query entra dall&#39;alto, attraversa i nodi più promettenti e il terminale spiega in tempo reale cosa sta succedendo a ogni step.</p>
+</blockquote>
+<iframe
+  src="../../../../../Assets/hnsw-3d.html"
+  title="Simulazione interattiva HNSW con navigazione a livelli e terminale esplicativo"
+  loading="lazy"
+  style="width: 100%; min-height: 980px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
+></iframe>
 
-<p>Immagina che la query sia: <strong>&quot;un primo sostanzioso per l&#39;inverno con i legumi&quot;</strong>.</p>
-<p>Nel nostro indice vettoriale ci sono questi nodi:</p>
-<ul>
-<li><strong>A</strong> = insalata di farro fredda</li>
-<li><strong>B</strong> = zuppa di lenticchie</li>
-<li><strong>C</strong> = pasta e fagioli</li>
-<li><strong>D</strong> = minestra di ceci</li>
-<li><strong>E</strong> = lasagna al forno</li>
-</ul>
-<p>HNSW non confronta la query con tutti i vettori del database. Fa una navigazione guidata dentro il grafo.</p>
-<details class="post-warning" open>
-<summary><strong>Step 1. Parte dall'alto, da un nodo d'ingresso molto connesso</strong></summary>
-
-<p>Ai livelli più alti il grafo è molto rado: pochi nodi, pochi archi, tanti &quot;salti lunghi&quot;. La ricerca parte da un <strong>entry point</strong>, per esempio <strong>E = lasagna al forno</strong>.</p>
-<p>Quel nodo magari non è vicino alla query, ma è utile come punto di ingresso perché da lì si raggiungono rapidamente zone diverse dello spazio vettoriale.</p>
-</details>
-
-<details class="post-warning">
-<summary><strong>Step 2. Si muove in modo greedy verso vicini sempre migliori</strong></summary>
-
-<p>Dal nodo <strong>E</strong>, HNSW guarda i vicini collegati e sceglie quello che sembra più vicino alla query.</p>
-<ul>
-<li>similarità query vs <strong>E</strong>: <code>0.39</code></li>
-<li>similarità query vs <strong>B</strong>: <code>0.71</code></li>
-<li>similarità query vs <strong>D</strong>: <code>0.76</code></li>
-</ul>
-<p>Quindi abbandona <strong>E</strong> e si sposta su <strong>D</strong>. Da <strong>D</strong> controlla di nuovo i vicini. Se nessun vicino migliora il punteggio, si ferma su quel livello. Qui il punto importante è che non fa una ricerca esaustiva: segue una strada promettente.</p>
-</details>
-
-<details class="post-warning">
-<summary><strong>Step 3. Scende di livello e restringe la ricerca</strong></summary>
-
-<p>Una volta trovato un buon punto al livello alto, HNSW scende a un livello più denso usando <strong>D</strong> come nuovo punto di partenza.</p>
-<p>Qui il grafo ha più nodi e collegamenti locali, quindi la ricerca diventa più fine. Intorno a <strong>D</strong> trova vicini come:</p>
-<ul>
-<li><strong>B</strong> = zuppa di lenticchie</li>
-<li><strong>C</strong> = pasta e fagioli</li>
-<li>altri piatti di zuppe e legumi</li>
-</ul>
-<p>In pratica i livelli alti servono a portarti nel quartiere giusto; i livelli bassi servono a trovare la casa giusta.</p>
-</details>
-
-<details class="post-warning">
-<summary><strong>Step 4. All'ultimo livello esplora un piccolo insieme di candidati</strong></summary>
-
-<p>Nel livello più basso, quello più denso, HNSW mantiene una piccola lista di candidati promettenti invece di visitare tutto il dataset.</p>
-<p>Per esempio potrebbe vedere:</p>
-<ul>
-<li><strong>D</strong> = minestra di ceci → <code>0.76</code></li>
-<li><strong>B</strong> = zuppa di lenticchie → <code>0.71</code></li>
-<li><strong>C</strong> = pasta e fagioli → <code>0.91</code></li>
-</ul>
-<p>A questo punto <strong>C</strong> diventa il miglior candidato e viene restituito come nearest neighbor approssimato.</p>
-<p>È qui che nasce il trade-off: HNSW visita abbastanza nodi da trovare quasi sempre una soluzione ottima o molto vicina all&#39;ottimo, ma evita il costo enorme di confrontare la query con tutti i vettori.</p>
-</details>
-
-<details class="post-warning">
-<summary><strong>Cosa vuol dire davvero "approssimato"?</strong></summary>
-
-<p>Vuol dire che da qualche parte nel database potrebbe esistere un vettore con similarità <code>0.93</code> che non è stato visitato, mentre <strong>C</strong> aveva <code>0.91</code>. Il sistema quindi non garantisce il vicino matematicamente perfetto, ma ottiene quasi sempre un risultato eccellente con una latenza molto più bassa.</p>
-<p>In altre parole: HNSW rinuncia a una piccola quota di perfezione teorica per guadagnare tantissimo in velocità pratica.</p>
-</details>
-
-</details>
-
+<p><em>Figure 03: Simulazione interattiva del search path di HNSW. La query parte dai layer più sparsi, usa i collegamenti lunghi per raggiungere rapidamente la zona semantica corretta e poi scende nei layer più densi, dove il terminale mostra i confronti locali che portano alla scelta del nearest neighbor approssimato.</em></p>
 <p>Nella nostra app culinaria, la semantic search brilla quando la query è concettuale. &quot;Un piatto leggero per l&#39;estate&quot; recupera insalate, carpacci, gazpacho, anche se nessuna di queste ricette contiene quelle parole. &quot;Qualcosa di dolce con le mandorle&quot; trova la torta caprese, i cantuccini, la pasta di mandorle. Il sistema capisce l&#39;intento, non solo i termini.</p>
 <p>I failure modes della semantic search sono altrettanto comuni e spesso sottovalutati. Il più insidioso è la <a href="https://chamomile.ai/challenges-dense-retrieval/"><strong>deriva semantica</strong></a>: il sistema recupera documenti che sono nello stesso &quot;quartiere semantico&quot; della query ma non rispondono alla domanda. Cercando &quot;pasta al pesto&quot; potresti ottenere anche ricette con salsa verde, chimichurri, o altre salse a base di erbe, perché gli embeddings catturano la vicinanza concettuale tra queste preparazioni. Sono risultati plausibili ma sbagliati.</p>
 <p>C&#39;è poi la <strong>confusione tra entità</strong>: &quot;ricette con mele&quot; potrebbe restituire ricette che menzionano Apple in un contesto di cucina tech-food, perché il vettore di embedding fonde i diversi significati in una rappresentazione unica. E la <strong>cecità ai token specifici</strong>: codici, sigle, nomi propri poco frequenti, numeri, identificatori di allergeni come &quot;E471&quot; sono mal rappresentati nello spazio vettoriale. Un modello generalista non ha imparato a dare peso a quei token.</p>
