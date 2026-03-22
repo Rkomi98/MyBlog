@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hybrid search: is two better than one? | Mirko Calcaterra</title>
-  <meta name="description" content="Hybrid search: due segnali valgono più di uno? Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si avvicina al t…">
+  <meta name="description" content="Hybrid search: due segnali valgono più di uno? Introduzione Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si…">
   <meta name="keywords" content="Hybrid Search, BM25, Semantic Search, Retrieval, RAG, AI Engineering, Mirko Calcaterra">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -23,7 +23,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/hybrid-search/">
   <meta property="og:title" content="Hybrid search: is two better than one?">
-  <meta property="og:description" content="Hybrid search: due segnali valgono più di uno? Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si avvicina al t…">
+  <meta property="og:description" content="Hybrid search: due segnali valgono più di uno? Introduzione Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-03-21T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -32,7 +32,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Hybrid search: is two better than one?">
-  <meta property="twitter:description" content="Hybrid search: due segnali valgono più di uno? Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si avvicina al t…">
+  <meta property="twitter:description" content="Hybrid search: due segnali valgono più di uno? Introduzione Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Hybrid search: due segnali valgono più di uno? Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si avvicina al t…"
+    "description": "Hybrid search: due segnali valgono più di uno? Introduzione Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si…"
   }
   </script>
 
@@ -1404,7 +1404,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">21 marzo 2026 • 33 min</span>
+            <span class="post-hero__author-meta">21 marzo 2026 • 34 min</span>
           </div>
         </div>
       </section>
@@ -1420,14 +1420,20 @@
         <div class="post-toc__content">
           <ul class="post-toc__list">
     <li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#estrarre-le-info-con-un-solo-metodo">
+          <a class="post-toc__link" href="#introduzione">
             <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Introduzione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#estrarre-le-info-con-un-solo-metodo">
+            <span class="post-toc__number">2</span>
             <span class="post-toc__text">Estrarre le info con un solo metodo</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#come-funziona-la-keyword-search-e-perch-ancora-fortissima">
-            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__number">2.1</span>
             <span class="post-toc__text">Come funziona la keyword search e perché è ancora fortissima</span>
           </a>
           
@@ -1435,31 +1441,31 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#perch-nata-la-semantic-search-e-dove-davvero-aiuta">
-            <span class="post-toc__number">2</span>
+            <span class="post-toc__number">3</span>
             <span class="post-toc__text">Perché è nata la semantic search e dove davvero aiuta</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#la-hybrid-search-non-un-compromesso-unarchitettura">
-            <span class="post-toc__number">3</span>
+            <span class="post-toc__number">4</span>
             <span class="post-toc__text">La hybrid search non è un compromesso, è un&#39;architettura</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#sparse-retrieval-non-solo-bm25">
-            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__number">4.1</span>
             <span class="post-toc__text">Sparse retrieval non è solo BM25</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#hybrid-retrieval-e-reranking-sono-cose-diverse">
-            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__number">4.2</span>
             <span class="post-toc__text">Hybrid retrieval e reranking sono cose diverse</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#perch-il-tema-tornato-centrale">
-            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__number">4.3</span>
             <span class="post-toc__text">Perché il tema è tornato centrale</span>
           </a>
           
@@ -1467,55 +1473,55 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#come-i-provider-interpretano-la-hybrid-search">
-            <span class="post-toc__number">4</span>
+            <span class="post-toc__number">5</span>
             <span class="post-toc__text">Come i provider interpretano la hybrid search</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#elasticsearch-il-pi-completo-il-pi-stratificato">
-            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__number">5.1</span>
             <span class="post-toc__text">Elasticsearch: il più completo, il più stratificato</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#opensearch-lalternativa-open-source-con-un-approccio-diverso-alla-fusione">
-            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__number">5.2</span>
             <span class="post-toc__text">OpenSearch: l&#39;alternativa open source con un approccio diverso alla fusione</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#pinecone-sparse-e-dense-nello-stesso-spazio-vettoriale">
-            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__number">5.3</span>
             <span class="post-toc__text">Pinecone: sparse e dense nello stesso spazio vettoriale</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#qdrant-multi-vettore-con-pipeline-componibili-server-side">
-            <span class="post-toc__number">4.4</span>
+            <span class="post-toc__number">5.4</span>
             <span class="post-toc__text">Qdrant: multi-vettore con pipeline componibili server-side</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#weaviate-il-vector-database-nato-ibrido">
-            <span class="post-toc__number">4.5</span>
+            <span class="post-toc__number">5.5</span>
             <span class="post-toc__text">Weaviate: il vector database nato ibrido</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#azure-ai-search-la-pipeline-pi-completa-out-of-the-box">
-            <span class="post-toc__number">4.6</span>
+            <span class="post-toc__number">5.6</span>
             <span class="post-toc__text">Azure AI Search: la pipeline più completa out-of-the-box</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#le-famiglie-concettuali">
-            <span class="post-toc__number">4.7</span>
+            <span class="post-toc__number">5.7</span>
             <span class="post-toc__text">Le famiglie concettuali</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#i-provider-secondari-in-breve">
-            <span class="post-toc__number">4.8</span>
+            <span class="post-toc__number">5.8</span>
             <span class="post-toc__text">I provider secondari in breve</span>
           </a>
           
@@ -1523,46 +1529,46 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#come-si-costruisce-una-pipeline-ibrida-concreta">
-            <span class="post-toc__number">5</span>
+            <span class="post-toc__number">6</span>
             <span class="post-toc__text">Come si costruisce una pipeline ibrida concreta</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#misurare-la-qualit-del-retrieval-sul-serio">
-            <span class="post-toc__number">6</span>
+            <span class="post-toc__number">7</span>
             <span class="post-toc__text">Misurare la qualità del retrieval, sul serio</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#i-costi-nellordine-che-conta">
-            <span class="post-toc__number">7</span>
+            <span class="post-toc__number">8</span>
             <span class="post-toc__text">I costi, nell&#39;ordine che conta</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-costo-computazionale-viene-prima-di-tutto">
-            <span class="post-toc__number">7.1</span>
+            <span class="post-toc__number">8.1</span>
             <span class="post-toc__text">Il costo computazionale viene prima di tutto</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-costo-commerciale-dipende-dal-modello">
-            <span class="post-toc__number">7.2</span>
+            <span class="post-toc__number">8.2</span>
             <span class="post-toc__text">Il costo commerciale dipende dal modello</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-costo-dellerrore-quello-che-nessuno-budgeta">
-            <span class="post-toc__number">7.3</span>
+            <span class="post-toc__number">8.3</span>
             <span class="post-toc__text">Il costo dell&#39;errore è quello che nessuno budgeta</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#il-principio-di-progettazione-dietro-la-hybrid-search">
-            <span class="post-toc__number">8</span>
-            <span class="post-toc__text">Il principio di progettazione dietro la hybrid search</span>
+          <a class="post-toc__link" href="#conclusione">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">Conclusione</span>
           </a>
           
         </li>
@@ -1570,7 +1576,8 @@
         </div>
       </aside>
         <div class="post-body">
-          <p>Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si avvicina al tema del retrieval in questi ultimi anni. Liquidare la ricerca per parole chiave come &quot;roba vecchia&quot; semplifica troppo le cose, e quella semplificazione prima o poi si paga.</p>
+          <h2 id="introduzione">Introduzione</h2>
+<p>Partiamo subito da un punto a cui tengo parecchio. La semantic search non ha reso obsoleta la keyword search. Ci tengo a dirlo perché ho visto troppe persone credere il contrario, soprattutto chi si avvicina al tema del retrieval in questi ultimi anni. Liquidare la ricerca per parole chiave come &quot;roba vecchia&quot; semplifica troppo le cose, e quella semplificazione prima o poi si paga.</p>
 <p>Il punto vero è un altro: ogni strategia di retrieval commette errori specifici, prevedibili e spesso complementari. La hybrid search esiste perché qualcuno ha guardato questi errori con attenzione e ha capito che dipendere da un solo segnale è una fragilità che un sistema serio non può permettersi.</p>
 <p>Questo articolo non è una gara per eleggere un vincitore tra keyword e semantic search. Il punto è capire <strong>quali errori fanno i diversi segnali di retrieval</strong>, perché li fanno, e come si costruisce un sistema che li combina senza che uno annulli l&#39;altro. Per rendere tutto più maneggiabile useremo un caso guida: un sistema di retrieval dietro un&#39;app culinaria, un motore che deve recuperare ricette, ingredienti, varianti regionali e informazioni nutrizionali a partire dalle domande degli utenti. Un dominio familiare, ma con abbastanza complessità da far emergere i limiti reali di ogni approccio.</p>
 <h2 id="estrarre-le-info-con-un-solo-metodo">Estrarre le info con un solo metodo</h2>
@@ -1587,7 +1594,29 @@
   <figcaption><strong>Figure 01.</strong> Schema semplificato di BM25: la rilevanza cresce con il match dei termini della query, ma viene corretta tenendo conto sia della frequenza dei termini sia della lunghezza del documento.</figcaption>
 </figure>
 
-<p>BM25 lavora su un <a href="https://medium.com/@noumannawaz/lesson-8-hybrid-retrieval-bm25-dense-bac3c702318b"><strong>indice invertito</strong></a>: una struttura dati che mappa ogni termine alla lista dei documenti che lo contengono, con frequenze e posizioni. È una tecnologia con decenni di ottimizzazione alle spalle, estremamente efficiente. Non richiede GPU, scala bene, e restituisce risultati in pochi millisecondi anche su un insieme di milioni di documenti.</p>
+<p>BM25 lavora su un <a href="https://medium.com/@noumannawaz/lesson-8-hybrid-retrieval-bm25-dense-bac3c702318b"><strong>indice invertito</strong></a>: una struttura dati che mappa ogni termine alla lista dei documenti che lo contengono, con frequenze e posizioni. È una tecnologia con decenni di ottimizzazione alle spalle, estremamente efficiente. Non richiede GPU, scala bene, e restituisce risultati in pochi millisecondi anche su un insieme di milioni di documenti. Se vuoi un approfondimento matematico te lo lascio qui 👇🏻.</p>
+<details class="post-warning">
+<summary><strong>Approfondimento matematico su BM25</strong> (clicca per espandere)</summary>
+
+<p>Se vuoi vedere la parte più formale, il punteggio BM25 di un documento $D$ rispetto a una query $Q$ si può scrivere così:</p>
+<p>$$
+\text{BM25}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i,D)\cdot(k_1+1)}{f(q_i,D)+k_1\cdot\left(1-b+b\cdot\dfrac{|D|}{\text{avgdl}}\right)}
+$$</p>
+<p>Qui dentro ci sono quattro idee semplici ma importanti:</p>
+<ul>
+<li><strong>Somma sui termini della query</strong>: BM25 calcola un contributo separato per ogni termine della query e poi li somma. Se cerchi &quot;pasta carbonara&quot;, il punteggio finale è la combinazione del contributo di &quot;pasta&quot; e di &quot;carbonara&quot;.</li>
+<li><strong>IDF$(q_i)$</strong>: misura quanto un termine è raro nel corpus. Più il termine è raro, più pesa nel punteggio. In una collezione di ricette, &quot;ricetta&quot; conta poco; &quot;guanciale&quot; o &quot;&#39;nduja&quot; molto di più.</li>
+<li><strong>$f(q_i,D)$ e $k_1$</strong>: $f(q_i,D)$ conta quante volte il termine compare nel documento, ma BM25 non cresce in modo lineare. Applica una <strong>saturazione</strong>: la prima occorrenza vale tanto, la seconda meno, la decima quasi niente. Il parametro $k_1$ controlla quanto rapidamente questa saturazione avviene.</li>
+<li><strong>$b$, $|D|$ e avgdl</strong>: questa parte corregge per la lunghezza del documento. Un documento lungo contiene naturalmente più parole, quindi anche più match casuali. BM25 compensa questo effetto confrontando la lunghezza del documento $|D|$ con la lunghezza media del corpus, <code>avgdl</code>.</li>
+</ul>
+<p>La formula dell&#39;IDF di solito viene scritta così:</p>
+<p>$$
+\text{IDF}(q_i) = \ln\left(\frac{N - n(q_i) + 0.5}{n(q_i) + 0.5} + 1\right)
+$$</p>
+<p>dove $N$ è il numero totale di documenti nel corpus e $n(q_i)$ è il numero di documenti che contengono il termine $q_i$.</p>
+<p>In pratica, BM25 cerca un equilibrio molto intelligente: premia i termini rari, considera le ripetizioni senza farsene ingannare, e impedisce che i documenti più lunghi vincano solo perché contengono più testo.</p>
+</details>
+
 <p>Nella nostra app culinaria, BM25 è imbattibile quando la query contiene termini esatti che compaiono nelle ricette. &quot;Carbonara&quot;, &quot;risotto ai funghi porcini&quot;, &quot;tiramisù senza uova&quot;: tutte query dove il match lessicale diretto è esattamente ciò che serve. Se l&#39;utente cerca un ingrediente specifico, magari poco comune come &quot;colatura di alici&quot; o &quot;bottarga di muggine&quot;, BM25 trova precisamente i documenti che contengono quei termini. È veloce, prevedibile, e i risultati sono spiegabili: puoi sempre dire perché un documento è stato recuperato.</p>
 <p>I failure modes della keyword search sono però ben documentati. Il <strong>vocabulary mismatch</strong> è il più importante: se l&#39;utente usa parole diverse da quelle nel documento, il sistema non trova nulla. &quot;Scarola&quot; e &quot;indivia riccia&quot; sono la stessa verdura, ma per BM25 sono due stringhe completamente diverse. La <strong>cecità ai sinonimi</strong> è un caso particolare: &quot;macchina&quot; e &quot;automobile&quot; sono estranei per un indice invertito. E più in generale, BM25 non ha alcuna comprensione semantica: &quot;un piatto veloce per la cena&quot; non matcha con nessuna ricetta perché nessuna ricetta si descrive con quelle parole esatte.</p>
 <p>C&#39;è anche un problema sottile di <strong>exact match bias</strong>: BM25 può restituire documenti che contengono i termini della query in contesti irrilevanti. Se nel procedimento di una torta compare la frase &quot;questa non è una carbonara&quot;, quella ricetta potrebbe apparire nei risultati per &quot;carbonara&quot;. Il termine c&#39;è, il contesto no.</p>
@@ -1694,7 +1723,7 @@
 <p>Il costo più sottile è quello dell&#39;errore di retrieval. In un sistema RAG, un retrieval che manca documenti rilevanti produce risposte incomplete o allucinazioni. Un retrieval che recupera documenti fuorvianti produce risposte plausibili ma sbagliate, che sono peggio dell&#39;assenza di risposta. Nella nostra app culinaria, restituire una ricetta con allergeni non dichiarati perché il retrieval non ha colto un filtro è un rischio concreto.</p>
 <p>Scegliere una soluzione troppo semplice, un solo retriever senza reranking, un solo segnale senza fusione, può sembrare un risparmio di complessità, ma il costo si materializza nella qualità dei risultati. <a href="https://medium.com/@akanshak/the-critical-role-of-rerankers-in-rag-98309f52abe5">Aziende che hanno aggiunto il reranking alle loro pipeline RAG hanno riportato una riduzione del <strong>25% nell&#39;uso di token</strong> e costi associati, perché il contesto fornito al modello è più preciso e richiede meno materiale di supporto.</a></p>
 <p>Dall&#39;altra parte, la sovra-ingegnerizzazione è un rischio reale. Aggiungere complessità senza valutazione produce sistemi opachi dove i problemi sono difficili da diagnosticare. La regola pratica è: parti con BM25 + dense + RRF come baseline, misura, e aggiungi complessità (reranking, pesi calibrati, sparse appreso) solo quando le metriche lo giustificano.</p>
-<h2 id="il-principio-di-progettazione-dietro-la-hybrid-search">Il principio di progettazione dietro la hybrid search</h2>
+<h2 id="conclusione">Conclusione</h2>
 <p>La hybrid search non è una feature da checkbox. È un principio di progettazione: non fidarti di un solo segnale. Ogni metodo di retrieval ha failure modes prevedibili, e la combinazione intelligente di segnali diversi produce un sistema più robusto di qualsiasi singolo componente.</p>
 <p>Se c&#39;è una cosa da portare a casa, è questa: la keyword search non è morta, la semantic search non è magica, e la hybrid search non è la somma delle due. È un&#39;architettura che riconosce l&#39;imperfezione di ogni segnale e la trasforma in resilienza. Il come si realizza, con quale provider, con quale fusione, con quali pesi, dipende dal dominio, dal volume, dal budget e dalla tolleranza all&#39;errore. Ma il perché è universale: i sistemi che dipendono da un solo segnale di retrieval sono fragili, e la fragilità prima o poi si paga.</p>
         </div>

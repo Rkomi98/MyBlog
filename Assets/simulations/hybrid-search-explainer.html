@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid Search — Datapizza</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+      svg: { fontCache: 'global' }, startup: { typeset: false }
+    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
+  <style>
+:root {
+  --bg: #f7f8fa;
+  --white: #ffffff;
+  --navy: #0d1b2a;
+  --navy2: #1a2e42;
+  --accent-red: #e8412a;
+  --accent-orange: #f5a623;
+  --accent-blue: #2563eb;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --border2: #d1d5db;
+  --grid-color: #e5e7eb;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--navy);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+body > * { position:relative; z-index:1; }
+
+nav {
+  background:var(--white); border-bottom:1px solid var(--border);
+  padding:0 48px; height:64px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+}
+.logo { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; color:var(--navy); text-decoration:none; }
+.logo img { height:28px; }
+.nav-tag { font-size:12px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+
+.step-nav { background:var(--white); border-bottom:1px solid var(--border); display:flex; overflow-x:auto; scrollbar-width:none; padding:0 48px; }
+.step-nav::-webkit-scrollbar { display:none; }
+.step-tab { padding:16px 18px; white-space:nowrap; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; display:flex; align-items:center; gap:8px; border:none; background:none; font-family:'DM Sans',sans-serif; flex-shrink:0; }
+.step-tab:hover { color:var(--navy); }
+.step-tab.active { color:var(--accent-red); border-bottom:2px solid var(--accent-red); }
+.step-tab.done { color:var(--navy); }
+.snum { background:var(--bg); border:1px solid var(--border2); border-radius:5px; width:20px; height:20px; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; color:var(--muted); flex-shrink:0; }
+.step-tab.active .snum { background:var(--accent-red); color:#fff; border-color:var(--accent-red); }
+.step-tab.done .snum { background:var(--navy); color:#fff; border-color:var(--navy); }
+
+.main { max-width:1100px; margin:0 auto; padding:48px 48px 80px; }
+
+.sh { margin-bottom:32px; display:flex; align-items:flex-start; gap:16px; }
+.badge { display:inline-flex; align-items:center; padding:4px 12px; border-radius:6px; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; margin-top:6px; flex-shrink:0; }
+.b-r  { background:#fee2e2; color:#dc2626; }
+.b-g  { background:#d1fae5; color:#059669; }
+.b-o  { background:#fef3c7; color:#d97706; }
+.b-bl { background:#dbeafe; color:#2563eb; }
+.b-p  { background:#f3e8ff; color:#7c3aed; }
+.b-n  { background:var(--bg); color:var(--muted); border:1px solid var(--border2); }
+.sh h2 { font-size:clamp(22px,3vw,36px); font-weight:900; letter-spacing:-.5px; line-height:1.1; }
+.sh h2 .cr { color:var(--accent-red); }
+.sh h2 .co { color:#d97706; }
+.sh h2 .cb { color:var(--accent-blue); }
+.sh h2 .cg { color:#059669; }
+
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:18px; }
+.grid1 { margin-bottom:18px; }
+
+.card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:24px 26px; transition:box-shadow .2s; }
+.card:hover { box-shadow:0 4px 24px rgba(13,27,42,.07); }
+.card.bl-r { border-left:3px solid var(--accent-red); }
+.card.bl-g { border-left:3px solid #059669; }
+.card.bl-o { border-left:3px solid #d97706; }
+.card.bl-b { border-left:3px solid var(--accent-blue); }
+.card.bl-p { border-left:3px solid #7c3aed; }
+.card.hl-r { background:#fff8f7; border-color:#fecaca; }
+.card.hl-g { background:#f0fdf4; border-color:#bbf7d0; }
+.card.hl-o { background:#fffbeb; border-color:#fde68a; }
+.card.hl-b { background:#eff6ff; border-color:#bfdbfe; }
+.ctag { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; margin-bottom:9px; color:var(--muted); }
+.ctag.r { color:var(--accent-red); }
+.ctag.g { color:#059669; }
+.ctag.o { color:#d97706; }
+.ctag.b { color:var(--accent-blue); }
+.ctag.p { color:#7c3aed; }
+.card h3 { font-size:15px; font-weight:800; margin-bottom:9px; color:var(--navy); line-height:1.3; }
+.card p { font-size:13px; color:var(--muted); line-height:1.75; }
+.card p strong { color:var(--navy); font-weight:700; }
+
+.codebox { background:var(--navy); border-radius:10px; padding:16px 20px; margin-top:14px; color:#e2e8f0; font-family:'DM Mono',monospace; font-size:12.5px; line-height:2; overflow-x:auto; }
+.codebox .cr { color:#f87171; font-weight:700; }
+.codebox .cg { color:#6ee7b7; font-weight:700; }
+.codebox .co { color:#fcd34d; font-weight:700; }
+.codebox .cb { color:#93c5fd; font-weight:700; }
+.codebox .cm { color:#475569; font-style:italic; font-size:11px; }
+.codebox .op { color:#94a3b8; }
+
+.lcard { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:26px 30px; margin-bottom:18px; }
+.lcard .ltag { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+.lcard .ltitle { font-size:15px; font-weight:800; color:var(--navy); margin-bottom:16px; }
+.eqrow { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.eqrow:last-child { border-bottom:none; }
+.eqlbl { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; width:110px; flex-shrink:0; }
+.eqf { flex:1; font-size:15px; min-width:200px; }
+.eqnote { font-size:11px; color:var(--muted); font-style:italic; width:200px; flex-shrink:0; text-align:right; line-height:1.4; }
+
+.darkcard { background:var(--navy); border-radius:14px; padding:30px 36px; margin-bottom:18px; color:#e2e8f0; }
+.darkcard .dtag { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#475569; margin-bottom:20px; }
+.drow { display:flex; align-items:center; gap:18px; padding:13px 0; border-bottom:1px solid rgba(255,255,255,.06); flex-wrap:wrap; }
+.drow:last-child { border-bottom:none; }
+.dchip { font-size:10px; font-weight:700; padding:3px 10px; border-radius:4px; text-transform:uppercase; letter-spacing:.07em; width:86px; text-align:center; flex-shrink:0; }
+.dc-r { background:rgba(248,113,113,.15); color:#f87171; }
+.dc-g { background:rgba(110,231,183,.15); color:#6ee7b7; }
+.dc-o { background:rgba(252,211,77,.15); color:#fcd34d; }
+.dc-b { background:rgba(147,197,253,.15); color:#93c5fd; }
+.dc-p { background:rgba(196,181,253,.15); color:#c4b5fd; }
+.deq { flex:1; font-size:14px; color:#f1f5f9; min-width:220px; line-height:1.65; }
+.dnote { font-size:11px; color:#475569; font-style:italic; width:190px; flex-shrink:0; text-align:right; line-height:1.5; }
+
+.flow { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:22px 26px; margin-bottom:18px; overflow-x:auto; }
+.ftag { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:18px; }
+.frow { display:flex; align-items:center; gap:6px; min-width:max-content; }
+.fnode { background:var(--bg); border:1px solid var(--border2); border-radius:8px; padding:8px 13px; font-size:12px; font-family:'DM Mono',monospace; text-align:center; line-height:1.4; }
+.fnode .fnl { color:var(--muted); font-size:9px; display:block; margin-bottom:2px; font-family:'DM Sans',sans-serif; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+.fnode .fnv { color:var(--navy); font-weight:700; font-size:13px; }
+.fn-r { background:#fff8f7; border-color:#fca5a5; }
+.fn-g { background:#f0fdf4; border-color:#86efac; }
+.fn-o { background:#fffbeb; border-color:#fcd34d; }
+.fn-b { background:#eff6ff; border-color:#93c5fd; }
+.fn-p { background:#faf5ff; border-color:#c4b5fd; }
+.farr { color:var(--border2); font-size:18px; flex-shrink:0; }
+.fop { width:28px; height:28px; border-radius:50%; border:1.5px solid var(--border2); background:var(--white); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--navy); flex-shrink:0; }
+.fop.r { border-color:#fca5a5; color:var(--accent-red); }
+.fop.g { border-color:#86efac; color:#059669; }
+.fop.b { border-color:#93c5fd; color:var(--accent-blue); }
+
+.tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700; margin-right:3px; }
+.tg-r { background:#fee2e2; color:#dc2626; }
+.tg-g { background:#d1fae5; color:#059669; }
+.tg-o { background:#fef3c7; color:#d97706; }
+.tg-b { background:#dbeafe; color:#2563eb; }
+.tg-p { background:#f3e8ff; color:#7c3aed; }
+
+.tcard { background:var(--white); border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:18px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead th { background:var(--bg); padding:12px 16px; text-align:left; font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); }
+tbody td { padding:12px 16px; border-bottom:1px solid var(--border); color:var(--muted); vertical-align:top; line-height:1.6; }
+tbody td:first-child { color:var(--navy); font-weight:700; font-size:13px; }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover td { background:var(--bg); }
+
+.btn-blue { background:var(--accent-blue); color:#fff; border:none; padding:14px 28px; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:all .15s; }
+.btn-blue:hover { background:#1d4ed8; transform:translateY(-1px); }
+.btn-blue:disabled { opacity:.3; cursor:not-allowed; transform:none; }
+.btn-dark { background:var(--navy); color:#fff; border:none; padding:14px 28px; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:all .15s; }
+.btn-dark:hover { background:var(--navy2); transform:translateY(-1px); }
+.btn-dark:disabled { opacity:.3; cursor:not-allowed; transform:none; }
+
+.bnav { background:var(--white); border-top:1px solid var(--border); padding:18px 48px; display:flex; align-items:center; justify-content:space-between; position:sticky; bottom:0; z-index:99; }
+.pinfo { font-size:13px; color:var(--muted); font-weight:500; display:flex; align-items:center; gap:12px; }
+.pbar { width:120px; height:4px; background:var(--border); border-radius:99px; overflow:hidden; }
+.pfill { height:100%; background:var(--accent-red); border-radius:99px; transition:width .3s; }
+
+.panel { display:none; }
+.panel.active { display:block; animation:fadeUp .3s ease forwards; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* Failure mode list custom */
+.fmlist { list-style:none; margin-top:10px; }
+.fmlist li { font-size:13px; color:var(--muted); padding:6px 0; border-bottom:1px dashed var(--border); display:flex; gap:8px; align-items:flex-start; line-height:1.6; }
+.fmlist li:last-child { border-bottom:none; }
+.fmlist li::before { content:'↳'; color:var(--accent-red); font-weight:700; flex-shrink:0; margin-top:1px; }
+.fmlist li strong { color:var(--navy); }
+
+/* Nuovo layout failure modes — blocchetti chiari */
+.fm-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.fm-item { background:var(--white); border:1px solid #fecaca; border-radius:10px; padding:13px 15px; border-left:3px solid var(--accent-red); }
+.fm-item .fm-name { font-size:11px; font-weight:800; color:var(--accent-red); letter-spacing:.05em; text-transform:uppercase; margin-bottom:4px; }
+.fm-item .fm-desc { font-size:13px; color:var(--navy); font-weight:600; line-height:1.4; margin-bottom:6px; }
+.fm-item .fm-ex { font-size:11.5px; color:var(--muted); line-height:1.55; background:var(--bg); border-radius:6px; padding:6px 9px; }
+.fm-item .fm-ex em { color:var(--navy); font-style:normal; font-weight:600; }
+
+/* Variante verde per i punti di forza inline */
+.fm-item.fm-ok { border-color:#bbf7d0; border-left-color:#059669; background:#f0fdf4; }
+.fm-item.fm-ok .fm-name { color:#059669; }
+
+/* Failure modes hybrid — sfondo più neutro */
+.fm-item.fm-warn { border-color:#fde68a; border-left-color:#d97706; }
+.fm-item.fm-warn .fm-name { color:#d97706; }
+
+/* Provider pill */
+.ppill { display:inline-flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border2); border-radius:20px; padding:5px 14px; font-size:12px; font-weight:700; color:var(--navy); margin:3px; }
+
+/* Score bar */
+.sbar-wrap { margin-top:8px; }
+.sbar-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.sbar-lbl { font-size:11px; font-weight:700; color:var(--muted); width:80px; flex-shrink:0; }
+.sbar { flex:1; height:6px; background:var(--border); border-radius:99px; overflow:hidden; }
+.sbar-fill { height:100%; border-radius:99px; }
+.sfr { background:var(--accent-red); }
+.sfg { background:#059669; }
+.sfb { background:var(--accent-blue); }
+.sfo { background:#d97706; }
+.sfp { background:#7c3aed; }
+.sbar-val { font-size:11px; font-weight:700; color:var(--navy); width:28px; text-align:right; flex-shrink:0; font-family:'DM Mono',monospace; }
+
+/* Hero intro card */
+.intro-card { background:var(--navy); border-radius:16px; padding:36px 40px; margin-bottom:24px; color:#e2e8f0; }
+.intro-card h3 { font-size:18px; font-weight:900; color:#fff; margin-bottom:10px; letter-spacing:-.3px; }
+.intro-card p { font-size:14px; color:#94a3b8; line-height:1.7; }
+.intro-card p strong { color:#f1f5f9; }
+
+@media(max-width:800px){
+  .step-nav, .main, .bnav { padding-left:20px; padding-right:20px; }
+  .grid2, .grid3 { grid-template-columns:1fr; }
+  .eqnote, .dnote { display:none; }
+  .darkcard { padding:22px 18px; }
+}
+
+/* POPUP OVERLAY */
+.popup-overlay { display:none; position:fixed; inset:0; background:rgba(13,27,42,.55); z-index:999; align-items:center; justify-content:center; }
+.popup-overlay.open { display:flex; }
+.popup-box { background:var(--white); border-radius:18px; padding:36px 40px; max-width:520px; width:90%; position:relative; box-shadow:0 24px 80px rgba(13,27,42,.25); animation:fadeUp .2s ease forwards; }
+.popup-box h4 { font-size:18px; font-weight:900; color:var(--navy); margin-bottom:6px; letter-spacing:-.3px; }
+.popup-box .popup-tag { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+.popup-box p { font-size:14px; color:var(--muted); line-height:1.75; margin-bottom:10px; }
+.popup-box p strong { color:var(--navy); }
+.popup-box .popup-example { background:var(--navy); border-radius:10px; padding:14px 18px; margin-top:12px; color:#e2e8f0; font-size:13px; line-height:1.7; }
+.popup-box .popup-example strong { color:#fcd34d; }
+.popup-close { position:absolute; top:16px; right:18px; background:var(--bg); border:1px solid var(--border2); border-radius:8px; width:32px; height:32px; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); font-family:'DM Mono',monospace; }
+.popup-close:hover { background:var(--border); }
+
+/* Termine cliccabile nelle formule */
+.term-hl { cursor:pointer; border-bottom:1px dashed; display:inline; transition:opacity .15s; }
+.term-hl:hover { opacity:.7; }
+.term-hl.tc-r { color:var(--accent-red); border-color:var(--accent-red); }
+.term-hl.tc-b { color:var(--accent-blue); border-color:var(--accent-blue); }
+.term-hl.tc-o { color:#d97706; border-color:#d97706; }
+.term-hl.tc-g { color:#059669; border-color:#059669; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">
+    <svg width="28" height="28" viewBox="0 0 210 210" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M127.24 107.052L117.61 79.7398C117.243 78.6967 117.737 77.5226 118.747 77.0665C120.457 76.2894 122.197 75.5588 123.962 74.8788C124.195 74.7902 124.418 74.6972 124.651 74.6128C126.18 74.0384 127.721 73.5063 129.267 73.0164C130.331 72.6785 131.459 73.2487 131.83 74.3003L160.042 154.319L166.296 172.061C166.922 173.83 165.11 175.516 163.425 174.73L15.8926 105.937C14.8748 105.464 14.4229 104.256 14.8664 103.2C15.597 101.452 16.3657 99.7075 17.1681 97.9718C17.2737 97.7395 17.375 97.5072 17.4848 97.2707C18.4731 95.1464 19.512 93.0601 20.5805 91.0033C23.0004 86.3535 25.6231 81.8684 28.4316 77.5564C29.8675 75.3561 31.3541 73.2022 32.8829 71.0906C34.4329 68.9536 36.0293 66.8715 37.6721 64.8274C53.6826 44.94 73.9882 29.6686 96.4814 19.8114C98.8126 18.7936 101.161 17.8265 103.534 16.9269C105.266 16.2681 107.01 15.6388 108.763 15.0391C109.84 14.6717 111.001 15.2334 111.381 16.3061L115.82 28.8873L120.938 43.4027L125.314 55.8234C125.715 56.9552 125.09 58.2095 123.95 58.5812C122.476 59.0627 121.006 59.5737 119.541 60.1227C119.308 60.2114 119.089 60.3043 118.856 60.3888C116.47 61.301 114.126 62.2935 111.833 63.3577C97.2711 70.1277 84.5337 79.9426 74.326 92.1436C73.0928 93.6176 71.8934 95.1295 70.7362 96.671C70.0352 97.6044 68.7386 97.8071 67.8179 97.1229L58.9617 90.5219C58.0326 89.8293 57.8468 88.4863 58.5563 87.5403C59.705 86.0072 60.8875 84.5079 62.0996 83.034C73.7221 68.9029 88.2797 57.5211 104.957 49.6447C105.95 49.1759 106.427 48.0188 106.064 46.9883L102.348 36.4469C101.938 35.2898 100.637 34.745 99.5221 35.2602C80.1288 44.2558 63.2399 57.4536 49.8732 73.9159C48.2219 75.9473 46.617 78.0336 45.0755 80.1664C43.5467 82.2865 42.077 84.453 40.6538 86.6618C38.8251 89.5125 37.0851 92.4308 35.4465 95.4251C34.8552 96.5063 35.2817 97.8535 36.3756 98.3645L136.89 145.235C138.575 146.02 140.387 144.335 139.762 142.565L138.968 140.314L127.235 107.043L127.24 107.052Z" fill="#D7342B"/></svg>
+    Datapizza
+  </a>
+  <span class="nav-tag">Hybrid Search — Guida tecnica</span>
+</nav>
+
+<div class="step-nav">
+  <button class="step-tab active" onclick="goTo(0)"><span class="snum">1</span> Panoramica</button>
+  <button class="step-tab" onclick="goTo(1)"><span class="snum">2</span> Keyword Search</button>
+  <button class="step-tab" onclick="goTo(2)"><span class="snum">3</span> Semantic Search</button>
+  <button class="step-tab" onclick="goTo(3)"><span class="snum">4</span> Hybrid Search</button>
+  <button class="step-tab" onclick="goTo(4)"><span class="snum">5</span> Algoritmi di fusione</button>
+  <button class="step-tab" onclick="goTo(5)"><span class="snum">6</span> Provider</button>
+  <button class="step-tab" onclick="goTo(6)"><span class="snum">7</span> Pipeline concreta</button>
+</div>
+
+<div class="main">
+
+  <!-- PANEL 0 — PANORAMICA -->
+  <div class="panel active" id="panel-0">
+    <div class="sh">
+      <span class="badge b-n">Introduzione</span>
+      <h2>Come funziona il <span class="cr">retrieval</span> delle informazioni</h2>
+    </div>
+
+    <div class="intro-card">
+      <h3>Il punto non è scegliere il metodo migliore</h3>
+      <p>Ogni strategia di retrieval commette errori <strong>specifici e prevedibili</strong>. La keyword search manca le query descrittive; la semantic search confonde termini con significati multipli; nessuna delle due, da sola, è robusta. La hybrid search combina segnali con profili di errore <strong>complementari</strong>, non cerca un compromesso.</p>
+    </div>
+
+    <div class="grid3">
+      <div class="card bl-r">
+        <div class="ctag r">Keyword Search</div>
+        <h3>Match lessicale diretto</h3>
+        <p>Cerca corrispondenze esatte tra i termini della query e i token del documento. Usa BM25 su <strong>indice invertito</strong>. Veloce, spiegabile, efficiente su CPU. Funziona benissimo su query precise come "carbonara" o "E471", ma cerca "un primo caldo con i legumi" e ottieni zero risultati: nessuna ricetta usa quelle parole esatte.</p>
+        <div class="sbar-wrap">
+          <div class="sbar-row"><span class="sbar-lbl">Precisione</span><div class="sbar"><div class="sbar-fill sfr" style="width:90%"></div></div><span class="sbar-val">9/10</span></div>
+          <div class="sbar-row"><span class="sbar-lbl">Recall</span><div class="sbar"><div class="sbar-fill sfr" style="width:50%"></div></div><span class="sbar-val">5/10</span></div>
+          <div class="sbar-row"><span class="sbar-lbl">Latenza</span><div class="sbar"><div class="sbar-fill sfg" style="width:95%"></div></div><span class="sbar-val">↓↓↓</span></div>
+        </div>
+      </div>
+      <div class="card bl-b">
+        <div class="ctag b">Semantic Search</div>
+        <h3>Vicinanza nel significato</h3>
+        <p>Rappresenta testi come <strong>vettori densi</strong> in uno spazio ad alta dimensionalità. Trova documenti semanticamente vicini anche senza termini in comune. Ma cerca "ricetta con 'nduja" e arrivano sughi piccanti generici: l'ingrediente specifico scompare in una zona di vicinanza troppo ampia.</p>
+        <div class="sbar-wrap">
+          <div class="sbar-row"><span class="sbar-lbl">Precisione</span><div class="sbar"><div class="sbar-fill sfb" style="width:70%"></div></div><span class="sbar-val">7/10</span></div>
+          <div class="sbar-row"><span class="sbar-lbl">Recall</span><div class="sbar"><div class="sbar-fill sfb" style="width:80%"></div></div><span class="sbar-val">8/10</span></div>
+          <div class="sbar-row"><span class="sbar-lbl">Latenza</span><div class="sbar"><div class="sbar-fill sfo" style="width:60%"></div></div><span class="sbar-val">↓↓</span></div>
+        </div>
+      </div>
+      <div class="card bl-g">
+        <div class="ctag g">Hybrid Search</div>
+        <h3>Fusione di segnali multipli</h3>
+        <p>Combina retrieval sparse e dense in un'unica pipeline. Aggiunge spesso un <span class="term-link" onclick="showPopup('crossencoder')" style="cursor:pointer; border-bottom:1px dashed #059669; color:#059669;"><strong>reranker cross-encoder</strong></span> per affinare la qualità finale. Con "pasta e ceci alla romana", BM25 trova i match esatti, la semantic trova varianti laziali: chi compare in entrambe le liste sale in cima.</p>
+        <div class="sbar-wrap">
+          <div class="sbar-row"><span class="sbar-lbl">Precisione</span><div class="sbar"><div class="sbar-fill sfg" style="width:88%"></div></div><span class="sbar-val">9/10</span></div>
+          <div class="sbar-row"><span class="sbar-lbl">Recall</span><div class="sbar"><div class="sbar-fill sfg" style="width:92%"></div></div><span class="sbar-val">9/10</span></div>
+          <div class="sbar-row"><span class="sbar-lbl">Latenza</span><div class="sbar"><div class="sbar-fill sfr" style="width:40%"></div></div><span class="sbar-val">↓</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="ftag">Progressione concettuale — dalla keyword alla hybrid search</div>
+      <div class="frow">
+        <div class="fnode fn-r"><span class="fnl">segnale</span><span class="fnv">Keyword</span></div>
+        <span class="farr">→</span>
+        <div class="fnode"><span class="fnl">problema</span><span class="fnv">Sinonimi</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-b"><span class="fnl">segnale</span><span class="fnv">Semantic</span></div>
+        <span class="farr">→</span>
+        <div class="fnode"><span class="fnl">problema</span><span class="fnv">Deriva semantica</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-g"><span class="fnl">soluzione</span><span class="fnv">Hybrid</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-o"><span class="fnl">opzionale</span><span class="fnv">Reranking</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-g"><span class="fnl">output</span><span class="fnv">Top-K risultati</span></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card bl-o hl-o">
+        <div class="ctag o">Caso guida</div>
+        <h3>App culinaria — motore ricette</h3>
+        <p>Useremo un sistema di retrieval su migliaia di ricette per mostrare concretamente quando ogni approccio funziona e quando fallisce. Query come <strong>"pasta e fagioli"</strong> vs <strong>"un primo caldo con i legumi"</strong> raccontano tutto.</p>
+      </div>
+      <div class="card bl-p">
+        <div class="ctag p">Perché oggi è centrale</div>
+        <h3>RAG e sistemi generativi</h3>
+        <p>Nei sistemi RAG (Retrieval-Augmented Generation), un LLM non risponde dalla sua memoria interna ma legge documenti recuperati in tempo reale. Se il retrieval porta documenti sbagliati, il modello produce <strong>risposte inventate o incomplete</strong>, perché non può ragionare su ciò che non ha ricevuto. La qualità del retrieval determina direttamente la qualità della risposta finale.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 1 — KEYWORD SEARCH -->
+  <div class="panel" id="panel-1">
+    <div class="sh">
+      <span class="badge b-r">Keyword Search</span>
+      <h2>Indici invertiti e <span class="cr">BM25</span></h2>
+    </div>
+
+    <div class="lcard">
+      <div class="ltag">Algoritmo fondamentale — BM25</div>
+      <div class="ltitle">Formula di scoring per un documento D rispetto alla query Q · <span style="font-weight:400; color:var(--muted);">clicca i chip sotto la formula per capire ogni termine</span></div>
+      <div class="eqrow">
+        <span class="eqlbl">BM25(D, Q)</span>
+        <span class="eqf">
+          $$\text{BM25}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i,D)\cdot(k_1+1)}{f(q_i,D)+k_1\cdot\!\left(1-b+b\cdot\dfrac{|D|}{\text{avgdl}}\right)}$$
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+            <button onclick="showPopup('bm25_sum')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#dbeafe; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;">∑ᵢ</button>
+            <button onclick="showPopup('bm25_idf')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; cursor:pointer;">IDF(qᵢ)</button>
+            <button onclick="showPopup('bm25_tf')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fef3c7; color:#d97706; border:1px solid #fcd34d; cursor:pointer;">f(qᵢ,D) · k₁</button>
+            <button onclick="showPopup('bm25_norm')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#f3e8ff; color:#7c3aed; border:1px solid #c4b5fd; cursor:pointer;">b · |D|/avgdl</button>
+          </div>
+        </span>
+        <span class="eqnote">somma pesata su tutti i termini della query</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">IDF(q)</span>
+        <span class="eqf">$$\text{IDF}(q_i) = \ln\!\left(\frac{N - n(q_i) + 0.5}{n(q_i) + 0.5} + 1\right)$$</span>
+        <span class="eqnote">peso inverso: termini rari valgono di più</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">Parametri</span>
+        <span class="eqf">
+          <button onclick="showPopup('bm25_tf')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#dbeafe; color:#2563eb; border:1px solid #93c5fd; cursor:pointer; margin-right:8px;">k₁ ≈ 1.2–2.0</button> saturazione frequenza &nbsp;
+          <button onclick="showPopup('bm25_norm')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fef3c7; color:#d97706; border:1px solid #fcd34d; cursor:pointer;">b ≈ 0.75</button> normalizzazione lunghezza
+        </span>
+        <span class="eqnote">k₁ alto = più peso alle ripetizioni; b alto = penalizza doc lunghi</span>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card bl-g hl-g">
+        <div class="ctag g">Punti di forza</div>
+        <h3>Quando funziona bene</h3>
+        <p>Ricerche esatte: <strong>"carbonara"</strong>, <strong>"colatura di alici"</strong>, <strong>"E471"</strong> (allergeni). Codici, sigle, nomi propri rari, qualsiasi token che deve matchare letteralmente. Scalabile, nessuna GPU richiesta, risultati spiegabili.</p>
+      </div>
+      <div class="card bl-r hl-r">
+        <div class="ctag r">Limiti strutturali — Keyword Search</div>
+        <h3>Quando non trova nulla di utile</h3>
+        <div class="fm-grid">
+          <div class="fm-item">
+            <div class="fm-name">Parole diverse, stesso concetto</div>
+            <div class="fm-desc">L'indice mappa token esatti: due parole con lo stesso significato sono trattate come estranee</div>
+            <div class="fm-ex">Cerchi <em>"indivia riccia"</em> ma le ricette usano <em>"scarola"</em>. Per BM25 sono due stringhe diverse: zero risultati.</div>
+          </div>
+          <div class="fm-item">
+            <div class="fm-name">Query descrittive senza match diretto</div>
+            <div class="fm-desc">Se la query non contiene i termini presenti nel documento, il sistema non recupera nulla</div>
+            <div class="fm-ex">Cerchi <em>"un primo caldo con i legumi"</em>: nessuna ricetta usa quelle parole esatte, eppure pasta e fagioli è esattamente quello.</div>
+          </div>
+          <div class="fm-item">
+            <div class="fm-name">Sinonimi non collegati</div>
+            <div class="fm-desc">L'indice non sa che "macchina" e "automobile" sono la stessa cosa</div>
+            <div class="fm-ex">Una ricetta scritta con <em>"automobile"</em> non appare mai cercando <em>"macchina"</em>, e viceversa.</div>
+          </div>
+          <div class="fm-item">
+            <div class="fm-name">Il termine c'è, il contesto no</div>
+            <div class="fm-desc">BM25 conta le occorrenze ma non capisce se il termine è usato in modo pertinente</div>
+            <div class="fm-ex">Il procedimento di una torta contiene <em>"questa non è una carbonara"</em>: BM25 la restituisce per la query "carbonara".</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bl-b">
+      <div class="ctag b">Architettura — Indice invertito</div>
+      <h3>Come è strutturato un indice BM25</h3>
+      <div class="codebox">
+        <span class="cm">// struttura semplificata dell'indice invertito</span><br>
+        <span class="cr">indice</span> <span class="op">=</span> {<br>
+        &nbsp;&nbsp;<span class="cg">"carbonara"</span>: <span class="op">[(doc_3, freq=4, pos=[12,45,78,91]), (doc_17, freq=2, ...)]</span><br>
+        &nbsp;&nbsp;<span class="cg">"pasta"</span>:     <span class="op">[(doc_1, freq=7, ...), (doc_3, freq=3, ...), ...]</span><br>
+        &nbsp;&nbsp;<span class="cg">"guanciale"</span>: <span class="op">[(doc_3, freq=3, ...), (doc_22, freq=1, ...)]</span><br>
+        }<br><br>
+        <span class="cm">// query "pasta carbonara" → recupera per intersezione, ordina per BM25</span><br>
+        <span class="cb">risultati</span> <span class="op">=</span> <span class="cr">bm25_score</span>(<span class="op">query_terms</span>, <span class="op">indice</span>)
+      </div>
+    </div>
+
+    <div class="card bl-o">
+      <div class="ctag o">Sparse retrieval appreso</div>
+      <h3>SPLADE: oltre BM25, ancora sull'indice invertito</h3>
+      <p>SPLADE (<a href="https://arxiv.org/abs/2109.10086" target="_blank" style="color:#d97706; font-weight:700;">paper originale, Naver Labs Europe</a>) usa un transformer per generare un vettore sparse in cui le dimensioni corrispondono a token del vocabolario, ma i pesi sono appresi dalla rete. Un documento su "automobile" attiva anche le dimensioni di "macchina", "veicolo", "guidare", risolvendo il problema dei sinonimi pur restando compatibile con un indice invertito. Pinecone ha pubblicato <a href="https://www.pinecone.io/learn/splade/" target="_blank" style="color:#d97706; font-weight:700;">una guida molto referenziata</a> sull'argomento. Elasticsearch ELSER, Pinecone sparse index e Qdrant sparse vectors seguono questo principio.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2 — SEMANTIC SEARCH -->
+  <div class="panel" id="panel-2">
+    <div class="sh">
+      <span class="badge b-bl">Semantic Search</span>
+      <h2>Embeddings e <span class="cb">spazio vettoriale</span></h2>
+    </div>
+
+    <div class="lcard">
+      <div class="ltag">Come funziona il retrieval denso</div>
+      <div class="ltitle">Pipeline: da testo a vettore, da vettore a nearest neighbors</div>
+      <div class="eqrow">
+        <span class="eqlbl">Embedding</span>
+        <span class="eqf">$$\vec{v} = \text{Encoder}(t) \in \mathbb{R}^d \quad (d = 768 \text{ o } 1536)$$</span>
+        <span class="eqnote">il testo viene compresso in un vettore denso</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">Similarity</span>
+        <span class="eqf">
+          $$\cos(\vec{q}, \vec{d}) = \frac{\vec{q} \cdot \vec{d}}{|\vec{q}||\vec{d}|}$$
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <button onclick="showPopup('cos_q')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; cursor:pointer;">q⃗</button>
+            <button onclick="showPopup('cos_d')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#dbeafe; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;">d⃗</button>
+            <button onclick="showPopup('cos_dot')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fef3c7; color:#d97706; border:1px solid #fcd34d; cursor:pointer;">q⃗·d⃗ / ‖q⃗‖‖d⃗‖</button>
+          </div>
+        </span>
+        <span class="eqnote">vicinanza geometrica = vicinanza di significato</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">ANN — HNSW</span>
+        <span class="eqf"><span class="tag tg-b">grafo navigabile</span> a più livelli, ricerca top-k approssimata in O(log n)</span>
+        <span class="eqnote">recall alta (~0.95), latenza 10–50ms su milioni di doc</span>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="ftag">Pipeline — dalla query ai risultati semantici</div>
+      <div class="frow">
+        <div class="fnode fn-b"><span class="fnl">query</span><span class="fnv">"primo caldo legumi"</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-b"><span class="fnl">encoder</span><span class="fnv">transformer</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-b"><span class="fnl">vettore query</span><span class="fnv">ℝ⁷⁶⁸</span></div>
+        <span class="farr">→</span>
+        <div class="fnode"><span class="fnl">HNSW index</span><span class="fnv">ANN search</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-g"><span class="fnl">top-K</span><span class="fnv">vettori vicini</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-g"><span class="fnl">risultati</span><span class="fnv">pasta e fagioli ✓</span></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card bl-g hl-g">
+        <div class="ctag g">Punti di forza</div>
+        <h3>Quando funziona bene</h3>
+        <p>Query concettuali: <strong>"un piatto leggero per l'estate"</strong> trova insalate, carpacci, gazpacho senza nessun match lessicale. Gestisce sinonimi e parafrasi in modo naturale, ed è l'unico approccio che funziona quando la query descrive un'intenzione piuttosto che un termine specifico.</p>
+      </div>
+      <div class="card bl-r hl-r">
+        <div class="ctag r">Limiti strutturali — Semantic Search</div>
+        <h3>Quando il significato non basta</h3>
+        <div class="fm-grid">
+          <div class="fm-item">
+            <div class="fm-name">Troppo simile per essere utile</div>
+            <div class="fm-desc">Il modello recupera documenti vicini nel senso, ma non pertinenti alla richiesta specifica</div>
+            <div class="fm-ex">Cerchi <em>"pasta al pesto"</em>: arrivano anche chimichurri, salsa verde, pistou. Tutte salse a base di erbe, nessuna è pesto.</div>
+          </div>
+          <div class="fm-item">
+            <div class="fm-name">La negazione non cambia il vettore</div>
+            <div class="fm-desc">Il modello codifica il tema del testo, non la sua direzione logica</div>
+            <div class="fm-ex"><em>"Torta caprese senza cioccolato"</em> e <em>"torta caprese al cioccolato"</em> producono embedding quasi identici: il sistema le tratta come equivalenti.</div>
+          </div>
+          <div class="fm-item">
+            <div class="fm-name">Codici e nomi rari non pesano</div>
+            <div class="fm-desc">Un modello generalista non ha imparato a dare importanza a sigle e identificatori tecnici</div>
+            <div class="fm-ex">Cerchi l'allergene <em>"E471"</em> o <em>"bottarga di muggine"</em>: il vettore risultante non riflette la specificità di quei token.</div>
+          </div>
+          <div class="fm-item">
+            <div class="fm-name">Stesso termine, significati diversi</div>
+            <div class="fm-desc">Il vettore fonde tutti i significati di una parola in una rappresentazione unica</div>
+            <div class="fm-ex">Cerchi ricette con <em>"mele"</em>: potresti ricevere articoli di cucina tech che citano Apple, perché l'embedding non distingue i due sensi.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="darkcard">
+      <div class="dtag">// dense vs sparse — differenze strutturali</div>
+      <div class="drow">
+        <span class="dchip dc-b">Dense</span>
+        <span class="deq">Vettore compatto (768–1536 dim), tutti i valori non-zero. Generato da transformer. Dimensioni latenti senza significato diretto. <strong>HNSW</strong> per la ricerca.</span>
+        <span class="dnote">~3 KB per documento, GPU necessaria per l'encoding</span>
+      </div>
+      <div class="drow">
+        <span class="dchip dc-r">Sparse</span>
+        <span class="deq">Vettore con migliaia di dimensioni, quasi tutti zero. Ogni dimensione = token del vocabolario. Con BM25 i pesi sono statistici; con SPLADE sono <strong>appresi</strong>. Indice invertito per la ricerca.</span>
+        <span class="dnote">molto compatto, CPU sufficiente per la ricerca</span>
+      </div>
+      <div class="drow">
+        <span class="dchip dc-g">Hybrid</span>
+        <span class="deq">Entrambi in parallelo. La fusione combina i segnali: chi appare in entrambe le liste sale in cima. Il sistema non è esposto ai limiti di uno solo dei due retriever.</span>
+        <span class="dnote">recall massima, costo computazionale doppio</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3 — HYBRID SEARCH -->
+  <div class="panel" id="panel-3">
+    <div class="sh">
+      <span class="badge b-g">Hybrid Search</span>
+      <h2>Non un compromesso, <span class="cg">un'architettura</span></h2>
+    </div>
+
+    <div class="intro-card">
+      <h3>Il principio fondamentale</h3>
+      <p>La hybrid search non mescola casualmente due segnali. <strong>Riconosce che keyword e semantic falliscono in modo complementare</strong> e costruisce un sistema che triangola. Un documento rilevante che appare in entrambe le liste recuperate è quasi certamente pertinente. Uno che appare solo in una è meno sicuro.</p>
+    </div>
+
+    <div class="flow">
+      <div class="ftag">Architettura — pipeline hybrid a due retriever</div>
+      <div class="frow">
+        <div class="fnode fn-b"><span class="fnl">query</span><span class="fnv">testo utente</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-r"><span class="fnl">retriever 1</span><span class="fnv">BM25 / sparse</span></div>
+        <span class="farr">→</span>
+        <div class="fnode"><span class="fnl">lista A</span><span class="fnv">top-100</span></div>
+        <span class="farr" style="opacity:.2">—</span>
+        <div class="fop r">⊕</div>
+        <span class="farr">→</span>
+        <div class="fnode fn-g"><span class="fnl">fusione</span><span class="fnv">RRF / score</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-o"><span class="fnl">reranker</span><span class="fnv">cross-encoder</span></div>
+        <span class="farr">→</span>
+        <div class="fnode fn-g"><span class="fnl">output</span><span class="fnv">top-10</span></div>
+      </div>
+      <div class="frow" style="margin-top:8px;">
+        <div class="fnode" style="opacity:0; width:120px;"></div>
+        <span style="opacity:0" class="farr">→</span>
+        <div class="fnode fn-b"><span class="fnl">retriever 2</span><span class="fnv">kNN / dense</span></div>
+        <span class="farr">→</span>
+        <div class="fnode"><span class="fnl">lista B</span><span class="fnv">top-100</span></div>
+        <span class="farr">→</span>
+        <span style="opacity:0">fop</span>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card bl-b">
+        <div class="ctag b">Hybrid retrieval</div>
+        <h3>Fase di recupero</h3>
+        <p>I due retriever girano <strong>in parallelo</strong>. Ognuno restituisce i propri top-K candidati. L'intersezione sale in cima dopo la fusione. La recall è massimizzata: se un documento è rilevante, almeno uno dei retriever lo trova.</p>
+      </div>
+      <div class="card bl-o">
+        <div class="ctag o">Reranking</div>
+        <h3>Fase di affinamento: è diverso dal retrieval</h3>
+        <p>Il reranker <strong>non recupera</strong>, riordina i candidati già trovati. Un <span class="term-hl tc-o" onclick="showPopup('crossencoder')" style="font-weight:700;">cross-encoder ↗</span> valuta la coppia (query, documento) insieme, con attenzione completa su entrambi. Più preciso, ma praticabile solo su 20–50 candidati.</p>
+      </div>
+    </div>
+
+    <div class="card bl-o hl-o">
+      <div class="ctag o">Costi nascosti — Hybrid Search</div>
+      <h3>La complessità che porta con sé</h3>
+      <div class="fm-grid">
+        <div class="fm-item fm-warn">
+          <div class="fm-name">Il peso α non si indovina</div>
+          <div class="fm-desc">Nella score fusion, il bilanciamento tra i segnali va calibrato su dati etichettati reali</div>
+          <div class="fm-ex">Senza almeno 50–100 query annotate, un α sbagliato può dare risultati peggiori di BM25 da solo.</div>
+        </div>
+        <div class="fm-item fm-warn">
+          <div class="fm-name">Score su scale diverse</div>
+          <div class="fm-desc">BM25 non ha limite superiore, la similarità coseno sta in [−1, 1]: normalizzarli correttamente non è banale</div>
+          <div class="fm-ex">Min-max su BM25 richiede di conoscere i valori estremi del corpus, che in un sistema distribuito non sono sempre disponibili.</div>
+        </div>
+        <div class="fm-item fm-warn">
+          <div class="fm-name">Due indici invece di uno</div>
+          <div class="fm-desc">Storage e tempo di indicizzazione quasi raddoppiano rispetto a un singolo retriever</div>
+          <div class="fm-ex">10 milioni di documenti: l'indice vettoriale da solo occupa 30–60 GB. Aggiungi l'indice invertito e i costi operativi salgono ancora.</div>
+        </div>
+        <div class="fm-item fm-warn">
+          <div class="fm-name">Il reranker non copre i buchi del retrieval</div>
+          <div class="fm-desc">Se un documento rilevante non viene recuperato, nessun reranker successivo può aggiungerlo</div>
+          <div class="fm-ex">Il <span class="term-hl tc-o" onclick="showPopup('crossencoder')" style="font-weight:700; font-size:11px;">cross-encoder ↗</span> riordina i candidati già trovati. La recall si decide prima di lui.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4 — ALGORITMI DI FUSIONE -->
+  <div class="panel" id="panel-4">
+    <div class="sh">
+      <span class="badge b-o">Algoritmi di fusione</span>
+      <h2>Come si <span class="co">combinano</span> le liste di risultati</h2>
+    </div>
+
+    <div class="lcard">
+      <div class="ltag">Due famiglie principali</div>
+      <div class="ltitle">Score Fusion vs Rank Fusion</div>
+      <div class="eqrow">
+        <span class="eqlbl">Score Fusion (lineare)</span>
+        <span class="eqf">$$s_{\text{finale}}(d) = \alpha \cdot s_{\text{sparse}}(d) + (1-\alpha) \cdot s_{\text{dense}}(d)$$</span>
+        <span class="eqnote">α calibrato su dati etichettati; preserva la magnitudine degli score</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">RRF (Reciprocal Rank Fusion)</span>
+        <span class="eqf">
+          $$\text{RRF}(d) = \sum_{r \in \text{liste}} \frac{1}{k + \text{rango}_r(d)}$$
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <button onclick="showPopup('rrf_k')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#dbeafe; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;">k</button>
+            <button onclick="showPopup('rrf_rango')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; cursor:pointer;">rₐ(d)</button>
+          </div>
+        </span>
+        <span class="eqnote">k ≈ 60 di default; zero calibrazione necessaria; robusto ma perde l'informazione sugli score</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">DBSF (Qdrant)</span>
+        <span class="eqf"><span class="tag tg-b">Distribution-Based Score Fusion</span> — normalizza per distribuzione statistica, non per min-max</span>
+        <span class="eqnote">più stabile di min-max quando gli score hanno distribuzioni asimmetriche</span>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card bl-g hl-g">
+        <div class="ctag g">Quando usare RRF</div>
+        <h3>Default robusto, zero configurazione</h3>
+        <p>RRF è il punto di partenza consigliato per qualsiasi sistema hybrid. Non richiede dati etichettati, non ha parametri da calibrare, e funziona bene in pratica perché i documenti rilevanti tendono ad apparire nelle prime posizioni di entrambe le liste.</p>
+        <p style="margin-top:8px;"><strong>Usato da:</strong> <span class="tag tg-b">Elasticsearch</span> <span class="tag tg-g">Qdrant</span> <span class="tag tg-o">Azure AI Search</span> <span class="tag tg-r">OpenSearch</span></p>
+      </div>
+      <div class="card bl-b">
+        <div class="ctag b">Quando usare Score Fusion</div>
+        <h3>Più preciso, richiede calibrazione</h3>
+        <p>La score fusion lineare può superare RRF quando si hanno dati etichettati per trovare il peso α ottimale. Preserva l'informazione sulla distanza: un documento al primo posto con distacco enorme viene trattato diversamente da uno al primo posto per un soffio.</p>
+        <p style="margin-top:8px;"><strong>Usato da:</strong> <span class="tag tg-b">Elasticsearch retriever lineare</span> <span class="tag tg-g">Weaviate relativeScoreFusion</span></p>
+      </div>
+    </div>
+
+    <div class="darkcard">
+      <div class="dtag">// esempio numerico — RRF con k=60 su 3 documenti</div>
+      <div class="drow">
+        <span class="dchip dc-r">doc A</span>
+        <span class="deq">rango 1 in BM25, rango 2 in dense → RRF = 1/(60+1) + 1/(60+2) = <strong>0.0328</strong></span>
+        <span class="dnote">compare in entrambe le liste → sale in cima</span>
+      </div>
+      <div class="drow">
+        <span class="dchip dc-b">doc B</span>
+        <span class="deq">rango 1 solo in dense → RRF = 1/(60+1) = <strong>0.0164</strong></span>
+        <span class="dnote">presente solo in una lista</span>
+      </div>
+      <div class="drow">
+        <span class="dchip dc-g">doc C</span>
+        <span class="deq">rango 3 in BM25, rango 3 in dense → RRF = 1/(60+3) + 1/(60+3) = <strong>0.0317</strong></span>
+        <span class="dnote">coerenza tra segnali premia anche se non è primo</span>
+      </div>
+    </div>
+
+    <div class="card bl-o">
+      <div class="ctag o">Reranker cross-encoder — terza fase opzionale</div>
+      <h3>Come funziona e quando aggiungerlo</h3>
+      <p>Un <span class="term-hl tc-o" onclick="showPopup('crossencoder')" style="font-weight:700;">cross-encoder ↗</span> riceve in input la coppia <strong>(query + documento)</strong> concatenata e produce un singolo score di rilevanza. A differenza dei bi-encoder usati nel retrieval denso, l'attenzione del transformer copre entrambi i testi insieme, catturando relazioni tra i termini che gli embedding separati non riescono a vedere. Il costo: un'inferenza per ogni coppia, praticabile solo su 20–50 candidati. Latenza tipica: <strong>80–350 ms su CPU</strong>, 50–100 ms su GPU.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 5 — PROVIDER -->
+  <div class="panel" id="panel-5">
+    <div class="sh">
+      <span class="badge b-p">Comparativa Provider</span>
+      <h2>Come i principali sistemi <span class="cr">implementano</span> la hybrid search</h2>
+    </div>
+
+    <div class="tcard">
+      <table>
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Segnali combinati</th>
+            <th>Fusione</th>
+            <th>Reranking</th>
+            <th>Hybrid nativa?</th>
+            <th>Modello pricing</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Elasticsearch</td>
+            <td><span class="tag tg-r">BM25</span> <span class="tag tg-b">kNN dense</span> <span class="tag tg-o">ELSER sparse</span></td>
+            <td>RRF + retriever lineare</td>
+            <td>Elastic Rerank, Cohere, Jina</td>
+            <td><span class="tag tg-g">Sì, server-side</span></td>
+            <td>VCU consumption</td>
+          </tr>
+          <tr>
+            <td>OpenSearch</td>
+            <td><span class="tag tg-r">BM25</span> <span class="tag tg-b">kNN dense</span></td>
+            <td>RRF, min-max, L2, z-score + combinazione arith/geom/arm</td>
+            <td>Cross-encoder via ML Commons</td>
+            <td><span class="tag tg-g">Sì, search pipeline</span></td>
+            <td>~350$/mese serverless AWS</td>
+          </tr>
+          <tr>
+            <td>Pinecone</td>
+            <td><span class="tag tg-b">Dense</span> <span class="tag tg-o">Sparse (BM25/SPLADE)</span></td>
+            <td>Score fusion lato client (alpha scaling)</td>
+            <td>pinecone-rerank, Cohere, bge-reranker</td>
+            <td><span class="tag tg-o">Parziale: alpha lato client</span></td>
+            <td>Read/Write Units a consumo</td>
+          </tr>
+          <tr>
+            <td>Qdrant</td>
+            <td><span class="tag tg-b">Dense</span> <span class="tag tg-o">Sparse esatto</span> <span class="tag tg-p">ColBERT</span></td>
+            <td>RRF + DBSF, pesi configurabili, k personalizzabile</td>
+            <td>ColBERT late interaction (interno)</td>
+            <td><span class="tag tg-g">Sì, prefetch API server-side</span></td>
+            <td>Infrastruttura (RAM/CPU/disco)</td>
+          </tr>
+          <tr>
+            <td>Weaviate</td>
+            <td><span class="tag tg-r">BM25F</span> <span class="tag tg-b">Dense</span></td>
+            <td>relativeScoreFusion (default) o rankedFusion, parametro alpha</td>
+            <td>Cohere, Jina, Voyage, self-hosted</td>
+            <td><span class="tag tg-g">Sì, singola operazione</span></td>
+            <td>~45$/mese Flex, dimensioni vettoriali</td>
+          </tr>
+          <tr>
+            <td>Azure AI Search</td>
+            <td><span class="tag tg-r">BM25</span> <span class="tag tg-b">Dense</span></td>
+            <td>RRF (unico metodo disponibile)</td>
+            <td>Semantic Ranker (Bing-based, top-50)</td>
+            <td><span class="tag tg-g">Sì, pipeline 3 stadi</span></td>
+            <td>~75$/mese Basic, Search Units</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid3">
+      <div class="card bl-r">
+        <div class="ctag r">Elasticsearch</div>
+        <h3>Il più completo e stratificato</h3>
+        <p>Retriever framework componibile ad albero. Combina BM25, kNN, ELSER (sparse appreso). Reranker proprietario (184M param) competitivo. <strong>Pro:</strong> massima flessibilità e controllo. <strong>Contro:</strong> complessità alta, molte manopole da calibrare.</p>
+      </div>
+      <div class="card bl-r">
+        <div class="ctag r">OpenSearch</div>
+        <h3>Più opzioni di normalizzazione</h3>
+        <p>Search pipeline dedicata per la fusione. 9 combinazioni possibili di normalizzazione e aggregazione, più RRF dalla 2.19. <strong>Pro:</strong> tuning fine. <strong>Contro:</strong> configurazione più verbosa, pesi definiti nella pipeline non nella query.</p>
+      </div>
+      <div class="card bl-b">
+        <div class="ctag b">Pinecone</div>
+        <h3>Tutto vettoriale, sparse incluso</h3>
+        <p>Nessun BM25 tradizionale: il segnale keyword viene vettorizzato come sparse. Alpha lato client. Su serverless il segnale sparse ha meno peso di quanto dichiarato. <strong>Pro:</strong> SaaS puro. <strong>Contro:</strong> meno controllo sulla fusione.</p>
+      </div>
+      <div class="card bl-g">
+        <div class="ctag g">Qdrant</div>
+        <h3>Multi-vettore, sparse esatto</h3>
+        <p>Ogni punto può avere dense, sparse e ColBERT. Prefetch annidabili per pipeline arbitrarie. Sparse con indice invertito dedicato = recall esatta. <strong>Pro:</strong> open source Rust, velocissimo, pricing infrastrutturale. <strong>Contro:</strong> no reranker cross-encoder ospitato.</p>
+      </div>
+      <div class="card bl-b">
+        <div class="ctag b">Weaviate</div>
+        <h3>Nato vector-first, BM25 come complemento</h3>
+        <p>Hybrid search come operazione singola con parametro alpha intuitivo. relativeScoreFusion default dalla 1.24. Multi-tenancy nativo (50k+ tenant/nodo). <strong>Pro:</strong> semplicità API. <strong>Contro:</strong> no SPLADE/sparse appreso.</p>
+      </div>
+      <div class="card bl-o">
+        <div class="ctag o">Azure AI Search</div>
+        <h3>Pipeline enterprise out-of-the-box</h3>
+        <p>Tre stadi: BM25+kNN → RRF → Semantic Ranker (Bing). Quarto stadio in anteprima: agentic retrieval. <strong>Pro:</strong> massima qualità senza codice di orchestrazione, integrazione Azure. <strong>Contro:</strong> solo RRF, vendor lock-in significativo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 6 — PIPELINE CONCRETA -->
+  <div class="panel" id="panel-6">
+    <div class="sh">
+      <span class="badge b-g">Pipeline concreta</span>
+      <h2>Come si costruisce un sistema <span class="cg">hybrid search</span> end-to-end</h2>
+    </div>
+
+    <div class="grid1">
+      <div class="flow">
+        <div class="ftag">Pipeline completa — dall'ingestione al risultato</div>
+        <div class="frow">
+          <div class="fnode fn-o"><span class="fnl">1. chunking</span><span class="fnv">300–500 token</span></div>
+          <span class="farr">→</span>
+          <div class="fnode fn-b"><span class="fnl">2. embed</span><span class="fnv">dense vector</span></div>
+          <span class="farr">→</span>
+          <div class="fnode fn-r"><span class="fnl">3. sparse</span><span class="fnv">BM25 / SPLADE</span></div>
+          <span class="farr">→</span>
+          <div class="fnode"><span class="fnl">4. index</span><span class="fnv">HNSW + inv. idx</span></div>
+        </div>
+        <div style="height:12px"></div>
+        <div class="frow">
+          <div class="fnode fn-b"><span class="fnl">query</span><span class="fnv">testo utente</span></div>
+          <span class="farr">→</span>
+          <div class="fnode fn-r"><span class="fnl">filter</span><span class="fnv">pre-filter</span></div>
+          <span class="farr">→</span>
+          <div class="fnode fn-r"><span class="fnl">BM25</span><span class="fnv">top-100</span></div>
+          <span class="farr" style="opacity:.2">—</span>
+          <div class="fop r">⊕</div>
+          <span class="farr">→</span>
+          <div class="fnode fn-g"><span class="fnl">RRF</span><span class="fnv">fusione</span></div>
+          <span class="farr">→</span>
+          <div class="fnode fn-o"><span class="fnl">reranker</span><span class="fnv">top-50 → top-10</span></div>
+          <span class="farr">→</span>
+          <div class="fnode fn-g"><span class="fnl">output</span><span class="fnv">top-K</span></div>
+        </div>
+        <div style="height:4px"></div>
+        <div class="frow" style="margin-left:124px; margin-top:4px;">
+          <div class="fnode fn-b"><span class="fnl">kNN</span><span class="fnv">top-100</span></div>
+          <span class="farr">→</span>
+          <span style="opacity:0">placeholder</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card bl-o">
+        <div class="ctag o">1. Chunking intelligente</div>
+        <h3>Non tagliare a dimensione fissa</h3>
+        <p>Rispetta la struttura del documento. Per le ricette: titolo + ingredienti formano un chunk, procedimento un altro, note un altro ancora. Ogni chunk porta con sé <strong>metadata filtrabili</strong> (categoria, regione, tempo). Dimensione ideale: 300–500 token con overlap del 10–20%.</p>
+      </div>
+      <div class="card bl-r">
+        <div class="ctag r">4. Filtering — la trappola del post-filter</div>
+        <h3>Pre-filter, non post-filter</h3>
+        <p>I filtri ("senza glutine", "cucina campana") vanno applicati <strong>prima</strong> della ricerca vettoriale. Se applicati dopo (post-filter), si recuperano candidati che verranno scartati, degradando la recall effettiva. La maggior parte dei provider moderni supporta il pre-filtering nativo.</p>
+      </div>
+    </div>
+
+    <div class="lcard">
+      <div class="ltag">Metriche di valutazione — non basta "sembra meglio" · <span style="font-weight:400; color:var(--muted);">clicca i simboli ↗ per esempi concreti</span></div>
+      <div class="ltitle">Come misurare oggettivamente la qualità del retrieval</div>
+      <div class="eqrow">
+        <span class="eqlbl">Precision@k</span>
+        <span class="eqf">$$P@k = \frac{|\text{rilevanti nei top-}k|}{k}$$
+          <div style="margin-top:8px;">
+            <button onclick="showPopup('precision_ex')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; cursor:pointer;">esempio numerico</button>
+          </div>
+        </span>
+        <span class="eqnote">quanti dei k risultati sono pertinenti; importante per search classica</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">Recall@k</span>
+        <span class="eqf">$$R@k = \frac{|\text{rilevanti nei top-}k|}{|\text{totale rilevanti}|}$$
+          <div style="margin-top:8px;">
+            <button onclick="showPopup('recall_ex')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#dbeafe; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;">esempio numerico</button>
+          </div>
+        </span>
+        <span class="eqnote">critica per RAG: il modello non può inventare ciò che non ha ricevuto</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">MRR</span>
+        <span class="eqf">$$\text{MRR} = \frac{1}{|Q|}\sum_{i=1}^{|Q|}\frac{1}{\text{rango}_i}$$</span>
+        <span class="eqnote">velocità con cui appare il primo risultato rilevante; buona per QA</span>
+      </div>
+      <div class="eqrow">
+        <span class="eqlbl">NDCG@k</span>
+        <span class="eqf">
+          $$\text{NDCG@k} = \frac{\text{DCG@k}}{\text{IDCG@k}} \quad \text{con} \quad \text{DCG@k} = \sum_{i=1}^{k}\frac{2^{rel_i}-1}{\log_2(i+1)}$$
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <button onclick="showPopup('recall_ex')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#dbeafe; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;">esempio numerico</button>
+            <button onclick="showPopup('ndcg_rel')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; cursor:pointer;">relᵢ</button>
+            <button onclick="showPopup('ndcg_log')" style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; padding:5px 14px; border-radius:6px; background:#fef3c7; color:#d97706; border:1px solid #fcd34d; cursor:pointer;">log₂(i+1)</button>
+          </div>
+        </span>
+        <span class="eqnote">considera rilevanza graduata e posizione; standard de facto (BEIR, MTEB)</span>
+      </div>
+    </div>
+
+    <div class="darkcard">
+      <div class="dtag">// regola pratica per iniziare</div>
+      <div class="drow">
+        <span class="dchip dc-r">Fase 1</span>
+        <span class="deq"><strong>BM25 + dense + RRF</strong> come baseline. Non calibrare nulla. Misura NDCG@10 e recall@20 su 50–100 query annotate.</span>
+        <span class="dnote">zero-config, già molto buono</span>
+      </div>
+      <div class="drow">
+        <span class="dchip dc-o">Fase 2</span>
+        <span class="deq">Se recall bassa: aggiungi sparse appreso (ELSER, SPLADE). Se precision bassa: aggiungi un <strong>reranker cross-encoder</strong> sui top-50.</span>
+        <span class="dnote">solo se le metriche lo giustificano</span>
+      </div>
+      <div class="drow">
+        <span class="dchip dc-b">Fase 3</span>
+        <span class="deq">Se vuoi superare RRF: raccogli dati etichettati e calibra il peso α della score fusion. Richiede almeno 100 query annotate con giudizi graduati.</span>
+        <span class="dnote">investimento che ripaga in qualità</span>
+      </div>
+      <div class="drow">
+        <span class="dchip dc-g">Principio</span>
+        <span class="deq">I sistemi che dipendono da un solo segnale di retrieval sono fragili. La hybrid search trasforma l'imperfezione di ogni segnale in resilienza collettiva.</span>
+        <span class="dnote">non è un compromesso, è un principio di progettazione</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- POPUP OVERLAY -->
+<div class="popup-overlay" id="popup-overlay" onclick="closePopupOverlay(event)">
+  <div class="popup-box" id="popup-box">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-tag" id="popup-tag">Concetto</div>
+    <h4 id="popup-title"></h4>
+    <div id="popup-body"></div>
+  </div>
+</div>
+
+<div class="bnav">
+  <button class="btn-dark" id="btn-prev" onclick="nav(-1)">← Precedente</button>
+  <div class="pinfo">
+    <div class="pbar"><div class="pfill" id="pfill" style="width:14%"></div></div>
+    <span id="ptxt">Passo 1 di 7</span>
+  </div>
+  <button class="btn-blue" id="btn-next" onclick="nav(1)">Successivo →</button>
+</div>
+
+<script>
+let cur = 0;
+const TOT = 7;
+
+function goTo(idx) {
+  document.getElementById('panel-' + cur).classList.remove('active');
+  const tabs = document.querySelectorAll('.step-tab');
+  tabs[cur].classList.remove('active');
+  cur = idx;
+  document.getElementById('panel-' + cur).classList.add('active');
+  tabs.forEach(function(t, i) {
+    t.classList.remove('active', 'done');
+    if (i < cur) t.classList.add('done');
+    if (i === cur) t.classList.add('active');
+  });
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').disabled = cur === TOT - 1;
+  document.getElementById('ptxt').textContent = 'Passo ' + (cur + 1) + ' di ' + TOT;
+  document.getElementById('pfill').style.width = ((cur + 1) / TOT * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById('panel-' + cur)]);
+  }
+}
+
+function nav(dir) {
+  goTo(Math.max(0, Math.min(TOT - 1, cur + dir)));
+}
+
+document.getElementById('btn-prev').disabled = true;
+
+window.addEventListener('load', function() {
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+});
+
+/* ---- POPUP SYSTEM ---- */
+const POPUPS = {
+  crossencoder: {
+    tag: 'Reranking',
+    title: 'Cross-encoder: cos\'è e perché è diverso',
+    body: `<p>Un <strong>cross-encoder</strong> è un modello che legge la query e il documento <em>insieme</em>, concatenati in un unico input, e restituisce un punteggio che dice quanto quel documento risponde a quella query.</p>
+<p>La differenza rispetto al retrieval denso: lì query e documento vengono codificati separatamente in due vettori e poi si misura la distanza. Il cross-encoder invece li legge insieme, quindi può capire cose come "il testo parla di 'senza burro' e la query chiede 'ricette vegane': c'è una relazione rilevante". Questo lo rende molto più preciso.</p>
+<p>Il costo: un'inferenza separata per ogni coppia (query, documento). Su milioni di documenti sarebbe troppo lento. Per questo si usa solo sui primi 20–50 candidati che il retrieval ha già trovato.</p>
+<div class="popup-example"><strong>Nella pipeline:</strong> retrieval hybrid → top-50 candidati → cross-encoder li rilegge uno a uno → escono i top-10 definitivi, molto più precisi.</div>`
+  },
+  bm25_sum: {
+    tag: 'Formula BM25',
+    title: '∑ : la somma sui termini della query',
+    body: `<p>BM25 non calcola un punteggio globale in un colpo solo. Calcola un contributo separato per ogni termine della query e poi li somma. Se cerchi <em>"pasta carbonara"</em>, calcola il contributo di "pasta" e quello di "carbonara" separatamente.</p>
+<div class="popup-example"><strong>Conseguenza pratica:</strong> un documento che contiene sia "pasta" che "carbonara" ottiene un punteggio più alto di uno che ne contiene solo uno. Ogni termine della query aggiunge peso.</div>`
+  },
+  bm25_idf: {
+    tag: 'Formula BM25',
+    title: 'IDF: i termini rari pesano di più',
+    body: `<p><strong>IDF</strong> (Inverse Document Frequency) misura quanto un termine è raro nell'intero corpus. Più è raro, più pesa nel punteggio finale.</p>
+<p>Nella nostra app di ricette: "ricetta" compare in ogni documento, quindi il suo IDF è quasi zero e contribuisce pochissimo. "Guanciale" compare solo in pochi documenti, quindi il suo IDF è alto e discrimina molto.</p>
+<div class="popup-example">Se cerchi "pasta carbonara guanciale", è il termine "guanciale" che ti porta al documento giusto, non "pasta".</div>`
+  },
+  bm25_tf: {
+    tag: 'Formula BM25',
+    title: 'f(q,D) e k₁: frequenza con saturazione',
+    body: `<p><strong>f(q,D)</strong> conta quante volte il termine q compare nel documento D. Ma BM25 applica una saturazione: la prima occorrenza pesa tanto, la seconda meno, la decima quasi niente.</p>
+<p>Questo serve a evitare che un documento che ripete "carbonara" cinquanta volte batta uno che la menziona cinque volte in modo pertinente.</p>
+<div class="popup-example"><strong>k₁</strong> controlla la velocità di saturazione. Con k₁=1.2 si satura presto; con k₁=2.0 le ripetizioni pesano di più a lungo.</div>`
+  },
+  bm25_norm: {
+    tag: 'Formula BM25',
+    title: 'b e |D|/avgdl: la lunghezza del documento non deve avvantaggiare',
+    body: `<p>Un documento lungo contiene naturalmente più occorrenze di qualsiasi termine, ma questo non lo rende più rilevante. La parte <strong>b · |D|/avgdl</strong> compensa questa asimmetria dividendo per la lunghezza del documento normalizzata sulla media del corpus.</p>
+<p><strong>b=0</strong>: nessuna correzione per la lunghezza. <strong>b=1</strong>: correzione completa. Il valore tipico è 0.75, un equilibrio tra i due estremi.</p>
+<div class="popup-example">Una ricetta da 5000 parole non deve battere una da 300 solo perché "pasta" compare più volte in assoluto.</div>`
+  },
+  cos_q: {
+    tag: 'Similarità coseno',
+    title: 'q⃗ : il vettore della query',
+    body: `<p>La query viene passata attraverso il modello di embedding e trasformata in un punto nello spazio vettoriale. Questo punto è nello stesso spazio in cui sono stati proiettati tutti i documenti.</p>
+<p>"Un primo caldo con i legumi" diventa un vettore a 768 dimensioni posizionato vicino a testi come "pasta e fagioli" o "zuppa di ceci", perché il modello ha imparato che quei testi parlano di argomenti simili.</p>
+<div class="popup-example">Query e documenti devono essere codificati con lo <em>stesso modello</em>. Se non lo sono, i vettori vivono in spazi diversi e la distanza non ha senso.</div>`
+  },
+  cos_d: {
+    tag: 'Similarità coseno',
+    title: 'd⃗ : il vettore del documento',
+    body: `<p>Ogni documento viene trasformato in vettore una volta sola, al momento dell'indicizzazione, e quel vettore viene salvato nell'indice HNSW. Al momento della ricerca non c'è nulla da ricalcolare lato documento.</p>
+<div class="popup-example">Il vettore del documento è già pronto. Quando arriva la query, basta misurare la distanza angolare tra il vettore della query e i vettori dei candidati nell'indice.</div>`
+  },
+  cos_dot: {
+    tag: 'Similarità coseno',
+    title: 'q⃗·d⃗ / ‖q⃗‖‖d⃗‖ : l\'angolo conta, non la distanza',
+    body: `<p>La similarità coseno misura l'<strong>angolo</strong> tra due vettori nello spazio. Due testi con lo stesso significato puntano nella stessa direzione, quindi il loro coseno è vicino a 1. Dividere per le norme ‖q⃗‖ e ‖d⃗‖ serve a rendere il confronto indipendente dalla lunghezza dei testi.</p>
+<div class="popup-example"><strong>cos = 1:</strong> direzione identica, testi con lo stesso significato. <strong>cos = 0:</strong> testi su argomenti completamente diversi. <strong>cos = −1:</strong> rarissimo nei modelli linguistici reali.</div>`
+  },
+  rrf_k: {
+    tag: 'RRF',
+    title: 'k : la costante che smussisce le posizioni',
+    body: `<p>Con la formula 1/(k + rango), un documento al primo posto vale 1/61 ≈ 0.016 quando k=60. La costante k serve a evitare che la differenza tra primo e secondo posto sia troppo schiacciante.</p>
+<p>Con un k piccolo, il primo posto vale molto di più del secondo. Con un k grande, il peso si distribuisce più uniformemente su tutta la lista.</p>
+<div class="popup-example"><strong>k=60</strong> è il default perché produce risultati stabili senza privilegiare eccessivamente il primo posto di ciascuna lista.</div>`
+  },
+  rrf_rango: {
+    tag: 'RRF',
+    title: 'rₐ(d) : la posizione nella lista del retriever a',
+    body: `<p>Il rango è la posizione del documento nella classifica di un retriever: 1 per il primo risultato, 2 per il secondo. RRF ignora i punteggi numerici e lavora solo sulle posizioni.</p>
+<p>Questo risolve il problema della normalizzazione: BM25 produce score che vanno da 0 a qualsiasi valore, la similarità coseno sta in [−1, 1]. Confrontarli direttamente è difficile. Sui ranghi invece si può operare senza convertire nulla.</p>
+<div class="popup-example"><strong>Pro:</strong> zero calibrazione, funziona subito. <strong>Contro:</strong> un documento primo con distacco netto vale quanto uno primo per un soffio.</div>`
+  },
+  ndcg_rel: {
+    tag: 'NDCG',
+    title: 'relᵢ : quanto è rilevante il risultato in posizione i',
+    body: `<p><strong>relᵢ</strong> è il giudizio di rilevanza assegnato al documento che si trova in posizione i nella classifica. Può essere binario (0 irrilevante, 1 rilevante) oppure graduato su più livelli.</p>
+<div class="popup-example"><strong>Query "pasta e fagioli napoletana":</strong><br>ricetta napoletana doc originale → rel=2<br>ricetta generica pasta e fagioli → rel=1<br>risotto ai funghi → rel=0</div>`
+  },
+  ndcg_log: {
+    tag: 'NDCG',
+    title: 'log₂(i+1) : i risultati in cima pesano di più',
+    body: `<p>Dividere per il logaritmo della posizione fa sì che trovare un documento rilevante al primo posto valga molto di più che trovarlo al decimo. È una modellazione del comportamento reale: le persone leggono i primi risultati e raramente vanno oltre.</p>
+<div class="popup-example"><strong>Posizione 1:</strong> log₂(2) = 1, sconto minimo.<br><strong>Posizione 5:</strong> log₂(6) ≈ 2.58, vale meno di 2.5 volte rispetto al primo posto.<br><strong>Posizione 10:</strong> log₂(11) ≈ 3.46, vale quasi 3.5 volte meno.</div>`
+  },
+  precision_ex: {
+    tag: 'Precision@k',
+    title: 'Precision@5: un esempio numerico',
+    body: `<p>Cerchi <em>"ricette senza glutine con mandorle"</em>. Il sistema restituisce 5 risultati:</p>
+<div class="popup-example">
+<strong style="color:#6ee7b7;">✓</strong> Torta caprese alle mandorle<br>
+<strong style="color:#6ee7b7;">✓</strong> Biscotti alle mandorle senza farina<br>
+<strong style="color:#f87171;">✗</strong> Pasta alle mandorle (contiene glutine)<br>
+<strong style="color:#6ee7b7;">✓</strong> Cantuccini senza glutine<br>
+<strong style="color:#f87171;">✗</strong> Crema di mandorle per la colazione<br><br>
+<strong>Precision@5 = 3/5 = 0.60</strong>
+</div>
+<p style="margin-top:10px;">Alta precision significa che quasi tutto quello che il sistema mostra è utile. Bassa precision significa che l'utente deve scorrere risultati inutili per trovare quelli che cerca.</p>`
+  },
+  recall_ex: {
+    tag: 'Recall@k',
+    title: 'Recall@10: un esempio numerico',
+    body: `<p>Nel database ci sono <strong>20 ricette senza glutine con mandorle</strong>. Il sistema recupera 10 risultati, di cui 8 appartengono a quelle 20.</p>
+<div class="popup-example">
+Ricette rilevanti nel database: <strong>20</strong><br>
+Ricette rilevanti nei top-10: <strong>8</strong><br><br>
+<strong>Recall@10 = 8/20 = 0.40</strong>
+</div>
+<p style="margin-top:10px;">Alta recall significa che il sistema trova quasi tutto ciò che esiste nel database. Bassa recall significa che ci sono documenti rilevanti che non vengono mai recuperati.</p>
+<p>Nei sistemi RAG questo è il problema più grave: se l'LLM non riceve il documento giusto tra i candidati, non può usarlo nella risposta.</p>`
+  }
+};
+
+function showPopup(id) {
+  var data = POPUPS[id];
+  if (!data) return;
+  document.getElementById('popup-tag').textContent = data.tag;
+  document.getElementById('popup-title').textContent = data.title;
+  document.getElementById('popup-body').innerHTML = data.body;
+  document.getElementById('popup-overlay').classList.add('open');
+}
+
+function closePopup() {
+  document.getElementById('popup-overlay').classList.remove('open');
+}
+
+function closePopupOverlay(e) {
+  if (e.target === document.getElementById('popup-overlay')) closePopup();
+}
+</script>
+</body>
+</html>
