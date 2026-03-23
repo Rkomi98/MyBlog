@@ -1464,17 +1464,17 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#perch-il-tema-tornato-centrale">
+          <a class="post-toc__link" href="#dalla-ricerca-ibrida-a-rag">
             <span class="post-toc__number">3.3</span>
-            <span class="post-toc__text">Perché il tema è tornato centrale</span>
+            <span class="post-toc__text">Dalla ricerca ibrida a RAG</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#come-i-provider-interpretano-la-hybrid-search">
+          <a class="post-toc__link" href="#hybrid-search-tra-i-vari-provider">
             <span class="post-toc__number">4</span>
-            <span class="post-toc__text">Come i provider interpretano la hybrid search</span>
+            <span class="post-toc__text">Hybrid search tra i vari provider?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1667,11 +1667,11 @@ $$</p>
 <p>🎮 <strong>Simulazione dedicata.</strong> Se vuoi vedere visivamente come cambia l&#39;ordine dei risultati dopo il reranking, puoi aprire la <a href="../../../Assets/simulations/reranker-blog.html">pagina interattiva del reranker</a>.</p>
 </blockquote>
 <p>Ed è qui che i nodi vengono al pettine: <strong>un reranker può solo riordinare ciò che il retrieval ha già trovato</strong>. Se il retrieval non ha recuperato un documento rilevante, nessun reranking può rimediare. Per questo la <em>recall</em> si usa nella fase di <em>retrieval</em> e la <strong>precision</strong> nella fase di <strong>reranking</strong>. E per questo una pipeline ben progettata spesso ha entrambi: hybrid retrieval per massimizzare la recall, poi reranking per affinare la precision.</p>
-<p>Tra i reranker più usati oggi ci sono il <a href="https://markaicode.com/bge-reranker-cross-encoder-reranking-rag/">bge-reranker-v2-m3 di BAAI</a> (open source, 278 milioni di parametri, ottime prestazioni multilingue, ma non troppo per l&#39;italiano), <a href="https://docs.cohere.com/docs/rerank">Cohere Rerank 4.0</a> (API gestita, affidabile in produzione), e i modelli Elastic Rerank e Jina AI integrati nell&#39;ecosistema Elasticsearch. Il costo computazionale è nell&#39;ordine di 80-350 millisecondi su CPU per un batch di 20-50 candidati, che scende a 50-100 millisecondi su GPU.</p>
-<h3 id="perch-il-tema-tornato-centrale">Perché il tema è tornato centrale</h3>
-<p>Vale la pena spendere due parole sul motivo per cui la hybrid search è esplosa come argomento negli ultimi anni. La risposta è nei sistemi RAG (Retrieval-Augmented Generation): pipeline che recuperano documenti da una base di conoscenza e li passano a un large language model per generare risposte. In un sistema RAG, la qualità del retrieval determina la qualità della generazione. Se il retrieval manca documenti rilevanti, il modello genera risposte inventate o incomplete. Se recupera documenti fuorvianti, il modello li integra acriticamente nella risposta.</p>
-<p>Questo ha reso il retrieval un componente critico in un modo nuovo: non è più solo una questione di mostrare una lista di risultati a un utente umano che può valutarli, ma di fornire contesto a un sistema che lo consumerà in modo automatico. E i requisiti cambiano: per la search classica conta molto la precision, perché l&#39;utente vede direttamente i risultati e quelli sbagliati sono immediatamente evidenti; per il RAG conta ancora di più la recall, perché il modello può filtrare il rumore ma non può inventare informazioni che non ha ricevuto. La hybrid search, combinando più segnali per massimizzare la recall senza sacrificare troppo la precision, è diventata lo standard de facto per i sistemi RAG in produzione.</p>
-<h2 id="come-i-provider-interpretano-la-hybrid-search">Come i provider interpretano la hybrid search</h2>
+<p>Tra i reranker più usati oggi ci sono il <a href="https://markaicode.com/bge-reranker-cross-encoder-reranking-rag/">bge-reranker-v2-m3 di BAAI</a> (open source, 278 milioni di parametri, ottime prestazioni multilingue, ma non troppo per l&#39;italiano), <a href="https://docs.cohere.com/docs/rerank">Cohere Rerank 4.0</a> (API gestita, affidabile in produzione), e i modelli <a href="https://www.elastic.co/docs/explore-analyze/machine-learning/nlp/ml-nlp-rerank">Elastic Rerank</a> e <a href="https://jina.ai/reranker/">Jina AI</a> integrati nell&#39;ecosistema Elasticsearch. Il costo computazionale è nell&#39;ordine di 80-350 millisecondi su CPU per un batch di 20-50 candidati, che scende a 50-100 millisecondi su GPU.</p>
+<h3 id="dalla-ricerca-ibrida-a-rag">Dalla ricerca ibrida a RAG</h3>
+<p>Vale la pena spendere due parole sul motivo per cui la hybrid search è esplosa come argomento negli ultimi anni. La risposta è nei sistemi RAG (Retrieval-Augmented Generation): pipeline che recuperano documenti da una base di conoscenza e li passano a un large language model per generare risposte. In un sistema RAG, la <strong>qualità del retrieval determina la qualità della generazione</strong>. Se il retrieval manca documenti rilevanti, il modello genera risposte inventate o incomplete. Se recupera documenti fuorvianti, il modello li integra acriticamente nella risposta.</p>
+<p>Questo ha reso il retrieval un componente critico in un modo nuovo: non è più solo una questione di mostrare una lista di risultati a un utente umano che può valutarli, ma di fornire contesto a un sistema che lo consumerà in modo automatico. E i requisiti cambiano: per la search classica conta molto la precision, perché l&#39;utente vede direttamente i risultati e quelli sbagliati sono immediatamente evidenti; per il RAG conta ancora di più la recall, perché il <em>modello può filtrare il rumore</em> ma <strong>non può inventare informazioni che non ha ricevuto</strong>. La hybrid search, combinando più segnali per massimizzare la recall senza sacrificare troppo la precision, è diventata lo standard de facto per i sistemi RAG in produzione.</p>
+<h2 id="hybrid-search-tra-i-vari-provider">Hybrid search tra i vari provider?</h2>
 <p>Ogni provider ha fatto scelte progettuali diverse su come implementare la hybrid search, e queste scelte riflettono la loro storia e la loro visione dell&#39;architettura. Capire queste differenze è più utile di qualsiasi tabella comparativa di feature.</p>
 <h3 id="elasticsearch-il-pi-completo-il-pi-stratificato">Elasticsearch: il più completo, il più stratificato</h3>
 <p>Elasticsearch è oggi probabilmente il sistema più maturo per la hybrid search, frutto di un&#39;evoluzione che parte dal suo DNA di motore di ricerca full-text. Dal punto di vista architetturale, combina <strong>BM25 su indice invertito con ricerca kNN su vettori densi</strong> e, opzionalmente, con <strong>ELSER</strong> (Elastic Learned Sparse Encoder), un modello sparse proprietario che funziona come una sorta di SPLADE interno all&#39;ecosistema Elastic.</p>
