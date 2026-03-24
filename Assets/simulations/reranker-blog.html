@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html class="dark" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Il reranker spiegato bene - Topographic Tech</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0F172A",
+                        "background-dark": "#0B1120",
+                        "background-light": "#f6f8f7",
+                        "surface": "#1E293B",
+                        "text-main": "#E2E8F0",
+                        "text-muted": "#94A3B8",
+                        "accent": "#10B981",
+                        "code-bg": "#0F172A",
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "serif": ["Charter", "serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "4px",
+                        "lg": "12px",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .code-scroll::-webkit-scrollbar { height: 6px; }
+        .code-scroll::-webkit-scrollbar-track { background: #0F172A; }
+        .code-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .code-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .topographic-bg {
+            background-color: #0B1120;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        /* Animazione score bar */
+        .score-fill {
+            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Drag & drop result item */
+        .result-item {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .result-item.reranked {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-8px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .rank-badge {
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-text-main font-serif antialiased min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-primary">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full z-50 h-[2px] bg-surface">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-600 w-[0%] shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-150"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background-dark/80 border-b border-white/5">
+        <div class="flex items-center justify-between px-4 py-3 max-w-2xl mx-auto">
+            <a href="../../blog/it/hybrid-search/" onclick="return goBackToArticle(event)" class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5" aria-label="Torna all'articolo Hybrid search">
+                <span class="material-symbols-outlined text-2xl">arrow_back</span>
+            </a>
+            <div aria-hidden="true"></div>
+        </div>
+    </header>
+
+    <main class="relative px-6 pb-32 max-w-2xl mx-auto topographic-bg">
+
+        <!-- Article Header -->
+        <header class="pt-8 pb-8 space-y-6">
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-2 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded tracking-wide">RAG</span>
+                <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded tracking-wide">RETRIEVAL</span>
+                <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded tracking-wide">NLP</span>
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-mono font-bold leading-tight text-white tracking-tight">
+                Il reranker, spiegato bene
+            </h1>
+
+            <div class="flex items-center gap-3 py-2 border-l-2 border-accent pl-3">
+                <div class="h-10 w-10 rounded-full bg-surface border border-white/10 flex items-center justify-center">
+                    <span class="text-accent font-mono font-bold text-sm">MC</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-mono text-white font-medium">Mirko Calcaterra</span>
+                    <span class="text-xs font-sans text-text-muted">Marzo 2026 · 5 min di lettura</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Article Body -->
+        <article class="space-y-6 text-lg leading-relaxed text-gray-300 font-serif" id="article-content">
+
+            <p>
+                Prima di entrare nel merito, facciamo un passo indietro. Nei sistemi di retrieval denso — quelli che stanno sotto la maggior parte dei pipeline RAG moderni — la ricerca funziona così: si trasformano documenti e query in vettori numerici e si trovano i candidati più vicini nello spazio geometrico. Veloce, scalabile, funziona su milioni di chunk senza fare una piega.
+            </p>
+
+            <p>
+                Fin qui tutto bene. Però se guardi cosa succede davvero sotto, trovi un limite strutturale che si porta dietro ogni sistema di questo tipo: query e documento vengono codificati <strong class="text-white">separatamente</strong>. Il modello non li vede mai insieme. La similarità coseno tra i due vettori è una stima rozza della pertinenza, non una misura precisa. Ed è qui che casca l'asino.
+            </p>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Il punto esatto del problema</h2>
+
+            <p>
+                Immagina di cercare <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">"memoria a lungo termine nel cervello"</span> in un corpus di documenti scientifici. Il retrieval denso restituisce in cima un articolo sulla memoria RAM dei computer — la parola <em>memoria</em> è lì, i vettori si avvicinano, la similarità coseno sorride. Il modello non ha strumenti per accorgersi che sta confrontando neuroscienze con architettura informatica.
+            </p>
+
+            <div class="bg-surface/50 border-l-2 border-blue-500 pl-4 py-2 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    Il bi-encoder misura la vicinanza geometrica tra proiezioni nello spazio latente, non la pertinenza contestuale tra i testi. È una distinzione sottile ma, in produzione, fa tutta la differenza.
+                </p>
+            </div>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Bi-encoder e cross-encoder: la differenza che conta</h2>
+
+            <p>
+                Il <strong class="text-white">bi-encoder</strong> codifica i due testi in modo indipendente: prima il documento, poi la query, senza che i due si vedano mai nello stesso passaggio. Il vantaggio è enorme: tutti i documenti possono essere codificati offline e salvati nell'indice. Al momento della query bastano pochi millisecondi.
+            </p>
+
+            <p>
+                Il <strong class="text-white">cross-encoder</strong> lavora diversamente. Query e documento entrano concatenati come un'unica sequenza — separate da un token <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">[SEP]</span> — e il transformer esegue full self-attention sull'insieme. Ogni token della query può guardare ogni token del documento. Il risultato è uno score di rilevanza molto più calibrato. Il costo è che questo non può essere pre-computato: ha bisogno della query in tempo reale.
+            </p>
+
+            <!-- Two-column card -->
+            <div class="grid md:grid-cols-2 gap-4 my-8">
+                <div class="bg-surface/50 border border-white/10 rounded-lg p-4">
+                    <div class="font-mono text-accent text-sm mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">bolt</span>
+                        Bi-Encoder
+                    </div>
+                    <p class="text-sm text-gray-400 font-sans leading-relaxed">Codifica separata. Ricerca ANN sub-lineare. Ideale per corpus da milioni di documenti. Ranking approssimato.</p>
+                    <div class="mt-3 flex gap-2 flex-wrap">
+                        <span class="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded">veloce</span>
+                        <span class="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded">scalabile</span>
+                        <span class="px-2 py-0.5 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-mono rounded">approssimato</span>
+                    </div>
+                </div>
+                <div class="bg-surface/50 border border-white/10 rounded-lg p-4">
+                    <div class="font-mono text-accent text-sm mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">join_inner</span>
+                        Cross-Encoder
+                    </div>
+                    <p class="text-sm text-gray-400 font-sans leading-relaxed">Full attention sulla coppia. Non pre-computabile. Usato su un sottoinsieme ristretto di candidati. Ranking preciso.</p>
+                    <div class="mt-3 flex gap-2 flex-wrap">
+                        <span class="px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded">preciso</span>
+                        <span class="px-2 py-0.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono rounded">lento su corpus ampio</span>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Come funziona il pipeline a due stadi</h2>
+
+            <p>
+                La soluzione non è scegliere uno dei due: è usarli in sequenza. Nel primo stadio il bi-encoder recupera velocemente i Top-K candidati più plausibili (di solito 50–200 documenti). Nel secondo stadio il cross-encoder li rivaluta tutti, uno a uno, leggendo ogni coppia insieme alla query. L'ordine definitivo viene da questo secondo passaggio.
+            </p>
+
+            <!-- Code block: pipeline schema -->
+            <div class="relative my-8 group">
+                <div class="absolute -top-3 right-4 bg-surface border border-white/10 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-accent shadow-lg z-10">PYTHON</div>
+                <div class="bg-code-bg rounded-lg border border-white/5 overflow-hidden shadow-2xl">
+                    <div class="flex items-center px-4 py-2 bg-white/5 border-b border-white/5">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                        </div>
+                        <span class="ml-4 text-xs font-mono text-text-muted">rerank_pipeline.py</span>
+                        <button onclick="copyCode(this)" class="ml-auto text-text-muted hover:text-white transition-colors" title="Copia codice">
+                            <span class="material-symbols-outlined text-sm">content_copy</span>
+                        </button>
+                    </div>
+                    <div class="p-4 overflow-x-auto code-scroll">
+                        <pre class="font-mono text-[13px] leading-6 text-gray-300"><code><span class="text-purple-400">from</span> <span class="text-blue-400">sentence_transformers</span> <span class="text-purple-400">import</span> SentenceTransformer, CrossEncoder
+
+<span class="text-text-muted"># Stage 1: retrieval denso con bi-encoder</span>
+bi_encoder = SentenceTransformer(<span class="text-green-400">"multi-qa-MiniLM-L6-cos-v1"</span>)
+query_vec  = bi_encoder.encode(query)
+candidates = index.search(query_vec, top_k=<span class="text-orange-400">100</span>)  <span class="text-text-muted"># ANN search</span>
+
+<span class="text-text-muted"># Stage 2: reranking con cross-encoder</span>
+cross_encoder = CrossEncoder(<span class="text-green-400">"cross-encoder/ms-marco-MiniLM-L-6-v2"</span>)
+pairs  = [(query, doc.text) <span class="text-purple-400">for</span> doc <span class="text-purple-400">in</span> candidates]
+scores = cross_encoder.predict(pairs)
+
+<span class="text-text-muted"># Riordino per score decrescente</span>
+reranked = <span class="text-blue-400">sorted</span>(<span class="text-blue-400">zip</span>(candidates, scores),
+           key=<span class="text-purple-400">lambda</span> x: x[<span class="text-orange-400">1</span>], reverse=<span class="text-purple-400">True</span>)
+top_n = reranked[:<span class="text-orange-400">5</span>]</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Il cross-encoder di riferimento per applicazioni RAG è <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">ms-marco-MiniLM</span> di sentence-transformers: compatto, ben calibrato, con una latenza accettabile anche su 100–200 candidati. Per casi che richiedono contesti più lunghi esistono alternative come i modelli Cohere Rerank o Jina Reranker.
+            </p>
+
+            <!-- SIMULAZIONE INTERATTIVA -->
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Provalo tu stesso</h2>
+
+            <p>
+                La simulazione qui sotto mette in scena l'intero pipeline. Scegli una query, guarda i risultati come li ordina il bi-encoder per similarità coseno, poi premi <strong class="text-white">Avvia reranking</strong> e osserva come il cross-encoder rimescola le carte.
+            </p>
+
+            <!-- Simulazione -->
+            <div class="my-8 bg-surface/50 border border-white/10 rounded-lg overflow-hidden">
+                <!-- Query selector -->
+                <div class="p-5 border-b border-white/10">
+                    <div class="font-mono text-accent text-xs mb-3 uppercase tracking-wider">Query di ricerca</div>
+                    <div class="flex flex-col gap-2" id="query-buttons">
+                        <button onclick="selectQuery(0)" class="query-btn text-left px-3 py-2.5 rounded border border-white/10 bg-code-bg text-sm font-mono text-gray-300 hover:border-accent/50 hover:text-white transition-all">
+                            "Come funziona la memoria a lungo termine nel cervello?"
+                        </button>
+                        <button onclick="selectQuery(1)" class="query-btn text-left px-3 py-2.5 rounded border border-white/10 bg-code-bg text-sm font-mono text-gray-300 hover:border-accent/50 hover:text-white transition-all">
+                            "Quali sono i rischi di un investimento in obbligazioni?"
+                        </button>
+                        <button onclick="selectQuery(2)" class="query-btn text-left px-3 py-2.5 rounded border border-white/10 bg-code-bg text-sm font-mono text-gray-300 hover:border-accent/50 hover:text-white transition-all">
+                            "Come si allena la resistenza aerobica?"
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results area -->
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="font-mono text-xs text-text-muted uppercase tracking-wider" id="results-label">Seleziona una query per iniziare</div>
+                        <button onclick="runRerank()" id="rerank-btn" disabled
+                            class="px-4 py-2 bg-accent/10 border border-accent/20 text-accent text-xs font-mono rounded hover:bg-accent/20 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">sort</span>
+                            Avvia reranking
+                        </button>
+                    </div>
+
+                    <div id="results-list" class="space-y-2">
+                        <!-- populated by JS -->
+                        <div class="text-center py-8 text-text-muted text-sm font-sans">
+                            Nessuna query selezionata
+                        </div>
+                    </div>
+
+                    <div id="rerank-note" class="hidden mt-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+                        <p class="text-xs font-sans text-emerald-400 leading-relaxed" id="rerank-note-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Il nodo da capire è che il reranker non sostituisce il retrieval denso: lo corregge. Il bi-encoder è necessario per la scalabilità — applicare un cross-encoder su un milione di documenti per ogni query è semplicemente infattibile. Ma il suo ranking è approssimato, e in contesti dove la qualità conta (RAG, ricerca su documentazione tecnica, assistenti documentali) quella approssimazione ha un costo reale.
+            </p>
+
+            <div class="bg-surface/50 border-l-2 border-accent pl-4 py-2 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    Il pipeline a due stadi è oggi lo standard de facto nei sistemi di ricerca semantica di qualità. Recupero veloce e impreciso nella prima fase, rivalutazione lenta e precisa nella seconda.
+                </p>
+            </div>
+
+            <div class="h-12"></div>
+        </article>
+    </main>
+
+    <!-- Floating Action Bar -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div class="flex items-center gap-1 p-1.5 bg-surface/80 backdrop-blur-md border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="toggleBookmark()">
+                <span class="material-symbols-outlined text-xl" id="bookmark-icon">bookmark</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Salva</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="shareArticle()">
+                <span class="material-symbols-outlined text-xl">ios_share</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Condividi</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="adjustFontSize()">
+                <span class="material-symbols-outlined text-xl">format_size</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Testo</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface border border-white/10 text-white px-4 py-2 rounded-lg shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+        <span id="toast-message">Messaggio</span>
+    </div>
+
+    <script>
+        function goBackToArticle(event) {
+            const fallbackUrl = "../../blog/it/hybrid-search/";
+            const referrer = document.referrer;
+
+            if (referrer) {
+                try {
+                    const referrerUrl = new URL(referrer);
+                    const sameOrigin = referrerUrl.origin === window.location.origin;
+                    const sameArticle = referrerUrl.pathname.includes("/blog/it/hybrid-search/");
+
+                    if (sameOrigin && sameArticle) {
+                        event.preventDefault();
+                        window.location.href = referrerUrl.href;
+                        return false;
+                    }
+                } catch (error) {
+                    // Ignore malformed referrers and use the fallback article URL.
+                }
+            }
+
+            event.preventDefault();
+            window.location.href = fallbackUrl;
+            return false;
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progress-bar').style.width = ((winScroll / height) * 100) + "%";
+        });
+
+        function copyCode(button) {
+            const code = button.closest('.bg-code-bg').querySelector('code');
+            navigator.clipboard.writeText(code.innerText).then(() => showToast('Codice copiato!'));
+        }
+
+        let isBookmarked = false;
+        function toggleBookmark() {
+            isBookmarked = !isBookmarked;
+            const icon = document.getElementById('bookmark-icon');
+            icon.textContent = isBookmarked ? 'bookmark_added' : 'bookmark';
+            icon.classList.toggle('text-accent', isBookmarked);
+            showToast(isBookmarked ? 'Salvato nei preferiti' : 'Rimosso dai preferiti');
+        }
+
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({ title: 'Il reranker, spiegato bene', url: window.location.href });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Link copiato negli appunti');
+            }
+        }
+
+        let fontSizeLevel = 1;
+        const fontSizes = ['text-base', 'text-lg', 'text-xl'];
+        function adjustFontSize() {
+            const article = document.getElementById('article-content');
+            article.classList.remove(...fontSizes);
+            fontSizeLevel = (fontSizeLevel + 1) % fontSizes.length;
+            article.classList.add(fontSizes[fontSizeLevel]);
+            showToast('Dimensione testo: ' + ['Piccola', 'Normale', 'Grande'][fontSizeLevel]);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0'); }, 2000);
+        }
+
+        // =====================
+        // SIMULAZIONE RERANKING
+        // =====================
+
+        const QUERIES = [
+            {
+                text: "Come funziona la memoria a lungo termine nel cervello?",
+                docs: [
+                    { text: "Guida alla memoria RAM: DRAM, SRAM e tipi di storage nei computer moderni", biScore: 0.81, ceScore: 0.06, note: "La parola «memoria» avvicina i vettori nello spazio — ma il cross-encoder capisce che si parla di hardware." },
+                    { text: "Neuroscienza della memoria: il ruolo dell'ippocampo nella consolidazione sinaptica", biScore: 0.76, ceScore: 0.94, note: "Primo documento davvero rilevante. Il cross-encoder lo porta in cima." },
+                    { text: "Tecniche mnemoniche per lo studio: metodo dei loci e spaced repetition", biScore: 0.71, ceScore: 0.52, note: "Parla di memoria umana, ma è divulgativo e applicativo, non neuroscientificamente preciso." },
+                    { text: "LTP (Long-Term Potentiation): meccanismi molecolari e potenziamento sinaptico", biScore: 0.65, ceScore: 0.89, note: "Il termine LTP non appare nella query, ma il cross-encoder riconosce che è il meccanismo biologico sottostante." },
+                    { text: "Sleep e consolidazione della memoria: studi recenti sull'ippocampo e il sonno REM", biScore: 0.61, ceScore: 0.78, note: "Documento pertinente che sale nettamente nel reranking." },
+                ],
+                rerankNote: "Il documento sulla RAM era in cima per via del bias lessicale sulla parola «memoria». Il cross-encoder ha corretto l'errore in modo netto, portando LTP e sonno REM nei posti che meritano."
+            },
+            {
+                text: "Quali sono i rischi di un investimento in obbligazioni?",
+                docs: [
+                    { text: "Obbligazioni societarie: cedole, scadenza e rating del credito emittente", biScore: 0.84, ceScore: 0.91, note: "Alta pertinenza in entrambi gli stadi: documento centrale sul tema." },
+                    { text: "Rischi operativi nella gestione di un magazzino logistico aziendale", biScore: 0.73, ceScore: 0.08, note: "«Rischi» e «aziende» avvicinano i vettori. Il cross-encoder smonta subito il malinteso." },
+                    { text: "Rischio di tasso di interesse e duration nei portafogli obbligazionari", biScore: 0.68, ceScore: 0.87, note: "Documento tecnico e pertinente: il reranker lo promuove significativamente." },
+                    { text: "Come investire in ETF azionari: guida per principianti", biScore: 0.64, ceScore: 0.33, note: "Parla di investimenti, ma su strumenti azionari — non obbligazioni." },
+                    { text: "Default e rischio di credito: storia dei fallimenti sovrani dal 1800 a oggi", biScore: 0.58, ceScore: 0.72, note: "Il cross-encoder valorizza questo documento: il rischio di default è un tema centrale per le obbligazioni." },
+                ],
+                rerankNote: "Il documento sui «rischi di magazzino» era entrato in classifica grazie alla parola «rischi». Il cross-encoder ha visto che non c'entrava nulla con il mercato obbligazionario, e l'ha relegato in fondo."
+            },
+            {
+                text: "Come si allena la resistenza aerobica?",
+                docs: [
+                    { text: "Allenamento della forza: periodizzazione, carico e supercompensazione muscolare", biScore: 0.79, ceScore: 0.28, note: "«Allenamento» avvicina i vettori, ma parla di forza — non di aerobica." },
+                    { text: "VO2max e soglia anaerobica: fisiologia dell'endurance sportiva", biScore: 0.74, ceScore: 0.92, note: "Documento tecnicamente preciso sul sistema aerobico. Meritava la cima fin dall'inizio." },
+                    { text: "Piani di corsa per maratoneti: long run, fartlek e ritmo gara", biScore: 0.70, ceScore: 0.85, note: "La corsa è il prototipo dell'aerobica. Il reranker lo promuove correttamente." },
+                    { text: "Resistenza elettrica nei circuiti RC: condensatori e costanti di tempo", biScore: 0.66, ceScore: 0.03, note: "«Resistenza» ha creato rumore lessicale: il cross-encoder lo azzera senza esitazione." },
+                    { text: "Ciclismo indoor e zone di frequenza cardiaca per l'allenamento aerobico", biScore: 0.61, ceScore: 0.80, note: "Pertinente e specifico sull'aerobica. Sale nel ranking finale." },
+                ],
+                rerankNote: "Due documenti erano entrati per rumore lessicale: «allenamento della forza» e «resistenza elettrica». Il bi-encoder non aveva strumenti per distinguerli. Il cross-encoder li ha riconosciuti e rimessi al loro posto."
+            }
+        ];
+
+        let currentQuery = -1;
+        let reranked = false;
+
+        function selectQuery(idx) {
+            currentQuery = idx;
+            reranked = false;
+
+            document.querySelectorAll('.query-btn').forEach((btn, i) => {
+                btn.classList.toggle('border-accent/60', i === idx);
+                btn.classList.toggle('text-accent', i === idx);
+                btn.classList.toggle('border-white/10', i !== idx);
+                btn.classList.toggle('text-gray-300', i !== idx);
+            });
+
+            document.getElementById('rerank-btn').disabled = false;
+            document.getElementById('rerank-note').classList.add('hidden');
+            document.getElementById('results-label').textContent = 'Ordinamento bi-encoder (similarità coseno)';
+
+            renderResults(false);
+        }
+
+        function renderResults(isReranked) {
+            const q = QUERIES[currentQuery];
+            const list = document.getElementById('results-list');
+
+            const docs = [...q.docs];
+            if (isReranked) {
+                docs.sort((a, b) => b.ceScore - a.ceScore);
+            }
+
+            list.innerHTML = '';
+
+            docs.forEach((doc, i) => {
+                const score = isReranked ? doc.ceScore : doc.biScore;
+                const pct = Math.round(score * 100);
+                const isTop3 = isReranked && i < 3;
+                const isNoise = isReranked && doc.ceScore < 0.15;
+
+                const color = isTop3 ? '#10B981' : (isNoise ? '#ef4444' : '#60a5fa');
+                const bgRank = isTop3 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                               (isNoise ? 'bg-red-500/20 text-red-400 border-red-500/30' :
+                                          'bg-white/5 text-text-muted border-white/10');
+
+                const item = document.createElement('div');
+                item.className = 'result-item bg-code-bg border border-white/5 rounded-lg p-3';
+                if (isReranked) item.classList.add('reranked');
+                item.style.animationDelay = (i * 0.08) + 's';
+
+                item.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="rank-badge flex-shrink-0 mt-0.5 w-6 h-6 flex items-center justify-center rounded border text-xs font-mono font-bold ${bgRank}">${i+1}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-sans text-gray-300 leading-snug mb-2">${doc.text}</p>
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                                    <div class="score-fill h-full rounded-full" style="width:0%;background:${color}"></div>
+                                </div>
+                                <span class="text-xs font-mono text-text-muted flex-shrink-0">${score.toFixed(2)}</span>
+                            </div>
+                            ${isReranked ? `<p class="text-xs font-sans text-text-muted mt-2 italic leading-relaxed">${doc.note}</p>` : ''}
+                        </div>
+                    </div>`;
+
+                list.appendChild(item);
+
+                setTimeout(() => {
+                    item.querySelector('.score-fill').style.width = pct + '%';
+                }, 100 + i * 80);
+            });
+        }
+
+        function runRerank() {
+            if (currentQuery < 0) return;
+            reranked = true;
+
+            document.getElementById('results-label').textContent = 'Dopo reranking (cross-encoder score)';
+            document.getElementById('rerank-btn').disabled = true;
+
+            renderResults(true);
+
+            const note = document.getElementById('rerank-note');
+            document.getElementById('rerank-note-text').textContent = QUERIES[currentQuery].rerankNote;
+            note.classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('rerank-btn').disabled = false;
+                document.getElementById('rerank-btn').innerHTML = `<span class="material-symbols-outlined text-sm">refresh</span> Ripristina bi-encoder`;
+                document.getElementById('rerank-btn').onclick = resetSim;
+            }, 800);
+        }
+
+        function resetSim() {
+            reranked = false;
+            document.getElementById('results-label').textContent = 'Ordinamento bi-encoder (similarità coseno)';
+            document.getElementById('rerank-note').classList.add('hidden');
+            document.getElementById('rerank-btn').innerHTML = `<span class="material-symbols-outlined text-sm">sort</span> Avvia reranking`;
+            document.getElementById('rerank-btn').onclick = runRerank;
+            renderResults(false);
+        }
+    </script>
+</body>
+</html>
