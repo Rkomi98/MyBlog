@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Embed - Time freezes at the edge</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: dark; --bg:#0b1120; --surface:rgba(15,23,42,.84); --surface-soft:rgba(15,23,42,.64); --border:rgba(255,255,255,.08); --text:#e2e8f0; --muted:#94a3b8; --accent:#10b981; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); }
+    body { font-family: 'Charter', Georgia, serif; color: var(--text); background: radial-gradient(120% 120% at 50% 0%, rgba(16,185,129,.10) 0%, transparent 65%), var(--bg); }
+    .embed-root { padding: 18px; }
+    .frame { max-width: 1100px; margin: 0 auto; border: 1px solid rgba(255,255,255,.14); border-radius: 24px; overflow: hidden; background: rgba(9,15,31,.96); box-shadow: 0 18px 46px rgba(0,0,0,.35); }
+    .frame-top { height: 72px; display: flex; align-items: center; padding: 0 28px; border-bottom: 1px solid var(--border); color: #94a3b8; font-family: 'Inter', sans-serif; font-size: 28px; }
+    .hero { padding: 36px 28px 20px; background: radial-gradient(circle at 10% 10%, rgba(99,102,241,.08) 0, transparent 18px), radial-gradient(circle at 28% 22%, rgba(99,102,241,.08) 0, transparent 10px), radial-gradient(circle at 52% 14%, rgba(99,102,241,.08) 0, transparent 14px), radial-gradient(circle at 76% 18%, rgba(99,102,241,.08) 0, transparent 12px), radial-gradient(circle at 88% 30%, rgba(99,102,241,.08) 0, transparent 18px), #0b1328; }
+    .tag-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+    .tag { padding: 10px 16px; border-radius: 10px; border: 1px solid currentColor; background: rgba(255,255,255,.03); }
+    .tag.physics { color: #c084fc; } .tag.relativity { color: #60a5fa; } .tag.blackhole { color: #34d399; }
+    .hero h1 { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: clamp(36px, 5vw, 58px); line-height: 1.02; letter-spacing: -0.04em; }
+    .hero p { margin: 22px 0 0; max-width: 900px; color: var(--muted); font-size: clamp(20px, 3vw, 30px); line-height: 1.45; }
+    .author { margin-top: 36px; padding-left: 18px; border-left: 4px solid var(--accent); display: flex; align-items: center; gap: 18px; }
+    .author-badge { width: 78px; height: 78px; border-radius: 999px; display: grid; place-items: center; background: rgba(51,65,85,.75); border: 1px solid rgba(148,163,184,.22); color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 34px; font-weight: 700; }
+    .author-name { font-family: 'JetBrains Mono', monospace; font-size: clamp(20px, 2.3vw, 28px); }
+    .author-meta { color: var(--muted); font-family: 'Inter', sans-serif; font-size: clamp(18px, 2vw, 22px); margin-top: 4px; }
+    .sim-wrap { padding: 24px 28px 28px; background: rgba(11,17,32,.98); font-family: 'Inter', sans-serif; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+    .panel-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+    .panel-kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); font-weight: 700; }
+    .panel-hint { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+    .panel-body { padding: 18px; display: grid; gap: 16px; }
+    #sim-scene { position: relative; height: 270px; background: rgba(15,23,42,.72); border: 1px solid rgba(255,255,255,.05); border-radius: 16px; overflow: hidden; }
+    .signal-dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; pointer-events: none; }
+    .freq-bar { transition: background-color 1.2s ease, width 0.8s ease; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .metric, .state-box { background: var(--surface-soft); border: 1px solid rgba(255,255,255,.05); border-radius: 14px; padding: 14px; }
+    .metric-label, .redshift-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .08em; }
+    .metric-value { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; }
+    .redshift-track { height: 16px; width: 100%; border-radius: 999px; background: rgba(15,23,42,.72); overflow: hidden; border: 1px solid rgba(255,255,255,.05); }
+    .redshift-scale { display: flex; justify-content: space-between; margin-top: 6px; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+    .btn { width: 100%; border-radius: 14px; border: 1px solid rgba(16,185,129,.25); background: rgba(16,185,129,.08); color: var(--accent); padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 14px; cursor: pointer; }
+    .btn.secondary { border-color: rgba(255,255,255,.08); background: rgba(255,255,255,.03); color: var(--muted); padding: 10px 14px; font-size: 12px; }
+    .state-text { margin: 0; color: #cbd5e1; font-size: 13px; line-height: 1.7; font-style: italic; }
+    @media (max-width: 720px) { .embed-root { padding: 10px; } .frame-top { height: 56px; padding: 0 16px; font-size: 22px; } .hero, .sim-wrap { padding-left: 16px; padding-right: 16px; } .grid-2 { grid-template-columns: 1fr; } .author-badge { width: 60px; height: 60px; font-size: 28px; } #sim-scene { height: 220px; } }
+  </style>
+</head>
+<body>
+  <div class="embed-root">
+    <section class="frame">
+      <div class="frame-top">←</div>
+      <div class="hero">
+        <div class="tag-row">
+          <span class="tag physics">PHYSICS</span>
+          <span class="tag relativity">RELATIVITY</span>
+          <span class="tag blackhole">BLACK HOLES</span>
+        </div>
+        <h1>Time stops at the edge</h1>
+        <p>Gravitational time dilation, redshift, and what really happens when a star collapses into a black hole.</p>
+        <div class="author">
+          <div class="author-badge">M</div>
+          <div>
+            <div class="author-name">Mirko Calcaterra</div>
+            <div class="author-meta">March 2026 · 8 min read</div>
+          </div>
+        </div>
+      </div>
+      <div class="sim-wrap">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-kicker">INTERACTIVE SIMULATION</span>
+            <span class="panel-hint">click to advance time</span>
+          </div>
+          <div class="panel-body">
+            <div id="sim-scene">
+              <div class="absolute left-1/2 -translate-x-1/2 bottom-4 flex flex-col items-center gap-1">
+                <div id="star-body" class="rounded-full bg-gradient-to-br from-orange-400 via-yellow-300 to-orange-500 shadow-[0_0_40px_12px_rgba(251,146,60,0.4)] transition-all duration-700" style="width:60px;height:60px;"></div>
+                <span class="font-mono text-[10px] text-orange-400">collapsing star</span>
+              </div>
+              <div class="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                <span class="text-2xl">🛸</span>
+                <span class="font-mono text-[10px] text-blue-400">spacecraft</span>
+              </div>
+              <div class="absolute left-1/2 -translate-x-1/2 bottom-16">
+                <span class="text-sm">👨‍🚀</span>
+              </div>
+              <div id="schwarzschild-ring" class="absolute left-1/2 -translate-x-1/2 bottom-4 border-2 border-dashed border-red-500/30 rounded-full pointer-events-none transition-all duration-700" style="width:80px;height:80px;margin-left:-40px;margin-bottom:-10px;"></div>
+              <div id="signals-container" class="absolute inset-0 pointer-events-none"></div>
+              <div id="horizon-overlay" class="absolute inset-0 bg-red-900/0 transition-all duration-1000 pointer-events-none rounded-lg flex items-center justify-center">
+                <span id="horizon-label" class="font-mono text-xs text-red-400 opacity-0 transition-opacity duration-500 bg-slate-900/80 px-3 py-1 rounded-full border border-red-500/30"></span>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="metric">
+                <div class="metric-label">astronaut clock</div>
+                <div id="astro-clock" class="metric-value">10:59:57</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">signal in orbit</div>
+                <div id="orbit-status" class="metric-value text-emerald-400 text-lg">received</div>
+              </div>
+            </div>
+            <div class="metric">
+              <div class="redshift-label">received light frequency (redshift)</div>
+              <div class="redshift-track">
+                <div id="freq-bar" class="freq-bar h-full rounded-full" style="width:90%;background:#6EE7B7;"></div>
+              </div>
+              <div class="redshift-scale">
+                <span>red (redshifted)</span>
+                <span>green (normal)</span>
+              </div>
+            </div>
+            <button id="advance-btn" onclick="advanceTime()" class="btn">▶ advance by 1 second</button>
+            <button onclick="resetSim()" class="btn secondary">↺ restart</button>
+            <div class="state-box">
+              <p id="state-text" class="state-text">The star is collapsing. The astronaut sends one signal every second. Everything still reaches the spacecraft in orbit normally.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    const clocks = ['10:59:57', '10:59:58', '10:59:59', '11:00:00', '11:00:01', '11:00:02'];
+    const states = [
+      { orbit: 'received', orbitColor: 'text-emerald-400', desc: 'The star is collapsing. The astronaut sends one signal every second. Everything still reaches the spacecraft in orbit normally.', freqW: '90%', freqColor: '#6EE7B7', starSize: 60, horizonBg: 'bg-red-900/0', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ advance by 1 second' },
+      { orbit: 'received', orbitColor: 'text-emerald-400', desc: 'We are one second away from the critical threshold. The signals still arrive, but the interval is increasing imperceptibly. The star is shrinking.', freqW: '72%', freqColor: '#86EFAC', starSize: 50, horizonBg: 'bg-red-900/0', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ advance by 1 second' },
+      { orbit: 'growing delay', orbitColor: 'text-yellow-400', desc: 'Time dilation is now evident. Between the 10:59:58 signal and this one, the spacecraft has waited slightly more than one second. The light is already turning redder.', freqW: '50%', freqColor: '#FCD34D', starSize: 40, horizonBg: 'bg-red-900/5', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ move toward the horizon' },
+      { orbit: '∞ - never', orbitColor: 'text-red-400', desc: 'At 11:00:00 the star crosses the Schwarzschild radius. The black hole is born. The signal is emitted, but it will never reach the spacecraft. The astronaut\\'s time is frozen for observers in orbit.', freqW: '15%', freqColor: '#F87171', starSize: 28, horizonBg: 'bg-red-900/20', horizonLabel: '⚠ event horizon', horizonOpacity: 'opacity-100', btnLabel: '▶ observe the aftermath' },
+      { orbit: 'frozen image', orbitColor: 'text-red-300', desc: 'For the spacecraft, the astronaut is frozen at the instant of collapse: a ghost image slowly fading away. They will never see the astronaut fall beyond the horizon.', freqW: '5%', freqColor: '#EF4444', starSize: 22, horizonBg: 'bg-red-900/30', horizonLabel: '✦ black hole formed', horizonOpacity: 'opacity-100', btnLabel: '↺ restart' }
+    ];
+    let simStep = 0;
+    function applyState(s) {
+      const state = states[s];
+      document.getElementById('astro-clock').textContent = clocks[s] || clocks[clocks.length - 1];
+      const orbitEl = document.getElementById('orbit-status');
+      orbitEl.textContent = state.orbit;
+      orbitEl.className = 'metric-value text-lg ' + state.orbitColor;
+      document.getElementById('state-text').textContent = state.desc;
+      const fb = document.getElementById('freq-bar');
+      fb.style.width = state.freqW;
+      fb.style.backgroundColor = state.freqColor;
+      const starBody = document.getElementById('star-body');
+      starBody.style.width = state.starSize + 'px';
+      starBody.style.height = state.starSize + 'px';
+      const overlay = document.getElementById('horizon-overlay');
+      overlay.className = 'absolute inset-0 transition-all duration-1000 pointer-events-none rounded-lg flex items-center justify-center ' + state.horizonBg;
+      const label = document.getElementById('horizon-label');
+      label.textContent = state.horizonLabel;
+      label.className = 'font-mono text-xs text-red-400 transition-opacity duration-500 bg-slate-900/80 px-3 py-1 rounded-full border border-red-500/30 ' + state.horizonOpacity;
+      document.getElementById('advance-btn').textContent = state.btnLabel;
+      if (s < 3) launchSignal(s);
+    }
+    function launchSignal(step) {
+      const container = document.getElementById('signals-container');
+      const dot = document.createElement('div');
+      dot.className = 'signal-dot';
+      dot.style.left = '50%';
+      dot.style.bottom = '48px';
+      dot.style.background = ['#10B981', '#6EE7B7', '#FCD34D'][step] || '#10B981';
+      container.appendChild(dot);
+      const duration = 1200 + step * 400;
+      const startTime = performance.now();
+      function animate(now) {
+        const progress = (now - startTime) / duration;
+        if (progress >= 1) { dot.remove(); return; }
+        const x = 50 + progress * 35;
+        const y = 48 - progress * 20;
+        dot.style.left = x + '%';
+        dot.style.bottom = y + 'px';
+        dot.style.opacity = 1 - progress * 0.5;
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    }
+    function advanceTime() {
+      if (simStep >= states.length - 1) { resetSim(); return; }
+      simStep++;
+      applyState(simStep);
+    }
+    function resetSim() {
+      simStep = 0;
+      applyState(0);
+    }
+    applyState(0);
+  </script>
+</body>
+</html>
