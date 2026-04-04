@@ -32,97 +32,9 @@
     .frame {
       max-width: 1100px;
       margin: 0 auto;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 24px;
-      overflow: hidden;
-      background: rgba(9, 15, 31, 0.96);
-      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.35);
-    }
-    .frame-top {
-      height: 72px;
-      display: flex;
-      align-items: center;
-      padding: 0 28px;
-      border-bottom: 1px solid var(--border);
-      color: #94a3b8;
-      font-family: 'Inter', sans-serif;
-      font-size: 28px;
-    }
-    .hero {
-      padding: 36px 28px 20px;
-      background:
-        radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.08) 0, transparent 18px),
-        radial-gradient(circle at 28% 22%, rgba(99, 102, 241, 0.08) 0, transparent 10px),
-        radial-gradient(circle at 52% 14%, rgba(99, 102, 241, 0.08) 0, transparent 14px),
-        radial-gradient(circle at 76% 18%, rgba(99, 102, 241, 0.08) 0, transparent 12px),
-        radial-gradient(circle at 88% 30%, rgba(99, 102, 241, 0.08) 0, transparent 18px),
-        #0b1328;
-    }
-    .tag-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-    }
-    .tag {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: 1px solid currentColor;
-      background: rgba(255,255,255,0.03);
-    }
-    .tag.physics { color: #c084fc; }
-    .tag.relativity { color: #60a5fa; }
-    .tag.blackhole { color: #34d399; }
-    .hero h1 {
-      margin: 0;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(36px, 5vw, 58px);
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-    }
-    .hero p {
-      margin: 22px 0 0;
-      max-width: 900px;
-      color: var(--muted);
-      font-size: clamp(20px, 3vw, 30px);
-      line-height: 1.45;
-    }
-    .author {
-      margin-top: 36px;
-      padding-left: 18px;
-      border-left: 4px solid var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-    .author-badge {
-      width: 78px;
-      height: 78px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      background: rgba(51, 65, 85, 0.75);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 34px;
-      font-weight: 700;
-    }
-    .author-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(20px, 2.3vw, 28px);
-    }
-    .author-meta {
-      color: var(--muted);
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(18px, 2vw, 22px);
-      margin-top: 4px;
     }
     .sim-wrap {
-      padding: 24px 28px 28px;
-      background: rgba(11, 17, 32, 0.98);
+      padding: 0;
       font-family: 'Inter', sans-serif;
     }
     .panel {
@@ -230,10 +142,7 @@
     }
     @media (max-width: 720px) {
       .embed-root { padding: 10px; }
-      .frame-top { height: 56px; padding: 0 16px; font-size: 22px; }
-      .hero, .sim-wrap { padding-left: 16px; padding-right: 16px; }
       .grid-2 { grid-template-columns: 1fr; }
-      .author-badge { width: 60px; height: 60px; font-size: 28px; }
       #sim-scene { height: 220px; }
     }
   </style>
@@ -241,23 +150,6 @@
 <body>
   <div class="embed-root">
     <section class="frame">
-      <div class="frame-top">←</div>
-      <div class="hero">
-        <div class="tag-row">
-          <span class="tag physics">FISICA</span>
-          <span class="tag relativity">RELATIVITÀ</span>
-          <span class="tag blackhole">BUCHI NERI</span>
-        </div>
-        <h1>Il tempo si ferma al bordo</h1>
-        <p>Dilatazione gravitazionale, redshift e cosa succede davvero quando una stella collassa in un buco nero.</p>
-        <div class="author">
-          <div class="author-badge">M</div>
-          <div>
-            <div class="author-name">Mirko Calcaterra</div>
-            <div class="author-meta">Marzo 2026 · 8 min di lettura</div>
-          </div>
-        </div>
-      </div>
       <div class="sim-wrap">
         <div class="panel">
           <div class="panel-head">
