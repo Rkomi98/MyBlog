@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Embed - Il tempo si ferma al bordo</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1120;
+      --surface: rgba(15, 23, 42, 0.84);
+      --surface-soft: rgba(15, 23, 42, 0.64);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #10b981;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); }
+    body {
+      font-family: 'Charter', Georgia, serif;
+      color: var(--text);
+      background:
+        radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.10) 0%, transparent 65%),
+        var(--bg);
+    }
+    .embed-root { padding: 18px; }
+    .frame {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .sim-wrap {
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .panel-hint {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .panel-body { padding: 18px; display: grid; gap: 16px; }
+    #sim-scene {
+      position: relative;
+      height: 270px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .signal-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .freq-bar { transition: background-color 1.2s ease, width 0.8s ease; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .metric, .state-box {
+      background: var(--surface-soft);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .metric-label, .redshift-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .redshift-track {
+      height: 16px;
+      width: 100%;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.72);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .redshift-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+    .btn {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      background: rgba(16, 185, 129, 0.08);
+      color: var(--accent);
+      padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn.secondary {
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+    .state-text {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.7;
+      font-style: italic;
+    }
+    @media (max-width: 720px) {
+      .embed-root { padding: 10px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      #sim-scene { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="embed-root">
+    <section class="frame">
+      <div class="sim-wrap">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-kicker">SIMULAZIONE INTERATTIVA</span>
+            <span class="panel-hint">clicca per avanzare il tempo</span>
+          </div>
+          <div class="panel-body">
+            <div id="sim-scene">
+              <div class="absolute left-1/2 -translate-x-1/2 bottom-4 flex flex-col items-center gap-1">
+                <div id="star-body" class="rounded-full bg-gradient-to-br from-orange-400 via-yellow-300 to-orange-500 shadow-[0_0_40px_12px_rgba(251,146,60,0.4)] transition-all duration-700" style="width:60px;height:60px;"></div>
+                <span class="font-mono text-[10px] text-orange-400">stella in collasso</span>
+              </div>
+              <div class="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                <span class="text-2xl">🛸</span>
+                <span class="font-mono text-[10px] text-blue-400">astronave</span>
+              </div>
+              <div class="absolute left-1/2 -translate-x-1/2 bottom-16">
+                <span class="text-sm">👨‍🚀</span>
+              </div>
+              <div id="schwarzschild-ring" class="absolute left-1/2 -translate-x-1/2 bottom-4 border-2 border-dashed border-red-500/30 rounded-full pointer-events-none transition-all duration-700" style="width:80px;height:80px;margin-left:-40px;margin-bottom:-10px;"></div>
+              <div id="signals-container" class="absolute inset-0 pointer-events-none"></div>
+              <div id="horizon-overlay" class="absolute inset-0 bg-red-900/0 transition-all duration-1000 pointer-events-none rounded-lg flex items-center justify-center">
+                <span id="horizon-label" class="font-mono text-xs text-red-400 opacity-0 transition-opacity duration-500 bg-slate-900/80 px-3 py-1 rounded-full border border-red-500/30"></span>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="metric">
+                <div class="metric-label">orologio astronauta</div>
+                <div id="astro-clock" class="metric-value">10:59:57</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">segnale in orbita</div>
+                <div id="orbit-status" class="metric-value text-emerald-400 text-lg">ricevuto</div>
+              </div>
+            </div>
+            <div class="metric">
+              <div class="redshift-label">frequenza luce ricevuta (redshift)</div>
+              <div class="redshift-track">
+                <div id="freq-bar" class="freq-bar h-full rounded-full" style="width:90%;background:#6EE7B7;"></div>
+              </div>
+              <div class="redshift-scale">
+                <span>rosso (redshiftato)</span>
+                <span>verde (normale)</span>
+              </div>
+            </div>
+            <button id="advance-btn" onclick="advanceTime()" class="btn">▶ avanza di 1 secondo</button>
+            <button onclick="resetSim()" class="btn secondary">↺ ricomincia</button>
+            <div class="state-box">
+              <p id="state-text" class="state-text">La stella sta collassando. L'astronauta invia un segnale ogni secondo. Tutto arriva regolarmente all'astronave in orbita.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    const clocks = ['10:59:57', '10:59:58', '10:59:59', '11:00:00', '11:00:01', '11:00:02'];
+    const states = [
+      { orbit: 'ricevuto', orbitColor: 'text-emerald-400', desc: 'La stella sta collassando. L\'astronauta invia un segnale ogni secondo. Tutto arriva regolarmente all\'astronave in orbita.', freqW: '90%', freqColor: '#6EE7B7', starSize: 60, horizonBg: 'bg-red-900/0', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ avanza di 1 secondo' },
+      { orbit: 'ricevuto', orbitColor: 'text-emerald-400', desc: 'Siamo a un secondo dalla soglia critica. I segnali arrivano ancora, ma l\'intervallo sta aumentando impercettibilmente. La stella si sta restringendo.', freqW: '72%', freqColor: '#86EFAC', starSize: 50, horizonBg: 'bg-red-900/0', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ avanza di 1 secondo' },
+      { orbit: 'ritardo crescente', orbitColor: 'text-yellow-400', desc: 'La dilatazione temporale è ora evidente. Tra il segnale delle 10:59:58 e questo, l\'astronave ha atteso leggermente più di un secondo. La luce si fa già più rossa.', freqW: '50%', freqColor: '#FCD34D', starSize: 40, horizonBg: 'bg-red-900/5', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ avanza verso l\'orizzonte' },
+      { orbit: '∞ — mai', orbitColor: 'text-red-400', desc: 'Alle 11:00:00 la stella supera il raggio di Schwarzschild. Nasce il buco nero. Il segnale viene emesso, ma non raggiungerà mai l\'astronave. Il tempo dell\'astronauta è congelato per gli osservatori in orbita.', freqW: '15%', freqColor: '#F87171', starSize: 28, horizonBg: 'bg-red-900/20', horizonLabel: '⚠ orizzonte degli eventi', horizonOpacity: 'opacity-100', btnLabel: '▶ osserva l\'aftermath' },
+      { orbit: 'immagine congelata', orbitColor: 'text-red-300', desc: 'Per l\'astronave, l\'astronauta è congelato all\'istante del collasso: un\'immagine fantasma che sbiadisce. Non lo vedranno mai cadere oltre l\'orizzonte.', freqW: '5%', freqColor: '#EF4444', starSize: 22, horizonBg: 'bg-red-900/30', horizonLabel: '✦ buco nero formato', horizonOpacity: 'opacity-100', btnLabel: '↺ ricomincia' }
+    ];
+    let simStep = 0;
+    function applyState(s) {
+      const state = states[s];
+      document.getElementById('astro-clock').textContent = clocks[s] || clocks[clocks.length - 1];
+      const orbitEl = document.getElementById('orbit-status');
+      orbitEl.textContent = state.orbit;
+      orbitEl.className = 'metric-value text-lg ' + state.orbitColor;
+      document.getElementById('state-text').textContent = state.desc;
+      const fb = document.getElementById('freq-bar');
+      fb.style.width = state.freqW;
+      fb.style.backgroundColor = state.freqColor;
+      const starBody = document.getElementById('star-body');
+      starBody.style.width = state.starSize + 'px';
+      starBody.style.height = state.starSize + 'px';
+      const overlay = document.getElementById('horizon-overlay');
+      overlay.className = 'absolute inset-0 transition-all duration-1000 pointer-events-none rounded-lg flex items-center justify-center ' + state.horizonBg;
+      const label = document.getElementById('horizon-label');
+      label.textContent = state.horizonLabel;
+      label.className = 'font-mono text-xs text-red-400 transition-opacity duration-500 bg-slate-900/80 px-3 py-1 rounded-full border border-red-500/30 ' + state.horizonOpacity;
+      document.getElementById('advance-btn').textContent = state.btnLabel;
+      if (s < 3) launchSignal(s);
+    }
+    function launchSignal(step) {
+      const container = document.getElementById('signals-container');
+      const dot = document.createElement('div');
+      dot.className = 'signal-dot';
+      dot.style.left = '50%';
+      dot.style.bottom = '48px';
+      dot.style.background = ['#10B981', '#6EE7B7', '#FCD34D'][step] || '#10B981';
+      container.appendChild(dot);
+      const duration = 1200 + step * 400;
+      const startTime = performance.now();
+      function animate(now) {
+        const progress = (now - startTime) / duration;
+        if (progress >= 1) { dot.remove(); return; }
+        const x = 50 + progress * 35;
+        const y = 48 - progress * 20;
+        dot.style.left = x + '%';
+        dot.style.bottom = y + 'px';
+        dot.style.opacity = 1 - progress * 0.5;
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    }
+    function advanceTime() {
+      if (simStep >= states.length - 1) { resetSim(); return; }
+      simStep++;
+      applyState(simStep);
+    }
+    function resetSim() {
+      simStep = 0;
+      applyState(0);
+    }
+    applyState(0);
+  </script>
+</body>
+</html>
