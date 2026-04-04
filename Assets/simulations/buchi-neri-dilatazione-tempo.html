@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html class="dark" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Il tempo si ferma al bordo — Topographic Tech</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0F172A",
+                        "background-dark": "#0B1120",
+                        "background-light": "#f6f8f7",
+                        "surface": "#1E293B",
+                        "text-main": "#E2E8F0",
+                        "text-muted": "#94A3B8",
+                        "accent": "#10B981",
+                        "code-bg": "#0F172A",
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "serif": ["Charter", "serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "4px",
+                        "lg": "12px",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .code-scroll::-webkit-scrollbar { height: 6px; }
+        .code-scroll::-webkit-scrollbar-track { background: #0F172A; }
+        .code-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .code-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .topographic-bg {
+            background-color: #0B1120;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        /* Simulazione interattiva */
+        #star-canvas {
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .signal-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            pointer-events: none;
+            transition: none;
+        }
+        .freq-bar {
+            transition: background-color 1.2s ease, width 0.8s ease;
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-text-main font-serif antialiased min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-primary">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full z-50 h-[2px] bg-surface">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-600 w-[0%] shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-150"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background-dark/80 border-b border-white/5 transition-all duration-300">
+        <div class="flex items-center justify-between px-4 py-3 max-w-2xl mx-auto">
+            <a href="/" class="text-text-muted hover:text-white transition-colors p-1 rounded-full hover:bg-white/5">
+                <span class="material-symbols-outlined text-2xl">arrow_back</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="relative px-6 pb-32 max-w-2xl mx-auto topographic-bg">
+
+        <!-- Article Header -->
+        <header class="pt-8 pb-8 space-y-6">
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded tracking-wide">FISICA</span>
+                <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded tracking-wide">RELATIVITÀ</span>
+                <span class="px-2 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded tracking-wide">BUCHI NERI</span>
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-mono font-bold leading-tight text-white tracking-tight">
+                Il tempo si ferma al bordo
+            </h1>
+            <p class="text-xl font-serif text-text-muted leading-relaxed">Dilatazione gravitazionale, redshift e cosa succede davvero quando una stella collassa in un buco nero.</p>
+
+            <div class="flex items-center gap-3 py-2 border-l-2 border-accent pl-3">
+                <div class="h-10 w-10 rounded-full bg-surface border border-white/10 overflow-hidden relative flex items-center justify-center">
+                    <span class="font-mono text-accent font-bold text-sm">M</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-mono text-white font-medium">Mirko Calcaterra</span>
+                    <span class="text-xs font-sans text-text-muted">Marzo 2026 · 8 min di lettura</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Article Body -->
+        <article class="space-y-6 text-lg leading-relaxed text-gray-300 font-serif" id="article-content">
+
+            <p>
+                Prima di entrare nel merito, vale la pena fermarsi un momento sul perché questo scenario è così utile per capire i buchi neri. Non è un caso che Rovelli e molti altri fisici ricorrano a esperimenti mentali con orologi e segnali: il punto non è costruire fantascienza, è far vedere qualcosa che le equazioni dicono ma che l'intuizione quotidiana si rifiuta di accettare. <strong class="text-white">Il tempo non è uguale per tutti.</strong> E una stella che collassa è il modo più spettacolare di rendersene conto.
+            </p>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Da dove nasce questa storia</h2>
+
+            <p>
+                Einstein, già nel 1915 con la relatività generale, mostrava che la gravità non è una forza nel senso tradizionale: è la curvatura dello spaziotempo generata dalla massa. Più massa in poco spazio, più curvatura. E tra le cose che si curvano c'è anche il tempo. Non nel senso vago di "il tempo vola quando ci si diverte" — nel senso fisico, misurabile, documentato sperimentalmente: gli orologi in fondo a una torre battono leggermente più lento di quelli in cima. Il testo lo menziona: è un esperimento fatto davvero, e il dislivello era una torre serbatoio.
+            </p>
+
+            <div class="bg-surface/50 border-l-2 border-blue-500 pl-4 py-3 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    Nel 1959, Pound e Rebka misurarono la dilatazione gravitazionale del tempo su una torre di 22 metri ad Harvard. La differenza fu di circa 2,5 parti su 10¹⁵: minuscola, ma perfettamente in linea con quanto predetto da Einstein.
+                </p>
+            </div>
+
+            <p>
+                Nella vita ordinaria, questa differenza è irrilevante. Vicino a un buco nero, invece, il quadro cambia radicalmente.
+            </p>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Lo scenario: un astronauta, una stella, un orologio</h2>
+
+            <p>
+                Immagina una stella massiccia che sta collassando su sé stessa. Un astronauta abbastanza temerario si trova sulla superficie e invia un segnale ogni secondo verso la sua astronave in orbita. Tutto regolare fino alle <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">10:59:59</span>. A quella distanza, i segnali arrivano in orbita con qualche ritardo o distorsione, ma arrivano.
+            </p>
+
+            <p>
+                Poi, alle <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">11:00:00</span> sul suo orologio, la stella supera una soglia critica. Da quel momento, il campo gravitazionale è talmente intenso che nemmeno la luce riesce a scalare la buca di potenziale e raggiungere l'orbita. Il segnale delle 11:00:00 viene emesso — l'astronauta lo invia, il suo orologio batte normalmente — ma non arriverà mai. Non nel senso che ci vorrà tanto tempo: nel senso che ci vorrebbe un tempo infinito.
+            </p>
+
+            <!-- Simulazione interattiva -->
+            <div class="my-10 bg-surface/40 border border-white/10 rounded-lg overflow-hidden">
+                <div class="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+                    <span class="font-mono text-xs text-accent font-bold">SIMULAZIONE INTERATTIVA</span>
+                    <span class="font-mono text-xs text-text-muted ml-auto">clicca per avanzare il tempo</span>
+                </div>
+                <div class="p-4 space-y-4">
+
+                    <!-- Scenario visivo -->
+                    <div class="relative h-48 bg-primary/60 rounded-lg overflow-hidden border border-white/5" id="sim-scene">
+                        <!-- Stella -->
+                        <div class="absolute left-1/2 -translate-x-1/2 bottom-4 flex flex-col items-center gap-1" id="star-container">
+                            <div id="star-body" class="rounded-full bg-gradient-to-br from-orange-400 via-yellow-300 to-orange-500 shadow-[0_0_40px_12px_rgba(251,146,60,0.4)] transition-all duration-700" style="width:60px;height:60px;"></div>
+                            <span class="font-mono text-[10px] text-orange-400">stella in collasso</span>
+                        </div>
+                        <!-- Astronave -->
+                        <div class="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                            <span class="text-2xl">🛸</span>
+                            <span class="font-mono text-[10px] text-blue-400">astronave</span>
+                        </div>
+                        <!-- Astronauta -->
+                        <div class="absolute left-1/2 -translate-x-1/2 bottom-16 flex flex-col items-center gap-0">
+                            <span class="text-sm" id="astronaut-emoji">👨‍🚀</span>
+                        </div>
+                        <!-- Raggio di Schwarzschild -->
+                        <div id="schwarzschild-ring" class="absolute left-1/2 -translate-x-1/2 bottom-4 border-2 border-dashed border-red-500/30 rounded-full pointer-events-none transition-all duration-700" style="width:80px;height:80px;margin-left:-40px;margin-bottom:-10px;"></div>
+
+                        <!-- Segnali -->
+                        <div id="signals-container" class="absolute inset-0 pointer-events-none"></div>
+
+                        <!-- Overlay "evento orizzonte" -->
+                        <div id="horizon-overlay" class="absolute inset-0 bg-red-900/0 transition-all duration-1000 pointer-events-none rounded-lg flex items-center justify-center">
+                            <span id="horizon-label" class="font-mono text-xs text-red-400 opacity-0 transition-opacity duration-500 bg-primary/80 px-3 py-1 rounded-full border border-red-500/30"></span>
+                        </div>
+                    </div>
+
+                    <!-- Orologio e stato -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-primary/60 rounded-lg p-3 border border-white/5">
+                            <div class="font-mono text-[10px] text-text-muted mb-1 uppercase tracking-wider">orologio astronauta</div>
+                            <div id="astro-clock" class="font-mono text-lg text-white font-bold">10:59:57</div>
+                        </div>
+                        <div class="bg-primary/60 rounded-lg p-3 border border-white/5">
+                            <div class="font-mono text-[10px] text-text-muted mb-1 uppercase tracking-wider">segnale in orbita</div>
+                            <div id="orbit-status" class="font-mono text-sm text-accent font-bold">ricevuto</div>
+                        </div>
+                    </div>
+
+                    <!-- Redshift indicator -->
+                    <div>
+                        <div class="font-mono text-[10px] text-text-muted mb-2 uppercase tracking-wider">frequenza luce ricevuta (redshift)</div>
+                        <div class="h-4 w-full rounded-full bg-primary/60 overflow-hidden border border-white/5">
+                            <div id="freq-bar" class="freq-bar h-full rounded-full" style="width:90%;background:#6EE7B7;"></div>
+                        </div>
+                        <div class="flex justify-between font-mono text-[9px] text-text-muted mt-1">
+                            <span>rosso (redshiftato)</span>
+                            <span>verde (normale)</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottone avanzamento -->
+                    <button id="advance-btn" onclick="advanceTime()" class="w-full py-2 bg-accent/10 border border-accent/30 text-accent font-mono text-sm rounded-lg hover:bg-accent/20 transition-colors">
+                        ▶ avanza di 1 secondo
+                    </button>
+                    <button onclick="resetSim()" class="w-full py-1.5 bg-white/5 border border-white/10 text-text-muted font-mono text-xs rounded-lg hover:bg-white/10 transition-colors">
+                        ↺ ricomincia
+                    </button>
+
+                    <!-- Descrizione stato -->
+                    <div id="state-desc" class="bg-surface/50 border border-white/10 rounded-lg p-3">
+                        <p class="font-sans text-xs text-gray-400 italic" id="state-text">
+                            La stella sta collassando. L'astronauta invia un segnale ogni secondo. Tutto arriva regolarmente all'astronave in orbita.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Cosa vede chi è in orbita</h2>
+
+            <p>
+                Fin qui tutto bene se si è nella testa dell'astronauta. Ma adesso sposta il punto di vista sull'astronave. I compagni in orbita notano qualcosa di strano già prima delle 11:00:00: gli intervalli tra un segnale e il successivo si allungano. Non di colpo, ma progressivamente. Il segnale delle 10:59:58 arriva. Quello delle 10:59:59 arriva un po' dopo. Quello delle 11:00:00 non arriverà mai.
+            </p>
+
+            <p>
+                Per loro, è come guardare un film proiettato sempre più lentamente, fino a quando l'immagine si congela. L'astronauta non scompare in un lampo: la sua immagine rimane lì, immobile all'istante del collasso, sempre più fioca, sempre più rossa. Non perché lui stia diventando rosso, ma perché la luce che porta la sua immagine perde energia scalando il campo gravitazionale.
+            </p>
+
+            <div class="bg-surface/50 border-l-2 border-accent pl-4 py-3 my-6">
+                <p class="font-sans text-sm italic text-gray-400">
+                    Questo è il <strong class="text-white not-italic">redshift gravitazionale</strong>: la luce che scala una buca di potenziale gravitazionale perde energia, e perdere energia per la luce significa allungarsi verso le lunghezze d'onda più basse, verso il rosso. Vale per qualsiasi campo gravitazionale, anche quello terrestre — è solo impercettibile a scale umane.
+                </p>
+            </div>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Il raggio di Schwarzschild</h2>
+
+            <p>
+                Il concetto chiave dietro tutto questo ha un nome preciso: il <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">raggio di Schwarzschild</span>. Karl Schwarzschild lo calcolò nel 1916 — poche settimane dopo la pubblicazione della relatività generale di Einstein, mentre era al fronte durante la Prima Guerra Mondiale. È il raggio entro cui la velocità di fuga supera quella della luce: nessun segnale, nessuna particella, nessuna informazione può uscire da quella regione. La superficie che delimita questo confine si chiama <span class="bg-surface text-accent px-1 rounded font-mono text-[0.9em]">orizzonte degli eventi</span>.
+            </p>
+
+            <!-- Formula box -->
+            <div class="relative my-8 group">
+                <div class="absolute -top-3 right-4 bg-surface border border-white/10 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-purple-400 shadow-lg z-10">
+                    FISICA
+                </div>
+                <div class="bg-code-bg rounded-lg border border-white/5 overflow-hidden shadow-2xl">
+                    <div class="flex items-center px-4 py-2 bg-white/5 border-b border-white/5">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                        </div>
+                        <span class="ml-4 text-xs font-mono text-text-muted">raggio-schwarzschild.txt</span>
+                    </div>
+                    <div class="p-4 overflow-x-auto code-scroll">
+                        <pre class="font-mono text-[13px] leading-7 text-gray-300"><code>  <span class="text-text-muted">// Raggio di Schwarzschild</span>
+  r<span class="text-orange-400">s</span> = <span class="text-blue-400">2GM</span> / c²
+
+  <span class="text-text-muted">// Dove:</span>
+  G  = costante gravitazionale  (<span class="text-orange-400">6.674 × 10⁻¹¹</span> N·m²/kg²)
+  M  = massa dell'oggetto       (kg)
+  c  = velocità della luce      (<span class="text-orange-400">3 × 10⁸</span> m/s)
+
+  <span class="text-text-muted">// Per il Sole (M ≈ 2×10³⁰ kg):</span>
+  r<span class="text-orange-400">s</span> ≈ <span class="text-orange-400">3</span> km   <span class="text-text-muted">// il Sole dovrebbe comprimersi in una sfera di 3 km</span>
+
+  <span class="text-text-muted">// Per la Terra (M ≈ 6×10²⁴ kg):</span>
+  r<span class="text-orange-400">s</span> ≈ <span class="text-orange-400">9</span> mm   <span class="text-text-muted">// una pallina poco più grande di un pisello</span></code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Questo è il punto che di solito genera più confusione. <strong class="text-white">L'orizzonte degli eventi non è una barriera fisica.</strong> Non c'è nessun muro, nessuna superficie solida. Un astronauta che cadesse verso un buco nero non sentirebbe nulla di speciale nel momento in cui lo attraversasse — almeno per buchi neri abbastanza grandi da rendere trascurabile la differenza di forze tra testa e piedi. Il fatto è che, una volta oltre quella soglia, non esiste nessuna traiettoria che riporti indietro.
+            </p>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Due orologi, due realtà</h2>
+
+            <p>
+                Ed è qui che i nodi vengono al pettine, perché la cosa davvero disturbante non è il buco nero in sé. È che questo esperimento mentale mette in luce qualcosa che vale in generale: il tempo non è un fondale fisso su cui si svolge la fisica. È una dimensione che si deforma insieme allo spazio sotto l'azione della gravità.
+            </p>
+
+            <!-- Card griglia -->
+            <div class="grid md:grid-cols-2 gap-4 my-6">
+                <div class="bg-surface/50 border border-white/10 rounded-lg p-4">
+                    <div class="font-mono text-accent text-sm mb-2">👨‍🚀 Per l'astronauta</div>
+                    <p class="font-sans text-sm text-gray-400">Il tempo scorre normalmente. Invia il segnale delle 11:00:00 e, dal suo punto di vista, non succede nulla di strano in quell'istante. Continua a esistere, a respirare, a muoversi. Per lui, l'orizzonte non è una barriera sentita: è una soglia geometrica nello spaziotempo.</p>
+                </div>
+                <div class="bg-surface/50 border border-white/10 rounded-lg p-4">
+                    <div class="font-mono text-blue-400 text-sm mb-2">🛸 Per l'astronave in orbita</div>
+                    <p class="font-sans text-sm text-gray-400">L'astronauta non scompare mai davvero: la sua immagine rimane congelata all'istante del collasso, sempre più debole e rossa. Aspettare il segnale delle 11:00:00 richiederebbe un tempo infinito. In senso stretto, non lo vedono cadere nel buco nero: lo vedono avvicinarsi asintoticamente all'orizzonte.</p>
+                </div>
+            </div>
+
+            <p>
+                Due osservatori, stesso evento, due descrizioni radicalmente diverse. Nessuna delle due è sbagliata: sono entrambe fisicamente corrette, ciascuna nel proprio sistema di riferimento. Questa è la stranezza che Einstein ha messo per iscritto più di un secolo fa, e che ancora oggi ha la capacità di far traballare le certezze di chiunque ci si soffermi davvero.
+            </p>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Perché la luce si fa rossa</h2>
+
+            <p>
+                L'ultimo tassello è il redshift, e merita un paragrafo per sé. Quando si dice che la luce proveniente dalla stella diventa "sempre più rossa e sempre più debole", non è un'immagine poetica. È letterale.
+            </p>
+
+            <p>
+                La luce è un'onda elettromagnetica caratterizzata da una frequenza. Più alta la frequenza, più energetica la luce — e più spostata verso il blu. Più bassa la frequenza, meno energetica — e più spostata verso il rosso. Quando un fotone scala un campo gravitazionale intenso, perde energia. Perdere energia, per la luce, significa allungare la propria lunghezza d'onda. Il risultato visibile è uno spostamento verso il rosso dello spettro.
+            </p>
+
+            <p>
+                Nel caso della stella in collasso, man mano che ci avviciniamo all'orizzonte degli eventi, ogni fotone emesso deve scalare una buca di potenziale sempre più profonda. L'intervallo tra fotoni successivi si allunga (dilatazione del tempo), e ciascun fotone arriva con meno energia (redshift). La combinazione produce quella dissolvenza rossa che gli osservatori in orbita vedrebbero: la stella che piano piano si spegne, senza mai sparire del tutto, almeno in linea di principio.
+            </p>
+
+            <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 my-6 flex gap-3">
+                <span class="material-symbols-outlined text-yellow-400 text-xl flex-shrink-0 mt-0.5">info</span>
+                <div>
+                    <p class="font-sans text-sm text-gray-300">
+                        <strong class="text-yellow-300">Nota pratica.</strong> Nel mondo reale, un buco nero stellare non è osservabile in questo modo: il flusso di fotoni decresce esponenzialmente e diventa rapidamente inferiore a qualsiasi soglia di rilevamento. Ma il principio fisico è esatto, e buchi neri supermassicci al centro delle galassie sono stati osservati proprio attraverso gli effetti del redshift gravitazionale sulla luce che li circonda.
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-mono font-bold text-white mt-12 mb-4">Un ultimo pensiero</h2>
+
+            <p>
+                Quello che rende questo esperimento mentale così potente è che non richiede strumenti complicati per essere capito: serve solo un orologio, un segnale, e la disposizione a seguire il ragionamento fino in fondo senza tirarsi indietro quando le conclusioni diventano scomode. Il tempo che scorre diversamente non è una metafora: è fisica. E un buco nero non è un oggetto esotico ai margini della realtà — è la dimostrazione più netta che la realtà stessa è strutturalmente diversa da come la immaginiamo quando usciamo di casa la mattina.
+            </p>
+
+            <p>
+                <em>Mutatis mutandis</em>, tutto quello che succede vicino a un buco nero ci dice qualcosa su dove siamo anche noi: in un campo gravitazionale, a scorrere leggermente più veloci di chi vive in pianura, e leggermente più lenti di chi orbita nello spazio. La differenza è irrilevante nella pratica. Ma il principio è lo stesso.
+            </p>
+
+            <div class="h-12"></div>
+        </article>
+    </main>
+
+    <!-- Floating Action Bar -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div class="flex items-center gap-1 p-1.5 bg-surface/80 backdrop-blur-md border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="toggleBookmark()">
+                <span class="material-symbols-outlined text-xl" id="bookmark-icon">bookmark</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Salva</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="shareArticle()">
+                <span class="material-symbols-outlined text-xl">ios_share</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Condividi</span>
+            </button>
+            <div class="w-px h-6 bg-white/10"></div>
+            <button class="p-3 text-text-muted hover:text-white hover:bg-white/10 rounded-full transition-all group relative" onclick="adjustFontSize()">
+                <span class="material-symbols-outlined text-xl">format_size</span>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Testo</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface border border-white/10 text-white px-4 py-2 rounded-lg shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+        <span id="toast-message">Messaggio</span>
+    </div>
+
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + "%";
+        });
+
+        // Bookmark
+        let isBookmarked = false;
+        function toggleBookmark() {
+            isBookmarked = !isBookmarked;
+            const icon = document.getElementById('bookmark-icon');
+            icon.textContent = isBookmarked ? 'bookmark_added' : 'bookmark';
+            icon.classList.toggle('text-accent', isBookmarked);
+            showToast(isBookmarked ? 'Salvato nei preferiti' : 'Rimosso dai preferiti');
+        }
+
+        // Share
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({ title: 'Il tempo si ferma al bordo', url: window.location.href });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Link copiato negli appunti');
+            }
+        }
+
+        // Font size
+        let fontSizeLevel = 1;
+        const fontSizes = ['text-base', 'text-lg', 'text-xl'];
+        function adjustFontSize() {
+            const article = document.getElementById('article-content');
+            article.classList.remove(...fontSizes);
+            fontSizeLevel = (fontSizeLevel + 1) % fontSizes.length;
+            article.classList.add(fontSizes[fontSizeLevel]);
+            showToast('Dimensione testo: ' + ['Piccola', 'Normale', 'Grande'][fontSizeLevel]);
+        }
+
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+
+        // =====================
+        // SIMULAZIONE INTERATTIVA
+        // =====================
+
+        const clocks = ['10:59:57', '10:59:58', '10:59:59', '11:00:00', '11:00:01', '11:00:02'];
+        const states = [
+            {
+                orbit: 'ricevuto',
+                orbitColor: 'text-accent',
+                desc: 'La stella sta collassando. L\'astronauta invia un segnale ogni secondo. Tutto arriva regolarmente all\'astronave in orbita.',
+                freqW: '90%',
+                freqColor: '#6EE7B7',
+                starSize: 60,
+                ringSize: 80,
+                horizonBg: 'bg-red-900/0',
+                horizonLabel: '',
+                horizonOpacity: 'opacity-0',
+                btnLabel: '▶ avanza di 1 secondo'
+            },
+            {
+                orbit: 'ricevuto',
+                orbitColor: 'text-accent',
+                desc: 'Siamo a un secondo dalla soglia critica. I segnali arrivano ancora, ma l\'intervallo sta aumentando impercettibilmente. La stella si sta restringendo.',
+                freqW: '72%',
+                freqColor: '#86EFAC',
+                starSize: 50,
+                ringSize: 80,
+                horizonBg: 'bg-red-900/0',
+                horizonLabel: '',
+                horizonOpacity: 'opacity-0',
+                btnLabel: '▶ avanza di 1 secondo'
+            },
+            {
+                orbit: 'ritardo crescente',
+                orbitColor: 'text-yellow-400',
+                desc: 'La dilatazione temporale è ora evidente. Tra il segnale delle 10:59:58 e questo, l\'astronave ha atteso leggermente più di un secondo. La luce si fa già più rossa.',
+                freqW: '50%',
+                freqColor: '#FCD34D',
+                starSize: 40,
+                ringSize: 80,
+                horizonBg: 'bg-red-900/5',
+                horizonLabel: '',
+                horizonOpacity: 'opacity-0',
+                btnLabel: '▶ avanza verso l\'orizzonte'
+            },
+            {
+                orbit: '∞ — mai',
+                orbitColor: 'text-red-400',
+                desc: 'Alle 11:00:00 la stella supera il raggio di Schwarzschild. Nasce il buco nero. Il segnale viene emesso, ma non raggiungerà mai l\'astronave. Il tempo dell\'astronauta è congelato per gli osservatori in orbita.',
+                freqW: '15%',
+                freqColor: '#F87171',
+                starSize: 28,
+                ringSize: 80,
+                horizonBg: 'bg-red-900/20',
+                horizonLabel: '⚠ orizzonte degli eventi',
+                horizonOpacity: 'opacity-100',
+                btnLabel: '▶ osserva l\'aftermath'
+            },
+            {
+                orbit: 'immagine congelata',
+                orbitColor: 'text-red-300',
+                desc: 'Per l\'astronave, l\'astronauta è congelato all\'istante del collasso — un\'immagine fantasma che sbiadisce. Non lo vedranno mai cadere oltre l\'orizzonte.',
+                freqW: '5%',
+                freqColor: '#EF4444',
+                starSize: 22,
+                ringSize: 80,
+                horizonBg: 'bg-red-900/30',
+                horizonLabel: '✦ buco nero formato',
+                horizonOpacity: 'opacity-100',
+                btnLabel: '↺ ricomincia'
+            }
+        ];
+
+        let simStep = 0;
+
+        function applyState(s) {
+            const state = states[s];
+
+            // Orologio
+            document.getElementById('astro-clock').textContent = clocks[s] || clocks[clocks.length - 1];
+
+            // Orbita status
+            const orbitEl = document.getElementById('orbit-status');
+            orbitEl.textContent = state.orbit;
+            orbitEl.className = 'font-mono text-sm font-bold ' + state.orbitColor;
+
+            // Descrizione
+            document.getElementById('state-text').textContent = state.desc;
+
+            // Freq bar
+            const fb = document.getElementById('freq-bar');
+            fb.style.width = state.freqW;
+            fb.style.backgroundColor = state.freqColor;
+
+            // Stella
+            const starBody = document.getElementById('star-body');
+            const sz = state.starSize;
+            starBody.style.width = sz + 'px';
+            starBody.style.height = sz + 'px';
+
+            // Overlay
+            const overlay = document.getElementById('horizon-overlay');
+            overlay.className = 'absolute inset-0 transition-all duration-1000 pointer-events-none rounded-lg flex items-center justify-center ' + state.horizonBg;
+            const label = document.getElementById('horizon-label');
+            label.textContent = state.horizonLabel;
+            label.className = 'font-mono text-xs text-red-400 transition-opacity duration-500 bg-primary/80 px-3 py-1 rounded-full border border-red-500/30 ' + state.horizonOpacity;
+
+            // Bottone
+            document.getElementById('advance-btn').textContent = state.btnLabel;
+
+            // Lancia segnale visivo
+            if (s < 3) launchSignal(s);
+        }
+
+        function launchSignal(step) {
+            const container = document.getElementById('signals-container');
+            const scene = document.getElementById('sim-scene');
+            const sceneRect = scene.getBoundingClientRect();
+
+            const dot = document.createElement('div');
+            dot.className = 'signal-dot';
+            dot.style.left = '50%';
+            dot.style.bottom = '48px';
+
+            const colors = ['#10B981', '#6EE7B7', '#FCD34D'];
+            dot.style.background = colors[step] || '#10B981';
+            container.appendChild(dot);
+
+            let progress = 0;
+            const duration = 1200 + step * 400;
+            const startTime = performance.now();
+
+            function animate(now) {
+                progress = (now - startTime) / duration;
+                if (progress >= 1) {
+                    dot.remove();
+                    return;
+                }
+                const x = 50 + progress * 35;
+                const y = 48 - progress * 20;
+                dot.style.left = x + '%';
+                dot.style.bottom = y + 'px';
+                dot.style.opacity = 1 - progress * 0.5;
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function advanceTime() {
+            if (simStep >= states.length - 1) {
+                resetSim();
+                return;
+            }
+            simStep++;
+            applyState(simStep);
+        }
+
+        function resetSim() {
+            simStep = 0;
+            applyState(0);
+            // Ripristina stella
+            const starBody = document.getElementById('star-body');
+            starBody.style.width = '60px';
+            starBody.style.height = '60px';
+        }
+
+        // Stato iniziale
+        applyState(0);
+    </script>
+
+</body>
+</html>
