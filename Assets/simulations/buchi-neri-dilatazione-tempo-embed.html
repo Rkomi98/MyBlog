@@ -63,6 +63,16 @@
       color: var(--muted);
     }
     .panel-body { padding: 18px; display: grid; gap: 16px; }
+    .qual-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.18);
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: #dbeafe;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .qual-note strong { color: #d1fae5; }
     #sim-scene {
       position: relative;
       height: 270px;
@@ -98,6 +108,10 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 22px;
       font-weight: 700;
+    }
+    .metric-value.metric-status {
+      font-size: 18px;
+      line-height: 1.4;
     }
     .redshift-track {
       height: 16px;
@@ -157,6 +171,9 @@
             <span class="panel-hint">clicca per avanzare il tempo</span>
           </div>
           <div class="panel-body">
+            <div class="qual-note">
+              <strong>Modello qualitativo.</strong> Questa visualizzazione non è una simulazione numerica completa del collasso gravitazionale: serve a mostrare come, per chi osserva da lontano, i segnali diventino sempre più radi, rossi e deboli vicino all'orizzonte degli eventi.
+            </div>
             <div id="sim-scene">
               <div class="absolute left-1/2 -translate-x-1/2 bottom-4 flex flex-col items-center gap-1">
                 <div id="star-body" class="rounded-full bg-gradient-to-br from-orange-400 via-yellow-300 to-orange-500 shadow-[0_0_40px_12px_rgba(251,146,60,0.4)] transition-all duration-700" style="width:60px;height:60px;"></div>
@@ -167,7 +184,7 @@
                 <span class="font-mono text-[10px] text-blue-400">astronave</span>
               </div>
               <div class="absolute left-1/2 -translate-x-1/2 bottom-16">
-                <span class="text-sm">👨‍🚀</span>
+                <span id="astronaut-marker" class="text-sm transition-all duration-700">👨‍🚀</span>
               </div>
               <div id="schwarzschild-ring" class="absolute left-1/2 -translate-x-1/2 bottom-4 border-2 border-dashed border-red-500/30 rounded-full pointer-events-none transition-all duration-700" style="width:80px;height:80px;margin-left:-40px;margin-bottom:-10px;"></div>
               <div id="signals-container" class="absolute inset-0 pointer-events-none"></div>
@@ -177,12 +194,12 @@
             </div>
             <div class="grid-2">
               <div class="metric">
-                <div class="metric-label">orologio astronauta</div>
+                <div class="metric-label">tempo proprio astronauta</div>
                 <div id="astro-clock" class="metric-value">10:59:57</div>
               </div>
               <div class="metric">
-                <div class="metric-label">segnale in orbita</div>
-                <div id="orbit-status" class="metric-value text-emerald-400 text-lg">ricevuto</div>
+                <div class="metric-label">intervallo visto in orbita</div>
+                <div id="orbit-status" class="metric-value metric-status text-emerald-400">~1.0 s</div>
               </div>
             </div>
             <div class="metric">
@@ -196,7 +213,7 @@
               </div>
             </div>
             <button id="advance-btn" onclick="advanceTime()" class="btn">▶ avanza di 1 secondo</button>
-            <button onclick="resetSim()" class="btn secondary">↺ ricomincia</button>
+            <button onclick="resetSim()" class="btn secondary">↺ reset manuale</button>
             <div class="state-box">
               <p id="state-text" class="state-text">La stella sta collassando. L'astronauta invia un segnale ogni secondo. Tutto arriva regolarmente all'astronave in orbita.</p>
             </div>
@@ -208,11 +225,81 @@
   <script>
     const clocks = ['10:59:57', '10:59:58', '10:59:59', '11:00:00', '11:00:01', '11:00:02'];
     const states = [
-      { orbit: 'ricevuto', orbitColor: 'text-emerald-400', desc: 'La stella sta collassando. L\'astronauta invia un segnale ogni secondo. Tutto arriva regolarmente all\'astronave in orbita.', freqW: '90%', freqColor: '#6EE7B7', starSize: 60, horizonBg: 'bg-red-900/0', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ avanza di 1 secondo' },
-      { orbit: 'ricevuto', orbitColor: 'text-emerald-400', desc: 'Siamo a un secondo dalla soglia critica. I segnali arrivano ancora, ma l\'intervallo sta aumentando impercettibilmente. La stella si sta restringendo.', freqW: '72%', freqColor: '#86EFAC', starSize: 50, horizonBg: 'bg-red-900/0', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ avanza di 1 secondo' },
-      { orbit: 'ritardo crescente', orbitColor: 'text-yellow-400', desc: 'La dilatazione temporale è ora evidente. Tra il segnale delle 10:59:58 e questo, l\'astronave ha atteso leggermente più di un secondo. La luce si fa già più rossa.', freqW: '50%', freqColor: '#FCD34D', starSize: 40, horizonBg: 'bg-red-900/5', horizonLabel: '', horizonOpacity: 'opacity-0', btnLabel: '▶ avanza verso l\'orizzonte' },
-      { orbit: '∞ — mai', orbitColor: 'text-red-400', desc: 'Alle 11:00:00 la stella supera il raggio di Schwarzschild. Nasce il buco nero. Il segnale viene emesso, ma non raggiungerà mai l\'astronave. Il tempo dell\'astronauta è congelato per gli osservatori in orbita.', freqW: '15%', freqColor: '#F87171', starSize: 28, horizonBg: 'bg-red-900/20', horizonLabel: '⚠ orizzonte degli eventi', horizonOpacity: 'opacity-100', btnLabel: '▶ osserva l\'aftermath' },
-      { orbit: 'immagine congelata', orbitColor: 'text-red-300', desc: 'Per l\'astronave, l\'astronauta è congelato all\'istante del collasso: un\'immagine fantasma che sbiadisce. Non lo vedranno mai cadere oltre l\'orizzonte.', freqW: '5%', freqColor: '#EF4444', starSize: 22, horizonBg: 'bg-red-900/30', horizonLabel: '✦ buco nero formato', horizonOpacity: 'opacity-100', btnLabel: '↺ ricomincia' }
+      {
+        orbit: '~1.0 s',
+        orbitColor: 'text-emerald-400',
+        desc: 'L\'astronauta emette un segnale ogni secondo del proprio orologio. Per l\'astronave in orbita l\'intervallo osservato è ancora quasi identico.',
+        freqW: '92%',
+        freqColor: '#6EE7B7',
+        starSize: 62,
+        starBg: 'linear-gradient(135deg, #fb923c 0%, #fde047 45%, #f59e0b 100%)',
+        starShadow: '0 0 40px 12px rgba(251,146,60,0.40)',
+        astronautOpacity: 1,
+        horizonBg: 'bg-red-900/0',
+        horizonLabel: '',
+        horizonOpacity: 'opacity-0',
+        btnLabel: '▶ invia il segnale successivo'
+      },
+      {
+        orbit: '~1.2 s',
+        orbitColor: 'text-emerald-300',
+        desc: 'Il campo gravitazionale cresce. Per l\'astronauta passa sempre un secondo, ma in orbita il segnale successivo arriva già con un ritardo un po\' maggiore.',
+        freqW: '76%',
+        freqColor: '#86EFAC',
+        starSize: 54,
+        starBg: 'linear-gradient(135deg, #fb923c 0%, #fcd34d 45%, #f97316 100%)',
+        starShadow: '0 0 36px 10px rgba(249,115,22,0.36)',
+        astronautOpacity: 0.98,
+        horizonBg: 'bg-red-900/0',
+        horizonLabel: '',
+        horizonOpacity: 'opacity-0',
+        btnLabel: '▶ invia il segnale successivo'
+      },
+      {
+        orbit: '~2.4 s',
+        orbitColor: 'text-yellow-400',
+        desc: 'La differenza fra tempo proprio e tempo osservato ora è evidente: i segnali diventano più radi e la luce arriva più redshiftata.',
+        freqW: '52%',
+        freqColor: '#FCD34D',
+        starSize: 44,
+        starBg: 'linear-gradient(135deg, #fb923c 0%, #f59e0b 45%, #ea580c 100%)',
+        starShadow: '0 0 30px 8px rgba(234,88,12,0.32)',
+        astronautOpacity: 0.9,
+        horizonBg: 'bg-red-900/5',
+        horizonLabel: '',
+        horizonOpacity: 'opacity-0',
+        btnLabel: '▶ avvicinati all\'orizzonte'
+      },
+      {
+        orbit: '→ infinito',
+        orbitColor: 'text-red-400',
+        desc: 'Vicino all\'orizzonte degli eventi, per l\'osservatore remoto il ritardo cresce senza limite. In questo modello il segnale emesso a 11:00:00 non viene mai visto arrivare in un tempo finito.',
+        freqW: '18%',
+        freqColor: '#F87171',
+        starSize: 30,
+        starBg: 'radial-gradient(circle at 50% 45%, #111827 0%, #020617 58%, #0f172a 100%)',
+        starShadow: '0 0 28px 10px rgba(239,68,68,0.18)',
+        astronautOpacity: 0.72,
+        horizonBg: 'bg-red-900/20',
+        horizonLabel: '⚠ ritardo osservato → infinito',
+        horizonOpacity: 'opacity-100',
+        btnLabel: '▶ osserva l\'immagine residua'
+      },
+      {
+        orbit: 'nessun nuovo segnale',
+        orbitColor: 'text-red-300',
+        desc: 'L\'osservatore lontano non vede un attraversamento netto: vede un\'immagine che si congela, si arrossa e diventa troppo debole per essere osservata in pratica.',
+        freqW: '5%',
+        freqColor: '#EF4444',
+        starSize: 24,
+        starBg: 'radial-gradient(circle at 50% 45%, #020617 0%, #000000 65%, #111827 100%)',
+        starShadow: '0 0 22px 8px rgba(239,68,68,0.10)',
+        astronautOpacity: 0.42,
+        horizonBg: 'bg-red-900/30',
+        horizonLabel: '✦ immagine congelata e sempre più debole',
+        horizonOpacity: 'opacity-100',
+        btnLabel: '↺ ricomincia'
+      }
     ];
     let simStep = 0;
     function applyState(s) {
@@ -228,11 +315,16 @@
       const starBody = document.getElementById('star-body');
       starBody.style.width = state.starSize + 'px';
       starBody.style.height = state.starSize + 'px';
+      starBody.style.background = state.starBg;
+      starBody.style.boxShadow = state.starShadow;
+      document.getElementById('astronaut-marker').style.opacity = state.astronautOpacity;
       const overlay = document.getElementById('horizon-overlay');
       overlay.className = 'absolute inset-0 transition-all duration-1000 pointer-events-none rounded-lg flex items-center justify-center ' + state.horizonBg;
       const label = document.getElementById('horizon-label');
       label.textContent = state.horizonLabel;
       label.className = 'font-mono text-xs text-red-400 transition-opacity duration-500 bg-slate-900/80 px-3 py-1 rounded-full border border-red-500/30 ' + state.horizonOpacity;
+      document.getElementById('orbit-status').textContent = state.orbit;
+      document.getElementById('orbit-status').className = 'metric-value metric-status ' + state.orbitColor;
       document.getElementById('advance-btn').textContent = state.btnLabel;
       if (s < 3) launchSignal(s);
     }

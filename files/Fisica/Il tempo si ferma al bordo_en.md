@@ -1,6 +1,6 @@
 # Time stops at the edge
 
-I want to conduct an experiment—in terms of topic, format, and visual presentation. I should preface this by saying that I am currently reading Stephen Hawking's ["A Brief History of Time"](https://www.mondadoristore.it/la-teoria-del-tutto-origine-e-destino-dell-universo-libro-stephen-hawking/p/9788817079761), and I admit that this concept gave me a lot to think about because I struggled to visualize it. That is why I decided to build a small artifact, and I thought it might help everyone understand these concepts. Happy reading!
+I want to conduct an experiment in terms of topic, format, and visual presentation. I should preface this by saying that I am currently reading Stephen Hawking's ["Theory of everything"](https://www.ibs.it/theory-of-everything-origin-fate-libro-inglese-stephen-w-hawking/e/9788179925911?utm_source=chatgpt.com), and I admit that this concept gave me a lot to think about because I struggled to visualize it. That is why I decided to build a small artifact, and I thought it might help everyone understand these concepts. Happy reading!
 
 ## Abstract
 
