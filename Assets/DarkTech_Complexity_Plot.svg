@@ -1,0 +1,155 @@
+<svg id="tech-plot" viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Gradienti Sfondo e Bordi -->
+                <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0b1224"/>
+                    <stop offset="100%" stop-color="#101a36"/>
+                </linearGradient>
+                <linearGradient id="box-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+                
+                <!-- Gradiente Linea O(N^2) (Orange Special/Feedback) -->
+                <linearGradient id="line-orange" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f97316"/>
+                    <stop offset="100%" stop-color="#facc15"/>
+                </linearGradient>
+
+                <!-- Ombre ed Effetti Glow -->
+                <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+                </filter>
+                
+                <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+
+                <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+
+                <!-- Custom Markers per gli Assi -->
+                <marker id="arrow-axis" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#cbd5f5"/>
+                </marker>
+            </defs>
+
+            <!-- Sfondo Principale SVG -->
+            <rect width="1000" height="700" fill="url(#bg-grad)"/>
+
+            <!-- Box Container Plot -->
+            <rect x="30" y="30" width="940" height="640" rx="16" fill="#1e293b" stroke="url(#box-stroke)" stroke-width="1.5" filter="url(#shadow)"/>
+            
+            <!-- Plot Area Background Inner -->
+            <rect x="120" y="140" width="800" height="410" rx="8" fill="#0f172a" opacity="0.6"/>
+
+            <!-- TITOLI -->
+            <g text-anchor="middle">
+                <text x="500" y="80" fill="#f8fafc" font-size="22" font-weight="600" letter-spacing="0.5">Complessità Computazionale: O(N) vs O(N²)</text>
+                <text x="500" y="105" fill="#94a3b8" font-size="14" font-weight="400">Analisi tempi di esecuzione ed operazioni in funzione della lunghezza della sequenza (N)</text>
+            </g>
+
+            <!-- GRIGLIA E ASSI -->
+            <g id="grid">
+                <!-- Linee Griglia Orizzontali (Scala Logaritmica) -->
+                <!-- 100 -->
+                <line x1="120" y1="516.67" x2="920" y2="516.67" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 1k -->
+                <line x1="120" y1="450.0" x2="920" y2="450.0" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 10k -->
+                <line x1="120" y1="383.33" x2="920" y2="383.33" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 100k -->
+                <line x1="120" y1="316.67" x2="920" y2="316.67" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 1M -->
+                <line x1="120" y1="250.0" x2="920" y2="250.0" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 10M -->
+                <line x1="120" y1="183.33" x2="920" y2="183.33" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+
+                <!-- Linee Griglia Verticali (Scala Lineare) -->
+                <!-- 1000 -->
+                <line x1="297.8" y1="150" x2="297.8" y2="550" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 2000 -->
+                <line x1="475.6" y1="150" x2="475.6" y2="550" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 3000 -->
+                <line x1="653.3" y1="150" x2="653.3" y2="550" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+                <!-- 4000 -->
+                <line x1="831.1" y1="150" x2="831.1" y2="550" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.7"/>
+
+                <!-- Assi Principali X e Y -->
+                <line x1="120" y1="550" x2="930" y2="550" stroke="#cbd5f5" stroke-width="2" marker-end="url(#arrow-axis)"/>
+                <line x1="120" y1="550" x2="120" y2="130" stroke="#cbd5f5" stroke-width="2" marker-end="url(#arrow-axis)"/>
+            </g>
+
+            <!-- ETICHETTE ASSI -->
+            <g id="labels" font-size="12" fill="#94a3b8" font-weight="500">
+                <!-- Y-Axis Labels -->
+                <text x="105" y="521" text-anchor="end">100</text>
+                <text x="105" y="454" text-anchor="end">1000</text>
+                <text x="105" y="388" text-anchor="end">10k</text>
+                <text x="105" y="321" text-anchor="end">100k</text>
+                <text x="105" y="254" text-anchor="end">1M</text>
+                <text x="105" y="188" text-anchor="end">10M</text>
+
+                <!-- X-Axis Labels -->
+                <text x="120" y="575" text-anchor="middle">0</text>
+                <text x="297.8" y="575" text-anchor="middle">1000</text>
+                <text x="475.6" y="575" text-anchor="middle">2000</text>
+                <text x="653.3" y="575" text-anchor="middle">3000</text>
+                <text x="831.1" y="575" text-anchor="middle">4000</text>
+
+                <!-- Label Titoli Assi -->
+                <text x="520" y="605" text-anchor="middle" fill="#cbd5f5" font-size="13" font-weight="600">Lunghezza della Sequenza (N)</text>
+                <text x="-350" y="60" transform="rotate(-90)" text-anchor="middle" fill="#cbd5f5" font-size="13" font-weight="600">Operazioni (Scala Logaritmica)</text>
+            </g>
+
+            <!-- LINEE DEI DATI -->
+            <g id="data-lines">
+                <!-- O(N) Blue Line (Exact extracted mapping) -->
+                <!-- Nota: uso di L per mantenere accuratezza scientifica dei dati, arrotondato ai nodi da stroke-linejoin -->
+                <path d="M 131.4 529.6 L 142.8 509.5 L 165.5 489.5 L 211.0 469.4 L 302.0 449.3 L 484.1 429.3 L 848.2 409.2" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" filter="url(#glow-cyan)"/>
+                
+                <!-- O(N^2) Orange Line (Exact extracted mapping) -->
+                <path d="M 131.4 409.2 L 142.8 369.1 L 165.5 328.9 L 211.0 288.8 L 302.0 248.6 L 484.1 208.5 L 848.2 168.4" fill="none" stroke="url(#line-orange)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" filter="url(#glow-orange)"/>
+            </g>
+
+            <!-- PUNTI DATI -->
+            <g id="data-points">
+                <!-- O(N) Punti -->
+                <circle cx="131.4" cy="529.6" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" class="data-point"/>
+                <circle cx="142.8" cy="509.5" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" class="data-point"/>
+                <circle cx="165.5" cy="489.5" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" class="data-point"/>
+                <circle cx="211.0" cy="469.4" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" class="data-point"/>
+                <circle cx="302.0" cy="449.3" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" class="data-point"/>
+                <circle cx="484.1" cy="429.3" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" class="data-point"/>
+                <circle cx="848.2" cy="409.2" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" class="data-point"/>
+
+                <!-- O(N^2) Punti -->
+                <circle cx="131.4" cy="409.2" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5" class="data-point"/>
+                <circle cx="142.8" cy="369.1" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5" class="data-point"/>
+                <circle cx="165.5" cy="328.9" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5" class="data-point"/>
+                <circle cx="211.0" cy="288.8" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5" class="data-point"/>
+                <circle cx="302.0" cy="248.6" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5" class="data-point"/>
+                <circle cx="484.1" cy="208.5" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5" class="data-point"/>
+                <circle cx="848.2" cy="168.4" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5" class="data-point"/>
+            </g>
+
+            <!-- LEGENDA -->
+            <g id="legend" transform="translate(190, 620)">
+                <!-- Sfondo Legenda -->
+                <rect x="0" y="0" width="620" height="40" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5" filter="url(#shadow)"/>
+                
+                <!-- Item: O(N) -->
+                <line x1="40" y1="20" x2="80" y2="20" stroke="#38bdf8" stroke-width="3.5" filter="url(#glow-cyan)"/>
+                <circle cx="60" cy="20" r="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+                <text x="95" y="25" fill="#f8fafc" font-size="13" font-weight="500">O(N) (es., Linear Attention)</text>
+
+                <!-- Item: O(N^2) -->
+                <line x1="330" y1="20" x2="370" y2="20" stroke="url(#line-orange)" stroke-width="3.5" filter="url(#glow-orange)"/>
+                <circle cx="350" cy="20" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="2.5"/>
+                <text x="385" y="25" fill="#f8fafc" font-size="13" font-weight="500">O(N²) (Self-Attention Standard)</text>
+            </g>
+
+        </svg>
