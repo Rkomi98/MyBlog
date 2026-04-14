@@ -1,0 +1,125 @@
+<svg width="1400" height="620" viewBox="0 0 1400 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="620" fill="#F8F7F4"/>
+
+  <style>
+    .title { font: 700 24px Arial, sans-serif; fill: #111111; }
+    .label { font: 700 18px Arial, sans-serif; fill: #5A5A5A; }
+    .tick { font: 400 16px Arial, sans-serif; fill: #5A5A5A; }
+    .anno { font: 700 20px Arial, sans-serif; fill: #111111; }
+    .legend { font: 400 16px Arial, sans-serif; fill: #555555; }
+    .axis { stroke: #3F3F46; stroke-width: 2; }
+    .grid { stroke: #E6E3DD; stroke-width: 1; }
+  </style>
+
+  <text x="90" y="44" class="title">Transformers asymptotically outperform LSTMs</text>
+  <text x="90" y="76" class="title">due to improved use of long contexts</text>
+  <text x="790" y="44" class="title">LSTM plateaus after &lt;100 tokens</text>
+  <text x="790" y="76" class="title">Transformer improves through the whole context</text>
+
+  <!-- Left chart axes -->
+  <line x1="95" y1="105" x2="95" y2="500" class="axis"/>
+  <line x1="95" y1="500" x2="615" y2="500" class="axis"/>
+
+  <line x1="95" y1="130" x2="615" y2="130" class="grid"/>
+  <line x1="95" y1="202" x2="615" y2="202" class="grid"/>
+  <line x1="95" y1="274" x2="615" y2="274" class="grid"/>
+  <line x1="95" y1="346" x2="615" y2="346" class="grid"/>
+  <line x1="95" y1="418" x2="615" y2="418" class="grid"/>
+
+  <text x="0" y="118" class="label">Test Loss</text>
+  <text x="62" y="136" class="tick">5.4</text>
+  <text x="62" y="208" class="tick">4.8</text>
+  <text x="62" y="280" class="tick">4.2</text>
+  <text x="62" y="352" class="tick">3.6</text>
+  <text x="62" y="424" class="tick">3.0</text>
+  <text x="62" y="496" class="tick">2.4</text>
+
+  <text x="92" y="565" class="label">Parameters</text>
+  <text x="225" y="565" class="tick">(non-embedding)</text>
+  <text x="135" y="535" class="tick">10<tspan dy="-8" font-size="11">5</tspan></text>
+  <text x="245" y="535" class="tick">10<tspan dy="-8" font-size="11">6</tspan></text>
+  <text x="356" y="535" class="tick">10<tspan dy="-8" font-size="11">7</tspan></text>
+  <text x="467" y="535" class="tick">10<tspan dy="-8" font-size="11">8</tspan></text>
+  <text x="579" y="535" class="tick">10<tspan dy="-8" font-size="11">9</tspan></text>
+
+  <!-- Left chart lines -->
+  <polyline fill="none" stroke="#2878B9" stroke-width="3.2"
+    points="95,146 125,163 155,178 210,207 242,226 272,240 300,253 326,272 352,287 390,315 430,345 470,375 510,404 552,438 592,470"/>
+  <polyline fill="none" stroke="#B33B2F" stroke-width="3"
+    points="150,152 186,176 221,196 257,215 296,234 336,255 376,276 416,297 456,318 496,339 536,360"/>
+  <polyline fill="none" stroke="#D46B60" stroke-width="3" opacity="0.85"
+    points="150,149 186,171 221,191 257,210 296,229 336,248 376,268 416,288 456,308 496,328 536,348"/>
+  <polyline fill="none" stroke="#E9B3AC" stroke-width="3" opacity="0.95"
+    points="188,170 224,189 260,208 296,226 336,245 376,264 416,284 456,302 496,321"/>
+
+  <g fill="#2878B9">
+    <circle cx="95" cy="146" r="4"/><circle cx="125" cy="163" r="4"/><circle cx="155" cy="178" r="4"/>
+    <circle cx="210" cy="207" r="4"/><circle cx="242" cy="226" r="4"/><circle cx="272" cy="240" r="4"/>
+    <circle cx="300" cy="253" r="4"/><circle cx="326" cy="272" r="4"/><circle cx="352" cy="287" r="4"/>
+    <circle cx="390" cy="315" r="4"/><circle cx="430" cy="345" r="4"/><circle cx="470" cy="375" r="4"/>
+    <circle cx="510" cy="404" r="4"/><circle cx="552" cy="438" r="4"/><circle cx="592" cy="470" r="4"/>
+  </g>
+  <g fill="#B33B2F">
+    <circle cx="150" cy="152" r="4"/><circle cx="186" cy="176" r="4"/><circle cx="221" cy="196" r="4"/>
+    <circle cx="257" cy="215" r="4"/><circle cx="296" cy="234" r="4"/><circle cx="336" cy="255" r="4"/>
+    <circle cx="376" cy="276" r="4"/><circle cx="416" cy="297" r="4"/><circle cx="456" cy="318" r="4"/>
+    <circle cx="496" cy="339" r="4"/><circle cx="536" cy="360" r="4"/>
+  </g>
+
+  <path d="M340 328C366 328 390 321 414 307" stroke="#6A6A6A" stroke-width="2" fill="none"/>
+  <polygon points="411,299 421,305 411,311" fill="#6A6A6A"/>
+  <text x="178" y="374" class="anno">Transformers</text>
+
+  <path d="M425 240C434 216 447 198 470 194" stroke="#6A6A6A" stroke-width="2" fill="none"/>
+  <polygon points="468,187 478,194 468,201" fill="#6A6A6A"/>
+  <text x="425" y="186" class="anno">LSTMs</text>
+
+  <text x="500" y="314" class="legend">1 Layer</text>
+  <text x="548" y="341" class="legend">2 Layers</text>
+  <text x="505" y="366" class="legend">4 Layers</text>
+
+  <!-- Right chart axes -->
+  <line x1="790" y1="105" x2="790" y2="500" class="axis"/>
+  <line x1="790" y1="500" x2="1305" y2="500" class="axis"/>
+
+  <line x1="790" y1="130" x2="1305" y2="130" class="grid"/>
+  <line x1="790" y1="215" x2="1305" y2="215" class="grid"/>
+  <line x1="790" y1="300" x2="1305" y2="300" class="grid"/>
+  <line x1="790" y1="385" x2="1305" y2="385" class="grid"/>
+  <line x1="790" y1="470" x2="1305" y2="470" class="grid"/>
+
+  <text x="675" y="118" class="label">Per-token</text>
+  <text x="675" y="148" class="label">Test Loss</text>
+  <text x="770" y="140" class="tick">6</text>
+  <text x="770" y="225" class="tick">5</text>
+  <text x="770" y="310" class="tick">4</text>
+  <text x="770" y="395" class="tick">3</text>
+  <text x="770" y="480" class="tick">2</text>
+
+  <text x="785" y="565" class="label">Token Index in Context</text>
+  <text x="930" y="535" class="tick">10<tspan dy="-8" font-size="11">1</tspan></text>
+  <text x="1120" y="535" class="tick">10<tspan dy="-8" font-size="11">2</tspan></text>
+  <text x="1272" y="535" class="tick">10<tspan dy="-8" font-size="11">3</tspan></text>
+
+  <!-- Right chart lines -->
+  <polyline fill="none" stroke="#D05C52" stroke-width="5"
+    points="815,112 845,165 875,175 905,186 935,199 965,211 995,219 1025,231 1055,239 1085,243 1125,245 1165,246 1205,246 1245,245 1297,247"/>
+  <polyline fill="none" stroke="#5F8FBF" stroke-width="5"
+    points="815,136 845,181 875,195 905,197 935,203 965,207 995,215 1025,225 1055,234 1085,246 1125,256 1165,263 1205,267 1245,271 1297,273"/>
+  <polyline fill="none" stroke="#E9C6C3" stroke-width="5"
+    points="815,148 845,206 875,216 905,231 935,249 965,265 995,281 1025,298 1055,316 1085,329 1125,337 1165,342 1205,344 1245,345 1297,346"/>
+  <polyline fill="none" stroke="#C3D2E3" stroke-width="5"
+    points="815,153 845,221 875,246 905,266 935,281 965,297 995,311 1025,324 1055,335 1085,343 1125,350 1165,354 1205,357 1245,358 1297,359"/>
+  <polyline fill="none" stroke="#F0C9C6" stroke-width="5"
+    points="815,158 845,206 875,239 905,264 935,292 965,316 995,338 1025,359 1055,379 1085,392 1125,402 1165,406 1205,407 1245,407 1297,407"/>
+  <polyline fill="none" stroke="#CAD9E9" stroke-width="5"
+    points="815,163 845,241 875,285 905,314 935,342 965,365 995,390 1025,410 1055,427 1085,438 1125,449 1165,456 1205,461 1245,465 1297,467"/>
+
+  <text x="1290" y="220" class="label">Parameters:</text>
+  <text x="1310" y="246" class="legend">400K</text>
+  <text x="1310" y="273" class="legend">400K</text>
+  <text x="1310" y="347" class="legend">2M</text>
+  <text x="1310" y="360" class="legend">3M</text>
+  <text x="1310" y="407" class="legend">200M</text>
+  <text x="1310" y="467" class="legend">300M</text>
+</svg>
