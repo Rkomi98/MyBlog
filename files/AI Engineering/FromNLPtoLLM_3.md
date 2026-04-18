@@ -3,6 +3,10 @@
 <details class="post-warning">
 <summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
 
+Questo articolo è ancora in lavorazione e sotto revisione editoriale. Alcuni paragrafi potrebbero risultare incompleti o cambiare in modo significativo nelle prossime settimane.
+
+</details>
+
 ## LLM come _componenti di sistema_, non solo modelli
 
 Un moderno AI engineer sa che usare un LLM potente **"grezzo" e isolato** spesso non basta. Oggi gli LLM sono tipicamente incapsulati in architetture più ampie dove altri componenti ne mitigano i limiti e ne potenziano le capacità. Ecco i principali ruoli e integrazioni:
