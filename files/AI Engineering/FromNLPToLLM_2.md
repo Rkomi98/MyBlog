@@ -1,12 +1,5 @@
 # Dai modelli NLP classici ai più celebri LLM (Parte 2)
 
-<details class="post-warning">
-<summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
-
-Questo articolo è ancora in lavorazione e sotto revisione editoriale. Alcuni paragrafi potrebbero risultare incompleti o cambiare in modo significativo nelle prossime settimane.
-
-</details>
-
 Benvenuti alla terza puntata del percorso per diventare GeoAI engineer. In quest'articolo continuiamo a parlare di storia e ci focalizziamo su come siamo arrivati a GPT, Gemini e compagnia, e da dove siamo partiti. Ma non ci limitiamo solo a questo.
 
 Buona lettura!

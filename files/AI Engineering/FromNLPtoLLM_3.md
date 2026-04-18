@@ -1,4 +1,4 @@
-# Dai modelli NLP classici ai più celebri LLM (Parte 2)
+# Dai modelli NLP classici ai più celebri LLM (Parte 3)
 
 <details class="post-warning">
 <summary><strong>Articolo in revisione</strong> (clicca per aprire)</summary>
