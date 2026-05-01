@@ -42,7 +42,7 @@
     "headline": "LLM per GeoAI: applicazioni geospaziali, GIS e disaster response",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-05-01T00:00:00.000Z",
-    "dateModified": "2026-05-01T12:49:52.048Z",
+    "dateModified": "2026-05-01T12:55:34.441Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1420,20 +1420,26 @@
         <div class="post-toc__content">
           <ul class="post-toc__list">
     <li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#come-si-collega-tutto-questo-al-mondo-geo">
+          <a class="post-toc__link" href="#introduzione">
             <span class="post-toc__number">1</span>
-            <span class="post-toc__text">Come si collega tutto questo al mondo GEO?</span>
+            <span class="post-toc__text">Introduzione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#i-miei-esempi-preferiti">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">I miei esempi preferiti</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#llm-rag-per-report-post-terremoto">
-            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__number">2.1</span>
             <span class="post-toc__text">LLM + RAG per report post-terremoto</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#llm-agenti-per-supporto-decisionale-in-emergenza">
-            <span class="post-toc__number">1.2</span>
+            <span class="post-toc__number">2.2</span>
             <span class="post-toc__text">LLM + agenti per supporto decisionale in emergenza</span>
           </a>
           
@@ -1450,7 +1456,13 @@
 <p>Questo articolo è ancora in lavorazione e sotto revisione editoriale. Alcuni paragrafi potrebbero risultare incompleti o cambiare in modo significativo nelle prossime settimane.</p>
 </details>
 
-<h2 id="come-si-collega-tutto-questo-al-mondo-geo">Come si collega tutto questo al mondo GEO?</h2>
+<h2 id="introduzione">Introduzione</h2>
+<p>Negli ultimi mesi si parla tantissimo di LLM, agenti, sistemi multimodali e strumenti di ragionamento. Molto spesso, però, il discorso resta sospeso in aria: si mostrano demo impressionanti, ma poi non è così chiaro dove queste tecnologie diventino davvero utili fuori da una chat generica (e generalista).</p>
+<p>È proprio qui che, secondo me, il mondo geospaziale diventa interessante sul serio. Perché quando entriamo nel campo delle mappe, delle immagini satellitari, dei dati territoriali, del monitoraggio ambientale o della risposta alle emergenze, il linguaggio da solo non basta. Serve metterlo in relazione con coordinate, strati informativi, serie temporali, rilievi da satellite, banche dati geografiche e vincoli che provengono dal mondo comune. In altre parole, bisogna smettere di vedere l&#39;LLM come un oggetto isolato e iniziare a trattarlo come un componente dentro un sistema più ampio.</p>
+<p>In questo articolo voglio quindi ragionare in modo semplice ma concreto su <strong>che cosa possono fare i modelli di linguaggio nel mondo geospaziale?</strong> Immagino vari scenari possibili, come report post-evento, supporto decisionale, lettura di risultati da telerilevamento, collegamento tra fonti testuali e dati cartografici, interfacce più intelligenti sopra strumenti GIS già esistenti.</p>
+<p>Il messaggio di fondo è abbastanza netto. Nel mondo GEO gli LLM possono essere molto utili, ma raramente sono il cuore quantitativo dell&#39;analisi. Non sono loro a dover segmentare con precisione un&#39;immagine radar, stimare l&#39;estensione di un&#39;alluvione al metro o sostituire un algoritmo geospaziale specialistico. Il loro valore, piuttosto, emerge quando devono <strong>mettere in relazione informazioni diverse, sintetizzarle, spiegarle bene e renderle interrogabili in modo naturale</strong>.</p>
+<p>Per questo motivo, secondo me, ha senso parlare di <strong>integrazione tra LLM e pipeline geospaziali</strong>. Ed è proprio questo il filo che seguiremo nelle sezioni che vengono.</p>
+<h2 id="i-miei-esempi-preferiti">I miei esempi preferiti</h2>
 <p>Veniamo ora al caso d&#39;uso che mi interessa di più, ovvero applicare queste tecnologie in ambito geospaziale e di risposta a disastri, come terremoti, calamità naturali, ecc.</p>
 <p>Questo settore combina dati <em>multi-modali</em> (testi, mappe, immagini satellitari, sensori) e richiede sia <strong>analisi quantitative precise</strong> (es. rilevare danni da immagini) sia <strong>capacità di sintesi e ragionamento</strong> (es. redigere un rapporto di situazione, fare inferenze su rischi). Gli LLM possono giocare un ruolo prezioso, ma <strong>devono essere integrati correttamente</strong> con i flussi geospaziali esistenti. Vediamo alcuni scenari.</p>
 <h3 id="llm-rag-per-report-post-terremoto">LLM + RAG per report post-terremoto</h3>
