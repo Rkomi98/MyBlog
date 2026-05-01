@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLM per GeoAI: applicazioni geospaziali, GIS e disaster response | Mirko Calcaterra</title>
+  <meta name="description" content="LLM per GeoAI: applicazioni geospaziali, GIS e disaster response Come si collega tutto questo al mondo GEO? Veniamo ora al caso d&#39;uso che mi interessa di più, ovvero applicare queste tecnologie in ambito geospaziale e di risposta a disastri, come terremoti, c…">
+  <meta name="keywords" content="LLM, GeoAI, GIS, Geospatial AI, Disaster Response, Remote Sensing, Mirko Calcaterra, geospaziale">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/llm-per-geoai/">
+  <meta property="og:title" content="LLM per GeoAI: applicazioni geospaziali, GIS e disaster response">
+  <meta property="og:description" content="LLM per GeoAI: applicazioni geospaziali, GIS e disaster response Come si collega tutto questo al mondo GEO? Veniamo ora al caso d&#39;uso che mi interessa di più, ovvero applicare queste tecnologie in ambito geospaziale e di risposta a disastri, come terremoti, c…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-05-01T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="GeoAI">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="LLM per GeoAI: applicazioni geospaziali, GIS e disaster response">
+  <meta property="twitter:description" content="LLM per GeoAI: applicazioni geospaziali, GIS e disaster response Come si collega tutto questo al mondo GEO? Veniamo ora al caso d&#39;uso che mi interessa di più, ovvero applicare queste tecnologie in ambito geospaziale e di risposta a disastri, come terremoti, c…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "LLM per GeoAI: applicazioni geospaziali, GIS e disaster response",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-05-01T00:00:00.000Z",
+    "dateModified": "2026-05-01T12:43:16.906Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "LLM per GeoAI: applicazioni geospaziali, GIS e disaster response Come si collega tutto questo al mondo GEO? Veniamo ora al caso d&#39;uso che mi interessa di più, ovvero applicare queste tecnologie in ambito geospaziale e di risposta a disastri, come terremoti, c…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      position: relative;
+      font-family: 'Charter', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --bg-card-strong: rgba(11, 17, 32, 0.92);
+      --border: rgba(148, 163, 184, 0.2);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --surface: #1e293b;
+      --shadow-lg: 0 28px 60px -36px rgba(2, 6, 23, 0.9);
+      --code-inline-bg: rgba(30, 41, 59, 0.88);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.2);
+      --code-shadow: 0 12px 32px rgba(2, 6, 23, 0.45);
+      --code-text: #cbd5e1;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f6f8f7;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(255, 255, 255, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #059669;
+      --accent-strong: #047857;
+      --surface: #f1f5f9;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.16);
+      --code-inline-bg: rgba(226, 232, 240, 0.9);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.24);
+      --code-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 16;
+      width: 100%;
+      height: 2px;
+      background: rgba(148, 163, 184, 0.25);
+    }
+    .reading-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #22c55e 55%, #2dd4bf 100%);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+      transition: width 0.1s ease-out;
+    }
+    .site-header__inner,
+    .site-nav,
+    .lang-btn,
+    .theme-toggle,
+    .post-toc,
+    footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-hero__title,
+    .post-body h2,
+    .post-body h3,
+    .post-body h4,
+    .post-body .post-warning summary,
+    .post-toc__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(5, 150, 105, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(5, 150, 105, 0.08);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(15, 23, 42, 0.55) 70%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 22%, rgba(16, 185, 129, 0.18) 0%, transparent 56%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.13);
+      color: var(--accent-strong);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__author {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--accent);
+    }
+    .post-hero__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      object-fit: cover;
+      background: var(--surface);
+    }
+    .post-hero__author-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .post-hero__author-name {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .post-hero__author-meta {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.12rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body ul li::marker,
+    .post-body ol li::marker {
+      color: var(--accent);
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body .inline-note {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.15rem;
+    }
+    .post-body .inline-note__trigger {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      margin: 0 0 0 0.08rem;
+      vertical-align: super;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
+    }
+    .post-body .inline-note__trigger:hover {
+      color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
+    }
+    .post-body .inline-note__popup {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.6rem);
+      width: min(360px, 80vw);
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-lg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      z-index: 8;
+      display: none;
+    }
+    .post-body .inline-note__popup strong {
+      color: var(--text-primary);
+    }
+    .post-body .inline-note--open .inline-note__popup {
+      display: block;
+    }
+    body[data-theme="light"] .post-body .inline-note__popup {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 0.75rem 1.2rem;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      background: rgba(30, 41, 59, 0.45);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.98rem;
+      font-style: italic;
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--accent-strong);
+      padding: 0.15rem 0.42rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+    }
+    .post-code-card pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--code-text);
+    }
+    .post-body pre {
+      margin: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
+    .post-body .mermaid-diagram {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-body .mermaid-diagram pre.mermaid {
+      margin: 0;
+    }
+    .post-body .mermaid-diagram__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .mermaid-diagram__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .mermaid-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 1000;
+    }
+    .mermaid-overlay--visible {
+      display: flex;
+    }
+    .mermaid-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1280px, 94vw);
+      max-height: 88vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .mermaid-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      z-index: 2;
+    }
+    .mermaid-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .mermaid-overlay__scroll {
+      overflow: auto;
+      max-height: 88vh;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .mermaid-overlay__scroll svg {
+      max-width: none;
+      height: auto;
+    }
+    body[data-theme="light"] .post-body .mermaid-diagram__expand {
+      background: rgba(248, 250, 252, 0.92);
+    }
+    body[data-theme="light"] .mermaid-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .mermaid-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-code-card pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: var(--code-text);
+    }
+    .post-code-card {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-code-card__language {
+      position: absolute;
+      right: 1rem;
+      top: -0.62rem;
+      z-index: 2;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      color: var(--accent-strong);
+      text-transform: uppercase;
+    }
+    .post-code-card__frame {
+      background: var(--code-block-bg);
+      border-radius: 12px;
+      border: 1px solid var(--code-border);
+      box-shadow: var(--code-shadow);
+      overflow: hidden;
+    }
+    .post-code-card__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.48rem 0.78rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-code-card__window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      flex: 0 0 auto;
+    }
+    .post-code-card__window-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .post-code-card__window-dot--red {
+      background: rgba(248, 113, 113, 0.25);
+      border-color: rgba(248, 113, 113, 0.6);
+    }
+    .post-code-card__window-dot--yellow {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .post-code-card__window-dot--green {
+      background: rgba(74, 222, 128, 0.22);
+      border-color: rgba(74, 222, 128, 0.65);
+    }
+    .post-code-card__filename {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-code-card__body {
+      padding: 0.95rem 1rem;
+      overflow-x: auto;
+    }
+    .post-code-card__body::-webkit-scrollbar {
+      height: 6px;
+    }
+    .post-code-card__body::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #c084fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #4ade80;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #fb923c;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .code-copy-btn {
+      margin-left: auto;
+      background: transparent;
+      color: var(--text-muted);
+      border: 0;
+      border-radius: 999px;
+      padding: 0.25rem 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .code-copy-btn__icon {
+      font-size: 0.88rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      color: var(--text-muted);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 2.2rem 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: var(--surface);
+      opacity: 0.88;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .article-figure {
+      margin: 2.4rem 0;
+    }
+    .post-body .article-figure img {
+      width: 100%;
+      display: block;
+      margin: 0;
+    }
+    .post-body .article-figure figcaption {
+      margin-top: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .post-body .article-figure figcaption strong {
+      color: var(--text-primary);
+    }
+    .post-body .article-figure--wide {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1500px, calc(100vw - 4rem));
+      max-width: none;
+    }
+    body[data-theme="light"] .post-body .article-figure figcaption {
+      color: var(--text-muted);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+        font-size: 1.04rem;
+      }
+      .post-body .article-figure--wide {
+        left: auto;
+        transform: none;
+        width: 100%;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-hero__author {
+        gap: 0.7rem;
+      }
+      .post-hero__author-meta {
+        font-size: 0.78rem;
+      }
+      .post-code-card__header {
+        padding: 0.45rem 0.6rem;
+      }
+      .post-code-card__filename {
+        max-width: 36vw;
+      }
+      .code-copy-btn__text {
+        display: none;
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .post-body .mermaid-diagram__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+      .mermaid-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      const labels = document.documentElement.lang === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full screen', close: 'Close' };
+      let overlay = null;
+      let overlayScroll = null;
+
+      const ensureOverlay = () => {
+        if (overlay) {
+          return;
+        }
+        overlay = document.createElement('div');
+        overlay.className = 'mermaid-overlay';
+        overlay.innerHTML =
+          '<div class="mermaid-overlay__content">' +
+            '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
+            '<div class="mermaid-overlay__scroll"></div>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
+        const closeButton = overlay.querySelector('.mermaid-overlay__close');
+        closeButton?.addEventListener('click', () => {
+          overlay.classList.remove('mermaid-overlay--visible');
+          document.body.classList.remove('no-scroll');
+          if (overlayScroll) {
+            overlayScroll.innerHTML = '';
+          }
+        });
+        overlay.addEventListener('click', (event) => {
+          if (event.target === overlay) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+      };
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      await mermaid.run({ querySelector: '.mermaid' });
+
+      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+        if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-diagram';
+        diagram.parentNode.insertBefore(wrapper, diagram);
+        wrapper.appendChild(diagram);
+
+        const expandButton = document.createElement('button');
+        expandButton.type = 'button';
+        expandButton.className = 'mermaid-diagram__expand';
+        expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
+        expandButton.setAttribute('aria-label', labels.expand);
+        expandButton.addEventListener('click', () => {
+          ensureOverlay();
+          if (!overlay || !overlayScroll) {
+            return;
+          }
+          overlayScroll.innerHTML = '';
+          const clone = diagram.cloneNode(true);
+          overlayScroll.appendChild(clone);
+          overlay.classList.add('mermaid-overlay--visible');
+          document.body.classList.add('no-scroll');
+        });
+        wrapper.appendChild(expandButton);
+      });
+    }
+  </script>
+</head>
+<body data-theme="dark">
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="reading-progress-bar"></div>
+  </div>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🛰️</div>
+        <span class="post-hero__category">GeoAI</span>
+        <h1 class="post-hero__title">LLM per GeoAI: applicazioni geospaziali, GIS e disaster response</h1>
+        <div class="post-hero__author">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
+          <div class="post-hero__author-text">
+            <span class="post-hero__author-name">Mirko Calcaterra</span>
+            <span class="post-hero__author-meta">1 maggio 2026 • 8 min</span>
+          </div>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#come-si-collega-tutto-questo-al-mondo-geo">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Come si collega tutto questo al mondo GEO?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#llm-rag-per-report-post-terremoto">
+            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__text">LLM + RAG per report post-terremoto</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#llm-agenti-per-supporto-decisionale-in-emergenza">
+            <span class="post-toc__number">1.2</span>
+            <span class="post-toc__text">LLM + agenti per supporto decisionale in emergenza</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <h2 id="come-si-collega-tutto-questo-al-mondo-geo">Come si collega tutto questo al mondo GEO?</h2>
+<p>Veniamo ora al caso d&#39;uso che mi interessa di più, ovvero applicare queste tecnologie in ambito geospaziale e di risposta a disastri, come terremoti, calamità naturali, ecc.</p>
+<p>Questo settore combina dati <em>multi-modali</em> (testi, mappe, immagini satellitari, sensori) e richiede sia <strong>analisi quantitative precise</strong> (es. rilevare danni da immagini) sia <strong>capacità di sintesi e ragionamento</strong> (es. redigere un rapporto di situazione, fare inferenze su rischi). Gli LLM possono giocare un ruolo prezioso, ma <strong>devono essere integrati correttamente</strong> con i flussi geospaziali esistenti. Vediamo alcuni scenari.</p>
+<h3 id="llm-rag-per-report-post-terremoto">LLM + RAG per report post-terremoto</h3>
+<p>Immagina dopo un forte terremoto di dover creare rapidamente un rapporto che riassuma i danni, le zone più colpite, lo stato delle infrastrutture e possibili azioni. Si dispone di varie fonti: relazioni dei vigili del fuoco, post sui social geolocalizzati, immagini satellitari con analisi dei crolli, database GIS con edifici e popolazione.</p>
+<p>Un LLM da solo non <em>sa</em> nulla del terremoto (a meno di aver addestrato su eventi passati, ma non sul nuovo). Però potremmo usarlo come <strong>motore di generazione linguistica</strong> alimentandolo con i dati specifici dell&#39;evento. Con un approccio RAG, il sistema può recuperare ad esempio: <em>&quot;rapporti testuali dei vigili del fuoco nelle ultime 12h&quot;</em>, <em>&quot;risultati di analisi automatica da immagini (X edifici crollati in area Y)&quot;</em>, <em>&quot;elenchi di strade bloccate da mappe live&quot;</em>. Queste informazioni vengono inserite (magari in forma già riassunta) nel prompt, e l&#39;LLM viene incaricato di redigere un <strong>resoconto coerente e leggibile</strong> per, ad esempio, le autorità. L&#39;LLM eccelle nel <strong>collegare i punti</strong>: può prendere l&#39;elenco di fatti e trasformarlo in una narrazione: &quot;Nella zona nord della città (Quartiere XX), risultano crollati circa 30 edifici, con le maggiori concentrazioni di danni lungo Via Alfa e Via Beta. Le squadre di soccorso hanno tratto in salvo 12 persone dalle macerie e segnalano almeno 5 dispersi. Il ponte sul fiume è inagibile, isolando temporaneamente la frazione Gamma...&quot;.</p>
+<p>Senza LLM, un operatore umano dovrebbe manualmente scrivere questo sommario integrando tante fonti; con l&#39;LLM, l&#39;operatore può concentrarsi su verificare e correggere, invece di scrivere da zero. </p>
+<blockquote>
+<p><strong>Importante:</strong> come visto, qui l&#39;LLM va collegato (<em>grounded</em>) ai dati reali: non vogliamo che inventi numeri di dispersi! Dunque forniamo cifre e dettagli precisi via RAG, e magari chiediamo al modello di citare le fonti (se l&#39;output è solo per uso interno). In tal modo l&#39;LLM fa bene ciò che sa fare (linguaggio e ragionamento testuale) ma non agisce &quot;in assenza di informazioni&quot;.</p>
+</blockquote>
+<h3 id="llm-agenti-per-supporto-decisionale-in-emergenza">LLM + agenti per supporto decisionale in emergenza</h3>
+<p>In situazioni di crisi, un decisore potrebbe interrogare un sistema AI con domande complesse, tipo <em>&quot;Dove dovremmo concentrare le squadre USAR in base alle segnalazioni e ai dati di danno?&quot;</em>. Rispondere richiede: capire la domanda (compito linguistico), avere dati (geospaziali e testuali), ragionare combinando <em>criteri</em> (ad esempio: squadre USAR = ricerca e soccorso in macerie, quindi servono dove edifici crollati e popolazione intrappolata potenziale è maggiore). Un singolo modello statico farebbe fatica. Ma possiamo costruire un <strong>agente LLM</strong> dotato di strumenti: uno che query un database GIS per numero di edifici crollati per zona, uno che legge gli ultimi messaggi SOS arrivati, uno che consulta il registro di squadre già dispiegate. L&#39;agente può fare un piano tipo: 1) ottenere mappa di densità crolli; 2) ottenere elenco segnalazioni di persone intrappolate; 3) incrociare per zone; 4) proporre priorità. I passi 1) e 2) li fa tramite tool (ad esempio chiamando un&#39;API geospatiale che ritorna dati, o eseguendo una query su un knowledge graph di emergenza). Poi l&#39;LLM stesso può generare una risposta tipo: <em>&quot;Le zone con maggior bisogno di USAR sembrano A e B. Nel quartiere A (20 edifici crollati, ~50 persone sotto macerie segnalate) al momento c&#39;è solo una squadra operativa, suggerisco di inviarne almeno altre due. Nel quartiere B (15 crolli, 30 persone segnalate) la situazione è simile. Le zone C e D hanno meno crolli o già sufficiente copertura.&quot;</em>. Questo è <strong>supporto decisionale</strong>: l&#39;LLM non prende la decisione, ma fornisce un&#39;analisi ragionata e leggibile rapidamente, integrando dati disparati (GIS + segnalazioni + stato risorse). Ciò permette al responsabile di confermare e agire molto più velocemente. Ancora, l&#39;LLM qui funge da <strong>collettore intelligente</strong>: manipola i dati con ragionamenti e li presenta efficacemente.</p>
+<ul>
+<li><strong>LLM come &quot;interfaccia cognitiva&quot; sopra modelli di Remote Sensing (RS):</strong> In analisi di immagini satellitari o telerilevamento, spesso otteniamo risultati tecnici: mappe di classificazione, matrici di confusione, percentuali di danno per cella, ecc. Un LLM può aiutare a tradurre questi output grezzi in <strong>insight umanamente fruibili</strong>. Per esempio, un modello di visione computazionale elabora immagini post-disastro e produce come output shapefile con poligoni delle aree allagate, e un indicatore di gravità per area. Un LLM potrebbe prendere questi risultati (convertiti in testo strutturato) e generare un <strong>briefing</strong>: <em>&quot;Le analisi satellitari indicano estese inondazioni lungo il fiume Delta: circa 45 km² di territorio risultano allagati. Particolarmente colpiti i comuni di X e Y, dove l&#39;acqua ha coperto rispettivamente ~30% e ~45% dell&#39;area urbana. L&#39;area industriale di Y è interamente sommersa con possibile rilascio di sostanze in acqua. Le infrastrutture principali interessate includono la SP123 e la ferrovia Z, entrambe interrotte.&quot;</em>. Osserva quante deduzioni e aggregazioni sono incluse: l&#39;LLM può descrivere l&#39;area totale (sommando poligoni), convertire quell&#39;informazione in frase di impatto, identificare comuni dentro i poligoni (incrociando coordinate con nomi via un tool GIS nel backend), menzionare infrastrutture toccate (se ha dati vettoriali su strade ferrovie, può incrociarli). Insomma, lo usiamo come un <em>report generator intelligente</em> che sta sopra ai modelli numerici. <strong>Cosa non deve fare l&#39;LLM?</strong> Non deve fare <em>lui</em> la segmentazione sull&#39;immagine! Per riconoscere pixel allagati c&#39;è un modello di visione specialistico che lavora su raster e magari utilizza reti convolutive o altre architetture. L&#39;LLM non ha la percezione visiva diretta (a meno di usare un modello multimodale, ma attualmente per compiti di precisione i modelli dedicati sono migliori). Quindi la regola: lasciare ai modelli RS il lavoro &quot;pixel-wise&quot; quantitativo (sono addestrati per alta accuratezza su quello), e usare l&#39;LLM per <strong>collegare quei risultati con la conoscenza e presentarli</strong>. Un LLM può ad esempio spiegare perché un certo pattern di allagamento è pericoloso (&quot;quest&#39;area era già franosa, l&#39;alluvione la rende instabile&quot;), cosa che un modello RS puro non fa.</li>
+</ul>
+<p><strong>Multimodalità (testo ↔ immagini ↔ geospaziale):</strong> Vale la pena notare che la tendenza attuale è verso modelli in grado di ingerire più forme di dati. Ad esempio <em>GPT-4</em> ha capacità visive: puoi dargli un&#39;immagine e lui produce testo su di essa. Ci sono modelli come <strong>CLIP</strong> e <strong>BLIP</strong> che collegano visione e linguaggio. Per dati geospaziali, emergono lavori che integrano grafi georeferenziati con LLM (es. GraphRAG nel geospaziale). Quindi in un futuro non lontano potresti avere un <em>LLM multimodale</em> che prende direttamente sia mappe che testi. Già oggi servizi come <strong>Google&#39;s PaLM-E</strong> puntano a unire visione, linguaggio e robotica. Nel contesto disastri, immagina di dare al modello sia la mappa del danno sia i tweet localizzati: un modello multimodale potrebbe combinare direttamente e spiegarti la situazione. Siamo agli inizi in questo - per ora, l&#39;approccio modulare (modello visivo + LLM) è più pratico. Ma tieni d&#39;occhio le ricerche, perché strumenti come <strong>Imagen (Google)</strong> o <strong>Kosmos-1 (Microsoft)</strong> stanno gettando ponti tra dati visivi e LLM.</p>
+<p><strong>Cosa un LLM <em>non deve fare</em> nel geospaziale/DR:</strong> come già accennato, non affidare a un LLM la <strong>precisione tecnica</strong> che richiede algoritmi dedicati. Se devi ottenere la latitudine/longitudine di un indirizzo, usa un geocoding API, non chiedere al modello di inventarsela! Se devi calcolare la magnitudo di un terremoto dai dati sismografici, servono formule fisiche, non il &quot;parere&quot; di un LLM. Gli LLM non hanno garanzie di accuratezza numerica né rigore scientifico. Quindi le parti <em>core</em> di analisi (rilevare danno, calcolare estensioni, contare esatti) vanno fatte con metodi deterministici o modelli ML specialistici. LLM eccelle invece in: <strong>sintesi, correlazione di alto livello, comunicazione, Q&amp;A</strong>. Inoltre è bravissimo a colmare gap di knowledge generale: se in un rapporto devi anche spiegare concetti (es: cos&#39;è una faglia sismica, o quali sono gli effetti del liquefacimento del suolo) l&#39;LLM può generare quei paragrafi attingendo alla sua conoscenza addestrata.</p>
+<p><strong>Integrazione con pipeline GEO esistenti:</strong> Potresti immaginare il tuo sistema come: pipeline di data ingestion (satelliti, sensor, open data) → modelli analitici (CV per immagini, GIS computations, ecc.) → <strong>layer LLM</strong> per l&#39;output all&#39;utente. In fase di design, definisci bene l&#39;API tra il layer analitico e l&#39;LLM. Spesso conviene strutturare i dati in un formato testuale comprensibile al modello (es. bullet point o JSON), includendo anche spiegazioni. Ad esempio, invece di buttare raw numbers, potresti dire: &quot;Strada X: interrotta (ponte crollato)&quot;. Così l&#39;LLM sa già che la strada X è interrotta e perché, e può facilmente includerlo nel suo racconto, magari ragionando &quot;ponte crollato → isolato quel comune a nord&quot;. Se dessi solo &quot;strada X status: 0&quot; dovrebbe inferire il significato di 0, molto più difficile. Quindi fare un po&#39; di <strong>data preprocessing per LLM</strong> è utile: convertire i risultati tecnici in frasi o dichiarazioni semplici.</p>
+<p><strong>Validazione incrociata:</strong> in ambiti safety-critical (disastri lo sono), un LLM non deve essere l&#39;unica voce. Si possono usare <em>ensemble</em> di approcci: far generare il rapporto all&#39;LLM, poi farlo rileggere a un altro LLM chiedendo di evidenziare contraddizioni o possibili errori, e infine avere un human-in-the-loop (un operatore) che verifica punti chiave. Oppure generare due versioni (magari con temperature diverse o prompt diversi) e confrontare. Insomma, usare l&#39;LLM come assistente, non come oracolo.</p>
+<p>In conclusione su GEO &amp; Disaster Response: un LLM può fungere da <strong>collettore intelligente e comunicatore</strong> sopra i dati geospaziali. Pensalo come un <strong>analista virtuale</strong> che conosce un po&#39; di tutto (grazie al training generale) e che può essere istruito a usare i tuoi dati specifici per produrre analisi e report. Ti libera dal dover manualmente interpretare ogni mappa e ogni tabella, proponendoti un quadro integrato. Ma tu come ingegnere predisponi l&#39;ecosistema: modelli specialistici per estrarre info dai dati grezzi, database ben organizzati, e poi l&#39;LLM opportunamente imbrigliato (prompt mirati, RAG, tool) per cucire il tutto. Così sfrutti il meglio dei due mondi - accuratezza quantitativa dei modelli geo e <em>intelligenza linguistica</em> degli LLM.</p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/llm-per-geoai/index.html";
+    (function() {
+      const body = document.body;
+      const readingProgressBar = document.getElementById('reading-progress-bar');
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
+      const inlineNotes = Array.from(document.querySelectorAll('.post-body .inline-note'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      const codeFileExtensions = {
+        bash: 'sh',
+        shell: 'sh',
+        sh: 'sh',
+        zsh: 'zsh',
+        powershell: 'ps1',
+        python: 'py',
+        py: 'py',
+        javascript: 'js',
+        js: 'js',
+        typescript: 'ts',
+        ts: 'ts',
+        json: 'json',
+        html: 'html',
+        css: 'css',
+        scss: 'scss',
+        sass: 'sass',
+        markdown: 'md',
+        md: 'md',
+        yaml: 'yml',
+        yml: 'yml',
+        toml: 'toml',
+        dockerfile: 'dockerfile',
+        sql: 'sql',
+        c: 'c',
+        cpp: 'cpp',
+        csharp: 'cs',
+        java: 'java',
+        go: 'go',
+        rust: 'rs',
+        r: 'r',
+        swift: 'swift',
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function normaliseCodeLanguage(codeElement) {
+        if (!codeElement || !codeElement.classList) {
+          return '';
+        }
+        const languageClass = Array.from(codeElement.classList).find((className) => className.startsWith('language-'));
+        if (!languageClass) {
+          return '';
+        }
+        return languageClass.replace(/^language-/, '').trim().toLowerCase();
+      }
+      function formatCodeLanguageLabel(language) {
+        if (!language) {
+          return 'TEXT';
+        }
+        if (language.length <= 4) {
+          return language.toUpperCase();
+        }
+        return language.charAt(0).toUpperCase() + language.slice(1);
+      }
+      function buildCodeFilename(language) {
+        const extension = codeFileExtensions[language] || (language ? language : 'txt');
+        return 'snippet.' + extension;
+      }
+      function updateReadingProgress() {
+        if (!readingProgressBar) {
+          return;
+        }
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+        );
+        const maxScrollable = Math.max(1, documentHeight - viewportHeight);
+        const progress = Math.min(100, Math.max(0, (scrollTop / maxScrollable) * 100));
+        readingProgressBar.style.width = progress.toFixed(2) + '%';
+      }
+      function closeInlineNotes() {
+        inlineNotes.forEach((note) => {
+          note.classList.remove('inline-note--open');
+          const trigger = note.querySelector('.inline-note__trigger');
+          if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      function initInlineNotes() {
+        if (!inlineNotes.length) {
+          return;
+        }
+        inlineNotes.forEach((note, index) => {
+          const trigger = note.querySelector('.inline-note__trigger');
+          const popup = note.querySelector('.inline-note__popup');
+          if (!trigger || !popup) {
+            return;
+          }
+          const popupId = popup.id || ('inline-note-popup-' + index);
+          popup.id = popupId;
+          trigger.setAttribute('aria-controls', popupId);
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const isOpen = note.classList.contains('inline-note--open');
+            closeInlineNotes();
+            if (!isOpen) {
+              note.classList.add('inline-note--open');
+              trigger.setAttribute('aria-expanded', 'true');
+            }
+          });
+          popup.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
+        });
+        document.addEventListener('click', closeInlineNotes);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true' || pre.closest('.post-code-card')) {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const language = normaliseCodeLanguage(code);
+          const languageLabel = formatCodeLanguageLabel(language);
+          const filenameLabel = buildCodeFilename(language);
+          const wrapper = document.createElement('div');
+          wrapper.className = 'post-code-card';
+          wrapper.innerHTML =
+            '<div class="post-code-card__language">' + languageLabel + '</div>' +
+            '<div class="post-code-card__frame">' +
+              '<div class="post-code-card__header">' +
+                '<div class="post-code-card__window-controls" aria-hidden="true">' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--red"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--yellow"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--green"></span>' +
+                '</div>' +
+                '<span class="post-code-card__filename">' + filenameLabel + '</span>' +
+              '</div>' +
+              '<div class="post-code-card__body"></div>' +
+            '</div>';
+          const frame = wrapper.querySelector('.post-code-card__frame');
+          const header = wrapper.querySelector('.post-code-card__header');
+          const codeBody = wrapper.querySelector('.post-code-card__body');
+          if (!frame || !header || !codeBody) {
+            return;
+          }
+          pre.parentNode.insertBefore(wrapper, pre);
+          codeBody.appendChild(pre);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          header.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          updateReadingProgress();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+          closeInlineNotes();
+        }
+      });
+      enhanceTables();
+      initInlineNotes();
+      enhanceCodeBlocks();
+      initToc();
+      applyTheme(initialTheme);
+      updateReadingProgress();
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', updateReadingProgress, { passive: true });
+    })();
+  </script>
+</body>
+</html>
