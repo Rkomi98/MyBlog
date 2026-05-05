@@ -1,4 +1,4 @@
-# LLM per GeoAI: applicazioni geospaziali, GIS e disaster response
+# LLM per GeoAI: applicazioni geospaziali
 
 ## Introduzione
 
