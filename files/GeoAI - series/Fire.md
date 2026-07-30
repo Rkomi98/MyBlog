@@ -100,10 +100,6 @@ Ho creato un piccolo simulatore che confronta come cambia la dimensione del pixe
 
 La scelta del sensore aggiunge un altro compromesso. I satelliti polari, come quelli che trasportano MODIS e VIIRS, offrono più dettaglio ma osservano lo stesso territorio durante determinati passaggi dei satelliti. I satelliti geostazionari, invece, mantengono lo sguardo sulla stessa porzione del pianeta e aggiornano la scena molto più spesso, accettando pixel più grandi.
 
-![Schema qualitativo del compromesso fra risoluzione spaziale e frequenza di osservazione](/Assets/fire-assets/images/03-compromesso-sensori.png)
-
-*Le posizioni nello schema sono qualitative. La prestazione effettiva dipende da sensore, orbita, geometria di acquisizione, copertura nuvolosa e prodotto.*
-
 Negli Stati Uniti il **Next Generation Fire System** analizza le immagini dei satelliti GOES. NOAA dichiara che [il sistema può generare un avviso anche entro un minuto dal momento in cui l’energia del fuoco raggiunge il satellite](https://prod-01-alb-www-noaa.woc.noaa.gov/news-release/noaa-unveils-powerful-convergence-of-ai-and-science-with-revolutionary-next-generation-fire-system); nel 2026 l’agenzia ha inoltre aperto un [portale pubblico con rilevazioni e monitoraggio sperimentali quasi continui](https://www.nesdis.noaa.gov/data-products-research-services/wildland-fire-data-portal).
 
 Un altro modo per ridurre la latenza consiste nel portare l’elaborazione direttamente in orbita. L’applicazione **PhiFireAI** di ESA classifica le immagini di Φsat-2 distinguendo [acqua, aree sicure, cicatrici e zone interessate dal fuoco, così da evitare il download di scene prive di informazioni utili](https://www.esa.int/Applications/Observing_the_Earth/Phsat-2/AI_for_wildfire_detection). Dopo la fase di commissioning, [Φsat-2 ha iniziato a distribuire dati scientifici nel luglio 2025](https://www.esa.int/Applications/Observing_the_Earth/Phsat-2/Phsat-2_begins_science_phase_for_AI_Earth_images).
