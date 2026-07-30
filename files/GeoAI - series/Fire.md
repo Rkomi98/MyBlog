@@ -154,31 +154,13 @@ Il laboratorio interattivo qui sotto usa la stessa idea generale della figura pr
 
 ---
 
-## Rodi: undici giorni, diciotto mappe
+## Esiste una bella API europea?
 
-Per vedere la filiera completa conviene seguire un caso.
+Ma certo che sì!
 
-Il 18 luglio 2023 un incendio iniziò sull’isola di Rodi. Il Copernicus Emergency Management Service attivò il modulo di Rapid Mapping e continuò ad aggiornare i prodotti mentre il fronte attraversava la parte centro-meridionale dell’isola.
+Copernicus EMS espone un’API JSON per interrogare le attivazioni pubbliche. La documentazione generale indica [un endpoint sintetico per il dettaglio di ogni codice, con titolo, categoria, paesi, centroide, stato e numero di prodotti](https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/). Per le attivazioni Rapid Mapping rimane disponibile anche [una risposta estesa con aree di interesse, immagini sorgente, statistiche, geometrie, layer e collegamenti ai pacchetti scaricabili](https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/emergency-response-data/). Il nuovo viewer associa inoltre a ogni scheda un collegamento OpenAPI, come [quello dell’attivazione EMSR906](https://mapping.emergency.copernicus.eu/activations/EMSR906/openapi), che useremo tra poco!
 
-Nel bilancio diffuso il 3 agosto, [l’attivazione EMSR675 risultava aver prodotto diciotto mappe per l’area di Salakos, con 17.773,5 ettari bruciati, circa 750 persone coinvolte e 737 edifici interessati](https://mapping.emergency.copernicus.eu/news/information-bulletin-169-the-copernicus-emergency-management-service-maps-some-critical-wildfires-in-greece-update/).
-
-Mesi dopo, il modulo Risk and Recovery rispose a una domanda più fine. [Il prodotto P07 dell’attivazione EMSN159 ricalcolò 17.628,7 ettari e li suddivise in 2.291,5 ettari lievemente danneggiati, 6.143,8 moderatamente danneggiati, 7.856,4 altamente danneggiati e 1.337,1 distrutti](https://mapping.emergency.copernicus.eu/activations/EMSN159/).
-
-Le due superfici differiscono leggermente, e quella differenza merita di restare visibile. Cambiano il momento dell’analisi, l’immagine disponibile, la risoluzione, la finalità del prodotto e il metodo di classificazione. Una mappa rapida deve arrivare mentre l’evento è ancora in corso. Una valutazione successiva può permettersi di osservare meglio i margini e distinguere la severità.
-
-![Timeline dei prodotti Copernicus per l'incendio di Rodi](/Assets/fire-assets/images/05-rodi-timeline.png)
-
-*Timeline originale costruita sui dati delle attivazioni EMSR675 ed EMSN159.*
-
-Anche i sensori raccontano pezzi diversi. Sentinel-2 usa bande ottiche e infrarosse per mostrare fumo, vegetazione e cicatrice. Sentinel-1 impiega il radar e può confrontare acquisizioni precedenti e successive senza dipendere dalla luce solare. [ESA ha combinato due immagini radar del 12 e del 24 luglio per mostrare una cicatrice di circa 13.000 ettari già visibile mentre l’incendio era ancora attivo](https://www.esa.int/ESA_Multimedia/Images/2023/09/Earth_from_Space_Scorched_Rhodes). Il valore è inferiore al bilancio finale proprio perché fotografia una fase precedente dell’evento.
-
-A prima vista queste sembrano rappresentazioni dello stesso rogo. Poi si sposta il focus e si vede il bandolo della matassa: una mappa serve a individuare il calore, un’altra a delimitare il fronte, un’altra ancora a stimare il danno. Trattarle come intercambiabili produce decisioni sbagliate.
-
----
-
-## Un modulo live, senza spacciare una demo per un allarme
-
-Copernicus EMS espone un’API JSON per interrogare le attivazioni pubbliche. La documentazione generale indica [un endpoint sintetico per il dettaglio di ogni codice, con titolo, categoria, paesi, centroide, stato e numero di prodotti](https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/). Per le attivazioni Rapid Mapping rimane disponibile anche [una risposta estesa con aree di interesse, immagini sorgente, statistiche, geometrie, layer e collegamenti ai pacchetti scaricabili](https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/emergency-response-data/). Il nuovo viewer associa inoltre a ogni scheda un collegamento OpenAPI, come [quello dell’attivazione EMSR906](https://mapping.emergency.copernicus.eu/activations/EMSR906/openapi).
+> Perché ho scelto proprio quello? Perché è stato un incendio che ho seguito da vicino negli ultimi giorni
 
 Il riquadro seguente prova queste interfacce in sequenza e dichiara quale risposta è riuscito a usare. Mostra soltanto metadati già pubblici, conserva l’ora dell’ultima verifica e, quando disponibile, parte da uno snapshot locale generato durante la pubblicazione. Il JRC cataloga il servizio come pubblico e ne consente il riuso con attribuzione alla Commissione europea, fatte salve eventuali opere di terzi ([scheda ufficiale del servizio e condizioni di riuso](https://data.jrc.ec.europa.eu/service/9d439213-2598-5d04-b6b3-f2882e4b0fb6)).
 
@@ -186,11 +168,11 @@ Il riquadro seguente prova queste interfacce in sequenza e dichiara quale rispos
 
 Il modulo va letto come una finestra editoriale sull’evoluzione di un prodotto geospaziale. Per allarmi, evacuazioni e decisioni di sicurezza fanno fede le comunicazioni della Protezione Civile, dei Vigili del Fuoco e delle autorità locali.
 
-La distinzione conta ancora di più dal 2026. Copernicus EMS ha annunciato che [i dati vettoriali Rapid Mapping vengono consegnati mediamente due ore prima delle mappe impaginate e che, oltre a shapefile e GeoJSON, è disponibile anche il formato GeoPackage](https://mapping.emergency.copernicus.eu/news/rapid-mapping-products-delivered-faster-and-with-new-formats/). Per una sala operativa, due ore possono essere una differenza sostanziale. Per un articolo, significano che la schermata incorporata può cambiare dopo la pubblicazione.
+> Copernicus EMS ha annunciato che [i dati vettoriali Rapid Mapping vengono consegnati mediamente due ore prima delle mappe impaginate e che, oltre a shapefile e GeoJSON, è disponibile anche il formato GeoPackage](https://mapping.emergency.copernicus.eu/news/rapid-mapping-products-delivered-faster-and-with-new-formats/). Per una sala operativa, due ore possono fare la differenza!
 
 ---
 
-## Dai pixel alla sala operativa
+## Come usa questi dati la Protezione Civile?
 
 Una previsione di propagazione acquista significato quando viene sovrapposta al territorio abitato.
 
@@ -199,12 +181,6 @@ Dove sono le case? Quali strade potrebbero essere tagliate dal fronte? Esiste un
 Qui la GeoAI smette di essere soltanto osservazione della Terra e diventa supporto alla decisione.
 
 La campagna antincendio italiana offre un esempio chiaro. Il Centro Operativo Aereo Unificato coordina la flotta statale e lo schieramento viene adattato considerando bollettini, condizioni previste, capacità regionali e richieste che arrivano dal territorio. Il modello non decide quale mezzo far decollare. Restringe il campo, ordina l’attenzione e offre una base comune a persone che devono scegliere in fretta.
-
-![Filiera GeoAI dall'osservazione alla valutazione post-incendio](/Assets/fire-assets/images/07-filiera-geoai.png)
-
-*Ogni anello eredita l’incertezza di quello precedente. Il valore nasce nel passaggio dai dati alla decisione.*
-
-Questa catena suggerisce anche un modo più serio di valutare i sistemi.
 
 Una segmentazione può ottenere un ottimo indice di intersezione sul benchmark e arrivare dopo che il fronte ha oltrepassato una strada. Un modello appena meno accurato può offrire dieci minuti in più e cambiare una decisione. Le metriche informatiche restano necessarie, ma devono incontrare quelle operative: latenza, affidabilità, falsi allarmi, eventi mancati, tempo guadagnato, risorse riallocate.
 
