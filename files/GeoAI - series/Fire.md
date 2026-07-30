@@ -1,16 +1,14 @@
 # Dove andrà il fuoco?
 
+Sono mesi che non scrivo su questo blog e mi dispiace parecchio 🫣! Però, ho deciso di tornare con una nuova serie di articoli che uscirà una volta al mese (ci proviamo).
+
 ## Come si gestiscono gli incendi con la GeoAI?
 
-*Satelliti, modelli fisici e intelligenza artificiale seguono un incendio prima, durante e dopo le fiamme. Il punto, però, è capire quale decisione riescono a migliorare.*
-
-**GeoAI sotto pressione · Episodio 1 · Agosto 2026**
-
-![Illustrazione procedurale di un incendio osservato su una superficie topografica](web/assets/images/hero-geoai-incendi.png)
-
-*Illustrazione procedurale originale. Non rappresenta un incendio reale e non contiene dati operativi.*
-
 Alle 8:18 del 29 luglio 2026, la pagina del Joint Research Centre dedicata agli incendi europei riportava [434.976 ettari bruciati nell’Unione europea dall’inizio dell’anno, 1.407 incendi rilevati e 17,98 milioni di tonnellate di anidride carbonica emesse](https://joint-research-centre.ec.europa.eu/projects-and-activities/natural-and-man-made-hazards/forest-fires/current-wildfire-situation-europe_en). Il confronto con lo stesso periodo del 2025, già indicato dal JRC come l’anno peggiore della serie, rendeva il quadro ancora più severo.
+
+![Mappa dell'anomalia mediana del Fire Weather Index](/Assets/fire-assets/fire_pred.jpg)
+
+*Sto scrivendo l’articolo il 30 luglio 2026. La carta rappresenta l’anomalia mediana del Fire Weather Index (FWI), calcolata come deviazione standard rispetto alla media storica degli ultimi trent’anni.*
 
 Prima di correre alle conclusioni, però, conviene fermarsi un momento. Le cifre di EFFIS non cadono dal cielo già definitive. La stessa pagina avverte che le stime vengono corrette quando arrivano immagini migliori; il sistema, inoltre, monitora soprattutto gli incendi di circa trenta ettari o più che coinvolgono almeno in parte superfici naturali. Persino la porzione di territorio che consideriamo “già bruciata”, insomma, rimane per qualche tempo una ricostruzione provvisoria.
 
@@ -42,7 +40,7 @@ La **pericolosità** descrive la possibilità che il fenomeno si presenti con un
 
 Le tre carte possono assomigliarsi. Le decisioni che suggeriscono cambiano.
 
-![Cinque superfici sintetiche mostrano combustibile, secchezza, pendenza, pressione umana e probabilità stimata](web/assets/images/01-dalla-vegetazione-alla-probabilita.png)
+![Cinque superfici sintetiche mostrano combustibile, secchezza, pendenza, pressione umana e probabilità stimata](/Assets/fire-assets/images/01-dalla-vegetazione-alla-probabilita.png)
 
 *Una visualizzazione didattica della fusione tra fattori geografici. La formula usata per generare l’immagine è volutamente semplificata.*
 
@@ -76,7 +74,7 @@ Nel prodotto MODIS, un hotspot rappresenta il centro di un pixel di circa un chi
 
 Con VIIRS il dettaglio migliora: [il prodotto NASA VNP14IMG_NRT rileva attività sub-pixel dentro celle nominali da 375 metri](https://www.earthdata.nasa.gov/es/data/catalog/lancemodis-vnp14img-nrt-2). La natura dell’informazione, però, rimane la stessa. Stiamo osservando un’anomalia termica, non il contorno esatto del rogo.
 
-![Confronto didattico tra un pixel MODIS e un pixel VIIRS](web/assets/images/02-hotspot-non-perimetro.png)
+![Confronto didattico tra un pixel MODIS e un pixel VIIRS](/Assets/fire-assets/images/02-hotspot-non-perimetro.png)
 
 *Il punto viene pubblicato al centro della cella che contiene l’anomalia. La sorgente termica può trovarsi in un’altra porzione del pixel.*
 
@@ -94,7 +92,7 @@ Il modulo seguente cambia la dimensione del pixel e sposta la sorgente termica a
 
 La scelta del sensore aggiunge un altro compromesso. I satelliti polari, come quelli che trasportano MODIS e VIIRS, offrono più dettaglio ma osservano lo stesso territorio durante passaggi determinati. I satelliti geostazionari mantengono invece lo sguardo sulla stessa porzione del pianeta e aggiornano la scena molto più spesso, accettando pixel più grandi.
 
-![Schema qualitativo del compromesso fra risoluzione spaziale e frequenza di osservazione](web/assets/images/03-compromesso-sensori.png)
+![Schema qualitativo del compromesso fra risoluzione spaziale e frequenza di osservazione](/Assets/fire-assets/images/03-compromesso-sensori.png)
 
 *Le posizioni nello schema sono qualitative. La prestazione effettiva dipende da sensore, orbita, geometria di acquisizione, copertura nuvolosa e prodotto.*
 
@@ -130,7 +128,7 @@ La piattaforma **WIFIRE Firemap** offre un esempio di questa integrazione. Il pr
 
 Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell’umidità o nello spotting possono produrre traiettorie divergenti. Per questo una previsione probabilistica è spesso più onesta di un unico perimetro colorato.
 
-![Tre scenari di propagazione e la probabilità ottenuta da 120 simulazioni Monte Carlo](web/assets/images/04-propagazione-probabilistica.png)
+![Tre scenari di propagazione e la probabilità ottenuta da 120 simulazioni Monte Carlo](/Assets/fire-assets/images/04-propagazione-probabilistica.png)
 
 *La figura nasce da 120 corse di un automa cellulare semplificato. Mostra un principio, non una previsione.*
 
@@ -160,7 +158,7 @@ Mesi dopo, il modulo Risk and Recovery rispose a una domanda più fine. [Il prod
 
 Le due superfici differiscono leggermente, e quella differenza merita di restare visibile. Cambiano il momento dell’analisi, l’immagine disponibile, la risoluzione, la finalità del prodotto e il metodo di classificazione. Una mappa rapida deve arrivare mentre l’evento è ancora in corso. Una valutazione successiva può permettersi di osservare meglio i margini e distinguere la severità.
 
-![Timeline dei prodotti Copernicus per l'incendio di Rodi](web/assets/images/05-rodi-timeline.png)
+![Timeline dei prodotti Copernicus per l'incendio di Rodi](/Assets/fire-assets/images/05-rodi-timeline.png)
 
 *Timeline originale costruita sui dati delle attivazioni EMSR675 ed EMSN159.*
 
@@ -176,7 +174,7 @@ Copernicus EMS espone un’API JSON per interrogare le attivazioni pubbliche. La
 
 Il riquadro seguente prova queste interfacce in sequenza e dichiara quale risposta è riuscito a usare. Mostra soltanto metadati già pubblici, conserva l’ora dell’ultima verifica e, quando disponibile, parte da uno snapshot locale generato durante la pubblicazione. Il JRC cataloga il servizio come pubblico e ne consente il riuso con attribuzione alla Commissione europea, fatte salve eventuali opere di terzi ([scheda ufficiale del servizio e condizioni di riuso](https://data.jrc.ec.europa.eu/service/9d439213-2598-5d04-b6b3-f2882e4b0fb6)).
 
-<cems-activation activation="EMSR906" snapshot="web/assets/data/emsr906-fallback.json"></cems-activation>
+<cems-activation activation="EMSR906" snapshot="/Assets/fire-assets/data/emsr906-fallback.json"></cems-activation>
 
 Il modulo va letto come una finestra editoriale sull’evoluzione di un prodotto geospaziale. Per allarmi, evacuazioni e decisioni di sicurezza fanno fede le comunicazioni della Protezione Civile, dei Vigili del Fuoco e delle autorità locali.
 
@@ -194,7 +192,7 @@ Qui la GeoAI smette di essere soltanto osservazione della Terra e diventa suppor
 
 La campagna antincendio italiana offre un esempio chiaro. Il Centro Operativo Aereo Unificato coordina la flotta statale e lo schieramento viene adattato considerando bollettini, condizioni previste, capacità regionali e richieste che arrivano dal territorio. Il modello non decide quale mezzo far decollare. Restringe il campo, ordina l’attenzione e offre una base comune a persone che devono scegliere in fretta.
 
-![Filiera GeoAI dall'osservazione alla valutazione post-incendio](web/assets/images/07-filiera-geoai.png)
+![Filiera GeoAI dall'osservazione alla valutazione post-incendio](/Assets/fire-assets/images/07-filiera-geoai.png)
 
 *Ogni anello eredita l’incertezza di quello precedente. Il valore nasce nel passaggio dai dati alla decisione.*
 
@@ -214,7 +212,7 @@ La perdita di vegetazione e le trasformazioni del suolo possono aumentare erosio
 
 Per ricostruire la severità si confrontano spesso immagini acquisite prima e dopo l’evento. Il **Normalized Burn Ratio** mette in relazione vicino infrarosso e infrarosso a onde corte, due regioni dello spettro sensibili alla vegetazione e all’umidità. La differenza tra il valore precedente e quello successivo, il dNBR, aiuta a separare aree non bruciate, danni lievi, moderati e severi. [Copernicus descrive NBR, area bruciata e Fire Radiative Power come misure complementari dell’impatto](https://climate.copernicus.eu/wildfire-impact-how-it-monitored-measured).
 
-![Esempio sintetico di NBR prima e dopo un incendio e differenza dNBR](web/assets/images/06-dnbr-severita.png)
+![Esempio sintetico di NBR prima e dopo un incendio e differenza dNBR](/Assets/fire-assets/images/06-dnbr-severita.png)
 
 *Anche qui i dati sono simulati. Le soglie di severità non sono universali e vanno calibrate con osservazioni locali.*
 

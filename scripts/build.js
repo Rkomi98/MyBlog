@@ -109,6 +109,7 @@ function mergeMetadata(posts, metadata) {
     post.meta = {
       slug: post.slug,
       icon,
+      image: matchedEntry?.image ?? null,
       category,
       categoryLabels: {
         it: categoryLabels.it ?? category,
@@ -121,6 +122,9 @@ function mergeMetadata(posts, metadata) {
       hiddenFromIndex,
       hiddenFromHome,
       showTocNumbers,
+      pageScripts: Array.isArray(matchedEntry?.pageScripts)
+        ? matchedEntry.pageScripts.filter((value) => typeof value === 'string' && value.trim())
+        : [],
     };
   }
 

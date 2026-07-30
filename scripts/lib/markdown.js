@@ -77,7 +77,7 @@ function resolveHtmlAttributePaths(markdown, relativeRoot) {
   }
 
   return markdown.replace(
-    /\b(href|src)=("([^"]*)"|'([^']*)')/gi,
+    /\b(href|src|snapshot)=("([^"]*)"|'([^']*)')/gi,
     (match, attribute, quotedValue, doubleQuotedValue, singleQuotedValue) => {
       const original = doubleQuotedValue ?? singleQuotedValue ?? '';
       const resolved = resolveRelativeLink(original, relativeRoot);

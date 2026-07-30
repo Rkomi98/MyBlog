@@ -1,941 +1,13 @@
-import path from 'path';
-import { markdownToHtml } from './markdown.js';
-
-function toPosix(input) {
-  return input.split(path.sep).join('/');
-}
-
-function joinUrl(base, ...parts) {
-  const normalisedBase = base ? toPosix(base) : '.';
-  return toPosix(path.posix.join(normalisedBase, ...parts.filter(Boolean)));
-}
-
-function formatDate(date) {
-  if (!date) {
-    return '';
-  }
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toISOString().split('T')[0];
-}
-
-function serializeForScript(value) {
-  return JSON.stringify(value)
-    .replace(/</g, '\\u003c')
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029');
-}
-
-function escapeHtml(value) {
-  if (value == null) {
-    return '';
-  }
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function buildTocTree(headings = []) {
-  const filtered = headings.filter((heading) => heading.level >= 2 && heading.level <= 4);
-  if (!filtered.length) {
-    return [];
-  }
-
-  const root = { level: 1, children: [] };
-  const stack = [root];
-
-  for (const heading of filtered) {
-    const node = { ...heading, children: [] };
-    while (stack.length && stack[stack.length - 1].level >= heading.level) {
-      stack.pop();
-    }
-    const parent = stack[stack.length - 1] ?? root;
-    parent.children.push(node);
-    stack.push(node);
-  }
-
-  assignTocNumbers(root.children, []);
-  return root.children;
-}
-
-function assignTocNumbers(nodes, prefix) {
-  nodes.forEach((node, index) => {
-    const parts = [...prefix, index + 1];
-    node.number = parts.join('.');
-    if (node.children?.length) {
-      assignTocNumbers(node.children, parts);
-    }
-  });
-}
-
-function renderTocList(nodes, isRoot = true, showNumbers = true) {
-  if (!nodes?.length) {
-    return '';
-  }
-
-  const listClass = isRoot ? 'post-toc__list' : 'post-toc__list post-toc__sublist';
-  return `<ul class="${listClass}">
-    ${nodes
-      .map((node) => {
-        const childHtml = renderTocList(node.children, false, showNumbers);
-        const depth = Math.max(0, node.level - 2);
-        return `<li class="post-toc__item" data-depth="${depth}">
-          <a class="post-toc__link" href="#${node.id}">
-            ${showNumbers ? `<span class="post-toc__number">${escapeHtml(node.number ?? '')}</span>` : ''}
-            <span class="post-toc__text">${escapeHtml(node.text)}</span>
-          </a>
-          ${childHtml}
-        </li>`;
-      })
-      .join('')}
-  </ul>`;
-}
-
-const sharedStyles = `
-  :root {
-    color-scheme: light dark;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height: 1.6;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg, #0f172a);
-    color: #0f172a;
-  }
-  @media (prefers-color-scheme: dark) {
-    body {
-      color: #e2e8f0;
-    }
-  }
-  .page {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 4rem;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-  }
-  header nav a {
-    margin-left: 1rem;
-    text-decoration: none;
-    font-weight: 500;
-    color: inherit;
-  }
-  header nav a:hover {
-    text-decoration: underline;
-  }
-`;
-
-export function renderBlogIndex({ posts, relativeRoot }) {
-  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
-  const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
-  const visiblePosts = posts.filter((post) => !post.meta?.hiddenFromIndex);
-  const postsPayload = visiblePosts.map((post) => {
-    const languages = {};
-    for (const [lang, langData] of Object.entries(post.languages)) {
-      languages[lang] = {
-        title: langData.title,
-        summary: langData.summary,
-        link: joinUrl('.', lang, post.slug, 'index.html'),
-      };
-    }
-
-    const publishedAt = post.meta?.publishedAt ?? post.updatedAt;
-    return {
-      slug: post.slug,
-      icon: post.meta?.icon ?? '📝',
-      category: post.meta?.category ?? 'General',
-      categoryLabels: post.meta?.categoryLabels ?? { it: 'Generale', en: 'General' },
-      readTime: post.meta?.readTime ?? 1,
-      publishedAt: publishedAt.toISOString(),
-      timestamp: publishedAt.getTime(),
-      languages,
-    };
-  });
-
-  const serializedPosts = serializeForScript(postsPayload);
-  const homeLink = joinUrl(relativeRoot, 'index.html');
-  const currentYear = new Date().getFullYear();
-  const baseUrl = 'https://rkomi98.github.io/MyBlog';
-  const canonicalUrl = `${baseUrl}/blog/index.html`;
-
-  return `<!DOCTYPE html>
-<html lang="it">
+<!DOCTYPE html>
+<html lang="it" translate="no">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Blog | Mirko Calcaterra</title>
-  <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
-  <meta name="keywords" content="Mirko Calcaterra, Blog, AI, Data Engineering, Geoinformatica, GeoAI, FRIA, AI Act, Python, Deep Learning">
-  <link rel="canonical" href="${canonicalUrl}">
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-9EVQ8G9W48');
-  </script>
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="blog">
-  <meta property="og:url" content="${canonicalUrl}">
-  <meta property="og:title" content="Blog | Mirko Calcaterra">
-  <meta property="og:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="og:image" content="${baseUrl}/Assets/Logo.png">
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary">
-  <meta property="twitter:title" content="Blog | Mirko Calcaterra">
-  <meta property="twitter:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="twitter:image" content="${baseUrl}/Assets/Logo.png">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "Mirko Calcaterra Blog",
-    "url": "${canonicalUrl}",
-    "description": "Blog tecnico su AI e Geoinformatica",
-    "publisher": {
-      "@type": "Person",
-      "name": "Mirko Calcaterra"
-    }
-  }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      position: relative;
-      font-family: 'Charter', Georgia, serif;
-      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
-      color: var(--text-primary);
-      transition: background 0.3s ease, color 0.3s ease;
-      --bg-primary: #0b1120;
-      --bg-secondary: #0f172a;
-      --bg-card: rgba(15, 23, 42, 0.84);
-      --border: rgba(148, 163, 184, 0.2);
-      --text-primary: #e2e8f0;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --accent: #10b981;
-      --accent-strong: #34d399;
-      --shadow-lg: 0 24px 45px -32px rgba(2, 6, 23, 0.85);
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
-    }
-    body > * {
-      position: relative;
-      z-index: 1;
-    }
-    body[data-theme="light"] {
-      --bg-primary: #f6f8f7;
-      --bg-secondary: #ffffff;
-      --bg-card: rgba(255, 255, 255, 0.96);
-      --border: rgba(148, 163, 184, 0.18);
-      --text-primary: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #64748b;
-      --accent: #059669;
-      --accent-strong: #047857;
-      --shadow-lg: 0 24px 45px -30px rgba(15, 23, 42, 0.14);
-      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
-    }
-    .site-header__inner,
-    .header-controls,
-    .lang-btn,
-    .theme-toggle,
-    .filters,
-    .filter label,
-    .filter select,
-    .post-card-meta,
-    .post-card-footer,
-    footer {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .hero h1,
-    .post-card-title {
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    header.site-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(14px);
-      background: rgba(15, 23, 42, 0.85);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.3s ease;
-    }
-    body[data-theme="light"] header.site-header {
-      background: rgba(248, 250, 252, 0.9);
-    }
-    .site-header__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1.2rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 1.05rem;
-      letter-spacing: 0.01em;
-    }
-    .logo-img {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      object-fit: cover;
-      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
-    }
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .lang-btn {
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text-primary);
-      padding: 0.45rem 0.9rem;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
-    }
-    .lang-btn:hover {
-      background: var(--accent);
-      color: #ffffff;
-      transform: translateY(-1px);
-      border-color: transparent;
-    }
-    .theme-toggle {
-      position: relative;
-      width: 52px;
-      height: 28px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      cursor: pointer;
-      padding: 0;
-      transition: background 0.3s ease, border 0.3s ease;
-      display: flex;
-      align-items: center;
-    }
-    .theme-toggle .theme-thumb {
-      position: absolute;
-      top: 50%;
-      left: 4px;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      color: #1f2937;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
-      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
-    }
-    body[data-theme="dark"] .theme-toggle .theme-thumb {
-      transform: translate(20px, -50%);
-      background: #1f2937;
-      color: #f8fafc;
-    }
-    body[data-theme="dark"] .theme-toggle {
-      background: rgba(16, 185, 129, 0.18);
-      border-color: rgba(16, 185, 129, 0.35);
-    }
-    main.page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 3.5rem 2rem 4rem;
-    }
-    .hero {
-      margin-bottom: 2.5rem;
-    }
-    .hero h1 {
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      margin: 0 0 1rem;
-      letter-spacing: -0.02em;
-    }
-    .hero p {
-      margin: 0;
-      max-width: 720px;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.7;
-    }
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-    .filter {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      min-width: 220px;
-    }
-    .filter label {
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-    .filter select {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 0.65rem 0.9rem;
-      color: var(--text-primary);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s ease, box-shadow 0.2s ease;
-    }
-    .filter select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
-    }
-    .posts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-    }
-    .post-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .post-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 32px 60px -40px rgba(15, 23, 42, 0.95);
-    }
-    .post-card-hero {
-      height: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .post-card-icon {
-      font-size: 2.8rem;
-      filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.45));
-    }
-    .post-card-body {
-      padding: 1.8rem 1.8rem 1.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-      flex: 1;
-    }
-    .post-card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 0.92rem;
-    }
-    .post-card-category {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      background: rgba(16, 185, 129, 0.16);
-      color: var(--accent);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    body[data-theme="light"] .post-card-category {
-      background: rgba(5, 150, 105, 0.12);
-    }
-    .post-card-date {
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .post-card-title {
-      margin: 0;
-      font-size: 1.35rem;
-      line-height: 1.3;
-      color: var(--text-primary);
-    }
-    .post-card-summary {
-      margin: 0;
-      color: var(--text-secondary);
-      font-size: 1rem;
-      line-height: 1.65;
-    }
-    .post-card-footer {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-    }
-    .post-card-link {
-      font-weight: 600;
-      color: var(--accent);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-    .post-card-link:hover {
-      color: var(--accent-strong);
-      transform: translateX(2px);
-    }
-    .no-results {
-      text-align: center;
-      margin-top: 3rem;
-      color: var(--text-muted);
-      font-size: 1rem;
-      display: none;
-    }
-    footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      border-top: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.35);
-    }
-    body[data-theme="light"] footer {
-      background: rgba(255, 255, 255, 0.72);
-    }
-    @media (max-width: 768px) {
-      .site-header__inner {
-        padding: 1rem 1.5rem;
-      }
-      main.page {
-        padding: 2.75rem 1.5rem 3.25rem;
-      }
-      .filters {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .filter {
-        width: 100%;
-      }
-      .post-card-body {
-        padding: 1.6rem 1.6rem 1.4rem;
-      }
-      .post-card-hero {
-        height: 120px;
-      }
-    }
-  </style>
-</head>
-<body data-theme="dark">
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a class="logo" href="${homeLink}">
-        <picture>
-          <source srcset="${logoWebpPath}" type="image/webp">
-          <source srcset="${logoPath}" type="image/png">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img" width="40" height="40">
-        </picture>
-        <span class="logo-text">Mirko Calcaterra</span>
-      </a>
-      <div class="header-controls">
-        <button class="lang-btn" type="button">EN</button>
-        <button class="theme-toggle" type="button" aria-label="Toggle theme">
-          <span class="theme-thumb">☀️</span>
-        </button>
-      </div>
-    </div>
-  </header>
-  <main class="page">
-    <section class="hero">
-      <h1 data-it="Il mio blog tecnico" data-en="My technical blog">Il mio blog tecnico</h1>
-      <p data-it="Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software."
-         data-en="Deep dives, case studies, and experiments on AI, Data Engineering, and modern software development.">
-         Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software.
-      </p>
-    </section>
-    <section class="filters" aria-label="Blog controls">
-      <div class="filter">
-        <label for="category-filter" data-it="Filtra per categoria" data-en="Filter by category">Filtra per categoria</label>
-        <select id="category-filter">
-          <option value="all" data-it="Tutte" data-en="All">Tutte</option>
-        </select>
-      </div>
-      <div class="filter">
-        <label for="sort-order" data-it="Ordina per data" data-en="Sort by date">Ordina per data</label>
-        <select id="sort-order">
-          <option value="desc" data-it="Più recenti" data-en="Newest first">Più recenti</option>
-          <option value="asc" data-it="Meno recenti" data-en="Oldest first">Meno recenti</option>
-        </select>
-      </div>
-    </section>
-    <section aria-live="polite">
-      <div id="posts-grid" class="posts-grid"></div>
-      <p id="no-results" class="no-results" data-it="Nessun articolo trovato." data-en="No articles found.">Nessun articolo trovato.</p>
-    </section>
-  </main>
-  <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
-    </span>
-  </footer>
-  <script>
-    const POSTS_DATA = ${serializedPosts};
-    (function() {
-      const gradients = [
-        'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-        'linear-gradient(135deg, #f97316 0%, #fb7185 100%)',
-        'linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%)',
-        'linear-gradient(135deg, #f472b6 0%, #c084fc 100%)'
-      ];
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const storedTheme = (localStorage.getItem('blogTheme') || '').toLowerCase();
-      const storedLang = (localStorage.getItem('blogLang') || '').toLowerCase();
-      const state = {
-        lang: storedLang === 'en' ? 'en' : 'it',
-        theme: storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light')),
-        category: 'all',
-        sort: 'desc'
-      };
-      const elements = {
-        body: document.body,
-        langBtn: document.querySelector('.lang-btn'),
-        themeToggle: document.querySelector('.theme-toggle'),
-        themeThumb: document.querySelector('.theme-toggle .theme-thumb'),
-        categorySelect: document.getElementById('category-filter'),
-        sortSelect: document.getElementById('sort-order'),
-        postsGrid: document.getElementById('posts-grid'),
-        noResults: document.getElementById('no-results')
-      };
-      const categoryEntries = Array.from(
-        POSTS_DATA.reduce((acc, post) => {
-          if (!acc.has(post.category)) {
-            acc.set(post.category, post.categoryLabels || {});
-          }
-          return acc;
-        }, new Map())
-      );
-      function formatDate(isoString) {
-        const date = new Date(isoString);
-        if (Number.isNaN(date.valueOf())) {
-          return '';
-        }
-        const formatter = state.lang === 'it'
-          ? new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
-          : new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-        return formatter.format(date);
-      }
-      function applyTheme(theme) {
-        state.theme = theme === 'dark' ? 'dark' : 'light';
-        elements.body.setAttribute('data-theme', state.theme);
-        if (elements.themeToggle) {
-          elements.themeToggle.classList.toggle('active', state.theme === 'dark');
-        }
-        if (elements.themeThumb) {
-          elements.themeThumb.textContent = state.theme === 'dark' ? '🌙' : '☀️';
-        }
-        localStorage.setItem('blogTheme', state.theme);
-      }
-      function updateTexts() {
-        document.querySelectorAll('[data-it][data-en]').forEach((node) => {
-          const value = node.getAttribute(state.lang === 'it' ? 'data-it' : 'data-en');
-          if (value !== null) {
-            node.textContent = value;
-          }
-        });
-        if (elements.langBtn) {
-          elements.langBtn.textContent = state.lang === 'it' ? 'EN' : 'IT';
-        }
-      }
-      function populateCategoryOptions() {
-        if (!elements.categorySelect) {
-          return;
-        }
-        const currentValue = state.category;
-        elements.categorySelect.innerHTML = '';
-        const allOption = document.createElement('option');
-        allOption.value = 'all';
-        allOption.setAttribute('data-it', 'Tutte');
-        allOption.setAttribute('data-en', 'All');
-        elements.categorySelect.appendChild(allOption);
-        categoryEntries.forEach(([value, labels]) => {
-          const option = document.createElement('option');
-          option.value = value;
-          option.setAttribute('data-it', labels.it || value);
-          option.setAttribute('data-en', labels.en || value);
-          elements.categorySelect.appendChild(option);
-        });
-        const availableValues = new Set(['all', ...categoryEntries.map(([value]) => value)]);
-        if (availableValues.has(currentValue)) {
-          elements.categorySelect.value = currentValue;
-        } else {
-          elements.categorySelect.value = 'all';
-          state.category = 'all';
-        }
-      }
-      function renderPosts() {
-        if (!elements.postsGrid) {
-          return;
-        }
-        const posts = POSTS_DATA.filter((post) => state.category === 'all' || post.category === state.category)
-          .sort((a, b) => {
-            if (state.sort === 'asc') {
-              return a.timestamp - b.timestamp;
-            }
-            return b.timestamp - a.timestamp;
-          });
-        elements.postsGrid.innerHTML = '';
-        if (!posts.length) {
-          if (elements.noResults) {
-            elements.noResults.style.display = 'block';
-          }
-          return;
-        }
-        if (elements.noResults) {
-          elements.noResults.style.display = 'none';
-        }
-        const fragment = document.createDocumentFragment();
-        posts.forEach((post, index) => {
-          const card = document.createElement('article');
-          card.className = 'post-card';
-          card.setAttribute('data-category', post.category);
-          const hero = document.createElement('div');
-          hero.className = 'post-card-hero';
-          hero.style.background = gradients[index % gradients.length];
-          const icon = document.createElement('div');
-          icon.className = 'post-card-icon';
-          icon.textContent = post.icon || '📝';
-          hero.appendChild(icon);
-          card.appendChild(hero);
-          const body = document.createElement('div');
-          body.className = 'post-card-body';
-          const metaRow = document.createElement('div');
-          metaRow.className = 'post-card-meta';
-          const categoryChip = document.createElement('span');
-          categoryChip.className = 'post-card-category';
-          const categoryLabel = (post.categoryLabels && post.categoryLabels[state.lang]) || post.category;
-          categoryChip.textContent = categoryLabel;
-          const dateSpan = document.createElement('span');
-          dateSpan.className = 'post-card-date';
-          dateSpan.textContent = formatDate(post.publishedAt);
-          metaRow.appendChild(categoryChip);
-          metaRow.appendChild(dateSpan);
-          body.appendChild(metaRow);
-          const titleEl = document.createElement('h3');
-          titleEl.className = 'post-card-title';
-          titleEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].title) ||
-            (post.languages.it && post.languages.it.title) ||
-            (post.languages.en && post.languages.en.title) ||
-            '';
-          body.appendChild(titleEl);
-          const summaryEl = document.createElement('p');
-          summaryEl.className = 'post-card-summary';
-          summaryEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].summary) ||
-            (post.languages.it && post.languages.it.summary) ||
-            (post.languages.en && post.languages.en.summary) ||
-            '';
-          body.appendChild(summaryEl);
-          const footerRow = document.createElement('div');
-          footerRow.className = 'post-card-footer';
-          const readSpan = document.createElement('span');
-          readSpan.className = 'post-card-readtime';
-          readSpan.textContent = '⏱️ ' + post.readTime + ' min';
-          const linkEl = document.createElement('a');
-          linkEl.className = 'post-card-link';
-          const fallbackLink = (post.languages.it && post.languages.it.link) || (post.languages.en && post.languages.en.link) || '#';
-          linkEl.href = (post.languages[state.lang] && post.languages[state.lang].link) || fallbackLink;
-          linkEl.textContent = state.lang === 'it' ? 'Leggi di più →' : 'Read more →';
-          footerRow.appendChild(readSpan);
-          footerRow.appendChild(linkEl);
-          body.appendChild(footerRow);
-          card.appendChild(body);
-          fragment.appendChild(card);
-        });
-        elements.postsGrid.appendChild(fragment);
-      }
-      function applyLanguage(lang) {
-        state.lang = lang === 'en' ? 'en' : 'it';
-        document.documentElement.setAttribute('lang', state.lang);
-        localStorage.setItem('blogLang', state.lang);
-        updateTexts();
-        renderPosts();
-      }
-      function init() {
-        document.documentElement.setAttribute('lang', state.lang);
-        populateCategoryOptions();
-        updateTexts();
-        applyTheme(state.theme);
-        if (elements.categorySelect) {
-          elements.categorySelect.addEventListener('change', (event) => {
-            state.category = event.target.value;
-            renderPosts();
-          });
-        }
-        if (elements.sortSelect) {
-          elements.sortSelect.value = state.sort;
-          elements.sortSelect.addEventListener('change', (event) => {
-            state.sort = event.target.value === 'asc' ? 'asc' : 'desc';
-            renderPosts();
-          });
-        }
-        if (elements.langBtn) {
-          elements.langBtn.addEventListener('click', () => {
-            applyLanguage(state.lang === 'it' ? 'en' : 'it');
-          });
-        }
-        if (elements.themeToggle) {
-          elements.themeToggle.addEventListener('click', () => {
-            applyTheme(state.theme === 'dark' ? 'light' : 'dark');
-          });
-        }
-        renderPosts();
-      }
-      init();
-    })();
-  </script>
-</body>
-</html>`;
-}
-
-export function renderBlogDetail({
-  post,
-  language,
-  relativeRoot,
-}) {
-  const langData = post.languages[language];
-  if (!langData) {
-    throw new Error(`Language ${language} is not available for ${post.slug}`);
-  }
-
-  const otherLang = language === 'it' ? 'en' : 'it';
-  const otherLangData = post.languages[otherLang];
-  const blogHome = joinUrl(relativeRoot, 'blog', 'index.html');
-  const homeLink = joinUrl(relativeRoot, 'index.html');
-
-  const otherLangLink = otherLangData
-    ? joinUrl(relativeRoot, 'blog', otherLang, post.slug, 'index.html')
-    : null;
-
-  const { html, headings } = markdownToHtml(langData.markdown, { relativeRoot });
-  const cleanedHtml = html.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>/i, '').trim();
-  const contentHtml = cleanedHtml || html;
-
-  const publishedRaw = post.meta?.publishedAt ?? langData.modifiedTime ?? post.updatedAt;
-  const publishedAt = new Date(publishedRaw);
-  const formattedDate = Number.isNaN(publishedAt.valueOf())
-    ? ''
-    : publishedAt.toLocaleDateString(language === 'it' ? 'it-IT' : 'en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
-
-  const readTime =
-    post.meta?.readTime ?? Math.max(1, Math.round(langData.markdown.split(/\s+/).length / 200));
-  const categoryLabel =
-    post.meta?.categoryLabels?.[language] ??
-    post.meta?.category ??
-    (language === 'it' ? 'Generale' : 'General');
-  const icon = post.meta?.icon ?? '📝';
-
-  const tocTree = buildTocTree(headings);
-  const showTocNumbers = post.meta?.showTocNumbers !== false;
-  const tocListHtml = renderTocList(tocTree, true, showTocNumbers);
-  const tocLabels =
-    language === 'it'
-      ? { title: 'Indice', open: 'Mostra indice', close: 'Nascondi indice' }
-      : { title: 'Table of contents', open: 'Show table of contents', close: 'Hide table of contents' };
-  const tocHtml = tocListHtml
-    ? `<aside class="post-toc" data-collapsed="false">
-        <div class="post-toc__header">
-          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">${tocLabels.title}</div>
-          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="${tocLabels.close}">
-            <span class="post-toc__toggle-text">${tocLabels.title}</span>
-            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
-          </button>
-        </div>
-        <div class="post-toc__content">
-          ${tocListHtml}
-        </div>
-      </aside>`
-    : '';
-  const layoutClass = tocHtml ? 'post-layout' : 'post-layout post-layout--single';
-  const pageTitle = escapeHtml(langData.title);
-  const formattedCategory = escapeHtml(categoryLabel);
-  const formattedDateHtml = escapeHtml(formattedDate);
-  const iconHtml = escapeHtml(icon);
-  const currentYear = new Date().getFullYear();
-  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
-  const authorAvatarPath = joinUrl(relativeRoot, 'Assets', 'profile.webp');
-  
-  const baseUrl = 'https://rkomi98.github.io/MyBlog';
-  // Construct the absolute URL for the current page
-  // We assume the structure: blog/{lang}/{slug}/index.html
-  const pageUrl = `${baseUrl}/blog/${language}/${post.slug}/`;
-  const summary = langData.summary || `Articolo su ${formattedCategory} di Mirko Calcaterra.`;
-  const imageUrl = post.meta?.image ? (post.meta.image.startsWith('http') ? post.meta.image : `${baseUrl}/${post.meta.image}`) : `${baseUrl}/Assets/Logo.png`;
-  const keywords = post.meta?.keywords ? post.meta.keywords : '';
-  const pageScripts = (post.meta?.pageScripts ?? [])
-    .map((scriptPath) => joinUrl(relativeRoot, scriptPath.replace(/^[/]+/, '')))
-    .map((scriptPath) => `<script defer src="${escapeHtml(scriptPath)}"></script>`)
-    .join('\n  ');
-  const pageScriptTags = pageScripts ? `\n  ${pageScripts}` : '';
-
-  return `<!DOCTYPE html>
-<html lang="${language}" ${language === 'en' ? '' : 'translate="no"'}>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle} | Mirko Calcaterra</title>
-  <meta name="description" content="${escapeHtml(summary)}">
-  <meta name="keywords" content="${escapeHtml(keywords)}">
+  <title>Dove andrà il fuoco? | Mirko Calcaterra</title>
+  <meta name="description" content="Dove andrà il fuoco? Sono mesi che non scrivo su questo blog e mi dispiace parecchio 🫣! Però, ho deciso di tornare con una nuova serie di articoli che uscirà una volta al mese (ci proviamo). Come si gestiscono gli incendi con la GeoAI? Alle 8:18 del 29 lugli…">
+  <meta name="keywords" content="GeoAI, Wildfires, Fire Management, Remote Sensing, Copernicus, EFFIS, Satellite Data, GIS, Wildfire Prediction, Mirko Calcaterra">
   <meta name="author" content="Mirko Calcaterra">
-  <link rel="canonical" href="\${pageUrl}">
+  <link rel="canonical" href="${pageUrl}">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
@@ -949,40 +21,42 @@ export function renderBlogDetail({
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:url" content="${pageUrl}">
-  <meta property="og:title" content="${pageTitle}">
-  <meta property="og:description" content="${escapeHtml(summary)}">
-  <meta property="og:image" content="${imageUrl}">
-  <meta property="article:published_time" content="${publishedAt.toISOString()}">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/dove-andra-il-fuoco/">
+  <meta property="og:title" content="Dove andrà il fuoco?">
+  <meta property="og:description" content="Dove andrà il fuoco? Sono mesi che non scrivo su questo blog e mi dispiace parecchio 🫣! Però, ho deciso di tornare con una nuova serie di articoli che uscirà una volta al mese (ci proviamo). Come si gestiscono gli incendi con la GeoAI? Alle 8:18 del 29 lugli…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/fire-assets/images/hero-geoai-incendi.png">
+  <meta property="article:published_time" content="2026-07-30T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
-  <meta property="article:section" content="${formattedCategory}">
+  <meta property="article:section" content="GeoAI">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${pageTitle}">
-  <meta property="twitter:description" content="${escapeHtml(summary)}">
-  <meta property="twitter:image" content="${imageUrl}">
+  <meta property="twitter:title" content="Dove andrà il fuoco?">
+  <meta property="twitter:description" content="Dove andrà il fuoco? Sono mesi che non scrivo su questo blog e mi dispiace parecchio 🫣! Però, ho deciso di tornare con una nuova serie di articoli che uscirà una volta al mese (ci proviamo). Come si gestiscono gli incendi con la GeoAI? Alle 8:18 del 29 lugli…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/fire-assets/images/hero-geoai-incendi.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "${pageTitle}",
-    "image": "${imageUrl}",
-    "datePublished": "${publishedAt.toISOString()}",
-    "dateModified": "${(langData.modifiedTime || publishedAt).toISOString()}",
+    "headline": "Dove andrà il fuoco?",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/fire-assets/images/hero-geoai-incendi.png",
+    "datePublished": "2026-07-30T00:00:00.000Z",
+    "dateModified": "2026-07-30T09:37:49.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
-      "url": "${baseUrl}/"
+      "url": "https://rkomi98.github.io/MyBlog/"
     },
     "publisher": {
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "${escapeHtml(summary)}"
+    "description": "Dove andrà il fuoco? Sono mesi che non scrivo su questo blog e mi dispiace parecchio 🫣! Però, ho deciso di tornare con una nuova serie di articoli che uscirà una volta al mese (ci proviamo). Come si gestiscono gli incendi con la GeoAI? Alle 8:18 del 29 lugli…"
   }
-  </script>${pageScriptTags}
+  </script>
+  <script defer src="../../../Assets/fire-assets/js/wildfire-lab.js"></script>
+  <script defer src="../../../Assets/fire-assets/js/cems-live.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2200,8 +1274,8 @@ export function renderBlogDetail({
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
-        displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true,
       },
       options: {
@@ -2305,13 +1379,13 @@ export function renderBlogDetail({
   <header class="site-header">
     <div class="site-header__inner">
       <div class="site-header__left">
-        <a class="logo" href="${homeLink}">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
           <span class="logo-text">Mirko Calcaterra</span>
         </a>
         <nav class="site-nav">
-          <a href="${homeLink}" data-it="Home" data-en="Home">Home</a>
-          <a href="${blogHome}" data-it="Blog" data-en="Blog">Blog</a>
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
         </nav>
       </div>
       <div class="header-controls">
@@ -2325,37 +1399,306 @@ export function renderBlogDetail({
   <main class="page">
     <article class="post">
       <section class="post-hero">
-        <div class="post-hero__icon">${iconHtml}</div>
-        <span class="post-hero__category">${formattedCategory}</span>
-        <h1 class="post-hero__title">${pageTitle}</h1>
+        <div class="post-hero__icon">🔥</div>
+        <span class="post-hero__category">GeoAI</span>
+        <h1 class="post-hero__title">Dove andrà il fuoco?</h1>
         <div class="post-hero__author">
-          <img class="post-hero__avatar" src="${authorAvatarPath}" alt="Mirko Calcaterra">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">${formattedDateHtml} • ${readTime} min</span>
+            <span class="post-hero__author-meta">30 luglio 2026 • 22 min</span>
           </div>
         </div>
       </section>
-      <section class="${layoutClass}">
-        ${tocHtml}
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#come-si-gestiscono-gli-incendi-con-la-geoai">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Come si gestiscono gli incendi con la GeoAI?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#il-fuoco-comincia-prima-delle-fiamme">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Il fuoco comincia prima delle fiamme</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#un-punto-rosso-non-il-fronte-del-fuoco">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Un punto rosso non è il fronte del fuoco</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#prova-il-concetto">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">Prova il concetto</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#dove-andranno-le-fiamme">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Dove andranno le fiamme?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#una-previsione-un-ventaglio">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Una previsione è un ventaglio</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#muovi-il-vento-cambia-lesito">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Muovi il vento, cambia l’esito</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#rodi-undici-giorni-diciotto-mappe">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Rodi: undici giorni, diciotto mappe</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#un-modulo-live-senza-spacciare-una-demo-per-un-allarme">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">Un modulo live, senza spacciare una demo per un allarme</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#dai-pixel-alla-sala-operativa">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">Dai pixel alla sala operativa</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#quando-il-fuoco-non-si-vede-pi">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">Quando il fuoco non si vede più</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#gli-errori-che-contano">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">Gli errori che contano</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#la-mappa-giusta-al-momento-giusto">
+            <span class="post-toc__number">10</span>
+            <span class="post-toc__text">La mappa giusta, al momento giusto</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#nota-sul-laboratorio-interattivo">
+            <span class="post-toc__number">11</span>
+            <span class="post-toc__text">Nota sul laboratorio interattivo</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#fonti-e-letture-per-approfondire">
+            <span class="post-toc__number">12</span>
+            <span class="post-toc__text">Fonti e letture per approfondire</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
+      </aside>
         <div class="post-body">
-          ${contentHtml}
+          <p>Sono mesi che non scrivo su questo blog e mi dispiace parecchio 🫣! Però, ho deciso di tornare con una nuova serie di articoli che uscirà una volta al mese (ci proviamo).</p>
+<h2 id="come-si-gestiscono-gli-incendi-con-la-geoai">Come si gestiscono gli incendi con la GeoAI?</h2>
+<p>Alle 8:18 del 29 luglio 2026, la pagina del Joint Research Centre dedicata agli incendi europei riportava <a href="https://joint-research-centre.ec.europa.eu/projects-and-activities/natural-and-man-made-hazards/forest-fires/current-wildfire-situation-europe_en">434.976 ettari bruciati nell’Unione europea dall’inizio dell’anno, 1.407 incendi rilevati e 17,98 milioni di tonnellate di anidride carbonica emesse</a>. Il confronto con lo stesso periodo del 2025, già indicato dal JRC come l’anno peggiore della serie, rendeva il quadro ancora più severo.</p>
+<p><img src="../../../Assets/fire-assets/fire_pred.jpg" alt="Mappa dell'anomalia mediana del Fire Weather Index"></p>
+<p><em>Sto scrivendo l’articolo il 30 luglio 2026. La carta rappresenta l’anomalia mediana del Fire Weather Index (FWI), calcolata come deviazione standard rispetto alla media storica degli ultimi trent’anni.</em></p>
+<p>Prima di correre alle conclusioni, però, conviene fermarsi un momento. Le cifre di EFFIS non cadono dal cielo già definitive. La stessa pagina avverte che le stime vengono corrette quando arrivano immagini migliori; il sistema, inoltre, monitora soprattutto gli incendi di circa trenta ettari o più che coinvolgono almeno in parte superfici naturali. Persino la porzione di territorio che consideriamo “già bruciata”, insomma, rimane per qualche tempo una ricostruzione provvisoria.</p>
+<p>È un buon punto da cui cominciare, perché mostra la faccenda per quella che è. Durante un incendio non esiste una mappa perfetta che osserva tutto nello stesso istante. Esistono sensori che passano in momenti diversi, pixel di dimensioni diverse, modelli meteorologici, osservazioni a terra, camere, aeromobili, droni, perimetri disegnati e poi ridisegnati. A ogni passaggio si guadagna informazione e, insieme, si scopre un nuovo margine d’errore.</p>
+<p>La GeoAI entra proprio qui. Tiene insieme geografia, osservazione della Terra, modellistica e intelligenza artificiale, ma la domanda cambia di continuo. Prima prova a capire dove il territorio sia predisposto a bruciare. Poi deve distinguere una nuova anomalia termica, ricostruire il fronte, esplorare la sua possibile propagazione, sovrapporre persone e infrastrutture esposte e, infine, leggere ciò che rimane dopo il passaggio delle fiamme.</p>
+<p>A prima vista sembra una sola applicazione. Guardando meglio, emergono problemi differenti, collocati su scale temporali che vanno dai mesi ai minuti.</p>
+<hr>
+<h2 id="il-fuoco-comincia-prima-delle-fiamme">Il fuoco comincia prima delle fiamme</h2>
+<p>Quando compare il primo punto rosso su una mappa satellitare, una parte della storia è già stata scritta.</p>
+<p>Nei giorni precedenti può aver piovuto poco. Il vento può essere aumentato. La vegetazione può aver perso umidità, mentre rami, aghi e arbusti secchi hanno continuato ad accumularsi. Una primavera piovosa può persino aver favorito la crescita di nuova biomassa che, una volta disseccata, diventa combustibile. Poi arriva l’innesco: un fulmine, una scintilla, un’attività agricola, una linea elettrica, un gesto umano deliberato o superficiale.</p>
+<p>Per leggere questa fase si usano da tempo gli indici meteorologici di pericolo. In Europa, EFFIS calcola il <strong>Fire Weather Index</strong> a partire dalle previsioni ECMWF e Météo-France e lo rappresenta in sei classi armonizzate, da bassa a molto estrema. <a href="https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/fire-danger-forecast">La documentazione ufficiale di EFFIS descrive previsioni da uno a nove giorni e una classe “Very Extreme” introdotta nel 2021 per distinguere le situazioni mediterranee più severe</a>.</p>
+<p>Il risultato dice quanto l’atmosfera e il combustibile morto favoriscano l’accensione e un comportamento difficile da controllare, qualora un innesco avvenga.</p>
+<p>Quel <strong>qualora</strong> conta parecchio.</p>
+<p>Un territorio può essere molto secco e ventoso senza che parta alcun incendio. Un’area con condizioni meno estreme può invece bruciare perché l’innesco avviene nel punto sbagliato, vicino a vegetazione continua e a un’interfaccia urbano-rurale.</p>
+<p>Qui conviene separare almeno tre concetti.</p>
+<p>La <strong>pericolosità</strong> descrive la possibilità che il fenomeno si presenti con una certa intensità. La <strong>probabilità di attività</strong> prova a localizzare dove sia plausibile osservare un incendio, aggiungendo informazioni su combustibile e sorgenti d’innesco. Il <strong>rischio</strong> incorpora ciò che potrebbe essere colpito: persone, abitazioni, strade, ecosistemi, linee elettriche, aziende agricole.</p>
+<p>Le tre carte possono assomigliarsi. Le decisioni che suggeriscono cambiano.</p>
+<p><img src="../../../Assets/fire-assets/images/01-dalla-vegetazione-alla-probabilita.png" alt="Cinque superfici sintetiche mostrano combustibile, secchezza, pendenza, pressione umana e probabilità stimata"></p>
+<p><em>Una visualizzazione didattica della fusione tra fattori geografici. La formula usata per generare l’immagine è volutamente semplificata.</em></p>
+<p>In Italia il Dipartimento della Protezione Civile elabora ogni giorno un bollettino nazionale. Nella valutazione entrano <a href="https://rischi.protezionecivile.gov.it/it/approfondimento/bollettino-di-previsione-nazionale-incendi-boschivi/">condizioni meteo-climatiche, vegetazione, stato e uso del suolo, morfologia e organizzazione del territorio</a>. Il prodotto esprime, su tre livelli, una stima probabilistica della suscettività all’innesco e alla propagazione nelle ventiquattro ore successive e supporta anche la gestione della flotta aerea statale.</p>
+<p>Questa è già una forma di GeoAI, anche quando l’etichetta non compare. C’è una componente geografica, perché ogni variabile cambia nello spazio. C’è una componente modellistica, perché bisogna fondere dati eterogenei. C’è una decisione a valle, perché una zona classificata ad alta suscettività può richiedere un diverso schieramento di uomini e mezzi. Per l’estate 2026, <a href="https://www.protezionecivile.gov.it/it/approfondimento/campagna-antincendio-boschivo-2026/">la campagna antincendio boschivo nazionale è stata fissata dal 15 giugno al 15 ottobre</a>.</p>
+<p>Negli ultimi anni il machine learning ha provato a spostare un po’ più avanti la messa a fuoco. Il modello <strong>Probability of Fire</strong> sviluppato da ECMWF integra meteo, abbondanza e umidità del combustibile, presenza umana, fulmini e osservazioni dell’attività del fuoco. <a href="https://www.ecmwf.int/en/about/media-centre/news/2025/scientists-present-new-ml-tool-improved-fire-prediction">Secondo la presentazione tecnica di ECMWF, l’impiego congiunto delle diverse sorgenti ha migliorato fino al 30% la capacità predittiva</a>.</p>
+<p>Lo studio scientifico da cui nasce il sistema aggiunge un risultato ancora più istruttivo: <a href="https://www.nature.com/articles/s41467-025-58097-7">i dati su combustibile, inneschi e incendi osservati riducono i falsi allarmi dei modelli basati soprattutto sul meteo, mentre la qualità degli input pesa più della complessità dell’architettura</a>. In quel confronto, una soluzione ad alberi come XGBoost ha ottenuto prestazioni paragonabili a una rete neurale più sofisticata.</p>
+<p>Un lavoro condotto nella Spagna orientale aiuta a vedere che cosa significhi aggiungere la componente umana. Gli autori hanno incrociato 849 inneschi con distanza da strade e interfacce urbano-rurali, densità di popolazione, tipi di combustibile e umidità del combustibile morto: <a href="https://www.tandfonline.com/doi/abs/10.1080/19475705.2025.2472864">il Random Forest ha raggiunto un’AUC di 0,76 ± 0,01 e ha mostrato come clima e trasformazioni demografiche possano ridisegnare la probabilità d’innesco</a>. Il numero va letto nel suo contesto, senza metterlo in gara con metriche ottenute su regioni, periodi e campionamenti differenti.</p>
+<p>È una lezione che torna spesso nella GeoAI. Prima di aggiungere strati al modello, conviene chiedersi se stiamo osservando bene il territorio.</p>
+<p>ECMWF ha poi pubblicato una <a href="https://www.ecmwf.int/en/about/media-centre/science-blog/2026/build-your-own-probability-fire-model">Probability of Fire Toolbox riproducibile, costruita come una sequenza di notebook per preparare dati, addestrare modelli locali e valutarli</a>. La scelta è interessante perché riconosce un limite dei prodotti globali: clima, vegetazione, gestione del suolo e attività umane cambiano da regione a regione. La stessa conclusione emerge da uno studio su oltre 17.000 incendi verificati in diverse aree della Russia centrale: <a href="https://www.nature.com/articles/s41598-025-94002-4">gli F1-score variavano tra 0,70 e 0,87 e gli autori raccomandavano modelli adattati alle caratteristiche di ciascuna regione</a>.</p>
+<p>Altri confronti rendono il limite ancora più visibile. A Changsha, <a href="https://www.mdpi.com/2072-4292/15/17/4208">evapotraspirazione e contenuto d’acqua della chioma sono risultati i fattori più influenti in un modello Random Forest con AUC pari a 0,981</a>; in uno studio tra Okanogan, negli Stati Uniti, e Jamésie, in Canada, <a href="https://link.springer.com/article/10.1186/s42408-024-00335-2">le prestazioni sono diminuite quando l’addestramento avveniva in una regione e la validazione nell’altra, pur conservando una capacità predittiva parziale</a>. È il genere di risultato che una media globale tende a nascondere.</p>
+<p>Il dominio geografico entra nella logica stessa dell’algoritmo: cambia le relazioni tra le variabili e, con loro, la validità del modello.</p>
+<hr>
+<h2 id="un-punto-rosso-non-il-fronte-del-fuoco">Un punto rosso non è il fronte del fuoco</h2>
+<p>Aprendo NASA FIRMS durante una giornata difficile, si vedono costellazioni di punti rossi e arancioni. L’impressione è immediata: ogni punto sembra una fiamma e l’insieme dei punti sembra il perimetro dell’incendio.</p>
+<p>Ed è qui che casca l’asino.</p>
+<p>Nel prodotto MODIS, un hotspot rappresenta il centro di un pixel di circa un chilometro in cui l’algoritmo ha riconosciuto una o più anomalie termiche. EFFIS ricorda che <a href="https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/active-fire-detection">la risoluzione nominale del pixel MODIS per la rilevazione attiva è di un chilometro</a>. Il punto pubblicato non coincide per forza con la posizione esatta della sorgente e, soprattutto, l’intera cella non sta bruciando.</p>
+<p>Con VIIRS il dettaglio migliora: <a href="https://www.earthdata.nasa.gov/es/data/catalog/lancemodis-vnp14img-nrt-2">il prodotto NASA VNP14IMG_NRT rileva attività sub-pixel dentro celle nominali da 375 metri</a>. La natura dell’informazione, però, rimane la stessa. Stiamo osservando un’anomalia termica, non il contorno esatto del rogo.</p>
+<p><img src="../../../Assets/fire-assets/images/02-hotspot-non-perimetro.png" alt="Confronto didattico tra un pixel MODIS e un pixel VIIRS"></p>
+<p><em>Il punto viene pubblicato al centro della cella che contiene l’anomalia. La sorgente termica può trovarsi in un’altra porzione del pixel.</em></p>
+<p>La differenza è sostanziale. Gli hotspot sono preziosi per accorgersi che qualcosa sta accadendo e per seguirne l’attività nel tempo. Misurare la superficie bruciata richiede un altro procedimento.</p>
+<p>Il modulo di <strong>Rapid Damage Assessment</strong> di EFFIS combina immagini MODIS, VIIRS e Sentinel-2. <a href="https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/rapid-damage-assessment">Le aree ottenute con procedure automatiche vengono controllate e corrette attraverso l’interpretazione visuale; dal 2018 Sentinel-2 consente di affinare i perimetri a venti metri e di includere anche alcuni incendi sotto la soglia dei trenta ettari</a>. EFFIS stima che le aree così mappate rappresentino circa il 95% della superficie totale bruciata nell’Unione europea, pur coprendo soltanto una frazione del numero complessivo di incendi.</p>
+<p>Quel controllo evita anche errori meno intuitivi. Impianti industriali, superfici molto calde o attività agricole possono produrre segnali termici sospetti. L’algoritmo richiama l’attenzione. La verifica successiva decide se lì ci sia stato un incendio compatibile con il prodotto.</p>
+<h3 id="prova-il-concetto">Prova il concetto</h3>
+<p>Il modulo seguente cambia la dimensione del pixel e sposta la sorgente termica all’interno della cella. Non usa dati satellitari: serve soltanto a rendere visibile l’equivoco.</p>
+<p><hotspot-demo></hotspot-demo></p>
+<p>La scelta del sensore aggiunge un altro compromesso. I satelliti polari, come quelli che trasportano MODIS e VIIRS, offrono più dettaglio ma osservano lo stesso territorio durante passaggi determinati. I satelliti geostazionari mantengono invece lo sguardo sulla stessa porzione del pianeta e aggiornano la scena molto più spesso, accettando pixel più grandi.</p>
+<p><img src="../../../Assets/fire-assets/images/03-compromesso-sensori.png" alt="Schema qualitativo del compromesso fra risoluzione spaziale e frequenza di osservazione"></p>
+<p><em>Le posizioni nello schema sono qualitative. La prestazione effettiva dipende da sensore, orbita, geometria di acquisizione, copertura nuvolosa e prodotto.</em></p>
+<p>Negli Stati Uniti il <strong>Next Generation Fire System</strong> analizza le immagini dei satelliti GOES. NOAA dichiara che <a href="https://prod-01-alb-www-noaa.woc.noaa.gov/news-release/noaa-unveils-powerful-convergence-of-ai-and-science-with-revolutionary-next-generation-fire-system">il sistema può generare un avviso anche entro un minuto dal momento in cui l’energia del fuoco raggiunge il satellite</a>; nel 2026 l’agenzia ha inoltre aperto un <a href="https://www.nesdis.noaa.gov/data-products-research-services/wildland-fire-data-portal">portale pubblico con rilevazioni e monitoraggio sperimentali quasi continui</a>.</p>
+<p>Un altro modo per ridurre la latenza consiste nel portare l’elaborazione direttamente in orbita. L’applicazione <strong>PhiFireAI</strong> di ESA classifica le immagini di Φsat-2 distinguendo <a href="https://www.esa.int/Applications/Observing_the_Earth/Phsat-2/AI_for_wildfire_detection">acqua, aree sicure, cicatrici e zone interessate dal fuoco, così da evitare il download di scene prive di informazioni utili</a>. Dopo la fase di commissioning, <a href="https://www.esa.int/Applications/Observing_the_Earth/Phsat-2/Phsat-2_begins_science_phase_for_AI_Earth_images">Φsat-2 ha iniziato a distribuire dati scientifici nel luglio 2025</a>.</p>
+<p>Anche l’Europa mediterranea si sta muovendo verso costellazioni dedicate. Nel maggio 2026 la Grecia ha lanciato <a href="https://www.esa.int/Applications/Observing_the_Earth/Hellenic_Fire_System_satellites_launched_for_Greece">quattro CubeSat del nuovo Hellenic Fire System, indicato da ESA come la prima capacità satellitare nazionale dedicata al rilevamento e al tracciamento degli incendi</a>. Due mesi dopo, <a href="https://www.esa.int/Applications/Observing_the_Earth/Hellenic_Fire_System_achieves_first_light">il sistema ha restituito la prima immagine termica sul territorio greco</a>.</p>
+<p>Il telerilevamento può anche stimare quanto il combustibile sia pronto a bruciare. Un esperimento su scala continentale ha combinato osservazioni a terra, modelli meteorologici e riflettanze VIIRS: <a href="https://www.mdpi.com/2072-4292/15/13/3372">rimuovendo i dati satellitari, l’errore nella stima dell’umidità del combustibile morto peggiorava in modo marcato</a>. A una scala molto più minuta, un lavoro sperimentale ad Harbin ha usato 5.945 immagini multispettrali da drone e 480 campioni: <a href="https://www.mdpi.com/1999-4907/14/9/1724">il modello ConvNeXt ha stimato l’umidità del combustibile morto con un MAE dell’1,54% sul test set</a>. È una prova locale, non una garanzia di trasferibilità; mostra però come satellite, drone e campionamento a terra possano occupare gradini differenti della stessa scala osservativa.</p>
+<p>Più satelliti, però, non cancellano il problema. Lo riducono. Un sensore vede il calore, un altro legge la vegetazione, un altro attraversa fumo e nuvole con il radar. La mappa migliore nasce dalla loro combinazione e dalla chiarezza con cui vengono dichiarati tempo, risoluzione e limiti.</p>
+<hr>
+<h2 id="dove-andranno-le-fiamme">Dove andranno le fiamme?</h2>
+<p>Rilevare un incendio significa rispondere alla domanda: <strong>dove c’è attività termica?</strong></p>
+<p>Prevederne la propagazione significa affrontarne un’altra: <strong>come cambierà il perimetro quando vento, pendenza e combustibile interagiranno?</strong></p>
+<p>Le fiamme tendono a muoversi più rapidamente in salita perché preriscaldano il combustibile che si trova davanti. Il vento inclina la fiamma, trasporta calore e può sollevare tizzoni capaci di generare focolai oltre il fronte principale. La continuità della vegetazione apre corridoi; strade, rocce e aree già bruciate possono interromperli. L’umidità modifica l’energia necessaria per l’accensione.</p>
+<p>I modelli operativi non nascono con il deep learning. Sistemi come <strong>FlamMap</strong> e <strong>FARSITE</strong> incorporano decenni di ricerca fisica ed empirica. <a href="https://research.fs.usda.gov/firelab/products/dataandtools/flammap">La documentazione dello US Forest Service elenca otto strati geografici di base, tra cui elevazione, pendenza, esposizione, modelli di combustibile e caratteristiche della chioma</a>. Gli output comprendono velocità di propagazione, lunghezza della fiamma, intensità, crescita del perimetro e probabilità condizionata di bruciatura.</p>
+<p>I modelli non sono tutti equivalenti. <a href="https://research.fs.usda.gov/firelab/projects/flammap">FlamMap calcola il comportamento potenziale sotto condizioni ambientali costanti, mentre FARSITE permette sequenze meteorologiche variabili nel tempo</a>. Il primo è utile per confrontare paesaggi e trattamenti del combustibile; il secondo segue meglio l’evoluzione temporale. Confondere la loro finalità produce una precisione apparente, ma una domanda mal posta.</p>
+<p>La GeoAI può entrare nella filiera stimando variabili difficili da osservare, come la distribuzione del combustibile; correggendo gli errori sistematici di un simulatore; costruendo un surrogato più rapido di una simulazione costosa; oppure assimilando nuove osservazioni per aggiornare il perimetro previsto. Sono compiti diversi, e vale la pena dichiarare ogni volta quale di questi si sta affidando al modello.</p>
+<p>La piattaforma <strong>WIFIRE Firemap</strong> offre un esempio di questa integrazione. Il programma di UC San Diego combina <a href="https://scil.ucsd.edu/wifire-program">meteo quasi in tempo reale, inneschi, topografia e caratteristiche della vegetazione per produrre mappe previsionali in pochi minuti</a>. Durante gli eventi più pericolosi, i perimetri rilevati da aeromobili possono essere assimilati per aggiornare le simulazioni. La stessa piattaforma mette in chiaro un punto che vale anche qui: <a href="https://watch.firemap.sdsc.edu/">i risultati sono strumenti di supporto e non sostituiscono il giudizio professionale o le indicazioni delle autorità</a>.</p>
+<h3 id="una-previsione-un-ventaglio">Una previsione è un ventaglio</h3>
+<p>Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell’umidità o nello spotting possono produrre traiettorie divergenti. Per questo una previsione probabilistica è spesso più onesta di un unico perimetro colorato.</p>
+<p><img src="../../../Assets/fire-assets/images/04-propagazione-probabilistica.png" alt="Tre scenari di propagazione e la probabilità ottenuta da 120 simulazioni Monte Carlo"></p>
+<p><em>La figura nasce da 120 corse di un automa cellulare semplificato. Mostra un principio, non una previsione.</em></p>
+<p>La ricerca sta sperimentando anche modelli generativi. Un lavoro pubblicato nel 2026 su <em>Geoscientific Model Development</em> usa un modello di diffusione per produrre insiemi di futuri plausibili. <a href="https://gmd.copernicus.org/articles/19/1027/2026/">Il sistema apprende a emulare un automa cellulare probabilistico condizionato da copertura della chioma, densità vegetale, pendenza e vento</a>. Gli ensemble ottenuti rappresentano la quota di simulazioni in cui ogni cella viene raggiunta dal fuoco.</p>
+<p>Il risultato è promettente, ma il perimetro epistemico va tenuto ben visibile. Gli autori lo presentano come una <strong>proof of concept</strong> addestrata su sequenze sintetiche, sebbene costruite a partire dai contesti geografici degli incendi Chimney e Ferguson. <a href="https://gmd.copernicus.org/articles/19/1027/2026/index.html">Il lavoro futuro dichiarato comprende proprio la validazione contro progressioni osservate da satellite</a>.</p>
+<p>Chiamarla “AI che prevede gli incendi” cancellerebbe metà della storia. È un surrogato che prova a riprodurre la distribuzione di un simulatore. Utile, forse molto utile; non ancora un oracolo operativo.</p>
+<h3 id="muovi-il-vento-cambia-lesito">Muovi il vento, cambia l’esito</h3>
+<p>Il laboratorio interattivo qui sotto usa la stessa idea generale della figura precedente: una griglia, combustibile sintetico, secchezza, pendenza, vento e spotting. Ogni corsa contiene casualità. Cambiando i controlli si vede quanto rapidamente una traiettoria singola possa diventare fragile.</p>
+<p><wildfire-simulator></wildfire-simulator></p>
+<hr>
+<h2 id="rodi-undici-giorni-diciotto-mappe">Rodi: undici giorni, diciotto mappe</h2>
+<p>Per vedere la filiera completa conviene seguire un caso.</p>
+<p>Il 18 luglio 2023 un incendio iniziò sull’isola di Rodi. Il Copernicus Emergency Management Service attivò il modulo di Rapid Mapping e continuò ad aggiornare i prodotti mentre il fronte attraversava la parte centro-meridionale dell’isola.</p>
+<p>Nel bilancio diffuso il 3 agosto, <a href="https://mapping.emergency.copernicus.eu/news/information-bulletin-169-the-copernicus-emergency-management-service-maps-some-critical-wildfires-in-greece-update/">l’attivazione EMSR675 risultava aver prodotto diciotto mappe per l’area di Salakos, con 17.773,5 ettari bruciati, circa 750 persone coinvolte e 737 edifici interessati</a>.</p>
+<p>Mesi dopo, il modulo Risk and Recovery rispose a una domanda più fine. <a href="https://mapping.emergency.copernicus.eu/activations/EMSN159/">Il prodotto P07 dell’attivazione EMSN159 ricalcolò 17.628,7 ettari e li suddivise in 2.291,5 ettari lievemente danneggiati, 6.143,8 moderatamente danneggiati, 7.856,4 altamente danneggiati e 1.337,1 distrutti</a>.</p>
+<p>Le due superfici differiscono leggermente, e quella differenza merita di restare visibile. Cambiano il momento dell’analisi, l’immagine disponibile, la risoluzione, la finalità del prodotto e il metodo di classificazione. Una mappa rapida deve arrivare mentre l’evento è ancora in corso. Una valutazione successiva può permettersi di osservare meglio i margini e distinguere la severità.</p>
+<p><img src="../../../Assets/fire-assets/images/05-rodi-timeline.png" alt="Timeline dei prodotti Copernicus per l'incendio di Rodi"></p>
+<p><em>Timeline originale costruita sui dati delle attivazioni EMSR675 ed EMSN159.</em></p>
+<p>Anche i sensori raccontano pezzi diversi. Sentinel-2 usa bande ottiche e infrarosse per mostrare fumo, vegetazione e cicatrice. Sentinel-1 impiega il radar e può confrontare acquisizioni precedenti e successive senza dipendere dalla luce solare. <a href="https://www.esa.int/ESA_Multimedia/Images/2023/09/Earth_from_Space_Scorched_Rhodes">ESA ha combinato due immagini radar del 12 e del 24 luglio per mostrare una cicatrice di circa 13.000 ettari già visibile mentre l’incendio era ancora attivo</a>. Il valore è inferiore al bilancio finale proprio perché fotografia una fase precedente dell’evento.</p>
+<p>A prima vista queste sembrano rappresentazioni dello stesso rogo. Poi si sposta il focus e si vede il bandolo della matassa: una mappa serve a individuare il calore, un’altra a delimitare il fronte, un’altra ancora a stimare il danno. Trattarle come intercambiabili produce decisioni sbagliate.</p>
+<hr>
+<h2 id="un-modulo-live-senza-spacciare-una-demo-per-un-allarme">Un modulo live, senza spacciare una demo per un allarme</h2>
+<p>Copernicus EMS espone un’API JSON per interrogare le attivazioni pubbliche. La documentazione generale indica <a href="https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/">un endpoint sintetico per il dettaglio di ogni codice, con titolo, categoria, paesi, centroide, stato e numero di prodotti</a>. Per le attivazioni Rapid Mapping rimane disponibile anche <a href="https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/emergency-response-data/">una risposta estesa con aree di interesse, immagini sorgente, statistiche, geometrie, layer e collegamenti ai pacchetti scaricabili</a>. Il nuovo viewer associa inoltre a ogni scheda un collegamento OpenAPI, come <a href="https://mapping.emergency.copernicus.eu/activations/EMSR906/openapi">quello dell’attivazione EMSR906</a>.</p>
+<p>Il riquadro seguente prova queste interfacce in sequenza e dichiara quale risposta è riuscito a usare. Mostra soltanto metadati già pubblici, conserva l’ora dell’ultima verifica e, quando disponibile, parte da uno snapshot locale generato durante la pubblicazione. Il JRC cataloga il servizio come pubblico e ne consente il riuso con attribuzione alla Commissione europea, fatte salve eventuali opere di terzi (<a href="https://data.jrc.ec.europa.eu/service/9d439213-2598-5d04-b6b3-f2882e4b0fb6">scheda ufficiale del servizio e condizioni di riuso</a>).</p>
+<p><cems-activation activation="EMSR906" snapshot="../../../Assets/fire-assets/data/emsr906-fallback.json"></cems-activation></p>
+<p>Il modulo va letto come una finestra editoriale sull’evoluzione di un prodotto geospaziale. Per allarmi, evacuazioni e decisioni di sicurezza fanno fede le comunicazioni della Protezione Civile, dei Vigili del Fuoco e delle autorità locali.</p>
+<p>La distinzione conta ancora di più dal 2026. Copernicus EMS ha annunciato che <a href="https://mapping.emergency.copernicus.eu/news/rapid-mapping-products-delivered-faster-and-with-new-formats/">i dati vettoriali Rapid Mapping vengono consegnati mediamente due ore prima delle mappe impaginate e che, oltre a shapefile e GeoJSON, è disponibile anche il formato GeoPackage</a>. Per una sala operativa, due ore possono essere una differenza sostanziale. Per un articolo, significano che la schermata incorporata può cambiare dopo la pubblicazione.</p>
+<hr>
+<h2 id="dai-pixel-alla-sala-operativa">Dai pixel alla sala operativa</h2>
+<p>Una previsione di propagazione acquista significato quando viene sovrapposta al territorio abitato.</p>
+<p>Dove sono le case? Quali strade potrebbero essere tagliate dal fronte? Esiste un’unica via di evacuazione? Dove si trovano ospedali, campeggi, strutture ricettive, linee elettriche e depositi? Quali punti d’acqua sono disponibili per gli aeromobili? Quanto tempo serve alle squadre per raggiungere un versante?</p>
+<p>Qui la GeoAI smette di essere soltanto osservazione della Terra e diventa supporto alla decisione.</p>
+<p>La campagna antincendio italiana offre un esempio chiaro. Il Centro Operativo Aereo Unificato coordina la flotta statale e lo schieramento viene adattato considerando bollettini, condizioni previste, capacità regionali e richieste che arrivano dal territorio. Il modello non decide quale mezzo far decollare. Restringe il campo, ordina l’attenzione e offre una base comune a persone che devono scegliere in fretta.</p>
+<p><img src="../../../Assets/fire-assets/images/07-filiera-geoai.png" alt="Filiera GeoAI dall'osservazione alla valutazione post-incendio"></p>
+<p><em>Ogni anello eredita l’incertezza di quello precedente. Il valore nasce nel passaggio dai dati alla decisione.</em></p>
+<p>Questa catena suggerisce anche un modo più serio di valutare i sistemi.</p>
+<p>Una segmentazione può ottenere un ottimo indice di intersezione sul benchmark e arrivare dopo che il fronte ha oltrepassato una strada. Un modello appena meno accurato può offrire dieci minuti in più e cambiare una decisione. Le metriche informatiche restano necessarie, ma devono incontrare quelle operative: latenza, affidabilità, falsi allarmi, eventi mancati, tempo guadagnato, risorse riallocate.</p>
+<p>La domanda decisiva diventa: <strong>che cosa è stato possibile fare grazie a questa informazione?</strong></p>
+<hr>
+<h2 id="quando-il-fuoco-non-si-vede-pi">Quando il fuoco non si vede più</h2>
+<p>Spegnere le fiamme chiude soltanto una parte dell’emergenza.</p>
+<p>La perdita di vegetazione e le trasformazioni del suolo possono aumentare erosione, ruscellamento, frane superficiali e colate detritiche. Una pioggia intensa, poche settimane dopo l’incendio, può aprire un secondo capitolo.</p>
+<p>Per ricostruire la severità si confrontano spesso immagini acquisite prima e dopo l’evento. Il <strong>Normalized Burn Ratio</strong> mette in relazione vicino infrarosso e infrarosso a onde corte, due regioni dello spettro sensibili alla vegetazione e all’umidità. La differenza tra il valore precedente e quello successivo, il dNBR, aiuta a separare aree non bruciate, danni lievi, moderati e severi. <a href="https://climate.copernicus.eu/wildfire-impact-how-it-monitored-measured">Copernicus descrive NBR, area bruciata e Fire Radiative Power come misure complementari dell’impatto</a>.</p>
+<p><img src="../../../Assets/fire-assets/images/06-dnbr-severita.png" alt="Esempio sintetico di NBR prima e dopo un incendio e differenza dNBR"></p>
+<p><em>Anche qui i dati sono simulati. Le soglie di severità non sono universali e vanno calibrate con osservazioni locali.</em></p>
+<p>Negli Stati Uniti, le squadre <strong>BAER</strong> usano prodotti satellitari preliminari per valutare vegetazione, suolo e bacini idrografici. <a href="https://burnseverity.cr.usgs.gov/baer/">Il programma fornisce immagini, classificazioni di severità e altri dati entro circa sette giorni dal contenimento</a>, mentre le mappe BARC vengono poi corrette sul campo per produrre la soil burn severity definitiva. La documentazione USGS chiarisce che <a href="https://www.usgs.gov/centers/eros/science/burned-area-emergency-response-support">le classi BARC sono quattro — alta, moderata, bassa e non bruciata — e costituiscono un input per gli interventi di stabilizzazione</a>.</p>
+<p>Il confronto spettrale non chiude la faccenda. Dentro lo stesso perimetro possono convivere aree distrutte, porzioni appena intaccate e isole rimaste verdi. Inoltre il radar, l’ottico e i sopralluoghi misurano proprietà differenti. La mappa finale è una sintesi, non una fotografia neutrale.</p>
+<p>Nel frattempo il fumo percorre una geografia diversa da quella delle fiamme. Il Copernicus Atmosphere Monitoring Service usa il <strong>Global Fire Assimilation System</strong> per derivare intensità ed emissioni dalla Fire Radiative Power. <a href="https://atmosphere.copernicus.eu/global-fire-monitoring">GFAS viene aggiornato quasi in tempo reale e alimenta le previsioni sulla composizione e sul trasporto del fumo</a>. CAMS sottolinea anche che <a href="https://atmosphere.copernicus.eu/qa-wildfires">la Fire Radiative Power non fornisce la superficie fisica del rogo: misura il segnale energetico usato per stimare intensità ed emissioni</a>.</p>
+<p>Il perimetro del danno, a quel punto, non coincide più con il perimetro bruciato. Un pennacchio può attraversare regioni e continenti, degradando l’aria molto lontano dal fronte.</p>
+<hr>
+<h2 id="gli-errori-che-contano">Gli errori che contano</h2>
+<p>I dati sugli incendi sono sbilanciati per natura. La quasi totalità delle celle spazio-temporali osservate non contiene un incendio. Un modello che classificasse sempre “nessun fuoco” potrebbe mostrare un’accuratezza notevole e risultare perfettamente inutile.</p>
+<p>Serve quindi guardare precisione, richiamo, calibrazione delle probabilità e comportamento sugli eventi estremi. Serve controllare se il modello funziona fuori dalla regione in cui è stato addestrato. Serve chiedersi che cosa accade quando cambiano vegetazione, pratiche agricole, densità stradale, clima e qualità dei sensori.</p>
+<p>Ci sono poi gli errori di osservazione. Le nuvole e il fumo possono nascondere il terreno. Un satellite può passare tra due fasi intense. Un piccolo incendio può rimanere sotto la soglia di rilevamento. Una superficie calda può generare un falso positivo. Un perimetro può essere aggiornato ore dopo, quando arriva un’acquisizione migliore.</p>
+<p>Per questo ogni prodotto operativo dovrebbe portare con sé quattro coordinate: l’ora dell’ultima osservazione, il sensore o modello utilizzato, la risoluzione insieme alla latenza e lo stato d’incertezza del prodotto. Senza queste informazioni una mappa precisa nei colori può essere vaga nel significato.</p>
+<p>La questione non riguarda soltanto la trasparenza scientifica. Coinvolge il modo in cui le persone leggono un’interfaccia. Un perimetro rosso, continuo e netto comunica psicologicamente più certezza di quanta il modello possieda. Una fascia probabilistica, invece, può sembrare più confusa ma raccontare meglio ciò che sappiamo.</p>
+<p>A volte una visualizzazione onesta è meno spettacolare. In una sala operativa, però, l’estetica della certezza può costare cara.</p>
+<hr>
+<h2 id="la-mappa-giusta-al-momento-giusto">La mappa giusta, al momento giusto</h2>
+<p>La GeoAI applicata agli incendi somiglia a una staffetta.</p>
+<p>Il primo sistema legge la predisposizione del territorio. Il secondo intercetta un’anomalia termica. Il terzo ricostruisce il perimetro. Un simulatore esplora le possibili traiettorie. Un GIS sovrappone abitazioni, infrastrutture e vie di fuga. Dopo lo spegnimento, altri modelli misurano severità, erosione e trasporto del fumo.</p>
+<p>Ogni passaggio consegna al successivo una rappresentazione incompleta del mondo.</p>
+<p>È facile lasciarsi ipnotizzare dall’ultima rete neurale o dalla nuova costellazione satellitare. Guardando meglio, però, il valore si forma nelle cerniere: nel modo in cui un hotspot viene verificato, una simulazione viene aggiornata, un’incertezza viene comunicata e una previsione entra nella sala operativa.</p>
+<p>La domanda “l’intelligenza artificiale può prevedere un incendio?” è troppo larga per essere utile.</p>
+<p>Conviene spezzarla.</p>
+<p>Quale fase stiamo cercando di anticipare? Con quali osservazioni? A quale risoluzione? Entro quanto tempo deve arrivare la risposta? Chi dovrà decidere sulla base di quella mappa? E che cosa succede quando il modello sbaglia?</p>
+<p>Il fuoco corre lungo il territorio. L’informazione deve riuscire a correre un po’ più in fretta.</p>
+<hr>
+<h2 id="nota-sul-laboratorio-interattivo">Nota sul laboratorio interattivo</h2>
+<p>Le simulazioni presenti nell’articolo sono state sviluppate per spiegare propagazione, incertezza, risoluzione e aggiornamento progressivo. Usano un automa cellulare didattico, combustibile sintetico e parametri controllabili; FlamMap, FARSITE e i modelli fisici operativi hanno una struttura molto più ricca. Il codice è incluso nel pacchetto affinché ogni passaggio sia ispezionabile e riproducibile.</p>
+<p>Il modulo Copernicus legge invece metadati pubblici dell’API ufficiale. La provenienza istituzionale del dato lascia invariato il suo ruolo editoriale: per le decisioni di sicurezza fanno fede le autorità competenti.</p>
+<h2 id="fonti-e-letture-per-approfondire">Fonti e letture per approfondire</h2>
+<p>Le citazioni principali sono state inserite direttamente nei passaggi che sostengono. Per continuare la lettura:</p>
+<ul>
+<li><a href="https://joint-research-centre.ec.europa.eu/projects-and-activities/natural-and-man-made-hazards/forest-fires/current-wildfire-situation-europe_en">JRC — situazione aggiornata degli incendi nell’Unione europea</a></li>
+<li><a href="https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/fire-danger-forecast">EFFIS — Fire Danger Forecast</a></li>
+<li><a href="https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/active-fire-detection">EFFIS — Active Fire Detection</a></li>
+<li><a href="https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/rapid-damage-assessment">EFFIS — Rapid Damage Assessment</a></li>
+<li><a href="https://rischi.protezionecivile.gov.it/it/approfondimento/bollettino-di-previsione-nazionale-incendi-boschivi/">Protezione Civile — bollettino nazionale incendi boschivi</a></li>
+<li><a href="https://www.ecmwf.int/en/about/media-centre/news/2025/scientists-present-new-ml-tool-improved-fire-prediction">ECMWF — Probability of Fire</a></li>
+<li><a href="https://www.nature.com/articles/s41467-025-58097-7">Di Giuseppe et al. — Global data-driven prediction of fire activity</a></li>
+<li><a href="https://www.nature.com/articles/s41598-025-94002-4">Illarionova et al. — robust wildfire occurrence prediction</a></li>
+<li><a href="https://www.tandfonline.com/doi/abs/10.1080/19475705.2025.2472864">Gelabert et al. — inneschi di origine umana nella Spagna orientale</a></li>
+<li><a href="https://www.mdpi.com/2072-4292/15/17/4208">Wu et al. — fattori di combustibile e previsione degli incendi a Changsha</a></li>
+<li><a href="https://link.springer.com/article/10.1186/s42408-024-00335-2">Moghim e Mehrabi — generalizzazione tra regioni fisicamente differenti</a></li>
+<li><a href="https://www.mdpi.com/2072-4292/15/13/3372">Schreck et al. — VIIRS e machine learning per l’umidità del combustibile</a></li>
+<li><a href="https://www.mdpi.com/1999-4907/14/9/1724">Xing et al. — stima dell’umidità del combustibile con drone multispettrale</a></li>
+<li><a href="https://www.earthdata.nasa.gov/es/data/catalog/lancemodis-vnp14img-nrt-2">NASA Earthdata — VIIRS active fire 375 m</a></li>
+<li><a href="https://www.nesdis.noaa.gov/data-products-research-services/wildland-fire-data-portal">NOAA — Next Generation Fire System</a></li>
+<li><a href="https://www.esa.int/Applications/Observing_the_Earth/Phsat-2/AI_for_wildfire_detection">ESA — PhiFireAI</a></li>
+<li><a href="https://www.esa.int/Applications/Observing_the_Earth/Hellenic_Fire_System_achieves_first_light">ESA — Hellenic Fire System</a></li>
+<li><a href="https://research.fs.usda.gov/firelab/products/dataandtools/flammap">US Forest Service — FlamMap</a></li>
+<li><a href="https://scil.ucsd.edu/wifire-program">UC San Diego — WIFIRE Program</a></li>
+<li><a href="https://gmd.copernicus.org/articles/19/1027/2026/">Yu et al. — probabilistic wildfire spread with a diffusion surrogate</a></li>
+<li><a href="https://mapping.emergency.copernicus.eu/news/information-bulletin-169-the-copernicus-emergency-management-service-maps-some-critical-wildfires-in-greece-update/">Copernicus EMS — incendi greci del luglio 2023</a></li>
+<li><a href="https://mapping.emergency.copernicus.eu/activations/EMSN159/">Copernicus EMS — EMSN159, valutazione di Rodi</a></li>
+<li><a href="https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/emergency-response-data/">Copernicus EMS — documentazione API Rapid Mapping</a></li>
+<li><a href="https://burnseverity.cr.usgs.gov/baer/">USGS — Burned Area Emergency Response</a></li>
+<li><a href="https://atmosphere.copernicus.eu/global-fire-monitoring">CAMS — monitoraggio globale del fuoco e del fumo</a></li>
+</ul>
         </div>
       </section>
     </article>
   </main>
   <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
     </span>
   </footer>
   <script>
     const BLOG_LANG_KEY = 'blogLang';
     const BLOG_THEME_KEY = 'blogTheme';
-    const CURRENT_LANG = ${serializeForScript(language)};
-    const OTHER_LANG = ${serializeForScript(otherLang)};
-    const OTHER_LANG_LINK = ${serializeForScript(otherLangLink)};
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/dove-andra-il-fuoco/index.html";
     (function() {
       const body = document.body;
       const readingProgressBar = document.getElementById('reading-progress-bar');
@@ -2679,7 +2022,7 @@ export function renderBlogDetail({
             '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
             '<span class="code-copy-btn__text">' + labels.copy + '</span>';
           button.addEventListener('click', async () => {
-            const text = (code.textContent || '').replace(/\s+$/, '');
+            const text = (code.textContent || '').replace(/s+$/, '');
             if (!text) {
               return;
             }
@@ -2837,5 +2180,4 @@ export function renderBlogDetail({
     })();
   </script>
 </body>
-</html>`;
-}
+</html>

@@ -6,13 +6,6 @@ function toPosix(input) {
   return input.split(path.sep).join('/');
 }
 
-function redactKey(key) {
-  if (!key || key.length < 8) {
-    return '[missing]';
-  }
-  return `${key.slice(0, 4)}…${key.slice(-4)}`;
-}
-
 export async function ensureEnglishTranslation(inputPath, { logger = console } = {}) {
   await loadProjectEnv({ rootDir: process.cwd(), logger });
 
@@ -47,7 +40,7 @@ export async function ensureEnglishTranslation(inputPath, { logger = console } =
   logger.info(
     `[translate] Generating English version for ${path.basename(
       itPath,
-    )} using Gemini model ${model} (API ${apiVersion}) (${redactKey(apiKey)})`,
+    )} using Gemini model ${model} (API ${apiVersion})`,
   );
 
   const markdown = await fs.readFile(itPath, 'utf8');
@@ -60,7 +53,7 @@ export async function ensureEnglishTranslation(inputPath, { logger = console } =
 }
 
 function getGeminiConfig() {
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
   const inferredVersion = /^gemini-2/i.test(model) ? 'v1' : 'v1beta';
   const apiVersion = process.env.GEMINI_API_VERSION || inferredVersion;
   const endpoint = `https://generativelanguage.googleapis.com/${apiVersion}/models/${model}:generateContent`;
