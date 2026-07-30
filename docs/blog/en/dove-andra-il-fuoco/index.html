@@ -42,7 +42,7 @@
     "headline": "Where will the fire go?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/fire-assets/fire_pred.jpg",
     "datePublished": "2026-07-30T00:00:00.000Z",
-    "dateModified": "2026-07-30T09:54:32.000Z",
+    "dateModified": "2026-07-30T10:43:46.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1526,7 +1526,7 @@
 <p><img src="../../../Assets/fire-assets/fire_pred.jpg" alt="Median Fire Weather Index anomaly map"></p>
 <p><em>I am writing this article on July 30, 2026. The map shows the median Fire Weather Index (FWI) anomaly, calculated as a standard deviation from the thirty-year historical mean.</em></p>
 <p>The clearest signal comes from EFFIS’s <strong>Weekly Cumulative Severity Rating</strong>. The <strong>Daily Severity Rating (DSR)</strong> turns weather conditions that favour fire into a measure of their severity: the higher it is, the more intense and difficult to control a fire could become if it starts. In 2026, the cumulative value—the sum day by day from the start of the year—has already moved beyond the range observed in the historical series available so far. Explore the chart to compare the cumulative and weekly patterns with their departure from the historical range.</p>
-<iframe src="../../../Assets/fire-assets/grafico-dsr-cumulato-eu.html?lang=en" title="Interactive chart of the cumulative Daily Severity Rating in Europe" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
+<iframe data-sync-theme src="../../../Assets/fire-assets/grafico-dsr-cumulato-eu.html?lang=en" title="Interactive chart of the cumulative Daily Severity Rating in Europe" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
 
 <p>Before jumping to conclusions, however, it is worth pausing for a moment. EFFIS figures do not arrive as definitive data. The same page warns that estimates are corrected as better imagery becomes available; furthermore, the system primarily monitors fires of approximately thirty hectares or more that involve, at least in part, natural surfaces. In short, even the portion of territory we consider &quot;already burned&quot; remains a provisional reconstruction for some time.</p>
 <p>This is a good starting point because it shows the situation for what it is. During a wildfire, there is no perfect map that observes everything at the same instant. There are sensors passing over at different times, pixels of varying sizes, weather models, ground observations, cameras, aircraft, drones, and perimeters that are drawn and then redrawn. With every step, we gain information, but we also uncover a new margin of error.</p>
@@ -1551,6 +1551,8 @@
 <p>This is already a form of GeoAI, even if the label is not explicitly used. There is a geographic component, as every variable changes across space. There is a modeling component, as heterogeneous data must be fused. There is a downstream decision-making process, as an area classified as highly susceptible may require a different deployment of personnel and equipment. For the 2026 summer season, <a href="https://www.protezionecivile.gov.it/it/approfondimento/campagna-antincendio-boschivo-2026/">the national wildfire prevention campaign has been set from June 15 to October 15</a>.</p>
 <p>In recent years, machine learning has attempted to sharpen this focus. The <strong>Probability of Fire</strong> model developed by ECMWF integrates weather, fuel abundance and moisture, human presence, lightning, and observations of fire activity. <a href="https://www.ecmwf.int/en/about/media-centre/news/2025/scientists-present-new-ml-tool-improved-fire-prediction">According to the ECMWF technical presentation, the combined use of these various sources has improved predictive capability by up to 30%</a>.</p>
 <p>The scientific study behind the system offers an even more instructive finding: <a href="https://www.nature.com/articles/s41467-025-58097-7">data on fuel, ignitions, and observed fires reduce false alarms in models based primarily on weather, while the quality of the input data matters more than the complexity of the architecture</a>. In that comparison, a tree-based solution like XGBoost achieved performance comparable to a more sophisticated neural network.</p>
+<p><img src="../../../Assets/fire-assets/ecmwf-data-driven-fire-prediction.png" alt="Comparison of data-driven fire prediction skill"></p>
+<p><em>Performance of the data-driven fire-activity prediction in the ECMWF study. The figure compares models and data inputs, highlighting the contribution of observations of fuel, ignitions, and detected fires. Figure 1 from <a href="https://www.nature.com/articles/s41467-025-58097-7">Di Giuseppe et al. (2025)</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</em></p>
 <p>Work conducted in eastern Spain helps illustrate what it means to add the human component. The authors cross-referenced 849 ignitions with distance from roads and wildland-urban interfaces, population density, fuel types, and dead fuel moisture: <a href="https://www.tandfonline.com/doi/abs/10.1080/19475705.2025.2472864">the Random Forest model achieved an AUC of 0.76 ± 0.01 and demonstrated how climate and demographic shifts can reshape ignition probability</a>. This figure must be read within its context, without pitting it against metrics obtained from different regions, periods, and sampling methods.</p>
 <p>This is a lesson that frequently recurs in GeoAI. Before adding layers to a model, it is worth asking whether we are observing the territory correctly.</p>
 <p>ECMWF has also published a <a href="https://www.ecmwf.int/en/about/media-centre/science-blog/2026/build-your-own-probability-fire-model">reproducible Probability of Fire Toolbox, built as a sequence of notebooks for preparing data, training local models, and evaluating them</a>. This is an interesting choice because it acknowledges a limitation of global products: climate, vegetation, land management, and human activity vary from region to region. The same conclusion emerges from a study of over 17,000 fires verified in different areas of central Russia: <a href="https://www.nature.com/articles/s41598-025-94002-4">F1-scores ranged between 0.70 and 0.87, and the authors recommended models adapted to the characteristics of each region</a>.</p>
@@ -2097,6 +2099,13 @@
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
       let activeLink = null;
       let ticking = false;
+      function syncEmbeddedThemes(theme) {
+        document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+          if (frame.contentWindow) {
+            frame.contentWindow.postMessage({ type: 'blog-theme', theme }, window.location.origin);
+          }
+        });
+      }
       function applyTheme(theme) {
         const resolved = theme === 'dark' ? 'dark' : 'light';
         body.setAttribute('data-theme', resolved);
@@ -2107,6 +2116,7 @@
           themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
         }
         localStorage.setItem(BLOG_THEME_KEY, resolved);
+        syncEmbeddedThemes(resolved);
       }
       function setActive(link) {
         if (activeLink === link) {
@@ -2156,6 +2166,11 @@
       initInlineNotes();
       enhanceCodeBlocks();
       initToc();
+      document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+        frame.addEventListener('load', () => {
+          syncEmbeddedThemes(body.getAttribute('data-theme') || initialTheme);
+        });
+      });
       applyTheme(initialTheme);
       updateReadingProgress();
       if (themeToggle) {

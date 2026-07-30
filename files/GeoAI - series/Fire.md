@@ -13,7 +13,7 @@ Le cifre di [EFFIS (European Forest Fires Information System)](https://forest-fi
 
 Il segnale più netto arriva dal **Weekly Cumulative Severity Rating** di EFFIS. Il **Daily Severity Rating (DSR)** traduce le condizioni meteo favorevoli al fuoco in una misura della loro severità: più è alto, più un eventuale incendio può diventare intenso e difficile da controllare. Nel 2026 il valore cumulato, cioè la somma giorno per giorno dall'inizio dell'anno, è già oltre l'intervallo osservato nella serie storica finora disponibile. Esplora il grafico per confrontare l'andamento cumulato, quello settimanale e lo scostamento dalla fascia storica.
 
-<iframe src="/Assets/fire-assets/grafico-dsr-cumulato-eu.html" title="Grafico interattivo del Daily Severity Rating cumulato in Europa" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
+<iframe data-sync-theme src="/Assets/fire-assets/grafico-dsr-cumulato-eu.html" title="Grafico interattivo del Daily Severity Rating cumulato in Europa" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
 
 Facciamo un passo indietro. Ho detto poco fa che le stime vengono aggiornate quando arrivano nuove osservazioni, magari più recenti, più dettagliate o più adatte a quella particolare fase dell’incendio. Ma che cosa significa, in pratica?
 
@@ -35,9 +35,9 @@ Quando compare il primo punto rosso su una mappa satellitare, una parte della st
 
 Nei giorni precedenti può aver piovuto poco. Il vento può essere aumentato. La vegetazione può aver perso umidità, mentre rami, aghi e arbusti secchi hanno continuato ad accumularsi. Una primavera piovosa può persino aver favorito la crescita di nuova biomassa che, una volta disseccata, diventa combustibile. Poi arriva l’innesco: un fulmine, una scintilla, un’attività agricola, una linea elettrica, un gesto umano deliberato o superficiale.
 
-Per leggere questa fase si usano da tempo gli indici meteorologici di pericolo. In Europa, EFFIS calcola il **Fire Weather Index** a partire dalle previsioni ECMWF (~8 km) e Météo-France (~10 km) e lo rappresenta in sei classi armonizzate, da bassa a molto estrema. [La documentazione ufficiale di EFFIS descrive previsioni da uno a nove giorni e una classe “Very Extreme” introdotta nel 2021 per distinguere le situazioni mediterranee più gravi](https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/fire-danger-forecast).
+Per leggere questa fase si usano da tempo gli indici meteorologici di pericolo. In Europa, EFFIS calcola il **Fire Weather Index** a partire dalle previsioni ECMWF ($\sim 8$ km) e Météo-France ($\sim 10$ km) e lo rappresenta in sei classi armonizzate, da bassa a molto estrema. [La documentazione ufficiale di EFFIS descrive previsioni da uno a nove giorni e una classe “Very Extreme” introdotta nel 2021 per distinguere le situazioni mediterranee più gravi](https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/fire-danger-forecast).
 
-Il risultato dice quanto l’atmosfera e il combustibile morto favoriscano l’accensione e un comportamento difficile da controllare, qualora un innesco avvenga.
+Il valore indica quanto le condizioni meteo e la vegetazione secca al suolo rendano facile far partire un incendio e quanto rapidamente questo potrebbe propagarsi e diventare difficile da spegnere, se si verifica una scintilla o un’altra fonte di accensione.
 
 Quel **qualora** conta parecchio.
 
@@ -45,21 +45,21 @@ Un territorio può essere molto secco e ventoso senza che parta alcun incendio. 
 
 Qui conviene separare almeno tre concetti.
 
-La **pericolosità** descrive la possibilità che il fenomeno si presenti con una certa intensità. La **probabilità di attività** prova a localizzare dove sia plausibile osservare un incendio, aggiungendo informazioni su combustibile e sorgenti d’innesco. Il **rischio** incorpora ciò che potrebbe essere colpito: persone, abitazioni, strade, ecosistemi, linee elettriche, aziende agricole.
+La **pericolosità** descrive la possibilità che il fenomeno si presenti con una certa intensità. La **probabilità di attività** prova a localizzare *dove* sia plausibile osservare un incendio, aggiungendo informazioni su combustibile e sorgenti d’innesco. Il **rischio** incorpora ciò che potrebbe essere colpito: persone, abitazioni, strade, ecosistemi, linee elettriche, aziende agricole.
 
-Le tre carte possono assomigliarsi. Le decisioni che suggeriscono cambiano.
-
-![Cinque superfici sintetiche mostrano combustibile, secchezza, pendenza, pressione umana e probabilità stimata](/Assets/fire-assets/images/01-dalla-vegetazione-alla-probabilita.png)
-
-*Una visualizzazione didattica della fusione tra fattori geografici. La formula usata per generare l’immagine è volutamente semplificata.*
+Questi tre concetti possono assomigliarsi. Le decisioni che suggeriscono però cambiano parecchio!
 
 In Italia il Dipartimento della Protezione Civile elabora ogni giorno un bollettino nazionale. Nella valutazione entrano [condizioni meteo-climatiche, vegetazione, stato e uso del suolo, morfologia e organizzazione del territorio](https://rischi.protezionecivile.gov.it/it/approfondimento/bollettino-di-previsione-nazionale-incendi-boschivi/). Il prodotto esprime, su tre livelli, una stima probabilistica della suscettività all’innesco e alla propagazione nelle ventiquattro ore successive e supporta anche la gestione della flotta aerea statale.
 
 Questa è già una forma di GeoAI, anche quando l’etichetta non compare. C’è una componente geografica, perché ogni variabile cambia nello spazio. C’è una componente modellistica, perché bisogna fondere dati eterogenei. C’è una decisione a valle, perché una zona classificata ad alta suscettività può richiedere un diverso schieramento di uomini e mezzi. Per l’estate 2026, [la campagna antincendio boschivo nazionale è stata fissata dal 15 giugno al 15 ottobre](https://www.protezionecivile.gov.it/it/approfondimento/campagna-antincendio-boschivo-2026/).
 
-Negli ultimi anni il machine learning ha provato a spostare un po’ più avanti la messa a fuoco. Il modello **Probability of Fire** sviluppato da ECMWF integra meteo, abbondanza e umidità del combustibile, presenza umana, fulmini e osservazioni dell’attività del fuoco. [Secondo la presentazione tecnica di ECMWF, l’impiego congiunto delle diverse sorgenti ha migliorato fino al 30% la capacità predittiva](https://www.ecmwf.int/en/about/media-centre/news/2025/scientists-present-new-ml-tool-improved-fire-prediction).
+Negli ultimi anni il machine learning ha provato a spostare un po’ più avanti la messa a fuoco (scusate il gioco di parole infelice in questo articolo). Il modello **Probability of Fire** sviluppato da ECMWF integra meteo, abbondanza e umidità del combustibile, presenza umana, fulmini e osservazioni dell’attività del fuoco. [Secondo la presentazione tecnica di ECMWF, l’impiego congiunto delle diverse sorgenti ha migliorato fino al 30% la capacità predittiva](https://www.ecmwf.int/en/about/media-centre/news/2025/scientists-present-new-ml-tool-improved-fire-prediction).
 
 Lo studio scientifico da cui nasce il sistema aggiunge un risultato ancora più istruttivo: [i dati su combustibile, inneschi e incendi osservati riducono i falsi allarmi dei modelli basati soprattutto sul meteo, mentre la qualità degli input pesa più della complessità dell’architettura](https://www.nature.com/articles/s41467-025-58097-7). In quel confronto, una soluzione ad alberi come XGBoost ha ottenuto prestazioni paragonabili a una rete neurale più sofisticata.
+
+![Confronto delle prestazioni della previsione data-driven degli incendi](/Assets/fire-assets/ecmwf-data-driven-fire-prediction.png)
+
+*Prestazioni della previsione data-driven dell’attività di incendio nello studio ECMWF. La figura confronta modelli e insiemi di dati diversi, mostrando il contributo delle osservazioni su combustibile, inneschi e fuochi rilevati. Figura 1 di [Di Giuseppe et al. (2025)](https://www.nature.com/articles/s41467-025-58097-7), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).*
 
 Un lavoro condotto nella Spagna orientale aiuta a vedere che cosa significhi aggiungere la componente umana. Gli autori hanno incrociato 849 inneschi con distanza da strade e interfacce urbano-rurali, densità di popolazione, tipi di combustibile e umidità del combustibile morto: [il Random Forest ha raggiunto un’AUC di 0,76 ± 0,01 e ha mostrato come clima e trasformazioni demografiche possano ridisegnare la probabilità d’innesco](https://www.tandfonline.com/doi/abs/10.1080/19475705.2025.2472864). Il numero va letto nel suo contesto, senza metterlo in gara con metriche ottenute su regioni, periodi e campionamenti differenti.
 

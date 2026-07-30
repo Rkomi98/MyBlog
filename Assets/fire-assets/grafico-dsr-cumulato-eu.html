@@ -14,6 +14,11 @@
     background-color:#0B1120;
     background-image:url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
     min-height:100vh;
+    transition:background-color .2s ease,color .2s ease;
+  }
+  body[data-theme="light"]{
+    background-color:#f8fafc;
+    background-image:none;
   }
 </style>
 </head>
@@ -111,6 +116,33 @@
   font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.13em;
   text-transform:uppercase;color:#64748B;
 }
+body[data-theme="light"] .tt-fig{
+  --tt-bg:#ffffff;
+  --tt-surface:#f1f5f9;
+  --tt-text:#0f172a;
+  --tt-muted:#475569;
+}
+body[data-theme="light"] .tt-card{
+  border-color:rgba(15,23,42,.12);
+  box-shadow:0 18px 40px -22px rgba(15,23,42,.32);
+}
+body[data-theme="light"] .tt-badge,
+body[data-theme="light"] .tt-seg,
+body[data-theme="light"] .tt-chip{
+  border-color:rgba(15,23,42,.12);
+  background:rgba(15,23,42,.035);
+}
+body[data-theme="light"] .tt-title,
+body[data-theme="light"] .tt-seg button:hover,
+body[data-theme="light"] .tt-chip:hover,
+body[data-theme="light"] .tt-note b,
+body[data-theme="light"] .tt-tip-day{color:#0f172a;}
+body[data-theme="light"] .tt-tip{
+  background:rgba(255,255,255,.98);
+  border-color:rgba(15,23,42,.14);
+  box-shadow:0 12px 28px -10px rgba(15,23,42,.3);
+}
+body[data-theme="light"] .tt-note{border-top-color:rgba(15,23,42,.09);}
 @media (max-width:560px){
   .tt-card{padding:1rem .8rem .85rem;}
   .tt-legend{margin-left:0;}
@@ -147,6 +179,24 @@
 <script>
 (function(){
   const lang = new URLSearchParams(window.location.search).get("lang") === "en" ? "en" : "it";
+  const parentTheme = (() => {
+    try {
+      return window.parent.document.body?.getAttribute("data-theme");
+    } catch (_) {
+      return null;
+    }
+  })();
+  const storedTheme = (localStorage.getItem("blogTheme") || "").toLowerCase();
+  function applyTheme(theme) {
+    document.body.setAttribute("data-theme", theme === "light" ? "light" : "dark");
+  }
+  applyTheme(parentTheme || (storedTheme === "light" ? "light" : "dark"));
+  window.addEventListener("message", (event) => {
+    if (event.source === window.parent && event.data?.type === "blog-theme") {
+      applyTheme(event.data.theme);
+      render();
+    }
+  });
   const T = lang === "en" ? {
     kicker:"Wildfire season · Europe",
     title:"2026 cumulative severity against forty-six years of history",
@@ -302,6 +352,9 @@
     const H = narrow ? 300 : 400;
     const m = {t:26, r:narrow?16:26, b:32, l:narrow?32:42};
     const pw = W-m.l-m.r, ph = H-m.t-m.b;
+    const isLight = document.body.getAttribute("data-theme") === "light";
+    const gridColor = isLight ? "rgba(15,23,42," : "rgba(255,255,255,";
+    const plotBackground = isLight ? "#ffffff" : "#0F172A";
 
     let lo=0, hi=1, series=[];
     if(state.view==="cum"){
@@ -340,7 +393,7 @@
     ticks(lo,hi,narrow?4:5).forEach(t=>{
       const y=Y(t), zero = Math.abs(t)<1e-9;
       s.push('<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+
-             '" stroke="rgba(255,255,255,'+(zero?0.18:0.055)+')" stroke-width="1"/>');
+             '" stroke="'+gridColor+(zero?0.18:0.055)+')" stroke-width="1"/>');
       s.push('<text x="'+(m.l-8)+'" y="'+(y+3.5).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#64748B">'+
              (Math.abs(t)>=10?t.toFixed(0):t.toFixed(1))+'</text>');
     });
@@ -354,7 +407,7 @@
       if(d.mese===seen) return;
       seen=d.mese;
       const x=X(i);
-      s.push('<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+(m.t+ph)+'" y2="'+(m.t+ph+4)+'" stroke="rgba(255,255,255,.12)"/>');
+      s.push('<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+(m.t+ph)+'" y2="'+(m.t+ph+4)+'" stroke="'+gridColor+'.12)"/>');
       s.push('<text x="'+x.toFixed(1)+'" y="'+(m.t+ph+17)+'" text-anchor="middle" font-size="9" letter-spacing=".08em" fill="#64748B">'+
              d.mese.toUpperCase()+'</text>');
     });
@@ -453,7 +506,7 @@
         if(state.cur && weekCur[i]!==null) dots.push([weekCur[i],COL.cur]);
       }else if(anom[i]!==null){ dots.push([anom[i],COL.cur]); }
       dots.forEach(d=>{
-        s.push('<circle cx="'+x.toFixed(1)+'" cy="'+Y(d[0]).toFixed(1)+'" r="3.2" fill="#0F172A" stroke="'+d[1]+'" stroke-width="1.8"/>');
+        s.push('<circle cx="'+x.toFixed(1)+'" cy="'+Y(d[0]).toFixed(1)+'" r="3.2" fill="'+plotBackground+'" stroke="'+d[1]+'" stroke-width="1.8"/>');
       });
     }
 

@@ -2749,6 +2749,13 @@ export function renderBlogDetail({
       const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
       let activeLink = null;
       let ticking = false;
+      function syncEmbeddedThemes(theme) {
+        document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+          if (frame.contentWindow) {
+            frame.contentWindow.postMessage({ type: 'blog-theme', theme }, window.location.origin);
+          }
+        });
+      }
       function applyTheme(theme) {
         const resolved = theme === 'dark' ? 'dark' : 'light';
         body.setAttribute('data-theme', resolved);
@@ -2759,6 +2766,7 @@ export function renderBlogDetail({
           themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
         }
         localStorage.setItem(BLOG_THEME_KEY, resolved);
+        syncEmbeddedThemes(resolved);
       }
       function setActive(link) {
         if (activeLink === link) {
@@ -2808,6 +2816,11 @@ export function renderBlogDetail({
       initInlineNotes();
       enhanceCodeBlocks();
       initToc();
+      document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+        frame.addEventListener('load', () => {
+          syncEmbeddedThemes(body.getAttribute('data-theme') || initialTheme);
+        });
+      });
       applyTheme(initialTheme);
       updateReadingProgress();
       if (themeToggle) {

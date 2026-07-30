@@ -12,7 +12,7 @@ At 8:18 AM on July 29, 2026, the Joint Research Centre’s page dedicated to Eur
 
 The clearest signal comes from EFFIS’s **Weekly Cumulative Severity Rating**. The **Daily Severity Rating (DSR)** turns weather conditions that favour fire into a measure of their severity: the higher it is, the more intense and difficult to control a fire could become if it starts. In 2026, the cumulative value—the sum day by day from the start of the year—has already moved beyond the range observed in the historical series available so far. Explore the chart to compare the cumulative and weekly patterns with their departure from the historical range.
 
-<iframe src="/Assets/fire-assets/grafico-dsr-cumulato-eu.html?lang=en" title="Interactive chart of the cumulative Daily Severity Rating in Europe" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
+<iframe data-sync-theme src="/Assets/fire-assets/grafico-dsr-cumulato-eu.html?lang=en" title="Interactive chart of the cumulative Daily Severity Rating in Europe" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
 
 Before jumping to conclusions, however, it is worth pausing for a moment. EFFIS figures do not arrive as definitive data. The same page warns that estimates are corrected as better imagery becomes available; furthermore, the system primarily monitors fires of approximately thirty hectares or more that involve, at least in part, natural surfaces. In short, even the portion of territory we consider "already burned" remains a provisional reconstruction for some time.
 
@@ -59,6 +59,10 @@ This is already a form of GeoAI, even if the label is not explicitly used. There
 In recent years, machine learning has attempted to sharpen this focus. The **Probability of Fire** model developed by ECMWF integrates weather, fuel abundance and moisture, human presence, lightning, and observations of fire activity. [According to the ECMWF technical presentation, the combined use of these various sources has improved predictive capability by up to 30%](https://www.ecmwf.int/en/about/media-centre/news/2025/scientists-present-new-ml-tool-improved-fire-prediction).
 
 The scientific study behind the system offers an even more instructive finding: [data on fuel, ignitions, and observed fires reduce false alarms in models based primarily on weather, while the quality of the input data matters more than the complexity of the architecture](https://www.nature.com/articles/s41467-025-58097-7). In that comparison, a tree-based solution like XGBoost achieved performance comparable to a more sophisticated neural network.
+
+![Comparison of data-driven fire prediction skill](/Assets/fire-assets/ecmwf-data-driven-fire-prediction.png)
+
+*Performance of the data-driven fire-activity prediction in the ECMWF study. The figure compares models and data inputs, highlighting the contribution of observations of fuel, ignitions, and detected fires. Figure 1 from [Di Giuseppe et al. (2025)](https://www.nature.com/articles/s41467-025-58097-7), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).*
 
 Work conducted in eastern Spain helps illustrate what it means to add the human component. The authors cross-referenced 849 ignitions with distance from roads and wildland-urban interfaces, population density, fuel types, and dead fuel moisture: [the Random Forest model achieved an AUC of 0.76 ± 0.01 and demonstrated how climate and demographic shifts can reshape ignition probability](https://www.tandfonline.com/doi/abs/10.1080/19475705.2025.2472864). This figure must be read within its context, without pitting it against metrics obtained from different regions, periods, and sampling methods.
 
