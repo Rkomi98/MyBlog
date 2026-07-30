@@ -96,6 +96,19 @@
     @media (max-width:860px) { .body { grid-template-columns:1fr; } .controls { border-top:1px solid var(--border, rgba(148,163,184,.2)); border-left:0; } .stage { min-height:22rem; } .head { flex-direction:column; } }
   `;
 
+  const wildfireStyle = `${hotspotStyle}
+    .body { min-height:29rem; }
+    .buttons { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .buttons .wide { grid-column:1 / -1; }
+    .buttons .primary { background:var(--surface, #1e293b); }
+    .buttons .accent { border-color:color-mix(in srgb, var(--accent, #10b981) 65%, transparent); background:var(--accent, #10b981); color:#fff; }
+    .buttons .accent:hover { background:var(--accent-strong, #34d399); color:#052e24; }
+    .buttons .soft { background:color-mix(in srgb, var(--surface, #1e293b) 75%, var(--text-primary, #e2e8f0) 8%); }
+    button:disabled { cursor:not-allowed; opacity:.52; transform:none; }
+    .progress { height:5px; margin-top:.8rem; overflow:hidden; border-radius:999px; background:var(--border, rgba(148,163,184,.2)); }
+    .progress > i { display:block; width:0; height:100%; background:var(--accent, #10b981); transition:width .15s ease; }
+  `;
+
   const HOTSPOT_COPY = {
     it: {
       experiment: 'Esperimento 01', title: 'Il punto rosso e la sorgente termica',
@@ -116,6 +129,35 @@
       note: 'The scale is illustrative. Real products depend on sensor geometry and on the detection algorithm.',
       canvasLabel: 'Demonstration of the relationship between a hotspot and its pixel', modisTitle: 'MODIS · larger nominal cell', viirsTitle: 'VIIRS · finer nominal cell',
       canvasHint: 'The symbol stays at the centre of the cell; the source can be elsewhere.'
+    }
+  };
+
+  const WILDFIRE_COPY = {
+    it: {
+      experiment: 'Esperimento 02',
+      title: 'Propagazione probabilistica su un paesaggio sintetico',
+      intro: 'Vento, umidità, continuità del combustibile e spotting cambiano il percorso. La modalità ensemble sovrappone più futuri possibili.',
+      status: 'didattico · non operativo',
+      canvasLabel: 'Simulatore didattico della propagazione di un incendio',
+      front: 'fronte', burned: 'bruciato', probability: 'probabilità ensemble',
+      wind: 'Forza del vento', direction: 'Direzione', humidity: 'Umidità', fuel: 'Continuità del combustibile', spotting: 'Spotting',
+      start: 'Avvia', pause: 'Pausa', resume: 'Riprendi', reset: 'Azzera', ensemble: 'Calcola 32 scenari', calculating: 'Calcolo in corso…',
+      steps: 'passi', reached: 'area raggiunta', view: 'vista', single: 'singolo', ensembleMode: 'ensemble',
+      note: 'Automa cellulare esplicativo. Non incorpora la fisica completa della combustione, dati osservati o regole operative.',
+      windCanvas: 'VENTO', ensembleCanvas: '32 futuri sovrapposti'
+    },
+    en: {
+      experiment: 'Experiment 02',
+      title: 'Probabilistic spread across a synthetic landscape',
+      intro: 'Wind, humidity, fuel continuity, and spotting change the path. Ensemble mode overlays several possible futures.',
+      status: 'educational · non-operational',
+      canvasLabel: 'Educational wildfire spread simulator',
+      front: 'active front', burned: 'burned', probability: 'ensemble probability',
+      wind: 'Wind strength', direction: 'Direction', humidity: 'Humidity', fuel: 'Fuel continuity', spotting: 'Spotting',
+      start: 'Start', pause: 'Pause', resume: 'Resume', reset: 'Reset', ensemble: 'Run 32 scenarios', calculating: 'Calculating…',
+      steps: 'steps', reached: 'reached area', view: 'view', single: 'single', ensembleMode: 'ensemble',
+      note: 'Explanatory cellular automaton. It does not include full combustion physics, observed data, or operational rules.',
+      windCanvas: 'WIND', ensembleCanvas: '32 overlaid outcomes'
     }
   };
 
@@ -301,27 +343,30 @@
     connectedCallback() {
       if (this.shadowRoot) return;
       const root = this.attachShadow({ mode: 'open' });
+      this.language = document.documentElement.lang === 'en' ? 'en' : 'it';
+      this.copy = WILDFIRE_COPY[this.language];
+      this.locale = this.language === 'en' ? 'en-US' : 'it-IT';
       root.innerHTML = `
-        <style>${sharedStyle}</style>
+        <style>${wildfireStyle}</style>
         <div class="lab">
           <div class="head">
-            <div><div class="eyebrow">Esperimento 02</div><h3>Propagazione probabilistica su un paesaggio sintetico</h3><p>Vento, umidità, continuità del combustibile e spotting cambiano il percorso. La modalità ensemble sovrappone più futuri possibili.</p></div>
-            <div class="status">non operativo</div>
+            <div><div class="eyebrow">${this.copy.experiment}</div><h3>${this.copy.title}</h3><p>${this.copy.intro}</p></div>
+            <div class="status">${this.copy.status}</div>
           </div>
           <div class="body">
-            <div class="stage"><canvas width="960" height="640" aria-label="Simulatore didattico della propagazione di un incendio"></canvas>
-              <div class="legend"><span><i class="swatch" style="background:${COLORS.orange}"></i> fronte</span><span><i class="swatch" style="background:${COLORS.darkRed}"></i> bruciato</span><span><i class="swatch" style="background:${COLORS.blue}"></i> probabilità ensemble</span></div>
+            <div class="stage"><canvas width="960" height="640" aria-label="${this.copy.canvasLabel}"></canvas>
+              <div class="legend"><span><i class="swatch" style="background:${COLORS.orange}"></i> ${this.copy.front}</span><span><i class="swatch" style="background:${COLORS.darkRed}"></i> ${this.copy.burned}</span><span><i class="swatch" style="background:${COLORS.blue}"></i> ${this.copy.probability}</span></div>
             </div>
             <div class="controls">
-              <div class="control"><div class="control-head"><label for="wind">Forza del vento</label><output id="windv">0,65</output></div><input id="wind" type="range" min="0" max="100" value="65"></div>
-              <div class="control"><div class="control-head"><label for="angle">Direzione</label><output id="anglev">25°</output></div><input id="angle" type="range" min="0" max="359" value="25"></div>
-              <div class="control"><div class="control-head"><label for="humidity">Umidità</label><output id="humidityv">30%</output></div><input id="humidity" type="range" min="10" max="70" value="30"></div>
-              <div class="control"><div class="control-head"><label for="fuel">Continuità del combustibile</label><output id="fuelv">82%</output></div><input id="fuel" type="range" min="25" max="100" value="82"></div>
-              <div class="control"><div class="control-head"><label for="spotting">Spotting</label><output id="spottingv">1,8%</output></div><input id="spotting" type="range" min="0" max="50" value="18"></div>
-              <div class="buttons"><button class="primary" id="run">Avvia</button><button class="soft" id="reset">Azzera</button><button class="accent wide" id="ensemble">Calcola 32 scenari</button></div>
+              <div class="control"><div class="control-head"><label for="wind">${this.copy.wind}</label><output id="windv">0</output></div><input id="wind" type="range" min="0" max="100" value="65"></div>
+              <div class="control"><div class="control-head"><label for="angle">${this.copy.direction}</label><output id="anglev">25°</output></div><input id="angle" type="range" min="0" max="359" value="25"></div>
+              <div class="control"><div class="control-head"><label for="humidity">${this.copy.humidity}</label><output id="humidityv">30%</output></div><input id="humidity" type="range" min="10" max="70" value="30"></div>
+              <div class="control"><div class="control-head"><label for="fuel">${this.copy.fuel}</label><output id="fuelv">82%</output></div><input id="fuel" type="range" min="25" max="100" value="82"></div>
+              <div class="control"><div class="control-head"><label for="spotting">${this.copy.spotting}</label><output id="spottingv">0</output></div><input id="spotting" type="range" min="0" max="50" value="18"></div>
+              <div class="buttons"><button class="primary" id="run">${this.copy.start}</button><button class="soft" id="reset">${this.copy.reset}</button><button class="accent wide" id="ensemble">${this.copy.ensemble}</button></div>
               <div class="progress"><i id="bar"></i></div>
-              <div class="metrics"><div class="metric"><strong id="step">0</strong><span>passi</span></div><div class="metric"><strong id="burned">0%</strong><span>area raggiunta</span></div><div class="metric"><strong id="mode">singolo</strong><span>vista</span></div></div>
-              <div class="note">Automa cellulare esplicativo. Non incorpora la fisica completa della combustione, dati osservati o regole operative.</div>
+              <div class="metrics"><div class="metric"><strong id="step">0</strong><span>${this.copy.steps}</span></div><div class="metric"><strong id="burned">0%</strong><span>${this.copy.reached}</span></div><div class="metric"><strong id="mode">${this.copy.single}</strong><span>${this.copy.view}</span></div></div>
+              <div class="note">${this.copy.note}</div>
             </div>
           </div>
         </div>`;
@@ -333,25 +378,38 @@
       for (const id of ['wind', 'angle', 'humidity', 'fuel', 'spotting']) this.controls[id] = root.querySelector(`#${id}`);
       this.running = false; this.frame = 0; this.ensembleProb = null;
       this.seedCounter = 0;
+      // bindControls() draws once to reflect the sliders, so the state must
+      // already exist before that first render.
+      this.state = new Uint8Array(this.rows * this.cols);
       this.bindControls();
       root.querySelector('#run').addEventListener('click', () => this.toggle());
       root.querySelector('#reset').addEventListener('click', () => this.reset());
       root.querySelector('#ensemble').addEventListener('click', () => this.runEnsemble());
+      this.themeObserver = new MutationObserver(() => this.draw());
+      this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
       this.reset();
+    }
+
+    disconnectedCallback() {
+      if (this.themeObserver) this.themeObserver.disconnect();
     }
 
     bindControls() {
       const root = this.shadowRoot;
       const show = () => {
-        root.querySelector('#windv').value = (Number(this.controls.wind.value) / 100).toFixed(2).replace('.', ',');
+        root.querySelector('#windv').value = this.formatNumber(Number(this.controls.wind.value) / 100, 2);
         root.querySelector('#anglev').value = `${this.controls.angle.value}°`;
         root.querySelector('#humidityv').value = `${this.controls.humidity.value}%`;
         root.querySelector('#fuelv').value = `${this.controls.fuel.value}%`;
-        root.querySelector('#spottingv').value = `${(Number(this.controls.spotting.value) / 10).toFixed(1).replace('.', ',')}%`;
+        root.querySelector('#spottingv').value = `${this.formatNumber(Number(this.controls.spotting.value) / 10, 1)}%`;
         this.draw();
       };
       Object.values(this.controls).forEach(control => control.addEventListener('input', show));
       show();
+    }
+
+    formatNumber(value, maximumFractionDigits = 1) {
+      return new Intl.NumberFormat(this.locale, { minimumFractionDigits: maximumFractionDigits, maximumFractionDigits }).format(value);
     }
 
     params() {
@@ -366,7 +424,7 @@
 
     reset() {
       this.running = false;
-      this.shadowRoot.querySelector('#run').textContent = 'Avvia';
+      this.shadowRoot.querySelector('#run').textContent = this.copy.start;
       this.state = new Uint8Array(this.rows * this.cols);
       this.burning = [];
       const sy = Math.floor(this.rows * .73); const sx = Math.floor(this.cols * .18);
@@ -376,21 +434,21 @@
       }
       this.stepNo = 0; this.ensembleProb = null;
       this.shadowRoot.querySelector('#bar').style.width = '0%';
-      this.updateMetrics('singolo'); this.draw();
+      this.updateMetrics(this.copy.single); this.draw();
     }
 
     toggle() {
       this.running = !this.running;
-      this.shadowRoot.querySelector('#run').textContent = this.running ? 'Pausa' : 'Riprendi';
+      this.shadowRoot.querySelector('#run').textContent = this.running ? this.copy.pause : this.copy.resume;
       if (this.running) this.loop();
     }
 
     loop() {
       if (!this.running) return;
       for (let i = 0; i < 2; i += 1) this.stepSimulation();
-      this.draw(); this.updateMetrics('singolo');
+      this.draw(); this.updateMetrics(this.copy.single);
       if (this.burning.length === 0 || this.stepNo >= 130) {
-        this.running = false; this.shadowRoot.querySelector('#run').textContent = 'Avvia'; return;
+        this.running = false; this.shadowRoot.querySelector('#run').textContent = this.copy.start; return;
       }
       requestAnimationFrame(() => this.loop());
     }
@@ -437,9 +495,9 @@
     }
 
     async runEnsemble() {
-      this.running = false; this.shadowRoot.querySelector('#run').textContent = 'Avvia';
+      this.running = false; this.shadowRoot.querySelector('#run').textContent = this.copy.start;
       const button = this.shadowRoot.querySelector('#ensemble');
-      button.disabled = true; button.textContent = 'Calcolo in corso…';
+      button.disabled = true; button.textContent = this.copy.calculating;
       const runs = 32; const counts = new Uint16Array(this.rows * this.cols);
       const base = this.params();
       for (let r = 0; r < runs; r += 1) {
@@ -465,8 +523,8 @@
       }
       this.ensembleProb = new Float32Array(counts.length);
       for (let i = 0; i < counts.length; i += 1) this.ensembleProb[i] = counts[i] / runs;
-      this.updateMetrics('ensemble'); this.draw();
-      button.disabled = false; button.textContent = 'Calcola 32 scenari';
+      this.updateMetrics(this.copy.ensembleMode); this.draw();
+      button.disabled = false; button.textContent = this.copy.ensemble;
     }
 
     updateMetrics(mode) {
@@ -478,7 +536,7 @@
         for (const s of this.state) if (s > 0) burned += 1;
       }
       root.querySelector('#step').textContent = String(this.stepNo || 0);
-      root.querySelector('#burned').textContent = `${(100 * burned / this.state.length).toFixed(1).replace('.', ',')}%`;
+      root.querySelector('#burned').textContent = `${this.formatNumber(100 * burned / this.state.length, 1)}%`;
       root.querySelector('#mode').textContent = mode;
     }
 
@@ -486,25 +544,38 @@
       if (!this.ctx || !this.land) return;
       const ctx = this.ctx; const w = this.canvas.width; const h = this.canvas.height;
       const cw = w / this.cols; const ch = h / this.rows;
-      const image = ctx.createImageData(w, h);
+      const dark = document.body.dataset.theme !== 'light';
+      const palette = dark
+        ? {
+            background: '#172235', terrainLow: '#1d3b36', terrainHigh: '#5e8b68',
+            burnedLow: '#4a241f', burnedHigh: '#16090a', activeLow: '#f59e0b', activeHigh: '#ef4444',
+            ensembleLow: '#2a3b55', ensembleHigh: '#7f1d1d', contour: 'rgba(226,232,240,.16)',
+            road: 'rgba(226,232,240,.66)', ink: '#e2e8f0', labelBackground: 'rgba(15,23,42,.88)'
+          }
+        : {
+            background: '#e7efe8', terrainLow: '#dfeade', terrainHigh: '#456b4f',
+            burnedLow: '#6b3b2a', burnedHigh: '#260e0a', activeLow: '#f5a623', activeHigh: '#e8412a',
+            ensembleLow: '#dbeafe', ensembleHigh: '#7f1d1d', contour: 'rgba(255,255,255,.24)',
+            road: 'rgba(247,248,250,.75)', ink: '#0d1b2a', labelBackground: 'rgba(255,255,255,.88)'
+          };
       // Draw one logical cell as a rectangle for speed and crispness.
-      ctx.fillStyle = '#e7efe8'; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = palette.background; ctx.fillRect(0, 0, w, h);
       for (let y = 0; y < this.rows; y += 1) {
         for (let x = 0; x < this.cols; x += 1) {
           const idx = y * this.cols + x;
           const v = clamp(.2 + .55 * this.land.fuel[idx] - .18 * this.land.elevation[idx], 0, 1);
-          let rgb = colorMix('#dfeade', '#456b4f', v);
+          let rgb = colorMix(palette.terrainLow, palette.terrainHigh, v);
           if (this.ensembleProb) {
             const p = this.ensembleProb[idx];
-            if (p > 0) rgb = colorMix('#fef3c7', '#7f1d1d', Math.pow(p, .72));
-          } else if (this.state[idx] === 2) rgb = colorMix('#6b3b2a', '#260e0a', .45 + .45 * this.land.fuel[idx]);
-          else if (this.state[idx] === 1) rgb = colorMix('#f5a623', '#e8412a', .65);
+            if (p > 0) rgb = colorMix(palette.ensembleLow, palette.ensembleHigh, Math.pow(p, .72));
+          } else if (this.state[idx] === 2) rgb = colorMix(palette.burnedLow, palette.burnedHigh, .45 + .45 * this.land.fuel[idx]);
+          else if (this.state[idx] === 1) rgb = colorMix(palette.activeLow, palette.activeHigh, .65);
           ctx.fillStyle = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
           ctx.fillRect(x * cw, y * ch, Math.ceil(cw + .25), Math.ceil(ch + .25));
         }
       }
       // Terrain contours, road and wind arrow.
-      ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = palette.contour; ctx.lineWidth = 1;
       for (let y = 8; y < this.rows; y += 10) {
         ctx.beginPath();
         for (let x = 0; x < this.cols; x += 1) {
@@ -513,22 +584,22 @@
         }
         ctx.stroke();
       }
-      ctx.strokeStyle = 'rgba(247,248,250,.75)'; ctx.lineWidth = Math.max(2, ch * 1.4); ctx.beginPath();
+      ctx.strokeStyle = palette.road; ctx.lineWidth = Math.max(2, ch * 1.4); ctx.beginPath();
       for (let x = 0; x < this.cols; x += 1) {
         const y = this.rows * (.58 + .06 * Math.sin(x / 11));
         if (x === 0) ctx.moveTo(0, y * ch); else ctx.lineTo(x * cw, y * ch);
       }
       ctx.stroke();
       const p = this.params(); const ax = w - 90; const ay = 78; const len = 52 + p.wind * 30;
-      ctx.strokeStyle = COLORS.navy; ctx.fillStyle = COLORS.navy; ctx.lineWidth = 4;
+      ctx.strokeStyle = palette.ink; ctx.fillStyle = palette.ink; ctx.lineWidth = 4;
       const ex = ax + Math.cos(p.angle) * len; const ey = ay + Math.sin(p.angle) * len;
       ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ex, ey); ctx.stroke();
       const head = 12; const a1 = p.angle + Math.PI * .82; const a2 = p.angle - Math.PI * .82;
       ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex + Math.cos(a1) * head, ey + Math.sin(a1) * head); ctx.lineTo(ex + Math.cos(a2) * head, ey + Math.sin(a2) * head); ctx.closePath(); ctx.fill();
-      ctx.font = '700 16px DM Mono, monospace'; ctx.fillText('VENTO', ax - 5, ay - 18);
+      ctx.font = '700 16px JetBrains Mono, monospace'; ctx.fillText(this.copy.windCanvas, ax - 5, ay - 18);
       if (this.ensembleProb) {
-        ctx.fillStyle = 'rgba(255,255,255,.88)'; ctx.fillRect(22, 20, 245, 44);
-        ctx.fillStyle = COLORS.navy; ctx.font = '700 18px DM Sans, sans-serif'; ctx.fillText('32 futuri sovrapposti', 38, 48);
+        ctx.fillStyle = palette.labelBackground; ctx.fillRect(22, 20, 245, 44);
+        ctx.fillStyle = palette.ink; ctx.font = '700 18px Inter, sans-serif'; ctx.fillText(this.copy.ensembleCanvas, 38, 48);
       }
     }
   }
