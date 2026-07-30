@@ -126,15 +126,15 @@ Le fiamme tendono a muoversi più rapidamente in salita perché preriscaldano il
 
 I modelli operativi non nascono con il deep learning. Sistemi come **FlamMap** e **FARSITE** incorporano decenni di ricerca fisica ed empirica. [La documentazione dello US Forest Service elenca otto strati geografici di base, tra cui elevazione, pendenza, esposizione, modelli di combustibile e caratteristiche della chioma](https://research.fs.usda.gov/firelab/products/dataandtools/flammap). Gli output comprendono velocità di propagazione, lunghezza della fiamma, intensità, crescita del perimetro e probabilità condizionata di bruciatura.
 
-I modelli non sono tutti equivalenti. [FlamMap calcola il comportamento potenziale sotto condizioni ambientali costanti, mentre FARSITE permette sequenze meteorologiche variabili nel tempo](https://research.fs.usda.gov/firelab/projects/flammap). Il primo è utile per confrontare paesaggi e trattamenti del combustibile; il secondo segue meglio l’evoluzione temporale. Confondere la loro finalità produce una precisione apparente, ma una domanda mal posta.
+I modelli non sono tutti equivalenti. [FlamMap calcola il comportamento potenziale sotto condizioni ambientali costanti, mentre FARSITE permette sequenze meteorologiche variabili nel tempo](https://research.fs.usda.gov/firelab/projects/flammap). Il primo è utile per confrontare paesaggi e trattamenti del combustibile; il secondo segue meglio l’evoluzione temporale.
 
-La GeoAI può entrare nella filiera stimando variabili difficili da osservare, come la distribuzione del combustibile; correggendo gli errori sistematici di un simulatore; costruendo un surrogato più rapido di una simulazione costosa; oppure assimilando nuove osservazioni per aggiornare il perimetro previsto. Sono compiti diversi, e vale la pena dichiarare ogni volta quale di questi si sta affidando al modello.
+La GeoAI può entrare nella filiera stimando variabili difficili da osservare, come la distribuzione del combustibile o correggendo gli errori sistematici di un simulatore o costruendo un surrogato più rapido di una simulazione costosa, oppure assimilando nuove osservazioni per aggiornare il perimetro previsto. Sono tutti compiti diversi, e vale la pena dichiarare ogni volta quale di questi si sta affidando al modello!
 
-La piattaforma **WIFIRE Firemap** offre un esempio di questa integrazione. Il programma di UC San Diego combina [meteo quasi in tempo reale, inneschi, topografia e caratteristiche della vegetazione per produrre mappe previsionali in pochi minuti](https://scil.ucsd.edu/wifire-program). Durante gli eventi più pericolosi, i perimetri rilevati da aeromobili possono essere assimilati per aggiornare le simulazioni. La stessa piattaforma mette in chiaro un punto che vale anche qui: [i risultati sono strumenti di supporto e non sostituiscono il giudizio professionale o le indicazioni delle autorità](https://watch.firemap.sdsc.edu/).
+La piattaforma [**WIFIRE Firemap**](https://watch.firemap.sdsc.edu/) offre un esempio di questa integrazione. Il programma di UC San Diego combina [meteo quasi in tempo reale, inneschi, topografia e caratteristiche della vegetazione per produrre mappe previsionali in pochi minuti](https://scil.ucsd.edu/wifire-program). Durante gli eventi più pericolosi, i perimetri rilevati da aeromobili possono essere assimilati per aggiornare le simulazioni.
 
 ### Una previsione è un ventaglio
 
-Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell’umidità o nello spotting possono produrre traiettorie divergenti. Per questo una previsione probabilistica è spesso più onesta di un unico perimetro colorato.
+Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell’umidità o nello spotting possono produrre traiettorie divergenti. Per questo una previsione probabilistica è spesso l'output che si ottiene.
 
 ![Tre scenari di propagazione e la probabilità ottenuta da 120 simulazioni Monte Carlo](/Assets/fire-assets/images/04-propagazione-probabilistica.png)
 
@@ -142,9 +142,9 @@ Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell�
 
 La ricerca sta sperimentando anche modelli generativi. Un lavoro pubblicato nel 2026 su *Geoscientific Model Development* usa un modello di diffusione per produrre insiemi di futuri plausibili. [Il sistema apprende a emulare un automa cellulare probabilistico condizionato da copertura della chioma, densità vegetale, pendenza e vento](https://gmd.copernicus.org/articles/19/1027/2026/). Gli ensemble ottenuti rappresentano la quota di simulazioni in cui ogni cella viene raggiunta dal fuoco.
 
-Il risultato è promettente, ma il perimetro epistemico va tenuto ben visibile. Gli autori lo presentano come una **proof of concept** addestrata su sequenze sintetiche, sebbene costruite a partire dai contesti geografici degli incendi Chimney e Ferguson. [Il lavoro futuro dichiarato comprende proprio la validazione contro progressioni osservate da satellite](https://gmd.copernicus.org/articles/19/1027/2026/index.html).
+Gli autori lo presentano come una **proof of concept** addestrata su sequenze sintetiche, sebbene costruite a partire dai contesti geografici degli incendi Chimney e Ferguson. [Il lavoro futuro dichiarato comprende proprio la validazione contro progressioni osservate da satellite](https://gmd.copernicus.org/articles/19/1027/2026/index.html).
 
-Chiamarla “AI che prevede gli incendi” cancellerebbe metà della storia. È un surrogato che prova a riprodurre la distribuzione di un simulatore. Utile, forse molto utile; non ancora un oracolo operativo.
+Il motivo per cui non voglio chiamarla “AI che prevede gli incendi” è perché semplificherebbe troppo tutto ciò che c'è dietro. L'AI è utile, ma non è l'unica cosa che permette di prevedere il comportamento dell'incendio.
 
 ### Muovi il vento, cambia l’esito
 
