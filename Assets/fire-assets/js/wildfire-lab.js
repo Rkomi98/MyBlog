@@ -61,6 +61,64 @@
     }
   `;
 
+  // The article shell owns the global theme. The hotspot module uses a Shadow DOM,
+  // so it needs its own surface styles while still consuming the shell's tokens.
+  const hotspotStyle = `
+    :host { display:block; margin:2rem 0; color:var(--text-primary, #e2e8f0); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    * { box-sizing:border-box; }
+    .lab { overflow:hidden; border:1px solid var(--border, rgba(148,163,184,.2)); border-radius:22px; background:var(--bg-card-strong, rgba(11,17,32,.92)); box-shadow:var(--shadow-lg, 0 28px 60px -36px rgba(2,6,23,.9)); transition:background .3s ease, border-color .3s ease, color .3s ease; }
+    .head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:1.45rem 1.5rem 1.2rem; border-bottom:1px solid var(--border, rgba(148,163,184,.2)); }
+    .eyebrow { margin-bottom:.5rem; color:var(--accent-strong, #34d399); font:700 .68rem/1.2 'JetBrains Mono', 'Fira Code', monospace; letter-spacing:.12em; text-transform:uppercase; }
+    h3 { margin:0; color:var(--text-primary, #e2e8f0); font:700 clamp(1.1rem, 2vw, 1.4rem)/1.25 'JetBrains Mono', 'Fira Code', monospace; letter-spacing:-.025em; }
+    .head p { max-width:46rem; margin:.55rem 0 0; color:var(--text-muted, #94a3b8); font-size:.9rem; line-height:1.6; }
+    .status { flex:0 0 auto; padding:.42rem .65rem; border:1px solid color-mix(in srgb, var(--accent, #10b981) 38%, transparent); border-radius:999px; background:color-mix(in srgb, var(--accent, #10b981) 14%, transparent); color:var(--accent-strong, #34d399); font:700 .64rem/1.2 'JetBrains Mono', 'Fira Code', monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .body { display:grid; grid-template-columns:minmax(0, 1fr) 18.25rem; min-height:29rem; }
+    .stage { position:relative; display:flex; align-items:center; justify-content:center; min-width:0; padding:1rem; background:var(--surface, #1e293b); transition:background .3s ease; }
+    canvas { display:block; width:100%; height:auto; max-height:38rem; border:1px solid var(--border, rgba(148,163,184,.2)); border-radius:14px; touch-action:none; }
+    .controls { padding:1.1rem 1.15rem 1.25rem; border-left:1px solid var(--border, rgba(148,163,184,.2)); background:color-mix(in srgb, var(--bg-card, rgba(15,23,42,.84)) 90%, transparent); }
+    .control { margin-bottom:1rem; }
+    .control-head { display:flex; align-items:center; justify-content:space-between; gap:.7rem; margin-bottom:.35rem; }
+    label { color:var(--text-secondary, #cbd5e1); font-size:.78rem; font-weight:700; }
+    output { color:var(--accent-strong, #34d399); font:700 .72rem/1 'JetBrains Mono', 'Fira Code', monospace; }
+    input[type='range'] { width:100%; accent-color:var(--accent, #10b981); }
+    select { width:100%; padding:.65rem .7rem; border:1px solid var(--border, rgba(148,163,184,.2)); border-radius:10px; background:var(--bg-card, rgba(15,23,42,.84)); color:var(--text-primary, #e2e8f0); font:600 .78rem 'Inter', sans-serif; }
+    .buttons { display:grid; grid-template-columns:1fr; gap:.55rem; margin-top:1.1rem; }
+    button { border:1px solid var(--border, rgba(148,163,184,.2)); border-radius:10px; padding:.72rem .75rem; background:var(--surface, #1e293b); color:var(--text-primary, #e2e8f0); cursor:pointer; font:700 .75rem 'Inter', sans-serif; transition:transform .15s ease, background .2s ease, border-color .2s ease; }
+    button:hover { transform:translateY(-1px); border-color:color-mix(in srgb, var(--accent, #10b981) 60%, transparent); background:color-mix(in srgb, var(--accent, #10b981) 15%, var(--surface, #1e293b)); }
+    .metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin-top:1rem; }
+    .metric { padding:.72rem .45rem; border:1px solid var(--border, rgba(148,163,184,.2)); border-radius:11px; background:var(--bg-card, rgba(15,23,42,.84)); text-align:center; }
+    .metric strong { display:block; color:var(--text-primary, #e2e8f0); font:700 .86rem/1.2 'JetBrains Mono', 'Fira Code', monospace; }
+    .metric span { color:var(--text-muted, #94a3b8); font-size:.62rem; line-height:1.25; }
+    .note { margin-top:1rem; padding:.8rem .85rem; border-left:3px solid var(--accent, #10b981); border-radius:0 10px 10px 0; background:color-mix(in srgb, var(--accent, #10b981) 10%, transparent); color:var(--text-secondary, #cbd5e1); font-size:.72rem; line-height:1.5; }
+    .legend { position:absolute; left:1.6rem; bottom:1.5rem; display:flex; flex-wrap:wrap; gap:.4rem .75rem; padding:.55rem .65rem; border:1px solid var(--border, rgba(148,163,184,.2)); border-radius:10px; background:color-mix(in srgb, var(--bg-card-strong, rgba(11,17,32,.92)) 88%, transparent); backdrop-filter:blur(8px); color:var(--text-secondary, #cbd5e1); font-size:.65rem; box-shadow:0 8px 22px rgba(2,6,23,.18); }
+    .legend span { display:inline-flex; align-items:center; gap:.3rem; }
+    .swatch { width:.66rem; height:.66rem; border-radius:3px; }
+    @media (max-width:860px) { .body { grid-template-columns:1fr; } .controls { border-top:1px solid var(--border, rgba(148,163,184,.2)); border-left:0; } .stage { min-height:22rem; } .head { flex-direction:column; } }
+  `;
+
+  const HOTSPOT_COPY = {
+    it: {
+      experiment: 'Esperimento 01', title: 'Il punto rosso e la sorgente termica',
+      intro: 'Riduci la cella e sposta la sorgente: il simbolo pubblicato rimane al centro del pixel che contiene l’anomalia.',
+      status: 'didattico', published: 'hotspot pubblicato', source: 'sorgente simulata',
+      sensor: 'Sensore concettuale', horizontal: 'Posizione orizzontale', vertical: 'Posizione verticale',
+      random: 'Sposta casualmente la sorgente', nominalPixel: 'pixel nominale', offset: 'offset dal centro', notPerimeter: 'non è un perimetro',
+      note: 'La scala è illustrativa. I prodotti reali dipendono dalla geometria del sensore e dall’algoritmo di rilevazione.',
+      canvasLabel: 'Dimostrazione della relazione tra hotspot e pixel', modisTitle: 'MODIS · cella nominale più ampia', viirsTitle: 'VIIRS · cella nominale più fine',
+      canvasHint: 'Il simbolo resta al centro della cella, la sorgente può stare altrove.'
+    },
+    en: {
+      experiment: 'Experiment 01', title: 'The red dot and the thermal source',
+      intro: 'Shrink the cell and move the source: the published symbol remains at the centre of the pixel that contains the anomaly.',
+      status: 'educational', published: 'published hotspot', source: 'simulated source',
+      sensor: 'Conceptual sensor', horizontal: 'Horizontal position', vertical: 'Vertical position',
+      random: 'Move source randomly', nominalPixel: 'nominal pixel', offset: 'offset from centre', notPerimeter: 'not a perimeter',
+      note: 'The scale is illustrative. Real products depend on sensor geometry and on the detection algorithm.',
+      canvasLabel: 'Demonstration of the relationship between a hotspot and its pixel', modisTitle: 'MODIS · larger nominal cell', viirsTitle: 'VIIRS · finer nominal cell',
+      canvasHint: 'The symbol stays at the centre of the cell; the source can be elsewhere.'
+    }
+  };
+
   class RNG {
     constructor(seed = 1) { this.s = seed >>> 0 || 1; }
     next() {
@@ -143,24 +201,26 @@
     connectedCallback() {
       if (this.shadowRoot) return;
       const root = this.attachShadow({ mode: 'open' });
+      this.language = document.documentElement.lang === 'en' ? 'en' : 'it';
+      this.copy = HOTSPOT_COPY[this.language];
       root.innerHTML = `
-        <style>${sharedStyle}</style>
+        <style>${hotspotStyle}</style>
         <div class="lab">
           <div class="head">
-            <div><div class="eyebrow">Esperimento 01</div><h3>Il punto rosso e la sorgente termica</h3><p>Riduci la cella e sposta la sorgente: il simbolo pubblicato rimane al centro del pixel che contiene l’anomalia.</p></div>
-            <div class="status">didattico</div>
+            <div><div class="eyebrow">${this.copy.experiment}</div><h3>${this.copy.title}</h3><p>${this.copy.intro}</p></div>
+            <div class="status">${this.copy.status}</div>
           </div>
           <div class="body">
-            <div class="stage"><canvas width="900" height="560" aria-label="Dimostrazione della relazione tra hotspot e pixel"></canvas>
-              <div class="legend"><span><i class="swatch" style="background:${COLORS.red}"></i> hotspot pubblicato</span><span><i class="swatch" style="background:${COLORS.darkRed}"></i> sorgente simulata</span></div>
+            <div class="stage"><canvas width="900" height="560" aria-label="${this.copy.canvasLabel}"></canvas>
+              <div class="legend"><span><i class="swatch" style="background:#fb7185"></i> ${this.copy.published}</span><span><i class="swatch" style="background:#f97316"></i> ${this.copy.source}</span></div>
             </div>
             <div class="controls">
-              <div class="control"><div class="control-head"><label for="sensor">Sensore concettuale</label></div><select id="sensor"><option value="5">MODIS · ~1 km</option><option value="12">VIIRS · ~375 m</option></select></div>
-              <div class="control"><div class="control-head"><label for="x">Posizione orizzontale</label><output id="xv">68%</output></div><input id="x" type="range" min="4" max="96" value="68"></div>
-              <div class="control"><div class="control-head"><label for="y">Posizione verticale</label><output id="yv">42%</output></div><input id="y" type="range" min="4" max="96" value="42"></div>
-              <div class="buttons"><button class="soft wide" id="random">Sposta casualmente la sorgente</button></div>
-              <div class="metrics"><div class="metric"><strong id="cell">1 km</strong><span>pixel nominale</span></div><div class="metric"><strong id="offset">—</strong><span>offset dal centro</span></div><div class="metric"><strong>≠</strong><span>non è un perimetro</span></div></div>
-              <div class="note">La scala è illustrativa. I prodotti reali dipendono dalla geometria del sensore e dall’algoritmo di rilevazione.</div>
+              <div class="control"><div class="control-head"><label for="sensor">${this.copy.sensor}</label></div><select id="sensor"><option value="5">MODIS · ~1 km</option><option value="12">VIIRS · ~375 m</option></select></div>
+              <div class="control"><div class="control-head"><label for="x">${this.copy.horizontal}</label><output id="xv">68%</output></div><input id="x" type="range" min="4" max="96" value="68"></div>
+              <div class="control"><div class="control-head"><label for="y">${this.copy.vertical}</label><output id="yv">42%</output></div><input id="y" type="range" min="4" max="96" value="42"></div>
+              <div class="buttons"><button id="random">${this.copy.random}</button></div>
+              <div class="metrics"><div class="metric"><strong id="cell">1 km</strong><span>${this.copy.nominalPixel}</span></div><div class="metric"><strong id="offset">—</strong><span>${this.copy.offset}</span></div><div class="metric"><strong>≠</strong><span>${this.copy.notPerimeter}</span></div></div>
+              <div class="note">${this.copy.note}</div>
             </div>
           </div>
         </div>`;
@@ -180,17 +240,26 @@
       });
       this.resizeObserver = new ResizeObserver(() => this.draw());
       this.resizeObserver.observe(this.canvas);
+      this.themeObserver = new MutationObserver(() => this.draw());
+      this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
       this.draw();
     }
 
-    disconnectedCallback() { if (this.resizeObserver) this.resizeObserver.disconnect(); }
+    disconnectedCallback() {
+      if (this.resizeObserver) this.resizeObserver.disconnect();
+      if (this.themeObserver) this.themeObserver.disconnect();
+    }
 
     draw() {
       if (!this.ctx) return;
       const c = this.canvas; const ctx = this.ctx;
       const w = c.width; const h = c.height;
+      const dark = document.body.dataset.theme !== 'light';
+      const palette = dark
+        ? { canvas: '#152235', cell: '#1d3147', grid: 'rgba(148,163,184,.38)', selected: 'rgba(16,185,129,.22)', border: '#34d399', hotspot: '#fb7185', source: '#fb923c', line: '#e2e8f0', text: '#e2e8f0', muted: '#94a3b8' }
+        : { canvas: '#edf4f0', cell: '#dcebe2', grid: 'rgba(71,85,105,.3)', selected: 'rgba(5,150,105,.17)', border: '#059669', hotspot: '#e11d48', source: '#ea580c', line: '#0f172a', text: '#0f172a', muted: '#64748b' };
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#dfeadf'; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = palette.canvas; ctx.fillRect(0, 0, w, h);
       const n = Number(this.sensor.value || 5);
       const margin = 48; const side = Math.min(w - margin * 2, h - margin * 2);
       const ox = (w - side) / 2; const oy = (h - side) / 2;
@@ -201,26 +270,26 @@
       const row = clamp(Math.floor((fy - oy) / cell), 0, n - 1);
       const cx = ox + (col + .5) * cell; const cy = oy + (row + .5) * cell;
 
-      ctx.fillStyle = 'rgba(245,166,35,.34)';
+      ctx.fillStyle = palette.selected;
       ctx.fillRect(ox + col * cell, oy + row * cell, cell, cell);
-      ctx.strokeStyle = COLORS.red; ctx.lineWidth = 4;
+      ctx.strokeStyle = palette.border; ctx.lineWidth = 4;
       ctx.strokeRect(ox + col * cell, oy + row * cell, cell, cell);
-      ctx.strokeStyle = 'rgba(255,255,255,.92)'; ctx.lineWidth = n > 8 ? 1 : 2;
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = n > 8 ? 1 : 2;
       for (let i = 0; i <= n; i += 1) {
         ctx.beginPath(); ctx.moveTo(ox + i * cell, oy); ctx.lineTo(ox + i * cell, oy + side); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(ox, oy + i * cell); ctx.lineTo(ox + side, oy + i * cell); ctx.stroke();
       }
-      ctx.fillStyle = COLORS.red; ctx.beginPath(); ctx.arc(cx, cy, n > 8 ? 9 : 14, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = COLORS.white; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = COLORS.darkRed;
+      ctx.fillStyle = palette.hotspot; ctx.beginPath(); ctx.arc(cx, cy, n > 8 ? 9 : 14, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = palette.line; ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = palette.source;
       ctx.beginPath(); ctx.moveTo(fx, fy - 17); ctx.lineTo(fx - 14, fy + 12); ctx.lineTo(fx + 14, fy + 12); ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = COLORS.white; ctx.lineWidth = 2; ctx.stroke();
-      ctx.setLineDash([8, 7]); ctx.strokeStyle = COLORS.navy; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(fx, fy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = palette.line; ctx.lineWidth = 2; ctx.stroke();
+      ctx.setLineDash([8, 7]); ctx.strokeStyle = palette.line; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(fx, fy); ctx.stroke(); ctx.setLineDash([]);
 
-      ctx.fillStyle = COLORS.navy; ctx.font = '700 23px DM Sans, sans-serif';
-      ctx.fillText(n === 5 ? 'MODIS · cella nominale più ampia' : 'VIIRS · cella nominale più fine', 35, 36);
-      ctx.font = '500 16px DM Sans, sans-serif'; ctx.fillStyle = COLORS.muted;
-      ctx.fillText('Il simbolo resta al centro della cella, la sorgente può stare altrove.', 35, h - 22);
+      ctx.fillStyle = palette.text; ctx.font = '700 22px Inter, sans-serif';
+      ctx.fillText(n === 5 ? this.copy.modisTitle : this.copy.viirsTitle, 35, 36);
+      ctx.font = '500 16px Inter, sans-serif'; ctx.fillStyle = palette.muted;
+      ctx.fillText(this.copy.canvasHint, 35, h - 22);
 
       const dx = Math.abs(fx - cx) / cell; const dy = Math.abs(fy - cy) / cell;
       this.shadowRoot.querySelector('#cell').textContent = n === 5 ? '1 km' : '375 m';

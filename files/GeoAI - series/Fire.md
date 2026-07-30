@@ -82,7 +82,7 @@ Nel prodotto MODIS, un hotspot rappresenta il centro di un pixel di circa un chi
 
 Con VIIRS il dettaglio migliora di parecchio! [Il prodotto NASA VNP14IMG_NRT rileva attività sub-pixel dentro celle nominali da 375 metri](https://www.earthdata.nasa.gov/es/data/catalog/lancemodis-vnp14img-nrt-2). La natura dell’informazione, però, rimane la stessa. Stiamo osservando un’anomalia termica, non il contorno esatto del rogo.
 
-![Confronto didattico tra un pixel MODIS e un pixel VIIRS](/Assets/fire-assets/images/02-hotspot-non-perimetro.png)
+![Confronto didattico tra un pixel MODIS e un pixel VIIRS](/Assets/fire-assets/images/02-hotspot-non-perimetro.svg)
 
 *Il punto viene pubblicato al centro della cella che contiene l’anomalia. La sorgente termica può trovarsi in un’altra porzione del pixel.*
 
