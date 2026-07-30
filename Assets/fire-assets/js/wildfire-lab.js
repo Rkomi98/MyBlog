@@ -54,6 +54,7 @@
     .progress > i { display:block; width:0; height:100%; background:var(--accent, #10b981); transition:width .15s ease; }
     .metric span { display:block; }
     .legend { position:static; left:auto; bottom:auto; justify-content:center; align-items:center; gap:.4rem 1rem; box-shadow:none; }
+    .legend .swatch { box-shadow:0 0 0 1px var(--border, rgba(148,163,184,.35)); }
     .legend .ramp { gap:.45rem; }
     .legend .gradient { width:5.5rem; height:.55rem; border-radius:999px; border:1px solid var(--border, rgba(148,163,184,.2)); }
     .legend em { font-style:normal; color:var(--text-muted, #94a3b8); font:600 .62rem/1 'JetBrains Mono', monospace; }
@@ -64,7 +65,6 @@
       .buttons, .progress, .metrics, .note { grid-column:1 / -1; }
       .buttons { grid-template-columns:repeat(auto-fit, minmax(9rem, 1fr)); }
       .buttons .wide { grid-column:auto; }
-      .head { flex-direction:column; }
     }
   `;
 
@@ -96,7 +96,6 @@
       experiment: 'Esperimento 02',
       title: 'Propagazione probabilistica su un paesaggio sintetico',
       intro: 'Vento, umidità, continuità del combustibile e spotting cambiano il percorso. La modalità ensemble sovrappone più futuri possibili.',
-      status: 'didattico · non operativo',
       canvasLabel: 'Simulatore didattico della propagazione di un incendio',
       front: 'fronte attivo', burned: 'bruciato', vegetation: 'vegetazione', probability: 'probabilità ensemble',
       wind: 'Forza del vento', direction: 'Direzione', humidity: 'Umidità', fuel: 'Continuità del combustibile', spotting: 'Spotting',
@@ -109,7 +108,6 @@
       experiment: 'Experiment 02',
       title: 'Probabilistic spread across a synthetic landscape',
       intro: 'Wind, humidity, fuel continuity, and spotting change the path. Ensemble mode overlays several possible futures.',
-      status: 'educational · non-operational',
       canvasLabel: 'Educational wildfire spread simulator',
       front: 'active front', burned: 'burned', vegetation: 'vegetation', probability: 'ensemble probability',
       wind: 'Wind strength', direction: 'Direction', humidity: 'Humidity', fuel: 'Fuel continuity', spotting: 'Spotting',
@@ -209,7 +207,7 @@
 
   const WILDFIRE_PALETTES = {
     dark: {
-      background: '#141f31', terrainLow: '#1c3a35', terrainHigh: '#5f8d69',
+      background: '#141f31', terrainLow: '#1b352f', terrainHigh: '#4e7659',
       burnedLow: '#3c1f18', burnedHigh: '#140907',
       activeLow: '#fcd34d', activeHigh: '#dc2626',
       rampLow: '#1e3a5f', rampMid: '#f59e0b', rampHigh: '#991b1b',
@@ -338,7 +336,6 @@
         <div class="lab">
           <div class="head">
             <div><div class="eyebrow">${this.copy.experiment}</div><h3>${this.copy.title}</h3><p>${this.copy.intro}</p></div>
-            <div class="status">${this.copy.status}</div>
           </div>
           <div class="body">
             <div class="stage"><canvas width="960" height="640" aria-label="${this.copy.canvasLabel}"></canvas>
@@ -406,22 +403,23 @@
       return { width: cssWidth, height: cssHeight, dpr };
     }
 
-    renderLegend(mode) {
+    // The legend has to be built from the same palette the canvas uses, or the
+    // swatches stop matching the map as soon as the theme flips.
+    renderLegend() {
       const palette = this.palette();
       const legend = this.shadowRoot.querySelector('#legend');
-      if (mode === this.copy.ensembleMode) {
+      let markup;
+      if (this.ensembleProb) {
         const gradient = `linear-gradient(90deg,${rgbCss(rampAt(palette, 0))},${rgbCss(rampAt(palette, .5))},${rgbCss(rampAt(palette, 1))})`;
-        legend.innerHTML = `<span class="ramp">${this.copy.probability}<i class="gradient" style="background:${gradient}"></i><em>0 → 100%</em></span>`;
-        return;
+        markup = `<span class="ramp">${this.copy.probability}<i class="gradient" style="background:${gradient}"></i><em>0 → 100%</em></span>`;
+      } else {
+        markup = [
+          [colorMix(palette.terrainLow, palette.terrainHigh, .62), this.copy.vegetation],
+          [colorMix(palette.activeLow, palette.activeHigh, .45), this.copy.front],
+          [colorMix(palette.burnedLow, palette.burnedHigh, .55), this.copy.burned]
+        ].map(([rgb, label]) => `<span><i class="swatch" style="background:${rgbCss(rgb)}"></i> ${label}</span>`).join('');
       }
-      const swatches = [
-        [rgbCss(colorMix(palette.terrainLow, palette.terrainHigh, .62)), this.copy.vegetation],
-        [rgbCss(colorMix(palette.activeLow, palette.activeHigh, .45)), this.copy.front],
-        [rgbCss(colorMix(palette.burnedLow, palette.burnedHigh, .55)), this.copy.burned]
-      ];
-      legend.innerHTML = swatches
-        .map(([color, label]) => `<span><i class="swatch" style="background:${color}"></i> ${label}</span>`)
-        .join('');
+      if (legend.innerHTML !== markup) legend.innerHTML = markup;
     }
 
     bindControls() {
@@ -474,7 +472,11 @@
       this.updateMetrics(this.copy.single); this.draw();
     }
 
+    finished() { return this.stepNo >= 150 || this.burning.length === 0; }
+
     toggle() {
+      // A finished run restarts from the ignition point instead of doing nothing.
+      if (!this.running && (this.finished() || this.ensembleProb)) this.reset();
       this.running = !this.running;
       this.shadowRoot.querySelector('#run').textContent = this.running ? this.copy.pause : this.copy.resume;
       if (this.running) this.loop();
@@ -484,7 +486,7 @@
       if (!this.running) return;
       for (let i = 0; i < 2; i += 1) this.stepSimulation();
       this.draw(); this.updateMetrics(this.copy.single);
-      if (this.burning.length === 0 || this.stepNo >= 220) {
+      if (this.finished()) {
         this.running = false; this.shadowRoot.querySelector('#run').textContent = this.copy.start; return;
       }
       requestAnimationFrame(() => this.loop());
@@ -520,9 +522,11 @@
           const uphill = Math.max(0, this.land.elevation[ni] - this.land.elevation[idx]);
           const push = 1 + 2.4 * params.wind * Math.pow(align, 1.4);
           const rise = 1 + 2.2 * Math.min(1, uphill * 9);
-          let p = .07 * weight * (.3 + localFuel) * dryness * push * rise;
+          let p = .062 * weight * (.3 + localFuel) * dryness * push * rise;
           p *= .75 + .5 * rng.next(); p = clamp(p, 0, .6);
-          if (p > (candidates.get(ni) || 0)) candidates.set(ni, p);
+          // Neighbours are independent ignition attempts, so accumulate the
+          // survival probability instead of keeping only the strongest one.
+          candidates.set(ni, (candidates.has(ni) ? candidates.get(ni) : 1) * (1 - p));
         }
         const remaining = life[idx] - 1;
         if (remaining <= 0) { nextState[idx] = 2; nextLife[idx] = 0; }
@@ -542,10 +546,10 @@
         const ni = ny * this.cols + nx;
         if (state[ni] !== 0) continue;
         const p = .55 * this.land.fuel[ni] * params.continuity * (1 - params.humidity);
-        if (p > (candidates.get(ni) || 0)) candidates.set(ni, p);
+        candidates.set(ni, (candidates.has(ni) ? candidates.get(ni) : 1) * (1 - p));
       }
-      for (const [idx, p] of candidates) {
-        if (rng.next() < p) { nextState[idx] = 1; nextLife[idx] = this.burnTicks; nextBurning.push(idx); }
+      for (const [idx, survival] of candidates) {
+        if (rng.next() < 1 - survival) { nextState[idx] = 1; nextLife[idx] = this.burnTicks; nextBurning.push(idx); }
       }
       return { state: nextState, life: nextLife, burning: nextBurning };
     }
@@ -565,15 +569,12 @@
           continuity: clamp(base.continuity + rng.normal() * .06, .2, 1),
           spotting: clamp(base.spotting + rng.normal() * .004, 0, .06)
         };
-        let state = new Uint8Array(this.rows * this.cols); let burning = [];
-        const sy = Math.floor(this.rows * .73); const sx = Math.floor(this.cols * .18);
-        for (let dy = -1; dy <= 1; dy += 1) for (let dx = -1; dx <= 1; dx += 1) {
-          const idx = (sy + dy) * this.cols + sx + dx; state[idx] = 1; burning.push(idx);
+        let { state, life, burning } = this.ignition();
+        for (let t = 0; t < 150 && burning.length; t += 1) {
+          const next = this.advance(state, life, burning, params, rng);
+          state = next.state; life = next.life; burning = next.burning;
         }
-        for (let t = 0; t < 82 && burning.length; t += 1) {
-          const next = this.advance(state, burning, params, rng); state = next.state; burning = next.burning;
-        }
-        for (let i = 0; i < state.length; i += 1) if (state[i] === 2 || state[i] === 1) counts[i] += 1;
+        for (let i = 0; i < state.length; i += 1) if (state[i] > 0) counts[i] += 1;
         this.shadowRoot.querySelector('#bar').style.width = `${((r + 1) / runs) * 100}%`;
         if (r % 4 === 3) await new Promise(resolve => setTimeout(resolve, 0));
       }
@@ -598,22 +599,13 @@
 
     draw() {
       if (!this.ctx || !this.land) return;
-      const ctx = this.ctx; const w = this.canvas.width; const h = this.canvas.height;
+      const ctx = this.ctx;
+      const view = this.syncCanvasSize();
+      const w = view.width; const h = view.height;
       const cw = w / this.cols; const ch = h / this.rows;
-      const dark = document.body.dataset.theme !== 'light';
-      const palette = dark
-        ? {
-            background: '#172235', terrainLow: '#1d3b36', terrainHigh: '#5e8b68',
-            burnedLow: '#4a241f', burnedHigh: '#16090a', activeLow: '#f59e0b', activeHigh: '#ef4444',
-            ensembleLow: '#2a3b55', ensembleHigh: '#7f1d1d', contour: 'rgba(226,232,240,.16)',
-            road: 'rgba(226,232,240,.66)', ink: '#e2e8f0', labelBackground: 'rgba(15,23,42,.88)'
-          }
-        : {
-            background: '#e7efe8', terrainLow: '#dfeade', terrainHigh: '#456b4f',
-            burnedLow: '#6b3b2a', burnedHigh: '#260e0a', activeLow: '#f5a623', activeHigh: '#e8412a',
-            ensembleLow: '#dbeafe', ensembleHigh: '#7f1d1d', contour: 'rgba(255,255,255,.24)',
-            road: 'rgba(247,248,250,.75)', ink: '#0d1b2a', labelBackground: 'rgba(255,255,255,.88)'
-          };
+      const palette = this.palette();
+      this.renderLegend();
+      ctx.setTransform(view.dpr, 0, 0, view.dpr, 0, 0);
       // Draw one logical cell as a rectangle for speed and crispness.
       ctx.fillStyle = palette.background; ctx.fillRect(0, 0, w, h);
       for (let y = 0; y < this.rows; y += 1) {
@@ -623,11 +615,15 @@
           let rgb = colorMix(palette.terrainLow, palette.terrainHigh, v);
           if (this.ensembleProb) {
             const p = this.ensembleProb[idx];
-            if (p > 0) rgb = colorMix(palette.ensembleLow, palette.ensembleHigh, Math.pow(p, .72));
-          } else if (this.state[idx] === 2) rgb = colorMix(palette.burnedLow, palette.burnedHigh, .45 + .45 * this.land.fuel[idx]);
-          else if (this.state[idx] === 1) rgb = colorMix(palette.activeLow, palette.activeHigh, .65);
-          ctx.fillStyle = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-          ctx.fillRect(x * cw, y * ch, Math.ceil(cw + .25), Math.ceil(ch + .25));
+            if (p > 0) rgb = rampAt(palette, Math.pow(p, .72));
+          } else if (this.state[idx] === 2) rgb = colorMix(palette.burnedLow, palette.burnedHigh, .35 + .5 * this.land.fuel[idx]);
+          else if (this.state[idx] === 1) {
+            // Freshly lit cells read as the bright leading edge, older ones cool to red.
+            const age = 1 - (this.life[idx] || 1) / this.burnTicks;
+            rgb = colorMix(palette.activeLow, palette.activeHigh, clamp(age, 0, 1));
+          }
+          ctx.fillStyle = rgbCss(rgb);
+          ctx.fillRect(x * cw, y * ch, Math.ceil(cw + .5), Math.ceil(ch + .5));
         }
       }
       // Terrain contours, road and wind arrow.
@@ -640,23 +636,45 @@
         }
         ctx.stroke();
       }
-      ctx.strokeStyle = palette.road; ctx.lineWidth = Math.max(2, ch * 1.4); ctx.beginPath();
+      ctx.strokeStyle = palette.road; ctx.lineWidth = Math.max(1.5, ch * 1.4); ctx.beginPath();
       for (let x = 0; x < this.cols; x += 1) {
         const y = this.rows * (.58 + .06 * Math.sin(x / 11));
         if (x === 0) ctx.moveTo(0, y * ch); else ctx.lineTo(x * cw, y * ch);
       }
       ctx.stroke();
-      const p = this.params(); const ax = w - 90; const ay = 78; const len = 52 + p.wind * 30;
-      ctx.strokeStyle = palette.ink; ctx.fillStyle = palette.ink; ctx.lineWidth = 4;
-      const ex = ax + Math.cos(p.angle) * len; const ey = ay + Math.sin(p.angle) * len;
-      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ex, ey); ctx.stroke();
-      const head = 12; const a1 = p.angle + Math.PI * .82; const a2 = p.angle - Math.PI * .82;
-      ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex + Math.cos(a1) * head, ey + Math.sin(a1) * head); ctx.lineTo(ex + Math.cos(a2) * head, ey + Math.sin(a2) * head); ctx.closePath(); ctx.fill();
-      ctx.font = '700 16px JetBrains Mono, monospace'; ctx.fillText(this.copy.windCanvas, ax - 5, ay - 18);
-      if (this.ensembleProb) {
-        ctx.fillStyle = palette.labelBackground; ctx.fillRect(22, 20, 245, 44);
-        ctx.fillStyle = palette.ink; ctx.font = '700 18px Inter, sans-serif'; ctx.fillText(this.copy.ensembleCanvas, 38, 48);
-      }
+      this.drawWindArrow(ctx, palette, w);
+      if (this.ensembleProb) this.drawChip(ctx, palette, this.copy.ensembleCanvas, 14, 14);
+    }
+
+    // A chip keeps canvas labels readable over burned ground in either theme.
+    drawChip(ctx, palette, label, x, y) {
+      ctx.font = '700 13px Inter, system-ui, sans-serif';
+      const padding = 8;
+      const width = ctx.measureText(label).width + padding * 2;
+      ctx.fillStyle = palette.chip;
+      ctx.strokeStyle = palette.chipBorder; ctx.lineWidth = 1;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x, y, width, 26, 8); else ctx.rect(x, y, width, 26);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = palette.ink; ctx.textBaseline = 'middle';
+      ctx.fillText(label, x + padding, y + 14);
+      ctx.textBaseline = 'alphabetic';
+      return width;
+    }
+
+    drawWindArrow(ctx, palette, w) {
+      const p = this.params();
+      const length = 26 + p.wind * 22;
+      const cx = w - 34 - length; const cy = 52;
+      this.drawChip(ctx, palette, this.copy.windCanvas, w - 34 - length - 6, 14);
+      ctx.strokeStyle = palette.ink; ctx.fillStyle = palette.ink; ctx.lineWidth = 2.5;
+      const ex = cx + Math.cos(p.angle) * length; const ey = cy + Math.sin(p.angle) * length;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ex, ey); ctx.stroke();
+      const head = 8; const a1 = p.angle + Math.PI * .82; const a2 = p.angle - Math.PI * .82;
+      ctx.beginPath(); ctx.moveTo(ex, ey);
+      ctx.lineTo(ex + Math.cos(a1) * head, ey + Math.sin(a1) * head);
+      ctx.lineTo(ex + Math.cos(a2) * head, ey + Math.sin(a2) * head);
+      ctx.closePath(); ctx.fill();
     }
   }
 
