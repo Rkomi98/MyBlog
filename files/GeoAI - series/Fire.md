@@ -92,13 +92,13 @@ Il modulo di **Rapid Damage Assessment** di EFFIS combina immagini MODIS, VIIRS 
 
 Quel controllo evita anche errori meno intuitivi. Impianti industriali, superfici molto calde o attività agricole possono produrre segnali termici sospetti. L’algoritmo richiama l’attenzione. La verifica successiva decide se lì ci sia stato un incendio compatibile con il prodotto.
 
-### Prova il concetto
+### Hai idea di cosa cambi?
 
-Il modulo seguente cambia la dimensione del pixel e sposta la sorgente termica all’interno della cella. Non usa dati satellitari: serve soltanto a rendere visibile l’equivoco.
+Ho creato un piccolo simulatore che confronta come cambia la dimensione del pixel e come si sposta la sorgente termica all’interno della cella.
 
 <hotspot-demo></hotspot-demo>
 
-La scelta del sensore aggiunge un altro compromesso. I satelliti polari, come quelli che trasportano MODIS e VIIRS, offrono più dettaglio ma osservano lo stesso territorio durante passaggi determinati. I satelliti geostazionari mantengono invece lo sguardo sulla stessa porzione del pianeta e aggiornano la scena molto più spesso, accettando pixel più grandi.
+La scelta del sensore aggiunge un altro compromesso. I satelliti polari, come quelli che trasportano MODIS e VIIRS, offrono più dettaglio ma osservano lo stesso territorio durante determinati passaggi dei satelliti. I satelliti geostazionari, invece, mantengono lo sguardo sulla stessa porzione del pianeta e aggiornano la scena molto più spesso, accettando pixel più grandi.
 
 ![Schema qualitativo del compromesso fra risoluzione spaziale e frequenza di osservazione](/Assets/fire-assets/images/03-compromesso-sensori.png)
 
