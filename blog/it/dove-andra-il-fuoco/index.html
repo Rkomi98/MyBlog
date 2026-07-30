@@ -42,7 +42,7 @@
     "headline": "Dove andrà il fuoco?",
     "image": "https://rkomi98.github.io/MyBlog/Assets/fire-assets/fire_pred.jpg",
     "datePublished": "2026-07-30T00:00:00.000Z",
-    "dateModified": "2026-07-30T13:10:37.000Z",
+    "dateModified": "2026-07-30T13:30:10.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1589,12 +1589,12 @@ Christopher Barnard) ha poi pubblicato una <a href="https://www.ecmwf.int/en/abo
 <p>La GeoAI può entrare nella filiera stimando variabili difficili da osservare, come la distribuzione del combustibile o correggendo gli errori sistematici di un simulatore o costruendo un surrogato più rapido di una simulazione costosa, oppure assimilando nuove osservazioni per aggiornare il perimetro previsto. Sono tutti compiti diversi, e vale la pena dichiarare ogni volta quale di questi si sta affidando al modello!</p>
 <p>La piattaforma <a href="https://watch.firemap.sdsc.edu/"><strong>WIFIRE Firemap</strong></a> offre un esempio di questa integrazione. Il programma di UC San Diego combina <a href="https://scil.ucsd.edu/wifire-program">meteo quasi in tempo reale, inneschi, topografia e caratteristiche della vegetazione per produrre mappe previsionali in pochi minuti</a>. Durante gli eventi più pericolosi, i perimetri rilevati da aeromobili possono essere assimilati per aggiornare le simulazioni.</p>
 <h3 id="una-previsione-un-ventaglio">Una previsione è un ventaglio</h3>
-<p>Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell’umidità o nello spotting possono produrre traiettorie divergenti. Per questo una previsione probabilistica è spesso più onesta di un unico perimetro colorato.</p>
+<p>Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell’umidità o nello spotting possono produrre traiettorie divergenti. Per questo una previsione probabilistica è spesso l&#39;output che si ottiene.</p>
 <p><img src="../../../Assets/fire-assets/images/04-propagazione-probabilistica.png" alt="Tre scenari di propagazione e la probabilità ottenuta da 120 simulazioni Monte Carlo"></p>
 <p><em>La figura nasce da 120 corse di un automa cellulare semplificato. Mostra un principio, non una previsione.</em></p>
 <p>La ricerca sta sperimentando anche modelli generativi. Un lavoro pubblicato nel 2026 su <em>Geoscientific Model Development</em> usa un modello di diffusione per produrre insiemi di futuri plausibili. <a href="https://gmd.copernicus.org/articles/19/1027/2026/">Il sistema apprende a emulare un automa cellulare probabilistico condizionato da copertura della chioma, densità vegetale, pendenza e vento</a>. Gli ensemble ottenuti rappresentano la quota di simulazioni in cui ogni cella viene raggiunta dal fuoco.</p>
-<p>Il risultato è promettente, ma il perimetro epistemico va tenuto ben visibile. Gli autori lo presentano come una <strong>proof of concept</strong> addestrata su sequenze sintetiche, sebbene costruite a partire dai contesti geografici degli incendi Chimney e Ferguson. <a href="https://gmd.copernicus.org/articles/19/1027/2026/index.html">Il lavoro futuro dichiarato comprende proprio la validazione contro progressioni osservate da satellite</a>.</p>
-<p>Chiamarla “AI che prevede gli incendi” cancellerebbe metà della storia. È un surrogato che prova a riprodurre la distribuzione di un simulatore. Utile, forse molto utile; non ancora un oracolo operativo.</p>
+<p>Gli autori lo presentano come una <strong>proof of concept</strong> addestrata su sequenze sintetiche, sebbene costruite a partire dai contesti geografici degli incendi Chimney e Ferguson. <a href="https://gmd.copernicus.org/articles/19/1027/2026/index.html">Il lavoro futuro dichiarato comprende proprio la validazione contro progressioni osservate da satellite</a>.</p>
+<p>Il motivo per cui non voglio chiamarla “AI che prevede gli incendi” è perché semplificherebbe troppo tutto ciò che c&#39;è dietro. L&#39;AI è utile, ma non è l&#39;unica cosa che permette di prevedere il comportamento dell&#39;incendio.</p>
 <h3 id="muovi-il-vento-cambia-lesito">Muovi il vento, cambia l’esito</h3>
 <p>Il laboratorio interattivo qui sotto usa la stessa idea generale della figura precedente: una griglia, combustibile sintetico, secchezza, pendenza, vento e spotting. Ogni corsa contiene casualità. Cambiando i controlli si vede quanto rapidamente una traiettoria singola possa diventare fragile.</p>
 <p><wildfire-simulator></wildfire-simulator></p>
