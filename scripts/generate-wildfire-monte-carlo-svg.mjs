@@ -262,7 +262,8 @@ function runMonteCarlo() {
   return { landscape, probability, samples, burnedCells };
 }
 
-const fmt = (value, digits = 0) => value.toFixed(digits).replace('.', ',');
+const num = (value, digits = 0) => value.toFixed(digits);
+const fmt = (value, digits = 0) => num(value, digits).replace('.', ',');
 const xml = value => String(value)
   .replaceAll('&', '&amp;')
   .replaceAll('<', '&lt;')
@@ -307,8 +308,8 @@ function horizontalRuns(colors, x, y, width, height) {
       const nextColor = col < CONFIG.cols ? colors[indexOf(col, row)] : null;
       if (nextColor !== color) {
         fragments.push(
-          `<rect x="${fmt(x + start * cellWidth, 2)}" y="${fmt(y + row * cellHeight, 2)}" ` +
-          `width="${fmt((col - start) * cellWidth + 0.08, 2)}" height="${fmt(cellHeight + 0.08, 2)}" fill="${color}"/>`
+          `<rect x="${num(x + start * cellWidth, 2)}" y="${num(y + row * cellHeight, 2)}" ` +
+          `width="${num((col - start) * cellWidth + 0.08, 2)}" height="${num(cellHeight + 0.08, 2)}" fill="${color}"/>`
         );
         start = col;
         color = nextColor;
@@ -335,10 +336,10 @@ function thresholdPath(probability, threshold, x, y, width, height) {
       const y0 = y + row * cellHeight;
       const x1 = x0 + cellWidth;
       const y1 = y0 + cellHeight;
-      if (!above(col, row - 1)) segments.push(`M${fmt(x0, 1)} ${fmt(y0, 1)}H${fmt(x1, 1)}`);
-      if (!above(col + 1, row)) segments.push(`M${fmt(x1, 1)} ${fmt(y0, 1)}V${fmt(y1, 1)}`);
-      if (!above(col, row + 1)) segments.push(`M${fmt(x0, 1)} ${fmt(y1, 1)}H${fmt(x1, 1)}`);
-      if (!above(col - 1, row)) segments.push(`M${fmt(x0, 1)} ${fmt(y0, 1)}V${fmt(y1, 1)}`);
+      if (!above(col, row - 1)) segments.push(`M${num(x0, 1)} ${num(y0, 1)}H${num(x1, 1)}`);
+      if (!above(col + 1, row)) segments.push(`M${num(x1, 1)} ${num(y0, 1)}V${num(y1, 1)}`);
+      if (!above(col, row + 1)) segments.push(`M${num(x0, 1)} ${num(y1, 1)}H${num(x1, 1)}`);
+      if (!above(col - 1, row)) segments.push(`M${num(x0, 1)} ${num(y0, 1)}V${num(y1, 1)}`);
     }
   }
   return segments.join('');
@@ -355,8 +356,8 @@ function burnedRuns(reached, x, y, width, height) {
       if (burned && start < 0) start = col;
       if (!burned && start >= 0) {
         fragments.push(
-          `<rect x="${fmt(x + start * cellWidth, 2)}" y="${fmt(y + row * cellHeight, 2)}" ` +
-          `width="${fmt((col - start) * cellWidth + 0.08, 2)}" height="${fmt(cellHeight + 0.08, 2)}"/>`
+          `<rect x="${num(x + start * cellWidth, 2)}" y="${num(y + row * cellHeight, 2)}" ` +
+          `width="${num((col - start) * cellWidth + 0.08, 2)}" height="${num(cellHeight + 0.08, 2)}"/>`
         );
         start = -1;
       }
@@ -371,29 +372,36 @@ function windArrow(x, y, angleDeg, length = 34) {
   const y2 = y + Math.sin(angle) * length;
   const left = angle + Math.PI * 0.82;
   const right = angle - Math.PI * 0.82;
-  return `<path d="M${fmt(x, 1)} ${fmt(y, 1)}L${fmt(x2, 1)} ${fmt(y2, 1)} ` +
-    `M${fmt(x2, 1)} ${fmt(y2, 1)}L${fmt(x2 + Math.cos(left) * 9, 1)} ${fmt(y2 + Math.sin(left) * 9, 1)} ` +
-    `M${fmt(x2, 1)} ${fmt(y2, 1)}L${fmt(x2 + Math.cos(right) * 9, 1)} ${fmt(y2 + Math.sin(right) * 9, 1)}" ` +
+  return `<path d="M${num(x, 1)} ${num(y, 1)}L${num(x2, 1)} ${num(y2, 1)} ` +
+    `M${num(x2, 1)} ${num(y2, 1)}L${num(x2 + Math.cos(left) * 9, 1)} ${num(y2 + Math.sin(left) * 9, 1)} ` +
+    `M${num(x2, 1)} ${num(y2, 1)}L${num(x2 + Math.cos(right) * 9, 1)} ${num(y2 + Math.sin(right) * 9, 1)}" ` +
     `fill="none" stroke="#102233" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
 }
 
-function scenarioCard(run, result, x, y) {
+function scenarioCard(run, result, landscape, x, y) {
   const mapX = x + 18;
   const mapY = y + 58;
   const mapW = 284;
   const mapH = 132.53;
   const ignitionX = mapX + (CONFIG.ignition.x + 0.5) * mapW / CONFIG.cols;
   const ignitionY = mapY + (CONFIG.ignition.y + 0.5) * mapH / CONFIG.rows;
+  const backgroundColors = new Array(CONFIG.cols * CONFIG.rows);
+  for (let i = 0; i < backgroundColors.length; i += 1) {
+    backgroundColors[i] = baseColor(landscape, i);
+  }
   return `
     <g>
       <rect x="${x}" y="${y}" width="320" height="224" rx="22" fill="#ffffff" stroke="#e1e7ea"/>
       <text x="${x + 18}" y="${y + 29}" class="scenario-title">Corsa ${String(run + 1).padStart(3, '0')}</text>
       <text x="${x + 302}" y="${y + 29}" text-anchor="end" class="scenario-stat">${result.burnedCells} celle</text>
       <rect x="${mapX}" y="${mapY}" width="${mapW}" height="${mapH}" rx="10" fill="#e8f0e9"/>
+      <g clip-path="url(#mini-${run})" shape-rendering="crispEdges">
+        ${horizontalRuns(backgroundColors, mapX, mapY, mapW, mapH)}
+      </g>
       <g clip-path="url(#mini-${run})" fill="#e84b32" opacity=".88" shape-rendering="crispEdges">
         ${burnedRuns(result.reached, mapX, mapY, mapW, mapH)}
       </g>
-      <circle cx="${fmt(ignitionX, 2)}" cy="${fmt(ignitionY, 2)}" r="4.5" fill="#102233" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="${num(ignitionX, 2)}" cy="${num(ignitionY, 2)}" r="4.5" fill="#102233" stroke="#ffffff" stroke-width="2"/>
       ${windArrow(x + 270, y + 205, result.params.directionDeg, 29)}
       <text x="${x + 18}" y="${y + 210}" class="scenario-note">vento ${fmt(result.params.wind, 2)} · umidità ${fmt(result.params.humidity * 100)}%</text>
     </g>`;
@@ -420,7 +428,7 @@ function createSvg(result) {
   }));
 
   const sampleCards = CONFIG.samples
-    .map((run, index) => scenarioCard(run, samples.get(run), 60 + index * 340, 170))
+    .map((run, index) => scenarioCard(run, samples.get(run), landscape, 60 + index * 340, 170))
     .join('');
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
@@ -480,13 +488,13 @@ function createSvg(result) {
     <path d="${thresholdPath(probability, 0.10, map.x, map.y, map.width, map.height)}" fill="none" stroke="#8d5708" stroke-width="1.4" opacity=".85"/>
     <path d="${thresholdPath(probability, 0.50, map.x, map.y, map.width, map.height)}" fill="none" stroke="#ffffff" stroke-width="2.4"/>
     <path d="${thresholdPath(probability, 0.90, map.x, map.y, map.width, map.height)}" fill="none" stroke="#102233" stroke-width="2.7"/>
-    ${Array.from({ length: 11 }, (_, i) => `<path d="M${fmt(map.x + i * map.width / 10, 1)} ${map.y}V${fmt(map.y + map.height, 1)}" stroke="#ffffff" stroke-width="1" opacity=".13"/>`).join('')}
-    ${Array.from({ length: 6 }, (_, i) => `<path d="M${map.x} ${fmt(map.y + i * map.height / 5, 1)}H${fmt(map.x + map.width, 1)}" stroke="#ffffff" stroke-width="1" opacity=".13"/>`).join('')}
+    ${Array.from({ length: 11 }, (_, i) => `<path d="M${num(map.x + i * map.width / 10, 1)} ${map.y}V${num(map.y + map.height, 1)}" stroke="#ffffff" stroke-width="1" opacity=".13"/>`).join('')}
+    ${Array.from({ length: 6 }, (_, i) => `<path d="M${map.x} ${num(map.y + i * map.height / 5, 1)}H${num(map.x + map.width, 1)}" stroke="#ffffff" stroke-width="1" opacity=".13"/>`).join('')}
   </g>
   <rect x="${map.x}" y="${map.y}" width="${map.width}" height="${map.height}" rx="13" fill="none" stroke="#d5dfe2" stroke-width="2"/>
-  <circle cx="${fmt(ignitionX, 2)}" cy="${fmt(ignitionY, 2)}" r="9" fill="#102233" stroke="#ffffff" stroke-width="3"/>
-  <path d="M${fmt(ignitionX, 1)} ${fmt(ignitionY - 14, 1)}V${fmt(ignitionY - 38, 1)}H${fmt(ignitionX + 72, 1)}" fill="none" stroke="#102233" stroke-width="2"/>
-  <text x="${fmt(ignitionX + 78, 1)}" y="${fmt(ignitionY - 32, 1)}" class="legend">innesco fisso</text>
+  <circle cx="${num(ignitionX, 2)}" cy="${num(ignitionY, 2)}" r="9" fill="#102233" stroke="#ffffff" stroke-width="3"/>
+  <path d="M${num(ignitionX, 1)} ${num(ignitionY - 14, 1)}V${num(ignitionY - 38, 1)}H${num(ignitionX + 72, 1)}" fill="none" stroke="#102233" stroke-width="2"/>
+  <text x="${num(ignitionX + 78, 1)}" y="${num(ignitionY - 32, 1)}" class="legend">innesco fisso</text>
 
   <text x="1140" y="486" class="panel-title">Quota delle 1.000 corse</text>
   ${[
@@ -505,9 +513,9 @@ function createSvg(result) {
 
   <line x1="1140" y1="798" x2="1500" y2="798" stroke="#e1e7ea"/>
   <text x="1140" y="828" class="metric">${fmt(mean)}</text>
-  <text x="1140" y="849" class="metric-label">celle raggiunte in media</text>
+  <text x="1140" y="849" class="metric-label">media celle raggiunte</text>
   <text x="1290" y="828" class="metric">${fmt(q10)}–${fmt(q90)}</text>
-  <text x="1290" y="849" class="metric-label">intervallo 10°–90° percentile</text>
+  <text x="1290" y="849" class="metric-label">10°–90° percentile</text>
 
   <rect x="1140" y="876" width="360" height="57" rx="12" fill="#fff8e8" stroke="#f0dca8"/>
   <text x="1155" y="899" class="metric-label" style="fill:#7c5b14">Errore Monte Carlo massimo: ${fmt(maxStandardError, 2)} p.p. (1σ)</text>

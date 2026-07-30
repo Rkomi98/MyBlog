@@ -1,66 +1,6 @@
 (() => {
   'use strict';
 
-  const COLORS = {
-    navy: '#0d1b2a',
-    navy2: '#1a2e42',
-    red: '#e8412a',
-    orange: '#f5a623',
-    blue: '#2563eb',
-    green: '#2d6a4f',
-    sage: '#7a9e7e',
-    paper: '#f7f8fa',
-    white: '#ffffff',
-    muted: '#6b7280',
-    border: '#d1d5db',
-    darkRed: '#7f1d1d'
-  };
-
-  const sharedStyle = `
-    :host { display:block; margin:2rem 0; color:${COLORS.navy}; font-family:'DM Sans', system-ui, sans-serif; }
-    * { box-sizing:border-box; }
-    .lab { background:${COLORS.white}; border:1px solid #e5e7eb; border-radius:18px; overflow:hidden; box-shadow:0 16px 50px rgba(13,27,42,.08); }
-    .head { padding:1.25rem 1.4rem 1rem; display:flex; gap:1rem; align-items:flex-start; justify-content:space-between; border-bottom:1px solid #e5e7eb; }
-    .eyebrow { font:700 .68rem/1.2 'DM Mono', monospace; letter-spacing:.11em; text-transform:uppercase; color:${COLORS.red}; margin-bottom:.45rem; }
-    h3 { margin:0; font-size:clamp(1.1rem,2vw,1.55rem); line-height:1.15; letter-spacing:-.025em; }
-    .head p { margin:.45rem 0 0; color:${COLORS.muted}; font-size:.88rem; line-height:1.55; max-width:48rem; }
-    .status { flex:0 0 auto; padding:.4rem .65rem; border-radius:999px; background:#fff7ed; color:#9a3412; font:700 .65rem/1.2 'DM Mono', monospace; text-transform:uppercase; letter-spacing:.06em; }
-    .body { display:grid; grid-template-columns:minmax(0,1fr) 18rem; min-height:28rem; }
-    .stage { position:relative; min-width:0; background:linear-gradient(145deg,#eef4ef,#dce8df); padding:1rem; display:flex; align-items:center; justify-content:center; }
-    canvas { width:100%; height:auto; max-height:38rem; display:block; border-radius:12px; background:#e6eee7; touch-action:none; }
-    .controls { padding:1rem 1.15rem 1.2rem; border-left:1px solid #e5e7eb; background:#fbfcfd; }
-    .control { margin-bottom:1rem; }
-    .control-head { display:flex; align-items:center; justify-content:space-between; gap:.7rem; margin-bottom:.35rem; }
-    label { font-size:.78rem; font-weight:700; }
-    output { font:700 .72rem/1 'DM Mono', monospace; color:${COLORS.red}; }
-    input[type='range'] { width:100%; accent-color:${COLORS.red}; }
-    select, input[type='text'] { width:100%; border:1px solid ${COLORS.border}; background:${COLORS.white}; color:${COLORS.navy}; padding:.65rem .7rem; border-radius:9px; font:600 .78rem 'DM Sans',sans-serif; }
-    .buttons { display:grid; grid-template-columns:1fr 1fr; gap:.55rem; margin-top:1.1rem; }
-    button { border:0; border-radius:9px; padding:.72rem .75rem; cursor:pointer; font:700 .75rem 'DM Sans',sans-serif; transition:transform .15s ease, opacity .15s ease; }
-    button:hover { transform:translateY(-1px); }
-    button:disabled { opacity:.45; cursor:not-allowed; transform:none; }
-    .primary { background:${COLORS.navy}; color:${COLORS.white}; }
-    .accent { background:${COLORS.red}; color:${COLORS.white}; }
-    .soft { background:#e9eef5; color:${COLORS.navy}; }
-    .wide { grid-column:1 / -1; }
-    .metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin-top:1rem; }
-    .metric { padding:.7rem .55rem; background:${COLORS.white}; border:1px solid #e5e7eb; border-radius:10px; text-align:center; }
-    .metric strong { display:block; font:700 .88rem/1.2 'DM Mono',monospace; }
-    .metric span { color:${COLORS.muted}; font-size:.62rem; }
-    .note { margin-top:1rem; padding:.8rem .85rem; border-left:3px solid ${COLORS.orange}; background:#fffbeb; color:#7c5b14; font-size:.72rem; line-height:1.5; border-radius:0 9px 9px 0; }
-    .legend { position:absolute; left:1.6rem; bottom:1.5rem; display:flex; flex-wrap:wrap; gap:.45rem .75rem; padding:.55rem .65rem; border-radius:9px; background:rgba(255,255,255,.9); backdrop-filter:blur(5px); font-size:.65rem; box-shadow:0 4px 18px rgba(13,27,42,.1); }
-    .legend span { display:inline-flex; align-items:center; gap:.3rem; }
-    .swatch { width:.66rem; height:.66rem; border-radius:2px; }
-    .progress { height:5px; background:#e5e7eb; overflow:hidden; border-radius:999px; margin-top:.8rem; }
-    .progress > i { display:block; width:0; height:100%; background:${COLORS.red}; transition:width .15s; }
-    @media (max-width:860px) {
-      .body { grid-template-columns:1fr; }
-      .controls { border-left:0; border-top:1px solid #e5e7eb; }
-      .stage { min-height:22rem; }
-      .head { flex-direction:column; }
-    }
-  `;
-
   // The article shell owns the global theme. The hotspot module uses a Shadow DOM,
   // so it needs its own surface styles while still consuming the shell's tokens.
   const hotspotStyle = `
@@ -96,8 +36,13 @@
     @media (max-width:860px) { .body { grid-template-columns:1fr; } .controls { border-top:1px solid var(--border, rgba(148,163,184,.2)); border-left:0; } .stage { min-height:22rem; } .head { flex-direction:column; } }
   `;
 
+  // The simulator lives inside a ~688px article column, so the two-column split has
+  // to answer to the element width, not the viewport: hence container queries.
   const wildfireStyle = `${hotspotStyle}
-    .body { min-height:29rem; }
+    :host { container-type:inline-size; }
+    .body { min-height:0; align-items:start; }
+    .stage { flex-direction:column; align-items:stretch; justify-content:flex-start; gap:.75rem; }
+    canvas { aspect-ratio:3 / 2; max-height:none; }
     .buttons { grid-template-columns:repeat(2, minmax(0, 1fr)); }
     .buttons .wide { grid-column:1 / -1; }
     .buttons .primary { background:var(--surface, #1e293b); }
@@ -107,6 +52,20 @@
     button:disabled { cursor:not-allowed; opacity:.52; transform:none; }
     .progress { height:5px; margin-top:.8rem; overflow:hidden; border-radius:999px; background:var(--border, rgba(148,163,184,.2)); }
     .progress > i { display:block; width:0; height:100%; background:var(--accent, #10b981); transition:width .15s ease; }
+    .metric span { display:block; }
+    .legend { position:static; left:auto; bottom:auto; justify-content:center; align-items:center; gap:.4rem 1rem; box-shadow:none; }
+    .legend .swatch { box-shadow:0 0 0 1px var(--border, rgba(148,163,184,.35)); }
+    .legend .ramp { gap:.45rem; }
+    .legend .gradient { width:5.5rem; height:.55rem; border-radius:999px; border:1px solid var(--border, rgba(148,163,184,.2)); }
+    .legend em { font-style:normal; color:var(--text-muted, #94a3b8); font:600 .62rem/1 'JetBrains Mono', monospace; }
+    @container (max-width:52rem) {
+      .body { grid-template-columns:1fr; }
+      .controls { display:grid; grid-template-columns:repeat(auto-fit, minmax(11.5rem, 1fr)); gap:0 1.1rem; align-items:start; border-top:1px solid var(--border, rgba(148,163,184,.2)); border-left:0; }
+      .control { margin-bottom:.9rem; }
+      .buttons, .progress, .metrics, .note { grid-column:1 / -1; }
+      .buttons { grid-template-columns:repeat(auto-fit, minmax(9rem, 1fr)); }
+      .buttons .wide { grid-column:auto; }
+    }
   `;
 
   const HOTSPOT_COPY = {
@@ -137,9 +96,8 @@
       experiment: 'Esperimento 02',
       title: 'Propagazione probabilistica su un paesaggio sintetico',
       intro: 'Vento, umidità, continuità del combustibile e spotting cambiano il percorso. La modalità ensemble sovrappone più futuri possibili.',
-      status: 'didattico · non operativo',
       canvasLabel: 'Simulatore didattico della propagazione di un incendio',
-      front: 'fronte', burned: 'bruciato', probability: 'probabilità ensemble',
+      front: 'fronte attivo', burned: 'bruciato', vegetation: 'vegetazione', probability: 'probabilità ensemble',
       wind: 'Forza del vento', direction: 'Direzione', humidity: 'Umidità', fuel: 'Continuità del combustibile', spotting: 'Spotting',
       start: 'Avvia', pause: 'Pausa', resume: 'Riprendi', reset: 'Azzera', ensemble: 'Calcola 32 scenari', calculating: 'Calcolo in corso…',
       steps: 'passi', reached: 'area raggiunta', view: 'vista', single: 'singolo', ensembleMode: 'ensemble',
@@ -150,9 +108,8 @@
       experiment: 'Experiment 02',
       title: 'Probabilistic spread across a synthetic landscape',
       intro: 'Wind, humidity, fuel continuity, and spotting change the path. Ensemble mode overlays several possible futures.',
-      status: 'educational · non-operational',
       canvasLabel: 'Educational wildfire spread simulator',
-      front: 'active front', burned: 'burned', probability: 'ensemble probability',
+      front: 'active front', burned: 'burned', vegetation: 'vegetation', probability: 'ensemble probability',
       wind: 'Wind strength', direction: 'Direction', humidity: 'Humidity', fuel: 'Fuel continuity', spotting: 'Spotting',
       start: 'Start', pause: 'Pause', resume: 'Resume', reset: 'Reset', ensemble: 'Run 32 scenarios', calculating: 'Calculating…',
       steps: 'steps', reached: 'reached area', view: 'view', single: 'single', ensembleMode: 'ensemble',
@@ -238,6 +195,34 @@
     const pb = b.match(/\w\w/g).map(v => parseInt(v, 16));
     return pa.map((v, i) => Math.round(v + (pb[i] - v) * t));
   }
+
+  function rgbCss(rgb) { return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`; }
+
+  // Three-stop sequential ramp for the ensemble probability surface.
+  function rampAt(palette, t) {
+    return t <= .5
+      ? colorMix(palette.rampLow, palette.rampMid, t / .5)
+      : colorMix(palette.rampMid, palette.rampHigh, (t - .5) / .5);
+  }
+
+  const WILDFIRE_PALETTES = {
+    dark: {
+      background: '#141f31', terrainLow: '#1b352f', terrainHigh: '#4e7659',
+      burnedLow: '#3c1f18', burnedHigh: '#140907',
+      activeLow: '#fcd34d', activeHigh: '#dc2626',
+      rampLow: '#1e3a5f', rampMid: '#f59e0b', rampHigh: '#991b1b',
+      contour: 'rgba(226,232,240,.15)', road: 'rgba(226,232,240,.6)',
+      ink: '#e2e8f0', chip: 'rgba(10,16,28,.82)', chipBorder: 'rgba(148,163,184,.3)'
+    },
+    light: {
+      background: '#e8efe9', terrainLow: '#e2ecdf', terrainHigh: '#43684d',
+      burnedLow: '#7a4630', burnedHigh: '#2a100b',
+      activeLow: '#f59e0b', activeHigh: '#c81e0f',
+      rampLow: '#dbeafe', rampMid: '#f59e0b', rampHigh: '#7f1d1d',
+      contour: 'rgba(255,255,255,.28)', road: 'rgba(250,251,252,.85)',
+      ink: '#0d1b2a', chip: 'rgba(255,255,255,.88)', chipBorder: 'rgba(15,23,42,.14)'
+    }
+  };
 
   class HotspotDemo extends HTMLElement {
     connectedCallback() {
@@ -351,11 +336,10 @@
         <div class="lab">
           <div class="head">
             <div><div class="eyebrow">${this.copy.experiment}</div><h3>${this.copy.title}</h3><p>${this.copy.intro}</p></div>
-            <div class="status">${this.copy.status}</div>
           </div>
           <div class="body">
             <div class="stage"><canvas width="960" height="640" aria-label="${this.copy.canvasLabel}"></canvas>
-              <div class="legend"><span><i class="swatch" style="background:${COLORS.orange}"></i> ${this.copy.front}</span><span><i class="swatch" style="background:${COLORS.darkRed}"></i> ${this.copy.burned}</span><span><i class="swatch" style="background:${COLORS.blue}"></i> ${this.copy.probability}</span></div>
+              <div class="legend" id="legend"></div>
             </div>
             <div class="controls">
               <div class="control"><div class="control-head"><label for="wind">${this.copy.wind}</label><output id="windv">0</output></div><input id="wind" type="range" min="0" max="100" value="65"></div>
@@ -373,25 +357,69 @@
       this.canvas = root.querySelector('canvas');
       this.ctx = this.canvas.getContext('2d', { alpha: false });
       this.rows = 80; this.cols = 120;
+      // A cell keeps burning for a few ticks, so the front has depth and keeps
+      // trying its neighbours instead of dying after a single attempt.
+      this.burnTicks = 5;
       this.land = makeLandscape(this.rows, this.cols);
       this.controls = {};
       for (const id of ['wind', 'angle', 'humidity', 'fuel', 'spotting']) this.controls[id] = root.querySelector(`#${id}`);
-      this.running = false; this.frame = 0; this.ensembleProb = null;
+      this.running = false; this.ensembleProb = null;
       this.seedCounter = 0;
       // bindControls() draws once to reflect the sliders, so the state must
       // already exist before that first render.
       this.state = new Uint8Array(this.rows * this.cols);
+      this.life = new Uint8Array(this.rows * this.cols);
       this.bindControls();
       root.querySelector('#run').addEventListener('click', () => this.toggle());
       root.querySelector('#reset').addEventListener('click', () => this.reset());
       root.querySelector('#ensemble').addEventListener('click', () => this.runEnsemble());
       this.themeObserver = new MutationObserver(() => this.draw());
       this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
+      this.resizeObserver = new ResizeObserver(() => this.draw());
+      this.resizeObserver.observe(this.canvas);
       this.reset();
     }
 
     disconnectedCallback() {
+      this.running = false;
       if (this.themeObserver) this.themeObserver.disconnect();
+      if (this.resizeObserver) this.resizeObserver.disconnect();
+    }
+
+    palette() {
+      return WILDFIRE_PALETTES[document.body.dataset.theme === 'light' ? 'light' : 'dark'];
+    }
+
+    // The canvas is laid out fluidly, so its backing store has to follow the CSS
+    // box: otherwise labels and cells are drawn at 960px and squeezed into ~360px.
+    syncCanvasSize() {
+      const cssWidth = Math.max(280, Math.round(this.canvas.clientWidth || 900));
+      const cssHeight = Math.round(cssWidth * this.rows / this.cols);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.round(cssWidth * dpr);
+      const height = Math.round(cssHeight * dpr);
+      if (this.canvas.width !== width) this.canvas.width = width;
+      if (this.canvas.height !== height) this.canvas.height = height;
+      return { width: cssWidth, height: cssHeight, dpr };
+    }
+
+    // The legend has to be built from the same palette the canvas uses, or the
+    // swatches stop matching the map as soon as the theme flips.
+    renderLegend() {
+      const palette = this.palette();
+      const legend = this.shadowRoot.querySelector('#legend');
+      let markup;
+      if (this.ensembleProb) {
+        const gradient = `linear-gradient(90deg,${rgbCss(rampAt(palette, 0))},${rgbCss(rampAt(palette, .5))},${rgbCss(rampAt(palette, 1))})`;
+        markup = `<span class="ramp">${this.copy.probability}<i class="gradient" style="background:${gradient}"></i><em>0 → 100%</em></span>`;
+      } else {
+        markup = [
+          [colorMix(palette.terrainLow, palette.terrainHigh, .62), this.copy.vegetation],
+          [colorMix(palette.activeLow, palette.activeHigh, .45), this.copy.front],
+          [colorMix(palette.burnedLow, palette.burnedHigh, .55), this.copy.burned]
+        ].map(([rgb, label]) => `<span><i class="swatch" style="background:${rgbCss(rgb)}"></i> ${label}</span>`).join('');
+      }
+      if (legend.innerHTML !== markup) legend.innerHTML = markup;
     }
 
     bindControls() {
@@ -422,22 +450,33 @@
       };
     }
 
-    reset() {
-      this.running = false;
-      this.shadowRoot.querySelector('#run').textContent = this.copy.start;
-      this.state = new Uint8Array(this.rows * this.cols);
-      this.burning = [];
+    ignition() {
+      const state = new Uint8Array(this.rows * this.cols);
+      const life = new Uint8Array(this.rows * this.cols);
+      const burning = [];
       const sy = Math.floor(this.rows * .73); const sx = Math.floor(this.cols * .18);
       for (let dy = -1; dy <= 1; dy += 1) for (let dx = -1; dx <= 1; dx += 1) {
         const idx = (sy + dy) * this.cols + sx + dx;
-        this.state[idx] = 1; this.burning.push(idx);
+        state[idx] = 1; life[idx] = this.burnTicks; burning.push(idx);
       }
-      this.stepNo = 0; this.ensembleProb = null;
+      return { state, life, burning };
+    }
+
+    reset() {
+      this.running = false;
+      this.shadowRoot.querySelector('#run').textContent = this.copy.start;
+      const seeded = this.ignition();
+      this.state = seeded.state; this.life = seeded.life; this.burning = seeded.burning;
+      this.stepNo = 0; this.ensembleProb = null; this.seedCounter = 0;
       this.shadowRoot.querySelector('#bar').style.width = '0%';
       this.updateMetrics(this.copy.single); this.draw();
     }
 
+    finished() { return this.stepNo >= 150 || this.burning.length === 0; }
+
     toggle() {
+      // A finished run restarts from the ignition point instead of doing nothing.
+      if (!this.running && (this.finished() || this.ensembleProb)) this.reset();
       this.running = !this.running;
       this.shadowRoot.querySelector('#run').textContent = this.running ? this.copy.pause : this.copy.resume;
       if (this.running) this.loop();
@@ -447,51 +486,72 @@
       if (!this.running) return;
       for (let i = 0; i < 2; i += 1) this.stepSimulation();
       this.draw(); this.updateMetrics(this.copy.single);
-      if (this.burning.length === 0 || this.stepNo >= 130) {
+      if (this.finished()) {
         this.running = false; this.shadowRoot.querySelector('#run').textContent = this.copy.start; return;
       }
       requestAnimationFrame(() => this.loop());
     }
 
     stepSimulation() {
-      const result = this.advance(this.state, this.burning, this.params(), new RNG(1701 + this.seedCounter++));
-      this.state = result.state; this.burning = result.burning; this.stepNo += 1;
+      const result = this.advance(this.state, this.life, this.burning, this.params(), new RNG(1701 + this.seedCounter++));
+      this.state = result.state; this.life = result.life; this.burning = result.burning; this.stepNo += 1;
     }
 
-    advance(state, burning, params, rng) {
-      const nextState = state.slice(); const nextBurning = [];
+    // Neighbour offsets with a length weight: diagonals share less flame front.
+    static get OFFSETS() {
+      return [[-1,-1,.72],[-1,0,1],[-1,1,.72],[0,-1,1],[0,1,1],[1,-1,.72],[1,0,1],[1,1,.72]];
+    }
+
+    advance(state, life, burning, params, rng) {
+      const nextState = state.slice(); const nextLife = life.slice(); const nextBurning = [];
       const candidates = new Map();
       const wy = Math.sin(params.angle); const wx = Math.cos(params.angle);
-      const offsets = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+      const dryness = .3 + 1.4 * (1 - params.humidity);
+      let frontSize = 0;
       for (const idx of burning) {
         const y = Math.floor(idx / this.cols); const x = idx % this.cols;
-        nextState[idx] = 2;
-        for (const [dy, dx] of offsets) {
+        if (life[idx] === this.burnTicks) frontSize += 1;
+        for (const [dy, dx, weight] of WildfireSimulator.OFFSETS) {
           const ny = y + dy; const nx = x + dx;
           if (ny < 0 || ny >= this.rows || nx < 0 || nx >= this.cols) continue;
           const ni = ny * this.cols + nx;
           if (state[ni] !== 0) continue;
+          const localFuel = this.land.fuel[ni] * params.continuity;
+          if (localFuel < .04) continue;
           const norm = Math.hypot(dx, dy); const align = Math.max(0, (dx * wx + dy * wy) / norm);
           const uphill = Math.max(0, this.land.elevation[ni] - this.land.elevation[idx]);
-          const localFuel = this.land.fuel[ni] * params.continuity;
-          let p = .022 + .23 * localFuel + .25 * (1 - params.humidity) + .27 * params.wind * align + .18 * Math.min(1, uphill * 8);
-          p *= .72 + .34 * rng.next(); p = clamp(p, 0, .93);
-          if (p > (candidates.get(ni) || 0)) candidates.set(ni, p);
+          const push = 1 + 2.4 * params.wind * Math.pow(align, 1.4);
+          const rise = 1 + 2.2 * Math.min(1, uphill * 9);
+          let p = .062 * weight * (.3 + localFuel) * dryness * push * rise;
+          p *= .75 + .5 * rng.next(); p = clamp(p, 0, .6);
+          // Neighbours are independent ignition attempts, so accumulate the
+          // survival probability instead of keeping only the strongest one.
+          candidates.set(ni, (candidates.has(ni) ? candidates.get(ni) : 1) * (1 - p));
         }
-        if (rng.next() < params.spotting * params.wind) {
-          const distance = 5 + Math.floor(rng.next() * 14);
-          const ny = Math.round(y + wy * distance + rng.normal() * 1.5);
-          const nx = Math.round(x + wx * distance + rng.normal() * 1.5);
-          if (ny >= 0 && ny < this.rows && nx >= 0 && nx < this.cols) {
-            const ni = ny * this.cols + nx;
-            if (state[ni] === 0) candidates.set(ni, Math.max(candidates.get(ni) || 0, .35 * this.land.fuel[ni] * (1 - params.humidity)));
-          }
-        }
+        const remaining = life[idx] - 1;
+        if (remaining <= 0) { nextState[idx] = 2; nextLife[idx] = 0; }
+        else { nextLife[idx] = remaining; nextBurning.push(idx); }
       }
-      for (const [idx, p] of candidates) {
-        if (rng.next() < p) { nextState[idx] = 1; nextBurning.push(idx); }
+      // Embers leave the leading edge only, otherwise a deep front seeds the whole map.
+      let embers = frontSize * params.spotting * params.wind * .15;
+      while (embers > 0) {
+        if (embers < 1 && rng.next() > embers) break;
+        embers -= 1;
+        const distance = 5 + Math.floor(rng.next() * 14);
+        const source = burning[Math.floor(rng.next() * burning.length)];
+        if (source === undefined) break;
+        const ny = Math.round(Math.floor(source / this.cols) + wy * distance + rng.normal() * 1.8);
+        const nx = Math.round((source % this.cols) + wx * distance + rng.normal() * 1.8);
+        if (ny < 0 || ny >= this.rows || nx < 0 || nx >= this.cols) continue;
+        const ni = ny * this.cols + nx;
+        if (state[ni] !== 0) continue;
+        const p = .55 * this.land.fuel[ni] * params.continuity * (1 - params.humidity);
+        candidates.set(ni, (candidates.has(ni) ? candidates.get(ni) : 1) * (1 - p));
       }
-      return { state: nextState, burning: nextBurning };
+      for (const [idx, survival] of candidates) {
+        if (rng.next() < 1 - survival) { nextState[idx] = 1; nextLife[idx] = this.burnTicks; nextBurning.push(idx); }
+      }
+      return { state: nextState, life: nextLife, burning: nextBurning };
     }
 
     async runEnsemble() {
@@ -509,15 +569,12 @@
           continuity: clamp(base.continuity + rng.normal() * .06, .2, 1),
           spotting: clamp(base.spotting + rng.normal() * .004, 0, .06)
         };
-        let state = new Uint8Array(this.rows * this.cols); let burning = [];
-        const sy = Math.floor(this.rows * .73); const sx = Math.floor(this.cols * .18);
-        for (let dy = -1; dy <= 1; dy += 1) for (let dx = -1; dx <= 1; dx += 1) {
-          const idx = (sy + dy) * this.cols + sx + dx; state[idx] = 1; burning.push(idx);
+        let { state, life, burning } = this.ignition();
+        for (let t = 0; t < 150 && burning.length; t += 1) {
+          const next = this.advance(state, life, burning, params, rng);
+          state = next.state; life = next.life; burning = next.burning;
         }
-        for (let t = 0; t < 82 && burning.length; t += 1) {
-          const next = this.advance(state, burning, params, rng); state = next.state; burning = next.burning;
-        }
-        for (let i = 0; i < state.length; i += 1) if (state[i] === 2 || state[i] === 1) counts[i] += 1;
+        for (let i = 0; i < state.length; i += 1) if (state[i] > 0) counts[i] += 1;
         this.shadowRoot.querySelector('#bar').style.width = `${((r + 1) / runs) * 100}%`;
         if (r % 4 === 3) await new Promise(resolve => setTimeout(resolve, 0));
       }
@@ -542,22 +599,13 @@
 
     draw() {
       if (!this.ctx || !this.land) return;
-      const ctx = this.ctx; const w = this.canvas.width; const h = this.canvas.height;
+      const ctx = this.ctx;
+      const view = this.syncCanvasSize();
+      const w = view.width; const h = view.height;
       const cw = w / this.cols; const ch = h / this.rows;
-      const dark = document.body.dataset.theme !== 'light';
-      const palette = dark
-        ? {
-            background: '#172235', terrainLow: '#1d3b36', terrainHigh: '#5e8b68',
-            burnedLow: '#4a241f', burnedHigh: '#16090a', activeLow: '#f59e0b', activeHigh: '#ef4444',
-            ensembleLow: '#2a3b55', ensembleHigh: '#7f1d1d', contour: 'rgba(226,232,240,.16)',
-            road: 'rgba(226,232,240,.66)', ink: '#e2e8f0', labelBackground: 'rgba(15,23,42,.88)'
-          }
-        : {
-            background: '#e7efe8', terrainLow: '#dfeade', terrainHigh: '#456b4f',
-            burnedLow: '#6b3b2a', burnedHigh: '#260e0a', activeLow: '#f5a623', activeHigh: '#e8412a',
-            ensembleLow: '#dbeafe', ensembleHigh: '#7f1d1d', contour: 'rgba(255,255,255,.24)',
-            road: 'rgba(247,248,250,.75)', ink: '#0d1b2a', labelBackground: 'rgba(255,255,255,.88)'
-          };
+      const palette = this.palette();
+      this.renderLegend();
+      ctx.setTransform(view.dpr, 0, 0, view.dpr, 0, 0);
       // Draw one logical cell as a rectangle for speed and crispness.
       ctx.fillStyle = palette.background; ctx.fillRect(0, 0, w, h);
       for (let y = 0; y < this.rows; y += 1) {
@@ -567,11 +615,15 @@
           let rgb = colorMix(palette.terrainLow, palette.terrainHigh, v);
           if (this.ensembleProb) {
             const p = this.ensembleProb[idx];
-            if (p > 0) rgb = colorMix(palette.ensembleLow, palette.ensembleHigh, Math.pow(p, .72));
-          } else if (this.state[idx] === 2) rgb = colorMix(palette.burnedLow, palette.burnedHigh, .45 + .45 * this.land.fuel[idx]);
-          else if (this.state[idx] === 1) rgb = colorMix(palette.activeLow, palette.activeHigh, .65);
-          ctx.fillStyle = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-          ctx.fillRect(x * cw, y * ch, Math.ceil(cw + .25), Math.ceil(ch + .25));
+            if (p > 0) rgb = rampAt(palette, Math.pow(p, .72));
+          } else if (this.state[idx] === 2) rgb = colorMix(palette.burnedLow, palette.burnedHigh, .35 + .5 * this.land.fuel[idx]);
+          else if (this.state[idx] === 1) {
+            // Freshly lit cells read as the bright leading edge, older ones cool to red.
+            const age = 1 - (this.life[idx] || 1) / this.burnTicks;
+            rgb = colorMix(palette.activeLow, palette.activeHigh, clamp(age, 0, 1));
+          }
+          ctx.fillStyle = rgbCss(rgb);
+          ctx.fillRect(x * cw, y * ch, Math.ceil(cw + .5), Math.ceil(ch + .5));
         }
       }
       // Terrain contours, road and wind arrow.
@@ -584,23 +636,45 @@
         }
         ctx.stroke();
       }
-      ctx.strokeStyle = palette.road; ctx.lineWidth = Math.max(2, ch * 1.4); ctx.beginPath();
+      ctx.strokeStyle = palette.road; ctx.lineWidth = Math.max(1.5, ch * 1.4); ctx.beginPath();
       for (let x = 0; x < this.cols; x += 1) {
         const y = this.rows * (.58 + .06 * Math.sin(x / 11));
         if (x === 0) ctx.moveTo(0, y * ch); else ctx.lineTo(x * cw, y * ch);
       }
       ctx.stroke();
-      const p = this.params(); const ax = w - 90; const ay = 78; const len = 52 + p.wind * 30;
-      ctx.strokeStyle = palette.ink; ctx.fillStyle = palette.ink; ctx.lineWidth = 4;
-      const ex = ax + Math.cos(p.angle) * len; const ey = ay + Math.sin(p.angle) * len;
-      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ex, ey); ctx.stroke();
-      const head = 12; const a1 = p.angle + Math.PI * .82; const a2 = p.angle - Math.PI * .82;
-      ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex + Math.cos(a1) * head, ey + Math.sin(a1) * head); ctx.lineTo(ex + Math.cos(a2) * head, ey + Math.sin(a2) * head); ctx.closePath(); ctx.fill();
-      ctx.font = '700 16px JetBrains Mono, monospace'; ctx.fillText(this.copy.windCanvas, ax - 5, ay - 18);
-      if (this.ensembleProb) {
-        ctx.fillStyle = palette.labelBackground; ctx.fillRect(22, 20, 245, 44);
-        ctx.fillStyle = palette.ink; ctx.font = '700 18px Inter, sans-serif'; ctx.fillText(this.copy.ensembleCanvas, 38, 48);
-      }
+      this.drawWindArrow(ctx, palette, w);
+      if (this.ensembleProb) this.drawChip(ctx, palette, this.copy.ensembleCanvas, 14, 14);
+    }
+
+    // A chip keeps canvas labels readable over burned ground in either theme.
+    drawChip(ctx, palette, label, x, y) {
+      ctx.font = '700 13px Inter, system-ui, sans-serif';
+      const padding = 8;
+      const width = ctx.measureText(label).width + padding * 2;
+      ctx.fillStyle = palette.chip;
+      ctx.strokeStyle = palette.chipBorder; ctx.lineWidth = 1;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x, y, width, 26, 8); else ctx.rect(x, y, width, 26);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = palette.ink; ctx.textBaseline = 'middle';
+      ctx.fillText(label, x + padding, y + 14);
+      ctx.textBaseline = 'alphabetic';
+      return width;
+    }
+
+    drawWindArrow(ctx, palette, w) {
+      const p = this.params();
+      const length = 26 + p.wind * 22;
+      const cx = w - 34 - length; const cy = 52;
+      this.drawChip(ctx, palette, this.copy.windCanvas, w - 34 - length - 6, 14);
+      ctx.strokeStyle = palette.ink; ctx.fillStyle = palette.ink; ctx.lineWidth = 2.5;
+      const ex = cx + Math.cos(p.angle) * length; const ey = cy + Math.sin(p.angle) * length;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ex, ey); ctx.stroke();
+      const head = 8; const a1 = p.angle + Math.PI * .82; const a2 = p.angle - Math.PI * .82;
+      ctx.beginPath(); ctx.moveTo(ex, ey);
+      ctx.lineTo(ex + Math.cos(a1) * head, ey + Math.sin(a1) * head);
+      ctx.lineTo(ex + Math.cos(a2) * head, ey + Math.sin(a2) * head);
+      ctx.closePath(); ctx.fill();
     }
   }
 

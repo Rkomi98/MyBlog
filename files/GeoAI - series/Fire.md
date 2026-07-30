@@ -136,9 +136,9 @@ La piattaforma [**WIFIRE Firemap**](https://watch.firemap.sdsc.edu/) offre un es
 
 Il fronte non segue una linea già scritta. Piccole differenze nel vento, nell’umidità o nello spotting possono produrre traiettorie divergenti. Per questo una previsione probabilistica è spesso l'output che si ottiene.
 
-![Tre scenari di propagazione e la probabilità ottenuta da 120 simulazioni Monte Carlo](/Assets/fire-assets/images/04-propagazione-probabilistica.png)
+![Tre corse campionate e la probabilità empirica ottenuta da 1.000 simulazioni Monte Carlo](/Assets/fire-assets/images/04-propagazione-probabilistica.svg)
 
-*La figura nasce da 120 corse di un automa cellulare semplificato. Mostra un principio, non una previsione.*
+*La figura nasce da 1.000 corse riproducibili di un automa cellulare semplificato. La frequenza di passaggio è il rapporto tra le corse che raggiungono ogni cella e il totale delle simulazioni. Mostra un principio, non una previsione operativa.*
 
 La ricerca sta sperimentando anche modelli generativi. Un lavoro pubblicato nel 2026 su *Geoscientific Model Development* usa un modello di diffusione per produrre insiemi di futuri plausibili. [Il sistema apprende a emulare un automa cellulare probabilistico condizionato da copertura della chioma, densità vegetale, pendenza e vento](https://gmd.copernicus.org/articles/19/1027/2026/). Gli ensemble ottenuti rappresentano la quota di simulazioni in cui ogni cella viene raggiunta dal fuoco.
 
@@ -192,7 +192,7 @@ La domanda decisiva diventa: **che cosa è stato possibile fare grazie a questa 
 
 Spegnere le fiamme chiude soltanto una parte dell’emergenza.
 
-La perdita di vegetazione e le trasformazioni del suolo possono aumentare erosione, ruscellamento, frane superficiali e colate detritiche. Una pioggia intensa, poche settimane dopo l’incendio, può aprire un secondo capitolo.
+La perdita di vegetazione e le trasformazioni del suolo possono aumentare erosione, ruscellamento, frane superficiali e colate detritiche. Una pioggia intensa, poche settimane dopo l’incendio, può aprire un secondo capitolo di problemi.
 
 Per ricostruire la severità si confrontano spesso immagini acquisite prima e dopo l’evento. Il **Normalized Burn Ratio** mette in relazione vicino infrarosso e infrarosso a onde corte, due regioni dello spettro sensibili alla vegetazione e all’umidità. La differenza tra il valore precedente e quello successivo, il dNBR, aiuta a separare aree non bruciate, danni lievi, moderati e severi. [Copernicus descrive NBR, area bruciata e Fire Radiative Power come misure complementari dell’impatto](https://climate.copernicus.eu/wildfire-impact-how-it-monitored-measured).
 
@@ -210,27 +210,11 @@ Il perimetro del danno, a quel punto, non coincide più con il perimetro bruciat
 
 ---
 
-## Gli errori che contano
-
-I dati sugli incendi sono sbilanciati per natura. La quasi totalità delle celle spazio-temporali osservate non contiene un incendio. Un modello che classificasse sempre “nessun fuoco” potrebbe mostrare un’accuratezza notevole e risultare perfettamente inutile.
-
-Serve quindi guardare precisione, richiamo, calibrazione delle probabilità e comportamento sugli eventi estremi. Serve controllare se il modello funziona fuori dalla regione in cui è stato addestrato. Serve chiedersi che cosa accade quando cambiano vegetazione, pratiche agricole, densità stradale, clima e qualità dei sensori.
-
-Ci sono poi gli errori di osservazione. Le nuvole e il fumo possono nascondere il terreno. Un satellite può passare tra due fasi intense. Un piccolo incendio può rimanere sotto la soglia di rilevamento. Una superficie calda può generare un falso positivo. Un perimetro può essere aggiornato ore dopo, quando arriva un’acquisizione migliore.
-
-Per questo ogni prodotto operativo dovrebbe portare con sé quattro coordinate: l’ora dell’ultima osservazione, il sensore o modello utilizzato, la risoluzione insieme alla latenza e lo stato d’incertezza del prodotto. Senza queste informazioni una mappa precisa nei colori può essere vaga nel significato.
-
-La questione non riguarda soltanto la trasparenza scientifica. Coinvolge il modo in cui le persone leggono un’interfaccia. Un perimetro rosso, continuo e netto comunica psicologicamente più certezza di quanta il modello possieda. Una fascia probabilistica, invece, può sembrare più confusa ma raccontare meglio ciò che sappiamo.
-
-A volte una visualizzazione onesta è meno spettacolare. In una sala operativa, però, l’estetica della certezza può costare cara.
-
----
-
 ## La mappa giusta, al momento giusto
 
 La GeoAI applicata agli incendi somiglia a una staffetta.
 
-Il primo sistema legge la predisposizione del territorio. Il secondo intercetta un’anomalia termica. Il terzo ricostruisce il perimetro. Un simulatore esplora le possibili traiettorie. Un GIS sovrappone abitazioni, infrastrutture e vie di fuga. Dopo lo spegnimento, altri modelli misurano severità, erosione e trasporto del fumo.
+Il primo sistema legge la predisposizione del territorio. Il secondo intercetta un’anomalia termica. Il terzo ricostruisce il perimetro. Un simulatore esplora le possibili traiettorie. Un GIS sovrappone abitazioni, infrastrutture e vie di fuga. Dopo lo spegnimento dell'incendio, altri modelli misurano severità, erosione e trasporto del fumo.
 
 Ogni passaggio consegna al successivo una rappresentazione incompleta del mondo.
 
@@ -242,15 +226,9 @@ Conviene spezzarla.
 
 Quale fase stiamo cercando di anticipare? Con quali osservazioni? A quale risoluzione? Entro quanto tempo deve arrivare la risposta? Chi dovrà decidere sulla base di quella mappa? E che cosa succede quando il modello sbaglia?
 
-Il fuoco corre lungo il territorio. L’informazione deve riuscire a correre un po’ più in fretta.
+Il fuoco corre lungo il territorio. L’informazione deve riuscire a correre un po’ più in fretta!
 
 ---
-
-## Nota sul laboratorio interattivo
-
-Le simulazioni presenti nell’articolo sono state sviluppate per spiegare propagazione, incertezza, risoluzione e aggiornamento progressivo. Usano un automa cellulare didattico, combustibile sintetico e parametri controllabili; FlamMap, FARSITE e i modelli fisici operativi hanno una struttura molto più ricca. Il codice è incluso nel pacchetto affinché ogni passaggio sia ispezionabile e riproducibile.
-
-Il modulo Copernicus legge invece metadati pubblici dell’API ufficiale. La provenienza istituzionale del dato lascia invariato il suo ruolo editoriale: per le decisioni di sicurezza fanno fede le autorità competenti.
 
 ## Fonti e letture per approfondire
 
