@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Confronto tra la dimensione nominale dei pixel MODIS e VIIRS</title>
+  <desc id="svg-desc">Due griglie alla stessa scala mostrano un pixel MODIS di circa un chilometro per un chilometro e un pixel VIIRS di circa 375 metri per 375 metri. In entrambi i casi il punto pubblicato è al centro del pixel, mentre la sorgente termica può trovarsi in una posizione diversa all'interno della cella.</desc>
+
+  <defs>
+    <pattern id="ground-grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <rect width="72" height="72" fill="#edf3ef"/>
+      <path d="M72 0H0V72" fill="none" stroke="#ffffff" stroke-width="3"/>
+    </pattern>
+
+    <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#102233" flood-opacity=".08"/>
+    </filter>
+
+    <filter id="marker-shadow" x="-80%" y="-80%" width="260%" height="260%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#102233" flood-opacity=".22"/>
+    </filter>
+
+    <linearGradient id="pixel-fill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd886" stop-opacity=".82"/>
+      <stop offset="1" stop-color="#ffb155" stop-opacity=".62"/>
+    </linearGradient>
+
+    <radialGradient id="heat-halo">
+      <stop offset="0" stop-color="#ef4934" stop-opacity=".42"/>
+      <stop offset=".46" stop-color="#ff784f" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#ff784f" stop-opacity="0"/>
+    </radialGradient>
+
+    <style>
+      .panel-title {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -.5px;
+        fill: #102233;
+      }
+      .panel-kicker {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 16px;
+        font-weight: 750;
+        letter-spacing: 1.6px;
+        fill: #d83d2e;
+      }
+      .panel-subtitle {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 20px;
+        font-weight: 550;
+        fill: #526170;
+      }
+      .measure {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 800;
+        fill: #102233;
+      }
+      .callout-label {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 750;
+        fill: #102233;
+      }
+      .callout-note {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        fill: #61717e;
+      }
+      .chip-text {
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: .8px;
+        fill: #ffffff;
+      }
+    </style>
+  </defs>
+
+  <rect width="1600" height="760" fill="#f5f7f8"/>
+
+  <!-- MODIS -->
+  <g filter="url(#card-shadow)">
+    <rect x="56" y="42" width="724" height="676" rx="28" fill="#ffffff"/>
+  </g>
+  <text x="96" y="91" class="panel-kicker">RISOLUZIONE NOMINALE</text>
+  <text x="96" y="133" class="panel-title">MODIS</text>
+  <text x="96" y="165" class="panel-subtitle">pixel di circa 1 km × 1 km</text>
+
+  <rect x="96" y="203" width="644" height="469" rx="20" fill="url(#ground-grid)"/>
+  <rect x="96" y="203" width="644" height="469" rx="20" fill="none" stroke="#dfe8e3" stroke-width="2"/>
+
+  <!-- highlighted 1 km cell -->
+  <rect x="288" y="299" width="288" height="288" rx="7" fill="url(#pixel-fill)" stroke="#ee765c" stroke-width="3"/>
+
+  <!-- dimension line: width of cell -->
+  <path d="M288 280V294M576 280V294M288 287H576" fill="none" stroke="#102233" stroke-width="2"/>
+  <path d="M288 287l10-5v10zM576 287l-10-5v10z" fill="#102233"/>
+  <rect x="389" y="269" width="86" height="36" rx="18" fill="#ffffff" stroke="#d9e1e5"/>
+  <text x="432" y="293" text-anchor="middle" class="measure">≈ 1 km</text>
+
+  <!-- published center -->
+  <path d="M432 416v54M405 443h54" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+  <circle cx="432" cy="443" r="18" fill="#ffffff" filter="url(#marker-shadow)"/>
+  <circle cx="432" cy="443" r="11" fill="#ef4934"/>
+  <circle cx="432" cy="443" r="3.5" fill="#ffffff"/>
+
+  <!-- thermal source -->
+  <circle cx="351" cy="373" r="47" fill="url(#heat-halo)"/>
+  <path d="M351 350c8 12 18 23 18 37 0 12-8 22-18 22s-18-10-18-22c0-10 6-20 12-29 1 8 5 13 9 16 2-8 1-16-3-24z"
+        fill="#d83d2e" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" filter="url(#marker-shadow)"/>
+  <path d="M351 374c4 6 8 11 8 17 0 6-4 11-8 11s-8-5-8-11c0-5 3-10 6-14 0 4 2 7 4 8 1-4 1-7-2-11z" fill="#ffd36a"/>
+
+  <!-- relation, kept inside cell -->
+  <path d="M370 389L416 429" fill="none" stroke="#455867" stroke-width="2.5" stroke-dasharray="7 7"/>
+
+  <!-- labels -->
+  <rect x="116" y="333" width="183" height="32" rx="16" fill="#102233"/>
+  <text x="207.5" y="355" text-anchor="middle" class="chip-text">SORGENTE TERMICA</text>
+  <path d="M299 349L335 369" fill="none" stroke="#102233" stroke-width="2.5"/>
+  <circle cx="335" cy="369" r="4" fill="#102233"/>
+
+  <rect x="482" y="611" width="217" height="32" rx="16" fill="#ffffff" stroke="#ccd7dc"/>
+  <circle cx="500" cy="627" r="7" fill="#ef4934"/>
+  <text x="515" y="633" class="callout-label" style="font-size:15px">Punto pubblicato</text>
+  <path d="M482 627C454 620 441 585 433 465" fill="none" stroke="#455867" stroke-width="2.5"/>
+
+  <!-- VIIRS -->
+  <g filter="url(#card-shadow)">
+    <rect x="820" y="42" width="724" height="676" rx="28" fill="#ffffff"/>
+  </g>
+  <text x="860" y="91" class="panel-kicker">RISOLUZIONE NOMINALE</text>
+  <text x="860" y="133" class="panel-title">VIIRS</text>
+  <text x="860" y="165" class="panel-subtitle">pixel di circa 375 m × 375 m</text>
+
+  <rect x="860" y="203" width="644" height="469" rx="20" fill="url(#ground-grid)"/>
+  <rect x="860" y="203" width="644" height="469" rx="20" fill="none" stroke="#dfe8e3" stroke-width="2"/>
+
+  <!-- highlighted 375 m cell, same ground scale as MODIS -->
+  <rect x="1120" y="380" width="108" height="108" rx="6" fill="url(#pixel-fill)" stroke="#ee765c" stroke-width="3"/>
+
+  <!-- dimension line: width of cell -->
+  <path d="M1120 330V375M1228 330V375M1120 337H1228" fill="none" stroke="#102233" stroke-width="2"/>
+  <path d="M1120 337l9-5v10zM1228 337l-9-5v10z" fill="#102233"/>
+  <rect x="1125" y="319" width="98" height="36" rx="18" fill="#ffffff" stroke="#d9e1e5"/>
+  <text x="1174" y="343" text-anchor="middle" class="measure">≈ 375 m</text>
+
+  <!-- published center -->
+  <path d="M1174 407v54M1147 434h54" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+  <circle cx="1174" cy="434" r="18" fill="#ffffff" filter="url(#marker-shadow)"/>
+  <circle cx="1174" cy="434" r="11" fill="#ef4934"/>
+  <circle cx="1174" cy="434" r="3.5" fill="#ffffff"/>
+
+  <!-- thermal source -->
+  <circle cx="1143" cy="403" r="40" fill="url(#heat-halo)"/>
+  <path d="M1143 382c7 10 16 20 16 32 0 11-7 19-16 19s-16-8-16-19c0-9 5-18 11-26 1 7 4 11 8 14 2-7 1-14-3-20z"
+        fill="#d83d2e" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" filter="url(#marker-shadow)"/>
+  <path d="M1143 403c3 5 7 10 7 15 0 5-3 9-7 9s-7-4-7-9c0-5 3-9 5-13 0 4 2 6 4 7 1-3 0-6-2-9z" fill="#ffd36a"/>
+
+  <path d="M1155 415L1162 422" fill="none" stroke="#455867" stroke-width="2.5" stroke-dasharray="5 5"/>
+
+  <!-- labels -->
+  <rect x="880" y="398" width="183" height="32" rx="16" fill="#102233"/>
+  <text x="971.5" y="420" text-anchor="middle" class="chip-text">SORGENTE TERMICA</text>
+  <path d="M1063 414L1127 407" fill="none" stroke="#102233" stroke-width="2.5"/>
+  <circle cx="1127" cy="407" r="4" fill="#102233"/>
+
+  <rect x="1246" y="552" width="217" height="32" rx="16" fill="#ffffff" stroke="#ccd7dc"/>
+  <circle cx="1264" cy="568" r="7" fill="#ef4934"/>
+  <text x="1279" y="574" class="callout-label" style="font-size:15px">Punto pubblicato</text>
+  <path d="M1246 568C1207 553 1185 512 1175 456" fill="none" stroke="#455867" stroke-width="2.5"/>
+
+  <!-- scale cue -->
+  <g transform="translate(1260 626)">
+    <path d="M0 0H144" stroke="#102233" stroke-width="5"/>
+    <path d="M0-7V7M144-7V7" stroke="#102233" stroke-width="3"/>
+    <text x="72" y="-13" text-anchor="middle" class="callout-note">stessa scala nei due pannelli</text>
+  </g>
+</svg>
