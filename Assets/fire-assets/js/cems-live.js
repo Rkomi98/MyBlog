@@ -234,7 +234,7 @@
         const match = String(centroidValue).match(/(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)/);
         if (match) points = [[Number(match[1]), Number(match[2])]];
       }
-      if (!points.length) return `<svg viewBox="0 0 600 420" role="img" aria-label="Geometria non inclusa nella risposta"><text x="300" y="200" fill="#90a5b7" text-anchor="middle" font-size="18">geometria non inclusa</text><text x="300" y="228" fill="#607a90" text-anchor="middle" font-size="13">apri il viewer per la cartografia completa</text></svg>`;
+      if (!points.length) return `<svg viewBox="0 0 600 420" role="img" aria-label="${this.copy.noGeometry}"><text x="300" y="200" fill="var(--text-secondary,#cbd5e1)" text-anchor="middle" font-size="18">${this.copy.noGeometry}</text><text x="300" y="228" fill="var(--text-muted,#94a3b8)" text-anchor="middle" font-size="13">${this.copy.openViewerMap}</text></svg>`;
       let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
       for (const [x,y] of points) { minX=Math.min(minX,x); maxX=Math.max(maxX,x); minY=Math.min(minY,y); maxY=Math.max(maxY,y); }
       if (maxX-minX < 1e-9) { minX -= .5; maxX += .5; }
@@ -243,19 +243,22 @@
       const paths = polygons.map(poly => poly.map((p,i) => `${i?'L':'M'} ${project(p)[0].toFixed(1)} ${project(p)[1].toFixed(1)}`).join(' ') + ' Z').join(' ');
       if (!paths) {
         const [cx,cy]=project(points[0]);
-        return `<svg viewBox="0 0 600 420" role="img" aria-label="Centroid dell’attivazione"><circle cx="${cx}" cy="${cy}" r="12" fill="#e8412a" stroke="#fff" stroke-width="4"/><circle cx="${cx}" cy="${cy}" r="34" fill="none" stroke="#e8412a" stroke-opacity=".35" stroke-width="3"/><text x="300" y="400" fill="#90a5b7" text-anchor="middle" font-size="12">centroide disponibile · perimetro assente</text></svg>`;
+        return `<svg viewBox="0 0 600 420" role="img" aria-label="${this.copy.centroid}"><circle cx="${cx}" cy="${cy}" r="12" fill="var(--accent,#10b981)" stroke="var(--bg-card-strong,#0b1120)" stroke-width="4"/><circle cx="${cx}" cy="${cy}" r="34" fill="none" stroke="var(--accent,#10b981)" stroke-opacity=".42" stroke-width="3"/><text x="300" y="400" fill="var(--text-muted,#94a3b8)" text-anchor="middle" font-size="12">${this.copy.centroidNote}</text></svg>`;
       }
-      return `<svg viewBox="0 0 600 420" role="img" aria-label="Estensione geografica semplificata dell’attivazione"><defs><linearGradient id="cemsFill" x1="0" x2="1"><stop offset="0" stop-color="#f5a623" stop-opacity=".58"/><stop offset="1" stop-color="#e8412a" stop-opacity=".78"/></linearGradient></defs><path d="${paths}" fill="url(#cemsFill)" stroke="#fecaca" stroke-width="3" vector-effect="non-scaling-stroke"/><text x="300" y="400" fill="#90a5b7" text-anchor="middle" font-size="12">estensione semplificata dai metadati API</text></svg>`;
+      return `<svg viewBox="0 0 600 420" role="img" aria-label="${this.copy.extent}"><defs><linearGradient id="cemsFill" x1="0" x2="1"><stop offset="0" stop-color="#34d399" stop-opacity=".55"/><stop offset="1" stop-color="#0ea5e9" stop-opacity=".78"/></linearGradient></defs><path d="${paths}" fill="url(#cemsFill)" stroke="var(--text-primary,#e2e8f0)" stroke-width="3" vector-effect="non-scaling-stroke"/><text x="300" y="400" fill="var(--text-muted,#94a3b8)" text-anchor="middle" font-size="12">${this.copy.extentNote}</text></svg>`;
     }
 
     renderUnavailable(error) {
       const code = this.code;
       const viewerUrl = `https://mapping.emergency.copernicus.eu/activations/${encodeURIComponent(code)}`;
       this.root.querySelector('#viewer').href = viewerUrl;
-      this.root.querySelector('#badge').textContent = 'non raggiungibile';
-      this.root.querySelector('#body').innerHTML = `<div class="main"><div class="title">${this.escape(code)}</div><div class="notice error">Il browser non ha ottenuto una risposta JSON utilizzabile. Possibili cause: attivazione non ancora pubblica, endpoint temporaneamente indisponibile o politica CORS. Il pacchetto non inventa un dato di riserva.</div><p class="reason" style="margin-top:1rem">${this.escape(error ? String(error.message || error) : 'Errore non specificato')}</p><a class="button" href="${viewerUrl}" target="_blank" rel="noopener">Controlla l’attivazione sul sito ufficiale</a></div>`;
-      this.root.querySelector('#source').innerHTML = `Fonti tentate: <a href="https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/" target="_blank" rel="noopener">API Copernicus EMS</a>`;
-      this.root.querySelector('#checked').textContent = `tentativo ${fmtDate(new Date().toISOString())}`;
+      this.root.querySelector('#badge').textContent = this.copy.unavailable;
+      this.root.querySelector('#badge').style.color = '#fca5a5';
+      this.root.querySelector('#badge').style.borderColor = 'rgba(248,113,113,.32)';
+      this.root.querySelector('#badge').style.background = 'rgba(248,113,113,.12)';
+      this.root.querySelector('#body').innerHTML = `<div class="main"><div class="title">${this.escape(code)}</div><div class="notice error">${this.copy.unavailableText}</div><p class="reason" style="margin-top:1rem">${this.escape(error ? String(error.message || error) : this.copy.unspecified)}</p><a class="button" href="${viewerUrl}" target="_blank" rel="noopener">${this.copy.checkOfficial}</a></div>`;
+      this.root.querySelector('#source').innerHTML = `${this.copy.attemptedSources}: <a href="https://mapping.emergency.copernicus.eu/about/how-to-harvest-cems-mapping-data/" target="_blank" rel="noopener">Copernicus EMS API</a>`;
+      this.root.querySelector('#checked').textContent = `${this.copy.attempted} ${this.formatDate(new Date().toISOString())}`;
     }
 
     escape(value) { const div=document.createElement('div'); div.textContent=String(value ?? ''); return div.innerHTML; }
