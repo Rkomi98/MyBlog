@@ -11,7 +11,9 @@ Alle 8:18 del 29 luglio 2026, la pagina del Joint Research Centre dedicata agli 
 
 Le cifre di [EFFIS (European Forest Fires Information System)](https://forest-fire.emergency.copernicus.eu/) sono in continuo aggiornamento e le [stime vengono corrette quando arrivano immagini, anzi dati in generale migliori](https://forest-fire.emergency.copernicus.eu/apps/effis.statistics/seasonaltrend).
 
-> Vorrei mettere l'attenzione sul fatto che l'EFFIS Weekly Cumulative Severity Rating è già più alto dell'intervallo di confidenza misurato finora!
+Il segnale più netto arriva dal **Weekly Cumulative Severity Rating** di EFFIS. Il **Daily Severity Rating (DSR)** traduce le condizioni meteo favorevoli al fuoco in una misura della loro severità: più è alto, più un eventuale incendio può diventare intenso e difficile da controllare. Nel 2026 il valore cumulato, cioè la somma giorno per giorno dall'inizio dell'anno, è già oltre l'intervallo osservato nella serie storica finora disponibile. Esplora il grafico per confrontare l'andamento cumulato, quello settimanale e lo scostamento dalla fascia storica.
+
+<iframe src="/Assets/fire-assets/grafico-dsr-cumulato-eu.html" title="Grafico interattivo del Daily Severity Rating cumulato in Europa" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
 
 Facciamo un passo indietro. Ho detto poco fa che le stime vengono aggiornate quando arrivano nuove osservazioni, magari più recenti, più dettagliate o più adatte a quella particolare fase dell’incendio. Ma che cosa significa, in pratica?
 
@@ -21,15 +23,19 @@ Ed è qui che entra in gioco la GeoAI, all’interno di un sistema più ampio ch
 
 A prima vista sembra una sola grande applicazione, ma guardando meglio, emergono problemi differenti, collocati su scale temporali che vanno dai mesi ai minuti. Ora entriamo più nel dettaglio per capirci qualcosa di più🧐!
 
+![Dalla prevenzione alla risposta e al recupero: le domande che la GeoAI aiuta ad affrontare lungo il ciclo di un incendio](/Assets/fire-assets/how_to_fire_Ita.png)
+
+*Ogni fase dell'incendio richiede dati, modelli e decisioni diversi: dalla previsione delle condizioni favorevoli fino alla valutazione dei danni e del recupero.*
+
 ---
 
 ## Il fuoco comincia prima delle fiamme
 
-Quando compare il primo punto rosso su una mappa satellitare, una parte della storia, ahimé, è già stata scritta.
+Quando compare il primo punto rosso su una mappa satellitare, una parte della storia, ahimé, è già stata scritta...
 
 Nei giorni precedenti può aver piovuto poco. Il vento può essere aumentato. La vegetazione può aver perso umidità, mentre rami, aghi e arbusti secchi hanno continuato ad accumularsi. Una primavera piovosa può persino aver favorito la crescita di nuova biomassa che, una volta disseccata, diventa combustibile. Poi arriva l’innesco: un fulmine, una scintilla, un’attività agricola, una linea elettrica, un gesto umano deliberato o superficiale.
 
-Per leggere questa fase si usano da tempo gli indici meteorologici di pericolo. In Europa, EFFIS calcola il **Fire Weather Index** a partire dalle previsioni ECMWF e Météo-France e lo rappresenta in sei classi armonizzate, da bassa a molto estrema. [La documentazione ufficiale di EFFIS descrive previsioni da uno a nove giorni e una classe “Very Extreme” introdotta nel 2021 per distinguere le situazioni mediterranee più severe](https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/fire-danger-forecast).
+Per leggere questa fase si usano da tempo gli indici meteorologici di pericolo. In Europa, EFFIS calcola il **Fire Weather Index** a partire dalle previsioni ECMWF (~8 km) e Météo-France (~10 km) e lo rappresenta in sei classi armonizzate, da bassa a molto estrema. [La documentazione ufficiale di EFFIS descrive previsioni da uno a nove giorni e una classe “Very Extreme” introdotta nel 2021 per distinguere le situazioni mediterranee più gravi](https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/fire-danger-forecast).
 
 Il risultato dice quanto l’atmosfera e il combustibile morto favoriscano l’accensione e un comportamento difficile da controllare, qualora un innesco avvenga.
 

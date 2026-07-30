@@ -122,12 +122,12 @@
   <div class="tt-card">
     <span class="tt-badge">EFFIS · DSR</span>
 
-    <p class="tt-kicker">Stagione degli incendi · Europa</p>
-    <h3 class="tt-title">Severità cumulata 2026 contro quarantasei anni di storia</h3>
-    <p class="tt-sub">Il Daily Severity Rating sommato giorno per giorno dall'inizio dell'anno. La fascia raccoglie tutto ciò che è accaduto fra il 1980 e il 2025, dal minimo al massimo; la linea verde è il 2026, aggiornata al 29 luglio.</p>
+    <p class="tt-kicker" id="tt-kicker">Stagione degli incendi · Europa</p>
+    <h3 class="tt-title" id="tt-title">Severità cumulata 2026 contro quarantasei anni di storia</h3>
+    <p class="tt-sub" id="tt-sub">Il Daily Severity Rating (DSR) trasforma le condizioni meteo favorevoli al fuoco in una misura della loro severità: più è alto, più un eventuale incendio può diventare intenso e difficile da controllare. Qui è sommato giorno per giorno dall'inizio dell'anno. La fascia mostra il minimo e il massimo osservati fra il 1980 e il 2025; la linea verde è il 2026, aggiornata al 29 luglio.</p>
 
     <div class="tt-bar">
-      <div class="tt-seg" role="group" aria-label="Vista">
+      <div class="tt-seg" role="group" id="tt-view-controls" aria-label="Vista">
         <button type="button" data-view="cum" aria-pressed="true">CUMULATO</button>
         <button type="button" data-view="week" aria-pressed="false">SETTIMANALE</button>
         <button type="button" data-view="anom" aria-pressed="false">SCOSTAMENTO</button>
@@ -141,11 +141,44 @@
 
     <p class="tt-note" id="tt-note"></p>
   </div>
-  <figcaption class="tt-cap">FIGURA · DSR CUMULATO, EUROPA, 1980-2026</figcaption>
+  <figcaption class="tt-cap" id="tt-cap">FIGURA · DSR CUMULATO, EUROPA, 1980-2026</figcaption>
 </figure>
 
 <script>
 (function(){
+  const lang = new URLSearchParams(window.location.search).get("lang") === "en" ? "en" : "it";
+  const T = lang === "en" ? {
+    kicker:"Wildfire season · Europe",
+    title:"2026 cumulative severity against forty-six years of history",
+    sub:"The Daily Severity Rating (DSR) turns weather conditions that favour fire into a measure of their severity: the higher it is, the more intense and difficult to control a fire could become if it starts. Here it is added up day by day from the start of the year. The band shows the minimum and maximum observed from 1980 to 2025; the green line is 2026, updated to 29 July.",
+    view:"View", buttons:["CUMULATIVE","WEEKLY","DEPARTURE"], cap:"FIGURE · CUMULATIVE DSR, EUROPE, 1980–2026",
+    months:{Jan:"Jan",Feb:"Feb",Mar:"Mar",Apr:"Apr",May:"May",Jun:"Jun",Jul:"Jul",Aug:"Aug",Sep:"Sep",Oct:"Oct",Nov:"Nov",Dec:"Dec"},
+    fullMonths:{Jan:"January",Feb:"February",Mar:"March",Apr:"April",May:"May",Jun:"June",Jul:"July",Aug:"August",Sep:"September",Oct:"October",Nov:"November",Dec:"December"},
+    chips:{band:"Min–max 1980–2025",avg:"Average 1980–2025",cur:"2026",weekAvg:"Weekly average",departure:"2026 minus average"},
+    units:{cum:"CUMULATIVE DSR",week:"DSR PER WEEK",anom:"DEPARTURE, POINTS"}, historicMax:"BEYOND HISTORIC MAXIMUM",
+    notes:{week:"Weekly increments. The historical average grows steadily; 2026 accelerates from late April and in the final week of July adds <b>{current}</b> points, compared with <b>{average}</b> in an average season.", departure:"The gap between 2026 and the 1980–2025 average. It is negative in the first three months, then the curve pulls away: on 29 July the departure is <b>+{departure}</b> DSR points.", cumulative:"2026 starts below average, reaches the historic maximum around 24 June and moves beyond the band from 1 July: <b>{current}</b> versus a maximum of <b>{max}</b> and an average of <b>{average}</b>, or <b>+{percent}%</b>. The value reached on 29 July is normally only reached on <b>{date}</b>."},
+    tooltip:{average:"Average",historicMax:"Historic max",historicMin:"Historic min",vsAverage:"Vs average",week2026:"2026, week",weekAverage:"Average, week",departure:"Departure"}
+  } : {
+    kicker:"Stagione degli incendi · Europa",
+    title:"Severità cumulata 2026 contro quarantasei anni di storia",
+    sub:"Il Daily Severity Rating (DSR) trasforma le condizioni meteo favorevoli al fuoco in una misura della loro severità: più è alto, più un eventuale incendio può diventare intenso e difficile da controllare. Qui è sommato giorno per giorno dall'inizio dell'anno. La fascia mostra il minimo e il massimo osservati fra il 1980 e il 2025; la linea verde è il 2026, aggiornata al 29 luglio.",
+    view:"Vista", buttons:["CUMULATO","SETTIMANALE","SCOSTAMENTO"], cap:"FIGURA · DSR CUMULATO, EUROPA, 1980–2026",
+    months:{Jan:"gen",Feb:"feb",Mar:"mar",Apr:"apr",May:"mag",Jun:"giu",Jul:"lug",Aug:"ago",Sep:"set",Oct:"ott",Nov:"nov",Dec:"dic"},
+    fullMonths:{Jan:"gennaio",Feb:"febbraio",Mar:"marzo",Apr:"aprile",May:"maggio",Jun:"giugno",Jul:"luglio",Aug:"agosto",Sep:"settembre",Oct:"ottobre",Nov:"novembre",Dec:"dicembre"},
+    chips:{band:"Min–max 1980–2025",avg:"Media 1980–2025",cur:"2026",weekAvg:"Media settimanale",departure:"2026 meno media"},
+    units:{cum:"DSR CUMULATO",week:"DSR PER SETTIMANA",anom:"PUNTI DI SCARTO"}, historicMax:"OLTRE IL MASSIMO STORICO",
+    notes:{week:"Gli incrementi settimanali. La media storica cresce con regolarità, il 2026 accelera da fine aprile e nell'ultima settimana di luglio aggiunge <b>{current}</b> punti contro i <b>{average}</b> del comportamento medio.", departure:"La distanza fra il 2026 e la media 1980-2025. Nei primi tre mesi il segno è negativo, poi la curva si stacca: al 29 luglio lo scarto vale <b>+{departure}</b> punti di DSR.", cumulative:"Il 2026 comincia sotto la media, aggancia il massimo storico intorno al 24 giugno e dal primo luglio esce dalla fascia: <b>{current}</b> contro un massimo di <b>{max}</b> e una media di <b>{average}</b>, ossia <b>+{percent}%</b>. Il valore che il 2026 tocca il 29 luglio, la stagione media lo raggiunge solo il <b>{date}</b>."},
+    tooltip:{average:"Media",historicMax:"Max storico",historicMin:"Min storico",vsAverage:"Vs media",week2026:"2026, settimana",weekAverage:"Media, settimana",departure:"Scostamento"}
+  };
+  const interpolate = (template, values) => template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+  document.documentElement.lang = lang;
+  document.getElementById("tt-kicker").textContent = T.kicker;
+  document.getElementById("tt-title").textContent = T.title;
+  document.getElementById("tt-sub").textContent = T.sub;
+  document.getElementById("tt-view-controls").setAttribute("aria-label", T.view);
+  document.querySelectorAll("#tt-dsr .tt-seg button").forEach((button, index) => { button.textContent = T.buttons[index]; });
+  document.getElementById("tt-cap").textContent = T.cap;
+
   const RAW = [
     ["07 Jan",0.02143,0.10,0.21143,0.05429],["14 Jan",0.05572,0.20,0.37285,0.10858],
     ["21 Jan",0.09001,0.30,0.49428,0.15144],["28 Jan",0.14287,0.41,0.77143,0.17287],
@@ -175,11 +208,10 @@
     ["23 Dec",60.64000,83.88,102.24142,null],["30 Dec",60.68000,83.97,102.32285,null]
   ];
 
-  const MESI = {Jan:"gen",Feb:"feb",Mar:"mar",Apr:"apr",May:"mag",Jun:"giu",
-                Jul:"lug",Aug:"ago",Sep:"set",Oct:"ott",Nov:"nov",Dec:"dic"};
   const D = RAW.map(r=>{
     const p = r[0].split(" ");
-    return {label:parseInt(p[0],10)+" "+MESI[p[1]], mese:MESI[p[1]],
+    const day = parseInt(p[0],10), month = p[1];
+    return {label:lang === "en" ? T.months[month]+" "+day : day+" "+T.months[month], mese:T.months[month], month,
             min:r[1], avg:r[2], max:r[3], cur:r[4]};
   });
   const N = D.length;
@@ -205,9 +237,9 @@
 
   // ---------- legenda ----------
   const CHIPS = {
-    cum:[["band","Min-Max 1980-2025",COL.band,.22],["avg","Media 1980-2025",COL.avg,1],["cur","2026",COL.cur,1]],
-    week:[["avg","Media settimanale",COL.avg,1],["cur","2026",COL.cur,1]],
-    anom:[["cur","2026 meno media",COL.cur,1]]
+    cum:[["band",T.chips.band,COL.band,.22],["avg",T.chips.avg,COL.avg,1],["cur",T.chips.cur,COL.cur,1]],
+    week:[["avg",T.chips.weekAvg,COL.avg,1],["cur",T.chips.cur,COL.cur,1]],
+    anom:[["cur",T.chips.departure,COL.cur,1]]
   };
   function drawLegend(){
     legend.innerHTML = CHIPS[state.view].map(c=>{
@@ -314,8 +346,7 @@
     });
 
     // unità sull'asse verticale
-    const UNITA = {cum:"DSR CUMULATO", week:"DSR PER SETTIMANA", anom:"PUNTI DI SCARTO"};
-    s.push('<text x="'+(m.l-(narrow?24:34))+'" y="'+(m.t-11)+'" font-size="8.5" letter-spacing=".12em" fill="#475569">'+UNITA[state.view]+'</text>');
+    s.push('<text x="'+(m.l-(narrow?24:34))+'" y="'+(m.t-11)+'" font-size="8.5" letter-spacing=".12em" fill="#475569">'+T.units[state.view]+'</text>');
 
     // etichette mesi
     let seen=null;
@@ -361,7 +392,7 @@
           s.push('<line x1="'+X(cross.x).toFixed(1)+'" x2="'+X(cross.x).toFixed(1)+'" y1="'+Y(cross.top).toFixed(1)+
                  '" y2="'+m.t+'" stroke="'+COL.alert+'" stroke-opacity=".35" stroke-width="1" stroke-dasharray="2 4"/>');
           if(!narrow){
-            s.push('<text x="'+(X(cross.x)+6).toFixed(1)+'" y="'+(m.t+2)+'" font-size="9" letter-spacing=".07em" fill="'+COL.alert+'">OLTRE IL MASSIMO STORICO</text>');
+            s.push('<text x="'+(X(cross.x)+6).toFixed(1)+'" y="'+(m.t+2)+'" font-size="9" letter-spacing=".07em" fill="'+COL.alert+'">'+T.historicMax+'</text>');
           }
         });
         s.push('<path d="'+line(D.map(d=>d.cur),LAST)+'" fill="none" stroke="'+COL.cur+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>');
@@ -434,19 +465,16 @@
 
   function drawNote(){
     const d=D[LAST], delta=((d.cur/d.avg-1)*100);
-    const LUNGHI={gen:"gennaio",feb:"febbraio",mar:"marzo",apr:"aprile",mag:"maggio",giu:"giugno",
-                  lug:"luglio",ago:"agosto",set:"settembre",ott:"ottobre",nov:"novembre",dic:"dicembre"};
     const idx=D.findIndex(x=>x.avg>=d.cur);
     const raggiunge = idx>=0
-      ? D[idx].label.replace(/\s(\w+)$/, (s,m)=>" "+LUNGHI[m])
-      : "fine anno";
+      ? (lang === "en" ? T.fullMonths[D[idx].month]+" "+D[idx].label.match(/\d+/)[0] : D[idx].label.replace(/\s(\w+)$/, (s,m)=>" "+T.fullMonths[D[idx].month]))
+      : (lang === "en" ? "year end" : "fine anno");
     if(state.view==="week"){
-      note.innerHTML = 'Gli incrementi settimanali. La media storica cresce con regolarità, il 2026 accelera da fine aprile e nell\'ultima settimana di luglio aggiunge <b>'+fmt(weekCur[LAST],1)+'</b> punti contro i <b>'+fmt(weekAvg[LAST],1)+'</b> del comportamento medio.';
+      note.innerHTML = interpolate(T.notes.week, {current:fmt(weekCur[LAST],1), average:fmt(weekAvg[LAST],1)});
     }else if(state.view==="anom"){
-      note.innerHTML = 'La distanza fra il 2026 e la media 1980-2025. Nei primi tre mesi il segno è negativo, poi la curva si stacca: al 29 luglio lo scarto vale <b>+'+fmt(anom[LAST],1)+'</b> punti di DSR.';
+      note.innerHTML = interpolate(T.notes.departure, {departure:fmt(anom[LAST],1)});
     }else{
-      note.innerHTML = 'Il 2026 comincia sotto la media, aggancia il massimo storico intorno al 24 giugno e dal primo luglio esce dalla fascia: <b>'+fmt(d.cur,1)+
-        '</b> contro un massimo di <b>'+fmt(d.max,1)+'</b> e una media di <b>'+fmt(d.avg,1)+'</b>, ossia <b>+'+delta.toFixed(0)+'%</b>. Il valore che il 2026 tocca il 29 luglio, la stagione media lo raggiunge solo il <b>'+raggiunge+'</b>.';
+      note.innerHTML = interpolate(T.notes.cumulative, {current:fmt(d.cur,1), max:fmt(d.max,1), average:fmt(d.avg,1), percent:delta.toFixed(0), date:raggiunge});
     }
   }
 
@@ -465,17 +493,17 @@
     let rows="";
     if(state.view==="cum"){
       rows += row("2026", d.cur===null?"—":fmt(d.cur), COL.cur);
-      rows += row("Media", fmt(d.avg), COL.avg);
-      rows += row("Max storico", fmt(d.max), COL.band);
-      rows += row("Min storico", fmt(d.min), COL.band);
-      if(d.cur!==null) rows += row("Vs media", (d.cur>=d.avg?"+":"")+((d.cur/d.avg-1)*100).toFixed(0)+"%", d.cur>d.max?COL.alert:COL.muted);
+      rows += row(T.tooltip.average, fmt(d.avg), COL.avg);
+      rows += row(T.tooltip.historicMax, fmt(d.max), COL.band);
+      rows += row(T.tooltip.historicMin, fmt(d.min), COL.band);
+      if(d.cur!==null) rows += row(T.tooltip.vsAverage, (d.cur>=d.avg?"+":"")+((d.cur/d.avg-1)*100).toFixed(0)+"%", d.cur>d.max?COL.alert:COL.muted);
     }else if(state.view==="week"){
-      rows += row("2026, settimana", weekCur[i]===null?"—":fmt(weekCur[i]), COL.cur);
-      rows += row("Media, settimana", fmt(weekAvg[i]), COL.avg);
+      rows += row(T.tooltip.week2026, weekCur[i]===null?"—":fmt(weekCur[i]), COL.cur);
+      rows += row(T.tooltip.weekAverage, fmt(weekAvg[i]), COL.avg);
     }else{
-      rows += row("Scostamento", anom[i]===null?"—":(anom[i]>=0?"+":"")+fmt(anom[i]), COL.cur);
+      rows += row(T.tooltip.departure, anom[i]===null?"—":(anom[i]>=0?"+":"")+fmt(anom[i]), COL.cur);
       rows += row("2026", d.cur===null?"—":fmt(d.cur), COL.cur);
-      rows += row("Media", fmt(d.avg), COL.avg);
+      rows += row(T.tooltip.average, fmt(d.avg), COL.avg);
     }
     tip.innerHTML = '<div class="tt-tip-day">'+d.label+'</div>'+rows;
     let yRef;

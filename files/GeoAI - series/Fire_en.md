@@ -10,6 +10,10 @@ At 8:18 AM on July 29, 2026, the Joint Research Centre’s page dedicated to Eur
 
 *I am writing this article on July 30, 2026. The map shows the median Fire Weather Index (FWI) anomaly, calculated as a standard deviation from the thirty-year historical mean.*
 
+The clearest signal comes from EFFIS’s **Weekly Cumulative Severity Rating**. The **Daily Severity Rating (DSR)** turns weather conditions that favour fire into a measure of their severity: the higher it is, the more intense and difficult to control a fire could become if it starts. In 2026, the cumulative value—the sum day by day from the start of the year—has already moved beyond the range observed in the historical series available so far. Explore the chart to compare the cumulative and weekly patterns with their departure from the historical range.
+
+<iframe src="/Assets/fire-assets/grafico-dsr-cumulato-eu.html?lang=en" title="Interactive chart of the cumulative Daily Severity Rating in Europe" loading="lazy" style="width: 100%; height: 620px; border: 0; border-radius: 12px;"></iframe>
+
 Before jumping to conclusions, however, it is worth pausing for a moment. EFFIS figures do not arrive as definitive data. The same page warns that estimates are corrected as better imagery becomes available; furthermore, the system primarily monitors fires of approximately thirty hectares or more that involve, at least in part, natural surfaces. In short, even the portion of territory we consider "already burned" remains a provisional reconstruction for some time.
 
 This is a good starting point because it shows the situation for what it is. During a wildfire, there is no perfect map that observes everything at the same instant. There are sensors passing over at different times, pixels of varying sizes, weather models, ground observations, cameras, aircraft, drones, and perimeters that are drawn and then redrawn. With every step, we gain information, but we also uncover a new margin of error.
@@ -17,6 +21,10 @@ This is a good starting point because it shows the situation for what it is. Dur
 This is exactly where GeoAI comes in. It brings together geography, Earth observation, modeling, and artificial intelligence, but the question is constantly shifting. First, it tries to understand where the landscape is prone to burning. Then, it must distinguish a new thermal anomaly, reconstruct the fire front, explore its potential spread, overlay exposed people and infrastructure, and finally, interpret what remains after the flames have passed.
 
 At first glance, it seems like a single application. Looking closer, however, different problems emerge, occurring on timescales ranging from months to minutes.
+
+![From prevention to response and recovery: the questions GeoAI helps address throughout a wildfire's lifecycle](/Assets/fire-assets/how_to_fire_eng.png)
+
+*Each phase of a wildfire calls for different data, models, and decisions: from anticipating favourable conditions to assessing damage and recovery.*
 
 ---
 
