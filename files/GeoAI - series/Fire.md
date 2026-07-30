@@ -66,7 +66,7 @@ Un lavoro condotto nella Spagna orientale aiuta a vedere che cosa significhi agg
 ECMWF (Francesca Di Giuseppe, Joe McNorton
 Christopher Barnard) ha poi pubblicato una [Probability of Fire Toolbox, costruita come una sequenza di notebook per preparare dati, addestrare modelli locali e valutarli](https://www.ecmwf.int/en/about/media-centre/science-blog/2026/build-your-own-probability-fire-model). La scelta è interessante perché riconosce un limite dei prodotti globali: clima, vegetazione, gestione del suolo e attività umane cambiano da regione a regione. La stessa conclusione emerge da uno studio su oltre 17.000 incendi verificati in diverse aree della Russia centrale: [gli F1-score variavano tra 0,70 e 0,87 e gli autori raccomandavano modelli adattati alle caratteristiche di ciascuna regione](https://www.nature.com/articles/s41598-025-94002-4).
 
-Altri confronti rendono il limite ancora più visibile. A Changsha, [evapotraspirazione e contenuto d’acqua della chioma sono risultati i fattori più influenti in un modello Random Forest con AUC pari a 0,981](https://www.mdpi.com/2072-4292/15/17/4208); in uno studio tra Okanogan, negli Stati Uniti, e Jamésie, in Canada, [le prestazioni sono diminuite quando l’addestramento avveniva in una regione e la validazione nell’altra, pur conservando una capacità predittiva parziale](https://link.springer.com/article/10.1186/s42408-024-00335-2). È il genere di risultato che una media globale tende a nascondere.
+Altri confronti rendono il limite ancora più visibile. A Changsha, in Cina, [evapotraspirazione e contenuto d’acqua della chioma sono risultati i fattori più influenti in un modello Random Forest con AUC pari a 0,981](https://www.mdpi.com/2072-4292/15/17/4208); in uno studio tra Okanogan, negli Stati Uniti, e Jamésie, in Canada, [le prestazioni sono diminuite quando l’addestramento avveniva in una regione e la validazione nell’altra, pur conservando una capacità predittiva parziale](https://link.springer.com/article/10.1186/s42408-024-00335-2). È il genere di risultato che una media globale tende a nascondere.
 
 Il dominio geografico entra nella logica stessa dell’algoritmo: cambia le relazioni tra le variabili e, con loro, la validità del modello.
 
@@ -74,19 +74,19 @@ Il dominio geografico entra nella logica stessa dell’algoritmo: cambia le rela
 
 ## Un punto rosso non è il fronte del fuoco
 
-Aprendo NASA FIRMS durante una giornata difficile, si vedono costellazioni di punti rossi e arancioni. L’impressione è immediata: ogni punto sembra una fiamma e l’insieme dei punti sembra il perimetro dell’incendio.
+Aprendo NASA FIRMS durante una giornata estiva, si vedono purtroppo costellazioni di punti rossi e arancioni. L’impressione che salta all'occhio è che ogni punto sembra una fiamma e l’insieme dei punti sembra il perimetro dell’incendio.
 
-Ed è qui che casca l’asino.
+Ecco non farti ingannare!🥲
 
-Nel prodotto MODIS, un hotspot rappresenta il centro di un pixel di circa un chilometro in cui l’algoritmo ha riconosciuto una o più anomalie termiche. EFFIS ricorda che [la risoluzione nominale del pixel MODIS per la rilevazione attiva è di un chilometro](https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/active-fire-detection). Il punto pubblicato non coincide per forza con la posizione esatta della sorgente e, soprattutto, l’intera cella non sta bruciando.
+Nel prodotto MODIS, un hotspot rappresenta il centro di un pixel di circa un chilometro in cui l’algoritmo ha riconosciuto una o più anomalie termiche. EFFIS ricorda che [la risoluzione nominale del pixel MODIS per la rilevazione attiva è di un chilometro](https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/active-fire-detection). Il punto pubblicato non coincide per forza con la posizione esatta della sorgente e, soprattutto, non è detto che sia l’intera cella non sta bruciando!
 
-Con VIIRS il dettaglio migliora: [il prodotto NASA VNP14IMG_NRT rileva attività sub-pixel dentro celle nominali da 375 metri](https://www.earthdata.nasa.gov/es/data/catalog/lancemodis-vnp14img-nrt-2). La natura dell’informazione, però, rimane la stessa. Stiamo osservando un’anomalia termica, non il contorno esatto del rogo.
+Con VIIRS il dettaglio migliora di parecchio! [Il prodotto NASA VNP14IMG_NRT rileva attività sub-pixel dentro celle nominali da 375 metri](https://www.earthdata.nasa.gov/es/data/catalog/lancemodis-vnp14img-nrt-2). La natura dell’informazione, però, rimane la stessa. Stiamo osservando un’anomalia termica, non il contorno esatto del rogo.
 
 ![Confronto didattico tra un pixel MODIS e un pixel VIIRS](/Assets/fire-assets/images/02-hotspot-non-perimetro.png)
 
 *Il punto viene pubblicato al centro della cella che contiene l’anomalia. La sorgente termica può trovarsi in un’altra porzione del pixel.*
 
-La differenza è sostanziale. Gli hotspot sono preziosi per accorgersi che qualcosa sta accadendo e per seguirne l’attività nel tempo. Misurare la superficie bruciata richiede un altro procedimento.
+Misurare la superficie bruciata richiede un altro procedimento!
 
 Il modulo di **Rapid Damage Assessment** di EFFIS combina immagini MODIS, VIIRS e Sentinel-2. [Le aree ottenute con procedure automatiche vengono controllate e corrette attraverso l’interpretazione visuale; dal 2018 Sentinel-2 consente di affinare i perimetri a venti metri e di includere anche alcuni incendi sotto la soglia dei trenta ettari](https://forest-fire.emergency.copernicus.eu/about-effis/technical-background/rapid-damage-assessment). EFFIS stima che le aree così mappate rappresentino circa il 95% della superficie totale bruciata nell’Unione europea, pur coprendo soltanto una frazione del numero complessivo di incendi.
 
