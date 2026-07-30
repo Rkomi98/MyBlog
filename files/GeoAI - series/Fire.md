@@ -4,25 +4,28 @@ Sono mesi che non scrivo su questo blog e mi dispiace parecchio 🫣! Però, ho 
 
 ## Come si gestiscono gli incendi con la GeoAI?
 
-Alle 8:18 del 29 luglio 2026, la pagina del Joint Research Centre dedicata agli incendi europei riportava [434.976 ettari bruciati nell’Unione europea dall’inizio dell’anno, 1.407 incendi rilevati e 17,98 milioni di tonnellate di anidride carbonica emesse](https://joint-research-centre.ec.europa.eu/projects-and-activities/natural-and-man-made-hazards/forest-fires/current-wildfire-situation-europe_en). Il confronto con lo stesso periodo del 2025, già indicato dal JRC come l’anno peggiore della serie, rendeva il quadro ancora più severo.
+Alle 8:18 del 29 luglio 2026, la pagina del Joint Research Centre dedicata agli incendi europei riportava [434.976 ettari bruciati nell’Unione europea dall’inizio dell’anno, 1.407 incendi rilevati e 17,98 milioni di tonnellate di anidride carbonica emesse](https://joint-research-centre.ec.europa.eu/projects-and-activities/natural-and-man-made-hazards/forest-fires/current-wildfire-situation-europe_en). Il confronto con lo stesso periodo del 2025, già indicato dal JRC come l’anno peggiore della serie, rendeva il quadro ancora più severo di quanto già non fosse un anno fa!
 
 ![Mappa dell'anomalia mediana del Fire Weather Index](/Assets/fire-assets/fire_pred.jpg)
-
 *Sto scrivendo l’articolo il 30 luglio 2026. La carta rappresenta l’anomalia mediana del Fire Weather Index (FWI), calcolata come deviazione standard rispetto alla media storica degli ultimi trent’anni.*
 
-Prima di correre alle conclusioni, però, conviene fermarsi un momento. Le cifre di EFFIS non cadono dal cielo già definitive. La stessa pagina avverte che le stime vengono corrette quando arrivano immagini migliori; il sistema, inoltre, monitora soprattutto gli incendi di circa trenta ettari o più che coinvolgono almeno in parte superfici naturali. Persino la porzione di territorio che consideriamo “già bruciata”, insomma, rimane per qualche tempo una ricostruzione provvisoria.
+Le cifre di [EFFIS (European Forest Fires Information System)](https://forest-fire.emergency.copernicus.eu/) sono in continuo aggiornamento e le [stime vengono corrette quando arrivano immagini, anzi dati in generale migliori](https://forest-fire.emergency.copernicus.eu/apps/effis.statistics/seasonaltrend).
 
-È un buon punto da cui cominciare, perché mostra la faccenda per quella che è. Durante un incendio non esiste una mappa perfetta che osserva tutto nello stesso istante. Esistono sensori che passano in momenti diversi, pixel di dimensioni diverse, modelli meteorologici, osservazioni a terra, camere, aeromobili, droni, perimetri disegnati e poi ridisegnati. A ogni passaggio si guadagna informazione e, insieme, si scopre un nuovo margine d’errore.
+> Vorrei mettere l'attenzione sul fatto che l'EFFIS Weekly Cumulative Severity Rating è già più alto dell'intervallo di confidenza misurato finora!
 
-La GeoAI entra proprio qui. Tiene insieme geografia, osservazione della Terra, modellistica e intelligenza artificiale, ma la domanda cambia di continuo. Prima prova a capire dove il territorio sia predisposto a bruciare. Poi deve distinguere una nuova anomalia termica, ricostruire il fronte, esplorare la sua possibile propagazione, sovrapporre persone e infrastrutture esposte e, infine, leggere ciò che rimane dopo il passaggio delle fiamme.
+Facciamo un passo indietro. Ho detto poco fa che le stime vengono aggiornate quando arrivano nuove osservazioni, magari più recenti, più dettagliate o più adatte a quella particolare fase dell’incendio. Ma che cosa significa, in pratica?
 
-A prima vista sembra una sola applicazione. Guardando meglio, emergono problemi differenti, collocati su scale temporali che vanno dai mesi ai minuti.
+Durante un incendio non esiste un’unica mappa, perfettamente aggiornata, capace di restituire nello stesso istante tutto ciò che sta accadendo. Esiste piuttosto un mosaico di informazioni che provengono da satelliti con tempi di acquisizione e risoluzioni diverse, modelli meteorologici, osservazioni sul campo, termocamere, sensori aviotrasportati, droni e perimetri operativi tracciati e poi aggiornati. Ogni nuovo passaggio aggiunge un tassello: riduce una parte dell’incertezza e, spesso, rende visibile quella che prima non riuscivamo nemmeno a misurare.
+
+Ed è qui che entra in gioco la GeoAI, all’interno di un sistema più ampio che comprende GIS, osservazione della Terra, modellistica fisica e dati operativi. Il problema, però, cambia continuamente. Prima si cerca di stimare dove, e in quali condizioni, un incendio possa innescarsi o propagarsi più facilmente. Quando compare un nuovo segnale, occorre rilevare e validare l’anomalia termica, stimare e aggiornare il fronte, simulare possibili scenari di propagazione, individuare persone e infrastrutture esposte e considerarne la vulnerabilità. Dopo il passaggio delle fiamme, lo sguardo cambia ancora: si delimitano l’area bruciata e la severità del danno, per capire che cosa sia stato colpito e con quale intensità.
+
+A prima vista sembra una sola grande applicazione, ma guardando meglio, emergono problemi differenti, collocati su scale temporali che vanno dai mesi ai minuti. Ora entriamo più nel dettaglio per capirci qualcosa di più🧐!
 
 ---
 
 ## Il fuoco comincia prima delle fiamme
 
-Quando compare il primo punto rosso su una mappa satellitare, una parte della storia è già stata scritta.
+Quando compare il primo punto rosso su una mappa satellitare, una parte della storia, ahimé, è già stata scritta.
 
 Nei giorni precedenti può aver piovuto poco. Il vento può essere aumentato. La vegetazione può aver perso umidità, mentre rami, aghi e arbusti secchi hanno continuato ad accumularsi. Una primavera piovosa può persino aver favorito la crescita di nuova biomassa che, una volta disseccata, diventa combustibile. Poi arriva l’innesco: un fulmine, una scintilla, un’attività agricola, una linea elettrica, un gesto umano deliberato o superficiale.
 

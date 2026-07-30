@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html class="dark" lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DSR cumulato Europa 1980-2026 - Topographic Tech</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  body{
+    margin:0;
+    padding:40px 20px;
+    background-color:#0B1120;
+    background-image:url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233b82f6' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+    min-height:100vh;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ INIZIO BLOCCO GRAFICO (copia da qui alla fine del blocco) ============ -->
+
+<style>
+.tt-fig{
+  --tt-bg:#0F172A;
+  --tt-surface:#1E293B;
+  --tt-text:#E2E8F0;
+  --tt-muted:#94A3B8;
+  --tt-accent:#10B981;
+  --tt-alert:#F87171;
+  --tt-band:#3B82F6;
+  margin:2.5rem auto;
+  max-width:44rem;
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--tt-text);
+  -webkit-font-smoothing:antialiased;
+}
+.tt-fig *{box-sizing:border-box;}
+.tt-card{
+  position:relative;
+  background:var(--tt-bg);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;
+  padding:1.25rem 1.25rem 1rem;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.85);
+  overflow:hidden;
+}
+.tt-badge{
+  position:absolute;top:-1px;right:1.25rem;
+  background:var(--tt-surface);
+  border:1px solid rgba(255,255,255,.1);
+  border-top:0;
+  border-radius:0 0 4px 4px;
+  padding:.2rem .5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:700;letter-spacing:.09em;
+  color:var(--tt-accent);
+}
+.tt-kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tt-muted);
+}
+.tt-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.05rem;font-weight:700;color:#fff;
+  margin:.4rem 0 .3rem;letter-spacing:-.01em;line-height:1.3;
+}
+.tt-sub{font-size:.82rem;color:var(--tt-muted);line-height:1.55;margin:0 0 1rem;max-width:36rem;}
+.tt-bar{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-bottom:.9rem;}
+.tt-seg{display:flex;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:2px;gap:2px;}
+.tt-seg button{
+  appearance:none;border:0;background:transparent;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.03em;
+  color:var(--tt-muted);padding:.34rem .6rem;border-radius:4px;transition:all .18s ease;
+}
+.tt-seg button:hover{color:#fff;}
+.tt-seg button[aria-pressed="true"]{background:rgba(16,185,129,.14);color:var(--tt-accent);box-shadow:inset 0 0 0 1px rgba(16,185,129,.28);}
+.tt-legend{display:flex;flex-wrap:wrap;gap:.35rem;margin-left:auto;}
+.tt-chip{
+  display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);
+  border-radius:999px;padding:.28rem .6rem .28rem .5rem;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tt-muted);
+  transition:all .18s ease;user-select:none;
+}
+.tt-chip:hover{border-color:rgba(255,255,255,.2);color:#fff;}
+.tt-chip[aria-pressed="false"]{opacity:.4;}
+.tt-swatch{width:12px;height:12px;border-radius:2px;flex:0 0 auto;}
+.tt-plot{position:relative;width:100%;touch-action:pan-y;}
+.tt-plot svg{display:block;width:100%;height:auto;overflow:visible;}
+.tt-tip{
+  position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-108%);
+  background:rgba(15,23,42,.96);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:.55rem .65rem;min-width:150px;
+  box-shadow:0 12px 28px -10px rgba(0,0,0,.9);
+  transition:opacity .12s ease;z-index:5;
+}
+.tt-tip-day{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#fff;margin-bottom:.4rem;}
+.tt-row{display:flex;align-items:baseline;gap:.5rem;font-size:11px;line-height:1.7;}
+.tt-row span:first-child{color:var(--tt-muted);flex:1;white-space:nowrap;}
+.tt-row span:last-child{font-family:'JetBrains Mono',monospace;color:var(--tt-text);}
+.tt-note{
+  margin-top:.85rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.06);
+  font-size:.78rem;line-height:1.6;color:var(--tt-muted);
+}
+.tt-note b{color:#fff;font-weight:600;}
+.tt-cap{
+  margin-top:.7rem;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:#64748B;
+}
+@media (max-width:560px){
+  .tt-card{padding:1rem .8rem .85rem;}
+  .tt-legend{margin-left:0;}
+  .tt-title{font-size:.95rem;}
+}
+</style>
+
+<figure class="tt-fig" id="tt-dsr">
+  <div class="tt-card">
+    <span class="tt-badge">EFFIS · DSR</span>
+
+    <p class="tt-kicker">Stagione degli incendi · Europa</p>
+    <h3 class="tt-title">Severità cumulata 2026 contro quarantasei anni di storia</h3>
+    <p class="tt-sub">Il Daily Severity Rating sommato giorno per giorno dall'inizio dell'anno. La fascia raccoglie tutto ciò che è accaduto fra il 1980 e il 2025, dal minimo al massimo; la linea verde è il 2026, aggiornata al 29 luglio.</p>
+
+    <div class="tt-bar">
+      <div class="tt-seg" role="group" aria-label="Vista">
+        <button type="button" data-view="cum" aria-pressed="true">CUMULATO</button>
+        <button type="button" data-view="week" aria-pressed="false">SETTIMANALE</button>
+        <button type="button" data-view="anom" aria-pressed="false">SCOSTAMENTO</button>
+      </div>
+      <div class="tt-legend" id="tt-legend"></div>
+    </div>
+
+    <div class="tt-plot" id="tt-plot">
+      <div class="tt-tip" id="tt-tip"></div>
+    </div>
+
+    <p class="tt-note" id="tt-note"></p>
+  </div>
+  <figcaption class="tt-cap">FIGURA · DSR CUMULATO, EUROPA, 1980-2026</figcaption>
+</figure>
+
+<script>
+(function(){
+  const RAW = [
+    ["07 Jan",0.02143,0.10,0.21143,0.05429],["14 Jan",0.05572,0.20,0.37285,0.10858],
+    ["21 Jan",0.09001,0.30,0.49428,0.15144],["28 Jan",0.14287,0.41,0.77143,0.17287],
+    ["04 Feb",0.16858,0.54,1.04714,0.19858],["11 Feb",0.21001,0.68,1.17429,0.22001],
+    ["18 Feb",0.25285,0.83,1.63286,0.28858],["25 Feb",0.29285,1.01,2.01287,0.39001],
+    ["04 Mar",0.36428,1.21,2.26429,0.57430],["11 Mar",0.45285,1.46,2.93143,0.78716],
+    ["18 Mar",0.58571,1.81,3.91857,1.11716],["25 Mar",0.76142,2.24,4.85857,1.60002],
+    ["01 Apr",1.03999,2.78,6.84428,2.16573],["08 Apr",1.36285,3.38,7.56428,3.11430],
+    ["15 Apr",1.82714,4.15,8.06285,4.03287],["22 Apr",2.26428,5.11,9.37286,5.52573],
+    ["29 Apr",3.14714,6.25,11.17857,8.01002],["06 May",4.07143,7.49,12.74000,10.80002],
+    ["13 May",4.70857,8.98,15.24429,12.00573],["20 May",5.71571,10.65,17.70715,12.78144],
+    ["27 May",7.08285,12.54,19.35858,15.92573],["03 Jun",8.38714,14.73,21.57715,19.77002],
+    ["10 Jun",10.01000,17.23,24.38429,22.28431],["17 Jun",11.34286,19.96,28.58286,25.45860],
+    ["24 Jun",12.93143,23.05,31.16715,31.05717],["01 Jul",15.13714,26.71,35.53286,37.12860],
+    ["08 Jul",18.55285,30.70,39.95286,43.74003],["15 Jul",22.90714,34.98,45.99000,50.94432],
+    ["22 Jul",27.07000,39.85,54.06286,57.32146],["29 Jul",30.71857,44.54,60.78286,63.82146],
+    ["05 Aug",34.05714,49.10,66.70572,null],["12 Aug",37.54428,53.83,74.17429,null],
+    ["19 Aug",40.51714,58.18,79.25143,null],["26 Aug",44.56428,62.49,82.92429,null],
+    ["02 Sep",48.55714,66.27,86.03715,null],["09 Sep",51.15285,69.61,89.18572,null],
+    ["16 Sep",53.49856,72.47,91.42429,null],["23 Sep",54.84142,74.82,93.18572,null],
+    ["30 Sep",55.99428,76.73,94.60858,null],["07 Oct",57.37428,78.52,96.36144,null],
+    ["14 Oct",58.01142,79.86,97.42430,null],["21 Oct",58.47571,80.87,98.63144,null],
+    ["28 Oct",59.06285,81.62,99.77430,null],["04 Nov",59.48571,82.21,100.86573,null],
+    ["11 Nov",59.93000,82.66,101.44144,null],["18 Nov",60.15857,83.03,101.75858,null],
+    ["25 Nov",60.30143,83.31,101.97715,null],["02 Dec",60.42857,83.51,102.13286,null],
+    ["09 Dec",60.52857,83.65,102.17000,null],["16 Dec",60.60714,83.78,102.19571,null],
+    ["23 Dec",60.64000,83.88,102.24142,null],["30 Dec",60.68000,83.97,102.32285,null]
+  ];
+
+  const MESI = {Jan:"gen",Feb:"feb",Mar:"mar",Apr:"apr",May:"mag",Jun:"giu",
+                Jul:"lug",Aug:"ago",Sep:"set",Oct:"ott",Nov:"nov",Dec:"dic"};
+  const D = RAW.map(r=>{
+    const p = r[0].split(" ");
+    return {label:parseInt(p[0],10)+" "+MESI[p[1]], mese:MESI[p[1]],
+            min:r[1], avg:r[2], max:r[3], cur:r[4]};
+  });
+  const N = D.length;
+  const LAST = D.reduce((a,d,i)=>d.cur!==null?i:a,0);
+
+  const COL = {band:"#3B82F6", avg:"#94A3B8", cur:"#10B981", alert:"#F87171", muted:"#94A3B8"};
+  const state = {view:"cum", band:true, avg:true, cur:true, hover:null};
+
+  const plot   = document.getElementById("tt-plot");
+  const tip    = document.getElementById("tt-tip");
+  const legend = document.getElementById("tt-legend");
+  const note   = document.getElementById("tt-note");
+
+  const fmt = (v,d)=> v===null||v===undefined||isNaN(v) ? "—" : v.toFixed(d===undefined?2:d);
+
+  // ---------- serie derivate ----------
+  const weekAvg = D.map((d,i)=> i===0 ? d.avg : d.avg - D[i-1].avg);
+  const weekCur = D.map((d,i)=>{
+    if(d.cur===null) return null;
+    return i===0 ? d.cur : (D[i-1].cur===null ? null : d.cur - D[i-1].cur);
+  });
+  const anom = D.map(d=> d.cur===null ? null : d.cur - d.avg);
+
+  // ---------- legenda ----------
+  const CHIPS = {
+    cum:[["band","Min-Max 1980-2025",COL.band,.22],["avg","Media 1980-2025",COL.avg,1],["cur","2026",COL.cur,1]],
+    week:[["avg","Media settimanale",COL.avg,1],["cur","2026",COL.cur,1]],
+    anom:[["cur","2026 meno media",COL.cur,1]]
+  };
+  function drawLegend(){
+    legend.innerHTML = CHIPS[state.view].map(c=>{
+      const on = state[c[0]] ? "true":"false";
+      const sw = c[3]<1
+        ? "background:"+c[2]+"33;border:1px solid "+c[2]+"66;"
+        : "background:"+c[2]+";";
+      return '<button type="button" class="tt-chip" data-key="'+c[0]+'" aria-pressed="'+on+'">'+
+             '<span class="tt-swatch" style="'+sw+'"></span>'+c[1]+'</button>';
+    }).join("");
+    legend.querySelectorAll(".tt-chip").forEach(b=>{
+      b.addEventListener("click",()=>{ const k=b.dataset.key; state[k]=!state[k]; drawLegend(); render(); });
+    });
+  }
+
+  // ---------- scale e utility ----------
+  function ticks(lo,hi,n){
+    const span = hi-lo || 1;
+    const raw = span/n;
+    const mag = Math.pow(10,Math.floor(Math.log10(raw)));
+    const step = [1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=raw) || 10*mag;
+    const out=[]; let t=Math.ceil(lo/step)*step;
+    for(; t<=hi+step*1e-6; t+=step) out.push(+t.toFixed(6));
+    return out;
+  }
+
+  function aboveSegments(A,B){
+    const segs=[]; let seg=null;
+    for(let i=0;i<N;i++){
+      const a=A[i], b=B[i];
+      if(a===null||b===null){ if(seg){segs.push(seg); seg=null;} continue; }
+      if(a>b){
+        if(!seg){
+          seg=[];
+          const pa=A[i-1], pb=B[i-1];
+          if(i>0 && pa!==null && pb!==null){
+            const d0=pa-pb, d1=a-b, t=d0/(d0-d1);
+            const v=pb+(b-pb)*t;
+            seg.push({x:(i-1)+t, top:v, bot:v});
+          }
+        }
+        seg.push({x:i, top:a, bot:b});
+      }else if(seg){
+        const pa=A[i-1], pb=B[i-1], d0=pa-pb, d1=a-b, t=d0/(d0-d1);
+        const v=pb+(b-pb)*t;
+        seg.push({x:(i-1)+t, top:v, bot:v});
+        segs.push(seg); seg=null;
+      }
+    }
+    if(seg) segs.push(seg);
+    return segs;
+  }
+
+  // ---------- render ----------
+  let geom = null;
+
+  function render(){
+    const W = Math.max(300, plot.clientWidth || 640);
+    const narrow = W < 560;
+    const H = narrow ? 300 : 400;
+    const m = {t:26, r:narrow?16:26, b:32, l:narrow?32:42};
+    const pw = W-m.l-m.r, ph = H-m.t-m.b;
+
+    let lo=0, hi=1, series=[];
+    if(state.view==="cum"){
+      const pool=[];
+      if(state.band) pool.push(...D.map(d=>d.max), ...D.map(d=>d.min));
+      if(state.avg)  pool.push(...D.map(d=>d.avg));
+      if(state.cur)  pool.push(...D.slice(0,LAST+1).map(d=>d.cur));
+      if(!pool.length) pool.push(0,1);
+      hi = Math.max.apply(null,pool)*1.06; lo = 0;
+    } else if(state.view==="week"){
+      const pool=[];
+      if(state.avg) pool.push(...weekAvg);
+      if(state.cur) pool.push(...weekCur.filter(v=>v!==null));
+      if(!pool.length) pool.push(0,1);
+      hi = Math.max.apply(null,pool)*1.15; lo = 0;
+    } else {
+      const vals = anom.filter(v=>v!==null);
+      hi = Math.max.apply(null,vals)*1.15;
+      lo = Math.min(0, Math.min.apply(null,vals)*1.3);
+    }
+
+    const X = i => m.l + (i/(N-1))*pw;
+    const Y = v => m.t + ph - ((v-lo)/(hi-lo))*ph;
+    geom = {W,H,m,pw,ph,X,Y,narrow};
+
+    const s=[];
+    s.push('<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" xmlns="http://www.w3.org/2000/svg" font-family="\'JetBrains Mono\', monospace">');
+    s.push('<defs><linearGradient id="ttAnomPos" x1="0" y1="0" x2="0" y2="1">'+
+           '<stop offset="0%" stop-color="'+COL.alert+'" stop-opacity=".38"/>'+
+           '<stop offset="100%" stop-color="'+COL.alert+'" stop-opacity=".02"/></linearGradient>'+
+           '<linearGradient id="ttCurFill" x1="0" y1="0" x2="0" y2="1">'+
+           '<stop offset="0%" stop-color="'+COL.cur+'" stop-opacity=".18"/>'+
+           '<stop offset="100%" stop-color="'+COL.cur+'" stop-opacity="0"/></linearGradient></defs>');
+
+    // griglia orizzontale
+    ticks(lo,hi,narrow?4:5).forEach(t=>{
+      const y=Y(t), zero = Math.abs(t)<1e-9;
+      s.push('<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+
+             '" stroke="rgba(255,255,255,'+(zero?0.18:0.055)+')" stroke-width="1"/>');
+      s.push('<text x="'+(m.l-8)+'" y="'+(y+3.5).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#64748B">'+
+             (Math.abs(t)>=10?t.toFixed(0):t.toFixed(1))+'</text>');
+    });
+
+    // unità sull'asse verticale
+    const UNITA = {cum:"DSR CUMULATO", week:"DSR PER SETTIMANA", anom:"PUNTI DI SCARTO"};
+    s.push('<text x="'+(m.l-(narrow?24:34))+'" y="'+(m.t-11)+'" font-size="8.5" letter-spacing=".12em" fill="#475569">'+UNITA[state.view]+'</text>');
+
+    // etichette mesi
+    let seen=null;
+    D.forEach((d,i)=>{
+      if(d.mese===seen) return;
+      seen=d.mese;
+      const x=X(i);
+      s.push('<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+(m.t+ph)+'" y2="'+(m.t+ph+4)+'" stroke="rgba(255,255,255,.12)"/>');
+      s.push('<text x="'+x.toFixed(1)+'" y="'+(m.t+ph+17)+'" text-anchor="middle" font-size="9" letter-spacing=".08em" fill="#64748B">'+
+             d.mese.toUpperCase()+'</text>');
+    });
+
+    const line = (arr, upto) => {
+      let p="", started=false;
+      for(let i=0;i<=(upto===undefined?N-1:upto);i++){
+        const v=arr[i]; if(v===null||v===undefined) continue;
+        p += (started?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1)+" ";
+        started=true;
+      }
+      return p.trim();
+    };
+
+    if(state.view==="cum"){
+      if(state.band){
+        let p="";
+        D.forEach((d,i)=>{ p += (i?"L":"M")+X(i).toFixed(1)+","+Y(d.max).toFixed(1)+" "; });
+        for(let i=N-1;i>=0;i--){ p += "L"+X(i).toFixed(1)+","+Y(D[i].min).toFixed(1)+" "; }
+        s.push('<path d="'+p+'Z" fill="'+COL.band+'" fill-opacity=".10"/>');
+        s.push('<path d="'+line(D.map(d=>d.max))+'" fill="none" stroke="'+COL.band+'" stroke-opacity=".45" stroke-width="1" stroke-dasharray="2 3"/>');
+        s.push('<path d="'+line(D.map(d=>d.min))+'" fill="none" stroke="'+COL.band+'" stroke-opacity=".45" stroke-width="1" stroke-dasharray="2 3"/>');
+      }
+      if(state.avg){
+        s.push('<path d="'+line(D.map(d=>d.avg))+'" fill="none" stroke="'+COL.avg+'" stroke-width="1.6" stroke-dasharray="6 4" stroke-linecap="round"/>');
+      }
+      if(state.cur){
+        // area di eccedenza sopra il massimo storico
+        aboveSegments(D.map(d=>d.cur), D.map(d=>d.max)).forEach(seg=>{
+          let p="";
+          seg.forEach((pt,k)=>{ p+=(k?"L":"M")+X(pt.x).toFixed(1)+","+Y(pt.top).toFixed(1)+" "; });
+          for(let k=seg.length-1;k>=0;k--){ p+="L"+X(seg[k].x).toFixed(1)+","+Y(seg[k].bot).toFixed(1)+" "; }
+          s.push('<path d="'+p+'Z" fill="'+COL.alert+'" fill-opacity=".22"/>');
+          const cross=seg[0];
+          s.push('<line x1="'+X(cross.x).toFixed(1)+'" x2="'+X(cross.x).toFixed(1)+'" y1="'+Y(cross.top).toFixed(1)+
+                 '" y2="'+m.t+'" stroke="'+COL.alert+'" stroke-opacity=".35" stroke-width="1" stroke-dasharray="2 4"/>');
+          if(!narrow){
+            s.push('<text x="'+(X(cross.x)+6).toFixed(1)+'" y="'+(m.t+2)+'" font-size="9" letter-spacing=".07em" fill="'+COL.alert+'">OLTRE IL MASSIMO STORICO</text>');
+          }
+        });
+        s.push('<path d="'+line(D.map(d=>d.cur),LAST)+'" fill="none" stroke="'+COL.cur+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>');
+        const xe=X(LAST), ye=Y(D[LAST].cur);
+        s.push('<circle cx="'+xe.toFixed(1)+'" cy="'+ye.toFixed(1)+'" r="5" fill="'+COL.cur+'" fill-opacity=".22"/>');
+        s.push('<circle cx="'+xe.toFixed(1)+'" cy="'+ye.toFixed(1)+'" r="2.6" fill="'+COL.cur+'"/>');
+        s.push('<text x="'+(xe-8).toFixed(1)+'" y="'+(ye-9).toFixed(1)+'" text-anchor="end" font-size="10" font-weight="700" fill="'+COL.cur+'">'+fmt(D[LAST].cur,1)+'</text>');
+      }
+    }
+
+    if(state.view==="week"){
+      if(state.cur){
+        const bw = Math.max(3, (pw/(N-1))*0.62);
+        for(let i=0;i<=LAST;i++){
+          const v=weekCur[i]; if(v===null) continue;
+          const h = Math.max(0.8, (m.t+ph)-Y(v));
+          const over = v > weekAvg[i];
+          s.push('<rect x="'+(X(i)-bw/2).toFixed(1)+'" y="'+Y(v).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+
+                 '" rx="1.5" fill="'+(over?COL.cur:COL.cur)+'" fill-opacity="'+(over?".85":".38")+'"/>');
+        }
+      }
+      if(state.avg){
+        s.push('<path d="'+line(weekAvg)+'" fill="none" stroke="'+COL.avg+'" stroke-width="1.6" stroke-dasharray="6 4"/>');
+      }
+    }
+
+    if(state.view==="anom"){
+      const ZERO = D.map(d=> d.cur===null ? null : 0);
+      const areaPath = seg => {
+        let p="";
+        seg.forEach((pt,k)=>{ p+=(k?"L":"M")+X(pt.x).toFixed(1)+","+Y(pt.top).toFixed(1)+" "; });
+        for(let k=seg.length-1;k>=0;k--){ p+="L"+X(seg[k].x).toFixed(1)+","+Y(seg[k].bot).toFixed(1)+" "; }
+        return p+"Z";
+      };
+      aboveSegments(anom, ZERO).forEach(seg=>{
+        s.push('<path d="'+areaPath(seg)+'" fill="url(#ttAnomPos)"/>');
+      });
+      aboveSegments(ZERO, anom).forEach(seg=>{
+        s.push('<path d="'+areaPath(seg)+'" fill="'+COL.band+'" fill-opacity=".16"/>');
+      });
+      s.push('<path d="'+line(anom,LAST)+'" fill="none" stroke="'+COL.cur+'" stroke-width="2.2" stroke-linejoin="round"/>');
+      const xe=X(LAST), ye=Y(anom[LAST]);
+      s.push('<circle cx="'+xe.toFixed(1)+'" cy="'+ye.toFixed(1)+'" r="2.6" fill="'+COL.cur+'"/>');
+      s.push('<text x="'+(xe-8).toFixed(1)+'" y="'+(ye-9).toFixed(1)+'" text-anchor="end" font-size="10" font-weight="700" fill="'+COL.cur+'">+'+fmt(anom[LAST],1)+'</text>');
+    }
+
+    // crosshair
+    if(state.hover!==null){
+      const i=state.hover, x=X(i);
+      s.push('<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+m.t+'" y2="'+(m.t+ph)+'" stroke="rgba(226,232,240,.28)" stroke-width="1"/>');
+      const dots=[];
+      if(state.view==="cum"){
+        if(state.band){dots.push([D[i].max,COL.band],[D[i].min,COL.band]);}
+        if(state.avg) dots.push([D[i].avg,COL.avg]);
+        if(state.cur && D[i].cur!==null) dots.push([D[i].cur,COL.cur]);
+      }else if(state.view==="week"){
+        if(state.avg) dots.push([weekAvg[i],COL.avg]);
+        if(state.cur && weekCur[i]!==null) dots.push([weekCur[i],COL.cur]);
+      }else if(anom[i]!==null){ dots.push([anom[i],COL.cur]); }
+      dots.forEach(d=>{
+        s.push('<circle cx="'+x.toFixed(1)+'" cy="'+Y(d[0]).toFixed(1)+'" r="3.2" fill="#0F172A" stroke="'+d[1]+'" stroke-width="1.8"/>');
+      });
+    }
+
+    s.push('</svg>');
+    plot.querySelectorAll("svg").forEach(el=>el.remove());
+    plot.insertAdjacentHTML("afterbegin", s.join(""));
+    drawNote();
+  }
+
+  function drawNote(){
+    const d=D[LAST], delta=((d.cur/d.avg-1)*100);
+    const LUNGHI={gen:"gennaio",feb:"febbraio",mar:"marzo",apr:"aprile",mag:"maggio",giu:"giugno",
+                  lug:"luglio",ago:"agosto",set:"settembre",ott:"ottobre",nov:"novembre",dic:"dicembre"};
+    const idx=D.findIndex(x=>x.avg>=d.cur);
+    const raggiunge = idx>=0
+      ? D[idx].label.replace(/\s(\w+)$/, (s,m)=>" "+LUNGHI[m])
+      : "fine anno";
+    if(state.view==="week"){
+      note.innerHTML = 'Gli incrementi settimanali. La media storica cresce con regolarità, il 2026 accelera da fine aprile e nell\'ultima settimana di luglio aggiunge <b>'+fmt(weekCur[LAST],1)+'</b> punti contro i <b>'+fmt(weekAvg[LAST],1)+'</b> del comportamento medio.';
+    }else if(state.view==="anom"){
+      note.innerHTML = 'La distanza fra il 2026 e la media 1980-2025. Nei primi tre mesi il segno è negativo, poi la curva si stacca: al 29 luglio lo scarto vale <b>+'+fmt(anom[LAST],1)+'</b> punti di DSR.';
+    }else{
+      note.innerHTML = 'Il 2026 comincia sotto la media, aggancia il massimo storico intorno al 24 giugno e dal primo luglio esce dalla fascia: <b>'+fmt(d.cur,1)+
+        '</b> contro un massimo di <b>'+fmt(d.max,1)+'</b> e una media di <b>'+fmt(d.avg,1)+'</b>, ossia <b>+'+delta.toFixed(0)+'%</b>. Il valore che il 2026 tocca il 29 luglio, la stagione media lo raggiunge solo il <b>'+raggiunge+'</b>.';
+    }
+  }
+
+  // ---------- tooltip ----------
+  function nearest(clientX){
+    const r=plot.getBoundingClientRect();
+    const scale = geom.W / r.width;
+    const px=(clientX-r.left)*scale;
+    let best=0, bd=Infinity;
+    for(let i=0;i<N;i++){ const d=Math.abs(geom.X(i)-px); if(d<bd){bd=d;best=i;} }
+    return best;
+  }
+
+  function showTip(i){
+    const d=D[i], r=plot.getBoundingClientRect(), scale=r.width/geom.W;
+    let rows="";
+    if(state.view==="cum"){
+      rows += row("2026", d.cur===null?"—":fmt(d.cur), COL.cur);
+      rows += row("Media", fmt(d.avg), COL.avg);
+      rows += row("Max storico", fmt(d.max), COL.band);
+      rows += row("Min storico", fmt(d.min), COL.band);
+      if(d.cur!==null) rows += row("Vs media", (d.cur>=d.avg?"+":"")+((d.cur/d.avg-1)*100).toFixed(0)+"%", d.cur>d.max?COL.alert:COL.muted);
+    }else if(state.view==="week"){
+      rows += row("2026, settimana", weekCur[i]===null?"—":fmt(weekCur[i]), COL.cur);
+      rows += row("Media, settimana", fmt(weekAvg[i]), COL.avg);
+    }else{
+      rows += row("Scostamento", anom[i]===null?"—":(anom[i]>=0?"+":"")+fmt(anom[i]), COL.cur);
+      rows += row("2026", d.cur===null?"—":fmt(d.cur), COL.cur);
+      rows += row("Media", fmt(d.avg), COL.avg);
+    }
+    tip.innerHTML = '<div class="tt-tip-day">'+d.label+'</div>'+rows;
+    let yRef;
+    if(state.view==="cum") yRef = state.cur && d.cur!==null ? d.cur : d.avg;
+    else if(state.view==="week") yRef = weekCur[i]!==null ? weekCur[i] : weekAvg[i];
+    else yRef = anom[i]!==null ? anom[i] : 0;
+    const left = geom.X(i)*scale, top = geom.Y(yRef)*scale;
+    const half = tip.offsetWidth/2;
+    tip.style.left = Math.min(Math.max(left, half+2), r.width-half-2)+"px";
+    tip.style.top  = Math.max(top, tip.offsetHeight+10)+"px";
+    tip.style.opacity = 1;
+  }
+  function row(k,v,c){
+    return '<div class="tt-row"><span>'+k+'</span><span style="color:'+(c||"#E2E8F0")+'">'+v+'</span></div>';
+  }
+
+  function move(e){
+    const i=nearest(e.clientX);
+    if(i!==state.hover){ state.hover=i; render(); }
+    showTip(i);
+  }
+  function leave(){ state.hover=null; tip.style.opacity=0; render(); }
+
+  plot.addEventListener("pointermove", move);
+  plot.addEventListener("pointerdown", move);
+  plot.addEventListener("pointerleave", leave);
+
+  document.querySelectorAll("#tt-dsr .tt-seg button").forEach(b=>{
+    b.addEventListener("click",()=>{
+      document.querySelectorAll("#tt-dsr .tt-seg button").forEach(x=>x.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");
+      state.view=b.dataset.view;
+      state.band=true; state.avg=true; state.cur=true; state.hover=null;
+      tip.style.opacity=0;
+      drawLegend(); render();
+    });
+  });
+
+  drawLegend();
+  render();
+
+  let raf=null;
+  const redraw=()=>{ if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(render); };
+  if(typeof ResizeObserver!=="undefined"){ new ResizeObserver(redraw).observe(plot); }
+  else { window.addEventListener("resize", redraw); }
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+})();
+</script>
+
+<!-- ============ FINE BLOCCO GRAFICO ============ -->
+
+</body>
+</html>
