@@ -11,7 +11,6 @@
     .eyebrow { margin-bottom:.5rem; color:var(--accent-strong, #34d399); font:700 .68rem/1.2 'JetBrains Mono', 'Fira Code', monospace; letter-spacing:.12em; text-transform:uppercase; }
     h3 { margin:0; color:var(--text-primary, #e2e8f0); font:700 clamp(1.1rem, 2vw, 1.4rem)/1.25 'JetBrains Mono', 'Fira Code', monospace; letter-spacing:-.025em; }
     .head p { max-width:46rem; margin:.55rem 0 0; color:var(--text-muted, #94a3b8); font-size:.9rem; line-height:1.6; }
-    .status { flex:0 0 auto; padding:.42rem .65rem; border:1px solid color-mix(in srgb, var(--accent, #10b981) 38%, transparent); border-radius:999px; background:color-mix(in srgb, var(--accent, #10b981) 14%, transparent); color:var(--accent-strong, #34d399); font:700 .64rem/1.2 'JetBrains Mono', 'Fira Code', monospace; letter-spacing:.08em; text-transform:uppercase; }
     .body { display:grid; grid-template-columns:minmax(0, 1fr) 18.25rem; min-height:29rem; }
     .stage { position:relative; display:flex; align-items:center; justify-content:center; min-width:0; padding:1rem; background:var(--surface, #1e293b); transition:background .3s ease; }
     canvas { display:block; width:100%; height:auto; max-height:38rem; border:1px solid var(--border, rgba(148,163,184,.2)); border-radius:14px; touch-action:none; }
@@ -72,7 +71,7 @@
     it: {
       experiment: 'Esperimento 01', title: 'Il punto rosso e la sorgente termica',
       intro: 'Riduci la cella e sposta la sorgente: il simbolo pubblicato rimane al centro del pixel che contiene l’anomalia.',
-      status: 'didattico', published: 'hotspot pubblicato', source: 'sorgente simulata',
+      published: 'hotspot pubblicato', source: 'sorgente simulata',
       sensor: 'Sensore concettuale', horizontal: 'Posizione orizzontale', vertical: 'Posizione verticale',
       random: 'Sposta casualmente la sorgente', nominalPixel: 'pixel nominale', offset: 'offset dal centro', notPerimeter: 'non è un perimetro',
       note: 'La scala è illustrativa. I prodotti reali dipendono dalla geometria del sensore e dall’algoritmo di rilevazione.',
@@ -82,7 +81,7 @@
     en: {
       experiment: 'Experiment 01', title: 'The red dot and the thermal source',
       intro: 'Shrink the cell and move the source: the published symbol remains at the centre of the pixel that contains the anomaly.',
-      status: 'educational', published: 'published hotspot', source: 'simulated source',
+      published: 'published hotspot', source: 'simulated source',
       sensor: 'Conceptual sensor', horizontal: 'Horizontal position', vertical: 'Vertical position',
       random: 'Move source randomly', nominalPixel: 'nominal pixel', offset: 'offset from centre', notPerimeter: 'not a perimeter',
       note: 'The scale is illustrative. Real products depend on sensor geometry and on the detection algorithm.',
@@ -235,7 +234,6 @@
         <div class="lab">
           <div class="head">
             <div><div class="eyebrow">${this.copy.experiment}</div><h3>${this.copy.title}</h3><p>${this.copy.intro}</p></div>
-            <div class="status">${this.copy.status}</div>
           </div>
           <div class="body">
             <div class="stage"><canvas width="900" height="560" aria-label="${this.copy.canvasLabel}"></canvas>
