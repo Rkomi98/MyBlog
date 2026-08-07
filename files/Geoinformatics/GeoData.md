@@ -110,7 +110,7 @@ Su superfici calme (speculari), l'energia è concentrata in un punto della DDM. 
 > 🎮 **Simulazione interattiva.** Vuoi vedere come cambiano le Delay Doppler Map al variare di vento, quota e angolo di incidenza? Prova la [simulazione DDM GNSS-R](Assets/simulations/ddm/index.html) basata sul modello qui descritto.
 
 <iframe
-  src="../../../Assets/simulations/ddm/index.html"
+  src="../Assets/simulations/ddm/index.html"
   title="Simulazione Delay Doppler Map GNSS-R"
   loading="lazy"
   style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -261,7 +261,7 @@ $$d = \frac{\lambda}{4\pi} \Delta \phi\_{unwrapped}$$
 
 Per un satellite in banda C come Sentinel-1 ($\lambda \approx 5.6$ cm), una frangia di interferenza ($2\pi$) corrisponde a uno spostamento di circa 2.8 cm.<sup>14</sup>
 
-<img src="../../../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
+<img src="../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
 _Figura 01: Frange interferometriche e deformazione misurata: esempio di interferogramma. Le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar_
 
 
@@ -272,7 +272,7 @@ Le principali sono:
 - **Subsidenza Urbana:** Monitoraggio della stabilità di edifici e infrastrutture critiche con tecniche avanzate come i Persistent Scatterers (PS-InSAR).<sup>12</sup>
 
 <figure>
-  <video controls src="https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499" style="max-width: 100%; height: auto;"></video>
+  <video controls src="https://sentiwiki.copernicus.eu/__attachments/a_58a75d408e90d9c18f3cbd94b38566ce32ee847ec25a392bba78c5400711e218/1302_001_AR_EN%20(1).mp4" style="max-width: 100%; height: auto;"></video>
   <figcaption>Video 01: Monitoraggio di Venezia (Italia) con Sentinel-1 che consente il monitoraggio continuo dei movimenti del suolo con un'accuratezza dell'ordine di pochi millimetri all'anno.<sup>16</sup></figcaption>
 </figure>
 
@@ -363,7 +363,7 @@ I  coefficienti $\alpha_i$  rappresentano i pesi spettrali. Poiché il sensore p
 
 Di seguito un [esempio di applicazione](https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/) del pansharpening.<sup>21</sup>
 
-<img src="../../../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
+<img src="../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
 Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la risoluzione geometrica estrema consente di distinguere singoli edifici e infrastrutture urbane._
 
 
@@ -400,7 +400,7 @@ Sfrutta le firme spettrali distintive dei materiali. Ad esempio, la clorofilla a
 
 L'uso di bande nello SWIR è fondamentale per discriminare la neve dalle nuvole e per monitorare lo stress idrico della vegetazione.
 
-<img src="../../../Assets/PanvsMulti.png" alt="Confronto tra immagine pancromatica e multispettrale su uno stesso quartiere urbano" title="Differenze tra banda pancromatica e composito multispettrale">
+<img src="../Assets/PanvsMulti.png" alt="Confronto tra immagine pancromatica e multispettrale su uno stesso quartiere urbano" title="Differenze tra banda pancromatica e composito multispettrale">
 _Figura 03: Confronto visivo tra una banda pancromatica ad alta risoluzione e il relativo composito multispettrale: il pancromatico cattura il dettaglio geometrico, mentre il multispettrale preserva la variazione cromatica utile per indici come NDVI e SWIR per discriminare materiali._
 
 
@@ -444,7 +444,7 @@ Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare mater
 
 
 <figure>
-  <img src="../../../Assets/Sea.png" alt="Colori dell'oceano determinati dai costituenti in acqua" title="Colori dell'oceano determinati dai costituenti in acqua">
+  <img src="../Assets/Sea.png" alt="Colori dell'oceano determinati dai costituenti in acqua" title="Colori dell'oceano determinati dai costituenti in acqua">
   <figcaption>
     Il colore dell'oceano è una funzione della luce che viene assorbita o diffusa in presenza dei costituenti disciolti o sospesi nell'acqua. <sup>26</sup>
   </figcaption>
@@ -463,7 +463,7 @@ Dove $a_k$ sono le abbondanze frazionarie. Questo permette di identificare mater
 > 🎮 **Simulazione spettrale.** Metti a confronto visivamente le modalità pancromatica, multispettrale e iperspettrale e osserva come cambiano risoluzione spaziale, spettro campionato e informazioni tematiche. Puoi aprirla a schermo intero dalla [pagina dedicata](Assets/simulations/spectral/index.html).
 
 <iframe
-  src="../../../Assets/simulations/spectral/index.html"
+  src="../Assets/simulations/spectral/index.html"
   title="Simulazione Sensori Spettrali"
   loading="lazy"
   style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -540,7 +540,7 @@ Tra le missioni che secondo me ha senso menzionare sicuramente ci sono:
 > 🎮 **Simulazione TIR interattiva.** Ripercorri la pipeline completa (fotoni → DN → radianza → inversione di Planck) e osserva come emissività e atmosfera spostano la temperatura di brillanza rispetto alla temperatura reale.
 
 <iframe
-  src="../../../Assets/simulations/tir/index.html"
+  src="../Assets/simulations/tir/index.html"
   title="Simulazione TIR: radianza e temperatura"
   loading="lazy"
   style="width: 100%; min-height: 960px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -564,7 +564,7 @@ Frequenze basse ($L-$band ~1.4 GHz) penetrano più in profondità nel suolo, uti
 
 
 <figure>
-  <img src="../../../Assets/Passive.png" alt="Schema di radiometria passiva in microonde" title="Schema di radiometria passiva in microonde">
+  <img src="../Assets/Passive.png" alt="Schema di radiometria passiva in microonde" title="Schema di radiometria passiva in microonde">
   <figcaption>
     Sensore passivo in banda microonde: misura l'emissione naturale, modulata da emissività, temperatura e atmosfera.
   </figcaption>
@@ -613,7 +613,7 @@ Le missioni gravimetriche misurano queste differenze tramite tracciamento di pre
 
 Un’altra tecnica è il **gravimetro a gradiometro** (usato da GOCE): sensori accelerometrici misurano direttamente il gradiente del campo lungo direzioni diverse. In breve, le missioni misurano parametri come: combinazioni lineari delle seconde derivate del potenziale gravitazionale (gradiometria), distanza inter-satellitare (GRACE) o perturbazioni orbitali (dalle quali si invertiscono armoniche sferiche del campo di gravità). I risultati finali sono modelli del geoide (superficie equipotenziale media) e mappe di anomalie gravitazionali (in mGal) statiche e tempo-varianti, o serie temporali di masse equivalenti variabili (come spessore di acqua).
 
-<img src="../../../Assets/geoid.jpg" alt="Modello del geoide terrestre derivato dalle missioni GOCE e GRACE" title="Il geoide terrestre, superficie equipotenziale media ottenuta dalle missioni di gravimetria come GOCE e GRACE">
+<img src="../Assets/geoid.jpg" alt="Modello del geoide terrestre derivato dalle missioni GOCE e GRACE" title="Il geoide terrestre, superficie equipotenziale media ottenuta dalle missioni di gravimetria come GOCE e GRACE">
 _Figura 05: Il geoide terrestre (combinando i dati GOCE/GRACE) visualizza la distribuzione spaziale delle anomalie gravitazionali che questi satelliti misurano e monitorano nel tempo_
 
 
@@ -903,7 +903,7 @@ L'analisi di queste categorie rivela un sistema di osservazione della Terra semp
 
 15. Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, <https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf>
 
-16. Sentinel-1 InSAR (Venezia) video - SentiWiki, <https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499>
+16. Sentinel-1 InSAR (Venezia) video - SentiWiki, <https://sentiwiki.copernicus.eu/__attachments/a_58a75d408e90d9c18f3cbd94b38566ce32ee847ec25a392bba78c5400711e218/1302_001_AR_EN%20(1).mp4>
 
 17. Radar Altimetry Principle and Data Processing by M.-H. Rio, <https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf>
 

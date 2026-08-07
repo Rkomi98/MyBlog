@@ -110,7 +110,7 @@ On calm (specular) surfaces, the energy is concentrated at one point in the DDM.
 > 🎮 **Interactive Simulation.** Do you want to see how Delay Doppler Maps change with varying wind, altitude, and incidence angle? Try the [GNSS-R DDM simulation](Assets/simulations/ddm/index.html) based on the model described here.
 
 <iframe
-  src="../../../Assets/simulations/ddm/index.html"
+  src="../Assets/simulations/ddm/index.html"
   title="GNSS-R Delay Doppler Map Simulation"
   loading="lazy"
   style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -256,7 +256,7 @@ $$d = \frac{\lambda}{4\pi} \Delta \phi\_{unwrapped}$$
 
 For a C-band satellite like Sentinel-1 ($\lambda \approx 5.6$ cm), an interference fringe ($2\pi$) corresponds to a displacement of approximately 2.8 cm.<sup>14</sup>
 
-<img src="../../../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
+<img src="../Assets/phase_diff.png" alt="Frange interferometriche e deformazione misurata" title="Esempio di interferogramma: le frange di fase colorate rappresentano spostamenti millimetrici della superficie rispetto alla linea di vista del radar.">
 _Figure 01: Interferometric fringes and measured deformation: example of an interferogram. The colored phase fringes represent millimeter-scale displacements of the surface relative to the radar's line of sight_
 
 
@@ -267,7 +267,7 @@ The main ones are:
 - **Urban Subsidence:** Monitoring the stability of critical buildings and infrastructure with advanced techniques such as Persistent Scatterers (PS-InSAR).<sup>12</sup>
 
 <figure>
-  <video controls src="https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499" style="max-width: 100%; height: auto;"></video>
+  <video controls src="https://sentiwiki.copernicus.eu/__attachments/a_58a75d408e90d9c18f3cbd94b38566ce32ee847ec25a392bba78c5400711e218/1302_001_AR_EN%20(1).mp4" style="max-width: 100%; height: auto;"></video>
   <figcaption>Video 01: Monitoring of Venice (Italy) with Sentinel-1, which allows continuous monitoring of ground movements with an accuracy of a few millimeters per year.<sup>16</sup></figcaption>
 </figure>
 
@@ -354,7 +354,7 @@ I coefficienti $\alpha_i$ rappresentano i pesi spettrali. Poiché il sensore pan
 
 Di seguito un [esempio di applicazione](https://www.satimagingcorp.com/satellite-sensors/superview-neo-satellite-constellation/) del pansharpening.<sup>21</sup>
 
-<img src="../../../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
+<img src="../Assets/Doha.jpg" alt="Immagine pancromatica satellitare della skyline di Doha" title="Esempio di immagine pancromatica ad altissima risoluzione di Doha">
 Figura 02: _Skyline di Doha ripreso da una scena pancromatica sub-metrica: la risoluzione geometrica estrema consente di distinguere singoli edifici e infrastrutture urbane._
 
 #### Missioni
@@ -387,7 +387,7 @@ It exploits the distinctive spectral signatures of materials. For example, chlor
 
 The use of SWIR bands is fundamental for discriminating snow from clouds and for monitoring vegetation water stress.
 
-<img src="../../../Assets/PanvsMulti.png" alt="Comparison between panchromatic and multispectral image of the same urban neighborhood" title="Differences between panchromatic band and multispectral composite">
+<img src="../Assets/PanvsMulti.png" alt="Comparison between panchromatic and multispectral image of the same urban neighborhood" title="Differences between panchromatic band and multispectral composite">
 _Figure 03: Visual comparison between a high-resolution panchromatic band and its multispectral composite: the panchromatic captures geometric detail, while the multispectral preserves chromatic variation useful for indices like NDVI and SWIR to discriminate materials._
 
 #### Applications and missions
@@ -425,7 +425,7 @@ Where $a_k$ are the fractional abundances. This allows for the identification of
 - **Water Quality:** Distinction between different algal species and sediments.<sup>26</sup>
 
 <figure>
-  <img src="../../../Assets/Sea.png" alt="Ocean colors determined by constituents in water" title="Ocean colors determined by constituents in water">
+  <img src="../Assets/Sea.png" alt="Ocean colors determined by constituents in water" title="Ocean colors determined by constituents in water">
   <figcaption>
     The color of the ocean is a function of the light that is absorbed or scattered in the presence of dissolved or suspended constituents in the water. <sup>26</sup>
   </figcaption>
@@ -443,7 +443,7 @@ Where $a_k$ are the fractional abundances. This allows for the identification of
 > 🎮 **Spectral simulation.** Visually compare panchromatic, multispectral, and hyperspectral modes and observe how spatial resolution, sampled spectrum, and thematic information change. You can open it full screen from the [dedicated page](Assets/simulations/spectral/index.html).
 
 <iframe
-  src="../../../Assets/simulations/spectral/index.html"
+  src="../Assets/simulations/spectral/index.html"
   title="Spectral Sensor Simulation"
   loading="lazy"
   style="width: 100%; min-height: 720px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -520,7 +520,7 @@ Among the missions that I think are definitely worth mentioning are:
 > 🎮 **Interactive TIR Simulation.** Follow the complete pipeline (photons → DN → radiance → Planck inversion) and observe how emissivity and atmosphere shift the brightness temperature relative to the real temperature.
 
 <iframe
-  src="../../../Assets/simulations/tir/index.html"
+  src="../Assets/simulations/tir/index.html"
   title="Simulazione TIR: radianza e temperatura"
   loading="lazy"
   style="width: 100%; min-height: 960px; border: 1px solid #e5e7eb; border-radius: 18px; margin: 16px 0;"
@@ -542,7 +542,7 @@ For example, liquid water has low emissivity in the microwave band, so the cold 
 Low frequencies ($L-$band ~1.4 GHz) penetrate deeper into the soil, useful for humidity; high frequencies ($K/Ka-$band) are more sensitive to vapor and rain. In bands around atmospheric absorption lines (e.g., 22 GHz water vapor, 60 GHz oxygen), temperature and gas content for atmospheric layers can be deduced (microwave sounding).
 
 <figure>
-  <img src="../../../Assets/Passive.png" alt="Passive microwave radiometry diagram" title="Passive microwave radiometry diagram">
+  <img src="../Assets/Passive.png" alt="Passive microwave radiometry diagram" title="Passive microwave radiometry diagram">
   <figcaption>
     Passive microwave band sensor: measures natural emission, modulated by emissivity, temperature, and atmosphere.
   </figcaption>
@@ -589,7 +589,7 @@ Gravimetric missions measure these differences through precision tracking: for e
 
 Another technique is the **gradiometer gravimeter** (used by GOCE): accelerometric sensors directly measure the field gradient along different directions. In short, missions measure parameters such as: linear combinations of the second derivatives of the gravitational potential (gradiometry), inter-satellite distance (GRACE), or orbital perturbations (from which spherical harmonics of the gravity field are inverted). The final results are geoid models (mean equipotential surface) and maps of static and time-varying gravitational anomalies (in mGal), or time series of variable equivalent masses (such as water thickness).
 
-<img src="../../../Assets/geoid.jpg" alt="Earth geoid model derived from GOCE and GRACE missions" title="The Earth's geoid, mean equipotential surface obtained from gravimetry missions like GOCE and GRACE">
+<img src="../Assets/geoid.jpg" alt="Earth geoid model derived from GOCE and GRACE" title="The Earth's geoid, mean equipotential surface obtained from gravimetry missions like GOCE and GRACE">
 _Figure 05: The Earth's geoid (combining GOCE/GRACE data) visualizes the spatial distribution of gravitational anomalies that these satellites measure and monitor over time_
 
 ### Physical Operation: Satellite-to-Satellite Tracking (SST)
@@ -872,7 +872,7 @@ The analysis of these categories reveals an increasingly interconnected and mult
 
 15. Sentinel-1 InSAR Processing using S1TBX - Alaska Satellite Facility, <https://asf.alaska.edu/wp-content/uploads/2019/05/generate_insar_with_s1tbx_v5.4.pdf>
 
-16. Sentinel-1 InSAR (Venice) video - SentiWiki, <https://sentiwiki.copernicus.eu/__attachments/1680568/1302_001_AR_EN%20(1).mp4?inst-v=edeeb585-a079-43c5-850b-337320319499>
+16. Sentinel-1 InSAR (Venice) video - SentiWiki, <https://sentiwiki.copernicus.eu/__attachments/a_58a75d408e90d9c18f3cbd94b38566ce32ee847ec25a392bba78c5400711e218/1302_001_AR_EN%20(1).mp4>
 
 17. Radar Altimetry Principle and Data Processing by M.-H. Rio, <https://ftp.itc.nl/pub/Dragon4_Lecturer_2018/D2_Tue/L1/D2L1-DRAGON_OTC18_Altimetry1_mhr.pdf>
 
