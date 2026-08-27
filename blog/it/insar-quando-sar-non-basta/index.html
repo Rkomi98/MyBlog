@@ -1,0 +1,2467 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InSAR: Quando SAR non basta | Mirko Calcaterra</title>
+  <meta name="description" content="InSAR: Quando SAR non basta Qualche anno fa, durante un progetto universitario sull&#39;alluvione che ha colpito l&#39;EmiliaRomagna nel maggio 2023, avevo già messo le mani in pasta su dati Sentinel1. L&#39;obiettivo era a quel tempo era distinguere l&#39;acqua comparsa dop…">
+  <meta name="keywords" content="InSAR, SAR, Sentinel-1, Earth Observation, Remote Sensing, Deformazione del suolo, Geoinformatica, Mirko Calcaterra">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/insar-quando-sar-non-basta/">
+  <meta property="og:title" content="InSAR: Quando SAR non basta">
+  <meta property="og:description" content="InSAR: Quando SAR non basta Qualche anno fa, durante un progetto universitario sull&#39;alluvione che ha colpito l&#39;EmiliaRomagna nel maggio 2023, avevo già messo le mani in pasta su dati Sentinel1. L&#39;obiettivo era a quel tempo era distinguere l&#39;acqua comparsa dop…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-08-27T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="Geoinformatica">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="InSAR: Quando SAR non basta">
+  <meta property="twitter:description" content="InSAR: Quando SAR non basta Qualche anno fa, durante un progetto universitario sull&#39;alluvione che ha colpito l&#39;EmiliaRomagna nel maggio 2023, avevo già messo le mani in pasta su dati Sentinel1. L&#39;obiettivo era a quel tempo era distinguere l&#39;acqua comparsa dop…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "InSAR: Quando SAR non basta",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-08-27T00:00:00.000Z",
+    "dateModified": "2026-08-27T09:54:47.351Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "InSAR: Quando SAR non basta Qualche anno fa, durante un progetto universitario sull&#39;alluvione che ha colpito l&#39;EmiliaRomagna nel maggio 2023, avevo già messo le mani in pasta su dati Sentinel1. L&#39;obiettivo era a quel tempo era distinguere l&#39;acqua comparsa dop…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      position: relative;
+      font-family: 'Charter', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --bg-card-strong: rgba(11, 17, 32, 0.92);
+      --border: rgba(148, 163, 184, 0.2);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --surface: #1e293b;
+      --shadow-lg: 0 28px 60px -36px rgba(2, 6, 23, 0.9);
+      --code-inline-bg: rgba(30, 41, 59, 0.88);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.2);
+      --code-shadow: 0 12px 32px rgba(2, 6, 23, 0.45);
+      --code-text: #cbd5e1;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f6f8f7;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(255, 255, 255, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #059669;
+      --accent-strong: #047857;
+      --surface: #f1f5f9;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.16);
+      --code-inline-bg: rgba(226, 232, 240, 0.9);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.24);
+      --code-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 16;
+      width: 100%;
+      height: 2px;
+      background: rgba(148, 163, 184, 0.25);
+    }
+    .reading-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #22c55e 55%, #2dd4bf 100%);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+      transition: width 0.1s ease-out;
+    }
+    .site-header__inner,
+    .site-nav,
+    .lang-btn,
+    .theme-toggle,
+    .post-toc,
+    footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-hero__title,
+    .post-body h2,
+    .post-body h3,
+    .post-body h4,
+    .post-body .post-warning summary,
+    .post-toc__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(5, 150, 105, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(5, 150, 105, 0.08);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(15, 23, 42, 0.55) 70%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 22%, rgba(16, 185, 129, 0.18) 0%, transparent 56%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.13);
+      color: var(--accent-strong);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__author {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--accent);
+    }
+    .post-hero__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      object-fit: cover;
+      background: var(--surface);
+    }
+    .post-hero__author-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .post-hero__author-name {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .post-hero__author-meta {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.12rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body ul li::marker,
+    .post-body ol li::marker {
+      color: var(--accent);
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body .inline-note {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.15rem;
+    }
+    .post-body .inline-note__trigger {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      margin: 0 0 0 0.08rem;
+      vertical-align: super;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
+    }
+    .post-body .inline-note__trigger:hover {
+      color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
+    }
+    .post-body .inline-note__popup {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.6rem);
+      width: min(360px, 80vw);
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-lg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      z-index: 8;
+      display: none;
+    }
+    .post-body .inline-note__popup strong {
+      color: var(--text-primary);
+    }
+    .post-body .inline-note--open .inline-note__popup {
+      display: block;
+    }
+    body[data-theme="light"] .post-body .inline-note__popup {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 0.75rem 1.2rem;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      background: rgba(30, 41, 59, 0.45);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.98rem;
+      font-style: italic;
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--accent-strong);
+      padding: 0.15rem 0.42rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+    }
+    .post-code-card pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--code-text);
+    }
+    .post-body pre {
+      margin: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
+    .post-body .mermaid-diagram {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-body .mermaid-diagram pre.mermaid {
+      margin: 0;
+    }
+    .post-body .mermaid-diagram__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .mermaid-diagram__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .mermaid-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 1000;
+    }
+    .mermaid-overlay--visible {
+      display: flex;
+    }
+    .mermaid-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1280px, 94vw);
+      max-height: 88vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .mermaid-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      z-index: 2;
+    }
+    .mermaid-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .mermaid-overlay__scroll {
+      overflow: auto;
+      max-height: 88vh;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .mermaid-overlay__scroll svg {
+      max-width: none;
+      height: auto;
+    }
+    body[data-theme="light"] .post-body .mermaid-diagram__expand {
+      background: rgba(248, 250, 252, 0.92);
+    }
+    body[data-theme="light"] .mermaid-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .mermaid-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-code-card pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: var(--code-text);
+    }
+    .post-code-card {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-code-card__language {
+      position: absolute;
+      right: 1rem;
+      top: -0.62rem;
+      z-index: 2;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      color: var(--accent-strong);
+      text-transform: uppercase;
+    }
+    .post-code-card__frame {
+      background: var(--code-block-bg);
+      border-radius: 12px;
+      border: 1px solid var(--code-border);
+      box-shadow: var(--code-shadow);
+      overflow: hidden;
+    }
+    .post-code-card__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.48rem 0.78rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-code-card__window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      flex: 0 0 auto;
+    }
+    .post-code-card__window-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .post-code-card__window-dot--red {
+      background: rgba(248, 113, 113, 0.25);
+      border-color: rgba(248, 113, 113, 0.6);
+    }
+    .post-code-card__window-dot--yellow {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .post-code-card__window-dot--green {
+      background: rgba(74, 222, 128, 0.22);
+      border-color: rgba(74, 222, 128, 0.65);
+    }
+    .post-code-card__filename {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-code-card__body {
+      padding: 0.95rem 1rem;
+      overflow-x: auto;
+    }
+    .post-code-card__body::-webkit-scrollbar {
+      height: 6px;
+    }
+    .post-code-card__body::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #c084fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #4ade80;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #fb923c;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .code-copy-btn {
+      margin-left: auto;
+      background: transparent;
+      color: var(--text-muted);
+      border: 0;
+      border-radius: 999px;
+      padding: 0.25rem 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .code-copy-btn__icon {
+      font-size: 0.88rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      color: var(--text-muted);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 2.2rem 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: var(--surface);
+      opacity: 0.88;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .article-figure {
+      margin: 2.4rem 0;
+    }
+    .post-body .article-figure img {
+      width: 100%;
+      display: block;
+      margin: 0;
+    }
+    .post-body .article-figure figcaption {
+      margin-top: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .post-body .article-figure figcaption strong {
+      color: var(--text-primary);
+    }
+    .post-body .article-figure--wide {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1500px, calc(100vw - 4rem));
+      max-width: none;
+    }
+    body[data-theme="light"] .post-body .article-figure figcaption {
+      color: var(--text-muted);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+        font-size: 1.04rem;
+      }
+      .post-body .article-figure--wide {
+        left: auto;
+        transform: none;
+        width: 100%;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-hero__author {
+        gap: 0.7rem;
+      }
+      .post-hero__author-meta {
+        font-size: 0.78rem;
+      }
+      .post-code-card__header {
+        padding: 0.45rem 0.6rem;
+      }
+      .post-code-card__filename {
+        max-width: 36vw;
+      }
+      .code-copy-btn__text {
+        display: none;
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .post-body .mermaid-diagram__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+      .mermaid-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      const labels = document.documentElement.lang === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full screen', close: 'Close' };
+      let overlay = null;
+      let overlayScroll = null;
+
+      const ensureOverlay = () => {
+        if (overlay) {
+          return;
+        }
+        overlay = document.createElement('div');
+        overlay.className = 'mermaid-overlay';
+        overlay.innerHTML =
+          '<div class="mermaid-overlay__content">' +
+            '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
+            '<div class="mermaid-overlay__scroll"></div>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
+        const closeButton = overlay.querySelector('.mermaid-overlay__close');
+        closeButton?.addEventListener('click', () => {
+          overlay.classList.remove('mermaid-overlay--visible');
+          document.body.classList.remove('no-scroll');
+          if (overlayScroll) {
+            overlayScroll.innerHTML = '';
+          }
+        });
+        overlay.addEventListener('click', (event) => {
+          if (event.target === overlay) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+      };
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      await mermaid.run({ querySelector: '.mermaid' });
+
+      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+        if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-diagram';
+        diagram.parentNode.insertBefore(wrapper, diagram);
+        wrapper.appendChild(diagram);
+
+        const expandButton = document.createElement('button');
+        expandButton.type = 'button';
+        expandButton.className = 'mermaid-diagram__expand';
+        expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
+        expandButton.setAttribute('aria-label', labels.expand);
+        expandButton.addEventListener('click', () => {
+          ensureOverlay();
+          if (!overlay || !overlayScroll) {
+            return;
+          }
+          overlayScroll.innerHTML = '';
+          const clone = diagram.cloneNode(true);
+          overlayScroll.appendChild(clone);
+          overlay.classList.add('mermaid-overlay--visible');
+          document.body.classList.add('no-scroll');
+        });
+        wrapper.appendChild(expandButton);
+      });
+    }
+  </script>
+</head>
+<body data-theme="dark">
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="reading-progress-bar"></div>
+  </div>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🛰️</div>
+        <span class="post-hero__category">Geoinformatica</span>
+        <h1 class="post-hero__title">InSAR: Quando SAR non basta</h1>
+        <div class="post-hero__author">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
+          <div class="post-hero__author-text">
+            <span class="post-hero__author-name">Mirko Calcaterra</span>
+            <span class="post-hero__author-meta">27 agosto 2026 • 27 min</span>
+          </div>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#lo-stesso-pixel-racconta-due-storie">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Lo stesso pixel racconta due storie</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#la-fase-non-una-distanza">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">La fase non è una distanza</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#due-immagini-non-bastano-devono-anche-parlarsi">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Due immagini non bastano: devono anche parlarsi</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#quelle-frange-colorate-non-sono-decorazione">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Quelle frange colorate non sono decorazione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#linterferogramma-contiene-pi-cose-di-quante-ne-vorremmo">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">L&#39;interferogramma contiene più cose di quante ne vorremmo</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#la-topografia">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">La topografia</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#latmosfera">
+            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__text">L&#39;atmosfera</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#le-orbite">
+            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__text">Le orbite</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#il-bersaglio-stesso">
+            <span class="post-toc__number">5.4</span>
+            <span class="post-toc__text">Il bersaglio stesso</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#coherence-quando-due-acquisizioni-si-riconoscono">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">Coherence: quando due acquisizioni si riconoscono</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#wrapped-unwrapped-e-il-problema-dellorologio">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">Wrapped, unwrapped e il problema dell&#39;orologio</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#il-satellite-vede-soltanto-lombra-del-movimento">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">Il satellite vede soltanto l&#39;ombra del movimento</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#un-interferogramma-una-fotografia-una-serie-temporale-un-film">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">Un interferogramma è una fotografia. Una serie temporale è un film</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#persistent-scatterer-interferometry">
+            <span class="post-toc__number">9.1</span>
+            <span class="post-toc__text">Persistent Scatterer Interferometry</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#small-baseline-subset">
+            <span class="post-toc__number">9.2</span>
+            <span class="post-toc__text">Small Baseline Subset</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#quando-linsar-smette-di-essere-un-esperimento-e-diventa-un-servizio">
+            <span class="post-toc__number">10</span>
+            <span class="post-toc__text">Quando l&#39;InSAR smette di essere un esperimento e diventa un servizio</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#basic-calibrated-ortho">
+            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__text">Basic, Calibrated, Ortho</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#metro-c-pochi-millimetri-sotto-una-citt-enorme">
+            <span class="post-toc__number">11</span>
+            <span class="post-toc__text">Metro C: pochi millimetri sotto una città enorme</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#non-tutti-i-radar-parlano-con-la-stessa-voce">
+            <span class="post-toc__number">12</span>
+            <span class="post-toc__text">Non tutti i radar parlano con la stessa voce</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#un-esempio-italiano-in-banda-x-il-parco-archeologico-di-sibari">
+            <span class="post-toc__number">13</span>
+            <span class="post-toc__text">Un esempio italiano in banda X: il Parco archeologico di Sibari</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#dallslc-alla-mappa-di-deformazione">
+            <span class="post-toc__number">14</span>
+            <span class="post-toc__text">Dall&#39;SLC alla mappa di deformazione</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#torniamo-allemilia-romagna">
+            <span class="post-toc__number">15</span>
+            <span class="post-toc__text">Torniamo all&#39;Emilia-Romagna</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#quando-linsar-non-la-risposta-giusta">
+            <span class="post-toc__number">16</span>
+            <span class="post-toc__text">Quando l&#39;InSAR non è la risposta giusta</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#se-lho-capito-davvero-dovrei-saper-rispondere-a-queste-domande">
+            <span class="post-toc__number">17</span>
+            <span class="post-toc__text">Se l&#39;ho capito davvero, dovrei saper rispondere a queste domande</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#tirando-le-fila">
+            <span class="post-toc__number">18</span>
+            <span class="post-toc__text">Tirando le fila</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#fonti-e-approfondimenti">
+            <span class="post-toc__number">19</span>
+            <span class="post-toc__text">Fonti e approfondimenti</span>
+          </a>
+          
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <p>Qualche anno fa, durante un progetto universitario sull&#39;alluvione che ha colpito l&#39;Emilia-Romagna nel maggio 2023, avevo già messo le mani in pasta su dati Sentinel-1. L&#39;obiettivo era a quel tempo era distinguere l&#39;acqua comparsa dopo l&#39;evento dai “corpi idrici permanenti” (laghi, fiumi, ecc) e capire quanto il preprocessing, in particolare la rimozione del rumore termico, influenzasse il risultato finale.</p>
+<p>In quel lavoro il protagonista assoluto è stato il <strong>backscatter</strong>. Guardavo quanta energia tornava indietro verso il satellite, come cambiava tra due acquisizioni e cosa potevo dedurne sulla superficie osservata. La fase del segnale c&#39;era, naturalmente, ma restava dietro le quinte.</p>
+<p>Poi inizi a studiare l&#39;InSAR e scopri che quella comparsa secondaria era in realtà capace di fare una cosa piuttosto sorprendente: misurare da centinaia di chilometri di quota spostamenti del terreno dell&#39;ordine dei centimetri e, nelle serie temporali ben costruite, dei millimetri.</p>
+<p>Il punto interessante è che il satellite non diventa improvvisamente più preciso. È sempre lo stesso radar. Siamo noi a fargli una domanda diversa.</p>
+<p>Quindi facciamo un passo indietro. Prima di parlare di interferogrammi, frange colorate, Persistent Scatterer e serie temporali, conviene capire che cosa contiene davvero un pixel SAR.</p>
+<hr>
+<h2 id="lo-stesso-pixel-racconta-due-storie">Lo stesso pixel racconta due storie</h2>
+<p>Un&#39;immagine radar non nasce come una fotografia in bianco e nero. Nei prodotti <strong>SLC, Single Look Complex</strong>, ogni pixel è un numero complesso e può essere descritto attraverso due grandezze: <strong>ampiezza</strong> e <strong>fase</strong>.</p>
+<p>L&#39;ampiezza ci dice, semplificando, quanto è forte il segnale tornato verso l&#39;antenna. Da lì derivano l&#39;intensità e, dopo la calibrazione radiometrica, grandezze come sigma naught usate per ragionare sul backscatter della superficie.</p>
+<p>La fase racconta invece <em>dove</em> ci troviamo all&#39;interno del ciclo dell&#39;onda elettromagnetica ricevuta.</p>
+<p>Questa distinzione sembra innocua. In realtà separa due mondi applicativi.</p>
+<p>Con l&#39;ampiezza posso osservare che l&#39;acqua tende a restituire al radar un segnale debole quando la superficie è relativamente liscia e riflette specularmente l&#39;energia lontano dal sensore. Posso quindi usarla per flood mapping, classificazione, change detection e una quantità di altre applicazioni.</p>
+<p>Con la fase posso confrontare due acquisizioni e accorgermi che la distanza tra satellite e terreno è cambiata di una piccolissima frazione della lunghezza d&#39;onda.</p>
+<p>Ed è qui che comincia l&#39;InSAR.</p>
+<blockquote>
+<p><strong>Definizione — SAR</strong><br>Il <strong>Synthetic Aperture Radar</strong> è un radar attivo: illumina la superficie con microonde e misura il segnale che torna al sensore. Il movimento della piattaforma lungo l&#39;orbita viene sfruttato per sintetizzare un&#39;antenna molto più grande di quella fisicamente disponibile e ottenere una risoluzione in azimuth molto più fine di quella di un radar ad apertura reale.</p>
+</blockquote>
+<p>Sentinel-1 opera in <strong>banda C a 5,405 GHz</strong>, quindi con una lunghezza d&#39;onda di circa <strong>5,55 cm</strong>. La modalità principale sulle terre emerse è l&#39;<strong>Interferometric Wide Swath</strong>, o IW: circa <strong>250 km di swath</strong> con una risoluzione nominale di <strong>5 × 20 m</strong>. Il nome della modalità non è casuale: la missione è stata progettata anche per consentire interferometria sistematica su grandi aree.[^s1-facts] [^s1-instrument]</p>
+<blockquote>
+<p><strong>Da ricordare — Perché serve un prodotto SLC?</strong><br>Per fare interferometria non basta conoscere quanto è intensa la risposta radar. Serve conservare l&#39;informazione complessa, quindi anche la fase. I prodotti GRD sono già stati rilevati e non mantengono la fase necessaria per costruire un interferogramma.[^s1-products]</p>
+</blockquote>
+<hr>
+<h2 id="la-fase-non-una-distanza">La fase non è una distanza</h2>
+<p>Qui vale la pena fermarsi un momento, perché è uno dei punti su cui si inciampa più facilmente.</p>
+<p>Se il radar riceve un&#39;onda con una certa fase, <strong>non può ricavare da quella sola fase la distanza assoluta del bersaglio</strong>. La fase viene osservata modulo (2\pi): dopo un giro completo siamo di nuovo nello stesso punto del ciclo.</p>
+<p>È un po&#39; come guardare soltanto la lancetta dei secondi di un orologio. Se segna 15, sai in quale posizione si trova, ma non puoi sapere se siano passati 15 secondi, 75 o 135 senza un&#39;informazione aggiuntiva.</p>
+<p>L&#39;InSAR aggira il problema confrontando acquisizioni della <strong>stessa area</strong>, riprese con una geometria sufficientemente simile in tempi diversi.</p>
+<p>Se tra le due acquisizioni il bersaglio si è mosso lungo la direzione satellite-terreno, cambia la distanza percorsa dall&#39;onda. E cambia la fase.</p>
+<p>Per una variazione di distanza lungo la <strong>Line of Sight</strong>, la relazione fondamentale è:</p>
+<p>$$
+\Delta \phi_{def} = \frac{4\pi}{\lambda},d_{LOS}
+$$</p>
+<p>Il fattore 4, invece del 2 che potremmo aspettarci a prima vista, viene dal viaggio di andata e ritorno del segnale: se il terreno si sposta di (d), il cammino radar cambia di (2d).</p>
+<p>Da questa equazione segue una conseguenza molto utile:</p>
+<p>$$
+2\pi \quad \longleftrightarrow \quad \frac{\lambda}{2}
+$$</p>
+<p>Con Sentinel-1, (\lambda/2) vale circa <strong>2,8 cm</strong>.</p>
+<p>Tieniamolo a mente. Tra poco ricomparirà in Italia centrale.</p>
+<blockquote>
+<p><strong>Definizione — Line of Sight (LOS)</strong><br>L&#39;InSAR non misura direttamente «quanto il terreno è sceso» o «quanto si è mosso verso est». Misura la <strong>proiezione dello spostamento tridimensionale lungo la linea che unisce il satellite al bersaglio</strong>. È una distinzione piccola sulla carta e decisiva quando si interpretano i risultati.</p>
+</blockquote>
+<hr>
+<h2 id="due-immagini-non-bastano-devono-anche-parlarsi">Due immagini non bastano: devono anche parlarsi</h2>
+<p>Prendiamo due acquisizioni SAR della stessa zona. Per costruire un interferogramma, i pixel che stiamo confrontando devono riferirsi agli stessi bersagli a terra con una precisione molto elevata. Il primo passaggio serio è quindi la <strong>co-registrazione</strong>.</p>
+<p>Poi si combina il segnale complesso delle due immagini, moltiplicando un&#39;immagine per il complesso coniugato dell&#39;altra. Quello che interessa è la differenza di fase.</p>
+<p>Fin qui sembrerebbe quasi troppo facile.</p>
+<p>Il problema è che il satellite non ripassa esattamente dallo stesso punto nello spazio. La distanza tra le due orbite viene descritta dalla <strong>baseline interferometrica</strong>, che può essere scomposta in diverse componenti; per la sensibilità alla topografia e alla decorrelazione geometrica, la <strong>baseline perpendicolare</strong> è particolarmente importante.</p>
+<p>Sentinel-1 beneficia di un controllo orbitale molto stretto proprio perché il repeat-pass interferometry richiede geometrie simili per mantenere una buona coerenza tra le acquisizioni.[^s1-baseline]</p>
+<blockquote>
+<p><strong>Definizione — InSAR</strong><br>Con <strong>Interferometric Synthetic Aperture Radar</strong> si indica l&#39;insieme di tecniche che sfruttano la differenza di fase tra due o più acquisizioni SAR per ricavare informazioni sulla topografia e/o sulla deformazione della superficie.[^nasa-handbook]</p>
+</blockquote>
+<p>Quando l&#39;obiettivo è isolare la deformazione rimuovendo il contributo topografico, entriamo più precisamente nel territorio della <strong>Differential InSAR, DInSAR</strong>.</p>
+<hr>
+<h2 id="quelle-frange-colorate-non-sono-decorazione">Quelle frange colorate non sono decorazione</h2>
+<p>Il 24 agosto 2016 un terremoto colpì l&#39;Italia centrale. ESA e CNR-IREA combinarono acquisizioni Sentinel-1 prese prima e dopo l&#39;evento per costruire un interferogramma della zona deformata.</p>
+<p>Nell&#39;immagine apparvero <strong>sette frange interferometriche</strong>. ESA quantificò il loro significato in modo quasi didattico: le sette frange corrispondevano a circa <strong>20 cm di deformazione lungo la linea di vista del radar</strong>, mentre ogni ciclo completo di colore rappresentava circa <strong>2,8 cm di spostamento</strong>.[^italy-august]</p>
+<p>Eccolo di nuovo, il nostro (\lambda/2).</p>
+<p>Un interferogramma visualizza normalmente la fase <em>wrapped</em>, cioè confinata in un intervallo di ampiezza (2\pi). Quando la fase supera il limite, ricomincia il ciclo cromatico. Ogni giro completo è una frangia.</p>
+<p>Per questo, se guardi un interferogramma co-sismico, quelle bande concentriche assomigliano un po&#39; alle curve di livello di una carta topografica. Solo che non stanno contando metri di quota: stanno contando cicli di fase.</p>
+<blockquote>
+<p><strong>Caso reale — Italia centrale, agosto 2016</strong><br>Sentinel-1B acquisì l&#39;area il 20 agosto e Sentinel-1A il 26 agosto, due giorni dopo il terremoto del 24. Nell&#39;interferogramma pubblicato da ESA, sette cicli completi corrispondevano a circa 20 cm di deformazione LOS. È uno dei casi più puliti per collegare visivamente fase, frange e spostamento.[^italy-august]</p>
+</blockquote>
+<p>C&#39;è però un dettaglio che non va perso: <strong>contare le frange non significa avere automaticamente lo spostamento tridimensionale del terreno</strong>. Stiamo sempre osservando una proiezione lungo la LOS.</p>
+<p>Su questo torniamo tra poco.</p>
+<hr>
+<h2 id="linterferogramma-contiene-pi-cose-di-quante-ne-vorremmo">L&#39;interferogramma contiene più cose di quante ne vorremmo</h2>
+<p>A questo punto potremmo essere tentati di dire: differenza di fase uguale deformazione.</p>
+<p>Ed è qui che casca l&#39;asino.</p>
+<p>La fase interferometrica non è un misuratore che restituisce direttamente il movimento. È una somma di contributi. Una forma utile per pensarla è:</p>
+<p>$$
+\Delta \phi =
+\Delta \phi_{def}</p>
+<ul>
+<li>\Delta \phi_{topo}</li>
+<li>\Delta \phi_{orb}</li>
+<li>\Delta \phi_{atmo}</li>
+<li>\Delta \phi_{scatt}</li>
+<li>\Delta \phi_{noise}
+$$</li>
+</ul>
+<p>La letteratura InSAR separa infatti il contributo della <strong>deformazione</strong> da quello della topografia residua, degli errori orbitali, dell&#39;atmosfera, dei cambiamenti nello scattering e del rumore.[^phase-components]</p>
+<p>Il nostro lavoro consiste nel togliere, modellare o ridurre tutto ciò che non è il segnale che stiamo cercando.</p>
+<h3 id="la-topografia">La topografia</h3>
+<p>Due orbite leggermente differenti «vedono» il rilievo con geometrie diverse, e questo introduce un contributo di fase. Nel DInSAR si usa un <strong>Digital Elevation Model</strong> per simulare la componente topografica e sottrarla. Se il DEM contiene errori, una parte di quel contributo rimane e si comporta come topografia residua.</p>
+<h3 id="latmosfera">L&#39;atmosfera</h3>
+<p>Il segnale radar attraversa l&#39;atmosfera due volte. Variazioni di pressione, temperatura, umidità e contenuto elettronico della ionosfera modificano il ritardo di propagazione. Se le condizioni sono diverse tra le acquisizioni, la differenza può finire dentro l&#39;interferogramma e sembrare movimento.[^atmosphere]</p>
+<h3 id="le-orbite">Le orbite</h3>
+<p>Orbiti imperfettamente note lasciano rampe e contributi a grande scala. Da qui l&#39;importanza delle orbite precise e della modellazione geometrica.</p>
+<h3 id="il-bersaglio-stesso">Il bersaglio stesso</h3>
+<p>Se tra due acquisizioni cambia il modo in cui la cella radar diffonde l&#39;energia — vegetazione che cresce, neve che compare, terreno che si bagna, una frana che stravolge la superficie — la fase può diventare instabile.</p>
+<p>Ed è qui che entra una parola che torna continuamente nell&#39;InSAR: <strong>coherence</strong>.</p>
+<hr>
+<h2 id="coherence-quando-due-acquisizioni-si-riconoscono">Coherence: quando due acquisizioni si riconoscono</h2>
+<p>La <strong>coerenza interferometrica</strong> misura la stabilità della relazione complessa tra le due acquisizioni. Viene normalmente espressa tra <strong>0 e 1</strong>: valori prossimi a 1 indicano una forte correlazione interferometrica; valori bassi indicano che la fase è diventata poco affidabile per stimare la deformazione.[^nasa-coherence]</p>
+<p>Detta così sembra soltanto un indicatore di qualità. In realtà è più interessante.</p>
+<p>La coerenza può diminuire perché le orbite sono troppo differenti, perché è passato troppo tempo, perché il terreno è cambiato, perché la vegetazione si è mossa, perché è comparsa neve, perché è cambiata l&#39;umidità superficiale. ESA, nella propria pipeline di coherence Sentinel-1, cita esplicitamente dinamiche della vegetazione, copertura nevosa, umidità e movimenti di massa tra le cause della decorrelazione temporale.[^apex-coherence]</p>
+<p>In altre parole, una bassa coerenza può dirti che il tuo interferogramma è poco affidabile. Ma può anche dirti che <strong>sulla superficie è successo qualcosa</strong>.</p>
+<p>Questa doppia natura è facile da dimenticare.</p>
+<blockquote>
+<p><strong>Caso reale — Kåfjord, Norvegia</strong><br>Due acquisizioni Sentinel-1A del 30 agosto e del 23 settembre 2014 furono combinate per osservare una frana nel comune di Kåfjord, nella contea di Troms. Nei 24 giorni tra le due acquisizioni il terreno si era mosso di circa <strong>1 cm</strong>. Il caso è interessante perché mostra l&#39;InSAR non come fotografia di un evento impulsivo, ma come strumento per seguire movimenti lenti di versante.[^kafjord]</p>
+</blockquote>
+<blockquote>
+<p><strong>Attenzione — Una frana veloce può essere più difficile di una lenta</strong><br>Se un evento modifica troppo la superficie tra due acquisizioni, i meccanismi di scattering possono cambiare al punto da perdere coerenza. L&#39;InSAR non ha quindi un rapporto semplice del tipo «più grande è il movimento, più facile è misurarlo». Contano velocità, gradiente spaziale della deformazione, geometria e stabilità dello scattering. In alcuni casi la perdita di coerenza diventa essa stessa un&#39;informazione utile per delimitare l&#39;area cambiata.</p>
+</blockquote>
+<hr>
+<h2 id="wrapped-unwrapped-e-il-problema-dellorologio">Wrapped, unwrapped e il problema dell&#39;orologio</h2>
+<p>Torniamo per un attimo alla nostra lancetta dei secondi.</p>
+<p>La fase osservata è wrapped: conosciamo la posizione nel ciclo, ma non sappiamo quanti giri completi ci siano stati. Per passare da un interferogramma a una mappa continua di spostamento dobbiamo ricostruire quei multipli di (2\pi).</p>
+<p>È il <strong>phase unwrapping</strong>.</p>
+<p>L&#39;idea sembra semplice: se un pixel vale quasi (+\pi) e quello accanto quasi (-\pi), probabilmente non è avvenuto un salto fisico enorme; abbiamo semplicemente attraversato il confine convenzionale dell&#39;intervallo di fase.</p>
+<p>Nella realtà, però, il phase unwrapping può diventare uno dei passaggi più delicati della catena. Rumore, bassa coerenza e forti gradienti di deformazione possono produrre errori di un intero multiplo di (2\pi). E un errore di un ciclo, con Sentinel-1, significa circa 2,8 cm di errore LOS.</p>
+<blockquote>
+<p><strong>Definizione — Phase unwrapping</strong><br>È il processo con cui si ricostruisce una fase continua a partire dalla fase osservata modulo (2\pi), stimando quanti cicli completi vadano aggiunti ai diversi pixel. Un unwrapping sbagliato non introduce un piccolo rumore: può spostare intere zone di uno o più cicli.</p>
+</blockquote>
+<p>Per questo la coherence map non è un allegato ornamentale dell&#39;interferogramma. Ti dice dove stai chiedendo all&#39;algoritmo di ricostruire una storia partendo da indizi robusti e dove, invece, gli stai chiedendo quasi di tirare a indovinare.</p>
+<hr>
+<h2 id="il-satellite-vede-soltanto-lombra-del-movimento">Il satellite vede soltanto l&#39;ombra del movimento</h2>
+<p>Immagina un bersaglio che si sposti di 10 cm verso est. Il satellite non misura «10 cm verso est». Misura quanto di quel vettore cade lungo la propria linea di vista.</p>
+<p>Lo stesso movimento osservato da un&#39;altra geometria produce una misura diversa.</p>
+<p>Le orbite <strong>ascending</strong> e <strong>descending</strong> diventano quindi preziose perché osservano la stessa area da lati differenti. Sentinel-1 segue un&#39;orbita quasi polare e guarda lateralmente: combinando geometrie diverse possiamo separare molto meglio la componente verticale e quella est-ovest, mentre la sensibilità alla componente nord-sud rimane intrinsecamente più debole.</p>
+<p>Il terremoto dell&#39;Italia centrale del 30 ottobre 2016 è un esempio quasi perfetto.</p>
+<p>Gli esperti di CNR-IREA e INGV, analizzando le acquisizioni radar Sentinel-1, ricostruirono un quadro in cui l&#39;area vicino a <strong>Montegallo</strong> si era spostata di circa <strong>40 cm verso est</strong>, quella di <strong>Norcia</strong> di circa <strong>30 cm verso ovest</strong>, mentre intorno a <strong>Castelluccio</strong> il terreno aveva subito una subsidenza fino a circa <strong>60 cm</strong>. Nei pressi di Norcia venne inoltre stimato un sollevamento di circa <strong>12 cm</strong>.[^italy-october]</p>
+<p>Se avessimo guardato soltanto una singola LOS, avremmo ottenuto una proiezione di questa storia. Combinando geometrie differenti, il quadro diventa molto più leggibile.</p>
+<blockquote>
+<p><strong>Caso reale — Norcia e Castelluccio, ottobre 2016</strong><br>Questo caso è utile perché sposta il ragionamento dalla domanda «quanto si è mosso?» alla domanda corretta: <strong>«quanto si è mosso, e in quale direzione rispetto alla geometria con cui lo sto osservando?»</strong>[^italy-october]</p>
+</blockquote>
+<blockquote>
+<p><strong>Domanda da colloquio</strong><br>Perché ascending + descending non restituiscono automaticamente il vettore 3D completo?<br>Perché le geometrie SAR quasi polari hanno una sensibilità molto limitata alla componente nord-sud. In assenza di informazione aggiuntiva, la decomposizione robusta riguarda soprattutto verticale ed est-ovest.</p>
+</blockquote>
+<hr>
+<h2 id="un-interferogramma-una-fotografia-una-serie-temporale-un-film">Un interferogramma è una fotografia. Una serie temporale è un film</h2>
+<p>Un singolo interferogramma può essere spettacolare dopo un terremoto. Ma se devo monitorare la subsidenza di una città, una frana lenta o la stabilità di un&#39;infrastruttura, il punto non è sapere che cosa è successo tra martedì e domenica.</p>
+<p>Voglio capire <strong>come evolve il movimento nel tempo</strong>.</p>
+<p>È qui che entrano le tecniche <strong>multi-temporali InSAR</strong>.</p>
+<p>Le due famiglie che compaiono più spesso sono la <strong>Persistent Scatterer Interferometry (PSI)</strong> e gli approcci <strong>Small Baseline Subset (SBAS)</strong>. La frontiera tra famiglie e implementazioni non è sempre netta — negli anni sono nate molte varianti e tecniche ibride — ma l&#39;intuizione di fondo è abbastanza chiara.[^tsinsar-review]</p>
+<h3 id="persistent-scatterer-interferometry">Persistent Scatterer Interferometry</h3>
+<p>La PSI cerca bersagli la cui risposta di fase rimanga stabile lungo una lunga sequenza di acquisizioni: i <strong>Persistent Scatterer</strong>.</p>
+<p>In ambiente urbano sono spesso edifici, strutture metalliche, ponti o altri bersagli puntuali che continuano a comportarsi in modo coerente nel tempo. Una volta individuati, possiamo modellare separatamente deformazione, atmosfera, errori topografici residui e altri contributi e ricostruire per ciascun punto una velocità media e una serie temporale.[^psi-review]</p>
+<h3 id="small-baseline-subset">Small Baseline Subset</h3>
+<p>Gli approcci SBAS costruiscono invece una rete di interferogrammi scegliendo coppie con <strong>baseline temporali e spaziali relativamente piccole</strong>, proprio per ridurre la decorrelazione. La rete viene poi invertita per ricostruire l&#39;evoluzione temporale dello spostamento.[^sbas-hpc]</p>
+<p>Una semplificazione utile è questa: la PSI mette al centro la stabilità di bersagli persistenti; SBAS mette al centro una rete di coppie interferometriche scelte per contenere la decorrelazione. Nella pratica moderna, però, strumenti e idee possono contaminarsi e molte pipeline lavorano anche con <strong>Distributed Scatterer</strong>, cioè gruppi omogenei di pixel che non si comportano come un singolo scatterer puntuale ma contengono comunque informazione interferometrica sfruttabile.[^ds-review]</p>
+<blockquote>
+<p><strong>Definizione — Persistent Scatterer</strong><br>Un bersaglio radar che mantiene caratteristiche interferometriche sufficientemente stabili nel tempo da poter essere utilizzato per stimare deformazione e altri parametri attraverso una serie di acquisizioni.</p>
+</blockquote>
+<blockquote>
+<p><strong>Definizione — Distributed Scatterer</strong><br>Una regione composta da più scatterer con proprietà statisticamente simili. Preso singolarmente, un pixel può non avere la stabilità di un PS; trattando opportunamente un insieme omogeneo di pixel si può però recuperare informazione interferometrica utile.[^ds-review]</p>
+</blockquote>
+<hr>
+<h2 id="quando-linsar-smette-di-essere-un-esperimento-e-diventa-un-servizio">Quando l&#39;InSAR smette di essere un esperimento e diventa un servizio</h2>
+<p>Fin qui abbiamo ragionato come se stessimo costruendo un&#39;analisi su un&#39;area di studio.</p>
+<p>Poi arriva lo <strong>European Ground Motion Service</strong>, EGMS, e la scala cambia completamente.</p>
+<p>EGMS è il servizio del Copernicus Land Monitoring Service che usa dati InSAR derivati da Sentinel-1 per misurare i movimenti del terreno in Europa. I prodotti vengono aggiornati con cadenza annuale; nel prodotto Basic ogni punto di misura è associato a una velocità media LOS, a indicatori di qualità e a una serie temporale di spostamento.[^egms-overview] [^egms-basic]</p>
+<p>La specifica tecnica arriva a dichiarare una <strong>risoluzione della velocità media migliore di 1 mm/anno</strong> e, per determinate classi di punti, deviazioni standard dell&#39;ordine del millimetro per anno.[^egms-spec]</p>
+<p>La cosa interessante, soprattutto se vogliamo capire come un&#39;attività scientifica diventa operativa, è l&#39;organizzazione del servizio.</p>
+<p>Nel 2024 <strong>e-GEOS è diventata Group Leader del consorzio ORIGINAL</strong> incaricato dall&#39;Agenzia Europea dell&#39;Ambiente dell&#39;implementazione e dell&#39;operatività end-to-end di EGMS per il periodo <strong>2024-2028</strong>. Il servizio usa dati Sentinel-1 e, secondo e-GEOS, si appoggia anche all&#39;infrastruttura HPC <strong>davinci-1 di Leonardo</strong> per sostenere la produzione a scala continentale.[^egeos-egms]</p>
+<p>Questo passaggio mi sembra uno dei più interessanti di tutta la storia. L&#39;InSAR non è più soltanto un algoritmo che produce un bell&#39;interferogramma: diventa una <strong>catena industriale di dati</strong>, con requisiti di qualità, riproducibilità, aggiornamento, infrastruttura di calcolo e distribuzione del prodotto.</p>
+<h3 id="basic-calibrated-ortho">Basic, Calibrated, Ortho</h3>
+<p>EGMS distribuisce tre livelli che aiutano anche a fissare le idee sulla geometria della misura.</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Prodotto</th>
+<th>Che cosa contiene</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Basic (L2a)</strong></td>
+<td>Misure di spostamento in LOS, relative a un riferimento locale, con serie temporali e metriche di qualità.</td>
+</tr>
+<tr>
+<td><strong>Calibrated (L2b)</strong></td>
+<td>Misure LOS calibrate su un riferimento derivato da GNSS, quindi confrontabili in un sistema di riferimento comune.</td>
+</tr>
+<tr>
+<td><strong>Ortho (L3)</strong></td>
+<td>Due componenti più immediate da interpretare: <strong>verticale</strong> ed <strong>est-ovest</strong>, ottenute combinando geometrie ascending e descending e utilizzando informazione GNSS per gestire la debole sensibilità nord-sud.</td>
+</tr>
+</tbody></table>
+</div></figure><p>La documentazione Copernicus sottolinea proprio questo punto: il prodotto Ortho combina look-angle differenti e restituisce layer verticali ed east-west su griglia di 100 m.[^egms-levels] [^egms-ortho]</p>
+<hr>
+<h2 id="metro-c-pochi-millimetri-sotto-una-citt-enorme">Metro C: pochi millimetri sotto una città enorme</h2>
+<p>C&#39;è un caso che rende bene il salto dalla teoria alla città reale.</p>
+<p>Nell&#39;ottobre 2025, parlando delle applicazioni geospaziali di e-GEOS, <strong>Emanuele Mele, responsabile InSAR Service</strong>, ha citato il monitoraggio della <strong>Metro C di Roma</strong>. Durante la costruzione sono stati effettuati monitoraggi interferometrici per verificare la presenza di deformazioni in atto e osservare <strong>subsidenza del terreno e compattazione nelle zone di scavo sotto il tessuto urbano</strong>.[^metro-c]</p>
+<p>Qui cambia anche il modo di interpretare il dato.</p>
+<p>Dopo un terremoto cerchiamo una deformazione improvvisa che compare tra due epoche. Sotto una città vogliamo invece capire se un punto apparentemente immobile sta seguendo una tendenza lenta, se accelera, se mostra una discontinuità e se quella dinamica coincide con una fase di cantiere o con un&#39;altra causa.</p>
+<p>La serie temporale conta più del singolo numero.</p>
+<blockquote>
+<p><strong>Caso reale — Metro C, Roma</strong><br>L&#39;InSAR diventa uno strumento di monitoraggio delle conseguenze di una grande opera nel sottosuolo urbano. Il valore non sta soltanto nella precisione della misura, ma nella possibilità di osservare molti punti contemporaneamente e seguirli nel tempo senza installare un sensore fisico su ciascuno di essi.[^metro-c]</p>
+</blockquote>
+<p>Ed è forse qui che si vede meglio cosa rende speciale il remote sensing: non sostituisce automaticamente le misure a terra, ma cambia radicalmente <strong>la scala alla quale possiamo decidere dove guardare</strong>.</p>
+<hr>
+<h2 id="non-tutti-i-radar-parlano-con-la-stessa-voce">Non tutti i radar parlano con la stessa voce</h2>
+<p>Sentinel-1 è un ottimo punto di partenza, ma non è l&#39;unico sistema SAR che incontriamo in applicazioni interferometriche. Cambiando missione cambiano banda, lunghezza d&#39;onda, risoluzione, revisit, geometrie disponibili, politiche di acquisizione e costi.</p>
+<p>Una tabella aiuta a mettere ordine.</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Missione</th>
+<th>Banda</th>
+<th>Frequenza / lunghezza d&#39;onda</th>
+<th>Un tratto utile da ricordare</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Sentinel-1</strong></td>
+<td>C</td>
+<td>5,405 GHz, (\lambda) ≈ 5,55 cm</td>
+<td>IW: 250 km di swath, 5 × 20 m; acquisizioni sistematiche e dati Copernicus aperti.</td>
+</tr>
+<tr>
+<td><strong>COSMO-SkyMed / CSG</strong></td>
+<td>X</td>
+<td>banda X</td>
+<td>Elevata risoluzione e grande flessibilità operativa; CSG offre, per esempio, Stripmap nominale 3 × 3 m.</td>
+</tr>
+<tr>
+<td><strong>RADARSAT-2 / RCM</strong></td>
+<td>C</td>
+<td>5,405 GHz, (\lambda) ≈ 5,55 cm</td>
+<td>Tradizione canadese in banda C; RADARSAT-2 offre polarizzazioni multiple e diverse modalità di imaging.</td>
+</tr>
+<tr>
+<td><strong>SAOCOM</strong></td>
+<td>L</td>
+<td>1,275 GHz, (\lambda) ≈ 23,5 cm</td>
+<td>Lunghezza d&#39;onda molto maggiore della C/X band; la missione argentina è pensata anche per applicazioni legate all&#39;umidità del suolo.</td>
+</tr>
+</tbody></table>
+</div></figure><p>Le specifiche provengono dalle rispettive agenzie spaziali.[^s1-facts] [^csg-spec] [^radarsat-spec] [^saocom-spec]</p>
+<p>La lunghezza d&#39;onda non è un dettaglio da catalogo.</p>
+<p>In generale, una <strong>banda X</strong>, più corta, può offrire grande sensibilità a piccoli cambiamenti e alte risoluzioni ma tende a essere più vulnerabile alla decorrelazione quando la scena cambia. La <strong>banda L</strong>, molto più lunga, interagisce più profondamente con la vegetazione e spesso mantiene coerenza più a lungo in aree vegetate. La <strong>banda C</strong> vive in mezzo e, con Sentinel-1, ha avuto soprattutto il vantaggio enorme di una politica di acquisizione sistematica e di una copertura molto ampia.</p>
+<p>Detto questo, ridurre la scelta del sensore alla sola banda sarebbe un errore. Revisit time, risoluzione, polarizzazione, angolo d&#39;incidenza, disponibilità delle acquisizioni, baseline e geometria della scena possono contare altrettanto.</p>
+<blockquote>
+<p><strong>Domanda da colloquio</strong><br>«Perché dovrei scegliere COSMO-SkyMed invece di Sentinel-1?»<br>Una buona risposta non parte da «X-band è migliore». Parte dal requisito: risoluzione, frequenza di osservazione, area da coprire, tipo di bersaglio, stabilità temporale, geometrie disponibili e vincoli economici. Solo dopo si sceglie il sensore.</p>
+</blockquote>
+<hr>
+<h2 id="un-esempio-italiano-in-banda-x-il-parco-archeologico-di-sibari">Un esempio italiano in banda X: il Parco archeologico di Sibari</h2>
+<p>Nel 2024 e-GEOS ha raccontato un progetto per il <strong>Parco archeologico di Sibari</strong>, area esposta sia a instabilità del terreno sia a rischio idraulico legato alle esondazioni del Crati.</p>
+<p>Per il rischio di instabilità è stata predisposta una catena di monitoraggio basata su <strong>metodologia InSAR e dati COSMO-SkyMed</strong>; le informazioni sugli spostamenti vengono poi rese disponibili attraverso servizi di visualizzazione e interrogazione della piattaforma di data intelligence di Leonardo.[^sibari]</p>
+<p>È un caso utile perché mette insieme diversi pezzi del puzzle: banda X, monitoraggio ripetuto, una catena operativa e un utente finale che non ha bisogno di «un interferogramma», ma di informazioni leggibili per decidere come proteggere un sito.</p>
+<p>Il prodotto finale raramente coincide con la tecnica che lo ha generato.</p>
+<hr>
+<h2 id="dallslc-alla-mappa-di-deformazione">Dall&#39;SLC alla mappa di deformazione</h2>
+<p>A questo punto ha senso rimettere in fila una catena di processamento tipica. I dettagli cambiano tra SNAP, ISCE, GAMMA, SARscape, MintPy, LiCSBAS e le pipeline proprietarie, ma la logica generale rimane riconoscibile.</p>
+<ol>
+<li><strong>Selezione delle acquisizioni</strong> compatibili per geometria, orbita, modalità e polarizzazione.</li>
+<li><strong>Acquisizione dei prodotti SLC</strong> e delle informazioni orbitali precise.</li>
+<li><strong>Co-registrazione</strong> delle immagini sulla stessa geometria radar.</li>
+<li><strong>Formazione dell&#39;interferogramma</strong> e stima della coherence.</li>
+<li><strong>Rimozione della fase topografica</strong>, normalmente usando un DEM.</li>
+<li><strong>Filtraggio interferometrico</strong> quando opportuno, per ridurre il rumore di fase senza distruggere il segnale.</li>
+<li><strong>Phase unwrapping</strong> nelle aree in cui la fase è sufficientemente affidabile.</li>
+<li><strong>Conversione della fase in displacement LOS</strong> e scelta di un riferimento spaziale coerente.</li>
+<li><strong>Geocoding e validazione</strong> rispetto a dati esterni, GNSS, livellazione, inventari o conoscenza del fenomeno.</li>
+<li>Se abbiamo molte acquisizioni, <strong>stima della serie temporale</strong>, dell&#39;Atmospheric Phase Screen, delle velocità e degli altri parametri del modello.</li>
+</ol>
+<p>Con Sentinel-1 IW si aggiungono aspetti specifici della modalità TOPS: gestione dei burst e delle sub-swath, co-registrazione azimutale molto accurata e deburst. È uno dei motivi per cui una pipeline operativa richiede molto più della sequenza di pulsanti che possiamo imparare in un tutorial.</p>
+<blockquote>
+<p><strong>Più in profondità — Cosa stiamo cercando di isolare?</strong><br>Alla fine della catena vogliamo che la fase residua sia dominata da (\Delta\phi_{def}). Tutto il resto — topografia residua, orbita, atmosfera, scattering instabile e rumore — è qualcosa da modellare, stimare, filtrare o almeno quantificare.</p>
+</blockquote>
+<hr>
+<h2 id="torniamo-allemilia-romagna">Torniamo all&#39;Emilia-Romagna</h2>
+<p>A questo punto posso tornare al progetto da cui ero partito.</p>
+<p>Nel flood mapping con Sentinel-1 mi interessava osservare come cambiava il <strong>backscatter</strong> tra acquisizioni e come il preprocessing influenzasse la separazione tra superfici allagate e acqua permanente. Avevo lavorato con calibrazione, multilooking, rimozione del rumore termico, terrain correction e change detection.</p>
+<p>Se volessi usare le stesse acquisizioni per un problema InSAR, però, la domanda cambierebbe completamente.</p>
+<figure class="table-wrapper" data-enhanced-table><div class="table-wrapper__scroll"><table>
+<thead>
+<tr>
+<th>Flood mapping SAR</th>
+<th>InSAR per deformazione</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L&#39;informazione centrale è l&#39;<strong>ampiezza/backscatter</strong>.</td>
+<td>L&#39;informazione centrale è la <strong>differenza di fase</strong>.</td>
+</tr>
+<tr>
+<td>Posso lavorare con prodotti detected come GRD.</td>
+<td>Ho bisogno della fase complessa, quindi tipicamente di <strong>SLC</strong>.</td>
+</tr>
+<tr>
+<td>Cerco un cambiamento nelle proprietà elettromagnetiche della superficie.</td>
+<td>Cerco una variazione di distanza lungo la <strong>LOS</strong>.</td>
+</tr>
+<tr>
+<td>Una superficie che cambia molto può essere proprio il segnale che cerco.</td>
+<td>Una superficie che cambia molto può distruggere la coerenza e impedirmi di misurare la fase.</td>
+</tr>
+<tr>
+<td>La terrain correction serve a riportare correttamente il dato nello spazio geografico.</td>
+<td>Il DEM entra anche nella modellazione e rimozione della <strong>fase topografica</strong>.</td>
+</tr>
+<tr>
+<td>Il confronto può essere fatto sulle intensità calibrate.</td>
+<td>Devo co-registrare con grande precisione i segnali complessi e gestire wrapping/unwrapping.</td>
+</tr>
+</tbody></table>
+</div></figure><p>È la stessa missione satellitare. Spesso persino la stessa scena.</p>
+<p>Ma stiamo interrogando il dato in modo diverso.</p>
+<p>Questa, secondo me, è la chiave per non vivere SAR e InSAR come due capitoli indipendenti di un manuale. Il pixel è sempre quello. Cambia la parte del segnale a cui decidiamo di dare ascolto.</p>
+<hr>
+<h2 id="quando-linsar-non-la-risposta-giusta">Quando l&#39;InSAR non è la risposta giusta</h2>
+<p>Arrivati fin qui è facile innamorarsi della tecnica. Succede spesso con gli strumenti eleganti: appena impariamo come funzionano, iniziamo a vederli come soluzione naturale di ogni problema.</p>
+<p>Meglio vaccinarsi subito.</p>
+<p>L&#39;InSAR soffre quando la superficie cambia troppo rapidamente tra acquisizioni, quando la copertura vegetale distrugge la stabilità di fase, quando neve e umidità cambiano il comportamento elettromagnetico, quando il movimento è orientato quasi perpendicolarmente alla LOS o quando il gradiente spaziale della deformazione è così forte da rendere ambiguo l&#39;unwrapping.</p>
+<p>Una frana molto rapida può quindi essere <strong>meno</strong> misurabile con DInSAR di una deformazione lenta e continua. Un movimento quasi nord-sud può essere importante sul terreno e quasi invisibile nella geometria SAR. Un&#39;atmosfera sfavorevole può creare pattern che sembrano deformazioni. Un edificio può essere un eccellente Persistent Scatterer mentre il prato accanto diventa quasi muto.</p>
+<p>Il punto non è ricordare una lista di limitazioni. È imparare a formulare, prima del processamento, la domanda giusta:</p>
+<blockquote>
+<p><strong>La geometria, la scala temporale e il tipo di superficie mi permettono di osservare il fenomeno che sto cercando?</strong></p>
+</blockquote>
+<p>Se la risposta è no, nessun algoritmo a valle può recuperare informazione che il sensore non ha misurato in modo utilizzabile.</p>
+<hr>
+<h2 id="se-lho-capito-davvero-dovrei-saper-rispondere-a-queste-domande">Se l&#39;ho capito davvero, dovrei saper rispondere a queste domande</h2>
+<p>Questa parte è quasi un test personale. Se una risposta richiede di tornare alle definizioni, va benissimo: significa che abbiamo trovato il punto da ripassare.</p>
+<ol>
+<li>Perché per un interferogramma ho bisogno di un prodotto SLC e non mi basta un GRD?</li>
+<li>Perché un ciclo completo di fase corrisponde a (\lambda/2) di displacement LOS e non a (\lambda)?</li>
+<li>Quali contributi, oltre alla deformazione, entrano nella fase interferometrica?</li>
+<li>Che cosa mi dice la coherence e perché una bassa coherence non significa sempre soltanto «dato brutto»?</li>
+<li>Perché una superficie urbana tende spesso a offrire più Persistent Scatterer di un campo coltivato?</li>
+<li>Perché un movimento grande può essere più difficile da misurare di uno piccolo?</li>
+<li>Che cosa significa dire che l&#39;InSAR misura lungo la LOS?</li>
+<li>Che cosa guadagno combinando orbite ascending e descending, e quale componente rimane difficile da osservare?</li>
+<li>Qual è l&#39;intuizione che separa PSI e SBAS?</li>
+<li>Se dovessi scegliere tra Sentinel-1, COSMO-SkyMed e SAOCOM, quali requisiti guarderei prima ancora di parlare di banda?</li>
+<li>Perché un servizio come EGMS è un problema anche di data engineering e High Performance Computing, oltre che di remote sensing?</li>
+<li>In che cosa il mio vecchio workflow di flood mapping Sentinel-1 assomiglia a una pipeline InSAR e in che cosa, invece, cambia radicalmente?</li>
+</ol>
+<p>Se queste domande diventano conversazione e smettono di sembrare interrogazione, probabilmente il grosso del lavoro è fatto.</p>
+<hr>
+<h2 id="tirando-le-fila">Tirando le fila</h2>
+<p>La parte che trovo più affascinante dell&#39;InSAR è che il risultato finale sembra quasi sproporzionato rispetto all&#39;informazione di partenza.</p>
+<p>Abbiamo un radar che manda un&#39;onda, aspetta un&#39;eco e registra un numero complesso. Poi facciamo ripassare il satellite, confrontiamo due fasi che da sole sono ambigue, togliamo la topografia, cerchiamo di capire cosa abbia fatto l&#39;atmosfera, scartiamo le zone che hanno perso coerenza, ricostruiamo i cicli della fase e proiettiamo tutto lungo una geometria che non coincide quasi mai con la direzione che ci interessa davvero.</p>
+<p>Sembra un castello fragile.</p>
+<p>Eppure da questo castello vengono fuori i centimetri del terremoto di Amatrice, il centimetro di movimento di un versante norvegese, le serie temporali di un continente intero e la possibilità di seguire la subsidenza sopra gli scavi di una metropolitana.</p>
+<p>Forse è proprio questo il punto. L&#39;InSAR non è potente perché elimina l&#39;ambiguità. È potente perché <strong>la modella abbastanza bene da trasformarla in misura</strong>.</p>
+<p>E quando torni a guardare un&#39;immagine Sentinel-1 dopo averlo capito, quel pixel non è più soltanto chiaro o scuro.</p>
+<p>Ha anche una memoria.</p>
+<hr>
+<h2 id="fonti-e-approfondimenti">Fonti e approfondimenti</h2>
+<p>[^s1-facts]: European Space Agency, <strong>Sentinel-1 — Facts and figures</strong>. <a href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures">https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures</a></p>
+<p>[^s1-instrument]: European Space Agency, <strong>Sentinel-1 — Instrument</strong>. <a href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Instrument">https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Instrument</a></p>
+<p>[^s1-products]: Copernicus Sentinel-1, <strong>Product Definition / Level-1 products</strong>. I prodotti SLC sono complessi e conservano ampiezza e fase; i GRD sono detected. <a href="https://sentinels.copernicus.eu/documents/247904/1877131/Sentinel-1-Product-Definition.pdf">https://sentinels.copernicus.eu/documents/247904/1877131/Sentinel-1-Product-Definition.pdf</a></p>
+<p>[^s1-baseline]: Copernicus Sentinel-1 Mission Performance Centre, <strong>Sentinel-1A &amp; Sentinel-1B Annual Performance Report 2018</strong>, sezione sulla interferometric baseline. <a href="https://sentinels.copernicus.eu/documents/247904/3406423/Sentinel-1-Annual-Performance-Report-2018.pdf">https://sentinels.copernicus.eu/documents/247904/3406423/Sentinel-1-Annual-Performance-Report-2018.pdf</a></p>
+<p>[^nasa-handbook]: NASA Earthdata, <strong>SAR Handbook — Chapter 2: Spaceborne Synthetic Aperture Radar</strong>, sezione sui principi dell&#39;Interferometric SAR. <a href="https://earthdata.nasa.gov/s3fs-public/2025-04/SARHB_CH2_Content.pdf">https://earthdata.nasa.gov/s3fs-public/2025-04/SARHB_CH2_Content.pdf</a></p>
+<p>[^italy-august]: European Space Agency, <strong>Italy earthquake displacement</strong>, 26 agosto 2016. <a href="https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement">https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement</a></p>
+<p>[^phase-components]: Pepe, A. &amp; Calò, F., <strong>A Review of Interferometric Synthetic Aperture RADAR (InSAR) Multi-Track Approaches for the Retrieval of Earth&#39;s Surface Displacements</strong>, <em>Applied Sciences</em>, 2017. <a href="https://www.mdpi.com/2076-3417/7/12/1264">https://www.mdpi.com/2076-3417/7/12/1264</a></p>
+<p>[^atmosphere]: Ding, X. et al., <strong>Atmospheric Effects on InSAR Measurements and Their Mitigation</strong>, <em>Sensors</em>, 2008. <a href="https://www.mdpi.com/1424-8220/8/9/5426">https://www.mdpi.com/1424-8220/8/9/5426</a></p>
+<p>[^nasa-coherence]: NASA Earthdata GIS, <strong>Interferometric Coherence</strong> — descrizione del prodotto di displacement OPERA. La coherence è descritta come misura della similarità della fase radar tra due acquisizioni, da 0 a 1. <a href="https://gis.earthdata.nasa.gov/gis05/rest/services/DISASTERS_202606_EARTHQUAKE_VENEZUELA/202611_opera_displacement/ImageServer">https://gis.earthdata.nasa.gov/gis05/rest/services/DISASTERS_202606_EARTHQUAKE_VENEZUELA/202611_opera_displacement/ImageServer</a></p>
+<p>[^apex-coherence]: ESA APEx Algorithm Catalogue, <strong>Sentinel-1 Coherence</strong>. <a href="https://algorithm-catalogue.apex.esa.int/apps/sentinel1_sar_coherence">https://algorithm-catalogue.apex.esa.int/apps/sentinel1_sar_coherence</a></p>
+<p>[^kafjord]: European Space Agency, <strong>Landslide risk monitoring with Sentinel-1</strong>, 27 marzo 2015. <a href="https://www.esa.int/ESA_Multimedia/Images/2015/03/Landslide_risk_monitoring_with_Sentinel-1">https://www.esa.int/ESA_Multimedia/Images/2015/03/Landslide_risk_monitoring_with_Sentinel-1</a></p>
+<p>[^italy-october]: European Space Agency, <strong>Sentinel satellites reveal east–west shift in Italian quake</strong>, 3 novembre 2016. <a href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Sentinel_satellites_reveal_east_west_shift_in_Italian_quake">https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Sentinel_satellites_reveal_east_west_shift_in_Italian_quake</a></p>
+<p>[^tsinsar-review]: Osmanoğlu, B. et al., <strong>Radar Interferometry: 20 Years of Development in Time Series Techniques and Future Perspectives</strong>, <em>Remote Sensing</em>, 2020. <a href="https://www.mdpi.com/2072-4292/12/9/1364">https://www.mdpi.com/2072-4292/12/9/1364</a></p>
+<p>[^psi-review]: Crosetto, M. et al., <strong>An Approach to Persistent Scatterer Interferometry</strong>, <em>Remote Sensing</em>, 2014. <a href="https://www.mdpi.com/2072-4292/6/7/6662">https://www.mdpi.com/2072-4292/6/7/6662</a></p>
+<p>[^sbas-hpc]: Zinno, I. et al., <strong>High Performance Computing in Satellite SAR Interferometry: A Critical Perspective</strong>, <em>Remote Sensing</em>, 2021. <a href="https://www.mdpi.com/2072-4292/13/23/4756">https://www.mdpi.com/2072-4292/13/23/4756</a></p>
+<p>[^ds-review]: Even, M. &amp; Schulz, K., <strong>InSAR Deformation Analysis with Distributed Scatterers: A Review Complemented by New Advances</strong>, <em>Remote Sensing</em>, 2018. <a href="https://www.mdpi.com/2072-4292/10/5/744">https://www.mdpi.com/2072-4292/10/5/744</a></p>
+<p>[^egms-overview]: Copernicus Land Monitoring Service, <strong>European Ground Motion Service</strong>. <a href="https://land.copernicus.eu/en/products/european-ground-motion-service">https://land.copernicus.eu/en/products/european-ground-motion-service</a></p>
+<p>[^egms-basic]: Copernicus Land Monitoring Service, <strong>European Ground Motion Service: Basic</strong>. <a href="https://land.copernicus.eu/en/products/european-ground-motion-service/egms-basic">https://land.copernicus.eu/en/products/european-ground-motion-service/egms-basic</a></p>
+<p>[^egms-spec]: Copernicus Land Monitoring Service, <strong>EGMS Product Description and Format Specification</strong>. <a href="https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Product_Description_v3.html">https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Product_Description_v3.html</a></p>
+<p>[^egeos-egms]: e-GEOS, <strong>Rilevare e misurare i movimenti del terreno dallo Spazio: e-GEOS alla guida del progetto europeo</strong>, 18 luglio 2024. <a href="https://www.e-geos.it/press-release/rilevare-e-misurare-i-movimenti-del-terreno-dallo-spazio-e-geos-alla-guida-del-progetto-europeo/">https://www.e-geos.it/press-release/rilevare-e-misurare-i-movimenti-del-terreno-dallo-spazio-e-geos-alla-guida-del-progetto-europeo/</a></p>
+<p>[^egms-levels]: Copernicus Land Monitoring Service, <strong>What European Ground Motion Service products are made available to the user?</strong> <a href="https://land.copernicus.eu/en/faq/products/european-ground-motion-service/what-products-are-made-available-to-the-user">https://land.copernicus.eu/en/faq/products/european-ground-motion-service/what-products-are-made-available-to-the-user</a></p>
+<p>[^egms-ortho]: Copernicus Land Monitoring Service, <strong>EGMS Explorer Manual / Ortho product description</strong>. <a href="https://land.copernicus.eu/en/technical-library/egms-end-user-interface-manual/@@download/file">https://land.copernicus.eu/en/technical-library/egms-end-user-interface-manual/@@download/file</a></p>
+<p>[^metro-c]: Telespazio, <strong>Smart city, dati satellitari per governare le metropoli del futuro</strong>, 7 ottobre 2025. Intervento di Emanuele Mele, responsabile InSAR Service di e-GEOS. <a href="https://www.telespazio.com/it/focus-detail/-/detail/space-panorama-episodio-4">https://www.telespazio.com/it/focus-detail/-/detail/space-panorama-episodio-4</a></p>
+<p>[^csg-spec]: Agenzia Spaziale Italiana, <strong>COSMO-SkyMed Seconda Generazione — System and Products Description</strong>. <a href="https://www.asi.it/wp-content/uploads/2021/02/CSG-Mission-and-Products-Description_issue-A-1.pdf">https://www.asi.it/wp-content/uploads/2021/02/CSG-Mission-and-Products-Description_issue-A-1.pdf</a></p>
+<p>[^radarsat-spec]: Canadian Space Agency, <strong>RADARSAT satellites: Technical comparison</strong>. <a href="https://www.asc-csa.gc.ca/eng/satellites/radarsat/technical-features/radarsat-comparison.asp">https://www.asc-csa.gc.ca/eng/satellites/radarsat/technical-features/radarsat-comparison.asp</a></p>
+<p>[^saocom-spec]: CONAE, <strong>SAOCOM Mission Products Definition</strong>. <a href="https://catalogos.conae.gov.ar/Catalogo/docs/SAOCOM/SAOCOM%20Mission%20Products%20Definition.pdf">https://catalogos.conae.gov.ar/Catalogo/docs/SAOCOM/SAOCOM%20Mission%20Products%20Definition.pdf</a></p>
+<p>[^sibari]: e-GEOS, <strong>Giornata Internazionale dei Monumenti e dei Siti 2024</strong> — monitoraggio del Parco archeologico di Sibari con InSAR e COSMO-SkyMed. <a href="https://www.e-geos.it/news-stories/giornata-internazionale-dei-monumenti-e-dei-siti-2024/">https://www.e-geos.it/news-stories/giornata-internazionale-dei-monumenti-e-dei-siti-2024/</a></p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = null;
+    (function() {
+      const body = document.body;
+      const readingProgressBar = document.getElementById('reading-progress-bar');
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
+      const inlineNotes = Array.from(document.querySelectorAll('.post-body .inline-note'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      const codeFileExtensions = {
+        bash: 'sh',
+        shell: 'sh',
+        sh: 'sh',
+        zsh: 'zsh',
+        powershell: 'ps1',
+        python: 'py',
+        py: 'py',
+        javascript: 'js',
+        js: 'js',
+        typescript: 'ts',
+        ts: 'ts',
+        json: 'json',
+        html: 'html',
+        css: 'css',
+        scss: 'scss',
+        sass: 'sass',
+        markdown: 'md',
+        md: 'md',
+        yaml: 'yml',
+        yml: 'yml',
+        toml: 'toml',
+        dockerfile: 'dockerfile',
+        sql: 'sql',
+        c: 'c',
+        cpp: 'cpp',
+        csharp: 'cs',
+        java: 'java',
+        go: 'go',
+        rust: 'rs',
+        r: 'r',
+        swift: 'swift',
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function normaliseCodeLanguage(codeElement) {
+        if (!codeElement || !codeElement.classList) {
+          return '';
+        }
+        const languageClass = Array.from(codeElement.classList).find((className) => className.startsWith('language-'));
+        if (!languageClass) {
+          return '';
+        }
+        return languageClass.replace(/^language-/, '').trim().toLowerCase();
+      }
+      function formatCodeLanguageLabel(language) {
+        if (!language) {
+          return 'TEXT';
+        }
+        if (language.length <= 4) {
+          return language.toUpperCase();
+        }
+        return language.charAt(0).toUpperCase() + language.slice(1);
+      }
+      function buildCodeFilename(language) {
+        const extension = codeFileExtensions[language] || (language ? language : 'txt');
+        return 'snippet.' + extension;
+      }
+      function updateReadingProgress() {
+        if (!readingProgressBar) {
+          return;
+        }
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+        );
+        const maxScrollable = Math.max(1, documentHeight - viewportHeight);
+        const progress = Math.min(100, Math.max(0, (scrollTop / maxScrollable) * 100));
+        readingProgressBar.style.width = progress.toFixed(2) + '%';
+      }
+      function closeInlineNotes() {
+        inlineNotes.forEach((note) => {
+          note.classList.remove('inline-note--open');
+          const trigger = note.querySelector('.inline-note__trigger');
+          if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      function initInlineNotes() {
+        if (!inlineNotes.length) {
+          return;
+        }
+        inlineNotes.forEach((note, index) => {
+          const trigger = note.querySelector('.inline-note__trigger');
+          const popup = note.querySelector('.inline-note__popup');
+          if (!trigger || !popup) {
+            return;
+          }
+          const popupId = popup.id || ('inline-note-popup-' + index);
+          popup.id = popupId;
+          trigger.setAttribute('aria-controls', popupId);
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const isOpen = note.classList.contains('inline-note--open');
+            closeInlineNotes();
+            if (!isOpen) {
+              note.classList.add('inline-note--open');
+              trigger.setAttribute('aria-expanded', 'true');
+            }
+          });
+          popup.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
+        });
+        document.addEventListener('click', closeInlineNotes);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true' || pre.closest('.post-code-card')) {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const language = normaliseCodeLanguage(code);
+          const languageLabel = formatCodeLanguageLabel(language);
+          const filenameLabel = buildCodeFilename(language);
+          const wrapper = document.createElement('div');
+          wrapper.className = 'post-code-card';
+          wrapper.innerHTML =
+            '<div class="post-code-card__language">' + languageLabel + '</div>' +
+            '<div class="post-code-card__frame">' +
+              '<div class="post-code-card__header">' +
+                '<div class="post-code-card__window-controls" aria-hidden="true">' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--red"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--yellow"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--green"></span>' +
+                '</div>' +
+                '<span class="post-code-card__filename">' + filenameLabel + '</span>' +
+              '</div>' +
+              '<div class="post-code-card__body"></div>' +
+            '</div>';
+          const frame = wrapper.querySelector('.post-code-card__frame');
+          const header = wrapper.querySelector('.post-code-card__header');
+          const codeBody = wrapper.querySelector('.post-code-card__body');
+          if (!frame || !header || !codeBody) {
+            return;
+          }
+          pre.parentNode.insertBefore(wrapper, pre);
+          codeBody.appendChild(pre);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          header.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function syncEmbeddedThemes(theme) {
+        document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+          if (frame.contentWindow) {
+            frame.contentWindow.postMessage({ type: 'blog-theme', theme }, window.location.origin);
+          }
+        });
+      }
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+        syncEmbeddedThemes(resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          updateReadingProgress();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+          closeInlineNotes();
+        }
+      });
+      enhanceTables();
+      initInlineNotes();
+      enhanceCodeBlocks();
+      initToc();
+      document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+        frame.addEventListener('load', () => {
+          syncEmbeddedThemes(body.getAttribute('data-theme') || initialTheme);
+        });
+      });
+      applyTheme(initialTheme);
+      updateReadingProgress();
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', updateReadingProgress, { passive: true });
+    })();
+  </script>
+</body>
+</html>
