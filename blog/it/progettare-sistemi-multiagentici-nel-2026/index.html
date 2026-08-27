@@ -1444,7 +1444,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">20 agosto 2026 • 27 min</span>
+            <span class="post-hero__author-meta">20 agosto 2026 • 28 min</span>
           </div>
         </div>
       </section>
@@ -1540,9 +1540,9 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="2">
-          <a class="post-toc__link" href="#un-handoff-un-contratto">
+          <a class="post-toc__link" href="#un-handoff-un-contratto-a-tutti-gli-effetti">
             <span class="post-toc__number">4.3.1</span>
-            <span class="post-toc__text">Un handoff è un contratto</span>
+            <span class="post-toc__text">Un handoff è un contratto a tutti gli effetti</span>
           </a>
           
         </li>
@@ -2228,14 +2228,10 @@ Questo impedisce che il contesto dei sotto-agenti si saturi di informazioni inut
     style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE</pre><p>OpenAI Agents SDK distingue esplicitamente queste due topologie: <em>agents as tools</em> quando il manager mantiene il controllo; <em>handoffs</em> quando lo specialista prende in carico la parte successiva dell&#39;interazione (<a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — orchestrazione</a>, <a href="https://openai.github.io/openai-agents-python/handoffs/">handoff</a>).</p>
 <p>La differenza si può ricordare così:</p>
 <pre><code class="hljs language-text">Delegation → cambia chi lavora.
-Handoff    → cambia chi possiede il controllo.</code></pre><h4 id="un-handoff-un-contratto">Un handoff è un contratto</h4>
-<p>Nei diagrammi l&#39;handoff è una freccia. Nei sistemi veri è un confine.</p>
-<p>Il passaggio ingenuo è questo:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [ANTI-PATTERN]</span>
-<span class="hljs-keyword">await</span> specialist.run(full_history)</code></pre><p>Il passaggio progettato assomiglia di più a questo:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
-
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+Handoff    → cambia chi possiede il controllo.</code></pre><h4 id="un-handoff-un-contratto-a-tutti-gli-effetti">Un handoff è un contratto a tutti gli effetti</h4>
+<p>Nei diagrammi architetturali l&#39;handoff viene spesso liquidato come una semplice freccia direzionale. Nella realtà ingegneristica, tuttavia, esso rappresenta un vero e proprio <strong>confine di isolamento (boundary)</strong>.</p>
+<p>Per strutturare un passaggio di consegne robusto, non possiamo affidarci a scambi di messaggi destrutturati. Dobbiamo definire un contratto formale, modellabile ad esempio tramite Pydantic:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     goal: <span class="hljs-built_in">str</span>
     reason: <span class="hljs-built_in">str</span>
     relevant_state: <span class="hljs-built_in">dict</span>
