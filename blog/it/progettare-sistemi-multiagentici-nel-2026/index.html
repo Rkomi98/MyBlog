@@ -1466,11 +1466,19 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#routing-sai-gi-descrivere-cosa-vuoi">
+          <a class="post-toc__link" href="#routing-sai-gi-cosa-vuoi">
             <span class="post-toc__number">4.1</span>
-            <span class="post-toc__text">Routing: sai già descrivere cosa vuoi?</span>
+            <span class="post-toc__text">Routing: sai già cosa vuoi?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#perch-questo-approccio-formidabile">
+            <span class="post-toc__number">4.1.1</span>
+            <span class="post-toc__text">Perché questo approccio è formidabile?</span>
           </a>
           
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#supervisor-la-decisione-resta-labile">
             <span class="post-toc__number">4.2</span>
@@ -2036,34 +2044,56 @@ Giudicare la coerenza        → evaluator, se resta soggettività</code></pre><
 <h2 id="chi-decide">Chi decide?</h2>
 <p>Una volta rappresentato il lavoro, dobbiamo assegnare il controllo.</p>
 <p>Nella mia esperienza ho visto che ci sono tre pattern che vengono confusi, o meglio pensati come equivalenti: routing, supervisor e handoff. In realtà rispondono a domande differenti!</p>
-<h3 id="routing-sai-gi-descrivere-cosa-vuoi">Routing: sai già descrivere cosa vuoi?</h3>
+<h3 id="routing-sai-gi-cosa-vuoi">Routing: sai già cosa vuoi?</h3>
 <blockquote>
-<p><strong>Quando usarlo.</strong> Usa il routing quando la scelta del prossimo passo può essere ridotta a uno stato o a una classificazione esplicita e verificabile: un campo tipizzato, una soglia, una policy o un booleano. Il modello può estrarre o classificare quell&#39;informazione e il codice deve decidere il ramo.
-<strong>Quando usare altro?</strong> Se la scelta dipende invece dall&#39;evoluzione del compito, da risultati intermedi o da un compromesso non rappresentato nello stato, serve un supervisor.</p>
+<p><strong>Quando usarlo.</strong> Usa il routing quando la scelta del prossimo passo può essere ricondotta a una classificazione esplicita o a uno stato ben definito (un campo tipizzato, una soglia, una policy booleana). L&#39;LLM si limita ad analizzare l&#39;input ed estrarre i parametri; poi, un semplice algoritmo deterministico in codice (es. <code>if/else</code>) smista l&#39;esecuzione verso il nodo corretto.
+<strong>Quando NON usarlo.</strong> Se la decisione sul passo successivo richiede di valutare dinamicamente trade-off, negoziare tra agenti o rivalutare la strategia in base a risultati parziali, usa un <strong>Supervisor</strong>.</p>
 </blockquote>
-<p>Vediamo con il running example quale dovrebbe essere il primo passo. Ecco esso consiste nel chiedere al modello di produrre uno stato semantico tipizzato.</p>
-<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
-    current_energy: <span class="hljs-built_in">float</span>
-    desired_energy: <span class="hljs-built_in">float</span>
-    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>]
-    needs_clarification: <span class="hljs-built_in">bool</span></code></pre><p>A quel punto il ramo non richiede un&#39;altra inferenza. È puro codice sincrono. Il modello non fa nessuna chiamata a un LLM, nessuna latenza di rete, nessun costo di inferenza. Abbiamo un bel risultato deterministico e testabile con un normale unit test</p>
-<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">route</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;clarification&quot;</span>, <span class="hljs-string">&quot;search&quot;</span>]:
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarification&quot;</span> <span class="hljs-keyword">if</span> profile.needs_clarification <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;search&quot;</span></code></pre><pre class="mermaid">flowchart LR
-    P[Prompt] --&gt; M[MoodProfile]
-    M --&gt; G{needs_clarification?}
-    G --&gt;|sì| C[Clarifier]
-    G --&gt;|no| S[Search]
+<p>Il routing è il pattern più efficiente in assoluto: massimizza la prevedibilità, minimizza la latenza e riduce i costi di chiamata LLM, spostando la logica di controllo dal prompt al codice applicativo.</p>
+<p>Prendiamo il nostro utente che dice: <em>«Sono stanco, ma voglio ballare.»</em></p>
+<p>Anziché chiedere a un agente di &quot;decidere cosa fare&quot;, usiamo uno schema di estrazione strutturata (<strong>Structured Outputs</strong>):</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PYTHON]</span>
+<span class="hljs-keyword">from</span> pydantic <span class="hljs-keyword">import</span> BaseModel, Field
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Literal</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    current_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Livello di energia stimato dell&#x27;utente (1-10)&quot;</span>)
+    desired_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Livello di energia desiderato (1-10)&quot;</span>)
+    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>] = Field(
+        ..., description=<span class="hljs-string">&quot;Mantenere lo stato, cambiarlo attivamente (shift) o esplorare cose nuove&quot;</span>
+    )
+    needs_clarification: <span class="hljs-built_in">bool</span> = Field(
+        ..., description=<span class="hljs-string">&quot;True se la richiesta è troppo vaga o contraddittoria e richiede domande di chiarimento&quot;</span>
+    )</code></pre><p>Una volta che l&#39;LLM ha estratto e validato questo schema, il passaggio successivo viene deciso da una funzione Python deterministica. Non c&#39;è alcun bisogno di un&#39;altra inferenza generativa:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Il router è codice, puro e semplice. 100% deterministico e testabile con pytest.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">determine_next_node</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-built_in">str</span>:
+    <span class="hljs-keyword">if</span> profile.needs_clarification:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarifier_agent&quot;</span>
+    <span class="hljs-keyword">if</span> profile.intent == <span class="hljs-string">&quot;shift&quot;</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;energy_transition_planner&quot;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;standard_search_agent&quot;</span></code></pre><pre class="mermaid">flowchart LR
+    U[Richiesta Utente] --&gt;|1. Estrazione strutturata| M[MoodProfile]
+    M --&gt;|2. Valutazione deterministica| R{needs_clarification?}
+    R --&gt;|Sì| C[Clarifier Agent]
+    R --&gt;|No| P{intent == &#39;shift&#39;?}
+    P --&gt;|Sì| T[Transition Planner]
+    P --&gt;|No| S[Standard Search]
 
     classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
     classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
     class M model;
-    class G code;</pre><p>La mossa importante qui è <strong>rendere la decisione rappresentabile</strong>. Finché la differenza fra «sono stanco» e «voglio ballare» restano testo libero, decidere il prossimo passo significa richiedere ogni volta un nuovo giudizio al modello. Quando diventa <code>current_energy != desired_energy</code> e <code>intent=&quot;shift&quot;</code>, una parte del controllo può uscire dal prompt ed entrare nel codice.</p>
+    class R,P code;</pre><h4 id="perch-questo-approccio-formidabile">Perché questo approccio è formidabile?</h4>
+<ol>
+<li><strong>Zero latenza decisionale</strong>: Il calcolo del percorso successivo richiede frazioni di millisecondo.</li>
+<li><strong>Facilità di test</strong>: Puoi scrivere unit test tradizionali (<code>pytest</code>) per verificare la logica di routing su centinaia di profili d&#39;uso, senza doverti preoccupare di allucinazioni o non-determinismo del modello in questa fase.</li>
+<li><strong>Meno sovraccarico nel prompt</strong>: Gli agenti a valle ricevono un input pulito e pre-strutturato (<code>MoodProfile</code>), liberandoli dal dover re-interpretare le intenzioni iniziali dell&#39;utente.</li>
+</ol>
 <h3 id="supervisor-la-decisione-resta-labile">Supervisor: la decisione resta labile</h3>
 <blockquote>
 <p><strong>Quando usarlo.</strong> Usa un supervisor quando il prossimo passo non è deducibile da una regola deterministica e richiede <strong>giudizio continuo</strong>. Il supervisor agisce come un &quot;Project Manager&quot; o un &quot;Direttore d&#39;Orchestra&quot;: valuta lo stato corrente, sceglie dinamicamente quale specialista (worker) attivare, riceve l&#39;output, aggiorna lo stato e decide il passo successivo. Conserva l&#39;ownership globale del contesto e della conversazione.
 <strong>Quando NON usarlo.</strong> Se la sequenza dei passaggi è fissa (A -&gt; B -&gt; C) o se la scelta del ramo dipende da una variabile nota (es. un boolean nel database), usa un workflow deterministico o un Router basato su codice. Eviterai latenza, costi di chiamata LLM e non-determinismo inutile.</p>
 </blockquote>
-<p>In pratica, il Supervisor serve quando dobbiamo coordinare diversi agenti specialisti le cui interazioni non sono prevedibili a priori.</p>
+<p>In pratica, il Supervisor serve quando dobbiamo coordinare diversi agenti specialisti le cui interazioni non sono prevedibili a priori. </p>
 <p>Prendiamo il nostro esempio di Spotify:</p>
 <ol>
 <li>L&#39;utente dice: <em>«Sono stanco, ma voglio ballare.»</em></li>
