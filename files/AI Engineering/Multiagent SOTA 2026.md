@@ -30,7 +30,7 @@ Nel 2026, le documentazioni e i case study che cito tra poco dedicano invece mol
 
 
 
-## 1. Il sistema più semplice che può funzionare
+## Il sistema più semplice che può funzionare
 
 Partiamo dalla prima domanda (probabillmente la più scomoda):
 
@@ -93,7 +93,7 @@ Sia chiaro non voglio dire che i sistemi multiagentici non hanno senso, sto solo
 
 
 
-## 2. Il monolite Spotify
+## Il monolite Spotify
 
 Torniamo al nostro esempio di Spotify. Partiamo dal sistema più naturale. Un agente riceve la richiesta e possiede cinque strumenti:
 
@@ -188,7 +188,7 @@ L'agente monolite (ovvero con solo tool a disposizione) possiede una condizione 
 
 Ed è qui che iniziano a valutare i sistemi multiagentici. Non perché cinque tool siano troppi in assoluto (o troppo pochi, potrebbero comunque fare confusione), ma perché l'azione di comprendere, di decidere, di eseguire e valutare convivono nello stesso centro decisionale, che è "la testa" di un singolo agente!
 
-## 3. Divide et impera
+## Divide et impera
 
 Chiudi gli occhi e dimmi a che soluzione stai pensando. Ok riapri gli occhi. Penso che la tentazione naturale sia, a questo punto, creare quattro agenti:
 
@@ -247,15 +247,18 @@ Microsoft Agent Framework presenta gli agenti come possibili partecipanti ed ese
 
 Una volta che abbiamo capito cosa vogliamo, vediamo a chi assegnare cosa ogni compito. Penso sia fondamentale che **ogni nodo abbia una responsabilità chiara**.
 
-## 4. Chi decide?
+## Chi decide?
 
 Una volta rappresentato il lavoro, dobbiamo assegnare il controllo.
 
-Tre pattern vengono spesso messi sullo stesso scaffale: routing, supervisor e handoff. In realtà rispondono a domande differenti.
+Nella mia esperienza ho visto che ci sono tre pattern che vengono confusi, o meglio pensati come equivalenti: routing, supervisor e handoff. In realtà rispondono a domande differenti!
 
 ### Routing: la decisione è già nello stato
 
-Il primo passo del running example consiste nel chiedere al modello di produrre uno stato semantico tipizzato.
+> **Quando usarlo.** Usa il routing quando la scelta del prossimo passo può essere ridotta a uno stato o a una classificazione esplicita e verificabile: un campo tipizzato, una soglia, una policy o un booleano. Il modello può estrarre o classificare quell'informazione e il codice deve decidere il ramo.
+> **Quando usare altro?** Se la scelta dipende invece dall'evoluzione del compito, da risultati intermedi o da un compromesso non rappresentato nello stato, serve un supervisor.
+
+Vediamo con il running example quale dovrebbe essere il primo passo. Ecco esso consiste nel chiedere al modello di produrre uno stato semantico tipizzato.
 
 ```python
 # [VERIFICATO NEL REPO] - mood_interpreter.py
@@ -294,6 +297,8 @@ La mossa importante non è «usare Pydantic». È **rendere la decisione rappres
 Finché la differenza fra «sono stanco» e «voglio ballare» vive soltanto nel testo, il control flow resta affidato al ragionamento del modello. Quando diventa `current_energy != desired_energy` e `intent="shift"`, una parte del controllo può uscire dal prompt ed entrare nel codice.
 
 ### Supervisor: la decisione richiede ancora giudizio
+
+> **Quando usarlo.** Usa un supervisor quando il prossimo passo non è deducibile da una regola stabile: deve scegliere fra specialisti in base all'obiettivo, allo stato, agli output intermedi e a trade-off che cambiano durante l'esecuzione. Il supervisor conserva l'ownership della conversazione e ricompone i risultati. Se basta leggere un campo o applicare una policy deterministica, è routing: un supervisor aggiungerebbe inferenza, latenza e non-determinismo senza produrre giudizio utile.
 
 Un supervisor serve quando non basta leggere un campo.
 
@@ -337,6 +342,8 @@ Se la risposta è già dentro uno schema, il supervisor è un modo costoso per l
 
 ### Handoff: cambia il proprietario del prossimo turno
 
+> **Quando usarlo.** Usa un handoff quando, oltre al lavoro da svolgere, deve cambiare chi possiede il dialogo nel turno successivo. Se un agente deve solo eseguire un sotto-compito e restituirne l'esito, mantieni il controllo nell'orchestratore e usa una delegation o un agente come tool.
+
 Nella delegation il manager resta l'interlocutore. Nell'handoff il controllo passa allo specialista.
 
 ```mermaid
@@ -364,7 +371,7 @@ Handoff    → cambia chi possiede il controllo.
 
 
 
-## 5. Un handoff è un contratto
+## Un handoff è un contratto
 
 Nei diagrammi l'handoff è una freccia. Nei sistemi veri è un confine.
 
@@ -410,7 +417,7 @@ La conseguenza è importante: un handoff non dovrebbe passare «tutto, per sicur
 
 
 
-## 6. Chi fa cosa?
+## Chi fa cosa?
 
 A questo punto sappiamo chi prende le decisioni. Resta da distribuire il lavoro.
 
@@ -478,7 +485,7 @@ Simon Willison propone una cautela simile: il parallelismo aiuta quando i file o
 
 
 
-## 7. Chi sa cosa?
+## Chi sa cosa?
 
 Qui arriviamo al nodo che nel 2026 pesa quasi quanto l'orchestrazione stessa: il **context engineering**.
 
@@ -549,7 +556,7 @@ Il punto non si risolve con «passiamo tutto a tutti». I worker paralleli posso
 
 
 
-## 8. Stato, memoria e artefatti
+## Stato, memoria e artefatti
 
 Nel linguaggio degli agenti, *memory* viene usato per indicare troppe cose. Conviene rimetterle in fila.
 
@@ -616,7 +623,7 @@ L'artefatto conserva fedeltà. Il riepilogo conserva spazio nel contesto.
 
 
 
-## 9. Chi controlla?
+## Chi controlla?
 
 Fin qui abbiamo distribuito il lavoro. Ora dobbiamo evitare che il sistema confonda «ho prodotto qualcosa» con «ho finito».
 
@@ -640,7 +647,7 @@ flowchart TD
     class J soft;
 ```
 
-### 9.1 Controlli deterministici
+### Controlli deterministici
 
 Se una proprietà si può verificare in Python, non serve chiedere a un LLM.
 
@@ -667,7 +674,7 @@ def hard_checks(playlist: Playlist, request: PlaylistRequest) -> CheckResult:
     return CheckResult(passed=not errors, errors=errors)
 ```
 
-### 9.2 Verifica nell'ambiente
+### Verifica nell'ambiente
 
 Un agente può dire di aver creato una playlist. La domanda è se la playlist esista davvero nel sistema esterno.
 
@@ -681,7 +688,7 @@ assert spotify.get_playlist(playlist_id).track_ids == payload.track_ids
 
 Anthropic distingue con precisione transcript e outcome: il primo è ciò che l'agente ha detto e fatto; il secondo è lo stato finale dell'ambiente. Un eval robusto tende a preferire l'outcome quando è osservabile ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
-### 9.3 Valutazione semantica
+### Valutazione semantica
 
 Rimane poi ciò che non si lascia ridurre a un'asserzione netta:
 
@@ -731,7 +738,7 @@ Senza criteri, budget e stop condition, evaluator-optimizer è soltanto una conv
 
 
 
-## 10. Evals: il sistema va misurato intero
+## Evals: il sistema va misurato intero
 
 Gli eval per agenti non possono limitarsi alla risposta finale.
 
@@ -812,7 +819,7 @@ Un eval troppo prescrittivo rischia di bocciare una soluzione valida soltanto pe
 
 
 
-## 11. Il mondo va storto
+## Il mondo va storto
 
 Un sistema multiagentico non è definito soltanto dal percorso felice. È definito da ciò che succede quando un nodo non fa il proprio dovere.
 
@@ -906,7 +913,7 @@ Una policy semplice è il **single writer**: molti agenti possono proporre, uno 
 
 
 
-## 12. Blast radius e human-in-the-loop
+## Blast radius e human-in-the-loop
 
 Quando un agente può soltanto leggere un catalogo musicale, il danno massimo è contenuto. Quando un agente può effettuare un rollback in produzione, la stessa architettura diventa un'altra faccenda.
 
@@ -942,7 +949,7 @@ Da qui una regola pratica:
 
 
 
-## 13. Quando il lavoro dura più della conversazione
+## Quando il lavoro dura più della conversazione
 
 I task brevi possono vivere in una singola context window. I task lunghi no.
 
@@ -994,7 +1001,7 @@ Anthropic ha mostrato nel marzo 2026 un harness a tre agenti per applicazioni lo
 
 
 
-## 14. Dal sistema di agenti all'harness
+## Dal sistema di agenti all'harness
 
 Nel 2026 la parola più interessante non è forse *multi-agent*. È *harness*.
 
@@ -1039,7 +1046,7 @@ Questo non implica che ogni applicazione debba costruire un meta-harness. Signif
 
 
 
-## 15. MCP e A2A: due problemi differenti
+## MCP e A2A: due problemi differenti
 
 Nel rumore dei protocolli è facile confondere le sigle.
 
@@ -1071,7 +1078,7 @@ Nel running example Spotify, introdurlo ora sarebbe complessità pagata in antic
 
 
 
-## 16. Quando una decisione diventa un edge
+## Quando una decisione diventa un edge
 
 A un certo punto il sistema contiene:
 
@@ -1124,7 +1131,7 @@ Microsoft Agent Framework documenta workflow funzionali o graph-based, agenti co
 
 
 
-## 17. La reference architecture Spotify
+## La reference architecture Spotify
 
 Ora possiamo rimettere insieme i pezzi.
 
@@ -1224,41 +1231,41 @@ Questa implementazione completa **non è ancora presente nel repository della le
 
 
 
-## 18. Cosa sta convergendo nel 2026
+## Cosa sta convergendo nel 2026
 
 Fonti e framework non concordano su un'unica architettura vincente. Sarebbe sospetto il contrario. Stanno però convergendo su alcuni principi.
 
-### 1. La semplicità viene prima della decomposizione
+### La semplicità viene prima della decomposizione
 
 Il multi-agent non è un premio di complessità. Anthropic raccomanda di partire dalla soluzione più semplice e aumentare la complessità solo quando serve; nel case study del 2026 l'autore rimuove poi una struttura a sprint quando un modello più capace la rende superflua ([Anthropic — Building effective agents](https://www.anthropic.com/engineering/building-effective-agents), [Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
 
-### 2. Il contesto è un oggetto di progetto
+### Il contesto è un oggetto di progetto
 
 Subagent, state schema, artifact e handoff non sono decorazioni. Sono modi per controllare ciò che ogni componente vede e ciò che viene perso nei passaggi ([Anthropic — Context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), [Willison — Subagents](https://simonwillison.net/guides/agentic-engineering-patterns/subagents/)).
 
-### 3. Il controllo deve essere localizzato
+### Il controllo deve essere localizzato
 
 Router, supervisor e handoff non sono sinonimi. Il primo legge uno stato, il secondo ragiona e conserva ownership, il terzo trasferisce ownership.
 
-### 4. La verifica deve toccare l'ambiente
+### La verifica deve toccare l'ambiente
 
 Runtime evidence, unit test, stato del database, browser, metriche e log valgono più di una dichiarazione del modello. OpenAI descrive agenti che interrogano trace e metriche per verificare il proprio lavoro; Anthropic distingue nettamente transcript e outcome ([OpenAI — Harness engineering](https://openai.com/index/harness-engineering/), [Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
-### 5. Lo stato deve sopravvivere al prompt
+### Lo stato deve sopravvivere al prompt
 
 Checkpoint, sessioni append-only e artefatti persistenti rendono possibile riprendere, ispezionare e correggere il lavoro long-running ([Anthropic — Managed Agents](https://www.anthropic.com/engineering/managed-agents), [Microsoft — HITL nei workflow](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop)).
 
-### 6. Il rischio si gestisce con confini deterministici
+### Il rischio si gestisce con confini deterministici
 
 Permission, read-only worker, single writer, sandbox ed egress control limitano il danno anche quando il modello sbaglia o viene ingannato ([Anthropic — Containment](https://www.anthropic.com/engineering/how-we-contain-claude)).
 
-### 7. Il modello e l'harness vanno valutati insieme
+### Il modello e l'harness vanno valutati insieme
 
 Quando diciamo «l'agente ha ottenuto questo risultato», stiamo misurando modello, prompt, tool, memoria, orchestrazione e ambiente. Cambiare il modello senza riesaminare l'harness è tanto ingenuo quanto cambiare l'harness senza rieseguire gli eval ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents), [Anthropic — Managed Agents](https://www.anthropic.com/engineering/managed-agents)).
 
 
 
-## 19. Una grammatica per progettare
+## Una grammatica per progettare
 
 Alla fine, i pattern servono meno delle domande.
 
@@ -1315,7 +1322,7 @@ Una checklist minimale può stare in poche righe:
 
 
 
-## 20. Un laboratorio interattivo
+## Un laboratorio interattivo
 
 Il simulatore didattico interattivo arriverà in un aggiornamento successivo. Intanto questo diagramma statico rende visibile la decisione architetturale di base:
 
