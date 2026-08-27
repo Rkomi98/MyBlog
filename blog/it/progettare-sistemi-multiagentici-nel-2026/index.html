@@ -2048,8 +2048,10 @@ Giudicare la coerenza        → evaluator, se resta soggettività</code></pre><
 <p>Nella mia esperienza ho visto che ci sono tre pattern che vengono confusi, o meglio pensati come equivalenti: routing, supervisor e handoff. In realtà rispondono a domande differenti!</p>
 <h3 id="routing-sai-gi-cosa-vuoi">Routing: sai già cosa vuoi?</h3>
 <blockquote>
-<p><strong>Quando usarlo.</strong> Usa il routing quando la scelta del prossimo passo può essere ricondotta a una classificazione esplicita o a uno stato ben definito (un campo tipizzato, una soglia, una policy booleana). L&#39;LLM si limita ad analizzare l&#39;input ed estrarre i parametri; poi, un semplice algoritmo deterministico in codice (es. <code>if/else</code>) smista l&#39;esecuzione verso il nodo corretto.
-<strong>Quando NON usarlo.</strong> Se la decisione sul passo successivo richiede di valutare dinamicamente trade-off, negoziare tra agenti o rivalutare la strategia in base a risultati parziali, usa un <strong>Supervisor</strong>.</p>
+<p><strong>Quando usarlo.</strong> Usa il routing quando la scelta del prossimo passo può essere ricondotta a una classificazione esplicita o a uno stato ben definito (un campo tipizzato, una soglia, una policy booleana). L&#39;LLM si limita ad analizzare l&#39;input ed estrarre i parametri; poi, un semplice algoritmo deterministico in codice (es. <code>if/else</code>) smista l&#39;esecuzione verso il nodo corretto.</p>
+</blockquote>
+<blockquote>
+<p><strong>Quando NON usarlo.</strong> Se la decisione sul passo successivo richiede di valutare dinamicamente trade-off, negoziare tra agenti o rivalutare la strategia in base a risultati parziali, usa un <strong>Supervisor</strong>.</p>
 </blockquote>
 <p>Il routing è il pattern più efficiente in assoluto: massimizza la prevedibilità, minimizza la latenza e riduce i costi di chiamata LLM, spostando la logica di controllo dal prompt al codice applicativo.</p>
 <p>Prendiamo il nostro utente che dice: <em>«Sono stanco, ma voglio ballare.»</em></p>
