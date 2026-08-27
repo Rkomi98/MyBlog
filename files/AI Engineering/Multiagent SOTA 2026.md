@@ -1,38 +1,42 @@
 # Progettare sistemi multiagentici nel 2026
 
-> **Nota editoriale.** Questo articolo distingue deliberatamente tre livelli. Gli esempi marcati **[VERIFICATO NEL REPO]** corrispondono al running example Spotify della lezione. Gli esempi marcati **[REFERENCE DESIGN]** descrivono l'architettura verso cui quel sistema può evolvere. Gli esempi marcati **[PSEUDOCODICE]** servono a rendere visibile una scelta di progettazione e non vanno letti come API di un framework specifico.
+Ho sentito sviluppatori vantarsi di aver progettato sistemi multiagentici solo per farsi figo davanti ai colleghi o per vendere la propria soluzione con "temi di moda". Ecco, in questo articolo voglio andare deep su questo e non fermarmi al come costruirli. Perché prima di progettare un sistema così complesso, ha senso chiedersi se ha senso definirlo!
 
-Prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro. Su questo punto si inciampa spesso, e il resto del discorso ne risente...
+Per questo motivo, prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro.
 
 Un sistema multiagentico non nasce quando metti due modelli uno accanto all'altro. Non nasce nemmeno quando un agente chiama un secondo agente come se fosse un tool. Nasce quando decidi di **distribuire responsabilità, contesto e controllo** fra componenti che possono prendere decisioni parzialmente autonome.
 
-La parola importante, qui, è *decidi*. Perché aggiungere agenti non è un obiettivo. È una scelta architetturale che deve ripagare il proprio costo.
+La parola importante, qui, è *decidi*. Perché aggiungere agenti non è un obiettivo. È una **scelta architetturale** che deve ripagare il proprio costo.
 
-Per tenere insieme il discorso useremo un esempio che mi è arrivato direttamente da un percorso che sto costruendo con Datapizza. Un sistema multiagentico in grado di intercettare il mood dell'utente e di proporre una playlist di conseguenza (a tal proposito ora sto ascoltando [radio Suno](https://suno.com/labs/live-radio)). Partiamo da una richiesta molto semplice:
+Per tenere insieme il discorso useremo un esempio che mi è arrivato direttamente da un percorso che sto costruendo con Datapizza. Un sistema multiagentico in grado di intercettare il mood dell'utente e di proporre una playlist di conseguenza (a tal proposito ora sto ascoltando [radio Suno](https://suno.com/labs/live-radio)). Partiamo da una richiesta molto semplice e vaga di un possibile utente:
 
 > **«Sono stanco, ma voglio ballare.»**
 
-È una frase piccola, ma contiene già quasi tutto. Uno stato attuale, uno stato desiderato, una tensione fra i due e una decisione da prendere. La useremo come una lente: ogni volta che il sistema si incrina, introdurremo soltanto il meccanismo necessario a risolvere quella crepa.
+È una frase piccola, ma contiene in poche parole una tensione fra due stati e una decisione da prendere.
 
-Il filo rosso dell'articolo può essere condensato in cinque domande:
+Questo articolo può essere condensato in cinque domande:
 
 1. **Chi decide?**
 2. **Chi sa cosa?**
 3. **Chi fa cosa?**
 4. **Chi controlla che il lavoro sia stato svolto bene?**
-5. **Chi tiene in piedi il sistema quando il lavoro dura, qualcosa fallisce o il modello cambia?**
+5. **Chi tiene in piedi il sistema quando ci sono problemi?**
 
-Nel 2024 la tassonomia più utile parlava soprattutto di routing, chaining, parallelizzazione, orchestrator-workers ed evaluator-optimizer. Quei pattern restano validi. Nel 2026, però, il punto interessante si è spostato un livello più in alto: context lifecycle, contratti, artefatti, checkpoint, eval di traiettoria, sandbox, containment e harness. Anthropic, OpenAI e Microsoft stanno convergendo proprio su questa fascia del problema, pur usando vocabolari e astrazioni differenti.[^anthropic-engineering][^openai-sdk-2026][^microsoft-workflows]
+Nel 2024 Anthropic descriveva soprattutto routing, chaining, parallelizzazione, orchestrator-workers ed evaluator-optimizer ([Anthropic — Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)). Lungi da me dire che sono obsoleti quei pattern, anzi restano assolutamente validi.
 
----
+Nel 2026, le documentazioni e i case study che cito tra poco dedicano invece molta attenzione a context lifecycle, contratti, artefatti, checkpoint, eval di traiettoria, sandbox, containment e harness ([Anthropic — Managed Agents](https://www.anthropic.com/engineering/managed-agents), [OpenAI — Agents SDK](https://openai.com/index/the-next-evolution-of-the-agents-sdk/), [Microsoft — Workflows](https://learn.microsoft.com/en-us/agent-framework/workflows/)). 
+
+> Sia chiaro, questa è una sintesi generale di quanto ho letto finora sui vari substack e blog ufficiali delle fonti, non è una tassonomia ufficiale condivisa.
+
+
 
 ## 1. Il sistema più semplice che può funzionare
 
-La prima domanda non è «quanti agenti servono?». È più scomoda:
+Partiamo dalla prima domanda (probabillmente la più scomoda):
 
 > **Perché un singolo agente non basta?**
 
-Se il percorso è noto in anticipo, spesso basta un workflow. Se una trasformazione è deterministica, basta una funzione. Se un solo agente può mantenere il contesto e usare bene gli strumenti, dividere il lavoro crea soltanto nuovi punti di rottura.
+Se il percorso è noto in anticipo, spesso basta un **workflow**. Se una trasformazione è deterministica, basta magari solo una funzione. Se un solo agente può mantenere il contesto e usare bene gli strumenti, dividere il lavoro crea soltanto nuovi punti di rottura.
 
 ```mermaid
 flowchart LR
@@ -47,7 +51,7 @@ flowchart LR
     class M hot;
 ```
 
-Salire verso destra significa guadagnare flessibilità, ma anche pagare in latenza, costo, non determinismo, coordinamento e osservabilità.
+Andare verso destra significa guadagnare flessibilità, ma anche pagare in latenza, costo, non determinismo, coordinamento e osservabilità.
 
 Una regola di partenza può essere scritta così:
 
@@ -67,23 +71,31 @@ def choose_architecture(problem):
     return "consider_multi_agent"
 ```
 
-Non è una formula universale. È un freno. Serve a evitare l'errore più comune: scambiare la complessità per maturità.
+Chiaramente non è una formula universale, non sono un oracolo dell'AI. Però è quanto basta per evitare l'errore di scambiare la complessità di un sistema per maturità. Fidatevi che non è così
 
-Simon Willison lo formula da una prospettiva molto pratica: i subagent sono preziosi soprattutto perché preservano il contesto principale e assorbono operazioni pesanti in token; suddividere ogni attività in decine di specialisti, invece, può diventare un vezzo costoso.[^simon-subagents]
+Mi metto nei panni di un lettore che arrivato a questo punto si chiede:
+
+> Ok Mirko ma quindi questi sistemi quando mi servono? Quando ha senso definire dei sottoagenti?
+
+Simon Willison cerca di rispondere a questa domanda nel suo blog: i subagent sono preziosi soprattutto perché preservano il contesto principale e assorbono operazioni pesanti in token. Dall'altra parte avverte però che è facile frammentare inutilmente un task in molti specialisti ([Willison — Subagents](https://simonwillison.net/guides/agentic-engineering-patterns/subagents/)).
 
 ### Un agente deve guadagnarsi il posto
 
-Prima di aggiungere un agente, prova a completare questa frase:
+Prima di complicare la tua soluzione in una agentica, prova a completare questa frase:
 
-> «Questo componente deve essere un agente perché deve ____________.»
+> «Ora introduco un agente perché questa componente deve ____________.»
 
-Le risposte plausibili riguardano giudizio, pianificazione aperta, uso dinamico di strumenti, esplorazione o interazione. Se la risposta è «deve ordinare una lista», «deve verificare i duplicati» o «deve scegliere un ramo leggendo un booleano», probabilmente stai promuovendo a collega ciò che dovrebbe restare una funzione.
+Le risposte plausibili riguardano giudizio, pianificazione aperta, uso dinamico di strumenti, esplorazione o interazione. Se la risposta è «deve ordinare una lista», «deve verificare i duplicati» o «deve scegliere un ramo leggendo un booleano», probabilmente stai esagerando.
 
----
+Avete presente quando andate al supermercato e comprate più cose rispetto a quello di cui avete realmente bisogno? Ecco è esattamente quello che sto notando nel mondo agentico!
+
+Sia chiaro non voglio dire che i sistemi multiagentici non hanno senso, sto solo mettendo gli svlippatori sull'attenti perché non è una soluzione a tutto. Però ora vediamo un caso d'uso interessante.
+
+
 
 ## 2. Il monolite Spotify
 
-Partiamo dal sistema più naturale. Un agente riceve la richiesta e possiede cinque strumenti:
+Torniamo al nostro esempio di Spotify. Partiamo dal sistema più naturale. Un agente riceve la richiesta e possiede cinque strumenti:
 
 - interpretare il mood;
 - cercare generi;
@@ -91,10 +103,10 @@ Partiamo dal sistema più naturale. Un agente riceve la richiesta e possiede cin
 - ordinare i risultati;
 - generare la playlist.
 
-Nel repository della lezione questa versione esiste ed è eseguibile.
+> Nella lezione che ho proposto questo si è tradotto in un codice vero e proprio
 
 ```python
-# [VERIFICATO NEL REPO] - monolith.py
+# Ecco un bell'agente monolite
 
 return Agent(
     name="playlist_monolith",
@@ -111,7 +123,7 @@ return Agent(
 )
 ```
 
-Il disegno è quasi disarmante:
+Vediamo con uno schemino cosa fa questo agente:
 
 ```mermaid
 flowchart LR
@@ -141,7 +153,7 @@ Poi sposti il focus e compare la crepa.
 
 In alcuni run l'agente tratta i due segnali come due ricerche indipendenti, unisce i risultati e consegna una playlist che contiene brani da festa e brani rilassanti senza aver deciso quale relazione esista fra lo stato attuale e quello desiderato.
 
-Il problema non è che il modello non abbia capito le parole. Le ha capite entrambe. Non ha nemmeno scelto un tool palesemente sbagliato. Il fallimento sta altrove: **una decisione importante è rimasta implicita**.
+Il problema non è che il modello non abbia interpretato bene le parole. Le ha capite entrambe. E non ha nemmeno scelto un tool palesemente sbagliato. Il fallimento sta altrove: **una decisione importante è rimasta implicita**! O meglio non si è fermato a chiedere all'utente "Ok bro ma quindi che vuoi? Scegli una via altrimenti viene un mezzo pasticcio!"
 
 ```mermaid
 flowchart LR
@@ -158,7 +170,7 @@ flowchart LR
     class C,O bad;
 ```
 
-Qui si vedono due ambiguità diverse.
+Ok focalizziamoci meglio su queste due ambiguità diverse che non sono state viste dall'agente.
 
 ### Decision ambiguity
 
@@ -172,15 +184,13 @@ Chi stabilisce se la richiesta descrive:
 
 Chi stabilisce che la playlist prodotta sia abbastanza coerente da poter essere consegnata?
 
-Il monolite possiede una condizione di arresto tecnica: `max_steps=8` e un tool finale. Quello che gli manca è una **definition of done esterna al proprio entusiasmo**.
+L'agente monolite (ovvero con solo tool a disposizione) possiede una condizione di arresto tecnica: `max_steps=8` e un tool finale. Quello che gli manca è una **definition of done esterna**.
 
-Ed è qui che iniziano i sistemi multiagentici. Non perché cinque tool siano troppi in assoluto, ma perché comprendere, decidere, eseguire e valutare convivono nello stesso centro decisionale.
+Ed è qui che iniziano a valutare i sistemi multiagentici. Non perché cinque tool siano troppi in assoluto (o troppo pochi, potrebbero comunque fare confusione), ma perché l'azione di comprendere, di decidere, di eseguire e valutare convivono nello stesso centro decisionale, che è "la testa" di un singolo agente!
 
----
+## 3. Divide et impera
 
-## 3. Scomporre il problema prima dell'agente
-
-La tentazione, a questo punto, è creare quattro agenti:
+Chiudi gli occhi e dimmi a che soluzione stai pensando. Ok riapri gli occhi. Penso che la tentazione naturale sia, a questo punto, creare quattro agenti:
 
 ```text
 Mood Agent
@@ -189,9 +199,7 @@ Search Agent
 Evaluation Agent
 ```
 
-Sembra ordinato. Però l'ordine visivo non garantisce una buona architettura.
-
-Prima bisogna scomporre il **lavoro**.
+Sembra ordinato. Ma come gestiamo l'architettura, che ordine diamo? Prima bisogna scomporre il **lavoro**!
 
 ```mermaid
 flowchart LR
@@ -233,11 +241,11 @@ Giudicare la coerenza        → evaluator, se resta soggettività
 
 Questa distinzione vale la pena di fissarla:
 
-> **Task decomposition e agent decomposition non sono la stessa cosa.**
+> **Task decomposition e agent decomposition non sono la stessa cosa!!**
 
-Nel 2026 Microsoft Agent Framework rende questa scelta esplicita: gli executor di un workflow possono essere agenti oppure normale logica applicativa. Il grafo non pretende che ogni nodo ragioni; pretende che ogni nodo abbia una responsabilità chiara.[^microsoft-workflows]
+Microsoft Agent Framework presenta gli agenti come possibili partecipanti ed esecutori di workflow funzionali o basati su un grafo ([Microsoft — Workflows](https://learn.microsoft.com/en-us/agent-framework/workflows/)). 
 
----
+Una volta che abbiamo capito cosa vogliamo, vediamo a chi assegnare cosa ogni compito. Penso sia fondamentale che **ogni nodo abbia una responsabilità chiara**.
 
 ## 4. Chi decide?
 
@@ -345,7 +353,7 @@ flowchart LR
     end
 ```
 
-OpenAI Agents SDK distingue esplicitamente queste due topologie: *agents as tools* quando il manager mantiene il controllo; *handoffs* quando lo specialista prende in carico la parte successiva dell'interazione.[^openai-multi-agent][^openai-handoffs]
+OpenAI Agents SDK distingue esplicitamente queste due topologie: *agents as tools* quando il manager mantiene il controllo; *handoffs* quando lo specialista prende in carico la parte successiva dell'interazione ([OpenAI Agents SDK — orchestrazione](https://openai.github.io/openai-agents-python/multi_agent/), [handoff](https://openai.github.io/openai-agents-python/handoffs/)).
 
 La differenza si può ricordare così:
 
@@ -354,7 +362,7 @@ Delegation → cambia chi lavora.
 Handoff    → cambia chi possiede il controllo.
 ```
 
----
+
 
 ## 5. Un handoff è un contratto
 
@@ -396,11 +404,11 @@ Qui diventano visibili due decisioni che spesso vengono confuse:
 1. **chi possiede il controllo;**
 2. **quale informazione attraversa il confine.**
 
-LangChain/LangGraph tratta gli handoff come transizioni guidate dallo stato e permette di filtrare ciò che il nuovo agente riceve. Anche i subgraph hanno schemi di input e output separabili dallo stato del parent graph.[^langchain-handoffs][^langgraph-subgraphs]
+LangChain documenta gli handoff come transizioni guidate dallo stato. LangGraph mostra inoltre che parent graph e subgraph possono avere schemi di stato distinti, mappando esplicitamente l'input verso il subgraph e il suo output di ritorno ([LangChain — handoff](https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs), [LangGraph — subgraph](https://docs.langchain.com/oss/python/langgraph/use-subgraphs)).
 
 La conseguenza è importante: un handoff non dovrebbe passare «tutto, per sicurezza». Dovrebbe passare ciò che serve a lavorare senza costringere lo specialista a ricostruire il mondo.
 
----
+
 
 ## 6. Chi fa cosa?
 
@@ -460,15 +468,15 @@ A → B → C        dipendenza: sequenza
 A → {B, C, D}    indipendenza: parallelismo possibile
 ```
 
-Nel febbraio 2026 Anthropic ha raccontato un esperimento con sedici agenti Claude che lavoravano in parallelo su un compilatore C. L'esperimento mostra quanto può crescere la capacità quando il lavoro è divisibile e l'ambiente condiviso rende visibili progressi e test; mostra anche quanto rapidamente salgano costo e complessità operativa.[^anthropic-c-compiler]
+Nel febbraio 2026 Anthropic ha raccontato un esperimento con sedici agenti Claude che lavoravano in parallelo su un compilatore C. È un caso concreto in cui task lock, repository condiviso e test hanno permesso di dividere il lavoro; lo stesso resoconto documenta merge conflict frequenti, circa 2.000 sessioni e quasi 20.000 dollari di costo ([Anthropic — C compiler](https://www.anthropic.com/engineering/building-c-compiler)).
 
 La lettura giusta non è «sedici agenti funzionano». È:
 
 > **Quale struttura del problema ha reso possibile farli lavorare senza calpestarsi?**
 
-Simon Willison propone una cautela simile: il parallelismo aiuta quando i file o i sottocompiti sono indipendenti; i subagent restano soprattutto un meccanismo per proteggere il contesto principale e confinare operazioni verbose.[^simon-subagents]
+Simon Willison propone una cautela simile: il parallelismo aiuta quando i file o i sottocompiti sono indipendenti; i subagent restano soprattutto un meccanismo per proteggere il contesto principale e confinare operazioni verbose ([Willison — Subagents](https://simonwillison.net/guides/agentic-engineering-patterns/subagents/)).
 
----
+
 
 ## 7. Chi sa cosa?
 
@@ -524,13 +532,13 @@ rubrica di valutazione
 
 La regola «contesto minimo sufficiente» non significa amputare informazione a caso. Significa riconoscere che il contesto è una forma di **memoria di lavoro**: limitata, costosa e sensibile al rumore.
 
-Anthropic ha formalizzato questa idea nel 2025 parlando di context engineering: selezionare, mantenere e aggiornare l'insieme di token che massimizza la probabilità del comportamento desiderato. Nel 2026 quel principio si ritrova dentro subagent, sessioni persistenti, artefatti e harness long-running.[^anthropic-context]
+Anthropic ha formalizzato questa idea nel 2025 parlando di context engineering: selezionare, mantenere e aggiornare l'insieme di token che massimizza la probabilità del comportamento desiderato ([Anthropic — Context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)). Nel resto dell'articolo applicheremo questo principio a subagent, sessioni persistenti, artefatti e harness long-running.
 
 ### Il paradosso del contesto condiviso
 
 Passare poco contesto produce omissioni. Passarne troppo produce interferenza.
 
-Jason Liu, raccontando la posizione di Cognition sui multi-agent per il coding, usa l'immagine del telefono senza fili: ogni passaggio può perdere decisioni implicite e produrre componenti incompatibili. È una fonte del 2025, quindi non la userei per descrivere da sola lo stato dell'arte; rimane però una delle formulazioni più nitide del rischio di context loss fra agenti.[^jason-cognition]
+Jason Liu, raccontando la posizione di Cognition sui multi-agent per il coding, usa l'immagine del telefono senza fili: ogni passaggio può perdere decisioni implicite e produrre componenti incompatibili. È una fonte del 2025, quindi non la userei per descrivere da sola lo stato dell'arte; rimane però una delle formulazioni più nitide del rischio di context loss fra agenti ([Jason Liu — Cognition e multi-agent](https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/)).
 
 Il punto non si risolve con «passiamo tutto a tutti». I worker paralleli possono comunque prendere decisioni incompatibili, e il contesto globale può diventare troppo grande. La soluzione matura consiste nel rendere espliciti:
 
@@ -539,7 +547,7 @@ Il punto non si risolve con «passiamo tutto a tutti». I worker paralleli posso
 - le informazioni che possono restare locali;
 - il formato con cui i risultati risalgono.
 
----
+
 
 ## 8. Stato, memoria e artefatti
 
@@ -606,7 +614,7 @@ L'artefatto conserva fedeltà. Il riepilogo conserva spazio nel contesto.
 
 È un equilibrio molto più solido del tentativo di trasformare ogni passaggio in un messaggio sempre più lungo.
 
----
+
 
 ## 9. Chi controlla?
 
@@ -671,7 +679,7 @@ playlist_id = spotify.create_playlist(payload)
 assert spotify.get_playlist(playlist_id).track_ids == payload.track_ids
 ```
 
-Anthropic distingue con precisione transcript e outcome: il primo è ciò che l'agente ha detto e fatto; il secondo è lo stato finale dell'ambiente. Un eval robusto tende a preferire l'outcome quando è osservabile.[^anthropic-evals]
+Anthropic distingue con precisione transcript e outcome: il primo è ciò che l'agente ha detto e fatto; il secondo è lo stato finale dell'ambiente. Un eval robusto tende a preferire l'outcome quando è osservabile ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
 ### 9.3 Valutazione semantica
 
@@ -693,9 +701,9 @@ class SemanticEvaluation(BaseModel):
     passed: bool
 ```
 
-Il principio non è «servono sempre due agenti». Anthropic, nel lavoro del marzo 2026 su planner, generator ed evaluator, mostra che separare chi produce da chi giudica può correggere la tendenza all'autocompiacimento. Lo stesso articolo mostra però anche un'altra cosa: il beneficio dipende dal compito e dal modello, mentre costo e latenza possono crescere di un ordine di grandezza.[^anthropic-harness-2026]
+Il principio non è «servono sempre due agenti». Nel suo case study del marzo 2026, Anthropic propone di separare generator ed evaluator perché è più facile rendere un valutatore autonomo severo che convincere un generatore a criticare il proprio output. Lo stesso case study mostra però che il beneficio dipende dal compito e dal modello, mentre costo e latenza possono crescere di un ordine di grandezza ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
 
-In uno degli esperimenti descritti, il sistema completo ha lavorato per circa sei ore e consumato circa 200 dollari, contro venti minuti e 9 dollari del singolo agente. La qualità era superiore, ma il conto ci ricorda che un evaluator deve guadagnarsi il proprio posto esattamente come gli altri agenti.[^anthropic-harness-2026]
+In uno degli esperimenti descritti, il sistema completo ha lavorato per circa sei ore e consumato circa 200 dollari, contro venti minuti e 9 dollari del singolo agente. La qualità era superiore, ma il conto ci ricorda che un evaluator deve guadagnarsi il proprio posto esattamente come gli altri agenti ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
 
 ### Un ciclo ha bisogno di un freno
 
@@ -721,7 +729,7 @@ raise VerificationFailed("revision budget exhausted")
 
 Senza criteri, budget e stop condition, evaluator-optimizer è soltanto una conversazione circolare fra modelli.
 
----
+
 
 ## 10. Evals: il sistema va misurato intero
 
@@ -734,7 +742,7 @@ Anthropic propone una terminologia utile:
 - **grader**: la logica che assegna un giudizio;
 - **transcript / trace / trajectory**: la storia completa del trial;
 - **outcome**: lo stato finale dell'ambiente;
-- **evaluation harness**: l'infrastruttura che esegue, registra e valuta.[^anthropic-evals]
+- **evaluation harness**: l'infrastruttura che esegue, registra e valuta ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
 Nel running example, una suite sensata non dovrebbe chiedere soltanto «ha prodotto una playlist?». Dovrebbe definire una semantica diversa per ogni richiesta.
 
@@ -796,13 +804,13 @@ tasso di recovery
 fallimenti silenziosi
 ```
 
-Hamel Husain insiste su una distinzione che vale la pena portarsi dietro: errori differenti richiedono tassonomie differenti. Chiamare tutto «hallucination» rende invisibili i guasti che contano. La pratica utile parte dalla lettura dei trace, costruisce un vocabolario degli errori e calibra gli evaluator contro giudizi umani.[^hamel-evals]
+Hamel Husain insiste su una distinzione che vale la pena portarsi dietro: errori differenti richiedono tassonomie differenti. Chiamare tutto «hallucination» rende invisibili i guasti che contano. La pratica utile parte dalla lettura dei trace, costruisce un vocabolario degli errori e calibra gli evaluator contro giudizi umani ([Hamel Husain — Evals skills](https://hamelhusain.substack.com/p/evals-skills-for-coding-agents)).
 
 ### Non premiare un percorso rigido
 
 Un eval troppo prescrittivo rischia di bocciare una soluzione valida soltanto perché il modello ha trovato una strada diversa. Quando possibile, verifica l'outcome e usa la traiettoria per individuare comportamenti rischiosi, sprechi o violazioni di policy, senza trasformare ogni tool call in un copione obbligatorio.
 
----
+
 
 ## 11. Il mondo va storto
 
@@ -896,7 +904,7 @@ Senza idempotenza, un errore di rete dopo il side effect può produrre due playl
 
 Una policy semplice è il **single writer**: molti agenti possono proporre, uno soltanto può modificare lo stato esterno.
 
----
+
 
 ## 12. Blast radius e human-in-the-loop
 
@@ -924,15 +932,15 @@ flowchart LR
     class X risky;
 ```
 
-Anthropic, nel maggio 2026, ha descritto il containment come un problema di limitazione del blast radius: non soltanto sorvegliare ciò che il modello tende a fare, ma restringere ciò che l'ambiente gli permette materialmente di fare. L'articolo segnala anche l'approvazione automatica o distratta come limite del semplice human-in-the-loop: troppi prompt di permesso producono approval fatigue.[^anthropic-containment]
+Anthropic, nel maggio 2026, ha descritto il containment come un problema di limitazione del blast radius: non soltanto sorvegliare ciò che il modello tende a fare, ma restringere ciò che l'ambiente gli permette materialmente di fare. L'articolo segnala anche l'approvazione automatica o distratta come limite del semplice human-in-the-loop: troppi prompt di permesso producono approval fatigue ([Anthropic — Containment](https://www.anthropic.com/engineering/how-we-contain-claude)).
 
-Microsoft Agent Framework tratta le richieste di approvazione e informazione come eventi sospendibili del workflow; lo stato pendente può essere incluso nei checkpoint e riemesso dopo il ripristino.[^microsoft-hitl]
+Microsoft Agent Framework tratta le richieste di approvazione e informazione come eventi sospendibili del workflow; lo stato pendente può essere incluso nei checkpoint e riemesso dopo il ripristino ([Microsoft — HITL nei workflow](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop)).
 
 Da qui una regola pratica:
 
 > **Il controllo umano va collocato nei punti di rischio, non distribuito come una pioggia di finestre modali.**
 
----
+
 
 ## 13. Quando il lavoro dura più della conversazione
 
@@ -982,9 +990,9 @@ checkpoint = Checkpoint(
 checkpoint_store.save(checkpoint)
 ```
 
-Anthropic ha mostrato nel marzo 2026 un harness a tre agenti per applicazioni long-running: planner, generator ed evaluator, con contratti e file usati come artefatti di comunicazione. Un dettaglio istruttivo è che, con modelli successivi, alcune parti del vecchio harness sono diventate zavorra e sono state rimosse. L'harness non è una cattedrale: è un'ipotesi sui limiti del modello corrente.[^anthropic-harness-2026]
+Anthropic ha mostrato nel marzo 2026 un harness a tre agenti per applicazioni long-running: planner, generator ed evaluator, con contratti e file usati come artefatti di comunicazione. Un dettaglio istruttivo è che, con modelli successivi, alcune parti del vecchio harness sono diventate zavorra e sono state rimosse. L'harness non è una cattedrale: è un'ipotesi sui limiti del modello corrente ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
 
----
+
 
 ## 14. Dal sistema di agenti all'harness
 
@@ -1004,9 +1012,9 @@ flowchart TB
     H --> X[Sandbox / execution environments]
 ```
 
-OpenAI, nel proprio lavoro sull'harness engineering, racconta un prodotto costruito con agenti Codex, test automatizzati, osservabilità leggibile dal modello e ambienti isolati per task. Il punto interessante non è il numero di righe prodotte; è il cambio di mestiere: gli esseri umani progettano ambiente, intenti e feedback loop, mentre gli agenti eseguono.[^openai-harness]
+OpenAI, nel proprio lavoro sull'harness engineering, racconta un prodotto costruito con agenti Codex, test automatizzati, osservabilità leggibile dal modello e ambienti isolati per task. Il punto interessante non è il numero di righe prodotte; è il cambio di mestiere: gli esseri umani progettano ambiente, intenti e feedback loop, mentre gli agenti eseguono ([OpenAI — Harness engineering](https://openai.com/index/harness-engineering/)).
 
-Ad aprile 2026 OpenAI ha esteso Agents SDK con un harness più capace per lavori su file e tool, sandbox native e separazione fra harness e compute per sicurezza, durabilità e scala.[^openai-sdk-2026]
+Ad aprile 2026 OpenAI ha esteso Agents SDK con un harness più capace per lavori su file e tool, sandbox native e separazione fra harness e compute per sicurezza, durabilità e scala ([OpenAI — Evoluzione dell’Agents SDK](https://openai.com/index/the-next-evolution-of-the-agents-sdk/)).
 
 Anthropic, con Managed Agents, propone una separazione molto nitida:
 
@@ -1021,15 +1029,15 @@ SANDBOX
 ambiente in cui il lavoro viene eseguito
 ```
 
-La separazione consente a ciascun elemento di fallire, cambiare o scalare indipendentemente. È la versione infrastrutturale della stessa domanda che ci accompagna dall'inizio: chi possiede quale responsabilità?[^anthropic-managed]
+La separazione consente a ciascun elemento di fallire, cambiare o scalare indipendentemente. È la versione infrastrutturale della stessa domanda che ci accompagna dall'inizio: chi possiede quale responsabilità? ([Anthropic — Managed Agents](https://www.anthropic.com/engineering/managed-agents))
 
 ### Molti cervelli, molte mani
 
-La metafora usata da Anthropic è efficace. Il «cervello» è modello più harness; le «mani» sono sandbox e strumenti. Disaccoppiarli consente a più harness di usare ambienti diversi, o allo stesso harness di inviare lavoro a più execution environment, senza trasformare ogni sessione in un server indivisibile.[^anthropic-managed]
+La metafora usata da Anthropic è efficace. Il «cervello» è modello più harness; le «mani» sono sandbox e strumenti. Disaccoppiarli consente a più harness di usare ambienti diversi, o allo stesso harness di inviare lavoro a più execution environment, senza trasformare ogni sessione in un server indivisibile ([Anthropic — Managed Agents](https://www.anthropic.com/engineering/managed-agents)).
 
 Questo non implica che ogni applicazione debba costruire un meta-harness. Significa che, appena il lavoro diventa lungo e operativo, il confine fra ragionamento, stato ed esecuzione smette di essere un dettaglio.
 
----
+
 
 ## 15. MCP e A2A: due problemi differenti
 
@@ -1037,7 +1045,7 @@ Nel rumore dei protocolli è facile confondere le sigle.
 
 ### MCP
 
-Model Context Protocol collega un modello o un agente a strumenti, dati e risorse. La relazione tipica è:[^mcp]
+Model Context Protocol collega un modello o un agente a strumenti, dati e risorse ([specifica MCP](https://modelcontextprotocol.io/specification/2026-07-28)). La relazione tipica è:
 
 ```text
 agent ↔ tool / data source
@@ -1045,7 +1053,7 @@ agent ↔ tool / data source
 
 ### A2A
 
-Agent2Agent riguarda l'interoperabilità fra agenti o servizi agentici separati, con capability discovery, task e scambio di artefatti.
+Agent2Agent riguarda l'interoperabilità e la comunicazione fra agenti o servizi agentici separati ([documentazione ufficiale A2A](https://a2a-protocol.org/latest/)).
 
 ```text
 agent service ↔ agent service
@@ -1057,11 +1065,11 @@ flowchart LR
     A -->|A2A| B[Remote Agent Service]
 ```
 
-A2A non rende più intelligente un sistema nello stesso processo. Risolve un confine organizzativo e infrastrutturale: agenti remoti, stack differenti, ownership separata, memoria non condivisa.[^a2a]
+A2A è un livello di comunicazione tra agenti, non un agent development kit né un protocollo per i subagent interni o per le tool call. Serve a far collaborare agenti indipendenti, anche costruiti con framework diversi, senza imporre la condivisione di memoria, strumenti o logica proprietaria ([specifica A2A](https://a2a-protocol.org/latest/)).
 
 Nel running example Spotify, introdurlo ora sarebbe complessità pagata in anticipo. Diventerebbe pertinente se il catalogo, il curator e il sistema di creazione playlist fossero servizi autonomi gestiti da team o vendor differenti.
 
----
+
 
 ## 16. Quando una decisione diventa un edge
 
@@ -1112,9 +1120,9 @@ Graph thinking:
 
 Le due cose convivono. Un nodo del grafo può contenere un agente, una funzione, un tool wrapper o una richiesta umana.
 
-Microsoft Agent Framework espone workflow graph-based con executor, edge condizionali, parallelismo, checkpoint e HITL. LangGraph costruisce attorno a `State`, node, edge, reducer, subgraph, interrupt e persistence. Le API cambiano; la grammatica resta.[^microsoft-workflows][^langgraph-persistence][^langgraph-interrupts]
+Microsoft Agent Framework documenta workflow funzionali o graph-based, agenti come executor, orchestrazioni sequenziali o concorrenti, checkpoint e HITL. LangGraph documenta state, subgraph, interrupt e persistence. Le API cambiano; la grammatica resta ([Microsoft — Workflows](https://learn.microsoft.com/en-us/agent-framework/workflows/), [LangGraph — subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs), [LangGraph — persistence](https://docs.langchain.com/oss/python/langgraph/persistence), [LangGraph — interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts)).
 
----
+
 
 ## 17. La reference architecture Spotify
 
@@ -1214,7 +1222,7 @@ async def build_playlist(user_request: str) -> Playlist:
 
 Questa implementazione completa **non è ancora presente nel repository della lezione**. Il repository verificato copre il monolite e lo structured routing; il resto è una reference architecture coerente con il percorso didattico.
 
----
+
 
 ## 18. Cosa sta convergendo nel 2026
 
@@ -1222,11 +1230,11 @@ Fonti e framework non concordano su un'unica architettura vincente. Sarebbe sosp
 
 ### 1. La semplicità viene prima della decomposizione
 
-Il multi-agent non è un premio di complessità. Anthropic continua a raccomandare la soluzione più semplice che migliori gli outcome; il lavoro 2026 sugli harness mostra persino componenti rimossi quando modelli più capaci li hanno resi superflui.[^anthropic-harness-2026]
+Il multi-agent non è un premio di complessità. Anthropic raccomanda di partire dalla soluzione più semplice e aumentare la complessità solo quando serve; nel case study del 2026 l'autore rimuove poi una struttura a sprint quando un modello più capace la rende superflua ([Anthropic — Building effective agents](https://www.anthropic.com/engineering/building-effective-agents), [Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
 
 ### 2. Il contesto è un oggetto di progetto
 
-Subagent, state schema, artifact e handoff non sono decorazioni. Sono modi per controllare ciò che ogni componente vede e ciò che viene perso nei passaggi.[^anthropic-context][^simon-subagents]
+Subagent, state schema, artifact e handoff non sono decorazioni. Sono modi per controllare ciò che ogni componente vede e ciò che viene perso nei passaggi ([Anthropic — Context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), [Willison — Subagents](https://simonwillison.net/guides/agentic-engineering-patterns/subagents/)).
 
 ### 3. Il controllo deve essere localizzato
 
@@ -1234,21 +1242,21 @@ Router, supervisor e handoff non sono sinonimi. Il primo legge uno stato, il sec
 
 ### 4. La verifica deve toccare l'ambiente
 
-Runtime evidence, unit test, stato del database, browser, metriche e log valgono più di una dichiarazione del modello. OpenAI descrive agenti che interrogano trace e metriche per verificare il proprio lavoro; Anthropic distingue nettamente transcript e outcome.[^openai-harness][^anthropic-evals]
+Runtime evidence, unit test, stato del database, browser, metriche e log valgono più di una dichiarazione del modello. OpenAI descrive agenti che interrogano trace e metriche per verificare il proprio lavoro; Anthropic distingue nettamente transcript e outcome ([OpenAI — Harness engineering](https://openai.com/index/harness-engineering/), [Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
 ### 5. Lo stato deve sopravvivere al prompt
 
-Checkpoint, sessioni append-only e artefatti persistenti rendono possibile riprendere, ispezionare e correggere il lavoro long-running.[^anthropic-managed][^microsoft-hitl]
+Checkpoint, sessioni append-only e artefatti persistenti rendono possibile riprendere, ispezionare e correggere il lavoro long-running ([Anthropic — Managed Agents](https://www.anthropic.com/engineering/managed-agents), [Microsoft — HITL nei workflow](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop)).
 
 ### 6. Il rischio si gestisce con confini deterministici
 
-Permission, read-only worker, single writer, sandbox ed egress control limitano il danno anche quando il modello sbaglia o viene ingannato.[^anthropic-containment]
+Permission, read-only worker, single writer, sandbox ed egress control limitano il danno anche quando il modello sbaglia o viene ingannato ([Anthropic — Containment](https://www.anthropic.com/engineering/how-we-contain-claude)).
 
 ### 7. Il modello e l'harness vanno valutati insieme
 
-Quando diciamo «l'agente ha ottenuto questo risultato», stiamo misurando modello, prompt, tool, memoria, orchestrazione e ambiente. Cambiare il modello senza riesaminare l'harness è tanto ingenuo quanto cambiare l'harness senza rieseguire gli eval.[^anthropic-evals][^anthropic-managed]
+Quando diciamo «l'agente ha ottenuto questo risultato», stiamo misurando modello, prompt, tool, memoria, orchestrazione e ambiente. Cambiare il modello senza riesaminare l'harness è tanto ingenuo quanto cambiare l'harness senza rieseguire gli eval ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents), [Anthropic — Managed Agents](https://www.anthropic.com/engineering/managed-agents)).
 
----
+
 
 ## 19. Una grammatica per progettare
 
@@ -1305,26 +1313,11 @@ Una checklist minimale può stare in poche righe:
 [ ] L'harness viene semplificato ogni volta che il modello cambia.
 ```
 
----
+
 
 ## 20. Un laboratorio interattivo
 
-Per rendere visibili i compromessi ho preparato anche un simulatore didattico separato. Permette di modificare prevedibilità del percorso, ambiguità semantica, parallelizzabilità, rischio dei side effect, durata e presenza di confini remoti.
-
-Il simulatore non è un benchmark. Usa un modello trasparente e volutamente semplice per mostrare come alcune scelte spostino costo, latenza, osservabilità e blast radius.
-
-```html
-<iframe
-  src="./simulatore_architetture_multiagent.html"
-  title="Architecture Lab: dove mettere l'autonomia?"
-  width="100%"
-  height="900"
-  loading="lazy"
-  style="border:0;border-radius:16px;overflow:hidden"
-></iframe>
-```
-
-Fallback statico:
+Il simulatore didattico interattivo arriverà in un aggiornamento successivo. Intanto questo diagramma statico rende visibile la decisione architetturale di base:
 
 ```mermaid
 flowchart LR
@@ -1338,7 +1331,7 @@ flowchart LR
     Q3 -->|no| D[Delegation]
 ```
 
----
+
 
 ## Conclusione
 
@@ -1356,38 +1349,38 @@ Quando la decisione è nota, scrivila. Quando il risultato è verificabile, test
 
 Il resto è orchestrazione. E, come spesso accade, i nodi vengono al pettine proprio nei passaggi fra una scatola e l'altra.
 
----
+
 
 ## Fonti e note di lettura
 
 Le fonti sono ordinate per funzione, non per prestigio. Gli engineering post e la documentazione ufficiale sostengono le descrizioni dei sistemi; i practitioner aggiungono esperienza sul campo; i lavori 2025 vengono usati quando introducono concetti ancora centrali nel 2026.
 
-[^anthropic-engineering]: Anthropic, **Engineering at Anthropic**, indice aggiornato degli articoli 2024-2026: <https://www.anthropic.com/engineering>
-[^anthropic-evals]: Anthropic, **Demystifying evals for AI agents**, 9 gennaio 2026: <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents>
-[^anthropic-harness-2026]: Anthropic, **Harness design for long-running application development**, 24 marzo 2026: <https://www.anthropic.com/engineering/harness-design-long-running-apps>
-[^anthropic-managed]: Anthropic, **Scaling Managed Agents: Decoupling the brain from the hands**, 8 aprile 2026: <https://www.anthropic.com/engineering/managed-agents>
-[^anthropic-containment]: Anthropic, **How we contain Claude across products**, 25 maggio 2026: <https://www.anthropic.com/engineering/how-we-contain-claude>
-[^anthropic-c-compiler]: Anthropic, **Building a C compiler with a team of parallel Claudes**, 5 febbraio 2026: <https://www.anthropic.com/engineering/building-c-compiler>
-[^anthropic-context]: Anthropic, **Effective context engineering for AI agents**, 29 settembre 2025: <https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>
-[^openai-harness]: OpenAI, **Harness engineering: leveraging Codex in an agent-first world**, 11 febbraio 2026: <https://openai.com/index/harness-engineering/>
-[^openai-sdk-2026]: OpenAI, **The next evolution of the Agents SDK**, 15 aprile 2026: <https://openai.com/index/the-next-evolution-of-the-agents-sdk/>
-[^openai-multi-agent]: OpenAI Agents SDK, **Orchestrating multiple agents**: <https://openai.github.io/openai-agents-python/multi_agent/>
-[^openai-handoffs]: OpenAI Agents SDK, **Handoffs**: <https://openai.github.io/openai-agents-python/handoffs/>
-[^microsoft-workflows]: Microsoft Learn, **Microsoft Agent Framework Workflows**, aggiornato nel 2026: <https://learn.microsoft.com/en-us/agent-framework/workflows/>
-[^microsoft-hitl]: Microsoft Learn, **Human-in-the-loop with Agent Framework Workflows**, aggiornato il 17 luglio 2026: <https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop>
-[^langchain-handoffs]: LangChain, **Handoffs**, documentazione multi-agent: <https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs>
-[^langgraph-subgraphs]: LangGraph, **Use subgraphs**: <https://docs.langchain.com/oss/python/langgraph/use-subgraphs>
-[^langgraph-persistence]: LangGraph, **Persistence**: <https://docs.langchain.com/oss/python/langgraph/persistence>
-[^langgraph-interrupts]: LangGraph, **Interrupts**: <https://docs.langchain.com/oss/python/langgraph/interrupts>
-[^mcp]: Model Context Protocol, specifica ufficiale **2026-07-28**: <https://modelcontextprotocol.io/specification/2026-07-28>
-[^a2a]: A2A Protocol, specifica ufficiale **v1.0**: <https://a2a-protocol.org/latest/>
-[^simon-subagents]: Simon Willison, **Subagents - Agentic Engineering Patterns**, 17 marzo 2026: <https://simonwillison.net/guides/agentic-engineering-patterns/subagents/>
-[^hamel-evals]: Hamel Husain, **Evals Skills for Coding Agents**, 3 marzo 2026: <https://hamelhusain.substack.com/p/evals-skills-for-coding-agents>
-[^jason-cognition]: Jason Liu, **Why Cognition does not use multi-agent systems**, 11 settembre 2025: <https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/>
+- [Anthropic — Building effective agents](https://www.anthropic.com/engineering/building-effective-agents): guida del 2024 ai pattern routing, chaining, parallelizzazione, orchestrator-workers ed evaluator-optimizer, con la raccomandazione di partire dalla soluzione più semplice.
+- [Anthropic — Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents): definizioni di task, trial, grader, transcript, outcome ed evaluation harness.
+- [Anthropic — Harness design for long-running application development](https://www.anthropic.com/engineering/harness-design-long-running-apps): planner, generator, evaluator e trade-off di costo e durata per task lunghi.
+- [Anthropic — Scaling Managed Agents](https://www.anthropic.com/engineering/managed-agents): separazione fra sessione, harness, sandbox e ambienti di esecuzione.
+- [Anthropic — How we contain Claude across products](https://www.anthropic.com/engineering/how-we-contain-claude): containment, permission e riduzione del blast radius.
+- [Anthropic — Building a C compiler with a team of parallel Claudes](https://www.anthropic.com/engineering/building-c-compiler): esperimento con sedici agenti, ambiente condiviso e coordinamento del parallelismo.
+- [Anthropic — Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents): gestione del contesto, compaction, memoria e subagent.
+- [OpenAI — Harness engineering](https://openai.com/index/harness-engineering/): harness, test, osservabilità e ambienti isolati per agenti Codex.
+- [OpenAI — The next evolution of the Agents SDK](https://openai.com/index/the-next-evolution-of-the-agents-sdk/): evoluzione dell’SDK, sandbox e separazione fra harness e compute.
+- [OpenAI Agents SDK — Agent orchestration](https://openai.github.io/openai-agents-python/multi_agent/): differenza fra orchestrazione via LLM e via codice, agents as tools e handoff.
+- [OpenAI Agents SDK — Handoffs](https://openai.github.io/openai-agents-python/handoffs/): configurazione, input e filtri degli handoff.
+- [Microsoft Agent Framework — Workflows](https://learn.microsoft.com/en-us/agent-framework/workflows/): workflow funzionali o graph-based, agenti come executor, orchestrazioni sequenziali/concorrenti, checkpoint e HITL.
+- [Microsoft Agent Framework — Human in the loop](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop): richieste sospendibili, approvazioni e ripristino del workflow.
+- [LangChain — Handoffs](https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs): transizioni guidate dallo stato; nei subgraph il contesto trasferito va scelto esplicitamente.
+- [LangGraph — Use subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs): input, output e stato dei subgraph.
+- [LangGraph — Persistence](https://docs.langchain.com/oss/python/langgraph/persistence): persistenza dello stato e checkpoint.
+- [LangGraph — Interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts): interruzioni controllate e ripresa dei grafi.
+- [Model Context Protocol — specifica](https://modelcontextprotocol.io/specification/2026-07-28): protocollo per collegare agenti a tool, dati e risorse.
+- [A2A Protocol — specifica](https://a2a-protocol.org/latest/): interoperabilità e comunicazione fra agenti indipendenti, senza imporre la condivisione di memoria, strumenti o logica proprietaria.
+- [Simon Willison — Subagents](https://simonwillison.net/guides/agentic-engineering-patterns/subagents/): esperienza pratica su isolamento del contesto e parallelismo.
+- [Hamel Husain — Evals Skills for Coding Agents](https://hamelhusain.substack.com/p/evals-skills-for-coding-agents): tassonomie di errore, trace ed evaluator calibrati con giudizi umani.
+- [Jason Liu — Why Cognition does not use multi-agent systems](https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/): critica pratica al context loss nei sistemi multi-agent.
 
 ### Altre letture utili
 
-- OpenAI, **An open-source spec for Codex orchestration: Symphony**, 27 aprile 2026: <https://openai.com/index/open-source-codex-orchestration-symphony/>
-- Anthropic, **AI Organizations Can Be More Effective but Less Aligned than Individual Agents**, 2026: <https://alignment.anthropic.com/2026/ai-organizations/>
-- OpenAI Agents SDK, **Tracing**: <https://openai.github.io/openai-agents-python/tracing/>
-- LangChain, **Multi-agent patterns**: <https://docs.langchain.com/oss/python/langchain/multi-agent/index>
+- [OpenAI — Symphony](https://openai.com/index/open-source-codex-orchestration-symphony/): specifica open source per l’orchestrazione di Codex.
+- [Anthropic — AI Organizations](https://alignment.anthropic.com/2026/ai-organizations/): ricerca su efficacia e allineamento delle organizzazioni di agenti.
+- [OpenAI Agents SDK — Tracing](https://openai.github.io/openai-agents-python/tracing/): trace e osservabilità dell’esecuzione.
+- [LangChain — Multi-agent patterns](https://docs.langchain.com/oss/python/langchain/multi-agent/index): panoramica dei pattern multi-agent supportati dal framework.

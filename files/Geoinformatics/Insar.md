@@ -52,6 +52,10 @@ La fase radar ha lo stesso problema: viene osservata modulo \(2\pi\). Una singol
 
 L'InSAR cambia domanda. Non cerca la distanza assoluta: **confronta la fase di due o più acquisizioni della stessa area** e osserva come è cambiata [5].
 
+![Schema geometrico della misura di deformazione con InSAR: il sensore radar osserva la stessa area del terreno in due acquisizioni differenti e rileva la variazione della distanza lungo la Line of Sight. (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg)
+*Schema geometrico della misura di deformazione con InSAR: il sensore radar osserva la stessa area del terreno in due acquisizioni differenti e rileva la variazione della distanza lungo la Line of Sight. (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))*
+
+
 Se tra i due passaggi un punto a terra si è spostato lungo la linea di vista del satellite, cambia il cammino percorso dall'onda e quindi cambia anche la fase ricevuta. In modulo, la relazione tra la componente di deformazione della fase e lo spostamento LOS può essere scritta come:
 
 $$

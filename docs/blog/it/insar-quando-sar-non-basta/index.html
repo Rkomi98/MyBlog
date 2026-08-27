@@ -42,7 +42,7 @@
     "headline": "InSAR: Quando SAR non basta",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-27T00:00:00.000Z",
-    "dateModified": "2026-08-27T10:10:29.000Z",
+    "dateModified": "2026-08-27T10:47:08.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1426,9 +1426,9 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#la-fase-non-una-distanza">
+          <a class="post-toc__link" href="#cos-una-fase">
             <span class="post-toc__number">2</span>
-            <span class="post-toc__text">La fase non è una distanza</span>
+            <span class="post-toc__text">Cos&#39;è una fase?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
@@ -1544,18 +1544,17 @@
 <p>Detta così sembra quasi magia... In realtà, prima di inebriarci con la parola “millimetrico”, conviene capire bene che <strong>cosa</strong> stiamo misurando.</p>
 <blockquote>
 <p><strong>Cosa significa davvero “millimetrico”?</strong></p>
-<p>Dire che l&#39;InSAR rileva movimenti alla scala dei millimetri non significa che ogni pixel di una singola coppia SAR restituisca la posizione assoluta del terreno con un errore di un millimetro. Nei prodotti multi-temporali come EGMS, le misure sono stimate per punti di misura selezionati, rispetto a un riferimento e con condizioni di qualità esplicite.</p>
-<p>Le specifiche correnti di EGMS dichiarano, per i prodotti Basic e Calibrated, una <strong>deviazione standard della velocità media di 0,5 mm/anno (1σ)</strong> per coppie di punti distanti fino a 10 km, con velocità costante nell&#39;intervallo elaborato e coerenza superiore a 0,7. Per il prodotto Ortho il valore è <strong>0,7 mm/anno (1σ)</strong> alle stesse condizioni [2]. Sono incertezze sulla <em>velocità media</em>, non l&#39;accuratezza assoluta della posizione a ogni data. La risoluzione spaziale è un&#39;altra cosa: per Basic e Calibrated è di 5 × 20 m per i Persistent Scatterer e migliore di 100 m per i Distributed Scatterer; Ortho è invece riportato su una griglia di 100 × 100 m [2].</p>
+<p>Dire che l&#39;InSAR rileva movimenti alla scala dei millimetri non significa che ogni pixel di una singola coppia SAR restituisca la posizione assoluta del terreno con un errore di un millimetro. Nei prodotti multi-temporali come EGMS, le misure sono stimate per punti di misura selezionati, rispetto a un riferimento e con condizioni di qualità esplicite. Le specifiche correnti di EGMS dichiarano, per i prodotti Basic e Calibrated, una <strong>deviazione standard della velocità media di 0,5 mm/anno (1σ)</strong> per coppie di punti distanti fino a 10 km, con velocità costante nell&#39;intervallo elaborato e coerenza superiore a 0,7. Per il prodotto Ortho il valore è <strong>0,7 mm/anno (1σ)</strong> alle stesse condizioni [2]. Sono incertezze sulla <em>velocità media</em>, non l&#39;accuratezza assoluta della posizione a ogni data. La risoluzione spaziale è un&#39;altra cosa: per Basic e Calibrated è di 5 × 20 m per i Persistent Scatterer e migliore di 100 m per i Distributed Scatterer; Ortho è invece riportato su una griglia di 100 × 100 m [2].</p>
 </blockquote>
 <p>Resta comunque un fatto notevole: Sentinel-1 osserva la Terra da un&#39;orbita a circa <strong>693 km di quota</strong> [3], e da lassù possiamo ricostruire movimenti superficiali inferiori al centimetro.</p>
 <p>Come ci riesce?</p>
 <p>Per capirlo conviene tornare al punto da cui ero partito anch&#39;io: quel pixel SAR che, a prima vista, sembrava raccontare soltanto quanto una superficie fosse chiara o scura.</p>
 <hr>
 <h2 id="lo-stesso-pixel-racconta-due-storie">Lo stesso pixel racconta due storie</h2>
-<p>Un&#39;immagine radar non nasce come una fotografia in bianco e nero. Nei prodotti <strong>SLC, Single Look Complex</strong>, ogni pixel è rappresentato da un valore complesso: dentro quel numero convivono <strong>ampiezza</strong> e <strong>fase</strong>. La specifica dei prodotti Sentinel-1 lo dice in maniera piuttosto netta: un SLC conserva entrambe; un prodotto <strong>GRD, Ground Range Detected</strong>, è invece detected e perde l&#39;informazione di fase [4].</p>
-<p>L&#39;ampiezza descrive quanto è forte il segnale che torna verso l&#39;antenna. Da lì ricaviamo l&#39;intensità e, dopo la calibrazione radiometrica, grandezze come sigma nought che usiamo per ragionare sul <strong>backscatter</strong>.</p>
+<p>Un&#39;immagine radar non nasce come una fotografia in bianco e nero. Nei prodotti <strong>SLC, Single Look Complex</strong>, ogni pixel è rappresentato da un valore complesso: dentro quel numero convivono <strong>ampiezza</strong> e <strong>fase</strong>. La specifica dei prodotti Sentinel-1 lo dice in maniera piuttosto netta: un SLC conserva entrambe; un prodotto <strong>GRD, Ground Range Detected</strong>, è invece rilevato e perde l&#39;informazione di fase [4]!</p>
+<p>L&#39;ampiezza descrive <em>quanto è forte il segnale</em> che torna verso l&#39;antenna. Da lì ricaviamo l&#39;intensità e, dopo la calibrazione radiometrica, grandezze come <strong>sigma nought</strong> che usiamo per ragionare sul <strong>backscatter</strong>.</p>
 <p>È la parte che avevo sfruttato nel flood mapping. Una superficie d&#39;acqua relativamente liscia tende a riflettere l&#39;energia radar in maniera speculare, lontano dal sensore, e quindi spesso appare scura. Confrontando il backscatter prima e dopo un evento possiamo cercare cambiamenti compatibili con la comparsa di acqua.</p>
-<p>La fase racconta un&#39;altra storia. Indica dove ci troviamo all&#39;interno del ciclo dell&#39;onda elettromagnetica ricevuta e contiene informazione legata alla distanza percorsa dal segnale. Presa da sola, però, non è un metro satellitare.</p>
+<p>La fase, invece, indica <strong>dove</strong> ci troviamo <strong>all&#39;interno del ciclo dell&#39;onda elettromagnetica ricevuta</strong> e contiene informazione legata alla distanza percorsa dal segnale. Presa da sola, però, non è utilissima 🥲</p>
 <p>Qui sta il primo piccolo inghippo.</p>
 <blockquote>
 <p><strong>Definizione: SAR</strong></p>
@@ -1566,11 +1565,13 @@
 <p>Perché l&#39;interferometria vive della <strong>differenza di fase</strong>. Nei GRD Sentinel-1 il segnale è già stato detected e la fase è persa; negli SLC rimangono sia ampiezza sia fase [4]. Possiamo quindi usare un GRD per moltissime analisi di backscatter, ma non per costruire a posteriori un interferogramma.</p>
 </blockquote>
 <hr>
-<h2 id="la-fase-non-una-distanza">La fase non è una distanza</h2>
+<h2 id="cos-una-fase">Cos&#39;è una fase?</h2>
 <p>Immaginiamo di osservare una sinusoide. Se conosco soltanto la sua fase in un certo istante, so dove mi trovo all&#39;interno del ciclo, ma non so quanti cicli completi siano avvenuti prima.</p>
 <p>È come guardare la lancetta dei secondi di un orologio senza vedere ore e minuti. Se punta sul 15, conosco la posizione della lancetta, ma non so se siano passati 15 secondi, 75 o 135.</p>
 <p>La fase radar ha lo stesso problema: viene osservata modulo (2\pi). Una singola misura di fase non basta quindi a ricostruire la distanza assoluta tra satellite e bersaglio.</p>
 <p>L&#39;InSAR cambia domanda. Non cerca la distanza assoluta: <strong>confronta la fase di due o più acquisizioni della stessa area</strong> e osserva come è cambiata [5].</p>
+<p><img src="https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg" alt="Schema geometrico della misura di deformazione con InSAR: il sensore radar osserva la stessa area del terreno in due acquisizioni differenti e rileva la variazione della distanza lungo la Line of Sight. (Fonte: NASA/JPL, NISAR mission)">
+<em>Schema geometrico della misura di deformazione con InSAR: il sensore radar osserva la stessa area del terreno in due acquisizioni differenti e rileva la variazione della distanza lungo la Line of Sight. (Fonte: NASA/JPL, <a href="https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg">NISAR mission</a>)</em></p>
 <p>Se tra i due passaggi un punto a terra si è spostato lungo la linea di vista del satellite, cambia il cammino percorso dall&#39;onda e quindi cambia anche la fase ricevuta. In modulo, la relazione tra la componente di deformazione della fase e lo spostamento LOS può essere scritta come:</p>
 <p>$$
 |\Delta \phi_{def}| = \frac{4\pi}{\lambda}|d_{LOS}|
