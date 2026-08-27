@@ -694,6 +694,7 @@
     .post-body .mermaid-diagram {
       position: relative;
       margin: 2rem 0;
+      isolation: isolate;
     }
     .post-body .mermaid-diagram pre.mermaid {
       margin: 0;
@@ -709,6 +710,7 @@
       padding: 0.35rem 0.9rem;
       font-size: 0.85rem;
       font-weight: 600;
+      min-height: 2.75rem;
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
@@ -758,6 +760,7 @@
       padding: 0.4rem 1rem;
       font-size: 0.9rem;
       font-weight: 600;
+      min-height: 2.75rem;
       cursor: pointer;
       transition: background 0.2s ease, color 0.2s ease;
       z-index: 2;
@@ -774,6 +777,8 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
     .mermaid-overlay__scroll svg {
       max-width: none;
@@ -1256,10 +1261,32 @@
         padding: 0.25rem 0.75rem;
       }
       .post-body .mermaid-diagram__expand {
-        top: 0.6rem;
-        right: 0.6rem;
-        font-size: 0.78rem;
-        padding: 0.25rem 0.75rem;
+        top: auto;
+        right: 0.55rem;
+        bottom: 0.55rem;
+        min-height: 2.75rem;
+        padding: 0.35rem 0.8rem;
+        font-size: 0.82rem;
+      }
+      .post-body .mermaid-diagram pre.mermaid {
+        padding: 1rem 0.85rem 4.25rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .mermaid-overlay {
+        padding: 0.5rem;
+      }
+      .mermaid-overlay__content {
+        max-width: 100%;
+        max-height: 100dvh;
+        border-radius: 18px;
+      }
+      .mermaid-overlay__close {
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+      }
+      .mermaid-overlay__scroll {
+        max-height: 100dvh;
+        padding: 4rem 1rem 1.5rem;
       }
       .table-overlay__scroll {
         padding: 1.8rem 1.25rem 1.5rem;
@@ -1288,10 +1315,24 @@
     const hasMermaid = document.querySelector('.mermaid');
     if (hasMermaid) {
       const labels = document.documentElement.lang === 'it'
-        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
-        : { expand: 'Open full screen', close: 'Close' };
+        ? { expand: 'Apri diagramma', close: 'Chiudi', dialog: 'Diagramma ingrandito' }
+        : { expand: 'Open diagram', close: 'Close', dialog: 'Expanded diagram' };
       let overlay = null;
       let overlayScroll = null;
+      let lastTrigger = null;
+
+      const closeOverlay = () => {
+        if (!overlay) {
+          return;
+        }
+        overlay.classList.remove('mermaid-overlay--visible');
+        document.body.classList.remove('no-scroll');
+        if (overlayScroll) {
+          overlayScroll.innerHTML = '';
+        }
+        lastTrigger?.focus();
+        lastTrigger = null;
+      };
 
       const ensureOverlay = () => {
         if (overlay) {
@@ -1299,6 +1340,9 @@
         }
         overlay = document.createElement('div');
         overlay.className = 'mermaid-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', labels.dialog);
         overlay.innerHTML =
           '<div class="mermaid-overlay__content">' +
             '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
@@ -1308,28 +1352,16 @@
         overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
         const closeButton = overlay.querySelector('.mermaid-overlay__close');
         closeButton?.addEventListener('click', () => {
-          overlay.classList.remove('mermaid-overlay--visible');
-          document.body.classList.remove('no-scroll');
-          if (overlayScroll) {
-            overlayScroll.innerHTML = '';
-          }
+          closeOverlay();
         });
         overlay.addEventListener('click', (event) => {
           if (event.target === overlay) {
-            overlay.classList.remove('mermaid-overlay--visible');
-            document.body.classList.remove('no-scroll');
-            if (overlayScroll) {
-              overlayScroll.innerHTML = '';
-            }
+            closeOverlay();
           }
         });
         document.addEventListener('keydown', (event) => {
           if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
-            overlay.classList.remove('mermaid-overlay--visible');
-            document.body.classList.remove('no-scroll');
-            if (overlayScroll) {
-              overlayScroll.innerHTML = '';
-            }
+            closeOverlay();
           }
         });
       };
@@ -1354,16 +1386,24 @@
         expandButton.className = 'mermaid-diagram__expand';
         expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
         expandButton.setAttribute('aria-label', labels.expand);
-        expandButton.addEventListener('click', () => {
+        const openDiagram = (trigger) => {
           ensureOverlay();
           if (!overlay || !overlayScroll) {
             return;
           }
+          lastTrigger = trigger;
           overlayScroll.innerHTML = '';
           const clone = diagram.cloneNode(true);
           overlayScroll.appendChild(clone);
           overlay.classList.add('mermaid-overlay--visible');
           document.body.classList.add('no-scroll');
+          overlay.querySelector('.mermaid-overlay__close')?.focus();
+        };
+        expandButton.addEventListener('click', () => openDiagram(expandButton));
+        diagram.addEventListener('click', (event) => {
+          if (window.matchMedia('(max-width: 720px)').matches && !event.target.closest('a, button')) {
+            openDiagram(expandButton);
+          }
         });
         wrapper.appendChild(expandButton);
       });
@@ -2115,17 +2155,30 @@ Judge coherence              → evaluator, if subjectivity remains</code></pre>
 <p>If the answer is already inside a schema, the supervisor is just an expensive way to read a field.</p>
 <h3 id="handoff-changing-the-owner-of-the-next-turn">Handoff: changing the owner of the next turn</h3>
 <p>In delegation, the manager remains the primary contact. In a handoff, control passes to the specialist.</p>
-<pre class="mermaid">flowchart LR
-    subgraph Delegation
-        S1[Supervisor] --&gt; A1[Specialist]
-        A1 --&gt; S1
-        S1 --&gt; U1[User]
+<pre class="mermaid">flowchart TB
+    subgraph H[&quot;Handoff · ownership transfers&quot;]
+        direction LR
+        T[Triage] --&gt;|passes context + ownership| A2[Specialist]
+        A2 --&gt;|responds in following turns| U2([User])
     end
 
-    subgraph Handoff
-        T[Triage] --&gt; A2[Specialist]
-        A2 --&gt; U2[User]
-    end</pre><p>The OpenAI Agents SDK explicitly distinguishes between these two topologies: <em>agents as tools</em> when the manager retains control; <em>handoffs</em> when the specialist takes charge of the next part of the interaction.[^openai-multi-agent][^openai-handoffs]</p>
+    subgraph D[&quot;Delegation · ownership stays with Supervisor&quot;]
+        direction LR
+        S1[Supervisor] --&gt;|delegates a scoped task| A1[Specialist]
+        A1 -. result .-&gt; S1
+        S1 --&gt;|provides the final answer| U1([User])
+    end
+
+    classDef triage fill:#F5A623,stroke:#FBBF24,color:#1F2937,stroke-width:2px;
+    classDef owner fill:#1B64F5,stroke:#60A5FA,color:#FFFFFF,stroke-width:2px;
+    classDef specialist fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef user fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    class T triage;
+    class S1 owner;
+    class A1,A2 specialist;
+    class U1,U2 user;
+    style H fill:#101A30,stroke:#F5A623,stroke-width:2px,color:#FDE68A
+    style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE</pre><p>The OpenAI Agents SDK explicitly distinguishes between these two topologies: <em>agents as tools</em> when the manager retains control; <em>handoffs</em> when the specialist takes charge of the next part of the interaction.[^openai-multi-agent][^openai-handoffs]</p>
 <p>You can remember the difference like this:</p>
 <pre><code class="hljs language-text">Delegation → changes who does the work.
 Handoff    → changes who owns the control.</code></pre><hr>
