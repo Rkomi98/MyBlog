@@ -261,8 +261,6 @@ Nella mia esperienza ho visto che ci sono tre pattern che vengono confusi, o meg
 Vediamo con il running example quale dovrebbe essere il primo passo. Ecco esso consiste nel chiedere al modello di produrre uno stato semantico tipizzato.
 
 ```python
-# [VERIFICATO NEL REPO] - mood_interpreter.py
-
 class MoodProfile(BaseModel):
     current_energy: float
     desired_energy: float
@@ -270,11 +268,9 @@ class MoodProfile(BaseModel):
     needs_clarification: bool
 ```
 
-A quel punto il ramo non richiede un'altra inferenza.
+A quel punto il ramo non richiede un'altra inferenza. È puro codice sincrono. Il modello non fa nessuna chiamata a un LLM, nessuna latenza di rete, nessun costo di inferenza. Abbiamo un bel risultato deterministico e testabile con un normale unit test
 
 ```python
-# [VERIFICATO NEL REPO]
-
 def route(profile: MoodProfile) -> Literal["clarification", "search"]:
     return "clarification" if profile.needs_clarification else "search"
 ```
@@ -292,13 +288,12 @@ flowchart LR
     class G code;
 ```
 
-La mossa importante non è «usare Pydantic». È **rendere la decisione rappresentabile**.
-
-Finché la differenza fra «sono stanco» e «voglio ballare» vive soltanto nel testo, il control flow resta affidato al ragionamento del modello. Quando diventa `current_energy != desired_energy` e `intent="shift"`, una parte del controllo può uscire dal prompt ed entrare nel codice.
+La mossa importante qui è **rendere la decisione rappresentabile**. Finché la differenza fra «sono stanco» e «voglio ballare» restano testo libero, decidere il prossimo passo significa richiedere ogni volta un nuovo giudizio al modello. Quando diventa `current_energy != desired_energy` e `intent="shift"`, una parte del controllo può uscire dal prompt ed entrare nel codice.
 
 ### Supervisor: la decisione richiede ancora giudizio
 
-> **Quando usarlo.** Usa un supervisor quando il prossimo passo non è deducibile da una regola stabile: deve scegliere fra specialisti in base all'obiettivo, allo stato, agli output intermedi e a trade-off che cambiano durante l'esecuzione. Il supervisor conserva l'ownership della conversazione e ricompone i risultati. Se basta leggere un campo o applicare una policy deterministica, è routing: un supervisor aggiungerebbe inferenza, latenza e non-determinismo senza produrre giudizio utile.
+> **Quando usarlo.** Usa un supervisor quando il prossimo passo non è deducibile da una regola stabile e si deve scegliere fra specialisti in base all'obiettivo, allo stato, agli output intermedi e a trade-off che cambiano durante l'esecuzione. Il supervisor conserva l'ownership della conversazione e ricompone i risultati.
+> **Quando NON usarlo.** Se basta leggere un campo o applicare una policy deterministica, è routing: un supervisor aggiungerebbe inferenza, latenza e non-determinismo senza produrre giudizio utile.
 
 Un supervisor serve quando non basta leggere un campo.
 
