@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Progettare sistemi multiagentici nel 2026 | Mirko Calcaterra</title>
-  <meta name="description" content="Progettare sistemi multiagentici nel 2026 Nota editoriale. Questo articolo distingue deliberatamente tre livelli. Gli esempi marcati [VERIFICATO NEL REPO] corrispondono al running example Spotify della lezione. Gli esempi marcati [REFERENCE DESIGN] descrivono…">
+  <meta name="description" content="Progettare sistemi multiagentici nel 2026 Prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro. Su questo punto si inciampa spesso, e il resto del discorso ne risente... Un sistema multiagentico non nasce quando metti due modelli u…">
   <meta name="keywords" content="">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -23,7 +23,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/progettare-sistemi-multiagentici-nel-2026/">
   <meta property="og:title" content="Progettare sistemi multiagentici nel 2026">
-  <meta property="og:description" content="Progettare sistemi multiagentici nel 2026 Nota editoriale. Questo articolo distingue deliberatamente tre livelli. Gli esempi marcati [VERIFICATO NEL REPO] corrispondono al running example Spotify della lezione. Gli esempi marcati [REFERENCE DESIGN] descrivono…">
+  <meta property="og:description" content="Progettare sistemi multiagentici nel 2026 Prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro. Su questo punto si inciampa spesso, e il resto del discorso ne risente... Un sistema multiagentico non nasce quando metti due modelli u…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-08-20T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -32,7 +32,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Progettare sistemi multiagentici nel 2026">
-  <meta property="twitter:description" content="Progettare sistemi multiagentici nel 2026 Nota editoriale. Questo articolo distingue deliberatamente tre livelli. Gli esempi marcati [VERIFICATO NEL REPO] corrispondono al running example Spotify della lezione. Gli esempi marcati [REFERENCE DESIGN] descrivono…">
+  <meta property="twitter:description" content="Progettare sistemi multiagentici nel 2026 Prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro. Su questo punto si inciampa spesso, e il resto del discorso ne risente... Un sistema multiagentico non nasce quando metti due modelli u…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Progettare sistemi multiagentici nel 2026 Nota editoriale. Questo articolo distingue deliberatamente tre livelli. Gli esempi marcati [VERIFICATO NEL REPO] corrispondono al running example Spotify della lezione. Gli esempi marcati [REFERENCE DESIGN] descrivono…"
+    "description": "Progettare sistemi multiagentici nel 2026 Prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro. Su questo punto si inciampa spesso, e il resto del discorso ne risente... Un sistema multiagentico non nasce quando metti due modelli u…"
   }
   </script>
 
@@ -1852,10 +1852,7 @@
         </div>
       </aside>
         <div class="post-body">
-          <blockquote>
-<p><strong>Nota editoriale.</strong> Questo articolo distingue deliberatamente tre livelli. Gli esempi marcati <strong>[VERIFICATO NEL REPO]</strong> corrispondono al running example Spotify della lezione. Gli esempi marcati <strong>[REFERENCE DESIGN]</strong> descrivono l&#39;architettura verso cui quel sistema può evolvere. Gli esempi marcati <strong>[PSEUDOCODICE]</strong> servono a rendere visibile una scelta di progettazione e non vanno letti come API di un framework specifico.</p>
-</blockquote>
-<p>Prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro. Su questo punto si inciampa spesso, e il resto del discorso ne risente...</p>
+          <p>Prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro. Su questo punto si inciampa spesso, e il resto del discorso ne risente...</p>
 <p>Un sistema multiagentico non nasce quando metti due modelli uno accanto all&#39;altro. Non nasce nemmeno quando un agente chiama un secondo agente come se fosse un tool. Nasce quando decidi di <strong>distribuire responsabilità, contesto e controllo</strong> fra componenti che possono prendere decisioni parzialmente autonome.</p>
 <p>La parola importante, qui, è <em>decidi</em>. Perché aggiungere agenti non è un obiettivo. È una scelta architetturale che deve ripagare il proprio costo.</p>
 <p>Per tenere insieme il discorso useremo un esempio che mi è arrivato direttamente da un percorso che sto costruendo con Datapizza. Un sistema multiagentico in grado di intercettare il mood dell&#39;utente e di proporre una playlist di conseguenza (a tal proposito ora sto ascoltando <a href="https://suno.com/labs/live-radio">radio Suno</a>). Partiamo da una richiesta molto semplice e vaga di un possibile utente:</p>
@@ -1871,14 +1868,18 @@
 <li><strong>Chi controlla che il lavoro sia stato svolto bene?</strong></li>
 <li><strong>Chi tiene in piedi il sistema quando ci sono problemi?</strong></li>
 </ol>
-<p>Nel 2024 Anthropic descriveva soprattutto routing, chaining, parallelizzazione, orchestrator-workers ed evaluator-optimizer (<a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>). Quei pattern restano validi. Nel 2026, le documentazioni e i case study qui citati dedicano invece molta attenzione a context lifecycle, contratti, artefatti, checkpoint, eval di traiettoria, sandbox, containment e harness (<a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Managed Agents</a>, <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — Agents SDK</a>, <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft — Workflows</a>). Questa è una sintesi interpretativa delle fonti, non una tassonomia ufficiale condivisa.</p>
+<p>Nel 2024 Anthropic descriveva soprattutto routing, chaining, parallelizzazione, orchestrator-workers ed evaluator-optimizer (<a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>). Lungi da me dire che sono obsoleti quei pattern, anzi restano assolutamente validi.</p>
+<p>Nel 2026, le documentazioni e i case study che cito tra poco dedicano invece molta attenzione a context lifecycle, contratti, artefatti, checkpoint, eval di traiettoria, sandbox, containment e harness (<a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Managed Agents</a>, <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — Agents SDK</a>, <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft — Workflows</a>). </p>
+<blockquote>
+<p>Sia chiaro, questa è una sintesi generale di quanto ho letto finora sui vari substack e blog ufficiali delle fonti, non è una tassonomia ufficiale condivisa.</p>
+</blockquote>
 <hr>
 <h2 id="1-il-sistema-pi-semplice-che-pu-funzionare">1. Il sistema più semplice che può funzionare</h2>
-<p>La prima domanda non è «quanti agenti servono?». È più scomoda:</p>
+<p>Partiamo dalla prima domanda (probabillmente la più scomoda):</p>
 <blockquote>
 <p><strong>Perché un singolo agente non basta?</strong></p>
 </blockquote>
-<p>Se il percorso è noto in anticipo, spesso basta un workflow. Se una trasformazione è deterministica, basta una funzione. Se un solo agente può mantenere il contesto e usare bene gli strumenti, dividere il lavoro crea soltanto nuovi punti di rottura.</p>
+<p>Se il percorso è noto in anticipo, spesso basta un <strong>workflow</strong>. Se una trasformazione è deterministica, basta magari solo una funzione. Se un solo agente può mantenere il contesto e usare bene gli strumenti, dividere il lavoro crea soltanto nuovi punti di rottura.</p>
 <pre class="mermaid">flowchart LR
     F[Funzione] --&gt; W[Workflow deterministico]
     W --&gt; A[Singolo agente]
@@ -1888,7 +1889,7 @@
     classDef base fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
     classDef hot fill:#D7342B,stroke:#D7342B,color:#fff;
     class F,W,A,S base;
-    class M hot;</pre><p>Salire verso destra significa guadagnare flessibilità, ma anche pagare in latenza, costo, non determinismo, coordinamento e osservabilità.</p>
+    class M hot;</pre><p>Andare verso destra significa guadagnare flessibilità, ma anche pagare in latenza, costo, non determinismo, coordinamento e osservabilità.</p>
 <p>Una regola di partenza può essere scritta così:</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
 
@@ -1902,8 +1903,12 @@
     <span class="hljs-keyword">if</span> problem.fits_one_context <span class="hljs-keyword">and</span> problem.needs_one_owner:
         <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;single_agent&quot;</span>
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;consider_multi_agent&quot;</span></code></pre><p>Non è una formula universale. È un freno. Serve a evitare l&#39;errore più comune: scambiare la complessità per maturità.</p>
-<p>Simon Willison lo formula da una prospettiva molto pratica: i subagent sono preziosi soprattutto perché preservano il contesto principale e assorbono operazioni pesanti in token; avverte però che è facile frammentare inutilmente un task in molti specialisti (<a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Willison — Subagents</a>).</p>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;consider_multi_agent&quot;</span></code></pre><p>Chiaramente non è una formula universale, non sono un oracolo dell&#39;AI. Però è quanto basta per evitare l&#39;errore di scambiare la complessità di un sistema per maturità. Fidatevi che non è così</p>
+<p>Mi metto nei panni di un lettore che arrivato a questo punto si chiede:</p>
+<blockquote>
+<p>Ok Mirko ma quindi questi sistemi quando mi servono? Quando ha senso definire dei sottoagenti?</p>
+</blockquote>
+<p>Simon Willison cerca di rispondere a questa domanda nel suo blog: i subagent sono preziosi soprattutto perché preservano il contesto principale e assorbono operazioni pesanti in token. Dall&#39;altra parte avverte però che è facile frammentare inutilmente un task in molti specialisti (<a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Willison — Subagents</a>).</p>
 <h3 id="un-agente-deve-guadagnarsi-il-posto">Un agente deve guadagnarsi il posto</h3>
 <p>Prima di aggiungere un agente, prova a completare questa frase:</p>
 <blockquote>
