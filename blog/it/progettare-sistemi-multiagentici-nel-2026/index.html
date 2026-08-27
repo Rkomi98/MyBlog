@@ -42,7 +42,7 @@
     "headline": "Progettare sistemi multiagentici nel 2026",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-20T00:00:00.000Z",
-    "dateModified": "2026-08-27T14:44:38.000Z",
+    "dateModified": "2026-08-27T15:41:55.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1404,7 +1404,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">20 agosto 2026 • 26 min</span>
+            <span class="post-hero__author-meta">20 agosto 2026 • 27 min</span>
           </div>
         </div>
       </section>
@@ -1466,17 +1466,25 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#routing-la-decisione-gi-nello-stato">
+          <a class="post-toc__link" href="#routing-sai-gi-descrivere-cosa-vuoi">
             <span class="post-toc__number">4.1</span>
-            <span class="post-toc__text">Routing: la decisione è già nello stato</span>
+            <span class="post-toc__text">Routing: sai già descrivere cosa vuoi?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#supervisor-la-decisione-richiede-ancora-giudizio">
+          <a class="post-toc__link" href="#supervisor-la-decisione-resta-labile">
             <span class="post-toc__number">4.2</span>
-            <span class="post-toc__text">Supervisor: la decisione richiede ancora giudizio</span>
+            <span class="post-toc__text">Supervisor: la decisione resta labile</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#perch-importante-lownership-del-contesto">
+            <span class="post-toc__number">4.2.1</span>
+            <span class="post-toc__text">Perché è importante l&#39;Ownership del Contesto?</span>
           </a>
           
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#handoff-cambia-il-proprietario-del-prossimo-turno">
             <span class="post-toc__number">4.3</span>
@@ -2028,21 +2036,18 @@ Giudicare la coerenza        → evaluator, se resta soggettività</code></pre><
 <h2 id="chi-decide">Chi decide?</h2>
 <p>Una volta rappresentato il lavoro, dobbiamo assegnare il controllo.</p>
 <p>Nella mia esperienza ho visto che ci sono tre pattern che vengono confusi, o meglio pensati come equivalenti: routing, supervisor e handoff. In realtà rispondono a domande differenti!</p>
-<h3 id="routing-la-decisione-gi-nello-stato">Routing: la decisione è già nello stato</h3>
+<h3 id="routing-sai-gi-descrivere-cosa-vuoi">Routing: sai già descrivere cosa vuoi?</h3>
 <blockquote>
-<p><strong>Quando usarlo.</strong> Usa il routing quando la scelta del prossimo passo può essere ridotta a uno stato o a una classificazione esplicita e verificabile: un campo tipizzato, una soglia, una policy o un booleano. Il modello può estrarre o classificare quell&#39;informazione; il codice deve decidere il ramo. Se la scelta dipende invece dall&#39;evoluzione del compito, da risultati intermedi o da un compromesso non rappresentato nello stato, serve un supervisor.</p>
+<p><strong>Quando usarlo.</strong> Usa il routing quando la scelta del prossimo passo può essere ridotta a uno stato o a una classificazione esplicita e verificabile: un campo tipizzato, una soglia, una policy o un booleano. Il modello può estrarre o classificare quell&#39;informazione e il codice deve decidere il ramo.
+<strong>Quando usare altro?</strong> Se la scelta dipende invece dall&#39;evoluzione del compito, da risultati intermedi o da un compromesso non rappresentato nello stato, serve un supervisor.</p>
 </blockquote>
-<p>Il primo passo del running example consiste nel chiedere al modello di produrre uno stato semantico tipizzato.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFICATO NEL REPO] - mood_interpreter.py</span>
-
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+<p>Vediamo con il running example quale dovrebbe essere il primo passo. Ecco esso consiste nel chiedere al modello di produrre uno stato semantico tipizzato.</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     current_energy: <span class="hljs-built_in">float</span>
     desired_energy: <span class="hljs-built_in">float</span>
     intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>]
-    needs_clarification: <span class="hljs-built_in">bool</span></code></pre><p>A quel punto il ramo non richiede un&#39;altra inferenza.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFICATO NEL REPO]</span>
-
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">route</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;clarification&quot;</span>, <span class="hljs-string">&quot;search&quot;</span>]:
+    needs_clarification: <span class="hljs-built_in">bool</span></code></pre><p>A quel punto il ramo non richiede un&#39;altra inferenza. È puro codice sincrono. Il modello non fa nessuna chiamata a un LLM, nessuna latenza di rete, nessun costo di inferenza. Abbiamo un bel risultato deterministico e testabile con un normale unit test</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">route</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;clarification&quot;</span>, <span class="hljs-string">&quot;search&quot;</span>]:
     <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarification&quot;</span> <span class="hljs-keyword">if</span> profile.needs_clarification <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;search&quot;</span></code></pre><pre class="mermaid">flowchart LR
     P[Prompt] --&gt; M[MoodProfile]
     M --&gt; G{needs_clarification?}
@@ -2052,41 +2057,63 @@ Giudicare la coerenza        → evaluator, se resta soggettività</code></pre><
     classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
     classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
     class M model;
-    class G code;</pre><p>La mossa importante non è «usare Pydantic». È <strong>rendere la decisione rappresentabile</strong>.</p>
-<p>Finché la differenza fra «sono stanco» e «voglio ballare» vive soltanto nel testo, il control flow resta affidato al ragionamento del modello. Quando diventa <code>current_energy != desired_energy</code> e <code>intent=&quot;shift&quot;</code>, una parte del controllo può uscire dal prompt ed entrare nel codice.</p>
-<h3 id="supervisor-la-decisione-richiede-ancora-giudizio">Supervisor: la decisione richiede ancora giudizio</h3>
+    class G code;</pre><p>La mossa importante qui è <strong>rendere la decisione rappresentabile</strong>. Finché la differenza fra «sono stanco» e «voglio ballare» restano testo libero, decidere il prossimo passo significa richiedere ogni volta un nuovo giudizio al modello. Quando diventa <code>current_energy != desired_energy</code> e <code>intent=&quot;shift&quot;</code>, una parte del controllo può uscire dal prompt ed entrare nel codice.</p>
+<h3 id="supervisor-la-decisione-resta-labile">Supervisor: la decisione resta labile</h3>
 <blockquote>
-<p><strong>Quando usarlo.</strong> Usa un supervisor quando il prossimo passo non è deducibile da una regola stabile: deve scegliere fra specialisti in base all&#39;obiettivo, allo stato, agli output intermedi e a trade-off che cambiano durante l&#39;esecuzione. Il supervisor conserva l&#39;ownership della conversazione e ricompone i risultati. Se basta leggere un campo o applicare una policy deterministica, è routing: un supervisor aggiungerebbe inferenza, latenza e non-determinismo senza produrre giudizio utile.</p>
+<p><strong>Quando usarlo.</strong> Usa un supervisor quando il prossimo passo non è deducibile da una regola deterministica e richiede <strong>giudizio continuo</strong>. Il supervisor agisce come un &quot;Project Manager&quot; o un &quot;Direttore d&#39;Orchestra&quot;: valuta lo stato corrente, sceglie dinamicamente quale specialista (worker) attivare, riceve l&#39;output, aggiorna lo stato e decide il passo successivo. Conserva l&#39;ownership globale del contesto e della conversazione.
+<strong>Quando NON usarlo.</strong> Se la sequenza dei passaggi è fissa (A -&gt; B -&gt; C) o se la scelta del ramo dipende da una variabile nota (es. un boolean nel database), usa un workflow deterministico o un Router basato su codice. Eviterai latenza, costi di chiamata LLM e non-determinismo inutile.</p>
 </blockquote>
-<p>Un supervisor serve quando non basta leggere un campo.</p>
+<p>In pratica, il Supervisor serve quando dobbiamo coordinare diversi agenti specialisti le cui interazioni non sono prevedibili a priori.</p>
+<p>Prendiamo il nostro esempio di Spotify:</p>
+<ol>
+<li>L&#39;utente dice: <em>«Sono stanco, ma voglio ballare.»</em></li>
+<li>Il <strong>Supervisor</strong> riceve la richiesta e decide di interpellare il <code>Mood Interpreter</code>.</li>
+<li>Il <code>Mood Interpreter</code> restituisce una diagnosi: <em>&quot;L&#39;utente è affaticato ma cerca una transizione attiva (shift) verso l&#39;energia alta&quot;</em>.</li>
+<li>Il <strong>Supervisor</strong> legge questa diagnosi e decide dinamicamente che il prossimo passo non è ancora creare la playlist, ma chiedere al <code>Music Scout</code> di cercare generi di transizione (es. Deep House soft).</li>
+<li>Se lo <code>Scout</code> restituisce pochi risultati, il <strong>Supervisor</strong> non fallisce: decide di cambiare strategia e attivare un secondo Scout su generi alternativi (es. Funk ritmico).</li>
+</ol>
+<p>Questo flusso dinamico e adattivo non può essere mappato facilmente con un semplice <code>if/else</code>.</p>
 <pre class="mermaid">flowchart TD
     U[Utente] --&gt; S[Supervisor]
-    S --&gt; M[Mood Interpreter]
-    S --&gt; SC[Music Scout]
-    S --&gt; C[Curator]
-    M --&gt; S
-    SC --&gt; S
-    C --&gt; S
-    S --&gt; O[Output]
+    S --&gt;|1. Domanda: interpreta mood| M[Mood Interpreter]
+    S --&gt;|3. Domanda: cerca brani| SC[Music Scout]
+    S --&gt;|5. Domanda: cura e ordina| C[Curator]
+    M --&gt;|2. Risposta: Shift energetico| S
+    SC --&gt;|4. Risposta: Lista tracce candidati| S
+    C --&gt;|6. Risposta: Playlist rifinita| S
+    S --&gt;|7. Risposta finale| O[Output]
 
     classDef key fill:#1B64F5,stroke:#1B64F5,color:#fff;
-    class S key;</pre><p>Il supervisor conserva il filo della conversazione, decide quale specialista chiamare, riceve il risultato e può delegare di nuovo.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
+    class S key;</pre><h4 id="perch-importante-lownership-del-contesto">Perché è importante l&#39;Ownership del Contesto?</h4>
+<p>A differenza di un &quot;handoff&quot; (dove il controllo passa definitivamente a un altro agente e la conversazione continua lì), nel pattern <strong>Supervisor</strong> gli specialisti sono &quot;ciechi&quot; rispetto alla storia passata della conversazione globale. Ricevono solo un task circoscritto (<em>context minimization</em>) e restituiscono un risultato strutturato al Supervisor.
+Questo impedisce che il contesto dei sotto-agenti si saturi di informazioni inutili (rumore) e che l&#39;utente debba interagire con entità diverse, mantenendo l&#39;esperienza fluida e centralizzata sul Supervisor.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PSEUDOCODICE]</span>
 
 <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> state.done:
-    decision = supervisor.decide(
+    <span class="hljs-comment"># Il supervisor valuta lo stato e decide la mossa successiva</span>
+    decision = <span class="hljs-keyword">await</span> supervisor.decide(
         goal=state.goal,
-        current_state=state.summary,
-        pending=state.pending,
-        available_workers=registry,
+        current_state=state.summary, <span class="hljs-comment"># Mantiene una sintesi pulita del lavoro fatto finora</span>
+        available_workers=registry.list_tools(),
     )
 
-    result = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task)
-    state.record(result)</code></pre><p>Il costo è evidente: un&#39;altra inferenza, un altro punto di non determinismo, più latenza. Perciò la domanda corretta non è «posso usare un supervisor?», ma:</p>
+    <span class="hljs-keyword">if</span> decision.is_final:
+        state.done = <span class="hljs-literal">True</span>
+        <span class="hljs-keyword">break</span>
+
+    <span class="hljs-comment"># Delega il compito specifico allo specialista prescelto</span>
+    worker_output = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task_parameters)
+    
+    <span class="hljs-comment"># Registra l&#x27;esito nello stato globale (senza passare l&#x27;intera trascrizione della sotto-chat)</span>
+    state.record_step(
+        worker=decision.worker,
+        task=decision.task_parameters,
+        output=worker_output.summary
+    )</code></pre><p>Il costo di questo pattern è evidente: ogni decisione del Supervisor richiede un&#39;inferenza LLM aggiuntiva (latenza e costo in token). Perciò, prima di implementarlo, poniti questa domanda:</p>
 <blockquote>
-<p><strong>C&#39;è ancora qualcosa da negoziare?</strong></p>
+<p><strong>C&#39;è una reale negoziazione o ambiguità da gestire tra i passaggi?</strong></p>
 </blockquote>
-<p>Se la risposta è già dentro uno schema, il supervisor è un modo costoso per leggere un campo.</p>
+<p>Se la risposta è no, e i passaggi sono sequenziali o guidati da regole fisse, usa il <strong>Routing</strong> o un <strong>Workflow a grafo deterministico</strong>.</p>
 <h3 id="handoff-cambia-il-proprietario-del-prossimo-turno">Handoff: cambia il proprietario del prossimo turno</h3>
 <blockquote>
 <p><strong>Quando usarlo.</strong> Usa un handoff quando, oltre al lavoro da svolgere, deve cambiare chi possiede il dialogo nel turno successivo. Se un agente deve solo eseguire un sotto-compito e restituirne l&#39;esito, mantieni il controllo nell&#39;orchestratore e usa una delegation o un agente come tool.</p>
