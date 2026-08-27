@@ -2243,13 +2243,13 @@ Handoff    → cambia chi possiede il controllo.</code></pre><h4 id="un-handoff-
     H --&gt; B[Specialista]
 
     classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class H contract;</pre><p>Qui diventano visibili due decisioni che spesso vengono confuse:</p>
+    class H contract;</pre><p>La formalizzazione di questo schema evidenzia due responsabilità architetturali distinte che spesso i team confondono in fase di design:</p>
 <ol>
-<li><strong>chi possiede il controllo;</strong></li>
-<li><strong>quale informazione attraversa il confine.</strong></li>
+<li><strong>La governance del flusso (Control Ownership):</strong> Chi ha l&#39;autorità di decidere quale azione compiere in seguito?</li>
+<li><strong>La minimizzazione del contesto (Information Boundary):</strong> Quali dati devono realmente superare la barriera dell&#39;agente?</li>
 </ol>
-<p>LangChain documenta gli handoff come transizioni guidate dallo stato. LangGraph mostra inoltre che parent graph e subgraph possono avere schemi di stato distinti, mappando esplicitamente l&#39;input verso il subgraph e il suo output di ritorno (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
-<p>La conseguenza è importante: un handoff non dovrebbe passare «tutto, per sicurezza». Dovrebbe passare ciò che serve a lavorare senza costringere lo specialista a ricostruire il mondo.</p>
+<p>Sia LangChain che LangGraph supportano nativamente questo livello di astrazione. LangGraph, ad esempio, permette di definire subgraph indipendenti dotati di schemi di stato (state schemas) dedicati, incapsulando la memoria locale dello specialista e mappando in modo esplicito solo gli input e gli output concordati (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
+<p>La regola aurea di un handoff progettato con criteri moderni è chiara: <strong>evitare la tentazione di passare lo stato globale &quot;per sicurezza&quot;</strong>. L&#39;agente ricevente deve disporre esclusivamente del contesto minimo necessario per compiere il proprio dovere, senza l&#39;onere computazionale e cognitivo di dover ricostruire l&#39;intero storico del sistema.</p>
 <h2 id="chi-fa-cosa">Chi fa cosa?</h2>
 <p>A questo punto sappiamo chi prende le decisioni. Resta da distribuire il lavoro.</p>
 <h3 id="tool-worker-subagent">Tool, worker, subagent</h3>
