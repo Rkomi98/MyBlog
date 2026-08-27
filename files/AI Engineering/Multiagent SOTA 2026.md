@@ -8,7 +8,7 @@ Un sistema multiagentico non nasce quando metti due modelli uno accanto all'altr
 
 La parola importante, qui, è *decidi*. Perché aggiungere agenti non è un obiettivo. È una scelta architetturale che deve ripagare il proprio costo.
 
-Per tenere insieme il discorso useremo una richiesta molto semplice:
+Per tenere insieme il discorso useremo un esempio che mi è arrivato direttamente da un percorso che sto costruendo con Datapizza. Un sistema multiagentico in grado di intercettare il mood dell'utente e di proporre una playlist di conseguenza (a tal proposito ora sto ascoltando [radio Suno](https://suno.com/labs/live-radio)). Partiamo da una richiesta molto semplice:
 
 > **«Sono stanco, ma voglio ballare.»**
 
