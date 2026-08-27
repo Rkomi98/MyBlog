@@ -90,6 +90,7 @@ function mergeMetadata(posts, metadata) {
     const keywords = matchedEntry?.keywords ?? '';
     const hiddenFromIndex = Boolean(matchedEntry?.hiddenFromIndex);
     const hiddenFromHome = Boolean(matchedEntry?.hiddenFromHome);
+    const draft = Boolean(matchedEntry?.draft);
     const showTocNumbers = matchedEntry?.showTocNumbers !== false;
 
     for (const [lang, langData] of Object.entries(post.languages)) {
@@ -121,6 +122,7 @@ function mergeMetadata(posts, metadata) {
       keywords,
       hiddenFromIndex,
       hiddenFromHome,
+      draft,
       showTocNumbers,
       pageScripts: Array.isArray(matchedEntry?.pageScripts)
         ? matchedEntry.pageScripts.filter((value) => typeof value === 'string' && value.trim())
@@ -227,17 +229,18 @@ async function build() {
 
   const posts = await collectPosts({ rootDir, logger: console });
   mergeMetadata(posts, metadata);
+  const publishedPosts = posts.filter((post) => !post.meta?.draft);
 
   const blogDir = path.join(distDir, 'blog');
   await fs.ensureDir(blogDir);
 
   const blogIndexHtml = renderBlogIndex({
-    posts,
+    posts: publishedPosts,
     relativeRoot: path.relative(blogDir, distDir) || '.',
   });
   await fs.writeFile(path.join(blogDir, 'index.html'), blogIndexHtml, 'utf8');
 
-  for (const post of posts) {
+  for (const post of publishedPosts) {
     for (const language of Object.keys(post.languages)) {
       const pageDir = path.join(blogDir, language, post.slug);
       await fs.ensureDir(pageDir);
@@ -251,14 +254,14 @@ async function build() {
     }
   }
 
-  await writeManifest(posts, blogDir);
+  await writeManifest(publishedPosts, blogDir);
   await copyStaticBlogPages(rootDir, blogDir);
 
-  await generateSitemap(posts, distDir);
+  await generateSitemap(publishedPosts, distDir);
 
   await syncDocsDirectory(distDir, rootDir);
 
-  console.log(`✔️  Generated ${posts.length} post(s) into ${toPosix(path.relative(rootDir, distDir))}`);
+  console.log(`✔️  Generated ${publishedPosts.length} post(s) into ${toPosix(path.relative(rootDir, distDir))}`);
 }
 
 build().catch((error) => {
