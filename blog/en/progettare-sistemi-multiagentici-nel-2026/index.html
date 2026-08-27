@@ -1,0 +1,3329 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Designing Multi-Agent Systems in 2026 | Mirko Calcaterra</title>
+  <meta name="description" content="title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…">
+  <meta name="keywords" content="">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026/">
+  <meta property="og:title" content="Designing Multi-Agent Systems in 2026">
+  <meta property="og:description" content="title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-08-20T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="AI Engineering Path">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Designing Multi-Agent Systems in 2026">
+  <meta property="twitter:description" content="title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Designing Multi-Agent Systems in 2026",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-08-20T00:00:00.000Z",
+    "dateModified": "2026-08-27T10:10:29.000Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      position: relative;
+      font-family: 'Charter', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --bg-card-strong: rgba(11, 17, 32, 0.92);
+      --border: rgba(148, 163, 184, 0.2);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --surface: #1e293b;
+      --shadow-lg: 0 28px 60px -36px rgba(2, 6, 23, 0.9);
+      --code-inline-bg: rgba(30, 41, 59, 0.88);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.2);
+      --code-shadow: 0 12px 32px rgba(2, 6, 23, 0.45);
+      --code-text: #cbd5e1;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f6f8f7;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(255, 255, 255, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #059669;
+      --accent-strong: #047857;
+      --surface: #f1f5f9;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.16);
+      --code-inline-bg: rgba(226, 232, 240, 0.9);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.24);
+      --code-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 16;
+      width: 100%;
+      height: 2px;
+      background: rgba(148, 163, 184, 0.25);
+    }
+    .reading-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #22c55e 55%, #2dd4bf 100%);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+      transition: width 0.1s ease-out;
+    }
+    .site-header__inner,
+    .site-nav,
+    .lang-btn,
+    .theme-toggle,
+    .post-toc,
+    footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-hero__title,
+    .post-body h2,
+    .post-body h3,
+    .post-body h4,
+    .post-body .post-warning summary,
+    .post-toc__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(5, 150, 105, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(5, 150, 105, 0.08);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(15, 23, 42, 0.55) 70%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 22%, rgba(16, 185, 129, 0.18) 0%, transparent 56%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.13);
+      color: var(--accent-strong);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__author {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--accent);
+    }
+    .post-hero__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      object-fit: cover;
+      background: var(--surface);
+    }
+    .post-hero__author-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .post-hero__author-name {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .post-hero__author-meta {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.12rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body ul li::marker,
+    .post-body ol li::marker {
+      color: var(--accent);
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body .inline-note {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.15rem;
+    }
+    .post-body .inline-note__trigger {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      margin: 0 0 0 0.08rem;
+      vertical-align: super;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
+    }
+    .post-body .inline-note__trigger:hover {
+      color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
+    }
+    .post-body .inline-note__popup {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.6rem);
+      width: min(360px, 80vw);
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-lg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      z-index: 8;
+      display: none;
+    }
+    .post-body .inline-note__popup strong {
+      color: var(--text-primary);
+    }
+    .post-body .inline-note--open .inline-note__popup {
+      display: block;
+    }
+    body[data-theme="light"] .post-body .inline-note__popup {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 0.75rem 1.2rem;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      background: rgba(30, 41, 59, 0.45);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.98rem;
+      font-style: italic;
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--accent-strong);
+      padding: 0.15rem 0.42rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+    }
+    .post-code-card pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--code-text);
+    }
+    .post-body pre {
+      margin: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
+    .post-body .mermaid-diagram {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-body .mermaid-diagram pre.mermaid {
+      margin: 0;
+    }
+    .post-body .mermaid-diagram__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .mermaid-diagram__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .mermaid-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 1000;
+    }
+    .mermaid-overlay--visible {
+      display: flex;
+    }
+    .mermaid-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1280px, 94vw);
+      max-height: 88vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .mermaid-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      z-index: 2;
+    }
+    .mermaid-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .mermaid-overlay__scroll {
+      overflow: auto;
+      max-height: 88vh;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .mermaid-overlay__scroll svg {
+      max-width: none;
+      height: auto;
+    }
+    body[data-theme="light"] .post-body .mermaid-diagram__expand {
+      background: rgba(248, 250, 252, 0.92);
+    }
+    body[data-theme="light"] .mermaid-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .mermaid-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-code-card pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: var(--code-text);
+    }
+    .post-code-card {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-code-card__language {
+      position: absolute;
+      right: 1rem;
+      top: -0.62rem;
+      z-index: 2;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      color: var(--accent-strong);
+      text-transform: uppercase;
+    }
+    .post-code-card__frame {
+      background: var(--code-block-bg);
+      border-radius: 12px;
+      border: 1px solid var(--code-border);
+      box-shadow: var(--code-shadow);
+      overflow: hidden;
+    }
+    .post-code-card__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.48rem 0.78rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-code-card__window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      flex: 0 0 auto;
+    }
+    .post-code-card__window-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .post-code-card__window-dot--red {
+      background: rgba(248, 113, 113, 0.25);
+      border-color: rgba(248, 113, 113, 0.6);
+    }
+    .post-code-card__window-dot--yellow {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .post-code-card__window-dot--green {
+      background: rgba(74, 222, 128, 0.22);
+      border-color: rgba(74, 222, 128, 0.65);
+    }
+    .post-code-card__filename {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-code-card__body {
+      padding: 0.95rem 1rem;
+      overflow-x: auto;
+    }
+    .post-code-card__body::-webkit-scrollbar {
+      height: 6px;
+    }
+    .post-code-card__body::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #c084fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #4ade80;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #fb923c;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .code-copy-btn {
+      margin-left: auto;
+      background: transparent;
+      color: var(--text-muted);
+      border: 0;
+      border-radius: 999px;
+      padding: 0.25rem 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .code-copy-btn__icon {
+      font-size: 0.88rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      color: var(--text-muted);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 2.2rem 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: var(--surface);
+      opacity: 0.88;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .article-figure {
+      margin: 2.4rem 0;
+    }
+    .post-body .article-figure img {
+      width: 100%;
+      display: block;
+      margin: 0;
+    }
+    .post-body .article-figure figcaption {
+      margin-top: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .post-body .article-figure figcaption strong {
+      color: var(--text-primary);
+    }
+    .post-body .article-figure--wide {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1500px, calc(100vw - 4rem));
+      max-width: none;
+    }
+    body[data-theme="light"] .post-body .article-figure figcaption {
+      color: var(--text-muted);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+        font-size: 1.04rem;
+      }
+      .post-body .article-figure--wide {
+        left: auto;
+        transform: none;
+        width: 100%;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-hero__author {
+        gap: 0.7rem;
+      }
+      .post-hero__author-meta {
+        font-size: 0.78rem;
+      }
+      .post-code-card__header {
+        padding: 0.45rem 0.6rem;
+      }
+      .post-code-card__filename {
+        max-width: 36vw;
+      }
+      .code-copy-btn__text {
+        display: none;
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .post-body .mermaid-diagram__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+      .mermaid-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      const labels = document.documentElement.lang === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full screen', close: 'Close' };
+      let overlay = null;
+      let overlayScroll = null;
+
+      const ensureOverlay = () => {
+        if (overlay) {
+          return;
+        }
+        overlay = document.createElement('div');
+        overlay.className = 'mermaid-overlay';
+        overlay.innerHTML =
+          '<div class="mermaid-overlay__content">' +
+            '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
+            '<div class="mermaid-overlay__scroll"></div>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
+        const closeButton = overlay.querySelector('.mermaid-overlay__close');
+        closeButton?.addEventListener('click', () => {
+          overlay.classList.remove('mermaid-overlay--visible');
+          document.body.classList.remove('no-scroll');
+          if (overlayScroll) {
+            overlayScroll.innerHTML = '';
+          }
+        });
+        overlay.addEventListener('click', (event) => {
+          if (event.target === overlay) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
+            overlay.classList.remove('mermaid-overlay--visible');
+            document.body.classList.remove('no-scroll');
+            if (overlayScroll) {
+              overlayScroll.innerHTML = '';
+            }
+          }
+        });
+      };
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      await mermaid.run({ querySelector: '.mermaid' });
+
+      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+        if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-diagram';
+        diagram.parentNode.insertBefore(wrapper, diagram);
+        wrapper.appendChild(diagram);
+
+        const expandButton = document.createElement('button');
+        expandButton.type = 'button';
+        expandButton.className = 'mermaid-diagram__expand';
+        expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
+        expandButton.setAttribute('aria-label', labels.expand);
+        expandButton.addEventListener('click', () => {
+          ensureOverlay();
+          if (!overlay || !overlayScroll) {
+            return;
+          }
+          overlayScroll.innerHTML = '';
+          const clone = diagram.cloneNode(true);
+          overlayScroll.appendChild(clone);
+          overlay.classList.add('mermaid-overlay--visible');
+          document.body.classList.add('no-scroll');
+        });
+        wrapper.appendChild(expandButton);
+      });
+    }
+  </script>
+</head>
+<body data-theme="dark">
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="reading-progress-bar"></div>
+  </div>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">AI Engineering Path</span>
+        <h1 class="post-hero__title">Designing Multi-Agent Systems in 2026</h1>
+        <div class="post-hero__author">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
+          <div class="post-hero__author-text">
+            <span class="post-hero__author-name">Mirko Calcaterra</span>
+            <span class="post-hero__author-meta">August 20, 2026 • 24 min</span>
+          </div>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#title-designing-multi-agent-systems-in-2026-subtitle-how-to-distribute-autonomy-without-losing-control-description-a-reasoned-guide-to-routing-supervisors-handoffs-context-engineering-verification-failure-semantics-and-harnesses-for-modern-agent-systems-author-mirko-calcaterra-date-2026-08-20-lang-en-tags---ai-agents---multi-agent-systems---orchestration---context-engineering---ai-engineering">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">title: &quot;Designing Multi-Agent Systems in 2026&quot;
+subtitle: &quot;How to distribute autonomy without losing control&quot;
+description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent systems.&quot;
+author: &quot;Mirko Calcaterra&quot;
+date: &quot;2026-08-20&quot;
+lang: &quot;en&quot;
+tags:
+  - AI agents
+  - multi-agent systems
+  - orchestration
+  - context engineering
+  - AI engineering</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#how-to-distribute-autonomy-without-losing-control">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">How to distribute autonomy without losing control</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#1-the-simplest-system-that-could-work">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">1. The simplest system that could work</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#an-agent-must-earn-its-place">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">An agent must earn its place</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#2-the-spotify-monolith">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">2. The Spotify monolith</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#decision-ambiguity">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Decision ambiguity</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#acceptance-ambiguity">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Acceptance ambiguity</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#3-decomposing-the-problem-before-the-agent">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">3. Decomposing the problem before the agent</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#4-who-decides">
+            <span class="post-toc__number">6</span>
+            <span class="post-toc__text">4. Who decides?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#routing-the-decision-is-already-in-the-state">
+            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__text">Routing: the decision is already in the state</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#supervisor-the-decision-still-requires-judgment">
+            <span class="post-toc__number">6.2</span>
+            <span class="post-toc__text">Supervisor: the decision still requires judgment</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#handoff-changing-the-owner-of-the-next-turn">
+            <span class="post-toc__number">6.3</span>
+            <span class="post-toc__text">Handoff: changing the owner of the next turn</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#5-a-handoff-is-a-contract">
+            <span class="post-toc__number">7</span>
+            <span class="post-toc__text">5. A handoff is a contract</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#6-who-does-what">
+            <span class="post-toc__number">8</span>
+            <span class="post-toc__text">6. Who does what?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tools-workers-subagents">
+            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__text">Tools, workers, subagents</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#parallelism-dependencies-first">
+            <span class="post-toc__number">8.2</span>
+            <span class="post-toc__text">Parallelism: dependencies first</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#7-who-knows-what">
+            <span class="post-toc__number">9</span>
+            <span class="post-toc__text">7. Who knows what?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#the-shared-context-paradox">
+            <span class="post-toc__number">9.1</span>
+            <span class="post-toc__text">The shared context paradox</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#8-state-memory-and-artifacts">
+            <span class="post-toc__number">10</span>
+            <span class="post-toc__text">8. State, memory, and artifacts</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#conversation-state">
+            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__text">Conversation state</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#task-state">
+            <span class="post-toc__number">10.2</span>
+            <span class="post-toc__text">Task state</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#local-state">
+            <span class="post-toc__number">10.3</span>
+            <span class="post-toc__text">Local state</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#artifact">
+            <span class="post-toc__number">10.4</span>
+            <span class="post-toc__text">Artifact</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#9-who-is-in-control">
+            <span class="post-toc__number">11</span>
+            <span class="post-toc__text">9. Who is in control?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#91-deterministic-checks">
+            <span class="post-toc__number">11.1</span>
+            <span class="post-toc__text">9.1 Deterministic checks</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#92-environmental-verification">
+            <span class="post-toc__number">11.2</span>
+            <span class="post-toc__text">9.2 Environmental verification</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#93-semantic-evaluation">
+            <span class="post-toc__number">11.3</span>
+            <span class="post-toc__text">9.3 Semantic evaluation</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#a-loop-needs-a-brake">
+            <span class="post-toc__number">11.4</span>
+            <span class="post-toc__text">A loop needs a brake</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#10-evals-the-system-must-be-measured-as-a-whole">
+            <span class="post-toc__number">12</span>
+            <span class="post-toc__text">10. Evals: the system must be measured as a whole</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#do-not-reward-a-rigid-path">
+            <span class="post-toc__number">12.1</span>
+            <span class="post-toc__text">Do not reward a rigid path</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#11-things-go-wrong">
+            <span class="post-toc__number">13</span>
+            <span class="post-toc__text">11. Things go wrong</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#formally-invalid-output">
+            <span class="post-toc__number">13.1</span>
+            <span class="post-toc__text">Formally invalid output</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#valid-but-semantically-uncertain-output">
+            <span class="post-toc__number">13.2</span>
+            <span class="post-toc__text">Valid but semantically uncertain output</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#external-tool-unavailable">
+            <span class="post-toc__number">13.3</span>
+            <span class="post-toc__text">External tool unavailable</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#partial-success">
+            <span class="post-toc__number">13.4</span>
+            <span class="post-toc__text">Partial success</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#idempotency-and-side-effects">
+            <span class="post-toc__number">13.5</span>
+            <span class="post-toc__text">Idempotency and side effects</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#12-blast-radius-and-human-in-the-loop">
+            <span class="post-toc__number">14</span>
+            <span class="post-toc__text">12. Blast radius and human-in-the-loop</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#13-when-the-work-lasts-longer-than-the-conversation">
+            <span class="post-toc__number">15</span>
+            <span class="post-toc__text">13. When the work lasts longer than the conversation</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#compaction">
+            <span class="post-toc__number">15.1</span>
+            <span class="post-toc__text">Compaction</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#context-reset">
+            <span class="post-toc__number">15.2</span>
+            <span class="post-toc__text">Context reset</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#checkpoint">
+            <span class="post-toc__number">15.3</span>
+            <span class="post-toc__text">Checkpoint</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#artifact-persistence">
+            <span class="post-toc__number">15.4</span>
+            <span class="post-toc__text">Artifact persistence</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#14-from-agent-system-to-harness">
+            <span class="post-toc__number">16</span>
+            <span class="post-toc__text">14. From agent system to harness</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#many-brains-many-hands">
+            <span class="post-toc__number">16.1</span>
+            <span class="post-toc__text">Many brains, many hands</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#15-mcp-and-a2a-two-different-problems">
+            <span class="post-toc__number">17</span>
+            <span class="post-toc__text">15. MCP and A2A: two different problems</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#mcp">
+            <span class="post-toc__number">17.1</span>
+            <span class="post-toc__text">MCP</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#a2a">
+            <span class="post-toc__number">17.2</span>
+            <span class="post-toc__text">A2A</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#16-when-a-decision-becomes-an-edge">
+            <span class="post-toc__number">18</span>
+            <span class="post-toc__text">16. When a decision becomes an edge</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#17-the-spotify-reference-architecture">
+            <span class="post-toc__number">19</span>
+            <span class="post-toc__text">17. The Spotify reference architecture</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#the-runtime-in-pseudocode">
+            <span class="post-toc__number">19.1</span>
+            <span class="post-toc__text">The runtime, in pseudocode</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#18-what-is-converging-in-2026">
+            <span class="post-toc__number">20</span>
+            <span class="post-toc__text">18. What is converging in 2026</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#1-simplicity-comes-before-decomposition">
+            <span class="post-toc__number">20.1</span>
+            <span class="post-toc__text">1. Simplicity comes before decomposition</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#2-context-is-a-design-object">
+            <span class="post-toc__number">20.2</span>
+            <span class="post-toc__text">2. Context is a design object</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#3-control-must-be-localized">
+            <span class="post-toc__number">20.3</span>
+            <span class="post-toc__text">3. Control must be localized</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#4-verification-must-touch-the-environment">
+            <span class="post-toc__number">20.4</span>
+            <span class="post-toc__text">4. Verification must touch the environment</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#5-state-must-survive-the-prompt">
+            <span class="post-toc__number">20.5</span>
+            <span class="post-toc__text">5. State must survive the prompt</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#6-risk-is-managed-with-deterministic-boundaries">
+            <span class="post-toc__number">20.6</span>
+            <span class="post-toc__text">6. Risk is managed with deterministic boundaries</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#7-the-model-and-the-harness-must-be-evaluated-together">
+            <span class="post-toc__number">20.7</span>
+            <span class="post-toc__text">7. The model and the harness must be evaluated together</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#19-a-grammar-for-design">
+            <span class="post-toc__number">21</span>
+            <span class="post-toc__text">19. A grammar for design</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#who-decides">
+            <span class="post-toc__number">21.1</span>
+            <span class="post-toc__text">Who decides?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#who-knows-what">
+            <span class="post-toc__number">21.2</span>
+            <span class="post-toc__text">Who knows what?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#who-does-what">
+            <span class="post-toc__number">21.3</span>
+            <span class="post-toc__text">Who does what?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#who-controls">
+            <span class="post-toc__number">21.4</span>
+            <span class="post-toc__text">Who controls?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#who-keeps-the-system-running">
+            <span class="post-toc__number">21.5</span>
+            <span class="post-toc__text">Who keeps the system running?</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#20-an-interactive-lab">
+            <span class="post-toc__number">22</span>
+            <span class="post-toc__text">20. An interactive lab</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#conclusion">
+            <span class="post-toc__number">23</span>
+            <span class="post-toc__text">Conclusion</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#sources-and-reading-notes">
+            <span class="post-toc__number">24</span>
+            <span class="post-toc__text">Sources and reading notes</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#further-reading">
+            <span class="post-toc__number">24.1</span>
+            <span class="post-toc__text">Further reading</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <hr>
+<h2 id="title-designing-multi-agent-systems-in-2026-subtitle-how-to-distribute-autonomy-without-losing-control-description-a-reasoned-guide-to-routing-supervisors-handoffs-context-engineering-verification-failure-semantics-and-harnesses-for-modern-agent-systems-author-mirko-calcaterra-date-2026-08-20-lang-en-tags---ai-agents---multi-agent-systems---orchestration---context-engineering---ai-engineering">title: &quot;Designing Multi-Agent Systems in 2026&quot;
+subtitle: &quot;How to distribute autonomy without losing control&quot;
+description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent systems.&quot;
+author: &quot;Mirko Calcaterra&quot;
+date: &quot;2026-08-20&quot;
+lang: &quot;en&quot;
+tags:
+  - AI agents
+  - multi-agent systems
+  - orchestration
+  - context engineering
+  - AI engineering</h2>
+<h1 id="designing-multi-agent-systems-in-2026">Designing Multi-Agent Systems in 2026</h1>
+<h2 id="how-to-distribute-autonomy-without-losing-control">How to distribute autonomy without losing control</h2>
+<blockquote>
+<p><strong>Editorial Note.</strong> This article deliberately distinguishes between three levels. Examples marked <strong>[VERIFIED IN REPO]</strong> correspond to the Spotify running example used in the lecture. Examples marked <strong>[REFERENCE DESIGN]</strong> describe the architecture toward which that system can evolve. Examples marked <strong>[PSEUDOCODE]</strong> are intended to illustrate a design choice and should not be read as APIs for a specific framework.</p>
+</blockquote>
+<p>Before discussing swarms, supervisors, and handoffs, it is worth taking a step back. This is a common stumbling block, and the rest of the discussion suffers if it isn&#39;t addressed.</p>
+<p>A multi-agent system is not created simply by placing two models side-by-side. It doesn&#39;t even emerge when one agent calls a second agent as if it were a tool. It is born when you decide to <strong>distribute responsibility, context, and control</strong> among components that can make partially autonomous decisions.</p>
+<p>The important word here is <em>decide</em>. Adding agents is not an end in itself; it is an architectural choice that must justify its own cost.</p>
+<p>To keep the discussion grounded, we will use a very simple request:</p>
+<blockquote>
+<p><strong>«I’m tired, but I want to dance.»</strong></p>
+</blockquote>
+<p>It is a short sentence, but it already contains almost everything: a current state, a desired state, a tension between the two, and a decision to be made. We will use this as a lens: every time the system cracks, we will introduce only the mechanism necessary to fix that specific fissure.</p>
+<p>The common thread of this article can be condensed into five questions:</p>
+<ol>
+<li><strong>Who decides?</strong></li>
+<li><strong>Who knows what?</strong></li>
+<li><strong>Who does what?</strong></li>
+<li><strong>Who verifies that the work was done well?</strong></li>
+<li><strong>Who keeps the system running when the work takes time, something fails, or the model changes?</strong></li>
+</ol>
+<p>In 2024, the most useful taxonomy focused primarily on routing, chaining, parallelization, orchestrator-workers, and evaluator-optimizers. Those patterns remain valid. In 2026, however, the interesting focus has shifted one level higher: context lifecycle, contracts, artifacts, checkpoints, trajectory evals, sandboxes, containment, and harnesses. Anthropic, OpenAI, and Microsoft are converging on this exact layer of the problem, even while using different vocabularies and abstractions.[^anthropic-engineering][^openai-sdk-2026][^microsoft-workflows]</p>
+<hr>
+<h2 id="1-the-simplest-system-that-could-work">1. The simplest system that could work</h2>
+<p>The first question is not &quot;how many agents do I need?&quot; It is more uncomfortable:</p>
+<blockquote>
+<p><strong>Why isn&#39;t a single agent enough?</strong></p>
+</blockquote>
+<p>If the path is known in advance, a workflow is often sufficient. If a transformation is deterministic, a function will do. If a single agent can maintain the context and use tools effectively, splitting the work only creates new points of failure.</p>
+<pre class="mermaid">flowchart LR
+    F[Function] --&gt; W[Deterministic workflow]
+    W --&gt; A[Single agent]
+    A --&gt; S[Agent + specialists]
+    S --&gt; M[Multi-agent system]
+
+    classDef base fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
+    classDef hot fill:#D7342B,stroke:#D7342B,color:#fff;
+    class F,W,A,S base;
+    class M hot;</pre><p>Moving toward the right means gaining flexibility, but also paying in latency, cost, non-determinism, coordination, and observability.</p>
+<p>A starting rule can be written as follows:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">choose_architecture</span>(<span class="hljs-params">problem</span>):
+    <span class="hljs-keyword">if</span> problem.is_deterministic:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;function_or_workflow&quot;</span>
+
+    <span class="hljs-keyword">if</span> problem.path_is_known:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;graph_workflow&quot;</span>
+
+    <span class="hljs-keyword">if</span> problem.fits_one_context <span class="hljs-keyword">and</span> problem.needs_one_owner:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;single_agent&quot;</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;consider_multi_agent&quot;</span></code></pre><p>This is not a universal formula; it is a safeguard. It serves to avoid the most common mistake: confusing complexity with maturity.</p>
+<p>Simon Willison puts it from a very practical perspective: sub-agents are valuable primarily because they preserve the main context and absorb token-heavy operations; breaking every activity down into dozens of specialists, however, can become an expensive indulgence.[^simon-subagents]</p>
+<h3 id="an-agent-must-earn-its-place">An agent must earn its place</h3>
+<p>Before adding an agent, try to complete this sentence:</p>
+<blockquote>
+<p>&quot;This component must be an agent because it needs to ____________.&quot;</p>
+</blockquote>
+<p>Plausible responses involve judgment, open-ended planning, dynamic tool use, exploration, or interaction. If the response is &quot;must sort a list,&quot; &quot;must check for duplicates,&quot; or &quot;must choose a branch by reading a boolean,&quot; you are likely promoting what should remain a function to the role of a colleague.</p>
+<hr>
+<h2 id="2-the-spotify-monolith">2. The Spotify monolith</h2>
+<p>Let&#39;s start with the most natural system. An agent receives a request and possesses five tools:</p>
+<ul>
+<li>interpret mood;</li>
+<li>search genres;</li>
+<li>search songs;</li>
+<li>sort results;</li>
+<li>generate playlist.</li>
+</ul>
+<p>This version exists and is executable in the lesson repository.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFIED IN REPO] - monolith.py</span>
+
+<span class="hljs-keyword">return</span> Agent(
+    name=<span class="hljs-string">&quot;playlist_monolith&quot;</span>,
+    client=client,
+    system_prompt=SYSTEM_PROMPT,
+    tools=[
+        interpreta_umore,
+        cerca_generi_per_mood,
+        cerca_canzoni_per_genere,
+        ordina_canzoni,
+        genera_playlist,
+    ],
+    max_steps=<span class="hljs-number">8</span>,
+)</code></pre><p>The design is almost disarmingly simple:</p>
+<pre class="mermaid">flowchart LR
+    U[User] --&gt; A[Playlist Agent]
+
+    A --&gt; T1[Interpret mood]
+    A --&gt; T2[Search genres]
+    A --&gt; T3[Search songs]
+    A --&gt; T4[Sort]
+    A --&gt; T5[Create playlist]
+
+    T1 --&gt; A
+    T2 --&gt; A
+    T3 --&gt; A
+    T4 --&gt; A
+    T5 --&gt; A
+
+    classDef agent fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef tool fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
+    class A agent;
+    class T1,T2,T3,T4,T5 tool;</pre><p>At first glance, everything seems fine. The model reads &quot;tired&quot; and &quot;dancing,&quot; finds two compatible genre families, retrieves the tracks, and builds a playlist.</p>
+<p>Then you shift your focus, and the crack appears.</p>
+<p>In some runs, the agent treats the two signals as independent searches, merges the results, and delivers a playlist containing both party tracks and relaxing tracks without having decided what relationship exists between the current state and the desired one.</p>
+<p>The problem isn&#39;t that the model didn&#39;t understand the words. It understood both. It didn&#39;t even choose a blatantly wrong tool. The failure lies elsewhere: <strong>an important decision remained implicit.</strong></p>
+<pre class="mermaid">flowchart LR
+    P[&quot;I&#39;m tired,&lt;br/&gt;but I want to dance&quot;] --&gt; I[Interpret]
+    I --&gt; S1[tired → low energy]
+    I --&gt; S2[dance → high energy]
+    S1 --&gt; C[Implicit union]
+    S2 --&gt; C
+    C --&gt; O[Formally valid playlist,&lt;br/&gt;semantically incoherent]
+
+    classDef ok fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+    classDef bad fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
+    class S1,S2 ok;
+    class C,O bad;</pre><p>Here we see two different types of ambiguity.</p>
+<h3 id="decision-ambiguity">Decision ambiguity</h3>
+<p>Who determines if the request describes:</p>
+<ul>
+<li>a contradiction to be clarified;</li>
+<li>a transition from low energy to high energy;</li>
+<li>a deliberately hybrid combination?</li>
+</ul>
+<h3 id="acceptance-ambiguity">Acceptance ambiguity</h3>
+<p>Who determines whether the produced playlist is coherent enough to be delivered?</p>
+<p>The monolith has a technical stop condition: <code>max_steps=8</code> and a final tool. What it lacks is a <strong>definition of done external to its own enthusiasm.</strong></p>
+<p>And this is where multi-agent systems begin. Not because five tools are too many in absolute terms, but because understanding, deciding, executing, and evaluating all coexist in the same decision-making center.</p>
+<hr>
+<h2 id="3-decomposing-the-problem-before-the-agent">3. Decomposing the problem before the agent</h2>
+<p>The temptation at this point is to create four agents:</p>
+<pre><code class="hljs language-text">Mood Agent
+Decision Agent
+Search Agent
+Evaluation Agent</code></pre><p>It looks orderly. However, visual order does not guarantee good architecture.</p>
+<p>First, you must decompose the <strong>work</strong>.</p>
+<pre class="mermaid">flowchart LR
+    A[Understand request] --&gt; B[Build search plan]
+    B --&gt; C[Gather candidates]
+    C --&gt; D[Compose playlist]
+    D --&gt; E[Verify constraints]
+    E --&gt; F[Deliver]</pre><p>Then, for each step, we ask:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+Task(
+    goal=...,
+    inputs=...,
+    outputs=...,
+    tools=...,
+    context=...,
+    side_effects=...,
+    failure_policy=...,
+    verification=...,
+)</code></pre><p>Only then do we decide which component should perform it.</p>
+<pre><code class="hljs language-text">Interpret intent             → LLM / agent
+Read a boolean               → code
+Search catalog               → tool or worker
+Sort by energy               → function
+Compose playlist             → agent, if judgment is needed
+Check duplicates             → function
+Judge coherence              → evaluator, if subjectivity remains</code></pre><p>This distinction is worth pinning down:</p>
+<blockquote>
+<p><strong>Task decomposition and agent decomposition are not the same thing.</strong></p>
+</blockquote>
+<p>In the 2026 Microsoft Agent Framework, this choice is made explicit: workflow executors can be agents or standard application logic. The graph does not require every node to reason; it requires every node to have a clear responsibility.[^microsoft-workflows]</p>
+<hr>
+<h2 id="4-who-decides">4. Who decides?</h2>
+<p>Once the work is represented, we must assign control.</p>
+<p>Three patterns are often lumped together: routing, supervisor, and handoff. In reality, they answer different questions.</p>
+<h3 id="routing-the-decision-is-already-in-the-state">Routing: the decision is already in the state</h3>
+<p>The first step of our running example is to ask the model to produce a typed semantic state.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFIED IN REPO] - mood_interpreter.py</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    current_energy: <span class="hljs-built_in">float</span>
+    desired_energy: <span class="hljs-built_in">float</span>
+    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>]
+    needs_clarification: <span class="hljs-built_in">bool</span></code></pre><p>At that point, the branch does not require another inference.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFIED IN REPO]</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">route</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;clarification&quot;</span>, <span class="hljs-string">&quot;search&quot;</span>]:
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarification&quot;</span> <span class="hljs-keyword">if</span> profile.needs_clarification <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;search&quot;</span></code></pre><pre class="mermaid">flowchart LR
+    P[Prompt] --&gt; M[MoodProfile]
+    M --&gt; G{needs_clarification?}
+    G --&gt;|yes| C[Clarifier]
+    G --&gt;|no| S[Search]
+
+    classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    class M model;
+    class G code;</pre><p>The important move isn&#39;t &quot;using Pydantic.&quot; It is <strong>making the decision representable</strong>.</p>
+<p>As long as the difference between &quot;I&#39;m tired&quot; and &quot;I want to dance&quot; exists only in the text, the control flow remains at the mercy of the model&#39;s reasoning. When it becomes <code>current_energy != desired_energy</code> and <code>intent=&quot;shift&quot;</code>, part of the control can move out of the prompt and into the code.</p>
+<h3 id="supervisor-the-decision-still-requires-judgment">Supervisor: the decision still requires judgment</h3>
+<p>A supervisor is needed when reading a field is not enough.</p>
+<pre class="mermaid">flowchart TD
+    U[User] --&gt; S[Supervisor]
+    S --&gt; M[Mood Interpreter]
+    S --&gt; SC[Music Scout]
+    S --&gt; C[Curator]
+    M --&gt; S
+    SC --&gt; S
+    C --&gt; S
+    S --&gt; O[Output]
+
+    classDef key fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    class S key;</pre><p>The supervisor maintains the thread of the conversation, decides which specialist to call, receives the result, and can delegate again.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> state.done:
+    decision = supervisor.decide(
+        goal=state.goal,
+        current_state=state.summary,
+        pending=state.pending,
+        available_workers=registry,
+    )
+
+    result = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task)
+    state.record(result)</code></pre><p>The cost is clear: another inference, another point of non-determinism, and higher latency. Therefore, the right question is not &quot;can I use a supervisor?&quot;, but:</p>
+<blockquote>
+<p><strong>Is there still something to negotiate?</strong></p>
+</blockquote>
+<p>If the answer is already inside a schema, the supervisor is just an expensive way to read a field.</p>
+<h3 id="handoff-changing-the-owner-of-the-next-turn">Handoff: changing the owner of the next turn</h3>
+<p>In delegation, the manager remains the primary contact. In a handoff, control passes to the specialist.</p>
+<pre class="mermaid">flowchart LR
+    subgraph Delegation
+        S1[Supervisor] --&gt; A1[Specialist]
+        A1 --&gt; S1
+        S1 --&gt; U1[User]
+    end
+
+    subgraph Handoff
+        T[Triage] --&gt; A2[Specialist]
+        A2 --&gt; U2[User]
+    end</pre><p>The OpenAI Agents SDK explicitly distinguishes between these two topologies: <em>agents as tools</em> when the manager retains control; <em>handoffs</em> when the specialist takes charge of the next part of the interaction.[^openai-multi-agent][^openai-handoffs]</p>
+<p>You can remember the difference like this:</p>
+<pre><code class="hljs language-text">Delegation → changes who does the work.
+Handoff    → changes who owns the control.</code></pre><hr>
+<h2 id="5-a-handoff-is-a-contract">5. A handoff is a contract</h2>
+<p>In diagrams, a handoff is an arrow. In real systems, it is a boundary.</p>
+<p>The naive approach is this:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [ANTI-PATTERN]</span>
+<span class="hljs-keyword">await</span> specialist.run(full_history)</code></pre><p>The designed approach looks more like this:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    goal: <span class="hljs-built_in">str</span>
+    reason: <span class="hljs-built_in">str</span>
+    relevant_state: <span class="hljs-built_in">dict</span>
+    constraints: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    artifact_refs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    expected_output: <span class="hljs-built_in">str</span>
+    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">flowchart LR
+    A[Triage] --&gt; H[&quot;Handoff contract&lt;br/&gt;goal&lt;br/&gt;relevant state&lt;br/&gt;constraints&lt;br/&gt;artifact refs&lt;br/&gt;expected output&quot;]
+    H --&gt; B[Specialist]
+
+    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    class H contract;</pre><p>Here, two decisions that are often confused become visible:</p>
+<ol>
+<li><strong>who owns the control;</strong></li>
+<li><strong>what information crosses the boundary.</strong></li>
+</ol>
+<p>LangChain/LangGraph treats handoffs as state-driven transitions and allows you to filter what the new agent receives. Subgraphs also have input and output schemas that can be separated from the parent graph&#39;s state.[^langchain-handoffs][^langgraph-subgraphs]</p>
+<p>The consequence is important: a handoff should not pass &quot;everything, just in case.&quot; It should pass what is needed to get the job done without forcing the specialist to reconstruct the world.</p>
+<hr>
+<h2 id="6-who-does-what">6. Who does what?</h2>
+<p>At this point, we know who makes the decisions. Now we need to distribute the work.</p>
+<h3 id="tools-workers-subagents">Tools, workers, subagents</h3>
+<p>These are three different things.</p>
+<p>A <strong>tool</strong> exposes a capability. It does not have a goal and does not decide the next step.</p>
+<p>A <strong>worker</strong> receives a specific task and returns a result.</p>
+<p>A <strong>subagent</strong> is a worker with its own reasoning loop, local context, and, often, its own tools.</p>
+<pre class="mermaid">flowchart TB
+    S[Supervisor]
+    S --&gt; T[Tool&lt;br/&gt;search_catalog(query)]
+    S --&gt; W[Worker&lt;br/&gt;execute defined task]
+    S --&gt; A[Subagent&lt;br/&gt;goal + context + tools + loop]</pre><p>This distinction is necessary because a tool does not need a personality, and a subagent should not be used to mask a function we are simply too lazy to write.</p>
+<h3 id="parallelism-dependencies-first">Parallelism: dependencies first</h3>
+<p>Three searches can only run in parallel if they do not depend on one another.</p>
+<pre class="mermaid">flowchart LR
+    P[Search Plan] --&gt; S1[Scout: electronic]
+    P --&gt; S2[Scout: indie dance]
+    P --&gt; S3[Scout: funk]
+    S1 --&gt; A[Aggregator]
+    S2 --&gt; A
+    S3 --&gt; A</pre><pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+results = <span class="hljs-keyword">await</span> asyncio.gather(
+    scout.run(SearchTask(genre=<span class="hljs-string">&quot;electronic&quot;</span>, ...)),
+    scout.run(SearchTask(genre=<span class="hljs-string">&quot;indie-dance&quot;</span>, ...)),
+    scout.run(SearchTask(genre=<span class="hljs-string">&quot;funk&quot;</span>, ...)),
+)
+
+candidates = aggregate(results)</code></pre><p>If, however, B requires the output of A, the fan-out is merely an aesthetic design.</p>
+<pre><code class="hljs language-text">A → B → C        dependency: sequence
+
+A → {B, C, D}    independence: parallelism possible</code></pre><p>In February 2026, Anthropic described an experiment with sixteen Claude agents working in parallel on a C compiler. The experiment demonstrates how capacity can scale when work is divisible and a shared environment makes progress and tests visible; it also shows how quickly cost and operational complexity rise.[^anthropic-c-compiler]</p>
+<p>The correct takeaway is not &quot;sixteen agents work.&quot; It is:</p>
+<blockquote>
+<p><strong>What problem structure made it possible for them to work without stepping on each other&#39;s toes?</strong></p>
+</blockquote>
+<p>Simon Willison suggests similar caution: parallelism helps when files or subtasks are independent; subagents remain primarily a mechanism to protect the main context and confine verbose operations.[^simon-subagents]</p>
+<hr>
+<h2 id="7-who-knows-what">7. Who knows what?</h2>
+<p>Here we arrive at the issue that, in 2026, weighs almost as much as orchestration itself: <strong>context engineering</strong>.</p>
+<p>The most convenient mistake is to give every agent the entire conversation, the entire state, and all the tools. It seems prudent. In reality, it shifts the problem: instead of risking missing information, we force every component to distinguish what matters from a mass of details that do not belong to it.</p>
+<pre class="mermaid">flowchart TD
+    GS[(Global State)] --&gt; S[Supervisor context]
+    S --&gt;|subset| A[Scout context]
+    S --&gt;|subset| B[Curator context]
+    S --&gt;|subset| C[Verifier context]
+
+    A --&gt;|summary + artifact ref| S
+    B --&gt;|playlist artifact| S
+    C --&gt;|verdict| S
+
+    classDef root fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    class GS,S root;</pre><p>In our example:</p>
+<pre><code class="hljs language-text">SUPERVISOR
+──────────
+user request
+MoodProfile
+current plan
+worker summaries
+global failures
+
+SCOUT
+──────────
+SearchTask
+energy range
+excluded genres
+catalog tools
+
+CURATOR
+──────────
+PlaylistRequest
+CandidateSet
+composition criteria
+
+VERIFIER
+──────────
+produced playlist
+constraints
+evaluation rubric</code></pre><p>The &quot;minimum sufficient context&quot; rule does not mean randomly amputating information. It means recognizing that context is a form of <strong>working memory</strong>: limited, expensive, and noise-sensitive.</p>
+<p>Anthropic formalized this idea in 2025 when discussing context engineering: selecting, maintaining, and updating the set of tokens that maximizes the probability of the desired behavior. By 2026, that principle is found within subagents, persistent sessions, artifacts, and long-running harnesses.[^anthropic-context]</p>
+<h3 id="the-shared-context-paradox">The shared context paradox</h3>
+<p>Passing too little context produces omissions. Passing too much produces interference.</p>
+<p>Jason Liu, describing Cognition&#39;s position on multi-agent coding, uses the image of a game of &quot;telephone&quot;: every handoff can lose implicit decisions and produce incompatible components. This is a 2025 source, so I would not use it alone to describe the state of the art; however, it remains one of the clearest formulations of the risk of context loss between agents.[^jason-cognition]</p>
+<p>The point is not solved by &quot;passing everything to everyone.&quot; Parallel workers can still make incompatible decisions, and the global context can become too large. The mature solution consists of making the following explicit:</p>
+<ul>
+<li>the state that must be shared;</li>
+<li>the decisions that must become contracts;</li>
+<li>the information that can remain local;</li>
+<li>the format in which results are reported back.</li>
+</ul>
+<hr>
+<h2 id="8-state-memory-and-artifacts">8. State, memory, and artifacts</h2>
+<p>In agent terminology, <em>memory</em> is used to mean too many things. It is worth sorting them out.</p>
+<h3 id="conversation-state">Conversation state</h3>
+<p>This is what is needed to maintain continuity in the interaction: messages, turns, active agent identity, and pending requests.</p>
+<h3 id="task-state">Task state</h3>
+<p>This is the operational state of the work:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">WorkflowState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    request: PlaylistRequest
+    search_plan: SearchPlan | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
+    candidate_artifacts: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>] = []
+    playlist_artifact: <span class="hljs-built_in">str</span> | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
+    verification: VerificationResult | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
+    retries: <span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">int</span>] = {}
+    status: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;running&quot;</span>, <span class="hljs-string">&quot;waiting&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>, <span class="hljs-string">&quot;done&quot;</span>] = <span class="hljs-string">&quot;running&quot;</span></code></pre><h3 id="local-state">Local state</h3>
+<p>This belongs to a specialist and does not necessarily need to be persisted:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScoutLocalState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    attempted_queries: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    visited_track_ids: <span class="hljs-built_in">set</span>[<span class="hljs-built_in">str</span>]
+    raw_tool_outputs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</code></pre><h3 id="artifact">Artifact</h3>
+<p>This is a persistent product of the work: a file, report, patch, table, playlist, dataset, or plan.</p>
+<p>When the output is large, passing a reference is often healthier than re-injecting everything into the prompt.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">return</span> WorkerResult(
+    summary=<span class="hljs-string">&quot;Trovati 84 candidati, 61 dopo i filtri.&quot;</span>,
+    artifact_ref=<span class="hljs-string">&quot;artifacts/run-284/candidate_set.json&quot;</span>,
+    warnings=[<span class="hljs-string">&quot;catalogo funk poco coperto&quot;</span>],
+)</code></pre><pre class="mermaid">flowchart LR
+    S[Scout] --&gt; A[(candidate_set.json)]
+    S --&gt; R[Summary]
+    A --&gt; C[Curator]
+    R --&gt; SUP[Supervisor]
+    SUP --&gt; C</pre><p>The artifact preserves fidelity. The summary preserves context space.</p>
+<p>This is a much more solid balance than attempting to turn every step into an increasingly long message.</p>
+<hr>
+<h2 id="9-who-is-in-control">9. Who is in control?</h2>
+<p>So far, we have distributed the work. Now we must prevent the system from confusing &quot;I produced something&quot; with &quot;I am finished.&quot;</p>
+<p>Modern verification has at least three layers.</p>
+<pre class="mermaid">flowchart TD
+    A[Artifact] --&gt; D[Deterministic checks]
+    D --&gt;|pass| E[Environmental verification]
+    E --&gt;|pass| J[Semantic evaluator]
+    J --&gt;|pass| O[Accepted]
+
+    D --&gt;|fail| F[Feedback]
+    E --&gt;|fail| F
+    J --&gt;|fail| F
+    F --&gt; G[Generator / Curator]
+
+    classDef hard fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+    classDef soft fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    class D,E hard;
+    class J soft;</pre><h3 id="91-deterministic-checks">9.1 Deterministic checks</h3>
+<p>If a property can be verified in Python, there is no need to ask an LLM.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">hard_checks</span>(<span class="hljs-params">playlist: Playlist, request: PlaylistRequest</span>) -&gt; CheckResult:
+    errors = []
+
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(playlist.track_ids) != <span class="hljs-built_in">len</span>(<span class="hljs-built_in">set</span>(playlist.track_ids)):
+        errors.append(<span class="hljs-string">&quot;duplicate_tracks&quot;</span>)
+
+    forbidden = <span class="hljs-built_in">set</span>(request.excluded_genres)
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">any</span>(track.genre <span class="hljs-keyword">in</span> forbidden <span class="hljs-keyword">for</span> track <span class="hljs-keyword">in</span> playlist.tracks):
+        errors.append(<span class="hljs-string">&quot;excluded_genre&quot;</span>)
+
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> energy_curve_matches(
+        playlist.tracks,
+        start=request.current_energy,
+        target=request.desired_energy,
+    ):
+        errors.append(<span class="hljs-string">&quot;energy_curve&quot;</span>)
+
+    <span class="hljs-keyword">return</span> CheckResult(passed=<span class="hljs-keyword">not</span> errors, errors=errors)</code></pre><h3 id="92-environmental-verification">9.2 Environmental verification</h3>
+<p>An agent might claim to have created a playlist. The question is whether that playlist actually exists in the external system.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+playlist_id = spotify.create_playlist(payload)
+
+<span class="hljs-keyword">assert</span> spotify.get_playlist(playlist_id).track_ids == payload.track_ids</code></pre><p>Anthropic makes a precise distinction between <em>transcript</em> and <em>outcome</em>: the former is what the agent said and did; the latter is the final state of the environment. A robust evaluation tends to prefer the outcome when it is observable.[^anthropic-evals]</p>
+<h3 id="93-semantic-evaluation">9.3 Semantic evaluation</h3>
+<p>Then there remains what cannot be reduced to a clear assertion:</p>
+<ul>
+<li>Does the playlist tell a coherent story?</li>
+<li>Is the selection varied without seeming random?</li>
+<li>Does the result interpret the tension between fatigue and the desire to dance well?</li>
+</ul>
+<p>Here, a separate evaluator can add value.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">SemanticEvaluation</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    mood_coherence: <span class="hljs-built_in">float</span>
+    transition_quality: <span class="hljs-built_in">float</span>
+    rationale: <span class="hljs-built_in">str</span>
+    passed: <span class="hljs-built_in">bool</span></code></pre><p>The principle is not &quot;you always need two agents.&quot; Anthropic, in their March 2026 work on planners, generators, and evaluators, shows that separating the producer from the judge can correct the tendency toward self-complacency. However, the same article also shows something else: the benefit depends on the task and the model, while cost and latency can increase by an order of magnitude.[^anthropic-harness-2026]</p>
+<p>In one of the experiments described, the complete system worked for about six hours and consumed about 200 dollars, compared to twenty minutes and 9 dollars for the single agent. The quality was higher, but the bill reminds us that an evaluator must earn its place just like any other agent.[^anthropic-harness-2026]</p>
+<h3 id="a-loop-needs-a-brake">A loop needs a brake</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">for</span> revision <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(MAX_REVISIONS + <span class="hljs-number">1</span>):
+    playlist = <span class="hljs-keyword">await</span> curator.run(request, feedback=feedback)
+
+    hard = hard_checks(playlist, request)
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hard.passed:
+        feedback = hard.to_feedback()
+        <span class="hljs-keyword">continue</span>
+
+    semantic = <span class="hljs-keyword">await</span> evaluator.run(playlist, request)
+    <span class="hljs-keyword">if</span> semantic.passed:
+        <span class="hljs-keyword">return</span> playlist
+
+    feedback = semantic.rationale</code></pre><pre><code class="hljs language-python"><span class="hljs-keyword">raise</span> VerificationFailed(<span class="hljs-string">&quot;revision budget exhausted&quot;</span>)</code></pre><p>Without criteria, budgets, and stop conditions, an evaluator-optimizer is nothing more than a circular conversation between models.</p>
+<hr>
+<h2 id="10-evals-the-system-must-be-measured-as-a-whole">10. Evals: the system must be measured as a whole</h2>
+<p>Evaluations for agents cannot be limited to the final response.</p>
+<p>Anthropic proposes a useful terminology:</p>
+<ul>
+<li><strong>task</strong>: the individual test case;</li>
+<li><strong>trial</strong>: an attempt, which must be repeated because the system is stochastic;</li>
+<li><strong>grader</strong>: the logic that assigns a judgment;</li>
+<li><strong>transcript / trace / trajectory</strong>: the complete history of the trial;</li>
+<li><strong>outcome</strong>: the final state of the environment;</li>
+<li><strong>evaluation harness</strong>: the infrastructure that executes, records, and evaluates.[^anthropic-evals]</li>
+</ul>
+<p>In our running example, a sensible suite shouldn&#39;t just ask, &quot;Did it produce a playlist?&quot; It should define different semantics for each request.</p>
+<pre><code class="hljs language-yaml"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-attr">tasks:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E01</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Sono stanco, ma voglio ballare.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">coherent_shift_or_clarification</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E02</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Sorprendimi.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">exploration_branch</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E03</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Fammi allenare, ma niente techno.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">no_excluded_genres</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E04</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Voglio una playlist energica per la palestra.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">valid_high_energy_playlist</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E05</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Che ore sono?&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">out_of_domain</span></code></pre><p>Then, you observe different dimensions:</p>
+<pre><code class="hljs language-text">OUTCOME
+playlist created?
+constraints met?
+correct side effect?
+
+TRAJECTORY
+correct router?
+handoff necessary?
+redundant tools?
+loop terminated?
+
+EFFICIENCY
+latency
+cost
+tokens
+tool calls
+retries
+
+RELIABILITY
+pass@1
+pass^k
+recovery rate
+silent failures</code></pre><p>Hamel Husain insists on a distinction that is worth keeping in mind: different errors require different taxonomies. Calling everything an &quot;hallucination&quot; makes the failures that actually matter invisible. Useful practice starts by reading traces, building a vocabulary of errors, and calibrating evaluators against human judgments.[^hamel-evals]</p>
+<h3 id="do-not-reward-a-rigid-path">Do not reward a rigid path</h3>
+<p>An overly prescriptive eval risks rejecting a valid solution simply because the model found a different path. Whenever possible, verify the outcome and use the trajectory to identify risky behaviors, waste, or policy violations, without turning every tool call into a mandatory script.</p>
+<hr>
+<h2 id="11-things-go-wrong">11. Things go wrong</h2>
+<p>A multi-agent system is not defined only by the &quot;happy path.&quot; It is defined by what happens when a node fails to do its job.</p>
+<pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Running
+    Running --&gt; Success: outcome verified
+    Running --&gt; Retry: transient error
+    Running --&gt; Fallback: recoverable error
+    Running --&gt; Replan: insufficient evidence
+    Running --&gt; Human: risky or ambiguous action
+    Running --&gt; Failed: fatal error
+    Retry --&gt; Running
+    Fallback --&gt; Running
+    Replan --&gt; Running
+    Human --&gt; Running: approval / new input</pre><p>It is worth distinguishing at least these families of errors.</p>
+<h3 id="formally-invalid-output">Formally invalid output</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+<span class="hljs-keyword">try</span>:
+    profile = <span class="hljs-keyword">await</span> mood_interpreter.run(prompt)
+<span class="hljs-keyword">except</span> ValidationError:
+    <span class="hljs-keyword">if</span> retry_budget.consume(<span class="hljs-string">&quot;mood_interpreter&quot;</span>):
+        profile = <span class="hljs-keyword">await</span> mood_interpreter.run(prompt, repair=<span class="hljs-literal">True</span>)
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> clarification_fallback()</code></pre><h3 id="valid-but-semantically-uncertain-output">Valid but semantically uncertain output</h3>
+<p>This is not an exception. It is a state.</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">if</span> profile.needs_clarification:
+    <span class="hljs-keyword">return</span> transition_to(<span class="hljs-string">&quot;clarifier&quot;</span>)</code></pre><h3 id="external-tool-unavailable">External tool unavailable</h3>
+<pre><code class="hljs language-python"><span class="hljs-keyword">try</span>:
+    tracks = <span class="hljs-keyword">await</span> remote_catalog.search(query)
+<span class="hljs-keyword">except</span> TransientToolError:
+    tracks = local_catalog.search(query)
+    state.warnings.append(<span class="hljs-string">&quot;remote_catalog_unavailable&quot;</span>)</code></pre><h3 id="partial-success">Partial success</h3>
+<pre><code class="hljs language-text">Scout A ✓
+Scout B timeout
+Scout C ✓</code></pre><p>The options are not just &quot;everything fails&quot; or &quot;pretend nothing happened.&quot;</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">if</span> successful_workers &gt;= minimum_required:
+    continue_with_partial_results(warnings=failed_workers)
+<span class="hljs-keyword">elif</span> retry_budget.available:
+    retry(failed_workers)
+<span class="hljs-keyword">else</span>:
+    escalate_or_abort()</code></pre><h3 id="idempotency-and-side-effects">Idempotency and side effects</h3>
+<p>An innocuous retry on a read-only search is different from a retry on creating a playlist.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+spotify.create_playlist(
+    payload,
+    idempotency_key=state.run_id,
+)</code></pre><p>Without idempotency, a network error after the side effect occurs can produce two identical playlists. In multi-agent systems, the problem worsens because multiple workers may believe they are authorized to write.</p>
+<p>A simple policy is the <strong>single writer</strong>: many agents can propose, but only one can modify the external state.</p>
+<hr>
+<h2 id="12-blast-radius-and-human-in-the-loop">12. Blast radius and human-in-the-loop</h2>
+<p>When an agent can only read a music catalog, the maximum damage is contained. When an agent can perform a rollback in production, the same architecture becomes a different matter entirely.</p>
+<p>Operational risk can be interpreted as:</p>
+<pre><code class="hljs language-text">risk ≈ probability of error × maximum possible damage</code></pre><p>Improving the model might reduce the first term. Permissions and isolation limit the second.</p>
+<pre class="mermaid">flowchart LR
+    A[Agent] --&gt; R[Read metrics]
+    A --&gt; L[Read logs]
+    A --&gt; P[Propose remediation]
+    A -. approval .-&gt; H[Human]
+    H --&gt; X[Execute production change]
+
+    classDef safe fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+    classDef risky fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
+    class R,L,P safe;
+    class X risky;</pre><p>In May 2026, Anthropic described containment as a problem of limiting the blast radius: not just monitoring what the model tends to do, but restricting what the environment materially allows it to do. The article also points out that automatic or distracted approval is a limitation of simple human-in-the-loop systems: too many permission prompts lead to approval fatigue.[^anthropic-containment]</p>
+<p>The Microsoft Agent Framework treats approval and information requests as suspendable workflow events; the pending state can be included in checkpoints and re-emitted after recovery.[^microsoft-hitl]</p>
+<p>This leads to a rule of thumb:</p>
+<blockquote>
+<p><strong>Human oversight should be placed at critical risk points, not distributed as a barrage of modal windows.</strong></p>
+</blockquote>
+<hr>
+<h2 id="13-when-the-work-lasts-longer-than-the-conversation">13. When the work lasts longer than the conversation</h2>
+<p>Short tasks can live within a single context window. Long tasks cannot.</p>
+<pre class="mermaid">flowchart LR
+    S1[Session 1] --&gt; C1[Checkpoint]
+    C1 --&gt; M[(Durable state)]
+    C1 --&gt; A[(Artifacts)]
+    M --&gt; S2[Session 2]
+    A --&gt; S2
+    S2 --&gt; C2[Checkpoint]</pre><p>Four different techniques come into play here.</p>
+<h3 id="compaction">Compaction</h3>
+<p>The previous history is summarized, and the same session continues. It maintains continuity, but the summary may lose details, and the context remains a layering of old decisions.</p>
+<h3 id="context-reset">Context reset</h3>
+<p>A clean context is started, and a structured handoff is passed. It costs more, but it eliminates the &quot;context anxiety&quot; observed in some models.</p>
+<h3 id="checkpoint">Checkpoint</h3>
+<p>The operational state is saved so that work can resume after a crash, human pause, or maintenance.</p>
+<h3 id="artifact-persistence">Artifact persistence</h3>
+<p>Work is not entrusted solely to conversational memory. Files, tests, plans, and results remain available outside the prompt.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+checkpoint = Checkpoint(
+    goal=state.goal,
+    completed=state.completed_tasks,
+    pending=state.pending_tasks,
+    decisions=state.key_decisions,
+    artifact_refs=state.artifact_refs,
+    failures=state.failure_log,
+    active_requests=state.pending_human_requests,
+)
+
+checkpoint_store.save(checkpoint)</code></pre><p>In March 2026, Anthropic showcased a three-agent harness for long-running applications: planner, generator, and evaluator, using contracts and files as communication artifacts. An instructive detail is that, with newer models, some parts of the old harness became dead weight and were removed. A harness is not a cathedral: it is a hypothesis about the current model&#39;s limitations.[^anthropic-harness-2026]</p>
+<hr>
+<h2 id="14-from-agent-system-to-harness">14. From agent system to harness</h2>
+<p>In 2026, the most interesting word is perhaps not <em>multi-agent</em>. It is <em>harness</em>.</p>
+<p>The harness is what surrounds the model and transforms an inference into an operating system:</p>
+<pre class="mermaid">flowchart TB
+    U[Goal] --&gt; H[Harness]
+    H --&gt; M[Model / Agents]
+    H --&gt; T[Tool dispatch]
+    H --&gt; C[Context lifecycle]
+    H --&gt; R[Recovery policy]
+    H --&gt; E[Tracing + eval hooks]
+    H --&gt; S[Session store]
+    H --&gt; X[Sandbox / execution environments]</pre><p>In its work on harness engineering, OpenAI describes a product built with Codex agents, automated tests, model-readable observability, and isolated environments for tasks. The interesting point is not the number of lines produced; it is the shift in roles: humans design the environment, intent, and feedback loops, while agents execute.[^openai-harness]</p>
+<p>In April 2026, OpenAI extended the Agents SDK with a more capable harness for file and tool work, native sandboxes, and a separation between harness and compute for security, durability, and scale.[^openai-sdk-2026]</p>
+<p>Anthropic, with Managed Agents, proposes a very clear separation:</p>
+<pre><code class="hljs language-text">SESSION
+append-only log of what has happened
+
+HARNESS
+loop that calls the model and routes tools
+
+SANDBOX
+environment where the work is executed</code></pre><p>This separation allows each element to fail, change, or scale independently. It is the infrastructural version of the same question that has been with us from the beginning: who owns which responsibility?[^anthropic-managed]</p>
+<h3 id="many-brains-many-hands">Many brains, many hands</h3>
+<p>The metaphor used by Anthropic is effective. The &quot;brain&quot; is the model plus the harness; the &quot;hands&quot; are the sandbox and tools. Decoupling them allows multiple harnesses to use different environments, or a single harness to send work to multiple execution environments, without turning every session into an indivisible server.[^anthropic-managed]</p>
+<p>This does not imply that every application must build a meta-harness. It means that as soon as the work becomes long-running and operational, the boundary between reasoning, state, and execution stops being a mere detail.</p>
+<hr>
+<h2 id="15-mcp-and-a2a-two-different-problems">15. MCP and A2A: two different problems</h2>
+<p>In the noise of protocols, it is easy to confuse the acronyms.</p>
+<h3 id="mcp">MCP</h3>
+<p>The Model Context Protocol connects a model or an agent to tools, data, and resources. The typical relationship is:[^mcp]</p>
+<pre><code class="hljs language-text">agent ↔ tool / data source</code></pre><h3 id="a2a">A2A</h3>
+<p>Agent2Agent concerns interoperability between separate agents or agentic services, involving capability discovery, tasks, and artifact exchange.</p>
+<pre><code class="hljs language-text">agent service ↔ agent service</code></pre><pre class="mermaid">flowchart LR
+    A[Agent] --&gt;|MCP| T[Tool / Data]
+    A --&gt;|A2A| B[Remote Agent Service]</pre><p>A2A does not make a system within the same process smarter. It solves an organizational and infrastructural boundary: remote agents, different stacks, separate ownership, and non-shared memory.[^a2a]</p>
+<p>In the Spotify running example, introducing it now would be complexity paid in advance. It would become relevant if the catalog, the curator, and the playlist creation system were autonomous services managed by different teams or vendors.</p>
+<hr>
+<h2 id="16-when-a-decision-becomes-an-edge">16. When a decision becomes an edge</h2>
+<p>At a certain point, the system contains:</p>
+<ul>
+<li>typed state;</li>
+<li>nodes;</li>
+<li>conditional transitions;</li>
+<li>fan-out and fan-in;</li>
+<li>revision loops;</li>
+<li>checkpoints;</li>
+<li>human requests;</li>
+<li>stop conditions.</li>
+</ul>
+<p>There is no longer a need to look for a metaphor. We have built a graph.</p>
+<pre class="mermaid">flowchart TD
+    U[User] --&gt; M[Mood Interpreter]
+    M --&gt; G{needs_clarification?}
+    G --&gt;|yes| C[Clarifier]
+    C --&gt; U
+    G --&gt;|no| P[Search Planner]
+    P --&gt; S1[Scout 1]
+    P --&gt; S2[Scout 2]
+    P --&gt; S3[Scout 3]
+    S1 --&gt; A[Aggregate]
+    S2 --&gt; A
+    S3 --&gt; A
+    A --&gt; CU[Curator]
+    CU --&gt; H[Hard Checks]
+    H --&gt;|fail| CU
+    H --&gt;|pass| E[Semantic Evaluator]
+    E --&gt;|revise| CU
+    E --&gt;|pass| O[Create Playlist]
+    O --&gt; END([Done])</pre><p>The conceptual transition is this:</p>
+<pre><code class="hljs language-text">Agent thinking:
+«Which tool should I call?»
+
+Graph thinking:
+«Which node is executable, given the current state?»</code></pre><p>The two coexist. A graph node can contain an agent, a function, a tool wrapper, or a human request.</p>
+<p>The Microsoft Agent Framework exposes workflow graph-based systems with executors, conditional edges, parallelism, checkpoints, and HITL. LangGraph builds around <code>State</code>, nodes, edges, reducers, subgraphs, interrupts, and persistence. The APIs change; the grammar remains.[^microsoft-workflows][^langgraph-persistence][^langgraph-interrupts]</p>
+<hr>
+<h2 id="17-the-spotify-reference-architecture">17. The Spotify reference architecture</h2>
+<p>Now we can put the pieces back together.</p>
+<pre class="mermaid">flowchart TD
+    U[User request] --&gt; MI[Mood Interpreter&lt;br/&gt;AGENT]
+
+    MI --&gt; G{needs_clarification?&lt;br/&gt;CODE}
+    G --&gt;|yes| CL[Clarifier&lt;br/&gt;AGENT]
+    CL --&gt; U
+
+    G --&gt;|no| SP[Search Planner&lt;br/&gt;AGENT]
+
+    SP --&gt; S1[Scout&lt;br/&gt;AGENT · read-only]
+    SP --&gt; S2[Scout&lt;br/&gt;AGENT · read-only]
+    SP --&gt; S3[Scout&lt;br/&gt;AGENT · read-only]
+
+    S1 --&gt; ART[(CandidateSet artifact)]
+    S2 --&gt; ART
+    S3 --&gt; ART
+
+    ART --&gt; CU[Curator&lt;br/&gt;AGENT · single writer]
+    CU --&gt; HC[Hard Checks&lt;br/&gt;CODE]
+
+    HC --&gt;|fail| CU
+    HC --&gt;|pass| SE[Semantic Evaluator&lt;br/&gt;AGENT]
+
+    SE --&gt;|revise ≤ 1| CU
+    SE --&gt;|pass| API[Playlist API&lt;br/&gt;idempotent side effect]
+    API --&gt; OUT([Done])
+
+    classDef agent fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    classDef artifact fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
+    classDef risk fill:#D7342B,stroke:#D7342B,color:#fff;
+    class MI,CL,SP,S1,S2,S3,CU,SE agent;
+    class G,HC code;
+    class ART artifact;
+    class API risk;</pre><p>The most important thing about the diagram is not the number of agents.</p>
+<p>It is that <strong>not all boxes are agents</strong>.</p>
+<p>The gate is code. The hard checks are code. The artifact is persistent state. The scouts are read-only. The curator is the sole writer. The side effect has a boundary and an idempotency policy.</p>
+<p>Each component has earned its place because it solves a problem we had already encountered.</p>
+<h3 id="the-runtime-in-pseudocode">The runtime, in pseudocode</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN - PSEUDOCODE]</span>
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">build_playlist</span>(<span class="hljs-params">user_request: <span class="hljs-built_in">str</span></span>) -&gt; Playlist:
+    profile = <span class="hljs-keyword">await</span> mood_interpreter.run(user_request)
+
+    <span class="hljs-keyword">if</span> profile.needs_clarification:
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> clarifier.run(profile)
+
+    request = PlaylistRequest.from_profile(profile)
+    plan = <span class="hljs-keyword">await</span> search_planner.run(request)</code></pre><pre><code class="hljs language-python">    worker_results = <span class="hljs-keyword">await</span> gather_with_policy(
+        tasks=[scout.run(task) <span class="hljs-keyword">for</span> task <span class="hljs-keyword">in</span> plan.independent_tasks],
+        minimum_successes=<span class="hljs-number">2</span>,
+        retry_budget=<span class="hljs-number">1</span>,
+    )
+
+    candidate_artifact = persist(
+        aggregate(worker_results)
+    )
+
+    feedback = <span class="hljs-literal">None</span>
+    <span class="hljs-keyword">for</span> revision <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">2</span>):
+        playlist = <span class="hljs-keyword">await</span> curator.run(
+            request=request,
+            candidates=candidate_artifact,
+            feedback=feedback,
+        )
+
+        hard = hard_checks(playlist, request)
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hard.passed:
+            feedback = hard.to_feedback()
+            <span class="hljs-keyword">continue</span>
+
+        semantic = <span class="hljs-keyword">await</span> evaluator.run(playlist, request)
+        <span class="hljs-keyword">if</span> semantic.passed:
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> create_playlist_idempotently(playlist)
+
+        feedback = semantic.rationale
+
+    <span class="hljs-keyword">raise</span> VerificationFailed()</code></pre><p>This complete implementation is <strong>not yet in the lesson repository</strong>. The verified repository covers the monolith and structured routing; the rest is a reference architecture consistent with the educational path.</p>
+<hr>
+<h2 id="18-what-is-converging-in-2026">18. What is converging in 2026</h2>
+<p>Sources and frameworks do not agree on a single winning architecture. It would be suspicious if they did. However, they are converging on a few principles.</p>
+<h3 id="1-simplicity-comes-before-decomposition">1. Simplicity comes before decomposition</h3>
+<p>Multi-agent systems are not a prize for complexity. Anthropic continues to recommend the simplest solution that improves outcomes; 2026 work on harnesses even shows components being removed when more capable models make them redundant.[^anthropic-harness-2026]</p>
+<h3 id="2-context-is-a-design-object">2. Context is a design object</h3>
+<p>Subagents, state schemas, artifacts, and handoffs are not decorations. They are ways to control what each component sees and what is lost during transitions.[^anthropic-context][^simon-subagents]</p>
+<h3 id="3-control-must-be-localized">3. Control must be localized</h3>
+<p>Routers, supervisors, and handoffs are not synonyms. The first reads a state, the second reasons and retains ownership, and the third transfers ownership.</p>
+<h3 id="4-verification-must-touch-the-environment">4. Verification must touch the environment</h3>
+<p>Runtime evidence, unit tests, database state, browsers, metrics, and logs are worth more than a model&#39;s declaration. OpenAI describes agents that query traces and metrics to verify their own work; Anthropic makes a sharp distinction between transcripts and outcomes.[^openai-harness][^anthropic-evals]</p>
+<h3 id="5-state-must-survive-the-prompt">5. State must survive the prompt</h3>
+<p>Checkpoints, append-only sessions, and persistent artifacts make it possible to resume, inspect, and correct long-running work.[^anthropic-managed][^microsoft-hitl]</p>
+<h3 id="6-risk-is-managed-with-deterministic-boundaries">6. Risk is managed with deterministic boundaries</h3>
+<p>Permissions, read-only workers, single writers, sandboxes, and egress controls limit damage even when the model errs or is deceived.[^anthropic-containment]</p>
+<h3 id="7-the-model-and-the-harness-must-be-evaluated-together">7. The model and the harness must be evaluated together</h3>
+<p>When we say &quot;the agent achieved this result,&quot; we are measuring the model, prompt, tools, memory, orchestration, and environment. Changing the model without re-examining the harness is as naive as changing the harness without re-running evaluations.[^anthropic-evals][^anthropic-managed]</p>
+<hr>
+<h2 id="19-a-grammar-for-design">19. A grammar for design</h2>
+<p>Ultimately, patterns are less useful than the questions they prompt.</p>
+<h3 id="who-decides">Who decides?</h3>
+<ul>
+<li>Is the decision already represented in the state? Use code or deterministic routing.</li>
+<li>Does it require judgment based on context? Consider a supervisor.</li>
+<li>Does it need to change the interlocutor? Use a handoff.</li>
+</ul>
+<h3 id="who-knows-what">Who knows what?</h3>
+<ul>
+<li>What is the minimum sufficient context?</li>
+<li>Which decisions should become typed fields?</li>
+<li>Which details can remain local?</li>
+<li>Which results should bubble up as summaries and which as artifacts?</li>
+</ul>
+<h3 id="who-does-what">Who does what?</h3>
+<ul>
+<li>Does this responsibility require autonomy?</li>
+<li>Can it be a function?</li>
+<li>Can it be a tool?</li>
+<li>Are the subtasks independent?</li>
+<li>Is there a single writer for side effects?</li>
+</ul>
+<h3 id="who-controls">Who controls?</h3>
+<ul>
+<li>Which properties are verifiable in code?</li>
+<li>What environment state proves success?</li>
+<li>Where is semantic judgment needed?</li>
+<li>Does the revision cycle have a budget?</li>
+</ul>
+<h3 id="who-keeps-the-system-running">Who keeps the system running?</h3>
+<ul>
+<li>How is the state saved?</li>
+<li>How do you resume after a crash or human approval?</li>
+<li>Which retries are idempotent?</li>
+<li>What is the blast radius of each agent?</li>
+<li>Can I reconstruct the entire trajectory?</li>
+</ul>
+<p>A minimal checklist can fit in a few lines:</p>
+<pre><code class="hljs language-text">[ ] Each agent has a responsibility that requires autonomy.
+[ ] Deterministic decisions are kept out of the prompt.
+[ ] Handoffs have a contract.
+[ ] Global and local states are separated.
+[ ] Parallelism follows dependencies, not enthusiasm.
+[ ] Side effects have ownership and idempotency.
+[ ] Outcomes are verified in the environment.
+[ ] Retries, fallbacks, escalations, and stops are explicit.
+[ ] Traces and evals measure the system, not just the last response.
+[ ] The harness is simplified whenever the model changes.</code></pre><hr>
+<h2 id="20-an-interactive-lab">20. An interactive lab</h2>
+<p>To make these trade-offs visible, I have prepared a separate educational simulator. It allows you to adjust path predictability, semantic ambiguity, parallelizability, side-effect risk, duration, and the presence of remote boundaries.</p>
+<p>The simulator is not a benchmark. It uses a transparent and intentionally simple model to show how certain choices shift cost, latency, observability, and blast radius.</p>
+<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">iframe</span>
+  <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../../../simulatore_architetture_multiagent.html&quot;</span>
+  <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Architecture Lab: where to place autonomy?&quot;</span>
+  <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;100%&quot;</span>
+  <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;900&quot;</span>
+  <span class="hljs-attr">loading</span>=<span class="hljs-string">&quot;lazy&quot;</span>
+  <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;border:0;border-radius:16px;overflow:hidden&quot;</span>
+&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">iframe</span>&gt;</span></code></pre><p>Static fallback:</p>
+<pre class="mermaid">flowchart LR
+    P[Problem] --&gt; Q1{Known path?}
+    Q1 --&gt;|yes| W[Workflow]
+    Q1 --&gt;|no| Q2{Decision representable?}
+    Q2 --&gt;|yes| R[Router + graph]
+    Q2 --&gt;|no| S[Supervisor]
+    S --&gt; Q3{Ownership changes?}
+    Q3 --&gt;|yes| H[Handoff]
+    Q3 --&gt;|no| D[Delegation]</pre><hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>We started with an agent equipped with five tools. It wasn&#39;t a bad architecture; it was simply an architecture where too many decisions remained implicit.</p>
+<p>We separated state from text, control from work, verification from generation, and execution from the session. Each time, we added structure only when the previous system showed a crack.</p>
+<p>In my opinion, this is the healthiest way to think about multi-agent systems in 2026.</p>
+<p>The question is not &quot;how many agents can I get to collaborate?&quot; It is:</p>
+<blockquote>
+<p><strong>Where should the intelligence reside, and where is structure needed instead?</strong></p>
+</blockquote>
+<p>When a decision is known, write it down. When a result is verifiable, test it. When work is independent, parallelize it. When context must cross a boundary, give it a shape. When an agent can cause damage, restrict what it is allowed to do. And when a component no longer adds value, remove it.</p>
+<p>The rest is orchestration. And, as often happens, the real challenges emerge precisely in the handoffs between one box and the next.</p>
+<hr>
+<h2 id="sources-and-reading-notes">Sources and reading notes</h2>
+<p>The sources are ordered by function, not by prestige. Engineering posts and official documentation support the system descriptions; practitioners add field experience; 2025 works are used when they introduce concepts that remain central in 2026.</p>
+<p>[^anthropic-engineering]: Anthropic, <strong>Engineering at Anthropic</strong>, updated index of 2024-2026 articles: <a href="https://www.anthropic.com/engineering">https://www.anthropic.com/engineering</a>
+[^anthropic-evals]: Anthropic, <strong>Demystifying evals for AI agents</strong>, January 9, 2026: <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents</a>
+[^anthropic-harness-2026]: Anthropic, <strong>Harness design for long-running application development</strong>, March 24, 2026: <a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">https://www.anthropic.com/engineering/harness-design-long-running-apps</a>
+[^anthropic-managed]: Anthropic, <strong>Scaling Managed Agents: Decoupling the brain from the hands</strong>, April 8, 2026: <a href="https://www.anthropic.com/engineering/managed-agents">https://www.anthropic.com/engineering/managed-agents</a>
+[^anthropic-containment]: Anthropic, <strong>How we contain Claude across products</strong>, May 25, 2026: <a href="https://www.anthropic.com/engineering/how-we-contain-claude">https://www.anthropic.com/engineering/how-we-contain-claude</a>
+[^anthropic-c-compiler]: Anthropic, <strong>Building a C compiler with a team of parallel Claudes</strong>, February 5, 2026: <a href="https://www.anthropic.com/engineering/building-c-compiler">https://www.anthropic.com/engineering/building-c-compiler</a>
+[^anthropic-context]: Anthropic, <strong>Effective context engineering for AI agents</strong>, September 29, 2025: <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents</a>
+[^openai-harness]: OpenAI, <strong>Harness engineering: leveraging Codex in an agent-first world</strong>, February 11, 2026: <a href="https://openai.com/index/harness-engineering/">https://openai.com/index/harness-engineering/</a>
+[^openai-sdk-2026]: OpenAI, <strong>The next evolution of the Agents SDK</strong>, April 15, 2026: <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">https://openai.com/index/the-next-evolution-of-the-agents-sdk/</a>
+[^openai-multi-agent]: OpenAI Agents SDK, <strong>Orchestrating multiple agents</strong>: <a href="https://openai.github.io/openai-agents-python/multi_agent/">https://openai.github.io/openai-agents-python/multi_agent/</a>
+[^openai-handoffs]: OpenAI Agents SDK, <strong>Handoffs</strong>: <a href="https://openai.github.io/openai-agents-python/handoffs/">https://openai.github.io/openai-agents-python/handoffs/</a>
+[^microsoft-workflows]: Microsoft Learn, <strong>Microsoft Agent Framework Workflows</strong>, updated 2026: <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">https://learn.microsoft.com/en-us/agent-framework/workflows/</a>
+[^microsoft-hitl]: Microsoft Learn, <strong>Human-in-the-loop with Agent Framework Workflows</strong>, updated July 17, 2026: <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop</a>
+[^langchain-handoffs]: LangChain, <strong>Handoffs</strong>, multi-agent documentation: <a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs</a>
+[^langgraph-subgraphs]: LangGraph, <strong>Use subgraphs</strong>: <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">https://docs.langchain.com/oss/python/langgraph/use-subgraphs</a>
+[^langgraph-persistence]: LangGraph, <strong>Persistence</strong>: <a href="https://docs.langchain.com/oss/python/langgraph/persistence">https://docs.langchain.com/oss/python/langgraph/persistence</a>
+[^langgraph-interrupts]: LangGraph, <strong>Interrupts</strong>: <a href="https://docs.langchain.com/oss/python/langgraph/interrupts">https://docs.langchain.com/oss/python/langgraph/interrupts</a></p>
+<p>[^mcp]: Model Context Protocol, official specification <strong>2026-07-28</strong>: <a href="https://modelcontextprotocol.io/specification/2026-07-28">https://modelcontextprotocol.io/specification/2026-07-28</a>
+[^a2a]: A2A Protocol, official specification <strong>v1.0</strong>: <a href="https://a2a-protocol.org/latest/">https://a2a-protocol.org/latest/</a>
+[^simon-subagents]: Simon Willison, <strong>Subagents - Agentic Engineering Patterns</strong>, March 17, 2026: <a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">https://simonwillison.net/guides/agentic-engineering-patterns/subagents/</a>
+[^hamel-evals]: Hamel Husain, <strong>Evals Skills for Coding Agents</strong>, March 3, 2026: <a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">https://hamelhusain.substack.com/p/evals-skills-for-coding-agents</a>
+[^jason-cognition]: Jason Liu, <strong>Why Cognition does not use multi-agent systems</strong>, September 11, 2025: <a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/</a></p>
+<h3 id="further-reading">Further reading</h3>
+<ul>
+<li>OpenAI, <strong>An open-source spec for Codex orchestration: Symphony</strong>, April 27, 2026: <a href="https://openai.com/index/open-source-codex-orchestration-symphony/">https://openai.com/index/open-source-codex-orchestration-symphony/</a></li>
+<li>Anthropic, <strong>AI Organizations Can Be More Effective but Less Aligned than Individual Agents</strong>, 2026: <a href="https://alignment.anthropic.com/2026/ai-organizations/">https://alignment.anthropic.com/2026/ai-organizations/</a></li>
+<li>OpenAI Agents SDK, <strong>Tracing</strong>: <a href="https://openai.github.io/openai-agents-python/tracing/">https://openai.github.io/openai-agents-python/tracing/</a></li>
+<li>LangChain, <strong>Multi-agent patterns</strong>: <a href="https://docs.langchain.com/oss/python/langchain/multi-agent/index">https://docs.langchain.com/oss/python/langchain/multi-agent/index</a></li>
+</ul>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/progettare-sistemi-multiagentici-nel-2026/index.html";
+    (function() {
+      const body = document.body;
+      const readingProgressBar = document.getElementById('reading-progress-bar');
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
+      const inlineNotes = Array.from(document.querySelectorAll('.post-body .inline-note'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      const codeFileExtensions = {
+        bash: 'sh',
+        shell: 'sh',
+        sh: 'sh',
+        zsh: 'zsh',
+        powershell: 'ps1',
+        python: 'py',
+        py: 'py',
+        javascript: 'js',
+        js: 'js',
+        typescript: 'ts',
+        ts: 'ts',
+        json: 'json',
+        html: 'html',
+        css: 'css',
+        scss: 'scss',
+        sass: 'sass',
+        markdown: 'md',
+        md: 'md',
+        yaml: 'yml',
+        yml: 'yml',
+        toml: 'toml',
+        dockerfile: 'dockerfile',
+        sql: 'sql',
+        c: 'c',
+        cpp: 'cpp',
+        csharp: 'cs',
+        java: 'java',
+        go: 'go',
+        rust: 'rs',
+        r: 'r',
+        swift: 'swift',
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function normaliseCodeLanguage(codeElement) {
+        if (!codeElement || !codeElement.classList) {
+          return '';
+        }
+        const languageClass = Array.from(codeElement.classList).find((className) => className.startsWith('language-'));
+        if (!languageClass) {
+          return '';
+        }
+        return languageClass.replace(/^language-/, '').trim().toLowerCase();
+      }
+      function formatCodeLanguageLabel(language) {
+        if (!language) {
+          return 'TEXT';
+        }
+        if (language.length <= 4) {
+          return language.toUpperCase();
+        }
+        return language.charAt(0).toUpperCase() + language.slice(1);
+      }
+      function buildCodeFilename(language) {
+        const extension = codeFileExtensions[language] || (language ? language : 'txt');
+        return 'snippet.' + extension;
+      }
+      function updateReadingProgress() {
+        if (!readingProgressBar) {
+          return;
+        }
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+        );
+        const maxScrollable = Math.max(1, documentHeight - viewportHeight);
+        const progress = Math.min(100, Math.max(0, (scrollTop / maxScrollable) * 100));
+        readingProgressBar.style.width = progress.toFixed(2) + '%';
+      }
+      function closeInlineNotes() {
+        inlineNotes.forEach((note) => {
+          note.classList.remove('inline-note--open');
+          const trigger = note.querySelector('.inline-note__trigger');
+          if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      function initInlineNotes() {
+        if (!inlineNotes.length) {
+          return;
+        }
+        inlineNotes.forEach((note, index) => {
+          const trigger = note.querySelector('.inline-note__trigger');
+          const popup = note.querySelector('.inline-note__popup');
+          if (!trigger || !popup) {
+            return;
+          }
+          const popupId = popup.id || ('inline-note-popup-' + index);
+          popup.id = popupId;
+          trigger.setAttribute('aria-controls', popupId);
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const isOpen = note.classList.contains('inline-note--open');
+            closeInlineNotes();
+            if (!isOpen) {
+              note.classList.add('inline-note--open');
+              trigger.setAttribute('aria-expanded', 'true');
+            }
+          });
+          popup.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
+        });
+        document.addEventListener('click', closeInlineNotes);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true' || pre.closest('.post-code-card')) {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const language = normaliseCodeLanguage(code);
+          const languageLabel = formatCodeLanguageLabel(language);
+          const filenameLabel = buildCodeFilename(language);
+          const wrapper = document.createElement('div');
+          wrapper.className = 'post-code-card';
+          wrapper.innerHTML =
+            '<div class="post-code-card__language">' + languageLabel + '</div>' +
+            '<div class="post-code-card__frame">' +
+              '<div class="post-code-card__header">' +
+                '<div class="post-code-card__window-controls" aria-hidden="true">' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--red"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--yellow"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--green"></span>' +
+                '</div>' +
+                '<span class="post-code-card__filename">' + filenameLabel + '</span>' +
+              '</div>' +
+              '<div class="post-code-card__body"></div>' +
+            '</div>';
+          const frame = wrapper.querySelector('.post-code-card__frame');
+          const header = wrapper.querySelector('.post-code-card__header');
+          const codeBody = wrapper.querySelector('.post-code-card__body');
+          if (!frame || !header || !codeBody) {
+            return;
+          }
+          pre.parentNode.insertBefore(wrapper, pre);
+          codeBody.appendChild(pre);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          header.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function syncEmbeddedThemes(theme) {
+        document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+          if (frame.contentWindow) {
+            frame.contentWindow.postMessage({ type: 'blog-theme', theme }, window.location.origin);
+          }
+        });
+      }
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+        syncEmbeddedThemes(resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          updateReadingProgress();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+          closeInlineNotes();
+        }
+      });
+      enhanceTables();
+      initInlineNotes();
+      enhanceCodeBlocks();
+      initToc();
+      document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+        frame.addEventListener('load', () => {
+          syncEmbeddedThemes(body.getAttribute('data-theme') || initialTheme);
+        });
+      });
+      applyTheme(initialTheme);
+      updateReadingProgress();
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', updateReadingProgress, { passive: true });
+    })();
+  </script>
+</body>
+</html>
