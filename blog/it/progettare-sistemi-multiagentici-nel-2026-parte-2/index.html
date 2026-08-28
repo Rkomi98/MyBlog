@@ -775,10 +775,14 @@
       max-height: 88vh;
       padding: 2rem;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: flex-start;
       overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
+    }
+    .mermaid-overlay__scroll > pre.mermaid {
+      flex: 0 0 auto;
+      margin: 0 auto;
     }
     .mermaid-overlay__scroll svg {
       max-width: none;
@@ -1405,6 +1409,29 @@
           overlayScroll.appendChild(clone);
           overlay.classList.add('mermaid-overlay--visible');
           document.body.classList.add('no-scroll');
+
+          const cloneSvg = clone.querySelector('svg');
+          const viewBox = cloneSvg?.viewBox?.baseVal;
+          if (cloneSvg && viewBox?.width > 0 && viewBox?.height > 0) {
+            const scrollStyles = window.getComputedStyle(overlayScroll);
+            const horizontalPadding =
+              (Number.parseFloat(scrollStyles.paddingLeft) || 0) +
+              (Number.parseFloat(scrollStyles.paddingRight) || 0);
+            const availableWidth = Math.max(320, overlayScroll.clientWidth - horizontalPadding);
+            const availableHeight = Math.max(320, window.innerHeight - 140);
+            const widthAtAvailableHeight = availableHeight * (viewBox.width / viewBox.height);
+            const targetWidth = Math.max(
+              viewBox.width,
+              Math.min(availableWidth, widthAtAvailableHeight),
+            );
+
+            clone.style.width = Math.ceil(targetWidth) + 'px';
+            clone.style.maxWidth = 'none';
+            cloneSvg.style.width = '100%';
+            cloneSvg.style.maxWidth = 'none';
+            cloneSvg.style.height = 'auto';
+          }
+
           overlay.querySelector('.mermaid-overlay__close')?.focus();
         };
         expandButton.addEventListener('click', () => openDiagram(expandButton));
@@ -1584,34 +1611,36 @@
             <span class="post-toc__number">2.1</span>
             <span class="post-toc__text">E quando il mondo va a rotoli?</span>
           </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#output-formalmente-invalido">
-            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__number">2.1.1</span>
             <span class="post-toc__text">Output formalmente invalido</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#output-valido-ma-semanticamente-incerto">
-            <span class="post-toc__number">2.3</span>
+            <span class="post-toc__number">2.1.2</span>
             <span class="post-toc__text">Output valido ma semanticamente incerto</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#tool-esterno-non-disponibile">
-            <span class="post-toc__number">2.4</span>
+            <span class="post-toc__number">2.1.3</span>
             <span class="post-toc__text">Tool esterno non disponibile</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#successo-parziale">
-            <span class="post-toc__number">2.5</span>
+            <span class="post-toc__number">2.1.4</span>
             <span class="post-toc__text">Successo parziale</span>
           </a>
           
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#idempotenza-e-side-effect">
-            <span class="post-toc__number">2.6</span>
+            <span class="post-toc__number">2.2</span>
             <span class="post-toc__text">Idempotenza e side effect</span>
           </a>
           
@@ -1976,7 +2005,8 @@ fallimenti silenziosi</code></pre><p>In uno dei miei substack preferiti, Hamel H
     Fallback --&gt; Running
     Replan --&gt; Running
     Human --&gt; Running: approvazione / nuovo input</pre><p>Conviene distinguere almeno queste famiglie.</p>
-<h3 id="output-formalmente-invalido">Output formalmente invalido</h3>
+<h4 id="output-formalmente-invalido">Output formalmente invalido</h4>
+<p>Qui il nodo ha risposto, ma ha violato il contratto: JSON malformato, campi mancanti, enum non valido, schema incompatibile. Questo è un errore TOTALMENTE tecnico. Possiamo chiedere al nodo di riparare l&#39;output, ma con un budget limitato: un agente che continua a produrre output invalido non diventa affidabile al quinto tentativo, è scientificamente provato 😜</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
 
 <span class="hljs-keyword">try</span>:
@@ -1985,18 +2015,22 @@ fallimenti silenziosi</code></pre><p>In uno dei miei substack preferiti, Hamel H
     <span class="hljs-keyword">if</span> retry_budget.consume(<span class="hljs-string">&quot;mood_interpreter&quot;</span>):
         profile = <span class="hljs-keyword">await</span> mood_interpreter.run(prompt, repair=<span class="hljs-literal">True</span>)
     <span class="hljs-keyword">else</span>:
-        <span class="hljs-keyword">return</span> clarification_fallback()</code></pre><h3 id="output-valido-ma-semanticamente-incerto">Output valido ma semanticamente incerto</h3>
-<p>Non è un&#39;eccezione. È uno stato.</p>
+        <span class="hljs-keyword">return</span> clarification_fallback()</code></pre><h4 id="output-valido-ma-semanticamente-incerto">Output valido ma semanticamente incerto</h4>
+<p>Eheh questo caso è più sottile, per cui andiamo con calma. L&#39;output rispetta lo schema, quindi non è un&#39;eccezione. Ma l&#39;agente dichiara poca confidenza, trova evidenze in conflitto o non possiede abbastanza informazioni per procedere in modo affidabile. L&#39;incertezza DEVE viaggiare nello stato del workflow e deve essere palesata subito!</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">if</span> profile.needs_clarification:
-    <span class="hljs-keyword">return</span> transition_to(<span class="hljs-string">&quot;clarifier&quot;</span>)</code></pre><h3 id="tool-esterno-non-disponibile">Tool esterno non disponibile</h3>
+    <span class="hljs-keyword">return</span> transition_to(<span class="hljs-string">&quot;clarifier&quot;</span>)</code></pre><p>In altre parole: “non so” è un risultato legittimo. Spesso è migliore di una risposta plausibile ma sbagliata. Non mi stancherò mai di ripeterlo.</p>
+<h4 id="tool-esterno-non-disponibile">Tool esterno non disponibile</h4>
+<p>Un tool esterno può andare in timeout, restituire un errore 503 o scontrarsi con un rate limit. Quando l&#39;operazione non è strettamente essenziale, l&#39;orchestratore può attuare una <em>graceful degradation</em> (degradazione controllata), ovvero appoggiarsi a una fonte dati locale, ridurre le funzionalità offerte oppure informare in modo trasparente l&#39;utente del limite.</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">try</span>:
     tracks = <span class="hljs-keyword">await</span> remote_catalog.search(query)
 <span class="hljs-keyword">except</span> TransientToolError:
     tracks = local_catalog.search(query)
-    state.warnings.append(<span class="hljs-string">&quot;remote_catalog_unavailable&quot;</span>)</code></pre><h3 id="successo-parziale">Successo parziale</h3>
+    state.warnings.append(<span class="hljs-string">&quot;remote_catalog_unavailable_using_local&quot;</span>)</code></pre><p>Tuttavia, un fallback non dovrebbe mai alterare di nascosto il significato o il perimetro del risultato. Se il catalogo locale risulta meno aggiornato o parziale rispetto a quello remoto, il sistema deve conservarne la traccia nello stato per avvertire correttamente i nodi a valle o direttamente l&#39;utente finale.</p>
+<h4 id="successo-parziale">Successo parziale</h4>
+<p>In un sistema con worker paralleli, il fallimento di un agente non implica automaticamente il fallimento dell&#39;intera richiesta.</p>
 <pre><code class="hljs language-text">Scout A ✓
 Scout B timeout
-Scout C ✓</code></pre><p>Le opzioni non sono soltanto «tutto fallisce» o «facciamo finta di niente».</p>
+Scout C ✓</code></pre><p>Non è tutto bianco o nero, vediamo anche un possibile grigio!</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-keyword">if</span> successful_workers &gt;= minimum_required:
@@ -2004,7 +2038,8 @@ Scout C ✓</code></pre><p>Le opzioni non sono soltanto «tutto fallisce» o «f
 <span class="hljs-keyword">elif</span> retry_budget.available:
     retry(failed_workers)
 <span class="hljs-keyword">else</span>:
-    escalate_or_abort()</code></pre><h3 id="idempotenza-e-side-effect">Idempotenza e side effect</h3>
+    escalate_or_abort()</code></pre><p>La scelta dipende dal contratto del task. Per una ricerca esplorativa, due fonti affidabili possono bastare. Per un controllo di compliance, la mancanza di una fonte obbligatoria deve bloccare l&#39;esecuzione.</p>
+<h3 id="idempotenza-e-side-effect">Idempotenza e side effect</h3>
 <p>Un retry innocuo su una ricerca read-only è diverso da un retry sulla creazione della playlist.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
