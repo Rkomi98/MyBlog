@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Designing multi-agent systems in 2026 | Mirko Calcaterra</title>
+  <meta name="description" content="Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…">
+  <meta name="keywords" content="">
+  <meta name="author" content="Mirko Calcaterra">
+  <link rel="canonical" href="${pageUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026-parte-1/">
+  <meta property="og:title" content="Designing multi-agent systems in 2026">
+  <meta property="og:description" content="Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-08-20T00:00:00.000Z">
+  <meta property="article:author" content="Mirko Calcaterra">
+  <meta property="article:section" content="AI Engineering Path">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Designing multi-agent systems in 2026">
+  <meta property="twitter:description" content="Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Designing multi-agent systems in 2026",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-08-20T00:00:00.000Z",
+    "dateModified": "2026-08-28T08:49:46.000Z",
+    "author": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra",
+      "url": "https://rkomi98.github.io/MyBlog/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    },
+    "description": "Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      position: relative;
+      font-family: 'Charter', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --bg-card-strong: rgba(11, 17, 32, 0.92);
+      --border: rgba(148, 163, 184, 0.2);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --surface: #1e293b;
+      --shadow-lg: 0 28px 60px -36px rgba(2, 6, 23, 0.9);
+      --code-inline-bg: rgba(30, 41, 59, 0.88);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.2);
+      --code-shadow: 0 12px 32px rgba(2, 6, 23, 0.45);
+      --code-text: #cbd5e1;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f6f8f7;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --bg-card-strong: rgba(255, 255, 255, 0.98);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #059669;
+      --accent-strong: #047857;
+      --surface: #f1f5f9;
+      --shadow-lg: 0 28px 50px -38px rgba(15, 23, 42, 0.16);
+      --code-inline-bg: rgba(226, 232, 240, 0.9);
+      --code-block-bg: #0f172a;
+      --code-border: rgba(148, 163, 184, 0.24);
+      --code-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 16;
+      width: 100%;
+      height: 2px;
+      background: rgba(148, 163, 184, 0.25);
+    }
+    .reading-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #22c55e 55%, #2dd4bf 100%);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+      transition: width 0.1s ease-out;
+    }
+    .site-header__inner,
+    .site-nav,
+    .lang-btn,
+    .theme-toggle,
+    .post-toc,
+    footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-hero__title,
+    .post-body h2,
+    .post-body h3,
+    .post-body h4,
+    .post-body .post-warning summary,
+    .post-toc__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    body[data-theme="light"] .post-toc {
+      background: rgba(255, 255, 255, 0.96);
+    }
+    body[data-theme="light"] .post-body {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text-secondary);
+    }
+    body[data-theme="light"] .post-hero__category {
+      background: rgba(5, 150, 105, 0.12);
+      color: var(--accent-strong);
+    }
+    body[data-theme="light"] .post-body blockquote {
+      background: rgba(5, 150, 105, 0.08);
+      color: var(--text-primary);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .site-header__left {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .site-nav {
+      display: flex;
+      gap: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .site-nav a:hover {
+      color: var(--accent);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover:not(.lang-btn--disabled) {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .lang-btn--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .theme-toggle .theme-thumb {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+    }
+    body[data-theme="dark"] .theme-toggle .theme-thumb {
+      transform: translate(20px, -50%);
+      background: #1f2937;
+      color: #f8fafc;
+    }
+    body[data-theme="dark"] .theme-toggle {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+    main.page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
+    }
+    .post-hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(15, 23, 42, 0.55) 70%), var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3rem;
+    }
+    .post-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 22%, rgba(16, 185, 129, 0.18) 0%, transparent 56%);
+      pointer-events: none;
+    }
+    .post-hero__icon {
+      position: relative;
+      font-size: 3.1rem;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-hero__category {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.13);
+      color: var(--accent-strong);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .post-hero__title {
+      position: relative;
+      margin: 0 0 1.25rem;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .post-hero__author {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--accent);
+    }
+    .post-hero__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      object-fit: cover;
+      background: var(--surface);
+    }
+    .post-hero__author-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .post-hero__author-name {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .post-hero__author-meta {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: 2.75rem;
+      align-items: flex-start;
+    }
+    .post-layout--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.5rem 1.6rem 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 120px;
+      max-height: calc(100vh - 160px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-toc__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-toc__title {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .post-toc__toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+    }
+    .post-toc__toggle:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: transparent;
+      color: var(--accent);
+    }
+    .post-toc__content {
+      margin-top: 0.6rem;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      max-height: calc(100vh - 220px);
+    }
+    .post-toc--collapsed .post-toc__content {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .post-toc__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .post-toc__sublist {
+      margin-left: 0.85rem;
+      padding-left: 0.85rem;
+      border-left: 1px solid rgba(148, 163, 184, 0.35);
+      margin-top: 0.4rem;
+      gap: 0.35rem;
+    }
+    .post-toc__item {
+      margin: 0;
+    }
+    .post-toc__link {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+    }
+    .post-toc__link:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(2px);
+    }
+    .post-toc__link--active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-toc__number {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 2.5ch;
+      display: inline-flex;
+      justify-content: flex-end;
+      padding-top: 0.15rem;
+    }
+    .post-toc__text {
+      flex: 1;
+    }
+    .post-body {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.12rem;
+      line-height: 1.78;
+      color: var(--text-secondary);
+    }
+    .post-body h2 {
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.9rem, 3vw, 2.35rem);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .post-body h3 {
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .post-body h4 {
+      margin-top: 1.8rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+    .post-body p {
+      margin-bottom: 1.4rem;
+    }
+    .post-body .post-warning {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(254, 243, 199, 0.9);
+      color: #4a3b0a;
+      padding: 0 1.25rem 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+    body[data-theme="dark"] .post-body .post-warning {
+      background: rgba(253, 230, 138, 0.12);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #f6e6b2;
+      box-shadow: inset 0 0 0 1px rgba(250, 200, 88, 0.3);
+    }
+    .post-body .post-warning summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      color: inherit;
+    }
+    .post-body .post-warning summary::-webkit-details-marker {
+      display: none;
+    }
+    .post-body .post-warning summary::before {
+      content: '⚠️';
+      font-size: 1rem;
+    }
+    .post-body .post-warning[open] {
+      padding-bottom: 1.25rem;
+    }
+    .post-body .post-warning p:last-child {
+      margin-bottom: 0;
+    }
+    .post-body ul,
+    .post-body ol {
+      margin: 1.4rem 0 1.4rem 1.4rem;
+      padding: 0;
+    }
+    .post-body li {
+      margin-bottom: 0.8rem;
+    }
+    .post-body ul li::marker,
+    .post-body ol li::marker {
+      color: var(--accent);
+    }
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.35);
+      transition: color 0.2s ease, border-bottom 0.2s ease;
+    }
+    .post-body a:hover {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent-strong);
+    }
+    .post-body .inline-note {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.15rem;
+    }
+    .post-body .inline-note__trigger {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      margin: 0 0 0 0.08rem;
+      vertical-align: super;
+      font-size: 0.92em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0.9em;
+      min-height: 0.9em;
+      transform: translateY(-0.18em);
+      text-decoration: none;
+    }
+    .post-body .inline-note__trigger:hover {
+      color: var(--accent-strong);
+    }
+    .post-body .inline-note__trigger span[aria-hidden="true"] {
+      display: inline-block;
+      line-height: 1;
+    }
+    .post-body .inline-note__popup {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.6rem);
+      width: min(360px, 80vw);
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-lg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      z-index: 8;
+      display: none;
+    }
+    .post-body .inline-note__popup strong {
+      color: var(--text-primary);
+    }
+    .post-body .inline-note--open .inline-note__popup {
+      display: block;
+    }
+    body[data-theme="light"] .post-body .inline-note__popup {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-body blockquote {
+      margin: 2rem 0;
+      padding: 0.75rem 1.2rem;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      background: rgba(30, 41, 59, 0.45);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.98rem;
+      font-style: italic;
+    }
+    .post-body code {
+      background: var(--code-inline-bg);
+      color: var(--accent-strong);
+      padding: 0.15rem 0.42rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+    }
+    .post-code-card pre code {
+      background: transparent;
+      padding: 0;
+      display: block;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--code-text);
+    }
+    .post-body pre {
+      margin: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+    .post-body pre.mermaid {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.45);
+      overflow-x: auto;
+    }
+    body[data-theme="light"] .post-body pre.mermaid {
+      background: rgba(241, 245, 249, 0.96);
+    }
+    .post-body .mermaid-diagram {
+      position: relative;
+      margin: 2rem 0;
+      isolation: isolate;
+    }
+    .post-body .mermaid-diagram pre.mermaid {
+      margin: 0;
+    }
+    .post-body .mermaid-diagram__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .mermaid-diagram__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .mermaid-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 1000;
+    }
+    .mermaid-overlay--visible {
+      display: flex;
+    }
+    .mermaid-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1280px, 94vw);
+      max-height: 88vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .mermaid-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-height: 2.75rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      z-index: 2;
+    }
+    .mermaid-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .mermaid-overlay__scroll {
+      overflow: auto;
+      max-height: 88vh;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    .mermaid-overlay__scroll svg {
+      max-width: none;
+      height: auto;
+    }
+    body[data-theme="light"] .post-body .mermaid-diagram__expand {
+      background: rgba(248, 250, 252, 0.92);
+    }
+    body[data-theme="light"] .mermaid-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .mermaid-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .post-code-card pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: var(--code-text);
+    }
+    .post-code-card {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .post-code-card__language {
+      position: absolute;
+      right: 1rem;
+      top: -0.62rem;
+      z-index: 2;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      color: var(--accent-strong);
+      text-transform: uppercase;
+    }
+    .post-code-card__frame {
+      background: var(--code-block-bg);
+      border-radius: 12px;
+      border: 1px solid var(--code-border);
+      box-shadow: var(--code-shadow);
+      overflow: hidden;
+    }
+    .post-code-card__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.48rem 0.78rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .post-code-card__window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      flex: 0 0 auto;
+    }
+    .post-code-card__window-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .post-code-card__window-dot--red {
+      background: rgba(248, 113, 113, 0.25);
+      border-color: rgba(248, 113, 113, 0.6);
+    }
+    .post-code-card__window-dot--yellow {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .post-code-card__window-dot--green {
+      background: rgba(74, 222, 128, 0.22);
+      border-color: rgba(74, 222, 128, 0.65);
+    }
+    .post-code-card__filename {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-code-card__body {
+      padding: 0.95rem 1rem;
+      overflow-x: auto;
+    }
+    .post-code-card__body::-webkit-scrollbar {
+      height: 6px;
+    }
+    .post-code-card__body::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    .post-code-card__body::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .hljs {
+      color: #e2e8f0;
+      background: transparent;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-name,
+    .hljs-strong,
+    .hljs-built_in {
+      color: #c084fc;
+      font-weight: 600;
+    }
+    .hljs-title,
+    .hljs-section,
+    .hljs-function,
+    .hljs-meta .hljs-keyword {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-template-tag,
+    .hljs-template-variable {
+      color: #4ade80;
+    }
+    .hljs-number,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-type {
+      color: #fb923c;
+    }
+    .hljs-variable,
+    .hljs-params {
+      color: #cbd5f5;
+    }
+    .code-copy-btn {
+      margin-left: auto;
+      background: transparent;
+      color: var(--text-muted);
+      border: 0;
+      border-radius: 999px;
+      padding: 0.25rem 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .code-copy-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .code-copy-btn__icon {
+      font-size: 0.88rem;
+    }
+    .code-copy-btn__text {
+      display: inline-block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body[data-theme="light"] .code-copy-btn {
+      color: var(--text-muted);
+    }
+    body[data-theme="light"] .code-copy-btn--copied {
+      color: var(--accent-strong);
+    }
+    .post-body img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 2.2rem 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: var(--surface);
+      opacity: 0.88;
+      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+    }
+    .post-body .article-figure {
+      margin: 2.4rem 0;
+    }
+    .post-body .article-figure img {
+      width: 100%;
+      display: block;
+      margin: 0;
+    }
+    .post-body .article-figure figcaption {
+      margin-top: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .post-body .article-figure figcaption strong {
+      color: var(--text-primary);
+    }
+    .post-body .article-figure--wide {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1500px, calc(100vw - 4rem));
+      max-width: none;
+    }
+    body[data-theme="light"] .post-body .article-figure figcaption {
+      color: var(--text-muted);
+    }
+    .post-body .table-wrapper {
+      margin: 2rem 0;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .post-body .table-wrapper__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+    .post-body .table-wrapper__scroll::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.4);
+      border-radius: 999px;
+    }
+    .post-body .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .post-body .table-wrapper[data-table-size="medium"] table {
+      min-width: 720px;
+    }
+    .post-body .table-wrapper[data-table-size="wide"] table {
+      min-width: 960px;
+    }
+    .post-body .table-wrapper thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .post-body .table-wrapper th,
+    .post-body .table-wrapper td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .post-body .table-wrapper td {
+      white-space: normal;
+    }
+    .post-body .table-wrapper tr:last-child td {
+      border-bottom: none;
+    }
+    .post-body .table-wrapper__expand {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      z-index: 2;
+    }
+    .post-body .table-wrapper__expand:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+    .table-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 999;
+    }
+    .table-overlay--visible {
+      display: flex;
+    }
+    .table-overlay__content {
+      background: var(--bg-card-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: min(1080px, 92vw);
+      max-height: 85vh;
+      width: 100%;
+      box-shadow: 0 32px 80px -40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    .table-overlay__close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .table-overlay__close:hover {
+      background: rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .table-overlay__scroll {
+      overflow: auto;
+      max-height: 85vh;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .table-overlay__scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
+    .table-overlay__scroll table[data-table-size="medium"] {
+      min-width: 720px;
+    }
+    .table-overlay__scroll table[data-table-size="wide"] {
+      min-width: 960px;
+    }
+    .table-overlay__scroll thead th {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .table-overlay__scroll th,
+    .table-overlay__scroll td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      white-space: nowrap;
+    }
+    .table-overlay__scroll td {
+      white-space: normal;
+    }
+    .table-overlay__scroll tr:last-child td {
+      border-bottom: none;
+    }
+    body[data-theme="light"] .post-body .table-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+    }
+    body[data-theme="light"] .post-body .table-wrapper__expand {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    body[data-theme="light"] .table-overlay {
+      background: rgba(15, 23, 42, 0.25);
+    }
+    body[data-theme="light"] .table-overlay__content {
+      background: rgba(255, 255, 255, 0.98);
+    }
+    body.no-scroll {
+      overflow: hidden;
+    }
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body[data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.72);
+    }
+    @media (max-width: 1024px) {
+      .site-header__inner {
+        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+      }
+      main.page {
+        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+      }
+      .post-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .post-toc {
+        position: sticky;
+        top: 88px;
+        z-index: 6;
+        max-height: calc(100vh - 140px);
+        margin-bottom: 2rem;
+        padding: 1.1rem 1.25rem 1.35rem;
+      }
+      .post-toc__toggle {
+        display: inline-flex;
+      }
+      .post-toc__content {
+        max-height: none;
+        margin-top: 0.4rem;
+        overflow: visible;
+      }
+    }
+    @media (max-width: 720px) {
+      .post-hero {
+        padding: 2.1rem 1.65rem;
+      }
+      .post-body {
+        padding: 1.9rem 1.5rem;
+        font-size: 1.04rem;
+      }
+      .post-body .article-figure--wide {
+        left: auto;
+        transform: none;
+        width: 100%;
+      }
+      .site-header__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .site-header__left {
+        justify-content: space-between;
+      }
+      .header-controls {
+        align-self: flex-end;
+      }
+      .post-hero__title {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+      }
+      .post-hero__author {
+        gap: 0.7rem;
+      }
+      .post-hero__author-meta {
+        font-size: 0.78rem;
+      }
+      .post-code-card__header {
+        padding: 0.45rem 0.6rem;
+      }
+      .post-code-card__filename {
+        max-width: 36vw;
+      }
+      .code-copy-btn__text {
+        display: none;
+      }
+      .post-body .table-wrapper {
+        margin: 1.6rem 0;
+      }
+      .post-body .table-wrapper__expand {
+        top: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.78rem;
+        padding: 0.25rem 0.75rem;
+      }
+      .post-body .mermaid-diagram__expand {
+        top: auto;
+        right: 0.55rem;
+        bottom: 0.55rem;
+        min-height: 2.75rem;
+        padding: 0.35rem 0.8rem;
+        font-size: 0.82rem;
+      }
+      .post-body .mermaid-diagram pre.mermaid {
+        padding: 1rem 0.85rem 4.25rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .mermaid-overlay {
+        padding: 0.5rem;
+      }
+      .mermaid-overlay__content {
+        max-width: 100%;
+        max-height: 100dvh;
+        border-radius: 18px;
+      }
+      .mermaid-overlay__close {
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+      }
+      .mermaid-overlay__scroll {
+        max-height: 100dvh;
+        padding: 4rem 1rem 1.5rem;
+      }
+      .table-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+      .mermaid-overlay__scroll {
+        padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      },
+    };
+  </script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    const hasMermaid = document.querySelector('.mermaid');
+    if (hasMermaid) {
+      const labels = document.documentElement.lang === 'it'
+        ? { expand: 'Apri diagramma', close: 'Chiudi', dialog: 'Diagramma ingrandito' }
+        : { expand: 'Open diagram', close: 'Close', dialog: 'Expanded diagram' };
+      let overlay = null;
+      let overlayScroll = null;
+      let lastTrigger = null;
+
+      const closeOverlay = () => {
+        if (!overlay) {
+          return;
+        }
+        overlay.classList.remove('mermaid-overlay--visible');
+        document.body.classList.remove('no-scroll');
+        if (overlayScroll) {
+          overlayScroll.innerHTML = '';
+        }
+        lastTrigger?.focus();
+        lastTrigger = null;
+      };
+
+      const ensureOverlay = () => {
+        if (overlay) {
+          return;
+        }
+        overlay = document.createElement('div');
+        overlay.className = 'mermaid-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', labels.dialog);
+        overlay.innerHTML =
+          '<div class="mermaid-overlay__content">' +
+            '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
+            '<div class="mermaid-overlay__scroll"></div>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
+        const closeButton = overlay.querySelector('.mermaid-overlay__close');
+        closeButton?.addEventListener('click', () => {
+          closeOverlay();
+        });
+        overlay.addEventListener('click', (event) => {
+          if (event.target === overlay) {
+            closeOverlay();
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
+            closeOverlay();
+          }
+        });
+      };
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+      });
+      const diagrams = Array.from(document.querySelectorAll('.post-body pre.mermaid'));
+      for (const diagram of diagrams) {
+        try {
+          await mermaid.run({ nodes: [diagram] });
+        } catch (error) {
+          console.error('Unable to render Mermaid diagram', error);
+          diagram.classList.add('mermaid--failed');
+        }
+      }
+
+      diagrams.forEach((diagram) => {
+        if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-diagram';
+        diagram.parentNode.insertBefore(wrapper, diagram);
+        wrapper.appendChild(diagram);
+
+        const expandButton = document.createElement('button');
+        expandButton.type = 'button';
+        expandButton.className = 'mermaid-diagram__expand';
+        expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
+        expandButton.setAttribute('aria-label', labels.expand);
+        const openDiagram = (trigger) => {
+          ensureOverlay();
+          if (!overlay || !overlayScroll) {
+            return;
+          }
+          lastTrigger = trigger;
+          overlayScroll.innerHTML = '';
+          const clone = diagram.cloneNode(true);
+          overlayScroll.appendChild(clone);
+          overlay.classList.add('mermaid-overlay--visible');
+          document.body.classList.add('no-scroll');
+          overlay.querySelector('.mermaid-overlay__close')?.focus();
+        };
+        expandButton.addEventListener('click', () => openDiagram(expandButton));
+        diagram.addEventListener('click', (event) => {
+          if (window.matchMedia('(max-width: 720px)').matches && !event.target.closest('a, button')) {
+            openDiagram(expandButton);
+          }
+        });
+        wrapper.appendChild(expandButton);
+      });
+    }
+  </script>
+</head>
+<body data-theme="dark">
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="reading-progress-bar"></div>
+  </div>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__left">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
+          <span class="logo-text">Mirko Calcaterra</span>
+        </a>
+        <nav class="site-nav">
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        </nav>
+      </div>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-thumb">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <article class="post">
+      <section class="post-hero">
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">AI Engineering Path</span>
+        <h1 class="post-hero__title">Designing multi-agent systems in 2026</h1>
+        <div class="post-hero__author">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
+          <div class="post-hero__author-text">
+            <span class="post-hero__author-name">Mirko Calcaterra</span>
+            <span class="post-hero__author-meta">August 20, 2026 • 15 min</span>
+          </div>
+        </div>
+      </section>
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#the-simplest-system-that-could-work">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">The simplest system that could work</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#an-agent-must-earn-its-place">
+            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__text">An agent must earn its place</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#the-spotify-monolith">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">The Spotify monolith</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#decision-ambiguity">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">Decision ambiguity</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#acceptance-ambiguity">
+            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__text">Acceptance ambiguity</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#divide-and-conquer">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Divide and conquer</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#who-decides">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Who decides?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#routing-do-you-already-know-what-you-want">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Routing: do you already know what you want?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#why-is-this-approach-formidable">
+            <span class="post-toc__number">4.1.1</span>
+            <span class="post-toc__text">Why is this approach formidable?</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#supervisor-the-decision-remains-fluid">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Supervisor: the decision remains fluid</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#why-is-context-ownership-important">
+            <span class="post-toc__number">4.2.1</span>
+            <span class="post-toc__text">Why is Context Ownership important?</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#handoff-a-conversation-between-agents">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">Handoff: a conversation between agents</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#a-handoff-is-a-full-fledged-contract">
+            <span class="post-toc__number">4.3.1</span>
+            <span class="post-toc__text">A handoff is a full-fledged contract</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#sources-and-reading-notes">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Sources and reading notes</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#other-useful-reading">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Other useful reading</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
+        <div class="post-body">
+          <p>I’ve heard developers brag about designing multi-agent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stopping at how to build them. Because before designing such a complex system, it makes sense to ask whether it’s even worth defining it as one!</p>
+<p>For this reason, before talking about swarms, supervisors, and handoffs, it’s worth taking a step back.</p>
+<p>A multi-agent system isn&#39;t born when you put two models side-by-side. It isn&#39;t born when one agent calls another as if it were a tool. It is born when you decide to <strong>distribute responsibility, context, and control</strong> among components that can make partially autonomous decisions.</p>
+<p>The important word here is <em>decide</em>. Because adding agents is not a goal. It is an <strong>architectural choice</strong> that must justify its own cost.</p>
+<p>To keep the discussion grounded, we will use an example from a project I am building with Datapizza: a multi-agent system capable of detecting a user&#39;s mood and suggesting a playlist accordingly (incidentally, I’m listening to <a href="https://suno.com/labs/live-radio">radio Suno</a> right now). Let’s start with a very simple and vague request from a potential user:</p>
+<blockquote>
+<p><strong>&quot;I&#39;m tired, but I want to dance.&quot;</strong></p>
+</blockquote>
+<p>It’s a short sentence, but in just a few words, it contains a tension between two states and a decision to be made.</p>
+<p>This article can be condensed into five questions:</p>
+<ol>
+<li><strong>Who decides?</strong></li>
+<li><strong>Who knows what?</strong></li>
+<li><strong>Who does what?</strong></li>
+<li><strong>Who checks that the work was done well?</strong></li>
+<li><strong>Who keeps the system running when problems arise?</strong></li>
+</ol>
+<p>In 2024, Anthropic primarily described routing, chaining, parallelization, orchestrator-workers, and evaluator-optimizer patterns (<a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>). Far be it from me to say those patterns are obsolete; on the contrary, they remain absolutely valid.</p>
+<p>In 2026, however, the documentation and case studies I’ll cite shortly dedicate much more attention to context lifecycle, contracts, artifacts, checkpoints, trajectory evals, sandboxes, containment, and harnesses (<a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Managed Agents</a>, <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — Agents SDK</a>, <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft — Workflows</a>).</p>
+<blockquote>
+<p>To be clear, this is a general synthesis of what I have read so far on various Substacks and official blogs; it is not an official, shared taxonomy.</p>
+</blockquote>
+<h2 id="the-simplest-system-that-could-work">The simplest system that could work</h2>
+<p>Let’s start with the first question (probably the most uncomfortable one):</p>
+<blockquote>
+<p><strong>Why isn&#39;t a single agent enough?</strong></p>
+</blockquote>
+<p>If the path is known in advance, a <strong>workflow</strong> is often sufficient. If a transformation is deterministic, a simple function might be enough. If a single agent can maintain context and use tools effectively, splitting the work only creates new points of failure.</p>
+<pre class="mermaid">flowchart LR
+    F[Funzione] --&gt; W[Workflow deterministico]
+    W --&gt; A[Singolo agente]
+    A --&gt; S[Agente + specialisti]
+    S --&gt; M[Sistema multiagentico]
+
+    classDef base fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
+    classDef hot fill:#D7342B,stroke:#D7342B,color:#fff;
+    class F,W,A,S base;
+    class M hot;</pre><p>Moving to the right means gaining flexibility, but also paying in terms of latency, cost, non-determinism, coordination, and observability.</p>
+<p>A starting rule can be written like this:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">choose_architecture</span>(<span class="hljs-params">problem</span>):
+    <span class="hljs-keyword">if</span> problem.is_deterministic:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;function_or_workflow&quot;</span>
+
+    <span class="hljs-keyword">if</span> problem.path_is_known:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;graph_workflow&quot;</span>
+
+    <span class="hljs-keyword">if</span> problem.fits_one_context <span class="hljs-keyword">and</span> problem.needs_one_owner:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;single_agent&quot;</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;consider_multi_agent&quot;</span></code></pre><p>Clearly, this isn&#39;t a universal formula—I’m no AI oracle. But it is enough to avoid the mistake of confusing system complexity with maturity. Believe me, they are not the same thing.</p>
+<p>I’ll put myself in the shoes of a reader who, at this point, is asking:</p>
+<blockquote>
+<p>Okay Mirko, but when do I actually need these systems? When does it make sense to define sub-agents?</p>
+</blockquote>
+<p>Simon Willison tries to answer this question on his blog: sub-agents are valuable primarily because they preserve the main context and absorb token-heavy operations. On the other hand, he warns that it is easy to unnecessarily fragment a task into many specialists (<a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Willison — Subagents</a>).</p>
+<h3 id="an-agent-must-earn-its-place">An agent must earn its place</h3>
+<p>Before complicating your solution with an agentic approach, try to complete this sentence:</p>
+<blockquote>
+<p>&quot;I am introducing an agent now because this component must ____________.&quot;</p>
+</blockquote>
+<p>Plausible responses involve judgment, open-ended planning, dynamic tool usage, exploration, or interaction. If the response is &quot;it must sort a list,&quot; &quot;it must check for duplicates,&quot; or &quot;it must choose a branch by reading a boolean,&quot; you are likely overcomplicating things.</p>
+<p>You know that feeling when you go to the supermarket and buy more than you actually need? That is exactly what I am noticing in the agentic world!</p>
+<p>To be clear, I am not saying that multi-agent systems don&#39;t make sense; I am just putting developers on alert because it is not a solution for everything. However, let&#39;s look at an interesting use case now.</p>
+<h2 id="the-spotify-monolith">The Spotify monolith</h2>
+<p>Let&#39;s go back to our Spotify example. Let&#39;s start with the most natural system. An agent receives the request and has five tools at its disposal:</p>
+<ul>
+<li>interpret the mood;</li>
+<li>search for genres;</li>
+<li>search for songs;</li>
+<li>sort the results;</li>
+<li>generate the playlist.</li>
+</ul>
+<blockquote>
+<p>In the lesson I proposed, this translated into actual code:</p>
+</blockquote>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Here is a nice monolith agent</span>
+
+<span class="hljs-keyword">return</span> Agent(
+    name=<span class="hljs-string">&quot;playlist_monolith&quot;</span>,
+    client=client,
+    system_prompt=SYSTEM_PROMPT,
+    tools=[
+        interpreta_umore,
+        cerca_generi_per_mood,
+        cerca_canzoni_per_genere,
+        ordina_canzoni,
+        genera_playlist,
+    ],
+    max_steps=<span class="hljs-number">8</span>,
+)</code></pre><p>Let&#39;s see what this agent does with a simple diagram:</p>
+<pre class="mermaid">flowchart LR
+    U[Utente] --&gt; A[Playlist Agent]
+
+    A --&gt; T1[Interpreta mood]
+    A --&gt; T2[Cerca generi]
+    A --&gt; T3[Cerca canzoni]
+    A --&gt; T4[Ordina]
+    A --&gt; T5[Crea playlist]
+
+    T1 --&gt; A
+    T2 --&gt; A
+    T3 --&gt; A
+    T4 --&gt; A
+    T5 --&gt; A
+
+    classDef agent fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef tool fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
+    class A agent;
+    class T1,T2,T3,T4,T5 tool;</pre><p>At first glance, everything seems fine. The model reads &quot;tired&quot; and &quot;dancing,&quot; finds two compatible genre families, retrieves the tracks, and builds a playlist.</p>
+<p>Then you shift your focus, and the crack appears.</p>
+<p>In some runs, the agent treats the two signals as independent searches, merges the results, and delivers a playlist containing both party tracks and relaxing tracks without having decided what relationship exists between the current state and the desired state.</p>
+<p>The problem is not that the model failed to interpret the words well. It understood both of them. And it didn&#39;t choose a blatantly wrong tool, either. The failure lies elsewhere: <strong>an important decision remained implicit!</strong> Or rather, it didn&#39;t stop to ask the user, &quot;Okay bro, but what do you actually want? Choose a path, otherwise it&#39;s going to be a bit of a mess!&quot;</p>
+<pre class="mermaid">flowchart LR
+    P[&quot;Sono stanco,&lt;br/&gt;ma voglio ballare&quot;] --&gt; I[Interpreta]
+    I --&gt; S1[stanco → energia bassa]
+    I --&gt; S2[ballare → energia alta]
+    S1 --&gt; C[Unione implicita]
+    S2 --&gt; C
+    C --&gt; O[Playlist formalmente valida,&lt;br/&gt;semanticamente incoerente]
+
+    classDef ok fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+    classDef bad fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
+    class S1,S2 ok;
+    class C,O bad;</pre><p>Okay, let&#39;s focus better on these two different ambiguities that the agent failed to see.</p>
+<h3 id="decision-ambiguity">Decision ambiguity</h3>
+<p>Who determines if the request describes:</p>
+<ul>
+<li>a contradiction to be clarified;</li>
+<li>a transition from low energy to high energy;</li>
+<li>a deliberately hybrid combination?</li>
+</ul>
+<h3 id="acceptance-ambiguity">Acceptance ambiguity</h3>
+<p>Who determines that the produced playlist is coherent enough to be delivered?</p>
+<p>The monolith agent (i.e., one with only tools at its disposal) has a technical stopping condition: <code>max_steps=8</code> and a final tool. What it lacks is an <strong>external definition of done</strong>.</p>
+<p>And this is where you start evaluating multi-agent systems. Not because five tools are too many in absolute terms (or too few—they could still get confused), but because the act of understanding, deciding, executing, and evaluating all coexist in the same decision-making center, which is &quot;the head&quot; of a single agent!</p>
+<h2 id="divide-and-conquer">Divide and conquer</h2>
+<p>Close your eyes and tell me what solution you are thinking of. Okay, open your eyes. I think the natural temptation at this point is to create four agents:</p>
+<pre><code class="hljs language-text">Mood Agent
+Decision Agent
+Search Agent
+Evaluation Agent</code></pre><p>It seems orderly. But how do we manage the architecture, and what order do we set? First, you need to break down the <strong>work</strong>!</p>
+<pre class="mermaid">flowchart LR
+    A[Comprendere la richiesta] --&gt; B[Costruire un piano di ricerca]
+    B --&gt; C[Raccogliere candidati]
+    C --&gt; D[Comporre la playlist]
+    D --&gt; E[Verificare i vincoli]
+    E --&gt; F[Consegnare]</pre><p>Then, for each step, we ask:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+Task(
+    goal=...,
+    inputs=...,
+    outputs=...,
+    tools=...,
+    context=...,
+    side_effects=...,
+    failure_policy=...,
+    verification=...,
+)</code></pre><p>Only then do we decide which component should perform it.</p>
+<p>Interpret intent           → LLM / agent
+Read a boolean             → code
+Search the catalog         → tool or worker
+Sort by energy             → function
+Compose a playlist         → agent, if judgment is required
+Check for duplicates       → function
+Judge coherence            → evaluator, if subjectivity remains</p>
+<p>It is worth establishing this distinction:</p>
+<blockquote>
+<p><strong>Task decomposition and agent decomposition are not the same thing!!</strong></p>
+</blockquote>
+<p>The Microsoft Agent Framework presents agents as potential participants and executors of functional or graph-based workflows (<a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft — Workflows</a>).</p>
+<p>Once we understand what we want, we need to determine who to assign each task to. I believe it is essential that <strong>every node has a clear responsibility</strong>.</p>
+<h2 id="who-decides">Who decides?</h2>
+<p>Once the work is mapped out, we must assign control.</p>
+<p>In my experience, I have seen three patterns that are often confused, or rather, thought of as equivalent: routing, supervisor, and handoff. In reality, they answer different questions!</p>
+<h3 id="routing-do-you-already-know-what-you-want">Routing: do you already know what you want?</h3>
+<blockquote>
+<p><strong>When to use it:</strong> Use routing when the choice of the next step can be traced back to an explicit classification or a well-defined state (a typed field, a threshold, a boolean policy). The LLM simply analyzes the input and extracts the parameters; then, a simple deterministic algorithm in code (e.g., <code>if/else</code>) routes execution to the correct node.</p>
+</blockquote>
+<blockquote>
+<p><strong>When NOT to use it:</strong> If the decision regarding the next step requires dynamically evaluating trade-offs, negotiating between agents, or re-evaluating the strategy based on partial results, use a <strong>Supervisor</strong>.</p>
+</blockquote>
+<p>Routing is the most efficient pattern of all: it maximizes predictability, minimizes latency, and reduces LLM call costs by shifting control logic from the prompt to the application code.</p>
+<p>Take our user who says: <em>«I&#39;m tired, but I want to dance.»</em></p>
+<p>Instead of asking an agent to &quot;decide what to do,&quot; we use a structured extraction schema (<strong>Structured Outputs</strong>):</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PYTHON]</span>
+<span class="hljs-keyword">from</span> pydantic <span class="hljs-keyword">import</span> BaseModel, Field
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Literal</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    current_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Estimated user energy level (1-10)&quot;</span>)
+    desired_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Desired user energy level (1-10)&quot;</span>)
+    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>] = Field(
+        ..., description=<span class="hljs-string">&quot;Maintain state, actively change it (shift), or explore new things&quot;</span>
+    )
+    needs_clarification: <span class="hljs-built_in">bool</span> = Field(
+        ..., description=<span class="hljs-string">&quot;True if the request is too vague or contradictory and requires clarifying questions&quot;</span>
+    )</code></pre><p>Once the LLM has extracted and validated this schema, the next step is decided by a deterministic Python function. There is no need for another generative inference:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># The router is code, pure and simple. 100% deterministic and testable with pytest.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">determine_next_node</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-built_in">str</span>:
+    <span class="hljs-keyword">if</span> profile.needs_clarification:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarifier_agent&quot;</span>
+    <span class="hljs-keyword">if</span> profile.intent == <span class="hljs-string">&quot;shift&quot;</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;energy_transition_planner&quot;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;standard_search_agent&quot;</span></code></pre><pre class="mermaid">flowchart LR
+    U[User Request] --&gt;|1. Structured extraction| M[MoodProfile]
+    M --&gt;|2. Deterministic evaluation| R{needs_clarification?}
+    R --&gt;|Yes| C[Clarifier Agent]
+    R --&gt;|No| P{intent == &#39;shift&#39;?}
+    P --&gt;|Yes| T[Transition Planner]
+    P --&gt;|No| S[Standard Search]
+
+    classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    class M model;
+    class R,P code;</pre><h4 id="why-is-this-approach-formidable">Why is this approach formidable?</h4>
+<ol>
+<li><strong>Zero decision latency</strong>: Calculating the next path takes fractions of a millisecond.</li>
+<li><strong>Ease of testing</strong>: You can write traditional unit tests (<code>pytest</code>) to verify the routing logic across hundreds of user profiles without having to worry about hallucinations or model non-determinism at this stage.</li>
+<li><strong>Less prompt overhead</strong>: Downstream agents receive clean, pre-structured input (<code>MoodProfile</code>), freeing them from having to re-interpret the user&#39;s initial intentions.</li>
+</ol>
+<h3 id="supervisor-the-decision-remains-fluid">Supervisor: the decision remains fluid</h3>
+<blockquote>
+<p><strong>When to use it:</strong> Use a supervisor when the next step cannot be deduced from a deterministic rule and requires <strong>continuous judgment</strong>. The supervisor acts as a &quot;Project Manager&quot; or &quot;Conductor&quot;: it evaluates the current state, dynamically chooses which specialist (worker) to activate, receives the output, updates the state, and decides the next step. It retains global ownership of the context and the conversation.</p>
+</blockquote>
+<blockquote>
+<p><strong>When NOT to use it:</strong> If the sequence of steps is fixed (A -&gt; B -&gt; C) or if the branching choice depends on a known variable (e.g., a boolean in the database), use a deterministic workflow or a code-based Router. This will help you avoid latency, LLM call costs, and unnecessary non-determinism.</p>
+</blockquote>
+<p>In practice, the Supervisor is useful when we need to coordinate various specialist agents whose interactions are not predictable in advance.</p>
+<p>Let&#39;s take our Spotify example:</p>
+<ol>
+<li>The user says: <em>&quot;I&#39;m tired, but I want to dance.&quot;</em></li>
+<li>The <strong>Supervisor</strong> receives the request and decides to consult the <code>Mood Interpreter</code>.</li>
+<li>The <code>Mood Interpreter</code> returns a diagnosis: <em>&quot;The user is fatigued but is looking for an active shift toward high energy.&quot;</em></li>
+<li>The <strong>Supervisor</strong> reads this diagnosis and dynamically decides that the next step is not yet to create the playlist, but to ask the <code>Music Scout</code> to search for transitional genres (e.g., soft Deep House).</li>
+<li>If the <code>Scout</code> returns few results, the <strong>Supervisor</strong> does not fail: it decides to change strategy and activate a second Scout for alternative genres (e.g., rhythmic Funk).</li>
+</ol>
+<p>This dynamic and adaptive flow cannot be easily mapped with a simple <code>if/else</code>.</p>
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    participant U as User
+    participant S as Supervisor
+    participant M as Mood Interpreter
+    participant SC as Music Scout
+    participant C as Curator
+
+    U-&gt;&gt;S: Music request
+    S-&gt;&gt;M: Interpret mood
+    M--&gt;&gt;S: Energy shift
+    S-&gt;&gt;SC: Search for suitable tracks
+    SC--&gt;&gt;S: Candidate tracks
+    S-&gt;&gt;C: Curate and sort
+    C--&gt;&gt;S: Refined playlist
+    S--&gt;&gt;U: Final response</pre><h4 id="why-is-context-ownership-important">Why is Context Ownership important?</h4>
+<p>Unlike a &quot;handoff&quot; (where control passes permanently to another agent and the conversation continues there), in the <strong>Supervisor</strong> pattern, the specialists are &quot;blind&quot; to the global conversation history. They receive only a circumscribed task (<em>context minimization</em>) and return a structured result to the Supervisor.
+This prevents the sub-agents&#39; context from becoming saturated with useless information (noise) and prevents the user from having to interact with different entities, keeping the experience fluid and centralized on the Supervisor.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PSEUDOCODE]</span>
+
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> state.done:
+    <span class="hljs-comment"># The supervisor evaluates the state and decides the next move</span>
+    decision = <span class="hljs-keyword">await</span> supervisor.decide(
+        goal=state.goal,
+        current_state=state.summary, <span class="hljs-comment"># Maintains a clean summary of work done so far</span>
+        available_workers=registry.list_tools(),
+    )
+
+    <span class="hljs-keyword">if</span> decision.is_final:
+        state.done = <span class="hljs-literal">True</span>
+        <span class="hljs-keyword">break</span>
+
+    <span class="hljs-comment"># Delegate the specific task to the chosen specialist</span>
+    worker_output = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task_parameters)
+    
+    <span class="hljs-comment"># Record the outcome in the global state (without passing the entire sub-chat transcript)</span>
+    state.record_step(
+        worker=decision.worker,
+        task=decision.task_parameters,
+        output=worker_output.summary
+    )</code></pre><p>The cost of this pattern is evident: every decision by the Supervisor requires an additional LLM inference (latency and token cost). Therefore, before implementing it, ask yourself this question:</p>
+<blockquote>
+<p><strong>Is there a real negotiation or ambiguity to manage between the steps?</strong></p>
+</blockquote>
+<p>If the answer is no, and the steps are sequential or guided by fixed rules, use <strong>Routing</strong> or a <strong>deterministic graph workflow</strong>.</p>
+<h3 id="handoff-a-conversation-between-agents">Handoff: a conversation between agents</h3>
+<blockquote>
+<p><strong>When to use it:</strong> Use a handoff when, in addition to the work to be performed, the entity owning the dialogue needs to change for the next turn.</p>
+</blockquote>
+<blockquote>
+<p><strong>When not to use it:</strong> If an agent only needs to execute a sub-task and return the result, keep control within the orchestrator and use delegation or an agent as a tool.</p>
+</blockquote>
+<p>In the delegation phase, the manager remains the interlocutor. In a handoff, control passes to the specialist.</p>
+<pre class="mermaid">flowchart TB
+    subgraph H[&quot;Handoff · ownership transferred&quot;]
+        direction LR
+        T[Triage] --&gt;|passes context + ownership| A2[Specialist]
+        A2 --&gt;|responds in subsequent turns| U2([User])
+    end
+
+    subgraph D[&quot;Delegation · ownership retained by Supervisor&quot;]
+        direction LR
+        S1[Supervisor] --&gt;|delegates a circumscribed task| A1[Specialist]
+        A1 -. result .-&gt; S1
+        S1 --&gt;|provides the final response| U1([User])
+    end</pre><pre class="mermaid">classDef triage fill:#F5A623,stroke:#FBBF24,color:#1F2937,stroke-width:2px;
+    classDef owner fill:#1B64F5,stroke:#60A5FA,color:#FFFFFF,stroke-width:2px;
+    classDef specialist fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef user fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    class T triage;
+    class S1 owner;
+    class A1,A2 specialist;
+    class U1,U2 user;
+    style H fill:#101A30,stroke:#F5A623,stroke-width:2px,color:#FDE68A
+    style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE</pre><p>The OpenAI Agents SDK explicitly distinguishes between these two topologies: <em>agents as tools</em>, where the manager retains control, and <em>handoffs</em>, where the specialist takes over the next part of the interaction (<a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — orchestration</a>, <a href="https://openai.github.io/openai-agents-python/handoffs/">handoff</a>).</p>
+<p>You can remember the difference this way:</p>
+<pre><code class="hljs language-text">Delegation → changes who does the work.
+Handoff    → changes who has the control.</code></pre><p>In summary:</p>
+<ul>
+<li><p><strong>Delegation</strong>: The Supervisor assigns a task to a specialist; the specialist executes it and returns a result, but the Supervisor remains the only one communicating with the user. Only the executor of the work changes; control of the conversation (who responds to the next turn) remains with the Supervisor.</p>
+</li>
+<li><p><strong>Handoff</strong>: It is not just the work that passes to the specialist, but also the right/duty to manage subsequent turns of the conversation. From that moment on, the user speaks directly with the specialist, no longer through the Supervisor.</p>
+</li>
+</ul>
+<h4 id="a-handoff-is-a-full-fledged-contract">A handoff is a full-fledged contract</h4>
+<p>In architectural diagrams, a handoff is often dismissed as a simple directional arrow. In reality, however, it represents a true <strong>isolation boundary</strong>.</p>
+<p>To structure a robust handover, we cannot rely on unstructured message exchanges. We must define a formal contract, which can be modeled using Pydantic, for example:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    goal: <span class="hljs-built_in">str</span>
+    reason: <span class="hljs-built_in">str</span>
+    relevant_state: <span class="hljs-built_in">dict</span>
+    constraints: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    artifact_refs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    expected_output: <span class="hljs-built_in">str</span>
+    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">sequenceDiagram
+    autonumber
+    participant T as Triage
+    participant C as Handoff contract
+    participant S as Specialist
+
+    T-&gt;&gt;C: Defines a minimal handover
+    Note over C: Intent&lt;br/&gt;goal · reason&lt;br/&gt;&lt;br/&gt;Required context&lt;br/&gt;relevant_state · artifact_refs&lt;br/&gt;&lt;br/&gt;Operational agreement&lt;br/&gt;constraints · expected_output · return_policy
+    C-&gt;&gt;S: Transfers context + ownership
+    Note right of S: The specialist&lt;br/&gt;manages subsequent turns</pre><p>Formalizing this schema highlights two distinct architectural responsibilities:</p>
+<ol>
+<li><strong>Flow governance (Control Ownership):</strong> Who has the authority to decide which action to take next?</li>
+<li><strong>Context minimization (Information Boundary):</strong> What data actually needs to cross the agent barrier?</li>
+</ol>
+<p>Both LangChain and LangGraph natively support this level of abstraction. LangGraph, for instance, allows you to define independent subgraphs equipped with dedicated state schemas, encapsulating the specialist&#39;s local memory and explicitly mapping only the agreed-upon inputs and outputs (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
+<blockquote>
+<p>The following rule applies when designing a handoff with modern criteria: <strong>avoid passing everything &quot;just in case.&quot;</strong> The receiving agent must have <strong>exclusively</strong> the minimum context necessary to perform its duty, without the computational and cognitive burden of having to reconstruct the entire system history.</p>
+</blockquote>
+<h2 id="sources-and-reading-notes">Sources and reading notes</h2>
+<p>The sources are ordered by function, not by prestige. Engineering posts and official documentation support the system descriptions; practitioners add field experience; 2025 works are used when they introduce concepts that remain central in 2026.</p>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>: A 2024 guide to routing, chaining, parallelization, orchestrator-worker, and evaluator-optimizer patterns, with a recommendation to start with the simplest solution.</li>
+<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Demystifying evals for AI agents</a>: Definitions of tasks, trials, graders, transcripts, outcomes, and evaluation harnesses.</li>
+<li><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness design for long-running application development</a>: Planners, generators, evaluators, and the trade-offs between cost and duration for long-running tasks.</li>
+<li><a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Scaling Managed Agents</a>: Separation of sessions, harnesses, sandboxes, and execution environments.</li>
+<li><a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — How we contain Claude across products</a>: Containment, permissions, and blast radius reduction.</li>
+<li><a href="https://www.anthropic.com/engineering/building-c-compiler">Anthropic — Building a C compiler with a team of parallel Claudes</a>: An experiment involving sixteen agents, a shared environment, and parallel coordination.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic — Effective context engineering for AI agents</a>: Context management, compaction, memory, and subagents.</li>
+<li><a href="https://openai.com/index/harness-engineering/">OpenAI — Harness engineering</a>: Harnesses, testing, observability, and isolated environments for Codex agents.</li>
+<li><a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — The next evolution of the Agents SDK</a>: Evolution of the SDK, sandboxing, and the separation of harnesses from compute.</li>
+<li><a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — Agent orchestration</a>: Differences between LLM-based and code-based orchestration, agents as tools, and handoffs.</li>
+<li><a href="https://openai.github.io/openai-agents-python/handoffs/">OpenAI Agents SDK — Handoffs</a>: Configuration, input, and handoff filtering.</li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft Agent Framework — Workflows</a>: Functional or graph-based workflows, agents as executors, sequential/concurrent orchestrations, checkpoints, and HITL.</li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">Microsoft Agent Framework — Human in the loop</a>: Suspendable requests, approvals, and workflow resumption.</li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — Handoffs</a>: State-driven transitions; in subgraphs, transferred context must be explicitly selected.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — Use subgraphs</a>: Input, output, and state management for subgraphs.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph — Persistence</a>: State persistence and checkpoints.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph — Interrupts</a>: Controlled interruptions and graph resumption.</li>
+<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">Model Context Protocol — specification</a>: A protocol for connecting agents to tools, data, and resources.</li>
+<li><a href="https://a2a-protocol.org/latest/">A2A Protocol — specification</a>: Interoperability and communication between independent agents without requiring shared memory, tools, or proprietary logic.</li>
+<li><a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Simon Willison — Subagents</a>: Practical experience with context isolation and parallelism.</li>
+<li><a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals Skills for Coding Agents</a>: Error taxonomies, traces, and evaluators calibrated with human judgment.</li>
+<li><a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">Jason Liu — Why Cognition does not use multi-agent systems</a>: A practical critique of context loss in multi-agent systems.</li>
+</ul>
+<h3 id="other-useful-reading">Other useful reading</h3>
+<ul>
+<li><a href="https://openai.com/index/open-source-codex-orchestration-symphony/">OpenAI — Symphony</a>: Open-source specification for Codex orchestration.</li>
+<li><a href="https://alignment.anthropic.com/2026/ai-organizations/">Anthropic — AI Organizations</a>: Research on the effectiveness and alignment of agent organizations.</li>
+<li><a href="https://openai.github.io/openai-agents-python/tracing/">OpenAI Agents SDK — Tracing</a>: Execution tracing and observability.</li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/index">LangChain — Multi-agent patterns</a>: Overview of multi-agent patterns supported by the framework.</li>
+</ul>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
+    </span>
+  </footer>
+  <script>
+    const BLOG_LANG_KEY = 'blogLang';
+    const BLOG_THEME_KEY = 'blogTheme';
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/progettare-sistemi-multiagentici-nel-2026-parte-1/index.html";
+    (function() {
+      const body = document.body;
+      const readingProgressBar = document.getElementById('reading-progress-bar');
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
+      const langBtn = document.querySelector('.lang-btn');
+      const tocElement = document.querySelector('.post-toc');
+      const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
+      const tocToggleText = tocElement ? tocElement.querySelector('.post-toc__toggle-text') : null;
+      const tocTitle = tocElement ? tocElement.querySelector('.post-toc__title') : null;
+      const tocLinks = tocElement ? Array.from(tocElement.querySelectorAll('.post-toc__link')) : [];
+      const headingEntries = tocLinks
+        .map((link) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          return target ? { link, target } : null;
+        })
+        .filter(Boolean);
+      const tocLabels = CURRENT_LANG === 'it'
+        ? { title: 'Indice', show: 'Mostra indice', hide: 'Nascondi indice' }
+        : { title: 'Table of contents', show: 'Show table of contents', hide: 'Hide table of contents' };
+      const tableWrappers = Array.from(document.querySelectorAll('.table-wrapper[data-enhanced-table]'));
+      const tableLabels = CURRENT_LANG === 'it'
+        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
+        : { expand: 'Open full view', close: 'Close' };
+      const codeBlocks = Array.from(document.querySelectorAll('.post-body pre:not(.mermaid)'));
+      const inlineNotes = Array.from(document.querySelectorAll('.post-body .inline-note'));
+      const codeCopyLabels = {
+        it: { copy: 'Copia', copied: 'Copiato!' },
+        en: { copy: 'Copy', copied: 'Copied!' },
+      };
+      const codeFileExtensions = {
+        bash: 'sh',
+        shell: 'sh',
+        sh: 'sh',
+        zsh: 'zsh',
+        powershell: 'ps1',
+        python: 'py',
+        py: 'py',
+        javascript: 'js',
+        js: 'js',
+        typescript: 'ts',
+        ts: 'ts',
+        json: 'json',
+        html: 'html',
+        css: 'css',
+        scss: 'scss',
+        sass: 'sass',
+        markdown: 'md',
+        md: 'md',
+        yaml: 'yml',
+        yml: 'yml',
+        toml: 'toml',
+        dockerfile: 'dockerfile',
+        sql: 'sql',
+        c: 'c',
+        cpp: 'cpp',
+        csharp: 'cs',
+        java: 'java',
+        go: 'go',
+        rust: 'rs',
+        r: 'r',
+        swift: 'swift',
+      };
+      let tableOverlay = null;
+      let tableOverlayScroll = null;
+      let tableOverlayClose = null;
+      if (tocTitle) {
+        tocTitle.textContent = tocLabels.title;
+      }
+      if (tocToggleText) {
+        tocToggleText.textContent = tocLabels.title;
+      }
+      let tocCollapsed = false;
+      let tocManualOverride = false;
+      const tocMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 1024px)') : null;
+      function ensureTableOverlay() {
+        if (tableOverlay) {
+          return;
+        }
+        tableOverlay = document.createElement('div');
+        tableOverlay.className = 'table-overlay';
+        tableOverlay.innerHTML =
+          '<div class="table-overlay__content">' +
+          '<button type="button" class="table-overlay__close">' + tableLabels.close + '</button>' +
+          '<div class="table-overlay__scroll"></div>' +
+          '</div>';
+        body.appendChild(tableOverlay);
+        tableOverlayScroll = tableOverlay.querySelector('.table-overlay__scroll');
+        tableOverlayClose = tableOverlay.querySelector('.table-overlay__close');
+        if (tableOverlayClose) {
+          tableOverlayClose.setAttribute('aria-label', tableLabels.close);
+          tableOverlayClose.addEventListener('click', closeTableOverlay);
+        }
+        tableOverlay.addEventListener('click', (event) => {
+          if (event.target === tableOverlay) {
+            closeTableOverlay();
+          }
+        });
+      }
+      function closeTableOverlay() {
+        if (!tableOverlay) {
+          return;
+        }
+        tableOverlay.classList.remove('table-overlay--visible');
+        body.classList.remove('no-scroll');
+        if (tableOverlayScroll) {
+          tableOverlayScroll.innerHTML = '';
+        }
+      }
+      function openTableOverlay(wrapper) {
+        ensureTableOverlay();
+        if (!tableOverlay || !tableOverlayScroll) {
+          return;
+        }
+        tableOverlayScroll.innerHTML = '';
+        const table = wrapper.querySelector('table');
+        if (table) {
+          const clone = table.cloneNode(true);
+          const tableSize = table.dataset.tableSize;
+          if (tableSize) {
+            clone.dataset.tableSize = tableSize;
+          }
+          tableOverlayScroll.appendChild(clone);
+        }
+        tableOverlay.classList.add('table-overlay--visible');
+        body.classList.add('no-scroll');
+        if (tableOverlayClose) {
+          tableOverlayClose.focus();
+        }
+      }
+      function enhanceTables() {
+        if (!tableWrappers.length) {
+          return;
+        }
+        tableWrappers.forEach((wrapper) => {
+          if (wrapper.dataset.enhanced === 'true') {
+            return;
+          }
+          const table = wrapper.querySelector('table');
+          if (!table) {
+            return;
+          }
+          const headerCells = table.querySelectorAll('thead th');
+          const referenceCells = headerCells.length ? headerCells : table.querySelectorAll('tr:first-child > *');
+          const columnCount = referenceCells.length;
+          let tableSize = '';
+          if (columnCount >= 6) {
+            tableSize = 'wide';
+          } else if (columnCount >= 4) {
+            tableSize = 'medium';
+          }
+          if (tableSize) {
+            wrapper.setAttribute('data-table-size', tableSize);
+            table.dataset.tableSize = tableSize;
+          }
+          const expandBtn = document.createElement('button');
+          expandBtn.type = 'button';
+          expandBtn.className = 'table-wrapper__expand';
+          expandBtn.innerHTML = '<span aria-hidden="true">🔍</span> ' + tableLabels.expand;
+          expandBtn.setAttribute('aria-label', tableLabels.expand);
+          expandBtn.addEventListener('click', () => openTableOverlay(wrapper));
+          wrapper.appendChild(expandBtn);
+          wrapper.dataset.enhanced = 'true';
+        });
+      }
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (error) {
+          successful = false;
+        }
+        textarea.remove();
+        return successful;
+      }
+      function showCopyFeedback(button, labels) {
+        if (button._copyTimeout) {
+          clearTimeout(button._copyTimeout);
+        }
+        const labelEl = button.querySelector('.code-copy-btn__text');
+        button.classList.add('code-copy-btn--copied');
+        if (labelEl) {
+          labelEl.textContent = labels.copied;
+        }
+        button._copyTimeout = window.setTimeout(() => {
+          button.classList.remove('code-copy-btn--copied');
+          if (labelEl) {
+            labelEl.textContent = labels.copy;
+          }
+        }, 2000);
+      }
+      function normaliseCodeLanguage(codeElement) {
+        if (!codeElement || !codeElement.classList) {
+          return '';
+        }
+        const languageClass = Array.from(codeElement.classList).find((className) => className.startsWith('language-'));
+        if (!languageClass) {
+          return '';
+        }
+        return languageClass.replace(/^language-/, '').trim().toLowerCase();
+      }
+      function formatCodeLanguageLabel(language) {
+        if (!language) {
+          return 'TEXT';
+        }
+        if (language.length <= 4) {
+          return language.toUpperCase();
+        }
+        return language.charAt(0).toUpperCase() + language.slice(1);
+      }
+      function buildCodeFilename(language) {
+        const extension = codeFileExtensions[language] || (language ? language : 'txt');
+        return 'snippet.' + extension;
+      }
+      function updateReadingProgress() {
+        if (!readingProgressBar) {
+          return;
+        }
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+        );
+        const maxScrollable = Math.max(1, documentHeight - viewportHeight);
+        const progress = Math.min(100, Math.max(0, (scrollTop / maxScrollable) * 100));
+        readingProgressBar.style.width = progress.toFixed(2) + '%';
+      }
+      function closeInlineNotes() {
+        inlineNotes.forEach((note) => {
+          note.classList.remove('inline-note--open');
+          const trigger = note.querySelector('.inline-note__trigger');
+          if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      function initInlineNotes() {
+        if (!inlineNotes.length) {
+          return;
+        }
+        inlineNotes.forEach((note, index) => {
+          const trigger = note.querySelector('.inline-note__trigger');
+          const popup = note.querySelector('.inline-note__popup');
+          if (!trigger || !popup) {
+            return;
+          }
+          const popupId = popup.id || ('inline-note-popup-' + index);
+          popup.id = popupId;
+          trigger.setAttribute('aria-controls', popupId);
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const isOpen = note.classList.contains('inline-note--open');
+            closeInlineNotes();
+            if (!isOpen) {
+              note.classList.add('inline-note--open');
+              trigger.setAttribute('aria-expanded', 'true');
+            }
+          });
+          popup.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
+        });
+        document.addEventListener('click', closeInlineNotes);
+      }
+      function enhanceCodeBlocks() {
+        if (!codeBlocks.length) {
+          return;
+        }
+        const labels = codeCopyLabels[CURRENT_LANG] || codeCopyLabels.en;
+        codeBlocks.forEach((pre) => {
+          if (pre.dataset.copyEnhanced === 'true' || pre.closest('.post-code-card')) {
+            return;
+          }
+          const code = pre.querySelector('code');
+          if (!code) {
+            return;
+          }
+          const language = normaliseCodeLanguage(code);
+          const languageLabel = formatCodeLanguageLabel(language);
+          const filenameLabel = buildCodeFilename(language);
+          const wrapper = document.createElement('div');
+          wrapper.className = 'post-code-card';
+          wrapper.innerHTML =
+            '<div class="post-code-card__language">' + languageLabel + '</div>' +
+            '<div class="post-code-card__frame">' +
+              '<div class="post-code-card__header">' +
+                '<div class="post-code-card__window-controls" aria-hidden="true">' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--red"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--yellow"></span>' +
+                  '<span class="post-code-card__window-dot post-code-card__window-dot--green"></span>' +
+                '</div>' +
+                '<span class="post-code-card__filename">' + filenameLabel + '</span>' +
+              '</div>' +
+              '<div class="post-code-card__body"></div>' +
+            '</div>';
+          const frame = wrapper.querySelector('.post-code-card__frame');
+          const header = wrapper.querySelector('.post-code-card__header');
+          const codeBody = wrapper.querySelector('.post-code-card__body');
+          if (!frame || !header || !codeBody) {
+            return;
+          }
+          pre.parentNode.insertBefore(wrapper, pre);
+          codeBody.appendChild(pre);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', labels.copy);
+          button.innerHTML =
+            '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
+            '<span class="code-copy-btn__text">' + labels.copy + '</span>';
+          button.addEventListener('click', async () => {
+            const text = (code.textContent || '').replace(/s+$/, '');
+            if (!text) {
+              return;
+            }
+            let copied = false;
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(text);
+                copied = true;
+              } catch (error) {
+                copied = false;
+              }
+            }
+            if (!copied) {
+              copied = fallbackCopy(text);
+            }
+            if (copied) {
+              showCopyFeedback(button, labels);
+            }
+          });
+          header.appendChild(button);
+          pre.dataset.copyEnhanced = 'true';
+        });
+      }
+      function setTocCollapsed(collapsed, { manual = false } = {}) {
+        if (!tocElement) {
+          return;
+        }
+        tocCollapsed = Boolean(collapsed);
+        if (manual) {
+          tocManualOverride = true;
+        }
+        tocElement.classList.toggle('post-toc--collapsed', tocCollapsed);
+        tocElement.setAttribute('data-collapsed', tocCollapsed ? 'true' : 'false');
+        if (tocToggle) {
+          tocToggle.setAttribute('aria-expanded', tocCollapsed ? 'false' : 'true');
+          tocToggle.setAttribute('aria-label', tocCollapsed ? tocLabels.show : tocLabels.hide);
+        }
+      }
+      function initToc() {
+        if (!tocElement) {
+          return;
+        }
+        if (tocToggle) {
+          tocToggle.addEventListener('click', () => {
+            setTocCollapsed(!tocCollapsed, { manual: true });
+          });
+        }
+        if (tocMediaQuery) {
+          const handleMediaChange = (event) => {
+            if (tocManualOverride) {
+              return;
+            }
+            setTocCollapsed(event.matches);
+          };
+          if (typeof tocMediaQuery.addEventListener === 'function') {
+            tocMediaQuery.addEventListener('change', handleMediaChange);
+          } else if (typeof tocMediaQuery.addListener === 'function') {
+            tocMediaQuery.addListener(handleMediaChange);
+          }
+          setTocCollapsed(tocMediaQuery.matches);
+        } else {
+          setTocCollapsed(false);
+        }
+      }
+      const storedTheme = (localStorage.getItem(BLOG_THEME_KEY) || '').toLowerCase();
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'));
+      let activeLink = null;
+      let ticking = false;
+      function syncEmbeddedThemes(theme) {
+        document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+          if (frame.contentWindow) {
+            frame.contentWindow.postMessage({ type: 'blog-theme', theme }, window.location.origin);
+          }
+        });
+      }
+      function applyTheme(theme) {
+        const resolved = theme === 'dark' ? 'dark' : 'light';
+        body.setAttribute('data-theme', resolved);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', resolved === 'dark');
+        }
+        if (themeThumb) {
+          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
+        }
+        localStorage.setItem(BLOG_THEME_KEY, resolved);
+        syncEmbeddedThemes(resolved);
+      }
+      function setActive(link) {
+        if (activeLink === link) {
+          return;
+        }
+        if (activeLink) {
+          activeLink.classList.remove('post-toc__link--active');
+        }
+        if (link) {
+          link.classList.add('post-toc__link--active');
+        }
+        activeLink = link;
+      }
+      function updateActiveHeading() {
+        if (!headingEntries.length) {
+          return;
+        }
+        const scrollPosition = window.scrollY + 160;
+        let current = headingEntries[0];
+        for (const item of headingEntries) {
+          if (item.target.offsetTop <= scrollPosition) {
+            current = item;
+          } else {
+            break;
+          }
+        }
+        setActive(current.link);
+      }
+      function onScroll() {
+        if (ticking) {
+          return;
+        }
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          updateReadingProgress();
+          ticking = false;
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeTableOverlay();
+          closeInlineNotes();
+        }
+      });
+      enhanceTables();
+      initInlineNotes();
+      enhanceCodeBlocks();
+      initToc();
+      document.querySelectorAll('iframe[data-sync-theme]').forEach((frame) => {
+        frame.addEventListener('load', () => {
+          syncEmbeddedThemes(body.getAttribute('data-theme') || initialTheme);
+        });
+      });
+      applyTheme(initialTheme);
+      updateReadingProgress();
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          applyTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+      }
+      if (langBtn) {
+        langBtn.textContent = CURRENT_LANG === 'it' ? 'EN' : 'IT';
+        if (OTHER_LANG_LINK) {
+          langBtn.addEventListener('click', () => {
+            localStorage.setItem(BLOG_LANG_KEY, OTHER_LANG);
+            window.location.href = OTHER_LANG_LINK;
+          });
+        } else {
+          langBtn.disabled = true;
+          langBtn.classList.add('lang-btn--disabled');
+        }
+      }
+      localStorage.setItem(BLOG_LANG_KEY, CURRENT_LANG);
+      if (headingEntries.length) {
+        headingEntries.sort((a, b) => a.target.offsetTop - b.target.offsetTop);
+        updateActiveHeading();
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', updateReadingProgress, { passive: true });
+    })();
+  </script>
+</body>
+</html>
