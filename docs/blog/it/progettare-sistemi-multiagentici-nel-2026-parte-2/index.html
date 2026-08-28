@@ -1,945 +1,13 @@
-import path from 'path';
-import { markdownToHtml } from './markdown.js';
-
-function toPosix(input) {
-  return input.split(path.sep).join('/');
-}
-
-function joinUrl(base, ...parts) {
-  const normalisedBase = base ? toPosix(base) : '.';
-  return toPosix(path.posix.join(normalisedBase, ...parts.filter(Boolean)));
-}
-
-function formatDate(date) {
-  if (!date) {
-    return '';
-  }
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toISOString().split('T')[0];
-}
-
-function serializeForScript(value) {
-  return JSON.stringify(value)
-    .replace(/</g, '\\u003c')
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029');
-}
-
-function escapeHtml(value) {
-  if (value == null) {
-    return '';
-  }
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function buildTocTree(headings = []) {
-  const filtered = headings.filter((heading) => heading.level >= 2 && heading.level <= 4);
-  if (!filtered.length) {
-    return [];
-  }
-
-  const root = { level: 1, children: [] };
-  const stack = [root];
-
-  for (const heading of filtered) {
-    const node = { ...heading, children: [] };
-    while (stack.length && stack[stack.length - 1].level >= heading.level) {
-      stack.pop();
-    }
-    const parent = stack[stack.length - 1] ?? root;
-    parent.children.push(node);
-    stack.push(node);
-  }
-
-  assignTocNumbers(root.children, []);
-  return root.children;
-}
-
-function assignTocNumbers(nodes, prefix) {
-  nodes.forEach((node, index) => {
-    const parts = [...prefix, index + 1];
-    node.number = parts.join('.');
-    if (node.children?.length) {
-      assignTocNumbers(node.children, parts);
-    }
-  });
-}
-
-function renderTocList(nodes, isRoot = true, showNumbers = true) {
-  if (!nodes?.length) {
-    return '';
-  }
-
-  const listClass = isRoot ? 'post-toc__list' : 'post-toc__list post-toc__sublist';
-  return `<ul class="${listClass}">
-    ${nodes
-      .map((node) => {
-        const childHtml = renderTocList(node.children, false, showNumbers);
-        const depth = Math.max(0, node.level - 2);
-        return `<li class="post-toc__item" data-depth="${depth}">
-          <a class="post-toc__link" href="#${node.id}">
-            ${showNumbers ? `<span class="post-toc__number">${escapeHtml(node.number ?? '')}</span>` : ''}
-            <span class="post-toc__text">${escapeHtml(node.text)}</span>
-          </a>
-          ${childHtml}
-        </li>`;
-      })
-      .join('')}
-  </ul>`;
-}
-
-const sharedStyles = `
-  :root {
-    color-scheme: light dark;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height: 1.6;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg, #0f172a);
-    color: #0f172a;
-  }
-  @media (prefers-color-scheme: dark) {
-    body {
-      color: #e2e8f0;
-    }
-  }
-  .page {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 4rem;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-  }
-  header nav a {
-    margin-left: 1rem;
-    text-decoration: none;
-    font-weight: 500;
-    color: inherit;
-  }
-  header nav a:hover {
-    text-decoration: underline;
-  }
-`;
-
-export function renderBlogIndex({ posts, relativeRoot }) {
-  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
-  const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
-  const visiblePosts = posts.filter((post) => !post.meta?.hiddenFromIndex);
-  const postsPayload = visiblePosts.map((post) => {
-    const languages = {};
-    for (const [lang, langData] of Object.entries(post.languages)) {
-      languages[lang] = {
-        title: langData.title,
-        summary: langData.summary,
-        link: joinUrl('.', lang, post.slug, 'index.html'),
-      };
-    }
-
-    const publishedAt = post.meta?.publishedAt ?? post.updatedAt;
-    return {
-      slug: post.slug,
-      icon: post.meta?.icon ?? '📝',
-      category: post.meta?.category ?? 'General',
-      categoryLabels: post.meta?.categoryLabels ?? { it: 'Generale', en: 'General' },
-      readTime: post.meta?.readTime ?? 1,
-      readTimes: post.meta?.readTimes ?? {},
-      publishedAt: publishedAt.toISOString(),
-      timestamp: publishedAt.getTime(),
-      languages,
-    };
-  });
-
-  const serializedPosts = serializeForScript(postsPayload);
-  const homeLink = joinUrl(relativeRoot, 'index.html');
-  const currentYear = new Date().getFullYear();
-  const baseUrl = 'https://rkomi98.github.io/MyBlog';
-  const canonicalUrl = `${baseUrl}/blog/index.html`;
-
-  return `<!DOCTYPE html>
-<html lang="it">
+<!DOCTYPE html>
+<html lang="it" translate="no">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Blog | Mirko Calcaterra</title>
-  <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
-  <meta name="keywords" content="Mirko Calcaterra, Blog, AI, Data Engineering, Geoinformatica, GeoAI, FRIA, AI Act, Python, Deep Learning">
-  <link rel="canonical" href="${canonicalUrl}">
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-9EVQ8G9W48');
-  </script>
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="blog">
-  <meta property="og:url" content="${canonicalUrl}">
-  <meta property="og:title" content="Blog | Mirko Calcaterra">
-  <meta property="og:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="og:image" content="${baseUrl}/Assets/Logo.png">
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary">
-  <meta property="twitter:title" content="Blog | Mirko Calcaterra">
-  <meta property="twitter:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="twitter:image" content="${baseUrl}/Assets/Logo.png">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "Mirko Calcaterra Blog",
-    "url": "${canonicalUrl}",
-    "description": "Blog tecnico su AI e Geoinformatica",
-    "publisher": {
-      "@type": "Person",
-      "name": "Mirko Calcaterra"
-    }
-  }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      position: relative;
-      font-family: 'Charter', Georgia, serif;
-      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
-      color: var(--text-primary);
-      transition: background 0.3s ease, color 0.3s ease;
-      --bg-primary: #0b1120;
-      --bg-secondary: #0f172a;
-      --bg-card: rgba(15, 23, 42, 0.84);
-      --border: rgba(148, 163, 184, 0.2);
-      --text-primary: #e2e8f0;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --accent: #10b981;
-      --accent-strong: #34d399;
-      --shadow-lg: 0 24px 45px -32px rgba(2, 6, 23, 0.85);
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
-    }
-    body > * {
-      position: relative;
-      z-index: 1;
-    }
-    body[data-theme="light"] {
-      --bg-primary: #f6f8f7;
-      --bg-secondary: #ffffff;
-      --bg-card: rgba(255, 255, 255, 0.96);
-      --border: rgba(148, 163, 184, 0.18);
-      --text-primary: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #64748b;
-      --accent: #059669;
-      --accent-strong: #047857;
-      --shadow-lg: 0 24px 45px -30px rgba(15, 23, 42, 0.14);
-      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
-    }
-    .site-header__inner,
-    .header-controls,
-    .lang-btn,
-    .theme-toggle,
-    .filters,
-    .filter label,
-    .filter select,
-    .post-card-meta,
-    .post-card-footer,
-    footer {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .hero h1,
-    .post-card-title {
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    header.site-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(14px);
-      background: rgba(15, 23, 42, 0.85);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.3s ease;
-    }
-    body[data-theme="light"] header.site-header {
-      background: rgba(248, 250, 252, 0.9);
-    }
-    .site-header__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1.2rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 1.05rem;
-      letter-spacing: 0.01em;
-    }
-    .logo-img {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      object-fit: cover;
-      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
-    }
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .lang-btn {
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text-primary);
-      padding: 0.45rem 0.9rem;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
-    }
-    .lang-btn:hover {
-      background: var(--accent);
-      color: #ffffff;
-      transform: translateY(-1px);
-      border-color: transparent;
-    }
-    .theme-toggle {
-      position: relative;
-      width: 52px;
-      height: 28px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      cursor: pointer;
-      padding: 0;
-      transition: background 0.3s ease, border 0.3s ease;
-      display: flex;
-      align-items: center;
-    }
-    .theme-toggle .theme-thumb {
-      position: absolute;
-      top: 50%;
-      left: 4px;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      color: #1f2937;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
-      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
-    }
-    body[data-theme="dark"] .theme-toggle .theme-thumb {
-      transform: translate(20px, -50%);
-      background: #1f2937;
-      color: #f8fafc;
-    }
-    body[data-theme="dark"] .theme-toggle {
-      background: rgba(16, 185, 129, 0.18);
-      border-color: rgba(16, 185, 129, 0.35);
-    }
-    main.page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 3.5rem 2rem 4rem;
-    }
-    .hero {
-      margin-bottom: 2.5rem;
-    }
-    .hero h1 {
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      margin: 0 0 1rem;
-      letter-spacing: -0.02em;
-    }
-    .hero p {
-      margin: 0;
-      max-width: 720px;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.7;
-    }
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-    .filter {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      min-width: 220px;
-    }
-    .filter label {
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-    .filter select {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 0.65rem 0.9rem;
-      color: var(--text-primary);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s ease, box-shadow 0.2s ease;
-    }
-    .filter select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
-    }
-    .posts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-    }
-    .post-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .post-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 32px 60px -40px rgba(15, 23, 42, 0.95);
-    }
-    .post-card-hero {
-      height: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .post-card-icon {
-      font-size: 2.8rem;
-      filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.45));
-    }
-    .post-card-body {
-      padding: 1.8rem 1.8rem 1.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-      flex: 1;
-    }
-    .post-card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 0.92rem;
-    }
-    .post-card-category {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      background: rgba(16, 185, 129, 0.16);
-      color: var(--accent);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    body[data-theme="light"] .post-card-category {
-      background: rgba(5, 150, 105, 0.12);
-    }
-    .post-card-date {
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .post-card-title {
-      margin: 0;
-      font-size: 1.35rem;
-      line-height: 1.3;
-      color: var(--text-primary);
-    }
-    .post-card-summary {
-      margin: 0;
-      color: var(--text-secondary);
-      font-size: 1rem;
-      line-height: 1.65;
-    }
-    .post-card-footer {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-    }
-    .post-card-link {
-      font-weight: 600;
-      color: var(--accent);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-    .post-card-link:hover {
-      color: var(--accent-strong);
-      transform: translateX(2px);
-    }
-    .no-results {
-      text-align: center;
-      margin-top: 3rem;
-      color: var(--text-muted);
-      font-size: 1rem;
-      display: none;
-    }
-    footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      border-top: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.35);
-    }
-    body[data-theme="light"] footer {
-      background: rgba(255, 255, 255, 0.72);
-    }
-    @media (max-width: 768px) {
-      .site-header__inner {
-        padding: 1rem 1.5rem;
-      }
-      main.page {
-        padding: 2.75rem 1.5rem 3.25rem;
-      }
-      .filters {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .filter {
-        width: 100%;
-      }
-      .post-card-body {
-        padding: 1.6rem 1.6rem 1.4rem;
-      }
-      .post-card-hero {
-        height: 120px;
-      }
-    }
-  </style>
-</head>
-<body data-theme="dark">
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a class="logo" href="${homeLink}">
-        <picture>
-          <source srcset="${logoWebpPath}" type="image/webp">
-          <source srcset="${logoPath}" type="image/png">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img" width="40" height="40">
-        </picture>
-        <span class="logo-text">Mirko Calcaterra</span>
-      </a>
-      <div class="header-controls">
-        <button class="lang-btn" type="button">EN</button>
-        <button class="theme-toggle" type="button" aria-label="Toggle theme">
-          <span class="theme-thumb">☀️</span>
-        </button>
-      </div>
-    </div>
-  </header>
-  <main class="page">
-    <section class="hero">
-      <h1 data-it="Il mio blog tecnico" data-en="My technical blog">Il mio blog tecnico</h1>
-      <p data-it="Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software."
-         data-en="Deep dives, case studies, and experiments on AI, Data Engineering, and modern software development.">
-         Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software.
-      </p>
-    </section>
-    <section class="filters" aria-label="Blog controls">
-      <div class="filter">
-        <label for="category-filter" data-it="Filtra per categoria" data-en="Filter by category">Filtra per categoria</label>
-        <select id="category-filter">
-          <option value="all" data-it="Tutte" data-en="All">Tutte</option>
-        </select>
-      </div>
-      <div class="filter">
-        <label for="sort-order" data-it="Ordina per data" data-en="Sort by date">Ordina per data</label>
-        <select id="sort-order">
-          <option value="desc" data-it="Più recenti" data-en="Newest first">Più recenti</option>
-          <option value="asc" data-it="Meno recenti" data-en="Oldest first">Meno recenti</option>
-        </select>
-      </div>
-    </section>
-    <section aria-live="polite">
-      <div id="posts-grid" class="posts-grid"></div>
-      <p id="no-results" class="no-results" data-it="Nessun articolo trovato." data-en="No articles found.">Nessun articolo trovato.</p>
-    </section>
-  </main>
-  <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
-    </span>
-  </footer>
-  <script>
-    const POSTS_DATA = ${serializedPosts};
-    (function() {
-      const gradients = [
-        'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-        'linear-gradient(135deg, #f97316 0%, #fb7185 100%)',
-        'linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%)',
-        'linear-gradient(135deg, #f472b6 0%, #c084fc 100%)'
-      ];
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const storedTheme = (localStorage.getItem('blogTheme') || '').toLowerCase();
-      const storedLang = (localStorage.getItem('blogLang') || '').toLowerCase();
-      const state = {
-        lang: storedLang === 'en' ? 'en' : 'it',
-        theme: storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light')),
-        category: 'all',
-        sort: 'desc'
-      };
-      const elements = {
-        body: document.body,
-        langBtn: document.querySelector('.lang-btn'),
-        themeToggle: document.querySelector('.theme-toggle'),
-        themeThumb: document.querySelector('.theme-toggle .theme-thumb'),
-        categorySelect: document.getElementById('category-filter'),
-        sortSelect: document.getElementById('sort-order'),
-        postsGrid: document.getElementById('posts-grid'),
-        noResults: document.getElementById('no-results')
-      };
-      const categoryEntries = Array.from(
-        POSTS_DATA.reduce((acc, post) => {
-          if (!acc.has(post.category)) {
-            acc.set(post.category, post.categoryLabels || {});
-          }
-          return acc;
-        }, new Map())
-      );
-      function formatDate(isoString) {
-        const date = new Date(isoString);
-        if (Number.isNaN(date.valueOf())) {
-          return '';
-        }
-        const formatter = state.lang === 'it'
-          ? new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
-          : new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-        return formatter.format(date);
-      }
-      function applyTheme(theme) {
-        state.theme = theme === 'dark' ? 'dark' : 'light';
-        elements.body.setAttribute('data-theme', state.theme);
-        if (elements.themeToggle) {
-          elements.themeToggle.classList.toggle('active', state.theme === 'dark');
-        }
-        if (elements.themeThumb) {
-          elements.themeThumb.textContent = state.theme === 'dark' ? '🌙' : '☀️';
-        }
-        localStorage.setItem('blogTheme', state.theme);
-      }
-      function updateTexts() {
-        document.querySelectorAll('[data-it][data-en]').forEach((node) => {
-          const value = node.getAttribute(state.lang === 'it' ? 'data-it' : 'data-en');
-          if (value !== null) {
-            node.textContent = value;
-          }
-        });
-        if (elements.langBtn) {
-          elements.langBtn.textContent = state.lang === 'it' ? 'EN' : 'IT';
-        }
-      }
-      function populateCategoryOptions() {
-        if (!elements.categorySelect) {
-          return;
-        }
-        const currentValue = state.category;
-        elements.categorySelect.innerHTML = '';
-        const allOption = document.createElement('option');
-        allOption.value = 'all';
-        allOption.setAttribute('data-it', 'Tutte');
-        allOption.setAttribute('data-en', 'All');
-        elements.categorySelect.appendChild(allOption);
-        categoryEntries.forEach(([value, labels]) => {
-          const option = document.createElement('option');
-          option.value = value;
-          option.setAttribute('data-it', labels.it || value);
-          option.setAttribute('data-en', labels.en || value);
-          elements.categorySelect.appendChild(option);
-        });
-        const availableValues = new Set(['all', ...categoryEntries.map(([value]) => value)]);
-        if (availableValues.has(currentValue)) {
-          elements.categorySelect.value = currentValue;
-        } else {
-          elements.categorySelect.value = 'all';
-          state.category = 'all';
-        }
-      }
-      function renderPosts() {
-        if (!elements.postsGrid) {
-          return;
-        }
-        const posts = POSTS_DATA.filter((post) => state.category === 'all' || post.category === state.category)
-          .sort((a, b) => {
-            if (state.sort === 'asc') {
-              return a.timestamp - b.timestamp;
-            }
-            return b.timestamp - a.timestamp;
-          });
-        elements.postsGrid.innerHTML = '';
-        if (!posts.length) {
-          if (elements.noResults) {
-            elements.noResults.style.display = 'block';
-          }
-          return;
-        }
-        if (elements.noResults) {
-          elements.noResults.style.display = 'none';
-        }
-        const fragment = document.createDocumentFragment();
-        posts.forEach((post, index) => {
-          const card = document.createElement('article');
-          card.className = 'post-card';
-          card.setAttribute('data-category', post.category);
-          const hero = document.createElement('div');
-          hero.className = 'post-card-hero';
-          hero.style.background = gradients[index % gradients.length];
-          const icon = document.createElement('div');
-          icon.className = 'post-card-icon';
-          icon.textContent = post.icon || '📝';
-          hero.appendChild(icon);
-          card.appendChild(hero);
-          const body = document.createElement('div');
-          body.className = 'post-card-body';
-          const metaRow = document.createElement('div');
-          metaRow.className = 'post-card-meta';
-          const categoryChip = document.createElement('span');
-          categoryChip.className = 'post-card-category';
-          const categoryLabel = (post.categoryLabels && post.categoryLabels[state.lang]) || post.category;
-          categoryChip.textContent = categoryLabel;
-          const dateSpan = document.createElement('span');
-          dateSpan.className = 'post-card-date';
-          dateSpan.textContent = formatDate(post.publishedAt);
-          metaRow.appendChild(categoryChip);
-          metaRow.appendChild(dateSpan);
-          body.appendChild(metaRow);
-          const titleEl = document.createElement('h3');
-          titleEl.className = 'post-card-title';
-          titleEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].title) ||
-            (post.languages.it && post.languages.it.title) ||
-            (post.languages.en && post.languages.en.title) ||
-            '';
-          body.appendChild(titleEl);
-          const summaryEl = document.createElement('p');
-          summaryEl.className = 'post-card-summary';
-          summaryEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].summary) ||
-            (post.languages.it && post.languages.it.summary) ||
-            (post.languages.en && post.languages.en.summary) ||
-            '';
-          body.appendChild(summaryEl);
-          const footerRow = document.createElement('div');
-          footerRow.className = 'post-card-footer';
-          const readSpan = document.createElement('span');
-          readSpan.className = 'post-card-readtime';
-          const readTime = (post.readTimes && post.readTimes[state.lang]) || post.readTime;
-          readSpan.textContent = '⏱️ ' + readTime + ' min';
-          const linkEl = document.createElement('a');
-          linkEl.className = 'post-card-link';
-          const fallbackLink = (post.languages.it && post.languages.it.link) || (post.languages.en && post.languages.en.link) || '#';
-          linkEl.href = (post.languages[state.lang] && post.languages[state.lang].link) || fallbackLink;
-          linkEl.textContent = state.lang === 'it' ? 'Leggi di più →' : 'Read more →';
-          footerRow.appendChild(readSpan);
-          footerRow.appendChild(linkEl);
-          body.appendChild(footerRow);
-          card.appendChild(body);
-          fragment.appendChild(card);
-        });
-        elements.postsGrid.appendChild(fragment);
-      }
-      function applyLanguage(lang) {
-        state.lang = lang === 'en' ? 'en' : 'it';
-        document.documentElement.setAttribute('lang', state.lang);
-        localStorage.setItem('blogLang', state.lang);
-        updateTexts();
-        renderPosts();
-      }
-      function init() {
-        document.documentElement.setAttribute('lang', state.lang);
-        populateCategoryOptions();
-        updateTexts();
-        applyTheme(state.theme);
-        if (elements.categorySelect) {
-          elements.categorySelect.addEventListener('change', (event) => {
-            state.category = event.target.value;
-            renderPosts();
-          });
-        }
-        if (elements.sortSelect) {
-          elements.sortSelect.value = state.sort;
-          elements.sortSelect.addEventListener('change', (event) => {
-            state.sort = event.target.value === 'asc' ? 'asc' : 'desc';
-            renderPosts();
-          });
-        }
-        if (elements.langBtn) {
-          elements.langBtn.addEventListener('click', () => {
-            applyLanguage(state.lang === 'it' ? 'en' : 'it');
-          });
-        }
-        if (elements.themeToggle) {
-          elements.themeToggle.addEventListener('click', () => {
-            applyTheme(state.theme === 'dark' ? 'light' : 'dark');
-          });
-        }
-        renderPosts();
-      }
-      init();
-    })();
-  </script>
-</body>
-</html>`;
-}
-
-export function renderBlogDetail({
-  post,
-  language,
-  relativeRoot,
-}) {
-  const langData = post.languages[language];
-  if (!langData) {
-    throw new Error(`Language ${language} is not available for ${post.slug}`);
-  }
-
-  const otherLang = language === 'it' ? 'en' : 'it';
-  const otherLangData = post.languages[otherLang];
-  const blogHome = joinUrl(relativeRoot, 'blog', 'index.html');
-  const homeLink = joinUrl(relativeRoot, 'index.html');
-
-  const otherLangLink = otherLangData
-    ? joinUrl(relativeRoot, 'blog', otherLang, post.slug, 'index.html')
-    : null;
-
-  const { html, headings } = markdownToHtml(langData.markdown, { relativeRoot });
-  const cleanedHtml = html.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>/i, '').trim();
-  const contentHtml = cleanedHtml || html;
-
-  const publishedRaw = post.meta?.publishedAt ?? langData.modifiedTime ?? post.updatedAt;
-  const publishedAt = new Date(publishedRaw);
-  const formattedDate = Number.isNaN(publishedAt.valueOf())
-    ? ''
-    : publishedAt.toLocaleDateString(language === 'it' ? 'it-IT' : 'en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
-
-  const readTime =
-    post.meta?.readTimes?.[language] ??
-    post.meta?.readTime ??
-    Math.max(1, Math.round(langData.markdown.split(/\s+/).length / 200));
-  const categoryLabel =
-    post.meta?.categoryLabels?.[language] ??
-    post.meta?.category ??
-    (language === 'it' ? 'Generale' : 'General');
-  const icon = post.meta?.icon ?? '📝';
-
-  const tocTree = buildTocTree(headings);
-  const showTocNumbers = post.meta?.showTocNumbers !== false;
-  const tocListHtml = renderTocList(tocTree, true, showTocNumbers);
-  const tocLabels =
-    language === 'it'
-      ? { title: 'Indice', open: 'Mostra indice', close: 'Nascondi indice' }
-      : { title: 'Table of contents', open: 'Show table of contents', close: 'Hide table of contents' };
-  const tocHtml = tocListHtml
-    ? `<aside class="post-toc" data-collapsed="false">
-        <div class="post-toc__header">
-          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">${tocLabels.title}</div>
-          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="${tocLabels.close}">
-            <span class="post-toc__toggle-text">${tocLabels.title}</span>
-            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
-          </button>
-        </div>
-        <div class="post-toc__content">
-          ${tocListHtml}
-        </div>
-      </aside>`
-    : '';
-  const layoutClass = tocHtml ? 'post-layout' : 'post-layout post-layout--single';
-  const pageTitle = escapeHtml(langData.title);
-  const formattedCategory = escapeHtml(categoryLabel);
-  const formattedDateHtml = escapeHtml(formattedDate);
-  const iconHtml = escapeHtml(icon);
-  const currentYear = new Date().getFullYear();
-  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
-  const authorAvatarPath = joinUrl(relativeRoot, 'Assets', 'profile.webp');
-  
-  const baseUrl = 'https://rkomi98.github.io/MyBlog';
-  // Construct the absolute URL for the current page
-  // We assume the structure: blog/{lang}/{slug}/index.html
-  const pageUrl = `${baseUrl}/blog/${language}/${post.slug}/`;
-  const summary = langData.summary || `Articolo su ${formattedCategory} di Mirko Calcaterra.`;
-  const imageUrl = post.meta?.image ? (post.meta.image.startsWith('http') ? post.meta.image : `${baseUrl}/${post.meta.image}`) : `${baseUrl}/Assets/Logo.png`;
-  const keywords = post.meta?.keywords ? post.meta.keywords : '';
-  const pageScripts = (post.meta?.pageScripts ?? [])
-    .map((scriptPath) => joinUrl(relativeRoot, scriptPath.replace(/^[/]+/, '')))
-    .map((scriptPath) => `<script defer src="${escapeHtml(scriptPath)}"></script>`)
-    .join('\n  ');
-  const pageScriptTags = pageScripts ? `\n  ${pageScripts}` : '';
-
-  return `<!DOCTYPE html>
-<html lang="${language}" ${language === 'en' ? '' : 'translate="no"'}>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle} | Mirko Calcaterra</title>
-  <meta name="description" content="${escapeHtml(summary)}">
-  <meta name="keywords" content="${escapeHtml(keywords)}">
+  <title>Progettare sistemi multiagentici nel 2026 — Parte 2 | Mirko Calcaterra</title>
+  <meta name="description" content="Progettare sistemi multiagentici nel 2026 — Parte 2 Nel primo capitolo abbiamo deciso quando un sistema merita davvero più agenti e chi debba possedere le decisioni. Ora rendiamo quel disegno operativo: distribuiamo ruoli, contesto e controlli senza trasforma…">
+  <meta name="keywords" content="AI agents, multi-agent systems, orchestration, context engineering, evaluation, AI engineering">
   <meta name="author" content="Mirko Calcaterra">
-  <link rel="canonical" href="\${pageUrl}">
+  <link rel="canonical" href="${pageUrl}">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
@@ -953,40 +21,40 @@ export function renderBlogDetail({
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:url" content="${pageUrl}">
-  <meta property="og:title" content="${pageTitle}">
-  <meta property="og:description" content="${escapeHtml(summary)}">
-  <meta property="og:image" content="${imageUrl}">
-  <meta property="article:published_time" content="${publishedAt.toISOString()}">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/it/progettare-sistemi-multiagentici-nel-2026-parte-2/">
+  <meta property="og:title" content="Progettare sistemi multiagentici nel 2026 — Parte 2">
+  <meta property="og:description" content="Progettare sistemi multiagentici nel 2026 — Parte 2 Nel primo capitolo abbiamo deciso quando un sistema merita davvero più agenti e chi debba possedere le decisioni. Ora rendiamo quel disegno operativo: distribuiamo ruoli, contesto e controlli senza trasforma…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-08-21T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
-  <meta property="article:section" content="${formattedCategory}">
+  <meta property="article:section" content="Percorso AI Engineering">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${pageTitle}">
-  <meta property="twitter:description" content="${escapeHtml(summary)}">
-  <meta property="twitter:image" content="${imageUrl}">
+  <meta property="twitter:title" content="Progettare sistemi multiagentici nel 2026 — Parte 2">
+  <meta property="twitter:description" content="Progettare sistemi multiagentici nel 2026 — Parte 2 Nel primo capitolo abbiamo deciso quando un sistema merita davvero più agenti e chi debba possedere le decisioni. Ora rendiamo quel disegno operativo: distribuiamo ruoli, contesto e controlli senza trasforma…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "${pageTitle}",
-    "image": "${imageUrl}",
-    "datePublished": "${publishedAt.toISOString()}",
-    "dateModified": "${(langData.modifiedTime || publishedAt).toISOString()}",
+    "headline": "Progettare sistemi multiagentici nel 2026 — Parte 2",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-08-21T00:00:00.000Z",
+    "dateModified": "2026-08-28T08:49:46.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
-      "url": "${baseUrl}/"
+      "url": "https://rkomi98.github.io/MyBlog/"
     },
     "publisher": {
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "${escapeHtml(summary)}"
+    "description": "Progettare sistemi multiagentici nel 2026 — Parte 2 Nel primo capitolo abbiamo deciso quando un sistema merita davvero più agenti e chi debba possedere le decisioni. Ora rendiamo quel disegno operativo: distribuiamo ruoli, contesto e controlli senza trasforma…"
   }
-  </script>${pageScriptTags}
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2231,8 +1299,8 @@ export function renderBlogDetail({
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
-        displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true,
       },
       options: {
@@ -2357,13 +1425,13 @@ export function renderBlogDetail({
   <header class="site-header">
     <div class="site-header__inner">
       <div class="site-header__left">
-        <a class="logo" href="${homeLink}">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
           <span class="logo-text">Mirko Calcaterra</span>
         </a>
         <nav class="site-nav">
-          <a href="${homeLink}" data-it="Home" data-en="Home">Home</a>
-          <a href="${blogHome}" data-it="Blog" data-en="Blog">Blog</a>
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
         </nav>
       </div>
       <div class="header-controls">
@@ -2377,37 +1445,638 @@ export function renderBlogDetail({
   <main class="page">
     <article class="post">
       <section class="post-hero">
-        <div class="post-hero__icon">${iconHtml}</div>
-        <span class="post-hero__category">${formattedCategory}</span>
-        <h1 class="post-hero__title">${pageTitle}</h1>
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">Percorso AI Engineering</span>
+        <h1 class="post-hero__title">Progettare sistemi multiagentici nel 2026 — Parte 2</h1>
         <div class="post-hero__author">
-          <img class="post-hero__avatar" src="${authorAvatarPath}" alt="Mirko Calcaterra">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">${formattedDateHtml} • ${readTime} min</span>
+            <span class="post-hero__author-meta">21 agosto 2026 • 11 min</span>
           </div>
         </div>
       </section>
-      <section class="${layoutClass}">
-        ${tocHtml}
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Indice</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Nascondi indice">
+            <span class="post-toc__toggle-text">Indice</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#diamo-un-po-di-ruoli">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">Diamo un po&#39; di ruoli</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#chi-fa-cosa">
+            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__text">Chi fa cosa?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#tool-worker-subagent">
+            <span class="post-toc__number">1.1.1</span>
+            <span class="post-toc__text">Tool, worker, subagent</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#parallelismo">
+            <span class="post-toc__number">1.1.2</span>
+            <span class="post-toc__text">Parallelismo</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#chi-sa-cosa">
+            <span class="post-toc__number">1.2</span>
+            <span class="post-toc__text">Chi sa cosa?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#il-paradosso-del-contesto-condiviso">
+            <span class="post-toc__number">1.2.1</span>
+            <span class="post-toc__text">Il paradosso del contesto condiviso</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#stato-memoria-e-artefatti">
+            <span class="post-toc__number">1.3</span>
+            <span class="post-toc__text">Stato, memoria e artefatti</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#conversation-state">
+            <span class="post-toc__number">1.3.1</span>
+            <span class="post-toc__text">Conversation state</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#task-state">
+            <span class="post-toc__number">1.3.2</span>
+            <span class="post-toc__text">Task state</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#local-state">
+            <span class="post-toc__number">1.3.3</span>
+            <span class="post-toc__text">Local state</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#artifact">
+            <span class="post-toc__number">1.3.4</span>
+            <span class="post-toc__text">Artifact</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#chi-controlla">
+            <span class="post-toc__number">1.4</span>
+            <span class="post-toc__text">Chi controlla?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#controlli-deterministici">
+            <span class="post-toc__number">1.5</span>
+            <span class="post-toc__text">Controlli deterministici</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#verifica-nellambiente">
+            <span class="post-toc__number">1.6</span>
+            <span class="post-toc__text">Verifica nell&#39;ambiente</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#valutazione-semantica">
+            <span class="post-toc__number">1.7</span>
+            <span class="post-toc__text">Valutazione semantica</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#un-ciclo-ha-bisogno-di-un-freno">
+            <span class="post-toc__number">1.8</span>
+            <span class="post-toc__text">Un ciclo ha bisogno di un freno</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#evals-il-sistema-va-misurato-intero">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Evals: il sistema va misurato intero</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#non-premiare-un-percorso-rigido">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">Non premiare un percorso rigido</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#il-mondo-va-storto">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Il mondo va storto</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#output-formalmente-invalido">
+            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__text">Output formalmente invalido</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#output-valido-ma-semanticamente-incerto">
+            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__text">Output valido ma semanticamente incerto</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#tool-esterno-non-disponibile">
+            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__text">Tool esterno non disponibile</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#successo-parziale">
+            <span class="post-toc__number">3.4</span>
+            <span class="post-toc__text">Successo parziale</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#idempotenza-e-side-effect">
+            <span class="post-toc__number">3.5</span>
+            <span class="post-toc__text">Idempotenza e side effect</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#blast-radius-e-human-in-the-loop">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Blast radius e human-in-the-loop</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#fonti-e-note-di-lettura">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Fonti e note di lettura</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#altre-letture-utili">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Altre letture utili</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
         <div class="post-body">
-          ${contentHtml}
+          <p>Nel <a href="../../../blog/it/progettare-sistemi-multiagentici-nel-2026-parte-1/">primo capitolo</a> abbiamo deciso quando un sistema merita davvero più agenti e chi debba possedere le decisioni. Ora rendiamo quel disegno operativo: distribuiamo ruoli, contesto e controlli senza trasformare l&#39;orchestrazione in una conversazione indistinta fra modelli.</p>
+<h2 id="diamo-un-po-di-ruoli">Diamo un po&#39; di ruoli</h2>
+<h3 id="chi-fa-cosa">Chi fa cosa?</h3>
+<p>Abbiamo più o meno capito ad alto livello cosa dobbiamo fare e a chi assenare le decisioni in base ai problemi. Resta ora da distribuire il lavoro!</p>
+<h4 id="tool-worker-subagent">Tool, worker, subagent</h4>
+<p>Diamo un po&#39; di definizioni:</p>
+<p>Un <strong>tool</strong> espone una capacità. Non possiede un obiettivo e non decide il passo successivo.</p>
+<p>Un <strong>worker</strong> riceve un compito circoscritto e restituisce un risultato.</p>
+<p>Un <strong>subagent</strong> è un worker con un proprio ciclo di ragionamento, un contesto locale e, spesso, strumenti propri.</p>
+<pre class="mermaid">flowchart TB
+    S[Supervisor]
+    S --&gt; T[&quot;Tool&lt;br/&gt;search_catalog(query)&quot;]
+    S --&gt; W[Worker&lt;br/&gt;esegui task definito]
+    S --&gt; A[Subagent&lt;br/&gt;goal + context + tools + loop]</pre><p>La distinzione serve perché un tool non ha bisogno di una personalità. E un subagent non dovrebbe essere usato per mascherare una funzione che non abbiamo voglia di scrivere.</p>
+<h4 id="parallelismo">Parallelismo</h4>
+<p>Tre ricerche possono lavorare in parallelo soltanto se non dipendono l&#39;una dall&#39;altra.</p>
+<pre class="mermaid">flowchart LR
+    P[Search Plan] --&gt; S1[Scout: electronic]
+    P --&gt; S2[Scout: indie dance]
+    P --&gt; S3[Scout: funk]
+    S1 --&gt; A[Aggregator]
+    S2 --&gt; A
+    S3 --&gt; A</pre><pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+results = <span class="hljs-keyword">await</span> asyncio.gather(
+    scout.run(SearchTask(genre=<span class="hljs-string">&quot;electronic&quot;</span>, ...)),
+    scout.run(SearchTask(genre=<span class="hljs-string">&quot;indie-dance&quot;</span>, ...)),
+    scout.run(SearchTask(genre=<span class="hljs-string">&quot;funk&quot;</span>, ...)),
+)
+
+candidates = aggregate(results)</code></pre><p>Lo scorso febbraio Anthropic ha raccontato un esperimento con sedici agenti Claude che lavoravano in parallelo su un compilatore C. Qui si può vedere un esempio in cui task lock, repository condiviso e test hanno permesso di dividere il lavoro. Penso sia inutile che lo dica, ma se leggete l&#39;articolo sono riportati anche merge conflict frequenti, circa 2.000 sessioni e quasi 20.000 dollari di costo (<a href="https://www.anthropic.com/engineering/building-c-compiler">Anthropic — C compiler</a>)!</p>
+<p>La domanda che dovrebbe sorgere ora è:</p>
+<blockquote>
+<p><strong>Quale struttura del problema ha reso possibile farli lavorare senza calpestarsi?</strong></p>
+</blockquote>
+<p>Il mio caro Simon Willison scrive sull&#39;articolo che ho menzionato prima, che il parallelismo aiuta quando i file o i sottocompiti sono indipendenti; i subagent restano soprattutto un meccanismo per proteggere il contesto principale e confinare operazioni verbose (<a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Willison — Subagents</a>)!</p>
+<h3 id="chi-sa-cosa">Chi sa cosa?</h3>
+<p>Qui arriviamo al trend che nel 2026 ha scavalcato il tema del prompt engineering: il <strong>context engineering</strong>.</p>
+<p>L&#39;ho detto prima, un errore classico, almeno all&#39;inizio, consiste nel dare a ogni agente l&#39;intera conversazione, l&#39;intero stato e tutti gli strumenti. Per quanto sembri sensato, specialmente con modelli che gestiscono contesti incredibili, in realtà sposta il problema: invece di rischiare che manchi un&#39;informazione, costringiamo ogni componente a distinguere ciò che conta da una massa di dettagli che non gli appartengono.</p>
+<pre class="mermaid">flowchart TD
+    GS[(Global State)] --&gt; S[Supervisor context]
+    S --&gt;|subset| A[Scout context]
+    S --&gt;|subset| B[Curator context]
+    S --&gt;|subset| C[Verifier context]
+
+    A --&gt;|summary + artifact ref| S
+    B --&gt;|playlist artifact| S
+    C --&gt;|verdict| S
+
+    classDef root fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    class GS,S root;</pre><p>Nel nostro esempio:</p>
+<pre><code class="hljs language-text">SUPERVISOR
+──────────
+richiesta utente
+MoodProfile
+piano corrente
+riepiloghi dei worker
+failure globali
+
+SCOUT
+──────────
+SearchTask
+range energetico
+generi esclusi
+catalog tools
+
+CURATOR
+──────────
+PlaylistRequest
+CandidateSet
+criteri di composizione
+
+VERIFIER
+──────────
+playlist prodotta
+vincoli
+rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficiente» (abbastanza cacofonico in italiano, n.d.r.) significa riconoscere che il contesto è una forma di <strong>memoria di lavoro</strong>: limitata, costosa e sensibile al rumore.</p>
+<p>Anthropic ha formalizzato questa idea nel 2025 parlando di context engineering: selezionare, mantenere e aggiornare l&#39;insieme di token che massimizza la probabilità del comportamento desiderato (<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic — Context engineering</a>). Nel resto dell&#39;articolo applicheremo questo principio a subagent, sessioni persistenti, artefatti e harness long-running.</p>
+<h4 id="il-paradosso-del-contesto-condiviso">Il paradosso del contesto condiviso</h4>
+<p>Passare poco contesto produce omissioni. Passarne troppo produce interferenza.</p>
+<p>Jason Liu, raccontando la posizione di Cognition sui sistemi multiagentici per il coding, usa l&#39;immagine del telefono senza fili: ogni passaggio può perdere decisioni implicite e produrre componenti incompatibili. Per quanto sia vecchiotto come articolo (ha un anno esatto), rimane però una delle formulazioni più nitide del rischio di context loss fra agenti (<a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">Jason Liu — Cognition e multi-agent</a>).</p>
+<p>Attenzione però, i worker paralleli possono comunque prendere decisioni incompatibili, e il contesto globale può diventare troppo grande.</p>
+<p>La soluzione matura per gestirli è una rigorosa <strong>architettura dei dati</strong> che renda espliciti quattro confini:</p>
+<ul>
+<li><strong>Lo stato condiviso (Shared State):</strong> l&#39;unica sorgente di verità comune e validata a cui tutti i nodi abilitati possono attingere.</li>
+<li><strong>Le decisioni-contratto (Contracts):</strong> i passaggi chiave strutturati (es. schemi Pydantic) che vincolano e normano i passaggi di consegna fra agenti.</li>
+<li><strong>Le informazioni locali (Private State):</strong> tutto ciò che serve allo specialista per elaborare il task (es. log grezzi, bozze temporanee) e che non deve inquinare la memoria globale.</li>
+<li><strong>I formati di risalita (Upstream schemas):</strong> lo schema rigido e tipizzato con cui i risultati dei sotto-task vengono aggregati e riportati al supervisor.</li>
+</ul>
+<p>Applicati al nostro esempio, i quattro confini disegnano un flusso preciso: lo stato condiviso è l&#39;unica cosa che entra ed esce validata dal centro, i contratti scendono verso gli specialisti, lo stato privato resta chiuso in ciascun worker, e solo uno schema di risalita tipizzato torna al supervisor.</p>
+<pre class="mermaid">flowchart TD
+    subgraph LEG[&quot;Legenda&quot;]
+        direction LR
+        L1[Shared State]:::shared
+        L2[Contract]:::contract
+        L3[Private State]:::private
+        L4[Upstream schema]:::upstream
+    end
+
+    GS[(Global State&lt;br/&gt;validato)]:::shared
+    SUP{{Supervisor}}:::supervisor
+
+    GS --&gt;|letto da tutti i nodi| SUP
+    SUP --&gt;|scrive stato validato| GS
+
+    SUP --&gt;|&quot;Contract: SearchTask&quot;| SCOUT[Scout]:::worker
+    SUP --&gt;|&quot;Contract: PlaylistRequest&quot;| CUR[Curator]:::worker
+    SUP --&gt;|&quot;Contract: EvalRequest&quot;| VER[Verifier]:::worker
+
+    SCOUT -.-&gt;|log grezzi, bozze| PS1[(scratch)]:::private
+    CUR -.-&gt;|bozze temporanee| PS2[(scratch)]:::private
+    VER -.-&gt;|note di verifica| PS3[(scratch)]:::private
+
+    SCOUT ==&gt;|&quot;Upstream: CandidateSet&quot;| SUP
+    CUR ==&gt;|&quot;Upstream: PlaylistDraft&quot;| SUP
+    VER ==&gt;|&quot;Upstream: Verdict&quot;| SUP
+
+    classDef shared fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef supervisor fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    classDef worker fill:#7C3AED,stroke:#A78BFA,color:#fff,stroke-width:2px;
+    classDef private fill:#ECEFF2,stroke:#818282,color:#0D1F2E,stroke-dasharray: 3 3;
+    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    classDef upstream fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+
+    linkStyle 0,1 stroke:#1B64F5,stroke-width:2px;
+    linkStyle 2,3,4 stroke:#C8902B,stroke-width:2px;
+    linkStyle 5,6,7 stroke:#818282,stroke-width:1.5px;
+    linkStyle 8,9,10 stroke:#2E8B6B,stroke-width:2.5px;</pre><p>Le frecce piene d&#39;oro sono i contratti che scendono, quelle tratteggiate grigie restano confinate al worker che le genera, quelle verdi spesse sono l&#39;unico canale con cui un risultato torna a monte.</p>
+<h3 id="stato-memoria-e-artefatti">Stato, memoria e artefatti</h3>
+<p>Nel linguaggio degli agenti, la parola <em>memory</em> l&#39;ho sentita per indicare troppe cose. Fermiamoci un attimo e facciamo chiarezza.</p>
+<h4 id="conversation-state">Conversation state</h4>
+<p>È ciò che serve a mantenere continuità nell&#39;interazione: messaggi, turni, identità dell&#39;agente attivo, richieste pendenti.</p>
+<h4 id="task-state">Task state</h4>
+<p>È lo stato operativo del lavoro:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">WorkflowState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    request: PlaylistRequest
+    search_plan: SearchPlan | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
+    candidate_artifacts: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>] = []
+    playlist_artifact: <span class="hljs-built_in">str</span> | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
+    verification: VerificationResult | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
+    retries: <span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">int</span>] = {}
+    status: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;running&quot;</span>, <span class="hljs-string">&quot;waiting&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>, <span class="hljs-string">&quot;done&quot;</span>] = <span class="hljs-string">&quot;running&quot;</span></code></pre><h4 id="local-state">Local state</h4>
+<p>È ciò che appartiene a uno specialista e non deve per forza risalire:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScoutLocalState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    attempted_queries: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    visited_track_ids: <span class="hljs-built_in">set</span>[<span class="hljs-built_in">str</span>]
+    raw_tool_outputs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</code></pre><h4 id="artifact">Artifact</h4>
+<p>È un prodotto persistente del lavoro: file, report, patch, tabella, playlist, dataset, piano.</p>
+<p>Quando l&#39;output è grande, passare un riferimento è spesso più sano che reiniettare tutto nel prompt.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">return</span> WorkerResult(
+    summary=<span class="hljs-string">&quot;Trovati 84 candidati, 61 dopo i filtri.&quot;</span>,
+    artifact_ref=<span class="hljs-string">&quot;artifacts/run-284/candidate_set.json&quot;</span>,
+    warnings=[<span class="hljs-string">&quot;catalogo funk poco coperto&quot;</span>],
+)</code></pre><pre class="mermaid">flowchart LR
+    S[Scout] --&gt; A[(candidate_set.json)]
+    S --&gt; R[Summary]
+    A --&gt; C[Curator]
+    R --&gt; SUP[Supervisor]
+    SUP --&gt; C</pre><p>L&#39;artefatto conserva fedeltà. Il riepilogo conserva spazio nel contesto.</p>
+<p>È un equilibrio molto più solido del tentativo di trasformare ogni passaggio in un messaggio sempre più lungo.</p>
+<h3 id="chi-controlla">Chi controlla?</h3>
+<p>Fin qui abbiamo distribuito il lavoro. Ora dobbiamo evitare che il sistema confonda «ho prodotto qualcosa» con «ho finito».</p>
+<p>La verifica moderna ha almeno tre strati.</p>
+<pre class="mermaid">flowchart TD
+    A[Artifact] --&gt; D[Deterministic checks]
+    D --&gt;|pass| E[Environmental verification]
+    E --&gt;|pass| J[Semantic evaluator]
+    J --&gt;|pass| O[Accepted]
+
+    D --&gt;|fail| F[Feedback]
+    E --&gt;|fail| F
+    J --&gt;|fail| F
+    F --&gt; G[Generator / Curator]
+
+    classDef hard fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+    classDef soft fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    class D,E hard;
+    class J soft;</pre><h3 id="controlli-deterministici">Controlli deterministici</h3>
+<p>Se una proprietà si può verificare in Python, non serve chiedere a un LLM.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">hard_checks</span>(<span class="hljs-params">playlist: Playlist, request: PlaylistRequest</span>) -&gt; CheckResult:
+    errors = []
+
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(playlist.track_ids) != <span class="hljs-built_in">len</span>(<span class="hljs-built_in">set</span>(playlist.track_ids)):
+        errors.append(<span class="hljs-string">&quot;duplicate_tracks&quot;</span>)
+
+    forbidden = <span class="hljs-built_in">set</span>(request.excluded_genres)
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">any</span>(track.genre <span class="hljs-keyword">in</span> forbidden <span class="hljs-keyword">for</span> track <span class="hljs-keyword">in</span> playlist.tracks):
+        errors.append(<span class="hljs-string">&quot;excluded_genre&quot;</span>)
+
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> energy_curve_matches(
+        playlist.tracks,
+        start=request.current_energy,
+        target=request.desired_energy,
+    ):
+        errors.append(<span class="hljs-string">&quot;energy_curve&quot;</span>)
+
+    <span class="hljs-keyword">return</span> CheckResult(passed=<span class="hljs-keyword">not</span> errors, errors=errors)</code></pre><h3 id="verifica-nellambiente">Verifica nell&#39;ambiente</h3>
+<p>Un agente può dire di aver creato una playlist. La domanda è se la playlist esista davvero nel sistema esterno.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
+
+playlist_id = spotify.create_playlist(payload)
+
+<span class="hljs-keyword">assert</span> spotify.get_playlist(playlist_id).track_ids == payload.track_ids</code></pre><p>Anthropic distingue con precisione transcript e outcome: il primo è ciò che l&#39;agente ha detto e fatto; il secondo è lo stato finale dell&#39;ambiente. Un eval robusto tende a preferire l&#39;outcome quando è osservabile (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals per agenti</a>).</p>
+<h3 id="valutazione-semantica">Valutazione semantica</h3>
+<p>Rimane poi ciò che non si lascia ridurre a un&#39;asserzione netta:</p>
+<ul>
+<li>la playlist racconta una transizione coerente?</li>
+<li>la selezione è varia senza sembrare casuale?</li>
+<li>il risultato interpreta bene la tensione fra stanchezza e desiderio di ballare?</li>
+</ul>
+<p>Qui un evaluator separato può aggiungere valore.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">SemanticEvaluation</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    mood_coherence: <span class="hljs-built_in">float</span>
+    transition_quality: <span class="hljs-built_in">float</span>
+    rationale: <span class="hljs-built_in">str</span>
+    passed: <span class="hljs-built_in">bool</span></code></pre><p>Il principio non è «servono sempre due agenti». Nel suo case study del marzo 2026, Anthropic propone di separare generator ed evaluator perché è più facile rendere un valutatore autonomo severo che convincere un generatore a criticare il proprio output. Lo stesso case study mostra però che il beneficio dipende dal compito e dal modello, mentre costo e latenza possono crescere di un ordine di grandezza (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
+<p>In uno degli esperimenti descritti, il sistema completo ha lavorato per circa sei ore e consumato circa 200 dollari, contro venti minuti e 9 dollari del singolo agente. La qualità era superiore, ma il conto ci ricorda che un evaluator deve guadagnarsi il proprio posto esattamente come gli altri agenti (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
+<h3 id="un-ciclo-ha-bisogno-di-un-freno">Un ciclo ha bisogno di un freno</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">for</span> revision <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(MAX_REVISIONS + <span class="hljs-number">1</span>):
+    playlist = <span class="hljs-keyword">await</span> curator.run(request, feedback=feedback)
+
+    hard = hard_checks(playlist, request)
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hard.passed:
+        feedback = hard.to_feedback()
+        <span class="hljs-keyword">continue</span>
+
+    semantic = <span class="hljs-keyword">await</span> evaluator.run(playlist, request)
+    <span class="hljs-keyword">if</span> semantic.passed:
+        <span class="hljs-keyword">return</span> playlist
+
+    feedback = semantic.rationale
+
+<span class="hljs-keyword">raise</span> VerificationFailed(<span class="hljs-string">&quot;revision budget exhausted&quot;</span>)</code></pre><p>Senza criteri, budget e stop condition, evaluator-optimizer è soltanto una conversazione circolare fra modelli.</p>
+<h2 id="evals-il-sistema-va-misurato-intero">Evals: il sistema va misurato intero</h2>
+<p>Gli eval per agenti non possono limitarsi alla risposta finale.</p>
+<p>Anthropic propone una terminologia utile:</p>
+<ul>
+<li><strong>task</strong>: il singolo caso di test;</li>
+<li><strong>trial</strong>: un tentativo, da ripetere perché il sistema è stocastico;</li>
+<li><strong>grader</strong>: la logica che assegna un giudizio;</li>
+<li><strong>transcript / trace / trajectory</strong>: la storia completa del trial;</li>
+<li><strong>outcome</strong>: lo stato finale dell&#39;ambiente;</li>
+<li><strong>evaluation harness</strong>: l&#39;infrastruttura che esegue, registra e valuta (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals per agenti</a>).</li>
+</ul>
+<p>Nel running example, una suite sensata non dovrebbe chiedere soltanto «ha prodotto una playlist?». Dovrebbe definire una semantica diversa per ogni richiesta.</p>
+<pre><code class="hljs language-yaml"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-attr">tasks:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E01</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Sono stanco, ma voglio ballare.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">coherent_shift_or_clarification</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E02</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Sorprendimi.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">exploration_branch</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E03</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Fammi allenare, ma niente techno.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">no_excluded_genres</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E04</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Voglio una playlist energica per la palestra.&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">valid_high_energy_playlist</span>
+
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E05</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Che ore sono?&quot;</span>
+    <span class="hljs-attr">expected:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">out_of_domain</span></code></pre><p>Poi si osservano dimensioni differenti:</p>
+<pre><code class="hljs language-text">OUTCOME
+playlist creata?
+vincoli rispettati?
+side effect corretto?
+
+TRAJECTORY
+router corretto?
+handoff necessario?
+tool ridondanti?
+loop terminato?
+
+EFFICIENZA
+latenza
+costo
+token
+tool call
+retry
+
+AFFIDABILITÀ
+pass@1
+pass^k
+tasso di recovery
+fallimenti silenziosi</code></pre><p>Hamel Husain insiste su una distinzione che vale la pena portarsi dietro: errori differenti richiedono tassonomie differenti. Chiamare tutto «hallucination» rende invisibili i guasti che contano. La pratica utile parte dalla lettura dei trace, costruisce un vocabolario degli errori e calibra gli evaluator contro giudizi umani (<a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals skills</a>).</p>
+<h3 id="non-premiare-un-percorso-rigido">Non premiare un percorso rigido</h3>
+<p>Un eval troppo prescrittivo rischia di bocciare una soluzione valida soltanto perché il modello ha trovato una strada diversa. Quando possibile, verifica l&#39;outcome e usa la traiettoria per individuare comportamenti rischiosi, sprechi o violazioni di policy, senza trasformare ogni tool call in un copione obbligatorio.</p>
+<h2 id="il-mondo-va-storto">Il mondo va storto</h2>
+<p>Un sistema multiagentico non è definito soltanto dal percorso felice. È definito da ciò che succede quando un nodo non fa il proprio dovere.</p>
+<pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Running
+    Running --&gt; Success: outcome verificato
+    Running --&gt; Retry: errore transitorio
+    Running --&gt; Fallback: errore recuperabile
+    Running --&gt; Replan: evidenza insufficiente
+    Running --&gt; Human: azione rischiosa o ambigua
+    Running --&gt; Failed: errore fatale
+    Retry --&gt; Running
+    Fallback --&gt; Running
+    Replan --&gt; Running
+    Human --&gt; Running: approvazione / nuovo input</pre><p>Conviene distinguere almeno queste famiglie.</p>
+<h3 id="output-formalmente-invalido">Output formalmente invalido</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
+
+<span class="hljs-keyword">try</span>:
+    profile = <span class="hljs-keyword">await</span> mood_interpreter.run(prompt)
+<span class="hljs-keyword">except</span> ValidationError:
+    <span class="hljs-keyword">if</span> retry_budget.consume(<span class="hljs-string">&quot;mood_interpreter&quot;</span>):
+        profile = <span class="hljs-keyword">await</span> mood_interpreter.run(prompt, repair=<span class="hljs-literal">True</span>)
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> clarification_fallback()</code></pre><h3 id="output-valido-ma-semanticamente-incerto">Output valido ma semanticamente incerto</h3>
+<p>Non è un&#39;eccezione. È uno stato.</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">if</span> profile.needs_clarification:
+    <span class="hljs-keyword">return</span> transition_to(<span class="hljs-string">&quot;clarifier&quot;</span>)</code></pre><h3 id="tool-esterno-non-disponibile">Tool esterno non disponibile</h3>
+<pre><code class="hljs language-python"><span class="hljs-keyword">try</span>:
+    tracks = <span class="hljs-keyword">await</span> remote_catalog.search(query)
+<span class="hljs-keyword">except</span> TransientToolError:
+    tracks = local_catalog.search(query)
+    state.warnings.append(<span class="hljs-string">&quot;remote_catalog_unavailable&quot;</span>)</code></pre><h3 id="successo-parziale">Successo parziale</h3>
+<pre><code class="hljs language-text">Scout A ✓
+Scout B timeout
+Scout C ✓</code></pre><p>Le opzioni non sono soltanto «tutto fallisce» o «facciamo finta di niente».</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+<span class="hljs-keyword">if</span> successful_workers &gt;= minimum_required:
+    continue_with_partial_results(warnings=failed_workers)
+<span class="hljs-keyword">elif</span> retry_budget.available:
+    retry(failed_workers)
+<span class="hljs-keyword">else</span>:
+    escalate_or_abort()</code></pre><h3 id="idempotenza-e-side-effect">Idempotenza e side effect</h3>
+<p>Un retry innocuo su una ricerca read-only è diverso da un retry sulla creazione della playlist.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+spotify.create_playlist(
+    payload,
+    idempotency_key=state.run_id,
+)</code></pre><p>Senza idempotenza, un errore di rete dopo il side effect può produrre due playlist identiche. Nei sistemi multiagentici il problema peggiora, perché più worker possono credere di essere autorizzati a scrivere.</p>
+<p>Una policy semplice è il <strong>single writer</strong>: molti agenti possono proporre, uno soltanto può modificare lo stato esterno.</p>
+<h2 id="blast-radius-e-human-in-the-loop">Blast radius e human-in-the-loop</h2>
+<p>Quando un agente può soltanto leggere un catalogo musicale, il danno massimo è contenuto. Quando un agente può effettuare un rollback in produzione, la stessa architettura diventa un&#39;altra faccenda.</p>
+<p>Il rischio operativo può essere letto come:</p>
+<pre><code class="hljs language-text">rischio ≈ probabilità di errore × danno massimo possibile</code></pre><p>Migliorare il modello riduce, forse, il primo termine. Le permission e l&#39;isolamento limitano il secondo.</p>
+<pre class="mermaid">flowchart LR
+    A[Agent] --&gt; R[Read metrics]
+    A --&gt; L[Read logs]
+    A --&gt; P[Propose remediation]
+    A -. approval .-&gt; H[Human]
+    H --&gt; X[Execute production change]
+
+    classDef safe fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+    classDef risky fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
+    class R,L,P safe;
+    class X risky;</pre><p>Anthropic, nel maggio 2026, ha descritto il containment come un problema di limitazione del blast radius: non soltanto sorvegliare ciò che il modello tende a fare, ma restringere ciò che l&#39;ambiente gli permette materialmente di fare. L&#39;articolo segnala anche l&#39;approvazione automatica o distratta come limite del semplice human-in-the-loop: troppi prompt di permesso producono approval fatigue (<a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — Containment</a>).</p>
+<p>Microsoft Agent Framework tratta le richieste di approvazione e informazione come eventi sospendibili del workflow; lo stato pendente può essere incluso nei checkpoint e riemesso dopo il ripristino (<a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">Microsoft — HITL nei workflow</a>).</p>
+<p>Da qui una regola pratica:</p>
+<blockquote>
+<p><strong>Il controllo umano va collocato nei punti di rischio, non distribuito come una pioggia di finestre modali.</strong></p>
+</blockquote>
+<p>Nel capitolo conclusivo portiamo questa architettura oltre la singola conversazione: persistenza, harness, protocolli e reference architecture completa.</p>
+<p>→ Continua con <a href="../../../blog/it/progettare-sistemi-multiagentici-nel-2026-parte-3/">Progettare sistemi multiagentici nel 2026 — Parte 3</a>.</p>
+<h2 id="fonti-e-note-di-lettura">Fonti e note di lettura</h2>
+<p>Le fonti sono ordinate per funzione, non per prestigio. Gli engineering post e la documentazione ufficiale sostengono le descrizioni dei sistemi; i practitioner aggiungono esperienza sul campo; i lavori 2025 vengono usati quando introducono concetti ancora centrali nel 2026.</p>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>: guida del 2024 ai pattern routing, chaining, parallelizzazione, orchestrator-workers ed evaluator-optimizer, con la raccomandazione di partire dalla soluzione più semplice.</li>
+<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Demystifying evals for AI agents</a>: definizioni di task, trial, grader, transcript, outcome ed evaluation harness.</li>
+<li><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness design for long-running application development</a>: planner, generator, evaluator e trade-off di costo e durata per task lunghi.</li>
+<li><a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Scaling Managed Agents</a>: separazione fra sessione, harness, sandbox e ambienti di esecuzione.</li>
+<li><a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — How we contain Claude across products</a>: containment, permission e riduzione del blast radius.</li>
+<li><a href="https://www.anthropic.com/engineering/building-c-compiler">Anthropic — Building a C compiler with a team of parallel Claudes</a>: esperimento con sedici agenti, ambiente condiviso e coordinamento del parallelismo.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic — Effective context engineering for AI agents</a>: gestione del contesto, compaction, memoria e subagent.</li>
+<li><a href="https://openai.com/index/harness-engineering/">OpenAI — Harness engineering</a>: harness, test, osservabilità e ambienti isolati per agenti Codex.</li>
+<li><a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — The next evolution of the Agents SDK</a>: evoluzione dell’SDK, sandbox e separazione fra harness e compute.</li>
+<li><a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — Agent orchestration</a>: differenza fra orchestrazione via LLM e via codice, agents as tools e handoff.</li>
+<li><a href="https://openai.github.io/openai-agents-python/handoffs/">OpenAI Agents SDK — Handoffs</a>: configurazione, input e filtri degli handoff.</li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft Agent Framework — Workflows</a>: workflow funzionali o graph-based, agenti come executor, orchestrazioni sequenziali/concorrenti, checkpoint e HITL.</li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">Microsoft Agent Framework — Human in the loop</a>: richieste sospendibili, approvazioni e ripristino del workflow.</li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — Handoffs</a>: transizioni guidate dallo stato; nei subgraph il contesto trasferito va scelto esplicitamente.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — Use subgraphs</a>: input, output e stato dei subgraph.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph — Persistence</a>: persistenza dello stato e checkpoint.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph — Interrupts</a>: interruzioni controllate e ripresa dei grafi.</li>
+<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">Model Context Protocol — specifica</a>: protocollo per collegare agenti a tool, dati e risorse.</li>
+<li><a href="https://a2a-protocol.org/latest/">A2A Protocol — specifica</a>: interoperabilità e comunicazione fra agenti indipendenti, senza imporre la condivisione di memoria, strumenti o logica proprietaria.</li>
+<li><a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Simon Willison — Subagents</a>: esperienza pratica su isolamento del contesto e parallelismo.</li>
+<li><a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals Skills for Coding Agents</a>: tassonomie di errore, trace ed evaluator calibrati con giudizi umani.</li>
+<li><a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">Jason Liu — Why Cognition does not use multi-agent systems</a>: critica pratica al context loss nei sistemi multi-agent.</li>
+</ul>
+<h3 id="altre-letture-utili">Altre letture utili</h3>
+<ul>
+<li><a href="https://openai.com/index/open-source-codex-orchestration-symphony/">OpenAI — Symphony</a>: specifica open source per l’orchestrazione di Codex.</li>
+<li><a href="https://alignment.anthropic.com/2026/ai-organizations/">Anthropic — AI Organizations</a>: ricerca su efficacia e allineamento delle organizzazioni di agenti.</li>
+<li><a href="https://openai.github.io/openai-agents-python/tracing/">OpenAI Agents SDK — Tracing</a>: trace e osservabilità dell’esecuzione.</li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/index">LangChain — Multi-agent patterns</a>: panoramica dei pattern multi-agent supportati dal framework.</li>
+</ul>
         </div>
       </section>
     </article>
   </main>
   <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
     </span>
   </footer>
   <script>
     const BLOG_LANG_KEY = 'blogLang';
     const BLOG_THEME_KEY = 'blogTheme';
-    const CURRENT_LANG = ${serializeForScript(language)};
-    const OTHER_LANG = ${serializeForScript(otherLang)};
-    const OTHER_LANG_LINK = ${serializeForScript(otherLangLink)};
+    const CURRENT_LANG = "it";
+    const OTHER_LANG = "en";
+    const OTHER_LANG_LINK = "../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-2/index.html";
     (function() {
       const body = document.body;
       const readingProgressBar = document.getElementById('reading-progress-bar');
@@ -2731,7 +2400,7 @@ export function renderBlogDetail({
             '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
             '<span class="code-copy-btn__text">' + labels.copy + '</span>';
           button.addEventListener('click', async () => {
-            const text = (code.textContent || '').replace(/\s+$/, '');
+            const text = (code.textContent || '').replace(/s+$/, '');
             if (!text) {
               return;
             }
@@ -2902,5 +2571,4 @@ export function renderBlogDetail({
     })();
   </script>
 </body>
-</html>`;
-}
+</html>

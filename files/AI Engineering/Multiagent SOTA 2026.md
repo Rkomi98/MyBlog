@@ -1,4 +1,4 @@
-# Progettare sistemi multiagentici nel 2026
+# Progettare sistemi multiagentici nel 2026 — Parte 1
 
 Ho sentito sviluppatori vantarsi di aver progettato sistemi multiagentici solo per farsi figo davanti ai colleghi o per vendere la propria soluzione con "temi di moda". Ecco, in questo articolo voglio andare deep su questo e non fermarmi al come costruirli. Perché prima di progettare un sistema così complesso, ha senso chiedersi se ha senso definirlo!
 
@@ -473,6 +473,9 @@ Sia LangChain che LangGraph supportano nativamente questo livello di astrazione.
 
 > Vale la seguente regola per disegnare un handoff con criteri moderni: **evitare di passare tutto "per sicurezza"**. L'agente ricevente deve disporre **esclusivamente** del contesto minimo necessario per compiere il proprio dovere, senza l'onere computazionale e cognitivo di dover ricostruire l'intero storico del sistema.
 
+Nel prossimo capitolo trasformiamo queste scelte di orchestrazione in un design operativo: ruoli, stato, verifiche, eval e confini di rischio.
+
+→ Continua con [Progettare sistemi multiagentici nel 2026 — Parte 2](/blog/it/progettare-sistemi-multiagentici-nel-2026-parte-2/).
 
 ## Fonti e note di lettura
 

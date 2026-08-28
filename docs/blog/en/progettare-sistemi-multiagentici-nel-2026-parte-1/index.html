@@ -1,945 +1,13 @@
-import path from 'path';
-import { markdownToHtml } from './markdown.js';
-
-function toPosix(input) {
-  return input.split(path.sep).join('/');
-}
-
-function joinUrl(base, ...parts) {
-  const normalisedBase = base ? toPosix(base) : '.';
-  return toPosix(path.posix.join(normalisedBase, ...parts.filter(Boolean)));
-}
-
-function formatDate(date) {
-  if (!date) {
-    return '';
-  }
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toISOString().split('T')[0];
-}
-
-function serializeForScript(value) {
-  return JSON.stringify(value)
-    .replace(/</g, '\\u003c')
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029');
-}
-
-function escapeHtml(value) {
-  if (value == null) {
-    return '';
-  }
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function buildTocTree(headings = []) {
-  const filtered = headings.filter((heading) => heading.level >= 2 && heading.level <= 4);
-  if (!filtered.length) {
-    return [];
-  }
-
-  const root = { level: 1, children: [] };
-  const stack = [root];
-
-  for (const heading of filtered) {
-    const node = { ...heading, children: [] };
-    while (stack.length && stack[stack.length - 1].level >= heading.level) {
-      stack.pop();
-    }
-    const parent = stack[stack.length - 1] ?? root;
-    parent.children.push(node);
-    stack.push(node);
-  }
-
-  assignTocNumbers(root.children, []);
-  return root.children;
-}
-
-function assignTocNumbers(nodes, prefix) {
-  nodes.forEach((node, index) => {
-    const parts = [...prefix, index + 1];
-    node.number = parts.join('.');
-    if (node.children?.length) {
-      assignTocNumbers(node.children, parts);
-    }
-  });
-}
-
-function renderTocList(nodes, isRoot = true, showNumbers = true) {
-  if (!nodes?.length) {
-    return '';
-  }
-
-  const listClass = isRoot ? 'post-toc__list' : 'post-toc__list post-toc__sublist';
-  return `<ul class="${listClass}">
-    ${nodes
-      .map((node) => {
-        const childHtml = renderTocList(node.children, false, showNumbers);
-        const depth = Math.max(0, node.level - 2);
-        return `<li class="post-toc__item" data-depth="${depth}">
-          <a class="post-toc__link" href="#${node.id}">
-            ${showNumbers ? `<span class="post-toc__number">${escapeHtml(node.number ?? '')}</span>` : ''}
-            <span class="post-toc__text">${escapeHtml(node.text)}</span>
-          </a>
-          ${childHtml}
-        </li>`;
-      })
-      .join('')}
-  </ul>`;
-}
-
-const sharedStyles = `
-  :root {
-    color-scheme: light dark;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height: 1.6;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg, #0f172a);
-    color: #0f172a;
-  }
-  @media (prefers-color-scheme: dark) {
-    body {
-      color: #e2e8f0;
-    }
-  }
-  .page {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 4rem;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-  }
-  header nav a {
-    margin-left: 1rem;
-    text-decoration: none;
-    font-weight: 500;
-    color: inherit;
-  }
-  header nav a:hover {
-    text-decoration: underline;
-  }
-`;
-
-export function renderBlogIndex({ posts, relativeRoot }) {
-  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
-  const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
-  const visiblePosts = posts.filter((post) => !post.meta?.hiddenFromIndex);
-  const postsPayload = visiblePosts.map((post) => {
-    const languages = {};
-    for (const [lang, langData] of Object.entries(post.languages)) {
-      languages[lang] = {
-        title: langData.title,
-        summary: langData.summary,
-        link: joinUrl('.', lang, post.slug, 'index.html'),
-      };
-    }
-
-    const publishedAt = post.meta?.publishedAt ?? post.updatedAt;
-    return {
-      slug: post.slug,
-      icon: post.meta?.icon ?? '📝',
-      category: post.meta?.category ?? 'General',
-      categoryLabels: post.meta?.categoryLabels ?? { it: 'Generale', en: 'General' },
-      readTime: post.meta?.readTime ?? 1,
-      readTimes: post.meta?.readTimes ?? {},
-      publishedAt: publishedAt.toISOString(),
-      timestamp: publishedAt.getTime(),
-      languages,
-    };
-  });
-
-  const serializedPosts = serializeForScript(postsPayload);
-  const homeLink = joinUrl(relativeRoot, 'index.html');
-  const currentYear = new Date().getFullYear();
-  const baseUrl = 'https://rkomi98.github.io/MyBlog';
-  const canonicalUrl = `${baseUrl}/blog/index.html`;
-
-  return `<!DOCTYPE html>
-<html lang="it">
+<!DOCTYPE html>
+<html lang="en" >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Blog | Mirko Calcaterra</title>
-  <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
-  <meta name="keywords" content="Mirko Calcaterra, Blog, AI, Data Engineering, Geoinformatica, GeoAI, FRIA, AI Act, Python, Deep Learning">
-  <link rel="canonical" href="${canonicalUrl}">
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-9EVQ8G9W48');
-  </script>
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="blog">
-  <meta property="og:url" content="${canonicalUrl}">
-  <meta property="og:title" content="Blog | Mirko Calcaterra">
-  <meta property="og:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="og:image" content="${baseUrl}/Assets/Logo.png">
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary">
-  <meta property="twitter:title" content="Blog | Mirko Calcaterra">
-  <meta property="twitter:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="twitter:image" content="${baseUrl}/Assets/Logo.png">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "Mirko Calcaterra Blog",
-    "url": "${canonicalUrl}",
-    "description": "Blog tecnico su AI e Geoinformatica",
-    "publisher": {
-      "@type": "Person",
-      "name": "Mirko Calcaterra"
-    }
-  }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      position: relative;
-      font-family: 'Charter', Georgia, serif;
-      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
-      color: var(--text-primary);
-      transition: background 0.3s ease, color 0.3s ease;
-      --bg-primary: #0b1120;
-      --bg-secondary: #0f172a;
-      --bg-card: rgba(15, 23, 42, 0.84);
-      --border: rgba(148, 163, 184, 0.2);
-      --text-primary: #e2e8f0;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --accent: #10b981;
-      --accent-strong: #34d399;
-      --shadow-lg: 0 24px 45px -32px rgba(2, 6, 23, 0.85);
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
-    }
-    body > * {
-      position: relative;
-      z-index: 1;
-    }
-    body[data-theme="light"] {
-      --bg-primary: #f6f8f7;
-      --bg-secondary: #ffffff;
-      --bg-card: rgba(255, 255, 255, 0.96);
-      --border: rgba(148, 163, 184, 0.18);
-      --text-primary: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #64748b;
-      --accent: #059669;
-      --accent-strong: #047857;
-      --shadow-lg: 0 24px 45px -30px rgba(15, 23, 42, 0.14);
-      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
-    }
-    .site-header__inner,
-    .header-controls,
-    .lang-btn,
-    .theme-toggle,
-    .filters,
-    .filter label,
-    .filter select,
-    .post-card-meta,
-    .post-card-footer,
-    footer {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .hero h1,
-    .post-card-title {
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    header.site-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(14px);
-      background: rgba(15, 23, 42, 0.85);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.3s ease;
-    }
-    body[data-theme="light"] header.site-header {
-      background: rgba(248, 250, 252, 0.9);
-    }
-    .site-header__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1.2rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 1.05rem;
-      letter-spacing: 0.01em;
-    }
-    .logo-img {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      object-fit: cover;
-      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
-    }
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .lang-btn {
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text-primary);
-      padding: 0.45rem 0.9rem;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
-    }
-    .lang-btn:hover {
-      background: var(--accent);
-      color: #ffffff;
-      transform: translateY(-1px);
-      border-color: transparent;
-    }
-    .theme-toggle {
-      position: relative;
-      width: 52px;
-      height: 28px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      cursor: pointer;
-      padding: 0;
-      transition: background 0.3s ease, border 0.3s ease;
-      display: flex;
-      align-items: center;
-    }
-    .theme-toggle .theme-thumb {
-      position: absolute;
-      top: 50%;
-      left: 4px;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      color: #1f2937;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
-      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
-    }
-    body[data-theme="dark"] .theme-toggle .theme-thumb {
-      transform: translate(20px, -50%);
-      background: #1f2937;
-      color: #f8fafc;
-    }
-    body[data-theme="dark"] .theme-toggle {
-      background: rgba(16, 185, 129, 0.18);
-      border-color: rgba(16, 185, 129, 0.35);
-    }
-    main.page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 3.5rem 2rem 4rem;
-    }
-    .hero {
-      margin-bottom: 2.5rem;
-    }
-    .hero h1 {
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      margin: 0 0 1rem;
-      letter-spacing: -0.02em;
-    }
-    .hero p {
-      margin: 0;
-      max-width: 720px;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.7;
-    }
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-    .filter {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      min-width: 220px;
-    }
-    .filter label {
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-    .filter select {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 0.65rem 0.9rem;
-      color: var(--text-primary);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s ease, box-shadow 0.2s ease;
-    }
-    .filter select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
-    }
-    .posts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-    }
-    .post-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .post-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 32px 60px -40px rgba(15, 23, 42, 0.95);
-    }
-    .post-card-hero {
-      height: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .post-card-icon {
-      font-size: 2.8rem;
-      filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.45));
-    }
-    .post-card-body {
-      padding: 1.8rem 1.8rem 1.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-      flex: 1;
-    }
-    .post-card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 0.92rem;
-    }
-    .post-card-category {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      background: rgba(16, 185, 129, 0.16);
-      color: var(--accent);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    body[data-theme="light"] .post-card-category {
-      background: rgba(5, 150, 105, 0.12);
-    }
-    .post-card-date {
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .post-card-title {
-      margin: 0;
-      font-size: 1.35rem;
-      line-height: 1.3;
-      color: var(--text-primary);
-    }
-    .post-card-summary {
-      margin: 0;
-      color: var(--text-secondary);
-      font-size: 1rem;
-      line-height: 1.65;
-    }
-    .post-card-footer {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-    }
-    .post-card-link {
-      font-weight: 600;
-      color: var(--accent);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-    .post-card-link:hover {
-      color: var(--accent-strong);
-      transform: translateX(2px);
-    }
-    .no-results {
-      text-align: center;
-      margin-top: 3rem;
-      color: var(--text-muted);
-      font-size: 1rem;
-      display: none;
-    }
-    footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      border-top: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.35);
-    }
-    body[data-theme="light"] footer {
-      background: rgba(255, 255, 255, 0.72);
-    }
-    @media (max-width: 768px) {
-      .site-header__inner {
-        padding: 1rem 1.5rem;
-      }
-      main.page {
-        padding: 2.75rem 1.5rem 3.25rem;
-      }
-      .filters {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .filter {
-        width: 100%;
-      }
-      .post-card-body {
-        padding: 1.6rem 1.6rem 1.4rem;
-      }
-      .post-card-hero {
-        height: 120px;
-      }
-    }
-  </style>
-</head>
-<body data-theme="dark">
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a class="logo" href="${homeLink}">
-        <picture>
-          <source srcset="${logoWebpPath}" type="image/webp">
-          <source srcset="${logoPath}" type="image/png">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img" width="40" height="40">
-        </picture>
-        <span class="logo-text">Mirko Calcaterra</span>
-      </a>
-      <div class="header-controls">
-        <button class="lang-btn" type="button">EN</button>
-        <button class="theme-toggle" type="button" aria-label="Toggle theme">
-          <span class="theme-thumb">☀️</span>
-        </button>
-      </div>
-    </div>
-  </header>
-  <main class="page">
-    <section class="hero">
-      <h1 data-it="Il mio blog tecnico" data-en="My technical blog">Il mio blog tecnico</h1>
-      <p data-it="Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software."
-         data-en="Deep dives, case studies, and experiments on AI, Data Engineering, and modern software development.">
-         Approfondimenti, casi studio e sperimentazioni su AI, Data Engineering e sviluppo software.
-      </p>
-    </section>
-    <section class="filters" aria-label="Blog controls">
-      <div class="filter">
-        <label for="category-filter" data-it="Filtra per categoria" data-en="Filter by category">Filtra per categoria</label>
-        <select id="category-filter">
-          <option value="all" data-it="Tutte" data-en="All">Tutte</option>
-        </select>
-      </div>
-      <div class="filter">
-        <label for="sort-order" data-it="Ordina per data" data-en="Sort by date">Ordina per data</label>
-        <select id="sort-order">
-          <option value="desc" data-it="Più recenti" data-en="Newest first">Più recenti</option>
-          <option value="asc" data-it="Meno recenti" data-en="Oldest first">Meno recenti</option>
-        </select>
-      </div>
-    </section>
-    <section aria-live="polite">
-      <div id="posts-grid" class="posts-grid"></div>
-      <p id="no-results" class="no-results" data-it="Nessun articolo trovato." data-en="No articles found.">Nessun articolo trovato.</p>
-    </section>
-  </main>
-  <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
-    </span>
-  </footer>
-  <script>
-    const POSTS_DATA = ${serializedPosts};
-    (function() {
-      const gradients = [
-        'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-        'linear-gradient(135deg, #f97316 0%, #fb7185 100%)',
-        'linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%)',
-        'linear-gradient(135deg, #f472b6 0%, #c084fc 100%)'
-      ];
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const storedTheme = (localStorage.getItem('blogTheme') || '').toLowerCase();
-      const storedLang = (localStorage.getItem('blogLang') || '').toLowerCase();
-      const state = {
-        lang: storedLang === 'en' ? 'en' : 'it',
-        theme: storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light')),
-        category: 'all',
-        sort: 'desc'
-      };
-      const elements = {
-        body: document.body,
-        langBtn: document.querySelector('.lang-btn'),
-        themeToggle: document.querySelector('.theme-toggle'),
-        themeThumb: document.querySelector('.theme-toggle .theme-thumb'),
-        categorySelect: document.getElementById('category-filter'),
-        sortSelect: document.getElementById('sort-order'),
-        postsGrid: document.getElementById('posts-grid'),
-        noResults: document.getElementById('no-results')
-      };
-      const categoryEntries = Array.from(
-        POSTS_DATA.reduce((acc, post) => {
-          if (!acc.has(post.category)) {
-            acc.set(post.category, post.categoryLabels || {});
-          }
-          return acc;
-        }, new Map())
-      );
-      function formatDate(isoString) {
-        const date = new Date(isoString);
-        if (Number.isNaN(date.valueOf())) {
-          return '';
-        }
-        const formatter = state.lang === 'it'
-          ? new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
-          : new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-        return formatter.format(date);
-      }
-      function applyTheme(theme) {
-        state.theme = theme === 'dark' ? 'dark' : 'light';
-        elements.body.setAttribute('data-theme', state.theme);
-        if (elements.themeToggle) {
-          elements.themeToggle.classList.toggle('active', state.theme === 'dark');
-        }
-        if (elements.themeThumb) {
-          elements.themeThumb.textContent = state.theme === 'dark' ? '🌙' : '☀️';
-        }
-        localStorage.setItem('blogTheme', state.theme);
-      }
-      function updateTexts() {
-        document.querySelectorAll('[data-it][data-en]').forEach((node) => {
-          const value = node.getAttribute(state.lang === 'it' ? 'data-it' : 'data-en');
-          if (value !== null) {
-            node.textContent = value;
-          }
-        });
-        if (elements.langBtn) {
-          elements.langBtn.textContent = state.lang === 'it' ? 'EN' : 'IT';
-        }
-      }
-      function populateCategoryOptions() {
-        if (!elements.categorySelect) {
-          return;
-        }
-        const currentValue = state.category;
-        elements.categorySelect.innerHTML = '';
-        const allOption = document.createElement('option');
-        allOption.value = 'all';
-        allOption.setAttribute('data-it', 'Tutte');
-        allOption.setAttribute('data-en', 'All');
-        elements.categorySelect.appendChild(allOption);
-        categoryEntries.forEach(([value, labels]) => {
-          const option = document.createElement('option');
-          option.value = value;
-          option.setAttribute('data-it', labels.it || value);
-          option.setAttribute('data-en', labels.en || value);
-          elements.categorySelect.appendChild(option);
-        });
-        const availableValues = new Set(['all', ...categoryEntries.map(([value]) => value)]);
-        if (availableValues.has(currentValue)) {
-          elements.categorySelect.value = currentValue;
-        } else {
-          elements.categorySelect.value = 'all';
-          state.category = 'all';
-        }
-      }
-      function renderPosts() {
-        if (!elements.postsGrid) {
-          return;
-        }
-        const posts = POSTS_DATA.filter((post) => state.category === 'all' || post.category === state.category)
-          .sort((a, b) => {
-            if (state.sort === 'asc') {
-              return a.timestamp - b.timestamp;
-            }
-            return b.timestamp - a.timestamp;
-          });
-        elements.postsGrid.innerHTML = '';
-        if (!posts.length) {
-          if (elements.noResults) {
-            elements.noResults.style.display = 'block';
-          }
-          return;
-        }
-        if (elements.noResults) {
-          elements.noResults.style.display = 'none';
-        }
-        const fragment = document.createDocumentFragment();
-        posts.forEach((post, index) => {
-          const card = document.createElement('article');
-          card.className = 'post-card';
-          card.setAttribute('data-category', post.category);
-          const hero = document.createElement('div');
-          hero.className = 'post-card-hero';
-          hero.style.background = gradients[index % gradients.length];
-          const icon = document.createElement('div');
-          icon.className = 'post-card-icon';
-          icon.textContent = post.icon || '📝';
-          hero.appendChild(icon);
-          card.appendChild(hero);
-          const body = document.createElement('div');
-          body.className = 'post-card-body';
-          const metaRow = document.createElement('div');
-          metaRow.className = 'post-card-meta';
-          const categoryChip = document.createElement('span');
-          categoryChip.className = 'post-card-category';
-          const categoryLabel = (post.categoryLabels && post.categoryLabels[state.lang]) || post.category;
-          categoryChip.textContent = categoryLabel;
-          const dateSpan = document.createElement('span');
-          dateSpan.className = 'post-card-date';
-          dateSpan.textContent = formatDate(post.publishedAt);
-          metaRow.appendChild(categoryChip);
-          metaRow.appendChild(dateSpan);
-          body.appendChild(metaRow);
-          const titleEl = document.createElement('h3');
-          titleEl.className = 'post-card-title';
-          titleEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].title) ||
-            (post.languages.it && post.languages.it.title) ||
-            (post.languages.en && post.languages.en.title) ||
-            '';
-          body.appendChild(titleEl);
-          const summaryEl = document.createElement('p');
-          summaryEl.className = 'post-card-summary';
-          summaryEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].summary) ||
-            (post.languages.it && post.languages.it.summary) ||
-            (post.languages.en && post.languages.en.summary) ||
-            '';
-          body.appendChild(summaryEl);
-          const footerRow = document.createElement('div');
-          footerRow.className = 'post-card-footer';
-          const readSpan = document.createElement('span');
-          readSpan.className = 'post-card-readtime';
-          const readTime = (post.readTimes && post.readTimes[state.lang]) || post.readTime;
-          readSpan.textContent = '⏱️ ' + readTime + ' min';
-          const linkEl = document.createElement('a');
-          linkEl.className = 'post-card-link';
-          const fallbackLink = (post.languages.it && post.languages.it.link) || (post.languages.en && post.languages.en.link) || '#';
-          linkEl.href = (post.languages[state.lang] && post.languages[state.lang].link) || fallbackLink;
-          linkEl.textContent = state.lang === 'it' ? 'Leggi di più →' : 'Read more →';
-          footerRow.appendChild(readSpan);
-          footerRow.appendChild(linkEl);
-          body.appendChild(footerRow);
-          card.appendChild(body);
-          fragment.appendChild(card);
-        });
-        elements.postsGrid.appendChild(fragment);
-      }
-      function applyLanguage(lang) {
-        state.lang = lang === 'en' ? 'en' : 'it';
-        document.documentElement.setAttribute('lang', state.lang);
-        localStorage.setItem('blogLang', state.lang);
-        updateTexts();
-        renderPosts();
-      }
-      function init() {
-        document.documentElement.setAttribute('lang', state.lang);
-        populateCategoryOptions();
-        updateTexts();
-        applyTheme(state.theme);
-        if (elements.categorySelect) {
-          elements.categorySelect.addEventListener('change', (event) => {
-            state.category = event.target.value;
-            renderPosts();
-          });
-        }
-        if (elements.sortSelect) {
-          elements.sortSelect.value = state.sort;
-          elements.sortSelect.addEventListener('change', (event) => {
-            state.sort = event.target.value === 'asc' ? 'asc' : 'desc';
-            renderPosts();
-          });
-        }
-        if (elements.langBtn) {
-          elements.langBtn.addEventListener('click', () => {
-            applyLanguage(state.lang === 'it' ? 'en' : 'it');
-          });
-        }
-        if (elements.themeToggle) {
-          elements.themeToggle.addEventListener('click', () => {
-            applyTheme(state.theme === 'dark' ? 'light' : 'dark');
-          });
-        }
-        renderPosts();
-      }
-      init();
-    })();
-  </script>
-</body>
-</html>`;
-}
-
-export function renderBlogDetail({
-  post,
-  language,
-  relativeRoot,
-}) {
-  const langData = post.languages[language];
-  if (!langData) {
-    throw new Error(`Language ${language} is not available for ${post.slug}`);
-  }
-
-  const otherLang = language === 'it' ? 'en' : 'it';
-  const otherLangData = post.languages[otherLang];
-  const blogHome = joinUrl(relativeRoot, 'blog', 'index.html');
-  const homeLink = joinUrl(relativeRoot, 'index.html');
-
-  const otherLangLink = otherLangData
-    ? joinUrl(relativeRoot, 'blog', otherLang, post.slug, 'index.html')
-    : null;
-
-  const { html, headings } = markdownToHtml(langData.markdown, { relativeRoot });
-  const cleanedHtml = html.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>/i, '').trim();
-  const contentHtml = cleanedHtml || html;
-
-  const publishedRaw = post.meta?.publishedAt ?? langData.modifiedTime ?? post.updatedAt;
-  const publishedAt = new Date(publishedRaw);
-  const formattedDate = Number.isNaN(publishedAt.valueOf())
-    ? ''
-    : publishedAt.toLocaleDateString(language === 'it' ? 'it-IT' : 'en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
-
-  const readTime =
-    post.meta?.readTimes?.[language] ??
-    post.meta?.readTime ??
-    Math.max(1, Math.round(langData.markdown.split(/\s+/).length / 200));
-  const categoryLabel =
-    post.meta?.categoryLabels?.[language] ??
-    post.meta?.category ??
-    (language === 'it' ? 'Generale' : 'General');
-  const icon = post.meta?.icon ?? '📝';
-
-  const tocTree = buildTocTree(headings);
-  const showTocNumbers = post.meta?.showTocNumbers !== false;
-  const tocListHtml = renderTocList(tocTree, true, showTocNumbers);
-  const tocLabels =
-    language === 'it'
-      ? { title: 'Indice', open: 'Mostra indice', close: 'Nascondi indice' }
-      : { title: 'Table of contents', open: 'Show table of contents', close: 'Hide table of contents' };
-  const tocHtml = tocListHtml
-    ? `<aside class="post-toc" data-collapsed="false">
-        <div class="post-toc__header">
-          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">${tocLabels.title}</div>
-          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="${tocLabels.close}">
-            <span class="post-toc__toggle-text">${tocLabels.title}</span>
-            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
-          </button>
-        </div>
-        <div class="post-toc__content">
-          ${tocListHtml}
-        </div>
-      </aside>`
-    : '';
-  const layoutClass = tocHtml ? 'post-layout' : 'post-layout post-layout--single';
-  const pageTitle = escapeHtml(langData.title);
-  const formattedCategory = escapeHtml(categoryLabel);
-  const formattedDateHtml = escapeHtml(formattedDate);
-  const iconHtml = escapeHtml(icon);
-  const currentYear = new Date().getFullYear();
-  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
-  const authorAvatarPath = joinUrl(relativeRoot, 'Assets', 'profile.webp');
-  
-  const baseUrl = 'https://rkomi98.github.io/MyBlog';
-  // Construct the absolute URL for the current page
-  // We assume the structure: blog/{lang}/{slug}/index.html
-  const pageUrl = `${baseUrl}/blog/${language}/${post.slug}/`;
-  const summary = langData.summary || `Articolo su ${formattedCategory} di Mirko Calcaterra.`;
-  const imageUrl = post.meta?.image ? (post.meta.image.startsWith('http') ? post.meta.image : `${baseUrl}/${post.meta.image}`) : `${baseUrl}/Assets/Logo.png`;
-  const keywords = post.meta?.keywords ? post.meta.keywords : '';
-  const pageScripts = (post.meta?.pageScripts ?? [])
-    .map((scriptPath) => joinUrl(relativeRoot, scriptPath.replace(/^[/]+/, '')))
-    .map((scriptPath) => `<script defer src="${escapeHtml(scriptPath)}"></script>`)
-    .join('\n  ');
-  const pageScriptTags = pageScripts ? `\n  ${pageScripts}` : '';
-
-  return `<!DOCTYPE html>
-<html lang="${language}" ${language === 'en' ? '' : 'translate="no"'}>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle} | Mirko Calcaterra</title>
-  <meta name="description" content="${escapeHtml(summary)}">
-  <meta name="keywords" content="${escapeHtml(keywords)}">
+  <title>Designing multi-agent systems in 2026 — Part 1 | Mirko Calcaterra</title>
+  <meta name="description" content="Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…">
+  <meta name="keywords" content="">
   <meta name="author" content="Mirko Calcaterra">
-  <link rel="canonical" href="\${pageUrl}">
+  <link rel="canonical" href="${pageUrl}">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
@@ -953,40 +21,40 @@ export function renderBlogDetail({
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:url" content="${pageUrl}">
-  <meta property="og:title" content="${pageTitle}">
-  <meta property="og:description" content="${escapeHtml(summary)}">
-  <meta property="og:image" content="${imageUrl}">
-  <meta property="article:published_time" content="${publishedAt.toISOString()}">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026-parte-1/">
+  <meta property="og:title" content="Designing multi-agent systems in 2026 — Part 1">
+  <meta property="og:description" content="Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+  <meta property="article:published_time" content="2026-08-20T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
-  <meta property="article:section" content="${formattedCategory}">
+  <meta property="article:section" content="AI Engineering Path">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${pageTitle}">
-  <meta property="twitter:description" content="${escapeHtml(summary)}">
-  <meta property="twitter:image" content="${imageUrl}">
+  <meta property="twitter:title" content="Designing multi-agent systems in 2026 — Part 1">
+  <meta property="twitter:description" content="Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…">
+  <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "${pageTitle}",
-    "image": "${imageUrl}",
-    "datePublished": "${publishedAt.toISOString()}",
-    "dateModified": "${(langData.modifiedTime || publishedAt).toISOString()}",
+    "headline": "Designing multi-agent systems in 2026 — Part 1",
+    "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
+    "datePublished": "2026-08-20T00:00:00.000Z",
+    "dateModified": "2026-08-28T08:49:46.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
-      "url": "${baseUrl}/"
+      "url": "https://rkomi98.github.io/MyBlog/"
     },
     "publisher": {
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "${escapeHtml(summary)}"
+    "description": "Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…"
   }
-  </script>${pageScriptTags}
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2231,8 +1299,8 @@ export function renderBlogDetail({
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
-        displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true,
       },
       options: {
@@ -2357,13 +1425,13 @@ export function renderBlogDetail({
   <header class="site-header">
     <div class="site-header__inner">
       <div class="site-header__left">
-        <a class="logo" href="${homeLink}">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img">
+        <a class="logo" href="../../../index.html">
+          <img src="../../../Assets/Logo.png" alt="Mirko Calcaterra logo" class="logo-img">
           <span class="logo-text">Mirko Calcaterra</span>
         </a>
         <nav class="site-nav">
-          <a href="${homeLink}" data-it="Home" data-en="Home">Home</a>
-          <a href="${blogHome}" data-it="Blog" data-en="Blog">Blog</a>
+          <a href="../../../index.html" data-it="Home" data-en="Home">Home</a>
+          <a href="../../../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
         </nav>
       </div>
       <div class="header-controls">
@@ -2377,37 +1445,540 @@ export function renderBlogDetail({
   <main class="page">
     <article class="post">
       <section class="post-hero">
-        <div class="post-hero__icon">${iconHtml}</div>
-        <span class="post-hero__category">${formattedCategory}</span>
-        <h1 class="post-hero__title">${pageTitle}</h1>
+        <div class="post-hero__icon">🧠</div>
+        <span class="post-hero__category">AI Engineering Path</span>
+        <h1 class="post-hero__title">Designing multi-agent systems in 2026 — Part 1</h1>
         <div class="post-hero__author">
-          <img class="post-hero__avatar" src="${authorAvatarPath}" alt="Mirko Calcaterra">
+          <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">${formattedDateHtml} • ${readTime} min</span>
+            <span class="post-hero__author-meta">August 20, 2026 • 14 min</span>
           </div>
         </div>
       </section>
-      <section class="${layoutClass}">
-        ${tocHtml}
+      <section class="post-layout">
+        <aside class="post-toc" data-collapsed="false">
+        <div class="post-toc__header">
+          <div class="post-toc__title" data-it="Indice" data-en="Table of contents">Table of contents</div>
+          <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="Hide table of contents">
+            <span class="post-toc__toggle-text">Table of contents</span>
+            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="post-toc__content">
+          <ul class="post-toc__list">
+    <li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#the-simplest-system-that-could-work">
+            <span class="post-toc__number">1</span>
+            <span class="post-toc__text">The simplest system that could work</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#an-agent-must-earn-its-place">
+            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__text">An agent must earn its place</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#the-spotify-monolith">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">The Spotify monolith</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#decision-ambiguity">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">Decision ambiguity</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#acceptance-ambiguity">
+            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__text">Acceptance ambiguity</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#divide-and-conquer">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">Divide and conquer</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#who-decides">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Who decides?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#routing-do-you-already-know-what-you-want">
+            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__text">Routing: do you already know what you want?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#why-is-this-approach-formidable">
+            <span class="post-toc__number">4.1.1</span>
+            <span class="post-toc__text">Why is this approach formidable?</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#supervisor-the-decision-remains-fluid">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Supervisor: the decision remains fluid</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#why-is-context-ownership-important">
+            <span class="post-toc__number">4.2.1</span>
+            <span class="post-toc__text">Why is Context Ownership important?</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#handoff-a-conversation-between-agents">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">Handoff: a conversation between agents</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#a-handoff-is-a-full-fledged-contract">
+            <span class="post-toc__number">4.3.1</span>
+            <span class="post-toc__text">A handoff is a full-fledged contract</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#sources-and-reading-notes">
+            <span class="post-toc__number">5</span>
+            <span class="post-toc__text">Sources and reading notes</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#other-useful-reading">
+            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__text">Other useful reading</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
+        </div>
+      </aside>
         <div class="post-body">
-          ${contentHtml}
+          <p>I’ve heard developers brag about designing multi-agent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stopping at how to build them. Because before designing such a complex system, it makes sense to ask whether it’s even worth defining it as one!</p>
+<p>For this reason, before talking about swarms, supervisors, and handoffs, it’s worth taking a step back.</p>
+<p>A multi-agent system isn&#39;t born when you put two models side-by-side. It isn&#39;t born when one agent calls another as if it were a tool. It is born when you decide to <strong>distribute responsibility, context, and control</strong> among components that can make partially autonomous decisions.</p>
+<p>The important word here is <em>decide</em>. Because adding agents is not a goal. It is an <strong>architectural choice</strong> that must justify its own cost.</p>
+<p>To keep the discussion grounded, we will use an example from a project I am building with Datapizza: a multi-agent system capable of detecting a user&#39;s mood and suggesting a playlist accordingly (incidentally, I’m listening to <a href="https://suno.com/labs/live-radio">radio Suno</a> right now). Let’s start with a very simple and vague request from a potential user:</p>
+<blockquote>
+<p><strong>&quot;I&#39;m tired, but I want to dance.&quot;</strong></p>
+</blockquote>
+<p>It’s a short sentence, but in just a few words, it contains a tension between two states and a decision to be made.</p>
+<p>This article can be condensed into five questions:</p>
+<ol>
+<li><strong>Who decides?</strong></li>
+<li><strong>Who knows what?</strong></li>
+<li><strong>Who does what?</strong></li>
+<li><strong>Who checks that the work was done well?</strong></li>
+<li><strong>Who keeps the system running when problems arise?</strong></li>
+</ol>
+<p>In 2024, Anthropic primarily described routing, chaining, parallelization, orchestrator-workers, and evaluator-optimizer patterns (<a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>). Far be it from me to say those patterns are obsolete; on the contrary, they remain absolutely valid.</p>
+<p>In 2026, however, the documentation and case studies I’ll cite shortly dedicate much more attention to context lifecycle, contracts, artifacts, checkpoints, trajectory evals, sandboxes, containment, and harnesses (<a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Managed Agents</a>, <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — Agents SDK</a>, <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft — Workflows</a>).</p>
+<blockquote>
+<p>To be clear, this is a general synthesis of what I have read so far on various Substacks and official blogs; it is not an official, shared taxonomy.</p>
+</blockquote>
+<h2 id="the-simplest-system-that-could-work">The simplest system that could work</h2>
+<p>Let’s start with the first question (probably the most uncomfortable one):</p>
+<blockquote>
+<p><strong>Why isn&#39;t a single agent enough?</strong></p>
+</blockquote>
+<p>If the path is known in advance, a <strong>workflow</strong> is often sufficient. If a transformation is deterministic, a simple function might be enough. If a single agent can maintain context and use tools effectively, splitting the work only creates new points of failure.</p>
+<pre class="mermaid">flowchart LR
+    F[Funzione] --&gt; W[Workflow deterministico]
+    W --&gt; A[Singolo agente]
+    A --&gt; S[Agente + specialisti]
+    S --&gt; M[Sistema multiagentico]
+
+    classDef base fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
+    classDef hot fill:#D7342B,stroke:#D7342B,color:#fff;
+    class F,W,A,S base;
+    class M hot;</pre><p>Moving to the right means gaining flexibility, but also paying in terms of latency, cost, non-determinism, coordination, and observability.</p>
+<p>A starting rule can be written like this:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">choose_architecture</span>(<span class="hljs-params">problem</span>):
+    <span class="hljs-keyword">if</span> problem.is_deterministic:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;function_or_workflow&quot;</span>
+
+    <span class="hljs-keyword">if</span> problem.path_is_known:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;graph_workflow&quot;</span>
+
+    <span class="hljs-keyword">if</span> problem.fits_one_context <span class="hljs-keyword">and</span> problem.needs_one_owner:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;single_agent&quot;</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;consider_multi_agent&quot;</span></code></pre><p>Clearly, this isn&#39;t a universal formula—I’m no AI oracle. But it is enough to avoid the mistake of confusing system complexity with maturity. Believe me, they are not the same thing.</p>
+<p>I’ll put myself in the shoes of a reader who, at this point, is asking:</p>
+<blockquote>
+<p>Okay Mirko, but when do I actually need these systems? When does it make sense to define sub-agents?</p>
+</blockquote>
+<p>Simon Willison tries to answer this question on his blog: sub-agents are valuable primarily because they preserve the main context and absorb token-heavy operations. On the other hand, he warns that it is easy to unnecessarily fragment a task into many specialists (<a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Willison — Subagents</a>).</p>
+<h3 id="an-agent-must-earn-its-place">An agent must earn its place</h3>
+<p>Before complicating your solution with an agentic approach, try to complete this sentence:</p>
+<blockquote>
+<p>&quot;I am introducing an agent now because this component must ____________.&quot;</p>
+</blockquote>
+<p>Plausible responses involve judgment, open-ended planning, dynamic tool usage, exploration, or interaction. If the response is &quot;it must sort a list,&quot; &quot;it must check for duplicates,&quot; or &quot;it must choose a branch by reading a boolean,&quot; you are likely overcomplicating things.</p>
+<p>You know that feeling when you go to the supermarket and buy more than you actually need? That is exactly what I am noticing in the agentic world!</p>
+<p>To be clear, I am not saying that multi-agent systems don&#39;t make sense; I am just putting developers on alert because it is not a solution for everything. However, let&#39;s look at an interesting use case now.</p>
+<h2 id="the-spotify-monolith">The Spotify monolith</h2>
+<p>Let&#39;s go back to our Spotify example. Let&#39;s start with the most natural system. An agent receives the request and has five tools at its disposal:</p>
+<ul>
+<li>interpret the mood;</li>
+<li>search for genres;</li>
+<li>search for songs;</li>
+<li>sort the results;</li>
+<li>generate the playlist.</li>
+</ul>
+<blockquote>
+<p>In the lesson I proposed, this translated into actual code:</p>
+</blockquote>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Here is a nice monolith agent</span>
+
+<span class="hljs-keyword">return</span> Agent(
+    name=<span class="hljs-string">&quot;playlist_monolith&quot;</span>,
+    client=client,
+    system_prompt=SYSTEM_PROMPT,
+    tools=[
+        interpreta_umore,
+        cerca_generi_per_mood,
+        cerca_canzoni_per_genere,
+        ordina_canzoni,
+        genera_playlist,
+    ],
+    max_steps=<span class="hljs-number">8</span>,
+)</code></pre><p>Let&#39;s see what this agent does with a simple diagram:</p>
+<pre class="mermaid">flowchart LR
+    U[Utente] --&gt; A[Playlist Agent]
+
+    A --&gt; T1[Interpreta mood]
+    A --&gt; T2[Cerca generi]
+    A --&gt; T3[Cerca canzoni]
+    A --&gt; T4[Ordina]
+    A --&gt; T5[Crea playlist]
+
+    T1 --&gt; A
+    T2 --&gt; A
+    T3 --&gt; A
+    T4 --&gt; A
+    T5 --&gt; A
+
+    classDef agent fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef tool fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
+    class A agent;
+    class T1,T2,T3,T4,T5 tool;</pre><p>At first glance, everything seems fine. The model reads &quot;tired&quot; and &quot;dancing,&quot; finds two compatible genre families, retrieves the tracks, and builds a playlist.</p>
+<p>Then you shift your focus, and the crack appears.</p>
+<p>In some runs, the agent treats the two signals as independent searches, merges the results, and delivers a playlist containing both party tracks and relaxing tracks without having decided what relationship exists between the current state and the desired state.</p>
+<p>The problem is not that the model failed to interpret the words well. It understood both of them. And it didn&#39;t choose a blatantly wrong tool, either. The failure lies elsewhere: <strong>an important decision remained implicit!</strong> Or rather, it didn&#39;t stop to ask the user, &quot;Okay bro, but what do you actually want? Choose a path, otherwise it&#39;s going to be a bit of a mess!&quot;</p>
+<pre class="mermaid">flowchart LR
+    P[&quot;Sono stanco,&lt;br/&gt;ma voglio ballare&quot;] --&gt; I[Interpreta]
+    I --&gt; S1[stanco → energia bassa]
+    I --&gt; S2[ballare → energia alta]
+    S1 --&gt; C[Unione implicita]
+    S2 --&gt; C
+    C --&gt; O[Playlist formalmente valida,&lt;br/&gt;semanticamente incoerente]
+
+    classDef ok fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+    classDef bad fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
+    class S1,S2 ok;
+    class C,O bad;</pre><p>Okay, let&#39;s focus better on these two different ambiguities that the agent failed to see.</p>
+<h3 id="decision-ambiguity">Decision ambiguity</h3>
+<p>Who determines if the request describes:</p>
+<ul>
+<li>a contradiction to be clarified;</li>
+<li>a transition from low energy to high energy;</li>
+<li>a deliberately hybrid combination?</li>
+</ul>
+<h3 id="acceptance-ambiguity">Acceptance ambiguity</h3>
+<p>Who determines that the produced playlist is coherent enough to be delivered?</p>
+<p>The monolith agent (i.e., one with only tools at its disposal) has a technical stopping condition: <code>max_steps=8</code> and a final tool. What it lacks is an <strong>external definition of done</strong>.</p>
+<p>And this is where you start evaluating multi-agent systems. Not because five tools are too many in absolute terms (or too few—they could still get confused), but because the act of understanding, deciding, executing, and evaluating all coexist in the same decision-making center, which is &quot;the head&quot; of a single agent!</p>
+<h2 id="divide-and-conquer">Divide and conquer</h2>
+<p>Close your eyes and tell me what solution you are thinking of. Okay, open your eyes. I think the natural temptation at this point is to create four agents:</p>
+<pre><code class="hljs language-text">Mood Agent
+Decision Agent
+Search Agent
+Evaluation Agent</code></pre><p>It seems orderly. But how do we manage the architecture, and what order do we set? First, you need to break down the <strong>work</strong>!</p>
+<pre class="mermaid">flowchart LR
+    A[Comprendere la richiesta] --&gt; B[Costruire un piano di ricerca]
+    B --&gt; C[Raccogliere candidati]
+    C --&gt; D[Comporre la playlist]
+    D --&gt; E[Verificare i vincoli]
+    E --&gt; F[Consegnare]</pre><p>Then, for each step, we ask:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+
+Task(
+    goal=...,
+    inputs=...,
+    outputs=...,
+    tools=...,
+    context=...,
+    side_effects=...,
+    failure_policy=...,
+    verification=...,
+)</code></pre><p>Only then do we decide which component should perform it.</p>
+<p>Interpret intent           → LLM / agent
+Read a boolean             → code
+Search the catalog         → tool or worker
+Sort by energy             → function
+Compose a playlist         → agent, if judgment is required
+Check for duplicates       → function
+Judge coherence            → evaluator, if subjectivity remains</p>
+<p>It is worth establishing this distinction:</p>
+<blockquote>
+<p><strong>Task decomposition and agent decomposition are not the same thing!!</strong></p>
+</blockquote>
+<p>The Microsoft Agent Framework presents agents as potential participants and executors of functional or graph-based workflows (<a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft — Workflows</a>).</p>
+<p>Once we understand what we want, we need to determine who to assign each task to. I believe it is essential that <strong>every node has a clear responsibility</strong>.</p>
+<h2 id="who-decides">Who decides?</h2>
+<p>Once the work is mapped out, we must assign control.</p>
+<p>In my experience, I have seen three patterns that are often confused, or rather, thought of as equivalent: routing, supervisor, and handoff. In reality, they answer different questions!</p>
+<h3 id="routing-do-you-already-know-what-you-want">Routing: do you already know what you want?</h3>
+<blockquote>
+<p><strong>When to use it:</strong> Use routing when the choice of the next step can be traced back to an explicit classification or a well-defined state (a typed field, a threshold, a boolean policy). The LLM simply analyzes the input and extracts the parameters; then, a simple deterministic algorithm in code (e.g., <code>if/else</code>) routes execution to the correct node.</p>
+</blockquote>
+<blockquote>
+<p><strong>When NOT to use it:</strong> If the decision regarding the next step requires dynamically evaluating trade-offs, negotiating between agents, or re-evaluating the strategy based on partial results, use a <strong>Supervisor</strong>.</p>
+</blockquote>
+<p>Routing is the most efficient pattern of all: it maximizes predictability, minimizes latency, and reduces LLM call costs by shifting control logic from the prompt to the application code.</p>
+<p>Take our user who says: <em>«I&#39;m tired, but I want to dance.»</em></p>
+<p>Instead of asking an agent to &quot;decide what to do,&quot; we use a structured extraction schema (<strong>Structured Outputs</strong>):</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PYTHON]</span>
+<span class="hljs-keyword">from</span> pydantic <span class="hljs-keyword">import</span> BaseModel, Field
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Literal</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    current_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Estimated user energy level (1-10)&quot;</span>)
+    desired_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Desired user energy level (1-10)&quot;</span>)
+    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>] = Field(
+        ..., description=<span class="hljs-string">&quot;Maintain state, actively change it (shift), or explore new things&quot;</span>
+    )
+    needs_clarification: <span class="hljs-built_in">bool</span> = Field(
+        ..., description=<span class="hljs-string">&quot;True if the request is too vague or contradictory and requires clarifying questions&quot;</span>
+    )</code></pre><p>Once the LLM has extracted and validated this schema, the next step is decided by a deterministic Python function. There is no need for another generative inference:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># The router is code, pure and simple. 100% deterministic and testable with pytest.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">determine_next_node</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-built_in">str</span>:
+    <span class="hljs-keyword">if</span> profile.needs_clarification:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarifier_agent&quot;</span>
+    <span class="hljs-keyword">if</span> profile.intent == <span class="hljs-string">&quot;shift&quot;</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;energy_transition_planner&quot;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;standard_search_agent&quot;</span></code></pre><pre class="mermaid">flowchart LR
+    U[User Request] --&gt;|1. Structured extraction| M[MoodProfile]
+    M --&gt;|2. Deterministic evaluation| R{needs_clarification?}
+    R --&gt;|Yes| C[Clarifier Agent]
+    R --&gt;|No| P{intent == &#39;shift&#39;?}
+    P --&gt;|Yes| T[Transition Planner]
+    P --&gt;|No| S[Standard Search]
+
+    classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    class M model;
+    class R,P code;</pre><h4 id="why-is-this-approach-formidable">Why is this approach formidable?</h4>
+<ol>
+<li><strong>Zero decision latency</strong>: Calculating the next path takes fractions of a millisecond.</li>
+<li><strong>Ease of testing</strong>: You can write traditional unit tests (<code>pytest</code>) to verify the routing logic across hundreds of user profiles without having to worry about hallucinations or model non-determinism at this stage.</li>
+<li><strong>Less prompt overhead</strong>: Downstream agents receive clean, pre-structured input (<code>MoodProfile</code>), freeing them from having to re-interpret the user&#39;s initial intentions.</li>
+</ol>
+<h3 id="supervisor-the-decision-remains-fluid">Supervisor: the decision remains fluid</h3>
+<blockquote>
+<p><strong>When to use it:</strong> Use a supervisor when the next step cannot be deduced from a deterministic rule and requires <strong>continuous judgment</strong>. The supervisor acts as a &quot;Project Manager&quot; or &quot;Conductor&quot;: it evaluates the current state, dynamically chooses which specialist (worker) to activate, receives the output, updates the state, and decides the next step. It retains global ownership of the context and the conversation.</p>
+</blockquote>
+<blockquote>
+<p><strong>When NOT to use it:</strong> If the sequence of steps is fixed (A -&gt; B -&gt; C) or if the branching choice depends on a known variable (e.g., a boolean in the database), use a deterministic workflow or a code-based Router. This will help you avoid latency, LLM call costs, and unnecessary non-determinism.</p>
+</blockquote>
+<p>In practice, the Supervisor is useful when we need to coordinate various specialist agents whose interactions are not predictable in advance.</p>
+<p>Let&#39;s take our Spotify example:</p>
+<ol>
+<li>The user says: <em>&quot;I&#39;m tired, but I want to dance.&quot;</em></li>
+<li>The <strong>Supervisor</strong> receives the request and decides to consult the <code>Mood Interpreter</code>.</li>
+<li>The <code>Mood Interpreter</code> returns a diagnosis: <em>&quot;The user is fatigued but is looking for an active shift toward high energy.&quot;</em></li>
+<li>The <strong>Supervisor</strong> reads this diagnosis and dynamically decides that the next step is not yet to create the playlist, but to ask the <code>Music Scout</code> to search for transitional genres (e.g., soft Deep House).</li>
+<li>If the <code>Scout</code> returns few results, the <strong>Supervisor</strong> does not fail: it decides to change strategy and activate a second Scout for alternative genres (e.g., rhythmic Funk).</li>
+</ol>
+<p>This dynamic and adaptive flow cannot be easily mapped with a simple <code>if/else</code>.</p>
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    participant U as User
+    participant S as Supervisor
+    participant M as Mood Interpreter
+    participant SC as Music Scout
+    participant C as Curator
+
+    U-&gt;&gt;S: Music request
+    S-&gt;&gt;M: Interpret mood
+    M--&gt;&gt;S: Energy shift
+    S-&gt;&gt;SC: Search for suitable tracks
+    SC--&gt;&gt;S: Candidate tracks
+    S-&gt;&gt;C: Curate and sort
+    C--&gt;&gt;S: Refined playlist
+    S--&gt;&gt;U: Final response</pre><h4 id="why-is-context-ownership-important">Why is Context Ownership important?</h4>
+<p>Unlike a &quot;handoff&quot; (where control passes permanently to another agent and the conversation continues there), in the <strong>Supervisor</strong> pattern, the specialists are &quot;blind&quot; to the global conversation history. They receive only a circumscribed task (<em>context minimization</em>) and return a structured result to the Supervisor.
+This prevents the sub-agents&#39; context from becoming saturated with useless information (noise) and prevents the user from having to interact with different entities, keeping the experience fluid and centralized on the Supervisor.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PSEUDOCODE]</span>
+
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> state.done:
+    <span class="hljs-comment"># The supervisor evaluates the state and decides the next move</span>
+    decision = <span class="hljs-keyword">await</span> supervisor.decide(
+        goal=state.goal,
+        current_state=state.summary, <span class="hljs-comment"># Maintains a clean summary of work done so far</span>
+        available_workers=registry.list_tools(),
+    )
+
+    <span class="hljs-keyword">if</span> decision.is_final:
+        state.done = <span class="hljs-literal">True</span>
+        <span class="hljs-keyword">break</span>
+
+    <span class="hljs-comment"># Delegate the specific task to the chosen specialist</span>
+    worker_output = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task_parameters)
+
+    <span class="hljs-comment"># Record the outcome in the global state (without passing the entire sub-chat transcript)</span>
+    state.record_step(
+        worker=decision.worker,
+        task=decision.task_parameters,
+        output=worker_output.summary
+    )</code></pre><p>The cost of this pattern is evident: every decision by the Supervisor requires an additional LLM inference (latency and token cost). Therefore, before implementing it, ask yourself this question:</p>
+<blockquote>
+<p><strong>Is there a real negotiation or ambiguity to manage between the steps?</strong></p>
+</blockquote>
+<p>If the answer is no, and the steps are sequential or guided by fixed rules, use <strong>Routing</strong> or a <strong>deterministic graph workflow</strong>.</p>
+<h3 id="handoff-a-conversation-between-agents">Handoff: a conversation between agents</h3>
+<blockquote>
+<p><strong>When to use it:</strong> Use a handoff when, in addition to the work to be performed, the entity owning the dialogue needs to change for the next turn.</p>
+</blockquote>
+<blockquote>
+<p><strong>When not to use it:</strong> If an agent only needs to execute a sub-task and return the result, keep control within the orchestrator and use delegation or an agent as a tool.</p>
+</blockquote>
+<p>In the delegation phase, the manager remains the interlocutor. In a handoff, control passes to the specialist.</p>
+<pre class="mermaid">flowchart TB
+    subgraph H[&quot;Handoff · ownership transferred&quot;]
+        direction LR
+        T[Triage] --&gt;|passes context + ownership| A2[Specialist]
+        A2 --&gt;|responds in subsequent turns| U2([User])
+    end
+
+    subgraph D[&quot;Delegation · ownership retained by Supervisor&quot;]
+        direction LR
+        S1[Supervisor] --&gt;|delegates a circumscribed task| A1[Specialist]
+        A1 -. result .-&gt; S1
+        S1 --&gt;|provides the final response| U1([User])
+    end</pre><pre class="mermaid">classDef triage fill:#F5A623,stroke:#FBBF24,color:#1F2937,stroke-width:2px;
+    classDef owner fill:#1B64F5,stroke:#60A5FA,color:#FFFFFF,stroke-width:2px;
+    classDef specialist fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef user fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    class T triage;
+    class S1 owner;
+    class A1,A2 specialist;
+    class U1,U2 user;
+    style H fill:#101A30,stroke:#F5A623,stroke-width:2px,color:#FDE68A
+    style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE</pre><p>The OpenAI Agents SDK explicitly distinguishes between these two topologies: <em>agents as tools</em>, where the manager retains control, and <em>handoffs</em>, where the specialist takes over the next part of the interaction (<a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — orchestration</a>, <a href="https://openai.github.io/openai-agents-python/handoffs/">handoff</a>).</p>
+<p>You can remember the difference this way:</p>
+<pre><code class="hljs language-text">Delegation → changes who does the work.
+Handoff    → changes who has the control.</code></pre><p>In summary:</p>
+<ul>
+<li><p><strong>Delegation</strong>: The Supervisor assigns a task to a specialist; the specialist executes it and returns a result, but the Supervisor remains the only one communicating with the user. Only the executor of the work changes; control of the conversation (who responds to the next turn) remains with the Supervisor.</p>
+</li>
+<li><p><strong>Handoff</strong>: It is not just the work that passes to the specialist, but also the right/duty to manage subsequent turns of the conversation. From that moment on, the user speaks directly with the specialist, no longer through the Supervisor.</p>
+</li>
+</ul>
+<h4 id="a-handoff-is-a-full-fledged-contract">A handoff is a full-fledged contract</h4>
+<p>In architectural diagrams, a handoff is often dismissed as a simple directional arrow. In reality, however, it represents a true <strong>isolation boundary</strong>.</p>
+<p>To structure a robust handover, we cannot rely on unstructured message exchanges. We must define a formal contract, which can be modeled using Pydantic, for example:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+    goal: <span class="hljs-built_in">str</span>
+    reason: <span class="hljs-built_in">str</span>
+    relevant_state: <span class="hljs-built_in">dict</span>
+    constraints: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    artifact_refs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
+    expected_output: <span class="hljs-built_in">str</span>
+    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">sequenceDiagram
+    autonumber
+    participant T as Triage
+    participant C as Handoff contract
+    participant S as Specialist
+
+    T-&gt;&gt;C: Defines a minimal handover
+    Note over C: Intent&lt;br/&gt;goal · reason&lt;br/&gt;&lt;br/&gt;Required context&lt;br/&gt;relevant_state · artifact_refs&lt;br/&gt;&lt;br/&gt;Operational agreement&lt;br/&gt;constraints · expected_output · return_policy
+    C-&gt;&gt;S: Transfers context + ownership
+    Note right of S: The specialist&lt;br/&gt;manages subsequent turns</pre><p>Formalizing this schema highlights two distinct architectural responsibilities:</p>
+<ol>
+<li><strong>Flow governance (Control Ownership):</strong> Who has the authority to decide which action to take next?</li>
+<li><strong>Context minimization (Information Boundary):</strong> What data actually needs to cross the agent barrier?</li>
+</ol>
+<p>Both LangChain and LangGraph natively support this level of abstraction. LangGraph, for instance, allows you to define independent subgraphs equipped with dedicated state schemas, encapsulating the specialist&#39;s local memory and explicitly mapping only the agreed-upon inputs and outputs (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
+<blockquote>
+<p>The following rule applies when designing a handoff with modern criteria: <strong>avoid passing everything &quot;just in case.&quot;</strong> The receiving agent must have <strong>exclusively</strong> the minimum context necessary to perform its duty, without the computational and cognitive burden of having to reconstruct the entire system history.</p>
+</blockquote>
+<p>In the next chapter, we turn these orchestration choices into an operating design: roles, state, verification, evals, and risk boundaries.</p>
+<p>→ Continue with <a href="../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-2/">Designing multi-agent systems in 2026 — Part 2</a>.</p>
+<h2 id="sources-and-reading-notes">Sources and reading notes</h2>
+<p>The sources are ordered by function, not by prestige. Engineering posts and official documentation support the system descriptions; practitioners add field experience; 2025 works are used when they introduce concepts that remain central in 2026.</p>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>: A 2024 guide to routing, chaining, parallelization, orchestrator-worker, and evaluator-optimizer patterns, with a recommendation to start with the simplest solution.</li>
+<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Demystifying evals for AI agents</a>: Definitions of tasks, trials, graders, transcripts, outcomes, and evaluation harnesses.</li>
+<li><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness design for long-running application development</a>: Planners, generators, evaluators, and the trade-offs between cost and duration for long-running tasks.</li>
+<li><a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Scaling Managed Agents</a>: Separation of sessions, harnesses, sandboxes, and execution environments.</li>
+<li><a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — How we contain Claude across products</a>: Containment, permissions, and blast radius reduction.</li>
+<li><a href="https://www.anthropic.com/engineering/building-c-compiler">Anthropic — Building a C compiler with a team of parallel Claudes</a>: An experiment involving sixteen agents, a shared environment, and parallel coordination.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic — Effective context engineering for AI agents</a>: Context management, compaction, memory, and subagents.</li>
+<li><a href="https://openai.com/index/harness-engineering/">OpenAI — Harness engineering</a>: Harnesses, testing, observability, and isolated environments for Codex agents.</li>
+<li><a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — The next evolution of the Agents SDK</a>: Evolution of the SDK, sandboxing, and the separation of harnesses from compute.</li>
+<li><a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — Agent orchestration</a>: Differences between LLM-based and code-based orchestration, agents as tools, and handoffs.</li>
+<li><a href="https://openai.github.io/openai-agents-python/handoffs/">OpenAI Agents SDK — Handoffs</a>: Configuration, input, and handoff filtering.</li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft Agent Framework — Workflows</a>: Functional or graph-based workflows, agents as executors, sequential/concurrent orchestrations, checkpoints, and HITL.</li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">Microsoft Agent Framework — Human in the loop</a>: Suspendable requests, approvals, and workflow resumption.</li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — Handoffs</a>: State-driven transitions; in subgraphs, transferred context must be explicitly selected.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — Use subgraphs</a>: Input, output, and state management for subgraphs.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph — Persistence</a>: State persistence and checkpoints.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph — Interrupts</a>: Controlled interruptions and graph resumption.</li>
+<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">Model Context Protocol — specification</a>: A protocol for connecting agents to tools, data, and resources.</li>
+<li><a href="https://a2a-protocol.org/latest/">A2A Protocol — specification</a>: Interoperability and communication between independent agents without requiring shared memory, tools, or proprietary logic.</li>
+<li><a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Simon Willison — Subagents</a>: Practical experience with context isolation and parallelism.</li>
+<li><a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals Skills for Coding Agents</a>: Error taxonomies, traces, and evaluators calibrated with human judgment.</li>
+<li><a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">Jason Liu — Why Cognition does not use multi-agent systems</a>: A practical critique of context loss in multi-agent systems.</li>
+</ul>
+<h3 id="other-useful-reading">Other useful reading</h3>
+<ul>
+<li><a href="https://openai.com/index/open-source-codex-orchestration-symphony/">OpenAI — Symphony</a>: Open-source specification for Codex orchestration.</li>
+<li><a href="https://alignment.anthropic.com/2026/ai-organizations/">Anthropic — AI Organizations</a>: Research on the effectiveness and alignment of agent organizations.</li>
+<li><a href="https://openai.github.io/openai-agents-python/tracing/">OpenAI Agents SDK — Tracing</a>: Execution tracing and observability.</li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/index">LangChain — Multi-agent patterns</a>: Overview of multi-agent patterns supported by the framework.</li>
+</ul>
         </div>
       </section>
     </article>
   </main>
   <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
+    <span data-it="© 2026 Mirko Calcaterra. Tutti i diritti riservati."
+          data-en="© 2026 Mirko Calcaterra. All rights reserved.">
+      © 2026 Mirko Calcaterra. Tutti i diritti riservati.
     </span>
   </footer>
   <script>
     const BLOG_LANG_KEY = 'blogLang';
     const BLOG_THEME_KEY = 'blogTheme';
-    const CURRENT_LANG = ${serializeForScript(language)};
-    const OTHER_LANG = ${serializeForScript(otherLang)};
-    const OTHER_LANG_LINK = ${serializeForScript(otherLangLink)};
+    const CURRENT_LANG = "en";
+    const OTHER_LANG = "it";
+    const OTHER_LANG_LINK = "../../../blog/it/progettare-sistemi-multiagentici-nel-2026-parte-1/index.html";
     (function() {
       const body = document.body;
       const readingProgressBar = document.getElementById('reading-progress-bar');
@@ -2731,7 +2302,7 @@ export function renderBlogDetail({
             '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
             '<span class="code-copy-btn__text">' + labels.copy + '</span>';
           button.addEventListener('click', async () => {
-            const text = (code.textContent || '').replace(/\s+$/, '');
+            const text = (code.textContent || '').replace(/s+$/, '');
             if (!text) {
               return;
             }
@@ -2902,5 +2473,4 @@ export function renderBlogDetail({
     })();
   </script>
 </body>
-</html>`;
-}
+</html>

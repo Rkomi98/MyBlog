@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Designing Multi-Agent Systems in 2026 | Mirko Calcaterra</title>
-  <meta name="description" content="title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…">
-  <meta name="keywords" content="">
+  <title>Designing multi-agent systems in 2026 — Part 2 | Mirko Calcaterra</title>
+  <meta name="description" content="Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…">
+  <meta name="keywords" content="AI agents, multi-agent systems, orchestration, context engineering, evaluation, AI engineering">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
 
@@ -21,28 +21,28 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026/">
-  <meta property="og:title" content="Designing Multi-Agent Systems in 2026">
-  <meta property="og:description" content="title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026-parte-2/">
+  <meta property="og:title" content="Designing multi-agent systems in 2026 — Part 2">
+  <meta property="og:description" content="Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
-  <meta property="article:published_time" content="2026-08-20T00:00:00.000Z">
+  <meta property="article:published_time" content="2026-08-21T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
   <meta property="article:section" content="AI Engineering Path">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Designing Multi-Agent Systems in 2026">
-  <meta property="twitter:description" content="title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…">
+  <meta property="twitter:title" content="Designing multi-agent systems in 2026 — Part 2">
+  <meta property="twitter:description" content="Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "Designing Multi-Agent Systems in 2026",
+    "headline": "Designing multi-agent systems in 2026 — Part 2",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
-    "datePublished": "2026-08-20T00:00:00.000Z",
-    "dateModified": "2026-08-28T07:51:28.000Z",
+    "datePublished": "2026-08-21T00:00:00.000Z",
+    "dateModified": "2026-08-28T08:55:39.959Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "title: &quot;Designing MultiAgent Systems in 2026&quot; subtitle: &quot;How to distribute autonomy without losing control&quot; description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent…"
+    "description": "Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…"
   }
   </script>
 
@@ -1447,12 +1447,12 @@
       <section class="post-hero">
         <div class="post-hero__icon">🧠</div>
         <span class="post-hero__category">AI Engineering Path</span>
-        <h1 class="post-hero__title">Designing Multi-Agent Systems in 2026</h1>
+        <h1 class="post-hero__title">Designing multi-agent systems in 2026 — Part 2</h1>
         <div class="post-hero__author">
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">August 20, 2026 • 29 min</span>
+            <span class="post-hero__author-meta">August 21, 2026 • 9 min</span>
           </div>
         </div>
       </section>
@@ -1468,451 +1468,170 @@
         <div class="post-toc__content">
           <ul class="post-toc__list">
     <li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#title-designing-multi-agent-systems-in-2026-subtitle-how-to-distribute-autonomy-without-losing-control-description-a-reasoned-guide-to-routing-supervisors-handoffs-context-engineering-verification-failure-semantics-and-harnesses-for-modern-agent-systems-author-mirko-calcaterra-date-2026-08-20-lang-en-tags---ai-agents---multi-agent-systems---orchestration---context-engineering---ai-engineering">
+          <a class="post-toc__link" href="#defining-roles">
             <span class="post-toc__number">1</span>
-            <span class="post-toc__text">title: &quot;Designing Multi-Agent Systems in 2026&quot;
-subtitle: &quot;How to distribute autonomy without losing control&quot;
-description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent systems.&quot;
-author: &quot;Mirko Calcaterra&quot;
-date: &quot;2026-08-20&quot;
-lang: &quot;en&quot;
-tags:
-  - AI agents
-  - multi-agent systems
-  - orchestration
-  - context engineering
-  - AI engineering</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#how-to-distribute-autonomy-without-losing-control">
-            <span class="post-toc__number">2</span>
-            <span class="post-toc__text">How to distribute autonomy without losing control</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#1-the-simplest-system-that-could-work">
-            <span class="post-toc__number">3</span>
-            <span class="post-toc__text">1. The simplest system that could work</span>
+            <span class="post-toc__text">Defining roles</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#an-agent-must-earn-its-place">
-            <span class="post-toc__number">3.1</span>
-            <span class="post-toc__text">An agent must earn its place</span>
+          <a class="post-toc__link" href="#who-does-what">
+            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__text">Who does what?</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#tool-worker-subagent">
+            <span class="post-toc__number">1.1.1</span>
+            <span class="post-toc__text">Tool, worker, subagent</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#parallelism">
+            <span class="post-toc__number">1.1.2</span>
+            <span class="post-toc__text">Parallelism</span>
           </a>
           
         </li>
   </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#2-the-spotify-monolith">
-            <span class="post-toc__number">4</span>
-            <span class="post-toc__text">2. The Spotify monolith</span>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#who-knows-what">
+            <span class="post-toc__number">1.2</span>
+            <span class="post-toc__text">Who knows what?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#decision-ambiguity">
-            <span class="post-toc__number">4.1</span>
-            <span class="post-toc__text">Decision ambiguity</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#acceptance-ambiguity">
-            <span class="post-toc__number">4.2</span>
-            <span class="post-toc__text">Acceptance ambiguity</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#3-decomposing-the-problem-before-the-agent">
-            <span class="post-toc__number">5</span>
-            <span class="post-toc__text">3. Decomposing the problem before the agent</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#4-who-decides">
-            <span class="post-toc__number">6</span>
-            <span class="post-toc__text">4. Who decides?</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#routing-the-decision-is-already-in-the-state">
-            <span class="post-toc__number">6.1</span>
-            <span class="post-toc__text">Routing: the decision is already in the state</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#supervisor-the-decision-still-requires-judgment">
-            <span class="post-toc__number">6.2</span>
-            <span class="post-toc__text">Supervisor: the decision still requires judgment</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#handoff-changing-the-owner-of-the-next-turn">
-            <span class="post-toc__number">6.3</span>
-            <span class="post-toc__text">Handoff: changing the owner of the next turn</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#5-a-handoff-is-a-contract">
-            <span class="post-toc__number">7</span>
-            <span class="post-toc__text">5. A handoff is a contract</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#6-who-does-what">
-            <span class="post-toc__number">8</span>
-            <span class="post-toc__text">6. Who does what?</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#tools-workers-subagents">
-            <span class="post-toc__number">8.1</span>
-            <span class="post-toc__text">Tools, workers, subagents</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#parallelism-dependencies-first">
-            <span class="post-toc__number">8.2</span>
-            <span class="post-toc__text">Parallelism: dependencies first</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#7-who-knows-what">
-            <span class="post-toc__number">9</span>
-            <span class="post-toc__text">7. Who knows what?</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
+    <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#the-shared-context-paradox">
-            <span class="post-toc__number">9.1</span>
+            <span class="post-toc__number">1.2.1</span>
             <span class="post-toc__text">The shared context paradox</span>
           </a>
           
         </li>
   </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#8-state-memory-and-artifacts">
-            <span class="post-toc__number">10</span>
-            <span class="post-toc__text">8. State, memory, and artifacts</span>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#state-memory-and-artifacts">
+            <span class="post-toc__number">1.3</span>
+            <span class="post-toc__text">State, memory, and artifacts</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
+    <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#conversation-state">
-            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__number">1.3.1</span>
             <span class="post-toc__text">Conversation state</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#task-state">
-            <span class="post-toc__number">10.2</span>
+            <span class="post-toc__number">1.3.2</span>
             <span class="post-toc__text">Task state</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#local-state">
-            <span class="post-toc__number">10.3</span>
+            <span class="post-toc__number">1.3.3</span>
             <span class="post-toc__text">Local state</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#artifact">
-            <span class="post-toc__number">10.4</span>
+            <span class="post-toc__number">1.3.4</span>
             <span class="post-toc__text">Artifact</span>
           </a>
           
         </li>
   </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#9-who-is-in-control">
-            <span class="post-toc__number">11</span>
-            <span class="post-toc__text">9. Who is in control?</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#91-deterministic-checks">
-            <span class="post-toc__number">11.1</span>
-            <span class="post-toc__text">9.1 Deterministic checks</span>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#who-is-in-control">
+            <span class="post-toc__number">1.4</span>
+            <span class="post-toc__text">Who is in control?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#92-environmental-verification">
-            <span class="post-toc__number">11.2</span>
-            <span class="post-toc__text">9.2 Environmental verification</span>
+          <a class="post-toc__link" href="#environment-verification">
+            <span class="post-toc__number">1.5</span>
+            <span class="post-toc__text">Environment verification</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#93-semantic-evaluation">
-            <span class="post-toc__number">11.3</span>
-            <span class="post-toc__text">9.3 Semantic evaluation</span>
+          <a class="post-toc__link" href="#semantic-evaluation">
+            <span class="post-toc__number">1.6</span>
+            <span class="post-toc__text">Semantic evaluation</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#a-loop-needs-a-brake">
-            <span class="post-toc__number">11.4</span>
+            <span class="post-toc__number">1.7</span>
             <span class="post-toc__text">A loop needs a brake</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#10-evals-the-system-must-be-measured-as-a-whole">
-            <span class="post-toc__number">12</span>
-            <span class="post-toc__text">10. Evals: the system must be measured as a whole</span>
+          <a class="post-toc__link" href="#evals-the-system-must-be-measured-as-a-whole">
+            <span class="post-toc__number">2</span>
+            <span class="post-toc__text">Evals: the system must be measured as a whole</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#do-not-reward-a-rigid-path">
-            <span class="post-toc__number">12.1</span>
-            <span class="post-toc__text">Do not reward a rigid path</span>
+          <a class="post-toc__link" href="#do-not-reward-rigid-paths">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">Do not reward rigid paths</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#11-things-go-wrong">
-            <span class="post-toc__number">13</span>
-            <span class="post-toc__text">11. Things go wrong</span>
+          <a class="post-toc__link" href="#when-things-go-wrong">
+            <span class="post-toc__number">3</span>
+            <span class="post-toc__text">When things go wrong</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#formally-invalid-output">
-            <span class="post-toc__number">13.1</span>
+            <span class="post-toc__number">3.1</span>
             <span class="post-toc__text">Formally invalid output</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#valid-but-semantically-uncertain-output">
-            <span class="post-toc__number">13.2</span>
+            <span class="post-toc__number">3.2</span>
             <span class="post-toc__text">Valid but semantically uncertain output</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#external-tool-unavailable">
-            <span class="post-toc__number">13.3</span>
+            <span class="post-toc__number">3.3</span>
             <span class="post-toc__text">External tool unavailable</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#partial-success">
-            <span class="post-toc__number">13.4</span>
+            <span class="post-toc__number">3.4</span>
             <span class="post-toc__text">Partial success</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#idempotency-and-side-effects">
-            <span class="post-toc__number">13.5</span>
+            <span class="post-toc__number">3.5</span>
             <span class="post-toc__text">Idempotency and side effects</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#12-blast-radius-and-human-in-the-loop">
-            <span class="post-toc__number">14</span>
-            <span class="post-toc__text">12. Blast radius and human-in-the-loop</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#13-when-the-work-lasts-longer-than-the-conversation">
-            <span class="post-toc__number">15</span>
-            <span class="post-toc__text">13. When the work lasts longer than the conversation</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#compaction">
-            <span class="post-toc__number">15.1</span>
-            <span class="post-toc__text">Compaction</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#context-reset">
-            <span class="post-toc__number">15.2</span>
-            <span class="post-toc__text">Context reset</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#checkpoint">
-            <span class="post-toc__number">15.3</span>
-            <span class="post-toc__text">Checkpoint</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#artifact-persistence">
-            <span class="post-toc__number">15.4</span>
-            <span class="post-toc__text">Artifact persistence</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#14-from-agent-system-to-harness">
-            <span class="post-toc__number">16</span>
-            <span class="post-toc__text">14. From agent system to harness</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#many-brains-many-hands">
-            <span class="post-toc__number">16.1</span>
-            <span class="post-toc__text">Many brains, many hands</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#15-mcp-and-a2a-two-different-problems">
-            <span class="post-toc__number">17</span>
-            <span class="post-toc__text">15. MCP and A2A: two different problems</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#mcp">
-            <span class="post-toc__number">17.1</span>
-            <span class="post-toc__text">MCP</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#a2a">
-            <span class="post-toc__number">17.2</span>
-            <span class="post-toc__text">A2A</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#16-when-a-decision-becomes-an-edge">
-            <span class="post-toc__number">18</span>
-            <span class="post-toc__text">16. When a decision becomes an edge</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#17-the-spotify-reference-architecture">
-            <span class="post-toc__number">19</span>
-            <span class="post-toc__text">17. The Spotify reference architecture</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#the-runtime-in-pseudocode">
-            <span class="post-toc__number">19.1</span>
-            <span class="post-toc__text">The runtime, in pseudocode</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#18-what-is-converging-in-2026">
-            <span class="post-toc__number">20</span>
-            <span class="post-toc__text">18. What is converging in 2026</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#1-simplicity-comes-before-decomposition">
-            <span class="post-toc__number">20.1</span>
-            <span class="post-toc__text">1. Simplicity comes before decomposition</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#2-context-is-a-design-object">
-            <span class="post-toc__number">20.2</span>
-            <span class="post-toc__text">2. Context is a design object</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#3-control-must-be-localized">
-            <span class="post-toc__number">20.3</span>
-            <span class="post-toc__text">3. Control must be localized</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#4-verification-must-touch-the-environment">
-            <span class="post-toc__number">20.4</span>
-            <span class="post-toc__text">4. Verification must touch the environment</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#5-state-must-survive-the-prompt">
-            <span class="post-toc__number">20.5</span>
-            <span class="post-toc__text">5. State must survive the prompt</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#6-risk-is-managed-with-deterministic-boundaries">
-            <span class="post-toc__number">20.6</span>
-            <span class="post-toc__text">6. Risk is managed with deterministic boundaries</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#7-the-model-and-the-harness-must-be-evaluated-together">
-            <span class="post-toc__number">20.7</span>
-            <span class="post-toc__text">7. The model and the harness must be evaluated together</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#19-a-grammar-for-design">
-            <span class="post-toc__number">21</span>
-            <span class="post-toc__text">19. A grammar for design</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#who-decides">
-            <span class="post-toc__number">21.1</span>
-            <span class="post-toc__text">Who decides?</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#who-knows-what">
-            <span class="post-toc__number">21.2</span>
-            <span class="post-toc__text">Who knows what?</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#who-does-what">
-            <span class="post-toc__number">21.3</span>
-            <span class="post-toc__text">Who does what?</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#who-controls">
-            <span class="post-toc__number">21.4</span>
-            <span class="post-toc__text">Who controls?</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#who-keeps-the-system-running">
-            <span class="post-toc__number">21.5</span>
-            <span class="post-toc__text">Who keeps the system running?</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#20-an-interactive-lab">
-            <span class="post-toc__number">22</span>
-            <span class="post-toc__text">20. An interactive lab</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#conclusion">
-            <span class="post-toc__number">23</span>
-            <span class="post-toc__text">Conclusion</span>
+          <a class="post-toc__link" href="#blast-radius-and-human-in-the-loop">
+            <span class="post-toc__number">4</span>
+            <span class="post-toc__text">Blast radius and human-in-the-loop</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#sources-and-reading-notes">
-            <span class="post-toc__number">24</span>
+            <span class="post-toc__number">5</span>
             <span class="post-toc__text">Sources and reading notes</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#further-reading">
-            <span class="post-toc__number">24.1</span>
+            <span class="post-toc__number">5.1</span>
             <span class="post-toc__text">Further reading</span>
           </a>
           
@@ -1923,318 +1642,22 @@ tags:
         </div>
       </aside>
         <div class="post-body">
-          <hr>
-<h2 id="title-designing-multi-agent-systems-in-2026-subtitle-how-to-distribute-autonomy-without-losing-control-description-a-reasoned-guide-to-routing-supervisors-handoffs-context-engineering-verification-failure-semantics-and-harnesses-for-modern-agent-systems-author-mirko-calcaterra-date-2026-08-20-lang-en-tags---ai-agents---multi-agent-systems---orchestration---context-engineering---ai-engineering">title: &quot;Designing Multi-Agent Systems in 2026&quot;
-subtitle: &quot;How to distribute autonomy without losing control&quot;
-description: &quot;A reasoned guide to routing, supervisors, handoffs, context engineering, verification, failure semantics, and harnesses for modern agent systems.&quot;
-author: &quot;Mirko Calcaterra&quot;
-date: &quot;2026-08-20&quot;
-lang: &quot;en&quot;
-tags:
-  - AI agents
-  - multi-agent systems
-  - orchestration
-  - context engineering
-  - AI engineering</h2>
-<h1 id="designing-multi-agent-systems-in-2026">Designing Multi-Agent Systems in 2026</h1>
-<h2 id="how-to-distribute-autonomy-without-losing-control">How to distribute autonomy without losing control</h2>
-<blockquote>
-<p><strong>Editorial Note.</strong> This article deliberately distinguishes between three levels. Examples marked <strong>[VERIFIED IN REPO]</strong> correspond to the Spotify running example used in the lecture. Examples marked <strong>[REFERENCE DESIGN]</strong> describe the architecture toward which that system can evolve. Examples marked <strong>[PSEUDOCODE]</strong> are intended to illustrate a design choice and should not be read as APIs for a specific framework.</p>
-</blockquote>
-<p>Before discussing swarms, supervisors, and handoffs, it is worth taking a step back. This is a common stumbling block, and the rest of the discussion suffers if it isn&#39;t addressed.</p>
-<p>A multi-agent system is not created simply by placing two models side-by-side. It doesn&#39;t even emerge when one agent calls a second agent as if it were a tool. It is born when you decide to <strong>distribute responsibility, context, and control</strong> among components that can make partially autonomous decisions.</p>
-<p>The important word here is <em>decide</em>. Adding agents is not an end in itself; it is an architectural choice that must justify its own cost.</p>
-<p>To keep the discussion grounded, we will use a very simple request:</p>
-<blockquote>
-<p><strong>«I’m tired, but I want to dance.»</strong></p>
-</blockquote>
-<p>It is a short sentence, but it already contains almost everything: a current state, a desired state, a tension between the two, and a decision to be made. We will use this as a lens: every time the system cracks, we will introduce only the mechanism necessary to fix that specific fissure.</p>
-<p>The common thread of this article can be condensed into five questions:</p>
-<ol>
-<li><strong>Who decides?</strong></li>
-<li><strong>Who knows what?</strong></li>
-<li><strong>Who does what?</strong></li>
-<li><strong>Who verifies that the work was done well?</strong></li>
-<li><strong>Who keeps the system running when the work takes time, something fails, or the model changes?</strong></li>
-</ol>
-<p>In 2024, the most useful taxonomy focused primarily on routing, chaining, parallelization, orchestrator-workers, and evaluator-optimizers. Those patterns remain valid. In 2026, however, the interesting focus has shifted one level higher: context lifecycle, contracts, artifacts, checkpoints, trajectory evals, sandboxes, containment, and harnesses. Anthropic, OpenAI, and Microsoft are converging on this exact layer of the problem, even while using different vocabularies and abstractions.[^anthropic-engineering][^openai-sdk-2026][^microsoft-workflows]</p>
-<hr>
-<h2 id="1-the-simplest-system-that-could-work">1. The simplest system that could work</h2>
-<p>The first question is not &quot;how many agents do I need?&quot; It is more uncomfortable:</p>
-<blockquote>
-<p><strong>Why isn&#39;t a single agent enough?</strong></p>
-</blockquote>
-<p>If the path is known in advance, a workflow is often sufficient. If a transformation is deterministic, a function will do. If a single agent can maintain the context and use tools effectively, splitting the work only creates new points of failure.</p>
-<pre class="mermaid">flowchart LR
-    F[Function] --&gt; W[Deterministic workflow]
-    W --&gt; A[Single agent]
-    A --&gt; S[Agent + specialists]
-    S --&gt; M[Multi-agent system]
-
-    classDef base fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
-    classDef hot fill:#D7342B,stroke:#D7342B,color:#fff;
-    class F,W,A,S base;
-    class M hot;</pre><p>Moving toward the right means gaining flexibility, but also paying in latency, cost, non-determinism, coordination, and observability.</p>
-<p>A starting rule can be written as follows:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
-
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">choose_architecture</span>(<span class="hljs-params">problem</span>):
-    <span class="hljs-keyword">if</span> problem.is_deterministic:
-        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;function_or_workflow&quot;</span>
-
-    <span class="hljs-keyword">if</span> problem.path_is_known:
-        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;graph_workflow&quot;</span>
-
-    <span class="hljs-keyword">if</span> problem.fits_one_context <span class="hljs-keyword">and</span> problem.needs_one_owner:
-        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;single_agent&quot;</span>
-
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;consider_multi_agent&quot;</span></code></pre><p>This is not a universal formula; it is a safeguard. It serves to avoid the most common mistake: confusing complexity with maturity.</p>
-<p>Simon Willison puts it from a very practical perspective: sub-agents are valuable primarily because they preserve the main context and absorb token-heavy operations; breaking every activity down into dozens of specialists, however, can become an expensive indulgence.[^simon-subagents]</p>
-<h3 id="an-agent-must-earn-its-place">An agent must earn its place</h3>
-<p>Before adding an agent, try to complete this sentence:</p>
-<blockquote>
-<p>&quot;This component must be an agent because it needs to ____________.&quot;</p>
-</blockquote>
-<p>Plausible responses involve judgment, open-ended planning, dynamic tool use, exploration, or interaction. If the response is &quot;must sort a list,&quot; &quot;must check for duplicates,&quot; or &quot;must choose a branch by reading a boolean,&quot; you are likely promoting what should remain a function to the role of a colleague.</p>
-<hr>
-<h2 id="2-the-spotify-monolith">2. The Spotify monolith</h2>
-<p>Let&#39;s start with the most natural system. An agent receives a request and possesses five tools:</p>
-<ul>
-<li>interpret mood;</li>
-<li>search genres;</li>
-<li>search songs;</li>
-<li>sort results;</li>
-<li>generate playlist.</li>
-</ul>
-<p>This version exists and is executable in the lesson repository.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFIED IN REPO] - monolith.py</span>
-
-<span class="hljs-keyword">return</span> Agent(
-    name=<span class="hljs-string">&quot;playlist_monolith&quot;</span>,
-    client=client,
-    system_prompt=SYSTEM_PROMPT,
-    tools=[
-        interpreta_umore,
-        cerca_generi_per_mood,
-        cerca_canzoni_per_genere,
-        ordina_canzoni,
-        genera_playlist,
-    ],
-    max_steps=<span class="hljs-number">8</span>,
-)</code></pre><p>The design is almost disarmingly simple:</p>
-<pre class="mermaid">flowchart LR
-    U[User] --&gt; A[Playlist Agent]
-
-    A --&gt; T1[Interpret mood]
-    A --&gt; T2[Search genres]
-    A --&gt; T3[Search songs]
-    A --&gt; T4[Sort]
-    A --&gt; T5[Create playlist]
-
-    T1 --&gt; A
-    T2 --&gt; A
-    T3 --&gt; A
-    T4 --&gt; A
-    T5 --&gt; A
-
-    classDef agent fill:#1B64F5,stroke:#1B64F5,color:#fff;
-    classDef tool fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
-    class A agent;
-    class T1,T2,T3,T4,T5 tool;</pre><p>At first glance, everything seems fine. The model reads &quot;tired&quot; and &quot;dancing,&quot; finds two compatible genre families, retrieves the tracks, and builds a playlist.</p>
-<p>Then you shift your focus, and the crack appears.</p>
-<p>In some runs, the agent treats the two signals as independent searches, merges the results, and delivers a playlist containing both party tracks and relaxing tracks without having decided what relationship exists between the current state and the desired one.</p>
-<p>The problem isn&#39;t that the model didn&#39;t understand the words. It understood both. It didn&#39;t even choose a blatantly wrong tool. The failure lies elsewhere: <strong>an important decision remained implicit.</strong></p>
-<pre class="mermaid">flowchart LR
-    P[&quot;I&#39;m tired,&lt;br/&gt;but I want to dance&quot;] --&gt; I[Interpret]
-    I --&gt; S1[tired → low energy]
-    I --&gt; S2[dance → high energy]
-    S1 --&gt; C[Implicit union]
-    S2 --&gt; C
-    C --&gt; O[Formally valid playlist,&lt;br/&gt;semantically incoherent]
-
-    classDef ok fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
-    classDef bad fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
-    class S1,S2 ok;
-    class C,O bad;</pre><p>Here we see two different types of ambiguity.</p>
-<h3 id="decision-ambiguity">Decision ambiguity</h3>
-<p>Who determines if the request describes:</p>
-<ul>
-<li>a contradiction to be clarified;</li>
-<li>a transition from low energy to high energy;</li>
-<li>a deliberately hybrid combination?</li>
-</ul>
-<h3 id="acceptance-ambiguity">Acceptance ambiguity</h3>
-<p>Who determines whether the produced playlist is coherent enough to be delivered?</p>
-<p>The monolith has a technical stop condition: <code>max_steps=8</code> and a final tool. What it lacks is a <strong>definition of done external to its own enthusiasm.</strong></p>
-<p>And this is where multi-agent systems begin. Not because five tools are too many in absolute terms, but because understanding, deciding, executing, and evaluating all coexist in the same decision-making center.</p>
-<hr>
-<h2 id="3-decomposing-the-problem-before-the-agent">3. Decomposing the problem before the agent</h2>
-<p>The temptation at this point is to create four agents:</p>
-<pre><code class="hljs language-text">Mood Agent
-Decision Agent
-Search Agent
-Evaluation Agent</code></pre><p>It looks orderly. However, visual order does not guarantee good architecture.</p>
-<p>First, you must decompose the <strong>work</strong>.</p>
-<pre class="mermaid">flowchart LR
-    A[Understand request] --&gt; B[Build search plan]
-    B --&gt; C[Gather candidates]
-    C --&gt; D[Compose playlist]
-    D --&gt; E[Verify constraints]
-    E --&gt; F[Deliver]</pre><p>Then, for each step, we ask:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
-
-Task(
-    goal=...,
-    inputs=...,
-    outputs=...,
-    tools=...,
-    context=...,
-    side_effects=...,
-    failure_policy=...,
-    verification=...,
-)</code></pre><p>Only then do we decide which component should perform it.</p>
-<pre><code class="hljs language-text">Interpret intent             → LLM / agent
-Read a boolean               → code
-Search catalog               → tool or worker
-Sort by energy               → function
-Compose playlist             → agent, if judgment is needed
-Check duplicates             → function
-Judge coherence              → evaluator, if subjectivity remains</code></pre><p>This distinction is worth pinning down:</p>
-<blockquote>
-<p><strong>Task decomposition and agent decomposition are not the same thing.</strong></p>
-</blockquote>
-<p>In the 2026 Microsoft Agent Framework, this choice is made explicit: workflow executors can be agents or standard application logic. The graph does not require every node to reason; it requires every node to have a clear responsibility.[^microsoft-workflows]</p>
-<hr>
-<h2 id="4-who-decides">4. Who decides?</h2>
-<p>Once the work is represented, we must assign control.</p>
-<p>Three patterns are often lumped together: routing, supervisor, and handoff. In reality, they answer different questions.</p>
-<h3 id="routing-the-decision-is-already-in-the-state">Routing: the decision is already in the state</h3>
-<p>The first step of our running example is to ask the model to produce a typed semantic state.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFIED IN REPO] - mood_interpreter.py</span>
-
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
-    current_energy: <span class="hljs-built_in">float</span>
-    desired_energy: <span class="hljs-built_in">float</span>
-    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>]
-    needs_clarification: <span class="hljs-built_in">bool</span></code></pre><p>At that point, the branch does not require another inference.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFIED IN REPO]</span>
-
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">route</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;clarification&quot;</span>, <span class="hljs-string">&quot;search&quot;</span>]:
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarification&quot;</span> <span class="hljs-keyword">if</span> profile.needs_clarification <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;search&quot;</span></code></pre><pre class="mermaid">flowchart LR
-    P[Prompt] --&gt; M[MoodProfile]
-    M --&gt; G{needs_clarification?}
-    G --&gt;|yes| C[Clarifier]
-    G --&gt;|no| S[Search]
-
-    classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
-    classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class M model;
-    class G code;</pre><p>The important move isn&#39;t &quot;using Pydantic.&quot; It is <strong>making the decision representable</strong>.</p>
-<p>As long as the difference between &quot;I&#39;m tired&quot; and &quot;I want to dance&quot; exists only in the text, the control flow remains at the mercy of the model&#39;s reasoning. When it becomes <code>current_energy != desired_energy</code> and <code>intent=&quot;shift&quot;</code>, part of the control can move out of the prompt and into the code.</p>
-<h3 id="supervisor-the-decision-still-requires-judgment">Supervisor: the decision still requires judgment</h3>
-<p>A supervisor is needed when reading a field is not enough.</p>
-<pre class="mermaid">flowchart TD
-    U[User] --&gt; S[Supervisor]
-    S --&gt; M[Mood Interpreter]
-    S --&gt; SC[Music Scout]
-    S --&gt; C[Curator]
-    M --&gt; S
-    SC --&gt; S
-    C --&gt; S
-    S --&gt; O[Output]
-
-    classDef key fill:#1B64F5,stroke:#1B64F5,color:#fff;
-    class S key;</pre><p>The supervisor maintains the thread of the conversation, decides which specialist to call, receives the result, and can delegate again.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
-
-<span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> state.done:
-    decision = supervisor.decide(
-        goal=state.goal,
-        current_state=state.summary,
-        pending=state.pending,
-        available_workers=registry,
-    )
-
-    result = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task)
-    state.record(result)</code></pre><p>The cost is clear: another inference, another point of non-determinism, and higher latency. Therefore, the right question is not &quot;can I use a supervisor?&quot;, but:</p>
-<blockquote>
-<p><strong>Is there still something to negotiate?</strong></p>
-</blockquote>
-<p>If the answer is already inside a schema, the supervisor is just an expensive way to read a field.</p>
-<h3 id="handoff-changing-the-owner-of-the-next-turn">Handoff: changing the owner of the next turn</h3>
-<p>In delegation, the manager remains the primary contact. In a handoff, control passes to the specialist.</p>
-<pre class="mermaid">flowchart TB
-    subgraph H[&quot;Handoff · ownership transfers&quot;]
-        direction LR
-        T[Triage] --&gt;|passes context + ownership| A2[Specialist]
-        A2 --&gt;|responds in following turns| U2([User])
-    end
-
-    subgraph D[&quot;Delegation · ownership stays with Supervisor&quot;]
-        direction LR
-        S1[Supervisor] --&gt;|delegates a scoped task| A1[Specialist]
-        A1 -. result .-&gt; S1
-        S1 --&gt;|provides the final answer| U1([User])
-    end
-
-    classDef triage fill:#F5A623,stroke:#FBBF24,color:#1F2937,stroke-width:2px;
-    classDef owner fill:#1B64F5,stroke:#60A5FA,color:#FFFFFF,stroke-width:2px;
-    classDef specialist fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
-    classDef user fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
-    class T triage;
-    class S1 owner;
-    class A1,A2 specialist;
-    class U1,U2 user;
-    style H fill:#101A30,stroke:#F5A623,stroke-width:2px,color:#FDE68A
-    style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE</pre><p>The OpenAI Agents SDK explicitly distinguishes between these two topologies: <em>agents as tools</em> when the manager retains control; <em>handoffs</em> when the specialist takes charge of the next part of the interaction.[^openai-multi-agent][^openai-handoffs]</p>
-<p>You can remember the difference like this:</p>
-<pre><code class="hljs language-text">Delegation → changes who does the work.
-Handoff    → changes who owns the control.</code></pre><hr>
-<h2 id="5-a-handoff-is-a-contract">5. A handoff is a contract</h2>
-<p>In diagrams, a handoff is an arrow. In real systems, it is a boundary.</p>
-<p>The naive approach is this:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [ANTI-PATTERN]</span>
-<span class="hljs-keyword">await</span> specialist.run(full_history)</code></pre><p>The designed approach looks more like this:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
-
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
-    goal: <span class="hljs-built_in">str</span>
-    reason: <span class="hljs-built_in">str</span>
-    relevant_state: <span class="hljs-built_in">dict</span>
-    constraints: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
-    artifact_refs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
-    expected_output: <span class="hljs-built_in">str</span>
-    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">sequenceDiagram
-    autonumber
-    participant T as Triage
-    participant C as Handoff contract
-    participant S as Specialist
-
-    T-&gt;&gt;C: Defines a minimal handoff
-    Note over C: Intent&lt;br/&gt;goal · reason&lt;br/&gt;&lt;br/&gt;Required context&lt;br/&gt;relevant_state · artifact_refs&lt;br/&gt;&lt;br/&gt;Operating agreement&lt;br/&gt;constraints · expected_output · return_policy
-    C-&gt;&gt;S: Transfers context + ownership
-    Note right of S: The specialist owns&lt;br/&gt;the following turns</pre><p>Here, two decisions that are often confused become visible:</p>
-<ol>
-<li><strong>who owns the control;</strong></li>
-<li><strong>what information crosses the boundary.</strong></li>
-</ol>
-<p>LangChain/LangGraph treats handoffs as state-driven transitions and allows you to filter what the new agent receives. Subgraphs also have input and output schemas that can be separated from the parent graph&#39;s state.[^langchain-handoffs][^langgraph-subgraphs]</p>
-<p>The consequence is important: a handoff should not pass &quot;everything, just in case.&quot; It should pass what is needed to get the job done without forcing the specialist to reconstruct the world.</p>
-<hr>
-<h2 id="6-who-does-what">6. Who does what?</h2>
-<p>At this point, we know who makes the decisions. Now we need to distribute the work.</p>
-<h3 id="tools-workers-subagents">Tools, workers, subagents</h3>
-<p>These are three different things.</p>
-<p>A <strong>tool</strong> exposes a capability. It does not have a goal and does not decide the next step.</p>
-<p>A <strong>worker</strong> receives a specific task and returns a result.</p>
-<p>A <strong>subagent</strong> is a worker with its own reasoning loop, local context, and, often, its own tools.</p>
+          <p>In the <a href="../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-1/">first chapter</a>, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and controls without turning orchestration into an indistinct conversation between models.</p>
+<h2 id="defining-roles">Defining roles</h2>
+<h3 id="who-does-what">Who does what?</h3>
+<p>We have a high-level understanding of what needs to be done and how to assign decisions based on the problems at hand. Now, we need to distribute the work.</p>
+<h4 id="tool-worker-subagent">Tool, worker, subagent</h4>
+<p>Let’s define our terms:</p>
+<p>A <strong>tool</strong> exposes a capability. It has no goal of its own and does not decide the next step.</p>
+<p>A <strong>worker</strong> receives a specific, bounded task and returns a result.</p>
+<p>A <strong>subagent</strong> is a worker with its own reasoning loop, local context, and, often, its own set of tools.</p>
 <pre class="mermaid">flowchart TB
     S[Supervisor]
     S --&gt; T[&quot;Tool&lt;br/&gt;search_catalog(query)&quot;]
     S --&gt; W[Worker&lt;br/&gt;execute defined task]
-    S --&gt; A[Subagent&lt;br/&gt;goal + context + tools + loop]</pre><p>This distinction is necessary because a tool does not need a personality, and a subagent should not be used to mask a function we are simply too lazy to write.</p>
-<h3 id="parallelism-dependencies-first">Parallelism: dependencies first</h3>
-<p>Three searches can only run in parallel if they do not depend on one another.</p>
+    S --&gt; A[Subagent&lt;br/&gt;goal + context + tools + loop]</pre><p>This distinction is important because a tool doesn&#39;t need a personality, and a subagent shouldn&#39;t be used as a mask for a function you simply don&#39;t want to write.</p>
+<h4 id="parallelism">Parallelism</h4>
+<p>Three searches can work in parallel only if they do not depend on one another.</p>
 <pre class="mermaid">flowchart LR
     P[Search Plan] --&gt; S1[Scout: electronic]
     P --&gt; S2[Scout: indie dance]
@@ -2249,19 +1672,15 @@ results = <span class="hljs-keyword">await</span> asyncio.gather(
     scout.run(SearchTask(genre=<span class="hljs-string">&quot;funk&quot;</span>, ...)),
 )
 
-candidates = aggregate(results)</code></pre><p>If, however, B requires the output of A, the fan-out is merely an aesthetic design.</p>
-<pre><code class="hljs language-text">A → B → C        dependency: sequence
-
-A → {B, C, D}    independence: parallelism possible</code></pre><p>In February 2026, Anthropic described an experiment with sixteen Claude agents working in parallel on a C compiler. The experiment demonstrates how capacity can scale when work is divisible and a shared environment makes progress and tests visible; it also shows how quickly cost and operational complexity rise.[^anthropic-c-compiler]</p>
-<p>The correct takeaway is not &quot;sixteen agents work.&quot; It is:</p>
+candidates = aggregate(results)</code></pre><p>Last February, Anthropic shared an experiment involving sixteen Claude agents working in parallel on a C compiler. You can see an example there of how task locking, a shared repository, and testing allowed the work to be divided. It goes without saying, but if you read the article, you&#39;ll see they encountered frequent merge conflicts, required about 2,000 sessions, and cost nearly $20,000 (<a href="https://www.anthropic.com/engineering/building-c-compiler">Anthropic — C compiler</a>)!</p>
+<p>The question that should arise now is:</p>
 <blockquote>
 <p><strong>What problem structure made it possible for them to work without stepping on each other&#39;s toes?</strong></p>
 </blockquote>
-<p>Simon Willison suggests similar caution: parallelism helps when files or subtasks are independent; subagents remain primarily a mechanism to protect the main context and confine verbose operations.[^simon-subagents]</p>
-<hr>
-<h2 id="7-who-knows-what">7. Who knows what?</h2>
-<p>Here we arrive at the issue that, in 2026, weighs almost as much as orchestration itself: <strong>context engineering</strong>.</p>
-<p>The most convenient mistake is to give every agent the entire conversation, the entire state, and all the tools. It seems prudent. In reality, it shifts the problem: instead of risking missing information, we force every component to distinguish what matters from a mass of details that do not belong to it.</p>
+<p>My dear friend Simon Willison writes in the article I mentioned earlier that parallelism helps when files or subtasks are independent; subagents remain primarily a mechanism to protect the main context and contain verbose operations (<a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Willison — Subagents</a>)!</p>
+<h3 id="who-knows-what">Who knows what?</h3>
+<p>This brings us to the trend that, in 2026, overtook prompt engineering: <strong>context engineering</strong>.</p>
+<p>As I mentioned earlier, a classic mistake—at least in the beginning—is giving every agent the entire conversation, the full state, and every available tool. While this might seem logical, especially with models that handle massive context windows, it actually shifts the problem: instead of risking missing information, we force every component to distinguish what matters from a mass of details that don&#39;t belong to it.</p>
 <pre class="mermaid">flowchart TD
     GS[(Global State)] --&gt; S[Supervisor context]
     S --&gt;|subset| A[Scout context]
@@ -2299,19 +1718,20 @@ VERIFIER
 ──────────
 produced playlist
 constraints
-evaluation rubric</code></pre><p>The &quot;minimum sufficient context&quot; rule does not mean randomly amputating information. It means recognizing that context is a form of <strong>working memory</strong>: limited, expensive, and noise-sensitive.</p>
-<p>Anthropic formalized this idea in 2025 when discussing context engineering: selecting, maintaining, and updating the set of tokens that maximizes the probability of the desired behavior. By 2026, that principle is found within subagents, persistent sessions, artifacts, and long-running harnesses.[^anthropic-context]</p>
-<h3 id="the-shared-context-paradox">The shared context paradox</h3>
-<p>Passing too little context produces omissions. Passing too much produces interference.</p>
-<p>Jason Liu, describing Cognition&#39;s position on multi-agent coding, uses the image of a game of &quot;telephone&quot;: every handoff can lose implicit decisions and produce incompatible components. This is a 2025 source, so I would not use it alone to describe the state of the art; however, it remains one of the clearest formulations of the risk of context loss between agents.[^jason-cognition]</p>
-<p>The point is not solved by &quot;passing everything to everyone.&quot; Parallel workers can still make incompatible decisions, and the global context can become too large. The mature solution consists of making the following explicit:</p>
+evaluation rubric</code></pre><p>The rule of &quot;minimum sufficient context&quot; means recognizing that context is a form of <strong>working memory</strong>: it is limited, expensive, and sensitive to noise.</p>
+<p>Anthropic formalized this idea in 2025 under the term context engineering: selecting, maintaining, and updating the set of tokens that maximizes the probability of the desired behavior (<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic — Context engineering</a>). Throughout the rest of this article, we will apply this principle to subagents, persistent sessions, artifacts, and long-running harnesses.</p>
+<h4 id="the-shared-context-paradox">The shared context paradox</h4>
+<p>Passing too little context leads to omissions. Passing too much leads to interference.</p>
+<p>Jason Liu, describing Cognition&#39;s stance on multi-agent systems for coding, uses the image of the &quot;telephone game&quot;: every hand-off can lose implicit decisions and result in incompatible components. Even though the article is a bit dated (exactly one year old), it remains one of the clearest formulations of the risk of context loss between agents (<a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">Jason Liu — Cognition and multi-agent</a>).</p>
+<p>However, be aware that parallel workers can still make incompatible decisions, and the global context can become bloated.</p>
+<p>The mature solution for managing them is a rigorous <strong>data architecture</strong> that makes four boundaries explicit:</p>
 <ul>
-<li>the state that must be shared;</li>
-<li>the decisions that must become contracts;</li>
-<li>the information that can remain local;</li>
-<li>the format in which results are reported back.</li>
+<li><strong>Shared State:</strong> The single, validated source of truth that all enabled nodes can draw from.</li>
+<li><strong>Contracts:</strong> Structured key steps (e.g., Pydantic schemas) that bind and regulate handoffs between agents.</li>
+<li><strong>Private State:</strong> Everything a specialist needs to process a task (e.g., raw logs, temporary drafts) that must not pollute the global memory.</li>
+<li><strong>Upstream schemas:</strong> The rigid, typed schema used to aggregate sub-task results and report them back to the supervisor.</li>
 </ul>
-<p>Applied to our example, the four boundaries draw a precise flow: shared state is the only thing that enters and leaves the center in validated form, contracts flow down to the specialists, private state stays sealed inside each worker, and only a typed upstream schema makes it back to the supervisor.</p>
+<p>Applied to our example, these four boundaries define a precise flow: the shared state is the only thing that enters and leaves the center validated, contracts flow down to the specialists, private state remains confined to each worker, and only a typed upstream schema returns to the supervisor.</p>
 <pre class="mermaid">flowchart TD
     subgraph LEG[&quot;Legend&quot;]
         direction LR
@@ -2324,7 +1744,7 @@ evaluation rubric</code></pre><p>The &quot;minimum sufficient context&quot; rule
     GS[(Global State&lt;br/&gt;validated)]:::shared
     SUP{{Supervisor}}:::supervisor
 
-    GS --&gt;|read by every node| SUP
+    GS --&gt;|read by all nodes| SUP
     SUP --&gt;|writes validated state| GS
 
     SUP --&gt;|&quot;Contract: SearchTask&quot;| SCOUT[Scout]:::worker
@@ -2349,13 +1769,12 @@ evaluation rubric</code></pre><p>The &quot;minimum sufficient context&quot; rule
     linkStyle 0,1 stroke:#1B64F5,stroke-width:2px;
     linkStyle 2,3,4 stroke:#C8902B,stroke-width:2px;
     linkStyle 5,6,7 stroke:#818282,stroke-width:1.5px;
-    linkStyle 8,9,10 stroke:#2E8B6B,stroke-width:2.5px;</pre><p>The solid gold arrows are the contracts flowing down, the dashed grey ones stay confined to the worker that produces them, and the thick green ones are the only channel through which a result travels back up.</p>
-<hr>
-<h2 id="8-state-memory-and-artifacts">8. State, memory, and artifacts</h2>
-<p>In agent terminology, <em>memory</em> is used to mean too many things. It is worth sorting them out.</p>
-<h3 id="conversation-state">Conversation state</h3>
+    linkStyle 8,9,10 stroke:#2E8B6B,stroke-width:2.5px;</pre><p>The solid gold arrows represent the contracts flowing down, the dashed gray arrows remain confined to the worker that generates them, and the thick green arrows are the only channel through which a result returns upstream.</p>
+<h3 id="state-memory-and-artifacts">State, memory, and artifacts</h3>
+<p>In agent terminology, &quot;memory&quot; is used to mean too many things. It is worth organizing them.</p>
+<h4 id="conversation-state">Conversation state</h4>
 <p>This is what is needed to maintain continuity in the interaction: messages, turns, active agent identity, and pending requests.</p>
-<h3 id="task-state">Task state</h3>
+<h4 id="task-state">Task state</h4>
 <p>This is the operational state of the work:</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
@@ -2366,89 +1785,89 @@ evaluation rubric</code></pre><p>The &quot;minimum sufficient context&quot; rule
     playlist_artifact: <span class="hljs-built_in">str</span> | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
     verification: VerificationResult | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
     retries: <span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">int</span>] = {}
-    status: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;running&quot;</span>, <span class="hljs-string">&quot;waiting&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>, <span class="hljs-string">&quot;done&quot;</span>] = <span class="hljs-string">&quot;running&quot;</span></code></pre><h3 id="local-state">Local state</h3>
-<p>This belongs to a specialist and does not necessarily need to be persisted:</p>
+    status: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;running&quot;</span>, <span class="hljs-string">&quot;waiting&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>, <span class="hljs-string">&quot;done&quot;</span>] = <span class="hljs-string">&quot;running&quot;</span></code></pre><h4 id="local-state">Local state</h4>
+<p>This belongs to a specialist and does not necessarily need to be propagated upstream:</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScoutLocalState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     attempted_queries: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     visited_track_ids: <span class="hljs-built_in">set</span>[<span class="hljs-built_in">str</span>]
-    raw_tool_outputs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</code></pre><h3 id="artifact">Artifact</h3>
-<p>This is a persistent product of the work: a file, report, patch, table, playlist, dataset, or plan.</p>
+    raw_tool_outputs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</code></pre><h4 id="artifact">Artifact</h4>
+<p>This is a persistent product of the work: files, reports, patches, tables, playlists, datasets, or plans.</p>
 <p>When the output is large, passing a reference is often healthier than re-injecting everything into the prompt.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-keyword">return</span> WorkerResult(
-    summary=<span class="hljs-string">&quot;Trovati 84 candidati, 61 dopo i filtri.&quot;</span>,
+    summary=<span class="hljs-string">&quot;Found 84 candidates, 61 after filtering.&quot;</span>,
     artifact_ref=<span class="hljs-string">&quot;artifacts/run-284/candidate_set.json&quot;</span>,
-    warnings=[<span class="hljs-string">&quot;catalogo funk poco coperto&quot;</span>],
+    warnings=[<span class="hljs-string">&quot;funk catalog poorly covered&quot;</span>],
 )</code></pre><pre class="mermaid">flowchart LR
     S[Scout] --&gt; A[(candidate_set.json)]
     S --&gt; R[Summary]
     A --&gt; C[Curator]
     R --&gt; SUP[Supervisor]
     SUP --&gt; C</pre><p>The artifact preserves fidelity. The summary preserves context space.</p>
-<p>This is a much more solid balance than attempting to turn every step into an increasingly long message.</p>
-<hr>
-<h2 id="9-who-is-in-control">9. Who is in control?</h2>
+<p>This is a much more robust balance than attempting to turn every step into an increasingly long message.</p>
+<h3 id="who-is-in-control">Who is in control?</h3>
 <p>So far, we have distributed the work. Now we must prevent the system from confusing &quot;I produced something&quot; with &quot;I am finished.&quot;</p>
 <p>Modern verification has at least three layers.</p>
 <pre class="mermaid">flowchart TD
     A[Artifact] --&gt; D[Deterministic checks]
     D --&gt;|pass| E[Environmental verification]
     E --&gt;|pass| J[Semantic evaluator]
-    J --&gt;|pass| O[Accepted]
-
-    D --&gt;|fail| F[Feedback]
+    J --&gt;|pass| O[Accepted]</pre><p>D --&gt;|fail| F[Feedback]
     E --&gt;|fail| F
     J --&gt;|fail| F
-    F --&gt; G[Generator / Curator]
+    F --&gt; G[Generator / Curator]</p>
+<pre><code class="hljs language-maxima">classDef hard fill:#D9EEE3,stroke:#2E8B6B,<span class="hljs-built_in">color</span>:#<span class="hljs-number">164B36</span>;
+classDef soft fill:#F4E3B2,stroke:#C8902B,<span class="hljs-built_in">color</span>:#5A4405;
+class D,E hard;
+class J soft;</code></pre><pre><code class="hljs language-routeros">
+<span class="hljs-comment">### Deterministic checks</span>
 
-    classDef hard fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
-    classDef soft fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class D,E hard;
-    class J soft;</pre><h3 id="91-deterministic-checks">9.1 Deterministic checks</h3>
-<p>If a property can be verified in Python, there is no need to ask an LLM.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+<span class="hljs-keyword">If</span> a property can be verified <span class="hljs-keyword">in</span> Python, there is <span class="hljs-literal">no</span> need <span class="hljs-keyword">to</span> ask an LLM.
 
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">hard_checks</span>(<span class="hljs-params">playlist: Playlist, request: PlaylistRequest</span>) -&gt; CheckResult:
+```python
+<span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+def hard_checks(playlist: Playlist, request: PlaylistRequest) -&gt; CheckResult:
     errors = []
 
-    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(playlist.track_ids) != <span class="hljs-built_in">len</span>(<span class="hljs-built_in">set</span>(playlist.track_ids)):
+    <span class="hljs-keyword">if</span> len(playlist.track_ids) != len(<span class="hljs-built_in">set</span>(playlist.track_ids)):
         errors.append(<span class="hljs-string">&quot;duplicate_tracks&quot;</span>)
 
     forbidden = <span class="hljs-built_in">set</span>(request.excluded_genres)
-    <span class="hljs-keyword">if</span> <span class="hljs-built_in">any</span>(track.genre <span class="hljs-keyword">in</span> forbidden <span class="hljs-keyword">for</span> track <span class="hljs-keyword">in</span> playlist.tracks):
+    <span class="hljs-keyword">if</span> any(track.genre <span class="hljs-keyword">in</span> forbidden <span class="hljs-keyword">for</span> track <span class="hljs-keyword">in</span> playlist.tracks):
         errors.append(<span class="hljs-string">&quot;excluded_genre&quot;</span>)
 
     <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> energy_curve_matches(
         playlist.tracks,
-        start=request.current_energy,
-        target=request.desired_energy,
+        <span class="hljs-attribute">start</span>=request.current_energy,
+        <span class="hljs-attribute">target</span>=request.desired_energy,
     ):
         errors.append(<span class="hljs-string">&quot;energy_curve&quot;</span>)
 
-    <span class="hljs-keyword">return</span> CheckResult(passed=<span class="hljs-keyword">not</span> errors, errors=errors)</code></pre><h3 id="92-environmental-verification">9.2 Environmental verification</h3>
-<p>An agent might claim to have created a playlist. The question is whether that playlist actually exists in the external system.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
+    return CheckResult(<span class="hljs-attribute">passed</span>=not errors, <span class="hljs-attribute">errors</span>=errors)</code></pre><h3 id="environment-verification">Environment verification</h3>
+<p>An agent might claim to have created a playlist. The real question is whether that playlist actually exists in the external system.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
 
 playlist_id = spotify.create_playlist(payload)
 
-<span class="hljs-keyword">assert</span> spotify.get_playlist(playlist_id).track_ids == payload.track_ids</code></pre><p>Anthropic makes a precise distinction between <em>transcript</em> and <em>outcome</em>: the former is what the agent said and did; the latter is the final state of the environment. A robust evaluation tends to prefer the outcome when it is observable.[^anthropic-evals]</p>
-<h3 id="93-semantic-evaluation">9.3 Semantic evaluation</h3>
-<p>Then there remains what cannot be reduced to a clear assertion:</p>
+<span class="hljs-keyword">assert</span> spotify.get_playlist(playlist_id).track_ids == payload.track_ids</code></pre><p>Anthropic makes a precise distinction between <em>transcript</em> and <em>outcome</em>: the former is what the agent said and did, while the latter is the final state of the environment. Robust evals tend to favor the outcome when it is observable (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals for agents</a>).</p>
+<h3 id="semantic-evaluation">Semantic evaluation</h3>
+<p>Then there is everything that cannot be reduced to a clear-cut assertion:</p>
 <ul>
 <li>Does the playlist tell a coherent story?</li>
-<li>Is the selection varied without seeming random?</li>
+<li>Is the selection varied without feeling random?</li>
 <li>Does the result interpret the tension between fatigue and the desire to dance well?</li>
 </ul>
-<p>Here, a separate evaluator can add value.</p>
+<p>This is where a separate evaluator can add value.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">SemanticEvaluation</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     mood_coherence: <span class="hljs-built_in">float</span>
     transition_quality: <span class="hljs-built_in">float</span>
     rationale: <span class="hljs-built_in">str</span>
-    passed: <span class="hljs-built_in">bool</span></code></pre><p>The principle is not &quot;you always need two agents.&quot; Anthropic, in their March 2026 work on planners, generators, and evaluators, shows that separating the producer from the judge can correct the tendency toward self-complacency. However, the same article also shows something else: the benefit depends on the task and the model, while cost and latency can increase by an order of magnitude.[^anthropic-harness-2026]</p>
-<p>In one of the experiments described, the complete system worked for about six hours and consumed about 200 dollars, compared to twenty minutes and 9 dollars for the single agent. The quality was higher, but the bill reminds us that an evaluator must earn its place just like any other agent.[^anthropic-harness-2026]</p>
+    passed: <span class="hljs-built_in">bool</span></code></pre><p>The principle is not that &quot;you always need two agents.&quot; In its March 2026 case study, Anthropic suggests separating the generator and the evaluator because it is easier to make an autonomous evaluator strict than it is to convince a generator to critique its own output. However, the same case study shows that the benefit depends on the task and the model, while costs and latency can increase by an order of magnitude (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
+<p>In one of the described experiments, the complete system ran for about six hours and cost roughly $200, compared to twenty minutes and $9 for a single agent. The quality was superior, but the bill serves as a reminder that an evaluator must earn its place just like any other agent (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
 <h3 id="a-loop-needs-a-brake">A loop needs a brake</h3>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
@@ -2464,10 +1883,11 @@ playlist_id = spotify.create_playlist(payload)
     <span class="hljs-keyword">if</span> semantic.passed:
         <span class="hljs-keyword">return</span> playlist
 
-    feedback = semantic.rationale</code></pre><pre><code class="hljs language-python"><span class="hljs-keyword">raise</span> VerificationFailed(<span class="hljs-string">&quot;revision budget exhausted&quot;</span>)</code></pre><p>Without criteria, budgets, and stop conditions, an evaluator-optimizer is nothing more than a circular conversation between models.</p>
-<hr>
-<h2 id="10-evals-the-system-must-be-measured-as-a-whole">10. Evals: the system must be measured as a whole</h2>
-<p>Evaluations for agents cannot be limited to the final response.</p>
+    feedback = semantic.rationale
+
+<span class="hljs-keyword">raise</span> VerificationFailed(<span class="hljs-string">&quot;revision budget exhausted&quot;</span>)</code></pre><p>Without criteria, budgets, and stop conditions, an evaluator-optimizer is just a circular conversation between models.</p>
+<h2 id="evals-the-system-must-be-measured-as-a-whole">Evals: the system must be measured as a whole</h2>
+<p>Agent evals cannot be limited to the final response.</p>
 <p>Anthropic proposes a useful terminology:</p>
 <ul>
 <li><strong>task</strong>: the individual test case;</li>
@@ -2475,64 +1895,61 @@ playlist_id = spotify.create_playlist(payload)
 <li><strong>grader</strong>: the logic that assigns a judgment;</li>
 <li><strong>transcript / trace / trajectory</strong>: the complete history of the trial;</li>
 <li><strong>outcome</strong>: the final state of the environment;</li>
-<li><strong>evaluation harness</strong>: the infrastructure that executes, records, and evaluates.[^anthropic-evals]</li>
+<li><strong>evaluation harness</strong>: the infrastructure that executes, records, and evaluates (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals for agents</a>).</li>
 </ul>
-<p>In our running example, a sensible suite shouldn&#39;t just ask, &quot;Did it produce a playlist?&quot; It should define different semantics for each request.</p>
+<p>In our running example, a sensible suite should not just ask, &quot;Did it produce a playlist?&quot; It should define different semantics for every request.</p>
 <pre><code class="hljs language-yaml"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-attr">tasks:</span>
   <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E01</span>
-    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Sono stanco, ma voglio ballare.&quot;</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;I&#x27;m tired, but I want to dance.&quot;</span>
     <span class="hljs-attr">expected:</span>
       <span class="hljs-bullet">-</span> <span class="hljs-string">coherent_shift_or_clarification</span>
 
   <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E02</span>
-    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Sorprendimi.&quot;</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Surprise me.&quot;</span>
     <span class="hljs-attr">expected:</span>
       <span class="hljs-bullet">-</span> <span class="hljs-string">exploration_branch</span>
 
   <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E03</span>
-    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Fammi allenare, ma niente techno.&quot;</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Help me work out, but no techno.&quot;</span>
     <span class="hljs-attr">expected:</span>
       <span class="hljs-bullet">-</span> <span class="hljs-string">no_excluded_genres</span>
 
   <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E04</span>
-    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Voglio una playlist energica per la palestra.&quot;</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;I want an energetic playlist for the gym.&quot;</span>
     <span class="hljs-attr">expected:</span>
       <span class="hljs-bullet">-</span> <span class="hljs-string">valid_high_energy_playlist</span>
 
   <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E05</span>
-    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Che ore sono?&quot;</span>
+    <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;What time is it?&quot;</span>
     <span class="hljs-attr">expected:</span>
       <span class="hljs-bullet">-</span> <span class="hljs-string">out_of_domain</span></code></pre><p>Then, you observe different dimensions:</p>
-<pre><code class="hljs language-text">OUTCOME
+<p>OUTCOME
 playlist created?
 constraints met?
-correct side effect?
-
-TRAJECTORY
-correct router?
+side effect correct?</p>
+<p>TRAJECTORY
+router correct?
 handoff necessary?
 redundant tools?
-loop terminated?
-
-EFFICIENCY
+loop terminated?</p>
+<p>EFFICIENCY
 latency
 cost
 tokens
 tool calls
-retries
-
-RELIABILITY
+retries</p>
+<p>RELIABILITY
 pass@1
-pass^k
+pass@k
 recovery rate
-silent failures</code></pre><p>Hamel Husain insists on a distinction that is worth keeping in mind: different errors require different taxonomies. Calling everything an &quot;hallucination&quot; makes the failures that actually matter invisible. Useful practice starts by reading traces, building a vocabulary of errors, and calibrating evaluators against human judgments.[^hamel-evals]</p>
-<h3 id="do-not-reward-a-rigid-path">Do not reward a rigid path</h3>
-<p>An overly prescriptive eval risks rejecting a valid solution simply because the model found a different path. Whenever possible, verify the outcome and use the trajectory to identify risky behaviors, waste, or policy violations, without turning every tool call into a mandatory script.</p>
-<hr>
-<h2 id="11-things-go-wrong">11. Things go wrong</h2>
-<p>A multi-agent system is not defined only by the &quot;happy path.&quot; It is defined by what happens when a node fails to do its job.</p>
+silent failures</p>
+<p>Hamel Husain insists on a distinction worth keeping in mind: different errors require different taxonomies. Calling everything an &quot;hallucination&quot; makes the failures that actually matter invisible. Useful practice starts with reading traces, building an error vocabulary, and calibrating evaluators against human judgment (<a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals skills</a>).</p>
+<h3 id="do-not-reward-rigid-paths">Do not reward rigid paths</h3>
+<p>An overly prescriptive eval risks rejecting a valid solution simply because the model found a different way to reach it. Whenever possible, verify the outcome and use the trajectory to identify risky behaviors, waste, or policy violations, without turning every tool call into a mandatory script.</p>
+<h2 id="when-things-go-wrong">When things go wrong</h2>
+<p>A multi-agent system is defined not just by the &quot;happy path,&quot; but by what happens when a node fails to do its job.</p>
 <pre class="mermaid">stateDiagram-v2
     [*] --&gt; Running
     Running --&gt; Success: outcome verified
@@ -2544,7 +1961,7 @@ silent failures</code></pre><p>Hamel Husain insists on a distinction that is wor
     Retry --&gt; Running
     Fallback --&gt; Running
     Replan --&gt; Running
-    Human --&gt; Running: approval / new input</pre><p>It is worth distinguishing at least these families of errors.</p>
+    Human --&gt; Running: approval / new input</pre><p>It is useful to distinguish at least these families of failure.</p>
 <h3 id="formally-invalid-output">Formally invalid output</h3>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODE]</span>
 
@@ -2555,7 +1972,7 @@ silent failures</code></pre><p>Hamel Husain insists on a distinction that is wor
         profile = <span class="hljs-keyword">await</span> mood_interpreter.run(prompt, repair=<span class="hljs-literal">True</span>)
     <span class="hljs-keyword">else</span>:
         <span class="hljs-keyword">return</span> clarification_fallback()</code></pre><h3 id="valid-but-semantically-uncertain-output">Valid but semantically uncertain output</h3>
-<p>This is not an exception. It is a state.</p>
+<p>This is not an exception; it is a state.</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">if</span> profile.needs_clarification:
     <span class="hljs-keyword">return</span> transition_to(<span class="hljs-string">&quot;clarifier&quot;</span>)</code></pre><h3 id="external-tool-unavailable">External tool unavailable</h3>
 <pre><code class="hljs language-python"><span class="hljs-keyword">try</span>:
@@ -2574,18 +1991,17 @@ Scout C ✓</code></pre><p>The options are not just &quot;everything fails&quot;
     retry(failed_workers)
 <span class="hljs-keyword">else</span>:
     escalate_or_abort()</code></pre><h3 id="idempotency-and-side-effects">Idempotency and side effects</h3>
-<p>An innocuous retry on a read-only search is different from a retry on creating a playlist.</p>
+<p>An innocuous retry on a read-only search is different from a retry on a playlist creation.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 spotify.create_playlist(
     payload,
     idempotency_key=state.run_id,
-)</code></pre><p>Without idempotency, a network error after the side effect occurs can produce two identical playlists. In multi-agent systems, the problem worsens because multiple workers may believe they are authorized to write.</p>
+)</code></pre><p>Without idempotency, a network error after a side effect can produce two identical playlists. In multi-agent systems, the problem worsens because multiple workers may believe they are authorized to write.</p>
 <p>A simple policy is the <strong>single writer</strong>: many agents can propose, but only one can modify the external state.</p>
-<hr>
-<h2 id="12-blast-radius-and-human-in-the-loop">12. Blast radius and human-in-the-loop</h2>
+<h2 id="blast-radius-and-human-in-the-loop">Blast radius and human-in-the-loop</h2>
 <p>When an agent can only read a music catalog, the maximum damage is contained. When an agent can perform a rollback in production, the same architecture becomes a different matter entirely.</p>
-<p>Operational risk can be interpreted as:</p>
+<p>Operational risk can be read as:</p>
 <pre><code class="hljs language-text">risk ≈ probability of error × maximum possible damage</code></pre><p>Improving the model might reduce the first term. Permissions and isolation limit the second.</p>
 <pre class="mermaid">flowchart LR
     A[Agent] --&gt; R[Read metrics]
@@ -2597,328 +2013,68 @@ spotify.create_playlist(
     classDef safe fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
     classDef risky fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
     class R,L,P safe;
-    class X risky;</pre><p>In May 2026, Anthropic described containment as a problem of limiting the blast radius: not just monitoring what the model tends to do, but restricting what the environment materially allows it to do. The article also points out that automatic or distracted approval is a limitation of simple human-in-the-loop systems: too many permission prompts lead to approval fatigue.[^anthropic-containment]</p>
-<p>The Microsoft Agent Framework treats approval and information requests as suspendable workflow events; the pending state can be included in checkpoints and re-emitted after recovery.[^microsoft-hitl]</p>
+    class X risky;</pre><p>In May 2026, Anthropic described containment as a problem of limiting the blast radius: not just monitoring what the model tends to do, but restricting what the environment materially allows it to do. The article also notes that automatic or distracted approval is a limitation of simple human-in-the-loop setups: too many permission prompts lead to approval fatigue (<a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — Containment</a>).</p>
+<p>The Microsoft Agent Framework treats approval and information requests as suspendable workflow events; the pending state can be included in checkpoints and resumed after recovery (<a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">Microsoft — HITL in workflows</a>).</p>
 <p>This leads to a rule of thumb:</p>
 <blockquote>
-<p><strong>Human oversight should be placed at critical risk points, not distributed as a barrage of modal windows.</strong></p>
+<p><strong>Human oversight should be placed at critical risk points, not scattered like a shower of modal windows.</strong></p>
 </blockquote>
-<hr>
-<h2 id="13-when-the-work-lasts-longer-than-the-conversation">13. When the work lasts longer than the conversation</h2>
-<p>Short tasks can live within a single context window. Long tasks cannot.</p>
-<pre class="mermaid">flowchart LR
-    S1[Session 1] --&gt; C1[Checkpoint]
-    C1 --&gt; M[(Durable state)]
-    C1 --&gt; A[(Artifacts)]
-    M --&gt; S2[Session 2]
-    A --&gt; S2
-    S2 --&gt; C2[Checkpoint]</pre><p>Four different techniques come into play here.</p>
-<h3 id="compaction">Compaction</h3>
-<p>The previous history is summarized, and the same session continues. It maintains continuity, but the summary may lose details, and the context remains a layering of old decisions.</p>
-<h3 id="context-reset">Context reset</h3>
-<p>A clean context is started, and a structured handoff is passed. It costs more, but it eliminates the &quot;context anxiety&quot; observed in some models.</p>
-<h3 id="checkpoint">Checkpoint</h3>
-<p>The operational state is saved so that work can resume after a crash, human pause, or maintenance.</p>
-<h3 id="artifact-persistence">Artifact persistence</h3>
-<p>Work is not entrusted solely to conversational memory. Files, tests, plans, and results remain available outside the prompt.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
-
-checkpoint = Checkpoint(
-    goal=state.goal,
-    completed=state.completed_tasks,
-    pending=state.pending_tasks,
-    decisions=state.key_decisions,
-    artifact_refs=state.artifact_refs,
-    failures=state.failure_log,
-    active_requests=state.pending_human_requests,
-)
-
-checkpoint_store.save(checkpoint)</code></pre><p>In March 2026, Anthropic showcased a three-agent harness for long-running applications: planner, generator, and evaluator, using contracts and files as communication artifacts. An instructive detail is that, with newer models, some parts of the old harness became dead weight and were removed. A harness is not a cathedral: it is a hypothesis about the current model&#39;s limitations.[^anthropic-harness-2026]</p>
-<hr>
-<h2 id="14-from-agent-system-to-harness">14. From agent system to harness</h2>
-<p>In 2026, the most interesting word is perhaps not <em>multi-agent</em>. It is <em>harness</em>.</p>
-<p>The harness is what surrounds the model and transforms an inference into an operating system:</p>
-<pre class="mermaid">flowchart TB
-    U[Goal] --&gt; H[Harness]
-    H --&gt; M[Model / Agents]
-    H --&gt; T[Tool dispatch]
-    H --&gt; C[Context lifecycle]
-    H --&gt; R[Recovery policy]
-    H --&gt; E[Tracing + eval hooks]
-    H --&gt; S[Session store]
-    H --&gt; X[Sandbox / execution environments]</pre><p>In its work on harness engineering, OpenAI describes a product built with Codex agents, automated tests, model-readable observability, and isolated environments for tasks. The interesting point is not the number of lines produced; it is the shift in roles: humans design the environment, intent, and feedback loops, while agents execute.[^openai-harness]</p>
-<p>In April 2026, OpenAI extended the Agents SDK with a more capable harness for file and tool work, native sandboxes, and a separation between harness and compute for security, durability, and scale.[^openai-sdk-2026]</p>
-<p>Anthropic, with Managed Agents, proposes a very clear separation:</p>
-<pre><code class="hljs language-text">SESSION
-append-only log of what has happened
-
-HARNESS
-loop that calls the model and routes tools
-
-SANDBOX
-environment where the work is executed</code></pre><p>This separation allows each element to fail, change, or scale independently. It is the infrastructural version of the same question that has been with us from the beginning: who owns which responsibility?[^anthropic-managed]</p>
-<h3 id="many-brains-many-hands">Many brains, many hands</h3>
-<p>The metaphor used by Anthropic is effective. The &quot;brain&quot; is the model plus the harness; the &quot;hands&quot; are the sandbox and tools. Decoupling them allows multiple harnesses to use different environments, or a single harness to send work to multiple execution environments, without turning every session into an indivisible server.[^anthropic-managed]</p>
-<p>This does not imply that every application must build a meta-harness. It means that as soon as the work becomes long-running and operational, the boundary between reasoning, state, and execution stops being a mere detail.</p>
-<hr>
-<h2 id="15-mcp-and-a2a-two-different-problems">15. MCP and A2A: two different problems</h2>
-<p>In the noise of protocols, it is easy to confuse the acronyms.</p>
-<h3 id="mcp">MCP</h3>
-<p>The Model Context Protocol connects a model or an agent to tools, data, and resources. The typical relationship is:[^mcp]</p>
-<pre><code class="hljs language-text">agent ↔ tool / data source</code></pre><h3 id="a2a">A2A</h3>
-<p>Agent2Agent concerns interoperability between separate agents or agentic services, involving capability discovery, tasks, and artifact exchange.</p>
-<pre><code class="hljs language-text">agent service ↔ agent service</code></pre><pre class="mermaid">flowchart LR
-    A[Agent] --&gt;|MCP| T[Tool / Data]
-    A --&gt;|A2A| B[Remote Agent Service]</pre><p>A2A does not make a system within the same process smarter. It solves an organizational and infrastructural boundary: remote agents, different stacks, separate ownership, and non-shared memory.[^a2a]</p>
-<p>In the Spotify running example, introducing it now would be complexity paid in advance. It would become relevant if the catalog, the curator, and the playlist creation system were autonomous services managed by different teams or vendors.</p>
-<hr>
-<h2 id="16-when-a-decision-becomes-an-edge">16. When a decision becomes an edge</h2>
-<p>At a certain point, the system contains:</p>
-<ul>
-<li>typed state;</li>
-<li>nodes;</li>
-<li>conditional transitions;</li>
-<li>fan-out and fan-in;</li>
-<li>revision loops;</li>
-<li>checkpoints;</li>
-<li>human requests;</li>
-<li>stop conditions.</li>
-</ul>
-<p>There is no longer a need to look for a metaphor. We have built a graph.</p>
-<pre class="mermaid">flowchart TD
-    U[User] --&gt; M[Mood Interpreter]
-    M --&gt; G{needs_clarification?}
-    G --&gt;|yes| C[Clarifier]
-    C --&gt; U
-    G --&gt;|no| P[Search Planner]
-    P --&gt; S1[Scout 1]
-    P --&gt; S2[Scout 2]
-    P --&gt; S3[Scout 3]
-    S1 --&gt; A[Aggregate]
-    S2 --&gt; A
-    S3 --&gt; A
-    A --&gt; CU[Curator]
-    CU --&gt; H[Hard Checks]
-    H --&gt;|fail| CU
-    H --&gt;|pass| E[Semantic Evaluator]
-    E --&gt;|revise| CU
-    E --&gt;|pass| O[Create Playlist]
-    O --&gt; END([Done])</pre><p>The conceptual transition is this:</p>
-<pre><code class="hljs language-text">Agent thinking:
-«Which tool should I call?»
-
-Graph thinking:
-«Which node is executable, given the current state?»</code></pre><p>The two coexist. A graph node can contain an agent, a function, a tool wrapper, or a human request.</p>
-<p>The Microsoft Agent Framework exposes workflow graph-based systems with executors, conditional edges, parallelism, checkpoints, and HITL. LangGraph builds around <code>State</code>, nodes, edges, reducers, subgraphs, interrupts, and persistence. The APIs change; the grammar remains.[^microsoft-workflows][^langgraph-persistence][^langgraph-interrupts]</p>
-<hr>
-<h2 id="17-the-spotify-reference-architecture">17. The Spotify reference architecture</h2>
-<p>Now we can put the pieces back together.</p>
-<pre class="mermaid">flowchart TD
-    U[User request] --&gt; MI[Mood Interpreter&lt;br/&gt;AGENT]
-
-    MI --&gt; G{needs_clarification?&lt;br/&gt;CODE}
-    G --&gt;|yes| CL[Clarifier&lt;br/&gt;AGENT]
-    CL --&gt; U
-
-    G --&gt;|no| SP[Search Planner&lt;br/&gt;AGENT]
-
-    SP --&gt; S1[Scout&lt;br/&gt;AGENT · read-only]
-    SP --&gt; S2[Scout&lt;br/&gt;AGENT · read-only]
-    SP --&gt; S3[Scout&lt;br/&gt;AGENT · read-only]
-
-    S1 --&gt; ART[(CandidateSet artifact)]
-    S2 --&gt; ART
-    S3 --&gt; ART
-
-    ART --&gt; CU[Curator&lt;br/&gt;AGENT · single writer]
-    CU --&gt; HC[Hard Checks&lt;br/&gt;CODE]
-
-    HC --&gt;|fail| CU
-    HC --&gt;|pass| SE[Semantic Evaluator&lt;br/&gt;AGENT]
-
-    SE --&gt;|revise ≤ 1| CU
-    SE --&gt;|pass| API[Playlist API&lt;br/&gt;idempotent side effect]
-    API --&gt; OUT([Done])
-
-    classDef agent fill:#1B64F5,stroke:#1B64F5,color:#fff;
-    classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    classDef artifact fill:#ECEFF2,stroke:#818282,color:#0D1F2E;
-    classDef risk fill:#D7342B,stroke:#D7342B,color:#fff;
-    class MI,CL,SP,S1,S2,S3,CU,SE agent;
-    class G,HC code;
-    class ART artifact;
-    class API risk;</pre><p>The most important thing about the diagram is not the number of agents.</p>
-<p>It is that <strong>not all boxes are agents</strong>.</p>
-<p>The gate is code. The hard checks are code. The artifact is persistent state. The scouts are read-only. The curator is the sole writer. The side effect has a boundary and an idempotency policy.</p>
-<p>Each component has earned its place because it solves a problem we had already encountered.</p>
-<h3 id="the-runtime-in-pseudocode">The runtime, in pseudocode</h3>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN - PSEUDOCODE]</span>
-
-<span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">build_playlist</span>(<span class="hljs-params">user_request: <span class="hljs-built_in">str</span></span>) -&gt; Playlist:
-    profile = <span class="hljs-keyword">await</span> mood_interpreter.run(user_request)
-
-    <span class="hljs-keyword">if</span> profile.needs_clarification:
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> clarifier.run(profile)
-
-    request = PlaylistRequest.from_profile(profile)
-    plan = <span class="hljs-keyword">await</span> search_planner.run(request)</code></pre><pre><code class="hljs language-python">    worker_results = <span class="hljs-keyword">await</span> gather_with_policy(
-        tasks=[scout.run(task) <span class="hljs-keyword">for</span> task <span class="hljs-keyword">in</span> plan.independent_tasks],
-        minimum_successes=<span class="hljs-number">2</span>,
-        retry_budget=<span class="hljs-number">1</span>,
-    )
-
-    candidate_artifact = persist(
-        aggregate(worker_results)
-    )
-
-    feedback = <span class="hljs-literal">None</span>
-    <span class="hljs-keyword">for</span> revision <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">2</span>):
-        playlist = <span class="hljs-keyword">await</span> curator.run(
-            request=request,
-            candidates=candidate_artifact,
-            feedback=feedback,
-        )
-
-        hard = hard_checks(playlist, request)
-        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hard.passed:
-            feedback = hard.to_feedback()
-            <span class="hljs-keyword">continue</span>
-
-        semantic = <span class="hljs-keyword">await</span> evaluator.run(playlist, request)
-        <span class="hljs-keyword">if</span> semantic.passed:
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> create_playlist_idempotently(playlist)
-
-        feedback = semantic.rationale
-
-    <span class="hljs-keyword">raise</span> VerificationFailed()</code></pre><p>This complete implementation is <strong>not yet in the lesson repository</strong>. The verified repository covers the monolith and structured routing; the rest is a reference architecture consistent with the educational path.</p>
-<hr>
-<h2 id="18-what-is-converging-in-2026">18. What is converging in 2026</h2>
-<p>Sources and frameworks do not agree on a single winning architecture. It would be suspicious if they did. However, they are converging on a few principles.</p>
-<h3 id="1-simplicity-comes-before-decomposition">1. Simplicity comes before decomposition</h3>
-<p>Multi-agent systems are not a prize for complexity. Anthropic continues to recommend the simplest solution that improves outcomes; 2026 work on harnesses even shows components being removed when more capable models make them redundant.[^anthropic-harness-2026]</p>
-<h3 id="2-context-is-a-design-object">2. Context is a design object</h3>
-<p>Subagents, state schemas, artifacts, and handoffs are not decorations. They are ways to control what each component sees and what is lost during transitions.[^anthropic-context][^simon-subagents]</p>
-<h3 id="3-control-must-be-localized">3. Control must be localized</h3>
-<p>Routers, supervisors, and handoffs are not synonyms. The first reads a state, the second reasons and retains ownership, and the third transfers ownership.</p>
-<h3 id="4-verification-must-touch-the-environment">4. Verification must touch the environment</h3>
-<p>Runtime evidence, unit tests, database state, browsers, metrics, and logs are worth more than a model&#39;s declaration. OpenAI describes agents that query traces and metrics to verify their own work; Anthropic makes a sharp distinction between transcripts and outcomes.[^openai-harness][^anthropic-evals]</p>
-<h3 id="5-state-must-survive-the-prompt">5. State must survive the prompt</h3>
-<p>Checkpoints, append-only sessions, and persistent artifacts make it possible to resume, inspect, and correct long-running work.[^anthropic-managed][^microsoft-hitl]</p>
-<h3 id="6-risk-is-managed-with-deterministic-boundaries">6. Risk is managed with deterministic boundaries</h3>
-<p>Permissions, read-only workers, single writers, sandboxes, and egress controls limit damage even when the model errs or is deceived.[^anthropic-containment]</p>
-<h3 id="7-the-model-and-the-harness-must-be-evaluated-together">7. The model and the harness must be evaluated together</h3>
-<p>When we say &quot;the agent achieved this result,&quot; we are measuring the model, prompt, tools, memory, orchestration, and environment. Changing the model without re-examining the harness is as naive as changing the harness without re-running evaluations.[^anthropic-evals][^anthropic-managed]</p>
-<hr>
-<h2 id="19-a-grammar-for-design">19. A grammar for design</h2>
-<p>Ultimately, patterns are less useful than the questions they prompt.</p>
-<h3 id="who-decides">Who decides?</h3>
-<ul>
-<li>Is the decision already represented in the state? Use code or deterministic routing.</li>
-<li>Does it require judgment based on context? Consider a supervisor.</li>
-<li>Does it need to change the interlocutor? Use a handoff.</li>
-</ul>
-<h3 id="who-knows-what">Who knows what?</h3>
-<ul>
-<li>What is the minimum sufficient context?</li>
-<li>Which decisions should become typed fields?</li>
-<li>Which details can remain local?</li>
-<li>Which results should bubble up as summaries and which as artifacts?</li>
-</ul>
-<h3 id="who-does-what">Who does what?</h3>
-<ul>
-<li>Does this responsibility require autonomy?</li>
-<li>Can it be a function?</li>
-<li>Can it be a tool?</li>
-<li>Are the subtasks independent?</li>
-<li>Is there a single writer for side effects?</li>
-</ul>
-<h3 id="who-controls">Who controls?</h3>
-<ul>
-<li>Which properties are verifiable in code?</li>
-<li>What environment state proves success?</li>
-<li>Where is semantic judgment needed?</li>
-<li>Does the revision cycle have a budget?</li>
-</ul>
-<h3 id="who-keeps-the-system-running">Who keeps the system running?</h3>
-<ul>
-<li>How is the state saved?</li>
-<li>How do you resume after a crash or human approval?</li>
-<li>Which retries are idempotent?</li>
-<li>What is the blast radius of each agent?</li>
-<li>Can I reconstruct the entire trajectory?</li>
-</ul>
-<p>A minimal checklist can fit in a few lines:</p>
-<pre><code class="hljs language-text">[ ] Each agent has a responsibility that requires autonomy.
-[ ] Deterministic decisions are kept out of the prompt.
-[ ] Handoffs have a contract.
-[ ] Global and local states are separated.
-[ ] Parallelism follows dependencies, not enthusiasm.
-[ ] Side effects have ownership and idempotency.
-[ ] Outcomes are verified in the environment.
-[ ] Retries, fallbacks, escalations, and stops are explicit.
-[ ] Traces and evals measure the system, not just the last response.
-[ ] The harness is simplified whenever the model changes.</code></pre><hr>
-<h2 id="20-an-interactive-lab">20. An interactive lab</h2>
-<p>To make these trade-offs visible, I have prepared a separate educational simulator. It allows you to adjust path predictability, semantic ambiguity, parallelizability, side-effect risk, duration, and the presence of remote boundaries.</p>
-<p>The simulator is not a benchmark. It uses a transparent and intentionally simple model to show how certain choices shift cost, latency, observability, and blast radius.</p>
-<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">iframe</span>
-  <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../../../simulatore_architetture_multiagent.html&quot;</span>
-  <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Architecture Lab: where to place autonomy?&quot;</span>
-  <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;100%&quot;</span>
-  <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;900&quot;</span>
-  <span class="hljs-attr">loading</span>=<span class="hljs-string">&quot;lazy&quot;</span>
-  <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;border:0;border-radius:16px;overflow:hidden&quot;</span>
-&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">iframe</span>&gt;</span></code></pre><p>Static fallback:</p>
-<pre class="mermaid">flowchart LR
-    P[Problem] --&gt; Q1{Known path?}
-    Q1 --&gt;|yes| W[Workflow]
-    Q1 --&gt;|no| Q2{Decision representable?}
-    Q2 --&gt;|yes| R[Router + graph]
-    Q2 --&gt;|no| S[Supervisor]
-    S --&gt; Q3{Ownership changes?}
-    Q3 --&gt;|yes| H[Handoff]
-    Q3 --&gt;|no| D[Delegation]</pre><hr>
-<h2 id="conclusion">Conclusion</h2>
-<p>We started with an agent equipped with five tools. It wasn&#39;t a bad architecture; it was simply an architecture where too many decisions remained implicit.</p>
-<p>We separated state from text, control from work, verification from generation, and execution from the session. Each time, we added structure only when the previous system showed a crack.</p>
-<p>In my opinion, this is the healthiest way to think about multi-agent systems in 2026.</p>
-<p>The question is not &quot;how many agents can I get to collaborate?&quot; It is:</p>
-<blockquote>
-<p><strong>Where should the intelligence reside, and where is structure needed instead?</strong></p>
-</blockquote>
-<p>When a decision is known, write it down. When a result is verifiable, test it. When work is independent, parallelize it. When context must cross a boundary, give it a shape. When an agent can cause damage, restrict what it is allowed to do. And when a component no longer adds value, remove it.</p>
-<p>The rest is orchestration. And, as often happens, the real challenges emerge precisely in the handoffs between one box and the next.</p>
-<hr>
+<p>In the concluding chapter, we take this architecture beyond a single conversation: persistence, harnesses, protocols, and the complete reference architecture.</p>
+<p>→ Continue with <a href="../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-3/">Designing multi-agent systems in 2026 — Part 3</a>.</p>
 <h2 id="sources-and-reading-notes">Sources and reading notes</h2>
-<p>The sources are ordered by function, not by prestige. Engineering posts and official documentation support the system descriptions; practitioners add field experience; 2025 works are used when they introduce concepts that remain central in 2026.</p>
-<p>[^anthropic-engineering]: Anthropic, <strong>Engineering at Anthropic</strong>, updated index of 2024-2026 articles: <a href="https://www.anthropic.com/engineering">https://www.anthropic.com/engineering</a>
-[^anthropic-evals]: Anthropic, <strong>Demystifying evals for AI agents</strong>, January 9, 2026: <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents</a>
-[^anthropic-harness-2026]: Anthropic, <strong>Harness design for long-running application development</strong>, March 24, 2026: <a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">https://www.anthropic.com/engineering/harness-design-long-running-apps</a>
-[^anthropic-managed]: Anthropic, <strong>Scaling Managed Agents: Decoupling the brain from the hands</strong>, April 8, 2026: <a href="https://www.anthropic.com/engineering/managed-agents">https://www.anthropic.com/engineering/managed-agents</a>
-[^anthropic-containment]: Anthropic, <strong>How we contain Claude across products</strong>, May 25, 2026: <a href="https://www.anthropic.com/engineering/how-we-contain-claude">https://www.anthropic.com/engineering/how-we-contain-claude</a>
-[^anthropic-c-compiler]: Anthropic, <strong>Building a C compiler with a team of parallel Claudes</strong>, February 5, 2026: <a href="https://www.anthropic.com/engineering/building-c-compiler">https://www.anthropic.com/engineering/building-c-compiler</a>
-[^anthropic-context]: Anthropic, <strong>Effective context engineering for AI agents</strong>, September 29, 2025: <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents</a>
-[^openai-harness]: OpenAI, <strong>Harness engineering: leveraging Codex in an agent-first world</strong>, February 11, 2026: <a href="https://openai.com/index/harness-engineering/">https://openai.com/index/harness-engineering/</a>
-[^openai-sdk-2026]: OpenAI, <strong>The next evolution of the Agents SDK</strong>, April 15, 2026: <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">https://openai.com/index/the-next-evolution-of-the-agents-sdk/</a>
-[^openai-multi-agent]: OpenAI Agents SDK, <strong>Orchestrating multiple agents</strong>: <a href="https://openai.github.io/openai-agents-python/multi_agent/">https://openai.github.io/openai-agents-python/multi_agent/</a>
-[^openai-handoffs]: OpenAI Agents SDK, <strong>Handoffs</strong>: <a href="https://openai.github.io/openai-agents-python/handoffs/">https://openai.github.io/openai-agents-python/handoffs/</a>
-[^microsoft-workflows]: Microsoft Learn, <strong>Microsoft Agent Framework Workflows</strong>, updated 2026: <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">https://learn.microsoft.com/en-us/agent-framework/workflows/</a>
-[^microsoft-hitl]: Microsoft Learn, <strong>Human-in-the-loop with Agent Framework Workflows</strong>, updated July 17, 2026: <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop</a>
-[^langchain-handoffs]: LangChain, <strong>Handoffs</strong>, multi-agent documentation: <a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs</a>
-[^langgraph-subgraphs]: LangGraph, <strong>Use subgraphs</strong>: <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">https://docs.langchain.com/oss/python/langgraph/use-subgraphs</a>
-[^langgraph-persistence]: LangGraph, <strong>Persistence</strong>: <a href="https://docs.langchain.com/oss/python/langgraph/persistence">https://docs.langchain.com/oss/python/langgraph/persistence</a>
-[^langgraph-interrupts]: LangGraph, <strong>Interrupts</strong>: <a href="https://docs.langchain.com/oss/python/langgraph/interrupts">https://docs.langchain.com/oss/python/langgraph/interrupts</a></p>
-<p>[^mcp]: Model Context Protocol, official specification <strong>2026-07-28</strong>: <a href="https://modelcontextprotocol.io/specification/2026-07-28">https://modelcontextprotocol.io/specification/2026-07-28</a>
-[^a2a]: A2A Protocol, official specification <strong>v1.0</strong>: <a href="https://a2a-protocol.org/latest/">https://a2a-protocol.org/latest/</a>
-[^simon-subagents]: Simon Willison, <strong>Subagents - Agentic Engineering Patterns</strong>, March 17, 2026: <a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">https://simonwillison.net/guides/agentic-engineering-patterns/subagents/</a>
-[^hamel-evals]: Hamel Husain, <strong>Evals Skills for Coding Agents</strong>, March 3, 2026: <a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">https://hamelhusain.substack.com/p/evals-skills-for-coding-agents</a>
-[^jason-cognition]: Jason Liu, <strong>Why Cognition does not use multi-agent systems</strong>, September 11, 2025: <a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/</a></p>
+<p>Sources are ordered by function, not by prestige. Engineering posts and official documentation support the system descriptions; practitioners add field experience; 2025 works are used when they introduce concepts that remain central in 2026.</p>
+<ul>
+<li><p><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic — Building effective agents</a>: A 2024 guide to routing, chaining, parallelization, orchestrator-workers, and evaluator-optimizer patterns, with the recommendation to start with the simplest solution.</p>
+</li>
+<li><p><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Demystifying evals for AI agents</a>: Definitions of tasks, trials, graders, transcripts, outcomes, and evaluation harnesses.</p>
+</li>
+<li><p><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness design for long-running application development</a>: Planner, generator, evaluator, and the cost/duration trade-offs for long tasks.</p>
+</li>
+<li><p><a href="https://www.anthropic.com/engineering/managed-agents">Anthropic — Scaling Managed Agents</a>: Separation between sessions, harnesses, sandboxes, and execution environments.</p>
+</li>
+<li><p><a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — How we contain Claude across products</a>: Containment, permissions, and blast radius reduction.</p>
+</li>
+<li><p><a href="https://www.anthropic.com/engineering/building-c-compiler">Anthropic — Building a C compiler with a team of parallel Claudes</a>: An experiment with sixteen agents, a shared environment, and parallel coordination.</p>
+</li>
+<li><p><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic — Effective context engineering for AI agents</a>: Context management, compaction, memory, and subagents.</p>
+</li>
+<li><p><a href="https://openai.com/index/harness-engineering/">OpenAI — Harness engineering</a>: Harnesses, testing, observability, and isolated environments for Codex agents.</p>
+</li>
+<li><p><a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">OpenAI — The next evolution of the Agents SDK</a>: SDK evolution, sandboxes, and the separation between harness and compute.</p>
+</li>
+<li><p><a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — Agent orchestration</a>: The difference between LLM-based and code-based orchestration, agents as tools, and handoffs.</p>
+</li>
+<li><p><a href="https://openai.github.io/openai-agents-python/handoffs/">OpenAI Agents SDK — Handoffs</a>: Configuration, input, and handoff filters.</p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/">Microsoft Agent Framework — Workflows</a>: Functional or graph-based workflows, agents as executors, sequential/concurrent orchestrations, checkpoints, and HITL.</p>
+</li>
+<li><p><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">Microsoft Agent Framework — Human in the loop</a>: Suspendable requests, approvals, and workflow resumption.</p>
+</li>
+<li><p><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — Handoffs</a>: State-driven transitions; in subgraphs, the transferred context must be chosen explicitly.</p>
+</li>
+<li><p><a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — Use subgraphs</a>: subgraph input, output, and state.</p>
+</li>
+<li><p><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph — Persistence</a>: state persistence and checkpointing.</p>
+</li>
+<li><p><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph — Interrupts</a>: controlled interruptions and resuming graphs.</p>
+</li>
+<li><p><a href="https://modelcontextprotocol.io/specification/2026-07-28">Model Context Protocol — Specification</a>: a protocol for connecting agents to tools, data, and resources.</p>
+</li>
+<li><p><a href="https://a2a-protocol.org/latest/">A2A Protocol — Specification</a>: interoperability and communication between independent agents, without requiring shared memory, tools, or proprietary logic.</p>
+</li>
+<li><p><a href="https://simonwillison.net/guides/agentic-engineering-patterns/subagents/">Simon Willison — Subagents</a>: practical experience with context isolation and parallelism.</p>
+</li>
+<li><p><a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals Skills for Coding Agents</a>: error taxonomies, traces, and evaluators calibrated with human judgment.</p>
+</li>
+<li><p><a href="https://jxnl.co/writing/2025/09/11/why-cognition-does-not-use-multi-agent-systems/">Jason Liu — Why Cognition does not use multi-agent systems</a>: a practical critique of context loss in multi-agent systems.</p>
+</li>
+</ul>
 <h3 id="further-reading">Further reading</h3>
 <ul>
-<li>OpenAI, <strong>An open-source spec for Codex orchestration: Symphony</strong>, April 27, 2026: <a href="https://openai.com/index/open-source-codex-orchestration-symphony/">https://openai.com/index/open-source-codex-orchestration-symphony/</a></li>
-<li>Anthropic, <strong>AI Organizations Can Be More Effective but Less Aligned than Individual Agents</strong>, 2026: <a href="https://alignment.anthropic.com/2026/ai-organizations/">https://alignment.anthropic.com/2026/ai-organizations/</a></li>
-<li>OpenAI Agents SDK, <strong>Tracing</strong>: <a href="https://openai.github.io/openai-agents-python/tracing/">https://openai.github.io/openai-agents-python/tracing/</a></li>
-<li>LangChain, <strong>Multi-agent patterns</strong>: <a href="https://docs.langchain.com/oss/python/langchain/multi-agent/index">https://docs.langchain.com/oss/python/langchain/multi-agent/index</a></li>
+<li><a href="https://openai.com/index/open-source-codex-orchestration-symphony/">OpenAI — Symphony</a>: open-source specification for Codex orchestration.</li>
+<li><a href="https://alignment.anthropic.com/2026/ai-organizations/">Anthropic — AI Organizations</a>: research on the effectiveness and alignment of agent organizations.</li>
+<li><a href="https://openai.github.io/openai-agents-python/tracing/">OpenAI Agents SDK — Tracing</a>: execution tracing and observability.</li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent/index">LangChain — Multi-agent patterns</a>: an overview of multi-agent patterns supported by the framework.</li>
 </ul>
         </div>
       </section>
@@ -2935,7 +2091,7 @@ Graph thinking:
     const BLOG_THEME_KEY = 'blogTheme';
     const CURRENT_LANG = "en";
     const OTHER_LANG = "it";
-    const OTHER_LANG_LINK = "../../../blog/it/progettare-sistemi-multiagentici-nel-2026/index.html";
+    const OTHER_LANG_LINK = "../../../blog/it/progettare-sistemi-multiagentici-nel-2026-parte-2/index.html";
     (function() {
       const body = document.body;
       const readingProgressBar = document.getElementById('reading-progress-bar');

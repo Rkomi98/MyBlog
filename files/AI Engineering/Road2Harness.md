@@ -1,3 +1,57 @@
+# Progettare sistemi multiagentici nel 2026 — Parte 3
+
+Nei [capitoli precedenti](/blog/it/progettare-sistemi-multiagentici-nel-2026-parte-1/) abbiamo definito quando scomporre il lavoro e come controllare i componenti. Qui completiamo il quadro: un sistema agentico deve continuare a funzionare quando il lavoro dura, il contesto cambia, un processo si interrompe o l'esecuzione tocca sistemi esterni.
+
+## Quando il lavoro dura più della conversazione
+
+I task brevi possono vivere in una singola context window. I task lunghi no.
+
+```mermaid
+flowchart LR
+    S1[Sessione 1] --> C1[Checkpoint]
+    C1 --> M[(Durable state)]
+    C1 --> A[(Artifacts)]
+    M --> S2[Sessione 2]
+    A --> S2
+    S2 --> C2[Checkpoint]
+```
+
+Qui entrano quattro tecniche differenti.
+
+### Compaction
+
+La storia precedente viene riassunta e la stessa sessione continua. Conserva continuità, ma il riepilogo può perdere dettagli e il contesto resta una stratificazione di decisioni vecchie.
+
+### Context reset
+
+Si avvia un contesto pulito e si passa uno structured handoff. Costa di più, ma elimina residui e «ansia da contesto» osservata in alcuni modelli.
+
+### Checkpoint
+
+Si salva lo stato operativo in modo da poter riprendere dopo crash, pausa umana o manutenzione.
+
+### Artifact persistence
+
+Il lavoro non viene affidato soltanto alla memoria conversazionale. File, test, piani e risultati restano disponibili fuori dal prompt.
+
+```python
+# [REFERENCE DESIGN]
+
+checkpoint = Checkpoint(
+    goal=state.goal,
+    completed=state.completed_tasks,
+    pending=state.pending_tasks,
+    decisions=state.key_decisions,
+    artifact_refs=state.artifact_refs,
+    failures=state.failure_log,
+    active_requests=state.pending_human_requests,
+)
+
+checkpoint_store.save(checkpoint)
+```
+
+Anthropic ha mostrato nel marzo 2026 un harness a tre agenti per applicazioni long-running: planner, generator ed evaluator, con contratti e file usati come artefatti di comunicazione. Un dettaglio istruttivo è che, con modelli successivi, alcune parti del vecchio harness sono diventate zavorra e sono state rimosse. L'harness non è una cattedrale: è un'ipotesi sui limiti del modello corrente ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
+
 ## Dal sistema di agenti all'harness
 
 Nel 2026 la parola più interessante non è forse *multi-agent*. È *harness*.

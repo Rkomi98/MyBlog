@@ -79,6 +79,11 @@ function mergeMetadata(posts, metadata) {
     const fallbackLanguage = post.languages.it ?? post.languages.en ?? languageEntries[0];
     const fallbackMarkdown = fallbackLanguage?.markdown ?? '';
     const readTime = matchedEntry?.readTime ?? computeReadTime(fallbackMarkdown);
+    const readTimes = Object.fromEntries(
+      Object.entries(matchedEntry?.readTimes ?? {}).filter(
+        ([lang, value]) => ['it', 'en'].includes(lang) && Number.isFinite(value) && value > 0,
+      ),
+    );
     const publishedAt = resolvePublishedAt(matchedEntry, post.updatedAt);
     const icon = matchedEntry?.icon ?? '📝';
     const category = matchedEntry?.category ?? 'General';
@@ -118,6 +123,7 @@ function mergeMetadata(posts, metadata) {
       },
       publishedAt,
       readTime,
+      readTimes,
       titles,
       keywords,
       hiddenFromIndex,

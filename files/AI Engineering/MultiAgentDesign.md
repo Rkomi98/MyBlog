@@ -1,3 +1,7 @@
+# Progettare sistemi multiagentici nel 2026 — Parte 2
+
+Nel [primo capitolo](/blog/it/progettare-sistemi-multiagentici-nel-2026-parte-1/) abbiamo deciso quando un sistema merita davvero più agenti e chi debba possedere le decisioni. Ora rendiamo quel disegno operativo: distribuiamo ruoli, contesto e controlli senza trasformare l'orchestrazione in una conversazione indistinta fra modelli.
+
 ## Diamo un po' di ruoli
 
 ### Chi fa cosa?
@@ -176,7 +180,7 @@ Le frecce piene d'oro sono i contratti che scendono, quelle tratteggiate grigie 
 
 ### Stato, memoria e artefatti
 
-Nel linguaggio degli agenti, *memory* viene usato per indicare troppe cose. Conviene rimetterle in fila.
+Nel linguaggio degli agenti, la parola *memory* l'ho sentita per indicare troppe cose. Fermiamoci un attimo e facciamo chiarezza.
 
 #### Conversation state
 
@@ -563,57 +567,9 @@ Da qui una regola pratica:
 
 > **Il controllo umano va collocato nei punti di rischio, non distribuito come una pioggia di finestre modali.**
 
+Nel capitolo conclusivo portiamo questa architettura oltre la singola conversazione: persistenza, harness, protocolli e reference architecture completa.
 
-
-## Quando il lavoro dura più della conversazione
-
-I task brevi possono vivere in una singola context window. I task lunghi no.
-
-```mermaid
-flowchart LR
-    S1[Sessione 1] --> C1[Checkpoint]
-    C1 --> M[(Durable state)]
-    C1 --> A[(Artifacts)]
-    M --> S2[Sessione 2]
-    A --> S2
-    S2 --> C2[Checkpoint]
-```
-
-Qui entrano quattro tecniche differenti.
-
-### Compaction
-
-La storia precedente viene riassunta e la stessa sessione continua. Conserva continuità, ma il riepilogo può perdere dettagli e il contesto resta una stratificazione di decisioni vecchie.
-
-### Context reset
-
-Si avvia un contesto pulito e si passa uno structured handoff. Costa di più, ma elimina residui e «ansia da contesto» osservata in alcuni modelli.
-
-### Checkpoint
-
-Si salva lo stato operativo in modo da poter riprendere dopo crash, pausa umana o manutenzione.
-
-### Artifact persistence
-
-Il lavoro non viene affidato soltanto alla memoria conversazionale. File, test, piani e risultati restano disponibili fuori dal prompt.
-
-```python
-# [REFERENCE DESIGN]
-
-checkpoint = Checkpoint(
-    goal=state.goal,
-    completed=state.completed_tasks,
-    pending=state.pending_tasks,
-    decisions=state.key_decisions,
-    artifact_refs=state.artifact_refs,
-    failures=state.failure_log,
-    active_requests=state.pending_human_requests,
-)
-
-checkpoint_store.save(checkpoint)
-```
-
-Anthropic ha mostrato nel marzo 2026 un harness a tre agenti per applicazioni long-running: planner, generator ed evaluator, con contratti e file usati come artefatti di comunicazione. Un dettaglio istruttivo è che, con modelli successivi, alcune parti del vecchio harness sono diventate zavorra e sono state rimosse. L'harness non è una cattedrale: è un'ipotesi sui limiti del modello corrente ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
+→ Continua con [Progettare sistemi multiagentici nel 2026 — Parte 3](/blog/it/progettare-sistemi-multiagentici-nel-2026-parte-3/).
 
 
 ## Fonti e note di lettura
