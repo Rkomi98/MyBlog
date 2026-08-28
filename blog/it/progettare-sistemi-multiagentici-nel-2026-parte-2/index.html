@@ -1636,14 +1636,14 @@
             <span class="post-toc__text">Successo parziale</span>
           </a>
           
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#idempotenza-e-side-effect">
-            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__number">2.1.5</span>
             <span class="post-toc__text">Idempotenza e side effect</span>
           </a>
           
+        </li>
+  </ul>
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
@@ -2027,20 +2027,29 @@ fallimenti silenziosi</code></pre><p>In uno dei miei substack preferiti, Hamel H
     tracks = local_catalog.search(query)
     state.warnings.append(<span class="hljs-string">&quot;remote_catalog_unavailable_using_local&quot;</span>)</code></pre><p>Tuttavia, un fallback non dovrebbe mai alterare di nascosto il significato o il perimetro del risultato. Se il catalogo locale risulta meno aggiornato o parziale rispetto a quello remoto, il sistema deve conservarne la traccia nello stato per avvertire correttamente i nodi a valle o direttamente l&#39;utente finale.</p>
 <h4 id="successo-parziale">Successo parziale</h4>
-<p>In un sistema con worker paralleli, il fallimento di un agente non implica automaticamente il fallimento dell&#39;intera richiesta.</p>
+<p>In un sistema con worker paralleli, il timeout di un agente non implica automaticamente che l&#39;intera richiesta sia fallita.</p>
 <pre><code class="hljs language-text">Scout A ✓
 Scout B timeout
-Scout C ✓</code></pre><p>Non è tutto bianco o nero, vediamo anche un possibile grigio!</p>
+Scout C ✓</code></pre><p>Ma attenzione: non basta dire «due agenti su tre hanno risposto». Il sistema deve capire quale contributo è mancato e se l&#39;output rimanente soddisfa ancora il contratto del task.</p>
+<p>Per una ricerca esplorativa, la perdita di una fonte può essere accettabile se le fonti disponibili coprono già i punti richiesti. Per un controllo di compliance, il fallimento dell&#39;agente incaricato di verificare un requisito obbligatorio deve invece bloccare il flusso.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+coverage = assess_coverage(
+    successful_results,
+    required_capabilities=task.required_capabilities,
+)
 
-<span class="hljs-keyword">if</span> successful_workers &gt;= minimum_required:
-    continue_with_partial_results(warnings=failed_workers)
+<span class="hljs-keyword">if</span> coverage.satisfies_minimum:
+    <span class="hljs-keyword">return</span> partial_result(
+        data=successful_results,
+        missing=failed_workers,
+        warnings=coverage.warnings,
+    )
 <span class="hljs-keyword">elif</span> retry_budget.available:
     retry(failed_workers)
 <span class="hljs-keyword">else</span>:
-    escalate_or_abort()</code></pre><p>La scelta dipende dal contratto del task. Per una ricerca esplorativa, due fonti affidabili possono bastare. Per un controllo di compliance, la mancanza di una fonte obbligatoria deve bloccare l&#39;esecuzione.</p>
-<h3 id="idempotenza-e-side-effect">Idempotenza e side effect</h3>
-<p>Un retry innocuo su una ricerca read-only è diverso da un retry sulla creazione della playlist.</p>
+    escalate_or_abort()</code></pre><p>Un risultato parziale è un outcome che è utilizzabile entro un perimetro esplicito, con dei limiti ben dichiarati!</p>
+<h4 id="idempotenza-e-side-effect">Idempotenza e side effect</h4>
+<p>Un retry innocuo su una ricerca read-only è profondamente diverso da un retry sulla creazione di una playlist, dall&#39;invio di un&#39;email o da un pagamento. Se succede qualcosa dopo il side effect, l&#39;agente potrebbe non sapere se l&#39;azione è avvenuta. Riprovare alla cieca può duplicarla (pensate ad un doppio pagamento, non penso che l&#39;utente sia felice di vedere i suoi soldi pagati due volte).</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 spotify.create_playlist(
@@ -2048,8 +2057,15 @@ spotify.create_playlist(
     idempotency_key=state.run_id,
 )</code></pre><p>Senza idempotenza, un errore di rete dopo il side effect può produrre due playlist identiche. Nei sistemi multiagentici il problema peggiora, perché più worker possono credere di essere autorizzati a scrivere.</p>
 <p>Una policy semplice è il <strong>single writer</strong>: molti agenti possono proporre, uno soltanto può modificare lo stato esterno.</p>
+<p>Prima di ogni side effect conviene quindi rendere esplicite tre domande:</p>
+<ol>
+<li>Chi è autorizzato a scrivere?</li>
+<li>Come verifichiamo se l&#39;azione è già avvenuta?</li>
+<li>Possiamo ripeterla senza creare danni?</li>
+</ol>
+<p>Se non sappiamo rispondere, non abbiamo ancora progettato davvero il failure handling!</p>
 <h2 id="blast-radius-e-human-in-the-loop">Blast radius e human-in-the-loop</h2>
-<p>Quando un agente può soltanto leggere un catalogo musicale, il danno massimo è contenuto. Quando un agente può effettuare un rollback in produzione, la stessa architettura diventa un&#39;altra faccenda.</p>
+<p>Quando un agente può soltanto leggere un catalogo musicale, il danno massimo è contenuto. Quando un agente può effettuare un rollback in produzione, ovviamente è un altro paio di maniche.</p>
 <p>Il rischio operativo può essere letto come:</p>
 <pre><code class="hljs language-text">rischio ≈ probabilità di errore × danno massimo possibile</code></pre><p>Migliorare il modello riduce, forse, il primo termine. Le permission e l&#39;isolamento limitano il secondo.</p>
 <pre class="mermaid">flowchart LR
@@ -2062,13 +2078,13 @@ spotify.create_playlist(
     classDef safe fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
     classDef risky fill:#F6D9D6,stroke:#C64336,color:#7A2A22;
     class R,L,P safe;
-    class X risky;</pre><p>Anthropic, nel maggio 2026, ha descritto il containment come un problema di limitazione del blast radius: non soltanto sorvegliare ciò che il modello tende a fare, ma restringere ciò che l&#39;ambiente gli permette materialmente di fare. L&#39;articolo segnala anche l&#39;approvazione automatica o distratta come limite del semplice human-in-the-loop: troppi prompt di permesso producono approval fatigue (<a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — Containment</a>).</p>
+    class X risky;</pre><p>Anthropic, nel maggio 2026, ha descritto il <strong>containment</strong> come un problema di limitazione del <strong>blast radius</strong>: non soltanto sorvegliare ciò che il modello tende a fare, ma restringere ciò che l&#39;ambiente gli permette materialmente di fare. L&#39;articolo segnala anche l&#39;approvazione automatica o distratta come limite del semplice human-in-the-loop: troppi prompt di permesso producono approval fatigue (<a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic — Containment</a>).</p>
 <p>Microsoft Agent Framework tratta le richieste di approvazione e informazione come eventi sospendibili del workflow; lo stato pendente può essere incluso nei checkpoint e riemesso dopo il ripristino (<a href="https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop">Microsoft — HITL nei workflow</a>).</p>
 <p>Da qui una regola pratica:</p>
 <blockquote>
-<p><strong>Il controllo umano va collocato nei punti di rischio, non distribuito come una pioggia di finestre modali.</strong></p>
+<p><strong>Il controllo umano va inserito nei punti di rischio, non distribuito come una pioggia di finestre modali.</strong></p>
 </blockquote>
-<p>Nel capitolo conclusivo portiamo questa architettura oltre la singola conversazione: persistenza, harness, protocolli e reference architecture completa.</p>
+<p>Nel capitolo conclusivo portiamo questa architettura oltre la singola conversazione: parleremo di persistenza, harness, protocolli e reference architecture completa.</p>
 <p>→ Continua con <a href="../../../blog/it/progettare-sistemi-multiagentici-nel-2026-parte-3/">Progettare sistemi multiagentici nel 2026 — Parte 3</a>.</p>
 <h2 id="fonti-e-note-di-lettura">Fonti e note di lettura</h2>
 <p>Le fonti sono ordinate per funzione, non per prestigio. Gli engineering post e la documentazione ufficiale sostengono le descrizioni dei sistemi; i practitioner aggiungono esperienza sul campo; i lavori 2025 vengono usati quando introducono concetti ancora centrali nel 2026.</p>
