@@ -2298,9 +2298,17 @@ export function renderBlogDetail({
         startOnLoad: false,
         theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
       });
-      await mermaid.run({ querySelector: '.mermaid' });
+      const diagrams = Array.from(document.querySelectorAll('.post-body pre.mermaid'));
+      for (const diagram of diagrams) {
+        try {
+          await mermaid.run({ nodes: [diagram] });
+        } catch (error) {
+          console.error('Unable to render Mermaid diagram', error);
+          diagram.classList.add('mermaid--failed');
+        }
+      }
 
-      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+      diagrams.forEach((diagram) => {
         if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
           return;
         }

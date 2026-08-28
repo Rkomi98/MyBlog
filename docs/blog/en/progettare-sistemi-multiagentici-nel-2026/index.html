@@ -42,7 +42,7 @@
     "headline": "Designing Multi-Agent Systems in 2026",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-20T00:00:00.000Z",
-    "dateModified": "2026-08-27T10:10:29.000Z",
+    "dateModified": "2026-08-28T07:51:28.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1370,9 +1370,17 @@
         startOnLoad: false,
         theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
       });
-      await mermaid.run({ querySelector: '.mermaid' });
+      const diagrams = Array.from(document.querySelectorAll('.post-body pre.mermaid'));
+      for (const diagram of diagrams) {
+        try {
+          await mermaid.run({ nodes: [diagram] });
+        } catch (error) {
+          console.error('Unable to render Mermaid diagram', error);
+          diagram.classList.add('mermaid--failed');
+        }
+      }
 
-      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+      diagrams.forEach((diagram) => {
         if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
           return;
         }
@@ -1444,7 +1452,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">August 20, 2026 • 28 min</span>
+            <span class="post-hero__author-meta">August 20, 2026 • 29 min</span>
           </div>
         </div>
       </section>
@@ -2196,12 +2204,16 @@ Handoff    → changes who owns the control.</code></pre><hr>
     constraints: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     artifact_refs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     expected_output: <span class="hljs-built_in">str</span>
-    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">flowchart LR
-    A[Triage] --&gt; H[&quot;Handoff contract&lt;br/&gt;goal&lt;br/&gt;relevant state&lt;br/&gt;constraints&lt;br/&gt;artifact refs&lt;br/&gt;expected output&quot;]
-    H --&gt; B[Specialist]
+    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">sequenceDiagram
+    autonumber
+    participant T as Triage
+    participant C as Handoff contract
+    participant S as Specialist
 
-    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class H contract;</pre><p>Here, two decisions that are often confused become visible:</p>
+    T-&gt;&gt;C: Defines a minimal handoff
+    Note over C: Intent&lt;br/&gt;goal · reason&lt;br/&gt;&lt;br/&gt;Required context&lt;br/&gt;relevant_state · artifact_refs&lt;br/&gt;&lt;br/&gt;Operating agreement&lt;br/&gt;constraints · expected_output · return_policy
+    C-&gt;&gt;S: Transfers context + ownership
+    Note right of S: The specialist owns&lt;br/&gt;the following turns</pre><p>Here, two decisions that are often confused become visible:</p>
 <ol>
 <li><strong>who owns the control;</strong></li>
 <li><strong>what information crosses the boundary.</strong></li>
@@ -2218,7 +2230,7 @@ Handoff    → changes who owns the control.</code></pre><hr>
 <p>A <strong>subagent</strong> is a worker with its own reasoning loop, local context, and, often, its own tools.</p>
 <pre class="mermaid">flowchart TB
     S[Supervisor]
-    S --&gt; T[Tool&lt;br/&gt;search_catalog(query)]
+    S --&gt; T[&quot;Tool&lt;br/&gt;search_catalog(query)&quot;]
     S --&gt; W[Worker&lt;br/&gt;execute defined task]
     S --&gt; A[Subagent&lt;br/&gt;goal + context + tools + loop]</pre><p>This distinction is necessary because a tool does not need a personality, and a subagent should not be used to mask a function we are simply too lazy to write.</p>
 <h3 id="parallelism-dependencies-first">Parallelism: dependencies first</h3>
@@ -2299,6 +2311,45 @@ evaluation rubric</code></pre><p>The &quot;minimum sufficient context&quot; rule
 <li>the information that can remain local;</li>
 <li>the format in which results are reported back.</li>
 </ul>
+<p>Applied to our example, the four boundaries draw a precise flow: shared state is the only thing that enters and leaves the center in validated form, contracts flow down to the specialists, private state stays sealed inside each worker, and only a typed upstream schema makes it back to the supervisor.</p>
+<pre class="mermaid">flowchart TD
+    subgraph LEG[&quot;Legend&quot;]
+        direction LR
+        L1[Shared State]:::shared
+        L2[Contract]:::contract
+        L3[Private State]:::private
+        L4[Upstream schema]:::upstream
+    end
+
+    GS[(Global State&lt;br/&gt;validated)]:::shared
+    SUP{{Supervisor}}:::supervisor
+
+    GS --&gt;|read by every node| SUP
+    SUP --&gt;|writes validated state| GS
+
+    SUP --&gt;|&quot;Contract: SearchTask&quot;| SCOUT[Scout]:::worker
+    SUP --&gt;|&quot;Contract: PlaylistRequest&quot;| CUR[Curator]:::worker
+    SUP --&gt;|&quot;Contract: EvalRequest&quot;| VER[Verifier]:::worker
+
+    SCOUT -.-&gt;|raw logs, drafts| PS1[(scratch)]:::private
+    CUR -.-&gt;|temporary drafts| PS2[(scratch)]:::private
+    VER -.-&gt;|verification notes| PS3[(scratch)]:::private
+
+    SCOUT ==&gt;|&quot;Upstream: CandidateSet&quot;| SUP
+    CUR ==&gt;|&quot;Upstream: PlaylistDraft&quot;| SUP
+    VER ==&gt;|&quot;Upstream: Verdict&quot;| SUP
+
+    classDef shared fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef supervisor fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    classDef worker fill:#7C3AED,stroke:#A78BFA,color:#fff,stroke-width:2px;
+    classDef private fill:#ECEFF2,stroke:#818282,color:#0D1F2E,stroke-dasharray: 3 3;
+    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    classDef upstream fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+
+    linkStyle 0,1 stroke:#1B64F5,stroke-width:2px;
+    linkStyle 2,3,4 stroke:#C8902B,stroke-width:2px;
+    linkStyle 5,6,7 stroke:#818282,stroke-width:1.5px;
+    linkStyle 8,9,10 stroke:#2E8B6B,stroke-width:2.5px;</pre><p>The solid gold arrows are the contracts flowing down, the dashed grey ones stay confined to the worker that produces them, and the thick green ones are the only channel through which a result travels back up.</p>
 <hr>
 <h2 id="8-state-memory-and-artifacts">8. State, memory, and artifacts</h2>
 <p>In agent terminology, <em>memory</em> is used to mean too many things. It is worth sorting them out.</p>

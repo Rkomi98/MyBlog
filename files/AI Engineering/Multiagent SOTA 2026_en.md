@@ -413,12 +413,16 @@ class HandoffContract(BaseModel):
 ```
 
 ```mermaid
-flowchart LR
-    A[Triage] --> H["Handoff contract<br/>goal<br/>relevant state<br/>constraints<br/>artifact refs<br/>expected output"]
-    H --> B[Specialist]
+sequenceDiagram
+    autonumber
+    participant T as Triage
+    participant C as Handoff contract
+    participant S as Specialist
 
-    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class H contract;
+    T->>C: Defines a minimal handoff
+    Note over C: Intent<br/>goal · reason<br/><br/>Required context<br/>relevant_state · artifact_refs<br/><br/>Operating agreement<br/>constraints · expected_output · return_policy
+    C->>S: Transfers context + ownership
+    Note right of S: The specialist owns<br/>the following turns
 ```
 
 Here, two decisions that are often confused become visible:
@@ -449,7 +453,7 @@ A **subagent** is a worker with its own reasoning loop, local context, and, ofte
 ```mermaid
 flowchart TB
     S[Supervisor]
-    S --> T[Tool<br/>search_catalog(query)]
+    S --> T["Tool<br/>search_catalog(query)"]
     S --> W[Worker<br/>execute defined task]
     S --> A[Subagent<br/>goal + context + tools + loop]
 ```
@@ -568,6 +572,51 @@ The point is not solved by "passing everything to everyone." Parallel workers ca
 - the decisions that must become contracts;
 - the information that can remain local;
 - the format in which results are reported back.
+
+Applied to our example, the four boundaries draw a precise flow: shared state is the only thing that enters and leaves the center in validated form, contracts flow down to the specialists, private state stays sealed inside each worker, and only a typed upstream schema makes it back to the supervisor.
+
+```mermaid
+flowchart TD
+    subgraph LEG["Legend"]
+        direction LR
+        L1[Shared State]:::shared
+        L2[Contract]:::contract
+        L3[Private State]:::private
+        L4[Upstream schema]:::upstream
+    end
+
+    GS[(Global State<br/>validated)]:::shared
+    SUP{{Supervisor}}:::supervisor
+
+    GS -->|read by every node| SUP
+    SUP -->|writes validated state| GS
+
+    SUP -->|"Contract: SearchTask"| SCOUT[Scout]:::worker
+    SUP -->|"Contract: PlaylistRequest"| CUR[Curator]:::worker
+    SUP -->|"Contract: EvalRequest"| VER[Verifier]:::worker
+
+    SCOUT -.->|raw logs, drafts| PS1[(scratch)]:::private
+    CUR -.->|temporary drafts| PS2[(scratch)]:::private
+    VER -.->|verification notes| PS3[(scratch)]:::private
+
+    SCOUT ==>|"Upstream: CandidateSet"| SUP
+    CUR ==>|"Upstream: PlaylistDraft"| SUP
+    VER ==>|"Upstream: Verdict"| SUP
+
+    classDef shared fill:#1B64F5,stroke:#1B64F5,color:#fff;
+    classDef supervisor fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    classDef worker fill:#7C3AED,stroke:#A78BFA,color:#fff,stroke-width:2px;
+    classDef private fill:#ECEFF2,stroke:#818282,color:#0D1F2E,stroke-dasharray: 3 3;
+    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
+    classDef upstream fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
+
+    linkStyle 0,1 stroke:#1B64F5,stroke-width:2px;
+    linkStyle 2,3,4 stroke:#C8902B,stroke-width:2px;
+    linkStyle 5,6,7 stroke:#818282,stroke-width:1.5px;
+    linkStyle 8,9,10 stroke:#2E8B6B,stroke-width:2.5px;
+```
+
+The solid gold arrows are the contracts flowing down, the dashed grey ones stay confined to the worker that produces them, and the thick green ones are the only channel through which a result travels back up.
 
 ---
 
