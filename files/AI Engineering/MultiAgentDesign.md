@@ -438,9 +438,18 @@ Se il workflow è lungo e modifica lo stato, valuta checkpoint di stato (es. “
 
 Infine, misurare tool call, token, errori e runtime resta prezioso: serve a trovare flussi ridondanti e strumenti mal progettati, non necessariamente a decretare che l’agente abbia fallito
 
-## E quando il mondo va a rotoli?
+### E quando il mondo va a rotoli?
 
-Un sistema multiagentico DEVE essere definito ANCHE da ciò che succede quando un nodo non fa il proprio dovere!
+Un sistema multiagentico non è definito soltanto da chi fa cosa quando tutto funziona. DEVE essere definito ANCHE da ciò che accade quando un nodo restituisce un output sbagliato, incompleto, incerto o non restituisce nulla. 
+
+Un buon orchestratore non tratta tutti i fallimenti allo stesso modo:
+
+- un timeout può richiedere un retry;
+- un output formalmente invalido può richiedere una riparazione;
+- un output valido ma incerto può richiedere una domanda all'utente;
+- un tool indisponibile può richiedere un fallback;
+- un'azione costosa, irreversibile o ambigua può richiedere approvazione umana;
+- un errore fatale deve fermare il flusso, non produrre un risultato inventato.
 
 ```mermaid
 stateDiagram-v2
@@ -451,15 +460,17 @@ stateDiagram-v2
     Running --> Replan: evidenza insufficiente
     Running --> Human: azione rischiosa o ambigua
     Running --> Failed: errore fatale
+
     Retry --> Running
     Fallback --> Running
     Replan --> Running
     Human --> Running: approvazione / nuovo input
 ```
-
 Conviene distinguere almeno queste famiglie.
 
-### Output formalmente invalido
+#### Output formalmente invalido
+
+Qui il nodo ha risposto, ma ha violato il contratto: JSON malformato, campi mancanti, enum non valido, schema incompatibile. Questo è un errore TOTALMENTE tecnico. Possiamo chiedere al nodo di riparare l'output, ma con un budget limitato: un agente che continua a produrre output invalido non diventa affidabile al quinto tentativo, è scientificamente provato 😜
 
 ```python
 # [PSEUDOCODICE]
@@ -473,26 +484,34 @@ except ValidationError:
         return clarification_fallback()
 ```
 
-### Output valido ma semanticamente incerto
+#### Output valido ma semanticamente incerto
 
-Non è un'eccezione. È uno stato.
+Eheh questo caso è più sottile, per cui andiamo con calma. L'output rispetta lo schema, quindi non è un'eccezione. Ma l'agente dichiara poca confidenza, trova evidenze in conflitto o non possiede abbastanza informazioni per procedere in modo affidabile. L'incertezza DEVE viaggiare nello stato del workflow e deve essere palesata subito!
 
 ```python
 if profile.needs_clarification:
     return transition_to("clarifier")
 ```
 
-### Tool esterno non disponibile
+In altre parole: “non so” è un risultato legittimo. Spesso è migliore di una risposta plausibile ma sbagliata. Non mi stancherò mai di ripeterlo.
+
+#### Tool esterno non disponibile
+
+Un tool esterno può andare in timeout, restituire un errore 503 o scontrarsi con un rate limit. Quando l'operazione non è strettamente essenziale, l'orchestratore può attuare una *graceful degradation* (degradazione controllata), ovvero appoggiarsi a una fonte dati locale, ridurre le funzionalità offerte oppure informare in modo trasparente l'utente del limite.
 
 ```python
 try:
     tracks = await remote_catalog.search(query)
 except TransientToolError:
     tracks = local_catalog.search(query)
-    state.warnings.append("remote_catalog_unavailable")
+    state.warnings.append("remote_catalog_unavailable_using_local")
 ```
 
-### Successo parziale
+Tuttavia, un fallback non dovrebbe mai alterare di nascosto il significato o il perimetro del risultato. Se il catalogo locale risulta meno aggiornato o parziale rispetto a quello remoto, il sistema deve conservarne la traccia nello stato per avvertire correttamente i nodi a valle o direttamente l'utente finale.
+
+#### Successo parziale
+
+In un sistema con worker paralleli, il timeout di un agente non implica automaticamente che l'intera richiesta sia fallita.
 
 ```text
 Scout A ✓
@@ -500,22 +519,34 @@ Scout B timeout
 Scout C ✓
 ```
 
-Le opzioni non sono soltanto «tutto fallisce» o «facciamo finta di niente».
+Ma attenzione: non basta dire «due agenti su tre hanno risposto». Il sistema deve capire quale contributo è mancato e se l'output rimanente soddisfa ancora il contratto del task.
+
+Per una ricerca esplorativa, la perdita di una fonte può essere accettabile se le fonti disponibili coprono già i punti richiesti. Per un controllo di compliance, il fallimento dell'agente incaricato di verificare un requisito obbligatorio deve invece bloccare il flusso.
 
 ```python
 # [REFERENCE DESIGN]
+coverage = assess_coverage(
+    successful_results,
+    required_capabilities=task.required_capabilities,
+)
 
-if successful_workers >= minimum_required:
-    continue_with_partial_results(warnings=failed_workers)
+if coverage.satisfies_minimum:
+    return partial_result(
+        data=successful_results,
+        missing=failed_workers,
+        warnings=coverage.warnings,
+    )
 elif retry_budget.available:
     retry(failed_workers)
 else:
     escalate_or_abort()
 ```
 
-### Idempotenza e side effect
+Un risultato parziale è un outcome che è utilizzabile entro un perimetro esplicito, con dei limiti ben dichiarati!
 
-Un retry innocuo su una ricerca read-only è diverso da un retry sulla creazione della playlist.
+#### Idempotenza e side effect
+
+Un retry innocuo su una ricerca read-only è profondamente diverso da un retry sulla creazione di una playlist, dall'invio di un'email o da un pagamento. Se succede qualcosa dopo il side effect, l'agente potrebbe non sapere se l'azione è avvenuta. Riprovare alla cieca può duplicarla (pensate ad un doppio pagamento, non penso che l'utente sia felice di vedere i suoi soldi pagati due volte).
 
 ```python
 # [REFERENCE DESIGN]
@@ -530,11 +561,18 @@ Senza idempotenza, un errore di rete dopo il side effect può produrre due playl
 
 Una policy semplice è il **single writer**: molti agenti possono proporre, uno soltanto può modificare lo stato esterno.
 
+Prima di ogni side effect conviene quindi rendere esplicite tre domande:
+
+1. Chi è autorizzato a scrivere?
+2. Come verifichiamo se l'azione è già avvenuta?
+3. Possiamo ripeterla senza creare danni?
+
+Se non sappiamo rispondere, non abbiamo ancora progettato davvero il failure handling!
 
 
 ## Blast radius e human-in-the-loop
 
-Quando un agente può soltanto leggere un catalogo musicale, il danno massimo è contenuto. Quando un agente può effettuare un rollback in produzione, la stessa architettura diventa un'altra faccenda.
+Quando un agente può soltanto leggere un catalogo musicale, il danno massimo è contenuto. Quando un agente può effettuare un rollback in produzione, ovviamente è un altro paio di maniche.
 
 Il rischio operativo può essere letto come:
 
@@ -558,15 +596,15 @@ flowchart LR
     class X risky;
 ```
 
-Anthropic, nel maggio 2026, ha descritto il containment come un problema di limitazione del blast radius: non soltanto sorvegliare ciò che il modello tende a fare, ma restringere ciò che l'ambiente gli permette materialmente di fare. L'articolo segnala anche l'approvazione automatica o distratta come limite del semplice human-in-the-loop: troppi prompt di permesso producono approval fatigue ([Anthropic — Containment](https://www.anthropic.com/engineering/how-we-contain-claude)).
+Anthropic, nel maggio 2026, ha descritto il **containment** come un problema di limitazione del **blast radius**: non soltanto sorvegliare ciò che il modello tende a fare, ma restringere ciò che l'ambiente gli permette materialmente di fare. L'articolo segnala anche l'approvazione automatica o distratta come limite del semplice human-in-the-loop: troppi prompt di permesso producono approval fatigue ([Anthropic — Containment](https://www.anthropic.com/engineering/how-we-contain-claude)).
 
 Microsoft Agent Framework tratta le richieste di approvazione e informazione come eventi sospendibili del workflow; lo stato pendente può essere incluso nei checkpoint e riemesso dopo il ripristino ([Microsoft — HITL nei workflow](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop)).
 
 Da qui una regola pratica:
 
-> **Il controllo umano va collocato nei punti di rischio, non distribuito come una pioggia di finestre modali.**
+> **Il controllo umano va inserito nei punti di rischio, non distribuito come una pioggia di finestre modali.**
 
-Nel capitolo conclusivo portiamo questa architettura oltre la singola conversazione: persistenza, harness, protocolli e reference architecture completa.
+Nel capitolo conclusivo portiamo questa architettura oltre la singola conversazione: parleremo di persistenza, harness, protocolli e reference architecture completa.
 
 → Continua con [Progettare sistemi multiagentici nel 2026 — Parte 3](/blog/it/progettare-sistemi-multiagentici-nel-2026-parte-3/).
 

@@ -1707,10 +1707,14 @@ export function renderBlogDetail({
       max-height: 88vh;
       padding: 2rem;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: flex-start;
       overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
+    }
+    .mermaid-overlay__scroll > pre.mermaid {
+      flex: 0 0 auto;
+      margin: 0 auto;
     }
     .mermaid-overlay__scroll svg {
       max-width: none;
@@ -2337,6 +2341,29 @@ export function renderBlogDetail({
           overlayScroll.appendChild(clone);
           overlay.classList.add('mermaid-overlay--visible');
           document.body.classList.add('no-scroll');
+
+          const cloneSvg = clone.querySelector('svg');
+          const viewBox = cloneSvg?.viewBox?.baseVal;
+          if (cloneSvg && viewBox?.width > 0 && viewBox?.height > 0) {
+            const scrollStyles = window.getComputedStyle(overlayScroll);
+            const horizontalPadding =
+              (Number.parseFloat(scrollStyles.paddingLeft) || 0) +
+              (Number.parseFloat(scrollStyles.paddingRight) || 0);
+            const availableWidth = Math.max(320, overlayScroll.clientWidth - horizontalPadding);
+            const availableHeight = Math.max(320, window.innerHeight - 140);
+            const widthAtAvailableHeight = availableHeight * (viewBox.width / viewBox.height);
+            const targetWidth = Math.max(
+              viewBox.width,
+              Math.min(availableWidth, widthAtAvailableHeight),
+            );
+
+            clone.style.width = Math.ceil(targetWidth) + 'px';
+            clone.style.maxWidth = 'none';
+            cloneSvg.style.width = '100%';
+            cloneSvg.style.maxWidth = 'none';
+            cloneSvg.style.height = 'auto';
+          }
+
           overlay.querySelector('.mermaid-overlay__close')?.focus();
         };
         expandButton.addEventListener('click', () => openDiagram(expandButton));

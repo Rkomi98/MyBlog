@@ -473,7 +473,7 @@ Sia LangChain che LangGraph supportano nativamente questo livello di astrazione.
 
 > Vale la seguente regola per disegnare un handoff con criteri moderni: **evitare di passare tutto "per sicurezza"**. L'agente ricevente deve disporre **esclusivamente** del contesto minimo necessario per compiere il proprio dovere, senza l'onere computazionale e cognitivo di dover ricostruire l'intero storico del sistema.
 
-Nel prossimo capitolo trasformiamo queste scelte di orchestrazione in un design operativo: ruoli, stato, verifiche, eval e confini di rischio.
+Nel prossimo capitolo trasformiamo queste scelte di orchestrazione in un design pronto all'uso: ruoli, stato, verifiche, eval e confini di rischio.
 
 → Continua con [Progettare sistemi multiagentici nel 2026 — Parte 2](/blog/it/progettare-sistemi-multiagentici-nel-2026-parte-2/).
 
