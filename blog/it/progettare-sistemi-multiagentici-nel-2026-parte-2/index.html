@@ -1544,28 +1544,30 @@
             <span class="post-toc__number">1.4</span>
             <span class="post-toc__text">Chi controlla?</span>
           </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#controlli-deterministici">
-            <span class="post-toc__number">1.5</span>
+            <span class="post-toc__number">1.4.1</span>
             <span class="post-toc__text">Controlli deterministici</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#verifica-nellambiente">
-            <span class="post-toc__number">1.6</span>
+            <span class="post-toc__number">1.4.2</span>
             <span class="post-toc__text">Verifica nell&#39;ambiente</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#valutazione-semantica">
-            <span class="post-toc__number">1.7</span>
+            <span class="post-toc__number">1.4.3</span>
             <span class="post-toc__text">Valutazione semantica</span>
           </a>
           
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#un-ciclo-ha-bisogno-di-un-freno">
-            <span class="post-toc__number">1.8</span>
+            <span class="post-toc__number">1.5</span>
             <span class="post-toc__text">Un ciclo ha bisogno di un freno</span>
           </a>
           
@@ -1779,9 +1781,9 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
 <h3 id="stato-memoria-e-artefatti">Stato, memoria e artefatti</h3>
 <p>Nel linguaggio degli agenti, la parola <em>memory</em> l&#39;ho sentita per indicare troppe cose. Fermiamoci un attimo e facciamo chiarezza.</p>
 <h4 id="conversation-state">Conversation state</h4>
-<p>È ciò che serve a mantenere continuità nell&#39;interazione: messaggi, turni, identità dell&#39;agente attivo, richieste pendenti.</p>
+<p>È l&#39;elemento che serve a garantire la continuità nell&#39;interazione. Tiene traccia di messaggi, turni, identità dell&#39;agente attivo e richieste in sospeso.</p>
 <h4 id="task-state">Task state</h4>
-<p>È lo stato operativo del lavoro:</p>
+<p>Definisce l&#39;avanzamento e lo stato puramente operativo del lavoro in corso:</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">WorkflowState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
@@ -1792,15 +1794,14 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     verification: VerificationResult | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
     retries: <span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">int</span>] = {}
     status: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;running&quot;</span>, <span class="hljs-string">&quot;waiting&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>, <span class="hljs-string">&quot;done&quot;</span>] = <span class="hljs-string">&quot;running&quot;</span></code></pre><h4 id="local-state">Local state</h4>
-<p>È ciò che appartiene a uno specialista e non deve per forza risalire:</p>
+<p>Rappresenta le informazioni di servizio confinate a un singolo specialista, che <strong>non hanno alcuna necessità di inquinare il contesto globale</strong>:</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScoutLocalState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     attempted_queries: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     visited_track_ids: <span class="hljs-built_in">set</span>[<span class="hljs-built_in">str</span>]
     raw_tool_outputs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</code></pre><h4 id="artifact">Artifact</h4>
-<p>È un prodotto persistente del lavoro: file, report, patch, tabella, playlist, dataset, piano.</p>
-<p>Quando l&#39;output è grande, passare un riferimento è spesso più sano che reiniettare tutto nel prompt.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
-
+<p>Costituisce l&#39;esito persistente del lavoro svolto. Può essere un file, un report, una patch, una playlist, un piano o un intero dataset.</p>
+<p>Quando l&#39;output generato è voluminoso, passare un semplice riferimento (<em>reference</em>) è una scelta di gran lunga preferibile rispetto a reiniettare l&#39;intero contenuto nel prompt!</p>
+<pre><code class="hljs language-python">
 <span class="hljs-keyword">return</span> WorkerResult(
     summary=<span class="hljs-string">&quot;Trovati 84 candidati, 61 dopo i filtri.&quot;</span>,
     artifact_ref=<span class="hljs-string">&quot;artifacts/run-284/candidate_set.json&quot;</span>,
@@ -1810,11 +1811,11 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     S --&gt; R[Summary]
     A --&gt; C[Curator]
     R --&gt; SUP[Supervisor]
-    SUP --&gt; C</pre><p>L&#39;artefatto conserva fedeltà. Il riepilogo conserva spazio nel contesto.</p>
+    SUP --&gt; C</pre><p>L&#39;artefatto conserva la fedeltà, mentre il riepilogo conserva spazio nel contesto.</p>
 <p>È un equilibrio molto più solido del tentativo di trasformare ogni passaggio in un messaggio sempre più lungo.</p>
 <h3 id="chi-controlla">Chi controlla?</h3>
-<p>Fin qui abbiamo distribuito il lavoro. Ora dobbiamo evitare che il sistema confonda «ho prodotto qualcosa» con «ho finito».</p>
-<p>La verifica moderna ha almeno tre strati.</p>
+<p>Fin qui abbiamo distribuito il lavoro. Ora dobbiamo capire come far capire quando ha finito (spoiler non quando ha prodotto le cose).</p>
+<p>Nella mia esperienza + blog che ho letto in passato, esistono 3 fasi che ora vediamo nelle prossime sezioni.</p>
 <pre class="mermaid">flowchart TD
     A[Artifact] --&gt; D[Deterministic checks]
     D --&gt;|pass| E[Environmental verification]
@@ -1829,7 +1830,7 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     classDef hard fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
     classDef soft fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
     class D,E hard;
-    class J soft;</pre><h3 id="controlli-deterministici">Controlli deterministici</h3>
+    class J soft;</pre><h4 id="controlli-deterministici">Controlli deterministici</h4>
 <p>Se una proprietà si può verificare in Python, non serve chiedere a un LLM.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
@@ -1850,14 +1851,14 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     ):
         errors.append(<span class="hljs-string">&quot;energy_curve&quot;</span>)
 
-    <span class="hljs-keyword">return</span> CheckResult(passed=<span class="hljs-keyword">not</span> errors, errors=errors)</code></pre><h3 id="verifica-nellambiente">Verifica nell&#39;ambiente</h3>
+    <span class="hljs-keyword">return</span> CheckResult(passed=<span class="hljs-keyword">not</span> errors, errors=errors)</code></pre><h4 id="verifica-nellambiente">Verifica nell&#39;ambiente</h4>
 <p>Un agente può dire di aver creato una playlist. La domanda è se la playlist esista davvero nel sistema esterno.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
 
 playlist_id = spotify.create_playlist(payload)
 
 <span class="hljs-keyword">assert</span> spotify.get_playlist(playlist_id).track_ids == payload.track_ids</code></pre><p>Anthropic distingue con precisione transcript e outcome: il primo è ciò che l&#39;agente ha detto e fatto; il secondo è lo stato finale dell&#39;ambiente. Un eval robusto tende a preferire l&#39;outcome quando è osservabile (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals per agenti</a>).</p>
-<h3 id="valutazione-semantica">Valutazione semantica</h3>
+<h4 id="valutazione-semantica">Valutazione semantica</h4>
 <p>Rimane poi ciò che non si lascia ridurre a un&#39;asserzione netta:</p>
 <ul>
 <li>la playlist racconta una transizione coerente?</li>
