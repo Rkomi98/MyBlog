@@ -1370,9 +1370,17 @@
         startOnLoad: false,
         theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
       });
-      await mermaid.run({ querySelector: '.mermaid' });
+      const diagrams = Array.from(document.querySelectorAll('.post-body pre.mermaid'));
+      for (const diagram of diagrams) {
+        try {
+          await mermaid.run({ nodes: [diagram] });
+        } catch (error) {
+          console.error('Unable to render Mermaid diagram', error);
+          diagram.classList.add('mermaid--failed');
+        }
+      }
 
-      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+      diagrams.forEach((diagram) => {
         if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
           return;
         }
@@ -2196,12 +2204,16 @@ Handoff    → changes who owns the control.</code></pre><hr>
     constraints: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     artifact_refs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     expected_output: <span class="hljs-built_in">str</span>
-    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">flowchart LR
-    A[Triage] --&gt; H[&quot;Handoff contract&lt;br/&gt;goal&lt;br/&gt;relevant state&lt;br/&gt;constraints&lt;br/&gt;artifact refs&lt;br/&gt;expected output&quot;]
-    H --&gt; B[Specialist]
+    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">sequenceDiagram
+    autonumber
+    participant T as Triage
+    participant C as Handoff contract
+    participant S as Specialist
 
-    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class H contract;</pre><p>Here, two decisions that are often confused become visible:</p>
+    T-&gt;&gt;C: Defines a minimal handoff
+    Note over C: Intent&lt;br/&gt;goal · reason&lt;br/&gt;&lt;br/&gt;Required context&lt;br/&gt;relevant_state · artifact_refs&lt;br/&gt;&lt;br/&gt;Operating agreement&lt;br/&gt;constraints · expected_output · return_policy
+    C-&gt;&gt;S: Transfers context + ownership
+    Note right of S: The specialist owns&lt;br/&gt;the following turns</pre><p>Here, two decisions that are often confused become visible:</p>
 <ol>
 <li><strong>who owns the control;</strong></li>
 <li><strong>what information crosses the boundary.</strong></li>
@@ -2218,7 +2230,7 @@ Handoff    → changes who owns the control.</code></pre><hr>
 <p>A <strong>subagent</strong> is a worker with its own reasoning loop, local context, and, often, its own tools.</p>
 <pre class="mermaid">flowchart TB
     S[Supervisor]
-    S --&gt; T[Tool&lt;br/&gt;search_catalog(query)]
+    S --&gt; T[&quot;Tool&lt;br/&gt;search_catalog(query)&quot;]
     S --&gt; W[Worker&lt;br/&gt;execute defined task]
     S --&gt; A[Subagent&lt;br/&gt;goal + context + tools + loop]</pre><p>This distinction is necessary because a tool does not need a personality, and a subagent should not be used to mask a function we are simply too lazy to write.</p>
 <h3 id="parallelism-dependencies-first">Parallelism: dependencies first</h3>

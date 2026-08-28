@@ -1370,9 +1370,17 @@
         startOnLoad: false,
         theme: document.body?.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
       });
-      await mermaid.run({ querySelector: '.mermaid' });
+      const diagrams = Array.from(document.querySelectorAll('.post-body pre.mermaid'));
+      for (const diagram of diagrams) {
+        try {
+          await mermaid.run({ nodes: [diagram] });
+        } catch (error) {
+          console.error('Unable to render Mermaid diagram', error);
+          diagram.classList.add('mermaid--failed');
+        }
+      }
 
-      document.querySelectorAll('.post-body pre.mermaid').forEach((diagram) => {
+      diagrams.forEach((diagram) => {
         if (diagram.parentElement?.classList.contains('mermaid-diagram')) {
           return;
         }
@@ -2236,7 +2244,7 @@ Handoff    → cambia chi possiede il controllo.</code></pre><p>Riassumendo:</p>
 </li>
 </ul>
 <h4 id="un-handoff-un-contratto-a-tutti-gli-effetti">Un handoff è un contratto a tutti gli effetti</h4>
-<p>Nei diagrammi architetturali l&#39;handoff viene spesso liquidato come una semplice freccia direzionale. Nella realtà ingegneristica, tuttavia, esso rappresenta un vero e proprio <strong>confine di isolamento (boundary)</strong>.</p>
+<p>Nei diagrammi architetturali l&#39;handoff viene spesso liquidato come una semplice freccia direzionale. Nella realtà, tuttavia, esso rappresenta un vero e proprio <strong>confine di isolamento (boundary)</strong>.</p>
 <p>Per strutturare un passaggio di consegne robusto, non possiamo affidarci a scambi di messaggi destrutturati. Dobbiamo definire un contratto formale, modellabile ad esempio tramite Pydantic:</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     goal: <span class="hljs-built_in">str</span>
@@ -2245,18 +2253,24 @@ Handoff    → cambia chi possiede il controllo.</code></pre><p>Riassumendo:</p>
     constraints: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     artifact_refs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     expected_output: <span class="hljs-built_in">str</span>
-    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">flowchart LR
-    A[Triage] --&gt; H[&quot;Handoff contract&lt;br/&gt;goal&lt;br/&gt;relevant state&lt;br/&gt;constraints&lt;br/&gt;artifact refs&lt;br/&gt;expected output&quot;]
-    H --&gt; B[Specialista]
+    return_policy: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;return_to_supervisor&quot;</span>, <span class="hljs-string">&quot;own_conversation&quot;</span>]</code></pre><pre class="mermaid">sequenceDiagram
+    autonumber
+    participant T as Triage
+    participant C as Handoff contract
+    participant S as Specialista
 
-    classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class H contract;</pre><p>La formalizzazione di questo schema evidenzia due responsabilità architetturali distinte che spesso i team confondono in fase di design:</p>
+    T-&gt;&gt;C: Definisce un passaggio minimale
+    Note over C: Intento&lt;br/&gt;goal · reason&lt;br/&gt;&lt;br/&gt;Contesto necessario&lt;br/&gt;relevant_state · artifact_refs&lt;br/&gt;&lt;br/&gt;Accordo operativo&lt;br/&gt;constraints · expected_output · return_policy
+    C-&gt;&gt;S: Trasferisce contesto + ownership
+    Note right of S: Lo specialista&lt;br/&gt;gestisce i turni successivi</pre><p>La formalizzazione di questo schema evidenzia due responsabilità architetturali distinte, vediamole insieme:</p>
 <ol>
 <li><strong>La governance del flusso (Control Ownership):</strong> Chi ha l&#39;autorità di decidere quale azione compiere in seguito?</li>
 <li><strong>La minimizzazione del contesto (Information Boundary):</strong> Quali dati devono realmente superare la barriera dell&#39;agente?</li>
 </ol>
 <p>Sia LangChain che LangGraph supportano nativamente questo livello di astrazione. LangGraph, ad esempio, permette di definire subgraph indipendenti dotati di schemi di stato (state schemas) dedicati, incapsulando la memoria locale dello specialista e mappando in modo esplicito solo gli input e gli output concordati (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
-<p>La regola aurea di un handoff progettato con criteri moderni è chiara: <strong>evitare la tentazione di passare lo stato globale &quot;per sicurezza&quot;</strong>. L&#39;agente ricevente deve disporre esclusivamente del contesto minimo necessario per compiere il proprio dovere, senza l&#39;onere computazionale e cognitivo di dover ricostruire l&#39;intero storico del sistema.</p>
+<blockquote>
+<p>Vale la seguente regola per disegnare un handoff con criteri moderni: <strong>evitare di passare tutto &quot;per sicurezza&quot;</strong>. L&#39;agente ricevente deve disporre <strong>esclusivamente</strong> del contesto minimo necessario per compiere il proprio dovere, senza l&#39;onere computazionale e cognitivo di dover ricostruire l&#39;intero storico del sistema.</p>
+</blockquote>
 <h2 id="chi-fa-cosa">Chi fa cosa?</h2>
 <p>Abbiamo più o meno capito ad alto livello cosa dobbiamo fare e a chi assenare le decisioni in base ai problemi. Resta ora da distribuire il lavoro!</p>
 <h3 id="tool-worker-subagent">Tool, worker, subagent</h3>
@@ -2266,7 +2280,7 @@ Handoff    → cambia chi possiede il controllo.</code></pre><p>Riassumendo:</p>
 <p>Un <strong>subagent</strong> è un worker con un proprio ciclo di ragionamento, un contesto locale e, spesso, strumenti propri.</p>
 <pre class="mermaid">flowchart TB
     S[Supervisor]
-    S --&gt; T[Tool&lt;br/&gt;search_catalog(query)]
+    S --&gt; T[&quot;Tool&lt;br/&gt;search_catalog(query)&quot;]
     S --&gt; W[Worker&lt;br/&gt;esegui task definito]
     S --&gt; A[Subagent&lt;br/&gt;goal + context + tools + loop]</pre><p>La distinzione serve perché un tool non ha bisogno di una personalità. E un subagent non dovrebbe essere usato per mascherare una funzione che non abbiamo voglia di scrivere.</p>
 <h3 id="parallelismo-prima-le-dipendenze">Parallelismo: prima le dipendenze</h3>
