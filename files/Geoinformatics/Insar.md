@@ -53,24 +53,33 @@ La fase radar ha lo stesso problema: viene osservata modulo \(2\pi\). Una singol
 L'InSAR cambia domanda. Non cerca la distanza assoluta: **confronta la fase di due o più acquisizioni della stessa area** e osserva come è cambiata [5].
 
 ![Schema geometrico della misura di deformazione con InSAR: il sensore radar osserva la stessa area del terreno in due acquisizioni differenti e rileva la variazione della distanza lungo la Line of Sight. (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg)
-*Schema geometrico della misura di deformazione con InSAR: il sensore radar osserva la stessa area del terreno in due acquisizioni differenti e rileva la variazione della distanza lungo la Line of Sight. (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))*
+*Schema geometrico della misura della deformazione mediante InSAR: il sensore radar acquisisce immagini della stessa area in due passaggi successivi e, dalla differenza di fase del segnale, ricava la variazione della distanza sensore–terreno lungo la linea di vista (line of sight, LOS). (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))*
 
+Se tra i due passaggi un punto a terra si sposta lungo la linea di vista del satellite, cambia la distanza tra sensore e bersaglio. Indichiamo questa variazione con $\Delta d_{LOS}$. Il segnale radar, però, non percorre quella distanza una sola volta: viaggia dal satellite al terreno e poi torna dal terreno al satellite. Uno spostamento $\Delta d_{LOS}$ modifica quindi il cammino complessivo dell'onda di $2\Delta d_{LOS}$.
 
-Se tra i due passaggi un punto a terra si è spostato lungo la linea di vista del satellite, cambia il cammino percorso dall'onda e quindi cambia anche la fase ricevuta. In modulo, la relazione tra la componente di deformazione della fase e lo spostamento LOS può essere scritta come:
-
-$$
-|\Delta \phi_{def}| = \frac{4\pi}{\lambda}|d_{LOS}|
-$$
-
-Il segno dipende dalla convenzione adottata per definire spostamenti verso o lontano dal satellite; ciò che ci interessa qui è il fattore di scala. Il radar percorre il tragitto satellite-terreno e poi terreno-satellite, quindi una variazione \(d\) della distanza modifica il cammino complessivo di \(2d\).
-
-Da qui arriva una relazione che vale la pena tenere in tasca:
+Una variazione del cammino pari a una lunghezza d'onda $\lambda$ produce una variazione di fase di $2\pi$ radianti. Il primo fattore della formula converte quindi il cammino in fase; il secondo tiene conto del percorso di andata e ritorno:
 
 $$
-2\pi \quad \longleftrightarrow \quad \frac{\lambda}{2}
+|\Delta \phi_{def}| = \frac{2\pi}{\lambda} \cdot 2|\Delta d_{LOS}| = \frac{4\pi}{\lambda}|\Delta d_{LOS}|
 $$
 
-Sentinel-1 lavora a 5,405 GHz, che corrispondono a una lunghezza d'onda di circa **5,55 cm**. Un ciclo interferometrico completo corrisponde quindi a circa **2,8 cm di variazione LOS** [3] [6].
+Invertendo la formula otteniamo direttamente lo spostamento lungo la LOS:
+
+$$
+|\Delta d_{LOS}| = \frac{\lambda}{4\pi}|\Delta \phi_{def}|
+$$
+
+Ora il significato del fattore $\lambda/2$ è più esplicito. Se la fase dovuta alla deformazione varia di un ciclo completo, cioè $2\pi$ radianti, allora:
+
+$$
+|\Delta \phi_{def}| = 2\pi
+\quad \Longrightarrow \quad
+|\Delta d_{LOS}| = \frac{\lambda}{2}
+$$
+
+In altre parole, **un ciclo completo della fase interferometrica corrisponde a uno spostamento pari a metà della lunghezza d'onda lungo la LOS**. La relazione riguarda il valore assoluto: il segno, che distingue un movimento verso il satellite da uno in allontanamento, dipende dalla convenzione adottata.
+
+Sentinel-1 lavora a 5,405 GHz, che corrispondono a una lunghezza d'onda di circa **5,55 cm**. Un ciclo interferometrico completo corrisponde quindi a circa **2,8 cm di variazione LOS** [3] [6]. Nella fase wrapped, tuttavia, $0$ e $2\pi$ coincidono: è per questo che un nuovo ciclo ricomincia dallo stesso valore di fase e, nell'interferogramma, dallo stesso colore.
 
 Tra poco quei 2,8 cm compariranno su una zona dell'Italia centrale.
 
