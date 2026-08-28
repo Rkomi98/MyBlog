@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>[REFERENCE DESIGN - PSEUDOCODE] | Mirko Calcaterra</title>
-  <meta name="description" content="From agent systems to harnesses In 2026, the most interesting word is perhaps not multiagent. It is harness. The harness is what surrounds the model, transforming an inference into an operating system: In its work on harness engineering, OpenAI describes a pr…">
+  <title>Designing multi-agent systems in 2026 — Part 3 | Mirko Calcaterra</title>
+  <meta name="description" content="Designing multiagent systems in 2026 — Part 3 In the previous chapters, we defined when to decompose work and how to govern its components. Here we complete the picture: an agentic system must keep working when work is longrunning, context changes, a process…">
   <meta name="keywords" content="AI agents, multi-agent systems, harness engineering, MCP, A2A, context persistence, AI engineering">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -22,8 +22,8 @@
   <!-- Open Graph -->
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026-parte-3/">
-  <meta property="og:title" content="[REFERENCE DESIGN - PSEUDOCODE]">
-  <meta property="og:description" content="From agent systems to harnesses In 2026, the most interesting word is perhaps not multiagent. It is harness. The harness is what surrounds the model, transforming an inference into an operating system: In its work on harness engineering, OpenAI describes a pr…">
+  <meta property="og:title" content="Designing multi-agent systems in 2026 — Part 3">
+  <meta property="og:description" content="Designing multiagent systems in 2026 — Part 3 In the previous chapters, we defined when to decompose work and how to govern its components. Here we complete the picture: an agentic system must keep working when work is longrunning, context changes, a process…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-08-22T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -31,18 +31,18 @@
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="[REFERENCE DESIGN - PSEUDOCODE]">
-  <meta property="twitter:description" content="From agent systems to harnesses In 2026, the most interesting word is perhaps not multiagent. It is harness. The harness is what surrounds the model, transforming an inference into an operating system: In its work on harness engineering, OpenAI describes a pr…">
+  <meta property="twitter:title" content="Designing multi-agent systems in 2026 — Part 3">
+  <meta property="twitter:description" content="Designing multiagent systems in 2026 — Part 3 In the previous chapters, we defined when to decompose work and how to govern its components. Here we complete the picture: an agentic system must keep working when work is longrunning, context changes, a process…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "[REFERENCE DESIGN - PSEUDOCODE]",
+    "headline": "Designing multi-agent systems in 2026 — Part 3",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-22T00:00:00.000Z",
-    "dateModified": "2026-08-28T08:51:02.504Z",
+    "dateModified": "2026-08-28T08:57:43.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "From agent systems to harnesses In 2026, the most interesting word is perhaps not multiagent. It is harness. The harness is what surrounds the model, transforming an inference into an operating system: In its work on harness engineering, OpenAI describes a pr…"
+    "description": "Designing multiagent systems in 2026 — Part 3 In the previous chapters, we defined when to decompose work and how to govern its components. Here we complete the picture: an agentic system must keep working when work is longrunning, context changes, a process…"
   }
   </script>
 
@@ -1447,12 +1447,12 @@
       <section class="post-hero">
         <div class="post-hero__icon">🧠</div>
         <span class="post-hero__category">AI Engineering Path</span>
-        <h1 class="post-hero__title">[REFERENCE DESIGN - PSEUDOCODE]</h1>
+        <h1 class="post-hero__title">Designing multi-agent systems in 2026 — Part 3</h1>
         <div class="post-hero__author">
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">August 22, 2026 • 13 min</span>
+            <span class="post-hero__author-meta">August 22, 2026 • 10 min</span>
           </div>
         </div>
       </section>
@@ -1468,14 +1468,46 @@
         <div class="post-toc__content">
           <ul class="post-toc__list">
     <li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#from-agent-systems-to-harnesses">
+          <a class="post-toc__link" href="#when-work-outlasts-the-conversation">
             <span class="post-toc__number">1</span>
+            <span class="post-toc__text">When work outlasts the conversation</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#compaction">
+            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__text">Compaction</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#context-reset">
+            <span class="post-toc__number">1.2</span>
+            <span class="post-toc__text">Context reset</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#checkpoint">
+            <span class="post-toc__number">1.3</span>
+            <span class="post-toc__text">Checkpoint</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#artifact-persistence">
+            <span class="post-toc__number">1.4</span>
+            <span class="post-toc__text">Artifact persistence</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="0">
+          <a class="post-toc__link" href="#from-agent-systems-to-harnesses">
+            <span class="post-toc__number">2</span>
             <span class="post-toc__text">From agent systems to harnesses</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#many-brains-many-hands">
-            <span class="post-toc__number">1.1</span>
+            <span class="post-toc__number">2.1</span>
             <span class="post-toc__text">Many brains, many hands</span>
           </a>
           
@@ -1483,19 +1515,19 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#mcp-and-a2a-two-different-problems">
-            <span class="post-toc__number">2</span>
+            <span class="post-toc__number">3</span>
             <span class="post-toc__text">MCP and A2A: two different problems</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#mcp">
-            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__number">3.1</span>
             <span class="post-toc__text">MCP</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#a2a">
-            <span class="post-toc__number">2.2</span>
+            <span class="post-toc__number">3.2</span>
             <span class="post-toc__text">A2A</span>
           </a>
           
@@ -1503,19 +1535,19 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#when-a-decision-becomes-an-edge">
-            <span class="post-toc__number">3</span>
+            <span class="post-toc__number">4</span>
             <span class="post-toc__text">When a decision becomes an edge</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#the-spotify-reference-architecture">
-            <span class="post-toc__number">4</span>
+            <span class="post-toc__number">5</span>
             <span class="post-toc__text">The Spotify reference architecture</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#the-runtime-in-pseudocode">
-            <span class="post-toc__number">4.1</span>
+            <span class="post-toc__number">5.1</span>
             <span class="post-toc__text">The runtime, in pseudocode</span>
           </a>
           
@@ -1523,49 +1555,49 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#what-is-converging-in-2026">
-            <span class="post-toc__number">5</span>
+            <span class="post-toc__number">6</span>
             <span class="post-toc__text">What is converging in 2026</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#simplicity-comes-before-decomposition">
-            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__number">6.1</span>
             <span class="post-toc__text">Simplicity comes before decomposition</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#context-is-a-design-object">
-            <span class="post-toc__number">5.2</span>
+            <span class="post-toc__number">6.2</span>
             <span class="post-toc__text">Context is a design object</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#control-must-be-localized">
-            <span class="post-toc__number">5.3</span>
+            <span class="post-toc__number">6.3</span>
             <span class="post-toc__text">Control must be localized</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#verification-must-touch-the-environment">
-            <span class="post-toc__number">5.4</span>
+            <span class="post-toc__number">6.4</span>
             <span class="post-toc__text">Verification must touch the environment</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#state-must-survive-the-prompt">
-            <span class="post-toc__number">5.5</span>
+            <span class="post-toc__number">6.5</span>
             <span class="post-toc__text">State must survive the prompt</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#manage-risk-with-deterministic-boundaries">
-            <span class="post-toc__number">5.6</span>
+            <span class="post-toc__number">6.6</span>
             <span class="post-toc__text">Manage risk with deterministic boundaries</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#evaluate-the-model-and-the-harness-together">
-            <span class="post-toc__number">5.7</span>
+            <span class="post-toc__number">6.7</span>
             <span class="post-toc__text">Evaluate the model and the harness together</span>
           </a>
           
@@ -1573,37 +1605,37 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#a-grammar-for-design">
-            <span class="post-toc__number">6</span>
+            <span class="post-toc__number">7</span>
             <span class="post-toc__text">A grammar for design</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#who-decides">
-            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__number">7.1</span>
             <span class="post-toc__text">Who decides?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#who-knows-what">
-            <span class="post-toc__number">6.2</span>
+            <span class="post-toc__number">7.2</span>
             <span class="post-toc__text">Who knows what?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#who-does-what">
-            <span class="post-toc__number">6.3</span>
+            <span class="post-toc__number">7.3</span>
             <span class="post-toc__text">Who does what?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#who-controls">
-            <span class="post-toc__number">6.4</span>
+            <span class="post-toc__number">7.4</span>
             <span class="post-toc__text">Who controls?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#who-keeps-the-system-running">
-            <span class="post-toc__number">6.5</span>
+            <span class="post-toc__number">7.5</span>
             <span class="post-toc__text">Who keeps the system running?</span>
           </a>
           
@@ -1611,25 +1643,25 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#an-interactive-lab">
-            <span class="post-toc__number">7</span>
+            <span class="post-toc__number">8</span>
             <span class="post-toc__text">An interactive lab</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#conclusion">
-            <span class="post-toc__number">8</span>
+            <span class="post-toc__number">9</span>
             <span class="post-toc__text">Conclusion</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#sources-and-further-reading">
-            <span class="post-toc__number">9</span>
+            <span class="post-toc__number">10</span>
             <span class="post-toc__text">Sources and further reading</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#further-reading">
-            <span class="post-toc__number">9.1</span>
+            <span class="post-toc__number">10.1</span>
             <span class="post-toc__text">Further reading</span>
           </a>
           
@@ -1640,7 +1672,38 @@
         </div>
       </aside>
         <div class="post-body">
-          <h2 id="from-agent-systems-to-harnesses">From agent systems to harnesses</h2>
+          <p>In the <a href="../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-1/">previous chapters</a>, we defined when to decompose work and how to govern its components. Here we complete the picture: an agentic system must keep working when work is long-running, context changes, a process is interrupted, or execution reaches external systems.</p>
+<h2 id="when-work-outlasts-the-conversation">When work outlasts the conversation</h2>
+<p>Short tasks can live within a single context window. Long tasks cannot.</p>
+<pre class="mermaid">flowchart LR
+    S1[Session 1] --&gt; C1[Checkpoint]
+    C1 --&gt; M[(Durable state)]
+    C1 --&gt; A[(Artifacts)]
+    M --&gt; S2[Session 2]
+    A --&gt; S2
+    S2 --&gt; C2[Checkpoint]</pre><p>Four different techniques come into play here.</p>
+<h3 id="compaction">Compaction</h3>
+<p>The previous history is summarized, and the same session continues. This maintains continuity, but the summary may lose details, and the context remains a layering of old decisions.</p>
+<h3 id="context-reset">Context reset</h3>
+<p>A clean context is started, and a structured handoff is passed. This costs more, but it eliminates residue and the &quot;context anxiety&quot; observed in some models.</p>
+<h3 id="checkpoint">Checkpoint</h3>
+<p>The operational state is saved so that work can resume after a crash, a human pause, or maintenance.</p>
+<h3 id="artifact-persistence">Artifact persistence</h3>
+<p>Work is not entrusted solely to conversational memory. Files, tests, plans, and results remain available outside the prompt.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
+
+checkpoint = Checkpoint(
+    goal=state.goal,
+    completed=state.completed_tasks,
+    pending=state.pending_tasks,
+    decisions=state.key_decisions,
+    artifact_refs=state.artifact_refs,
+    failures=state.failure_log,
+    active_requests=state.pending_human_requests,
+)
+
+checkpoint_store.save(checkpoint)</code></pre><p>In March 2026, Anthropic showcased a three-agent harness for long-running applications: planner, generator, and evaluator, using contracts and files as communication artifacts. An instructive detail is that, with subsequent models, some parts of the old harness became dead weight and were removed. The harness is not a cathedral; it is a hypothesis about the limits of the current model (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
+<h2 id="from-agent-systems-to-harnesses">From agent systems to harnesses</h2>
 <p>In 2026, the most interesting word is perhaps not <em>multi-agent</em>. It is <em>harness</em>.</p>
 <p>The harness is what surrounds the model, transforming an inference into an operating system:</p>
 <pre class="mermaid">flowchart TB

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Designing multi-agent systems in 2026 | Mirko Calcaterra</title>
-  <meta name="description" content="Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…">
+  <title>Designing multi-agent systems in 2026 — Part 1 | Mirko Calcaterra</title>
+  <meta name="description" content="Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…">
   <meta name="keywords" content="">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -22,8 +22,8 @@
   <!-- Open Graph -->
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026-parte-1/">
-  <meta property="og:title" content="Designing multi-agent systems in 2026">
-  <meta property="og:description" content="Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…">
+  <meta property="og:title" content="Designing multi-agent systems in 2026 — Part 1">
+  <meta property="og:description" content="Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-08-20T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -31,18 +31,18 @@
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Designing multi-agent systems in 2026">
-  <meta property="twitter:description" content="Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…">
+  <meta property="twitter:title" content="Designing multi-agent systems in 2026 — Part 1">
+  <meta property="twitter:description" content="Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "Designing multi-agent systems in 2026",
+    "headline": "Designing multi-agent systems in 2026 — Part 1",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-20T00:00:00.000Z",
-    "dateModified": "2026-08-28T08:49:46.000Z",
+    "dateModified": "2026-08-28T08:57:43.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Designing multiagent systems in 2026 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than just stoppin…"
+    "description": "Designing multiagent systems in 2026 — Part 1 I’ve heard developers brag about designing multiagent systems just to show off to their colleagues or to sell their solutions using &quot;buzzwords.&quot; In this article, I want to dive deep into this topic rather than jus…"
   }
   </script>
 
@@ -1447,12 +1447,12 @@
       <section class="post-hero">
         <div class="post-hero__icon">🧠</div>
         <span class="post-hero__category">AI Engineering Path</span>
-        <h1 class="post-hero__title">Designing multi-agent systems in 2026</h1>
+        <h1 class="post-hero__title">Designing multi-agent systems in 2026 — Part 1</h1>
         <div class="post-hero__author">
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">August 20, 2026 • 15 min</span>
+            <span class="post-hero__author-meta">August 20, 2026 • 14 min</span>
           </div>
         </div>
       </section>
@@ -1850,7 +1850,7 @@ This prevents the sub-agents&#39; context from becoming saturated with useless i
 
     <span class="hljs-comment"># Delegate the specific task to the chosen specialist</span>
     worker_output = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task_parameters)
-    
+
     <span class="hljs-comment"># Record the outcome in the global state (without passing the entire sub-chat transcript)</span>
     state.record_step(
         worker=decision.worker,
@@ -1928,6 +1928,8 @@ Handoff    → changes who has the control.</code></pre><p>In summary:</p>
 <blockquote>
 <p>The following rule applies when designing a handoff with modern criteria: <strong>avoid passing everything &quot;just in case.&quot;</strong> The receiving agent must have <strong>exclusively</strong> the minimum context necessary to perform its duty, without the computational and cognitive burden of having to reconstruct the entire system history.</p>
 </blockquote>
+<p>In the next chapter, we turn these orchestration choices into an operating design: roles, state, verification, evals, and risk boundaries.</p>
+<p>→ Continue with <a href="../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-2/">Designing multi-agent systems in 2026 — Part 2</a>.</p>
 <h2 id="sources-and-reading-notes">Sources and reading notes</h2>
 <p>The sources are ordered by function, not by prestige. Engineering posts and official documentation support the system descriptions; practitioners add field experience; 2025 works are used when they introduce concepts that remain central in 2026.</p>
 <ul>

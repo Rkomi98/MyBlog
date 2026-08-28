@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>[REFERENCE DESIGN] | Mirko Calcaterra</title>
-  <meta name="description" content="Defining roles Who does what? We have a highlevel understanding of what needs to be done and how to assign decisions based on the problems at hand. Now, we need to distribute the work. Tool, worker, subagent Let’s define our terms: A tool exposes a capability…">
+  <title>Designing multi-agent systems in 2026 — Part 2 | Mirko Calcaterra</title>
+  <meta name="description" content="Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…">
   <meta name="keywords" content="AI agents, multi-agent systems, orchestration, context engineering, evaluation, AI engineering">
   <meta name="author" content="Mirko Calcaterra">
   <link rel="canonical" href="${pageUrl}">
@@ -22,8 +22,8 @@
   <!-- Open Graph -->
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://rkomi98.github.io/MyBlog/blog/en/progettare-sistemi-multiagentici-nel-2026-parte-2/">
-  <meta property="og:title" content="[REFERENCE DESIGN]">
-  <meta property="og:description" content="Defining roles Who does what? We have a highlevel understanding of what needs to be done and how to assign decisions based on the problems at hand. Now, we need to distribute the work. Tool, worker, subagent Let’s define our terms: A tool exposes a capability…">
+  <meta property="og:title" content="Designing multi-agent systems in 2026 — Part 2">
+  <meta property="og:description" content="Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
   <meta property="article:published_time" content="2026-08-21T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
@@ -31,18 +31,18 @@
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="[REFERENCE DESIGN]">
-  <meta property="twitter:description" content="Defining roles Who does what? We have a highlevel understanding of what needs to be done and how to assign decisions based on the problems at hand. Now, we need to distribute the work. Tool, worker, subagent Let’s define our terms: A tool exposes a capability…">
+  <meta property="twitter:title" content="Designing multi-agent systems in 2026 — Part 2">
+  <meta property="twitter:description" content="Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…">
   <meta property="twitter:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "[REFERENCE DESIGN]",
+    "headline": "Designing multi-agent systems in 2026 — Part 2",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-21T00:00:00.000Z",
-    "dateModified": "2026-08-28T08:50:26.239Z",
+    "dateModified": "2026-08-28T08:57:43.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -52,7 +52,7 @@
       "@type": "Person",
       "name": "Mirko Calcaterra"
     },
-    "description": "Defining roles Who does what? We have a highlevel understanding of what needs to be done and how to assign decisions based on the problems at hand. Now, we need to distribute the work. Tool, worker, subagent Let’s define our terms: A tool exposes a capability…"
+    "description": "Designing multiagent systems in 2026 — Part 2 In the first chapter, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and co…"
   }
   </script>
 
@@ -1447,12 +1447,12 @@
       <section class="post-hero">
         <div class="post-hero__icon">🧠</div>
         <span class="post-hero__category">AI Engineering Path</span>
-        <h1 class="post-hero__title">[REFERENCE DESIGN]</h1>
+        <h1 class="post-hero__title">Designing multi-agent systems in 2026 — Part 2</h1>
         <div class="post-hero__author">
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">August 21, 2026 • 12 min</span>
+            <span class="post-hero__author-meta">August 21, 2026 • 9 min</span>
           </div>
         </div>
       </section>
@@ -1624,46 +1624,14 @@
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#when-work-outlasts-the-conversation">
-            <span class="post-toc__number">5</span>
-            <span class="post-toc__text">When work outlasts the conversation</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#compaction">
-            <span class="post-toc__number">5.1</span>
-            <span class="post-toc__text">Compaction</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#context-reset">
-            <span class="post-toc__number">5.2</span>
-            <span class="post-toc__text">Context reset</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#checkpoint">
-            <span class="post-toc__number">5.3</span>
-            <span class="post-toc__text">Checkpoint</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#artifact-persistence">
-            <span class="post-toc__number">5.4</span>
-            <span class="post-toc__text">Artifact persistence</span>
-          </a>
-          
-        </li>
-  </ul>
-        </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#sources-and-reading-notes">
-            <span class="post-toc__number">6</span>
+            <span class="post-toc__number">5</span>
             <span class="post-toc__text">Sources and reading notes</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#further-reading">
-            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__number">5.1</span>
             <span class="post-toc__text">Further reading</span>
           </a>
           
@@ -1674,7 +1642,8 @@
         </div>
       </aside>
         <div class="post-body">
-          <h2 id="defining-roles">Defining roles</h2>
+          <p>In the <a href="../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-1/">first chapter</a>, we decided when a system truly earns the complexity of multiple agents and who should own its decisions. Now we turn that design into an operating system: we distribute roles, context, and controls without turning orchestration into an indistinct conversation between models.</p>
+<h2 id="defining-roles">Defining roles</h2>
 <h3 id="who-does-what">Who does what?</h3>
 <p>We have a high-level understanding of what needs to be done and how to assign decisions based on the problems at hand. Now, we need to distribute the work.</p>
 <h4 id="tool-worker-subagent">Tool, worker, subagent</h4>
@@ -2050,36 +2019,8 @@ spotify.create_playlist(
 <blockquote>
 <p><strong>Human oversight should be placed at critical risk points, not scattered like a shower of modal windows.</strong></p>
 </blockquote>
-<h2 id="when-work-outlasts-the-conversation">When work outlasts the conversation</h2>
-<p>Short tasks can live within a single context window. Long tasks cannot.</p>
-<pre class="mermaid">flowchart LR
-    S1[Session 1] --&gt; C1[Checkpoint]
-    C1 --&gt; M[(Durable state)]
-    C1 --&gt; A[(Artifacts)]
-    M --&gt; S2[Session 2]
-    A --&gt; S2
-    S2 --&gt; C2[Checkpoint]</pre><p>Four different techniques come into play here.</p>
-<h3 id="compaction">Compaction</h3>
-<p>The previous history is summarized, and the same session continues. This maintains continuity, but the summary may lose details, and the context remains a layering of old decisions.</p>
-<h3 id="context-reset">Context reset</h3>
-<p>A clean context is started, and a structured handoff is passed. This costs more, but it eliminates residue and the &quot;context anxiety&quot; observed in some models.</p>
-<h3 id="checkpoint">Checkpoint</h3>
-<p>The operational state is saved so that work can resume after a crash, a human pause, or maintenance.</p>
-<h3 id="artifact-persistence">Artifact persistence</h3>
-<p>Work is not entrusted solely to conversational memory. Files, tests, plans, and results remain available outside the prompt.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
-
-checkpoint = Checkpoint(
-    goal=state.goal,
-    completed=state.completed_tasks,
-    pending=state.pending_tasks,
-    decisions=state.key_decisions,
-    artifact_refs=state.artifact_refs,
-    failures=state.failure_log,
-    active_requests=state.pending_human_requests,
-)
-
-checkpoint_store.save(checkpoint)</code></pre><p>In March 2026, Anthropic showcased a three-agent harness for long-running applications: planner, generator, and evaluator, using contracts and files as communication artifacts. An instructive detail is that, with subsequent models, some parts of the old harness became dead weight and were removed. The harness is not a cathedral; it is a hypothesis about the limits of the current model (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
+<p>In the concluding chapter, we take this architecture beyond a single conversation: persistence, harnesses, protocols, and the complete reference architecture.</p>
+<p>→ Continue with <a href="../../../blog/en/progettare-sistemi-multiagentici-nel-2026-parte-3/">Designing multi-agent systems in 2026 — Part 3</a>.</p>
 <h2 id="sources-and-reading-notes">Sources and reading notes</h2>
 <p>Sources are ordered by function, not by prestige. Engineering posts and official documentation support the system descriptions; practitioners add field experience; 2025 works are used when they introduce concepts that remain central in 2026.</p>
 <ul>
