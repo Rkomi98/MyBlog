@@ -349,17 +349,30 @@ If the answer is already inside a schema, the supervisor is just an expensive wa
 In delegation, the manager remains the primary contact. In a handoff, control passes to the specialist.
 
 ```mermaid
-flowchart LR
-    subgraph Delegation
-        S1[Supervisor] --> A1[Specialist]
-        A1 --> S1
-        S1 --> U1[User]
+flowchart TB
+    subgraph H["Handoff · ownership transfers"]
+        direction LR
+        T[Triage] -->|passes context + ownership| A2[Specialist]
+        A2 -->|responds in following turns| U2([User])
     end
 
-    subgraph Handoff
-        T[Triage] --> A2[Specialist]
-        A2 --> U2[User]
+    subgraph D["Delegation · ownership stays with Supervisor"]
+        direction LR
+        S1[Supervisor] -->|delegates a scoped task| A1[Specialist]
+        A1 -. result .-> S1
+        S1 -->|provides the final answer| U1([User])
     end
+
+    classDef triage fill:#F5A623,stroke:#FBBF24,color:#1F2937,stroke-width:2px;
+    classDef owner fill:#1B64F5,stroke:#60A5FA,color:#FFFFFF,stroke-width:2px;
+    classDef specialist fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef user fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    class T triage;
+    class S1 owner;
+    class A1,A2 specialist;
+    class U1,U2 user;
+    style H fill:#101A30,stroke:#F5A623,stroke-width:2px,color:#FDE68A
+    style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE
 ```
 
 The OpenAI Agents SDK explicitly distinguishes between these two topologies: *agents as tools* when the manager retains control; *handoffs* when the specialist takes charge of the next part of the interaction.[^openai-multi-agent][^openai-handoffs]

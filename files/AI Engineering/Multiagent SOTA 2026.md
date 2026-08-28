@@ -253,106 +253,171 @@ Una volta rappresentato il lavoro, dobbiamo assegnare il controllo.
 
 Nella mia esperienza ho visto che ci sono tre pattern che vengono confusi, o meglio pensati come equivalenti: routing, supervisor e handoff. In realtà rispondono a domande differenti!
 
-### Routing: la decisione è già nello stato
+### Routing: sai già cosa vuoi?
 
-> **Quando usarlo.** Usa il routing quando la scelta del prossimo passo può essere ridotta a uno stato o a una classificazione esplicita e verificabile: un campo tipizzato, una soglia, una policy o un booleano. Il modello può estrarre o classificare quell'informazione e il codice deve decidere il ramo.
-> **Quando usare altro?** Se la scelta dipende invece dall'evoluzione del compito, da risultati intermedi o da un compromesso non rappresentato nello stato, serve un supervisor.
+> **Quando usarlo:** Usa il routing quando la scelta del prossimo passo può essere ricondotta a una classificazione esplicita o a uno stato ben definito (un campo tipizzato, una soglia, una policy booleana). L'LLM si limita ad analizzare l'input ed estrarre i parametri; poi, un semplice algoritmo deterministico in codice (es. `if/else`) smista l'esecuzione verso il nodo corretto.
 
-Vediamo con il running example quale dovrebbe essere il primo passo. Ecco esso consiste nel chiedere al modello di produrre uno stato semantico tipizzato.
+> **Quando NON usarlo:** Se la decisione sul passo successivo richiede di valutare dinamicamente trade-off, negoziare tra agenti o rivalutare la strategia in base a risultati parziali, usa un **Supervisor**.
+
+Il routing è il pattern più efficiente in assoluto: massimizza la prevedibilità, minimizza la latenza e riduce i costi di chiamata LLM, spostando la logica di controllo dal prompt al codice applicativo.
+
+Prendiamo il nostro utente che dice: *«Sono stanco, ma voglio ballare.»*
+
+Anziché chiedere a un agente di "decidere cosa fare", usiamo uno schema di estrazione strutturata (**Structured Outputs**):
 
 ```python
+# [REFERENCE IMPLEMENTATION - PYTHON]
+from pydantic import BaseModel, Field
+from typing import Literal
+
 class MoodProfile(BaseModel):
-    current_energy: float
-    desired_energy: float
-    intent: Literal["maintain", "shift", "explore"]
-    needs_clarification: bool
+    current_energy: float = Field(..., description="Livello di energia stimato dell'utente (1-10)")
+    desired_energy: float = Field(..., description="Livello di energia desiderato (1-10)")
+    intent: Literal["maintain", "shift", "explore"] = Field(
+        ..., description="Mantenere lo stato, cambiarlo attivamente (shift) o esplorare cose nuove"
+    )
+    needs_clarification: bool = Field(
+        ..., description="True se la richiesta è troppo vaga o contraddittoria e richiede domande di chiarimento"
+    )
 ```
 
-A quel punto il ramo non richiede un'altra inferenza. È puro codice sincrono. Il modello non fa nessuna chiamata a un LLM, nessuna latenza di rete, nessun costo di inferenza. Abbiamo un bel risultato deterministico e testabile con un normale unit test
+Una volta che l'LLM ha estratto e validato questo schema, il passaggio successivo viene deciso da una funzione Python deterministica. Non c'è alcun bisogno di un'altra inferenza generativa:
 
 ```python
-def route(profile: MoodProfile) -> Literal["clarification", "search"]:
-    return "clarification" if profile.needs_clarification else "search"
+# Il router è codice, puro e semplice. 100% deterministico e testabile con pytest.
+def determine_next_node(profile: MoodProfile) -> str:
+    if profile.needs_clarification:
+        return "clarifier_agent"
+    if profile.intent == "shift":
+        return "energy_transition_planner"
+    return "standard_search_agent"
 ```
 
 ```mermaid
 flowchart LR
-    P[Prompt] --> M[MoodProfile]
-    M --> G{needs_clarification?}
-    G -->|sì| C[Clarifier]
-    G -->|no| S[Search]
+    U[Richiesta Utente] -->|1. Estrazione strutturata| M[MoodProfile]
+    M -->|2. Valutazione deterministica| R{needs_clarification?}
+    R -->|Sì| C[Clarifier Agent]
+    R -->|No| P{intent == 'shift'?}
+    P -->|Sì| T[Transition Planner]
+    P -->|No| S[Standard Search]
 
     classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
     classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
     class M model;
-    class G code;
+    class R,P code;
 ```
 
-La mossa importante qui è **rendere la decisione rappresentabile**. Finché la differenza fra «sono stanco» e «voglio ballare» restano testo libero, decidere il prossimo passo significa richiedere ogni volta un nuovo giudizio al modello. Quando diventa `current_energy != desired_energy` e `intent="shift"`, una parte del controllo può uscire dal prompt ed entrare nel codice.
+#### Perché questo approccio è formidabile?
+1. **Zero latenza decisionale**: Il calcolo del percorso successivo richiede frazioni di millisecondo.
+2. **Facilità di test**: Puoi scrivere unit test tradizionali (`pytest`) per verificare la logica di routing su centinaia di profili d'uso, senza doverti preoccupare di allucinazioni o non-determinismo del modello in questa fase.
+3. **Meno sovraccarico nel prompt**: Gli agenti a valle ricevono un input pulito e pre-strutturato (`MoodProfile`), liberandoli dal dover re-interpretare le intenzioni iniziali dell'utente.
 
-### Supervisor: la decisione richiede ancora giudizio
+### Supervisor: la decisione resta labile
 
-> **Quando usarlo.** Usa un supervisor quando il prossimo passo non è deducibile da una regola stabile e si deve scegliere fra specialisti in base all'obiettivo, allo stato, agli output intermedi e a trade-off che cambiano durante l'esecuzione. Il supervisor conserva l'ownership della conversazione e ricompone i risultati.
-> **Quando NON usarlo.** Se basta leggere un campo o applicare una policy deterministica, è routing: un supervisor aggiungerebbe inferenza, latenza e non-determinismo senza produrre giudizio utile.
+> **Quando usarlo:** Usa un supervisor quando il prossimo passo non è deducibile da una regola deterministica e richiede **giudizio continuo**. Il supervisor agisce come un "Project Manager" o un "Direttore d'Orchestra": valuta lo stato corrente, sceglie dinamicamente quale specialista (worker) attivare, riceve l'output, aggiorna lo stato e decide il passo successivo. Conserva l'ownership globale del contesto e della conversazione.
 
-Un supervisor serve quando non basta leggere un campo.
+> **Quando NON usarlo:** Se la sequenza dei passaggi è fissa (A -> B -> C) o se la scelta del ramo dipende da una variabile nota (es. un boolean nel database), usa un workflow deterministico o un Router basato su codice. Eviterai latenza, costi di chiamata LLM e non-determinismo inutile.
+
+In pratica, il Supervisor serve quando dobbiamo coordinare diversi agenti specialisti le cui interazioni non sono prevedibili a priori. 
+
+Prendiamo il nostro esempio di Spotify:
+1. L'utente dice: *«Sono stanco, ma voglio ballare.»*
+2. Il **Supervisor** riceve la richiesta e decide di interpellare il `Mood Interpreter`.
+3. Il `Mood Interpreter` restituisce una diagnosi: *"L'utente è affaticato ma cerca una transizione attiva (shift) verso l'energia alta"*.
+4. Il **Supervisor** legge questa diagnosi e decide dinamicamente che il prossimo passo non è ancora creare la playlist, ma chiedere al `Music Scout` di cercare generi di transizione (es. Deep House soft).
+5. Se lo `Scout` restituisce pochi risultati, il **Supervisor** non fallisce: decide di cambiare strategia e attivare un secondo Scout su generi alternativi (es. Funk ritmico).
+
+Questo flusso dinamico e adattivo non può essere mappato facilmente con un semplice `if/else`.
 
 ```mermaid
-flowchart TD
-    U[Utente] --> S[Supervisor]
-    S --> M[Mood Interpreter]
-    S --> SC[Music Scout]
-    S --> C[Curator]
-    M --> S
-    SC --> S
-    C --> S
-    S --> O[Output]
+sequenceDiagram
+    autonumber
+    participant U as Utente
+    participant S as Supervisor
+    participant M as Mood Interpreter
+    participant SC as Music Scout
+    participant C as Curator
 
-    classDef key fill:#1B64F5,stroke:#1B64F5,color:#fff;
-    class S key;
+    U->>S: Richiesta musicale
+    S->>M: Interpreta il mood
+    M-->>S: Shift energetico
+    S->>SC: Cerca brani adatti
+    SC-->>S: Tracce candidate
+    S->>C: Cura e ordina
+    C-->>S: Playlist rifinita
+    S-->>U: Risposta finale
 ```
 
-Il supervisor conserva il filo della conversazione, decide quale specialista chiamare, riceve il risultato e può delegare di nuovo.
+#### Perché è importante l'Ownership del Contesto?
+A differenza di un "handoff" (dove il controllo passa definitivamente a un altro agente e la conversazione continua lì), nel pattern **Supervisor** gli specialisti sono "ciechi" rispetto alla storia passata della conversazione globale. Ricevono solo un task circoscritto (*context minimization*) e restituiscono un risultato strutturato al Supervisor.
+Questo impedisce che il contesto dei sotto-agenti si saturi di informazioni inutili (rumore) e che l'utente debba interagire con entità diverse, mantenendo l'esperienza fluida e centralizzata sul Supervisor.
 
 ```python
-# [PSEUDOCODICE]
+# [REFERENCE IMPLEMENTATION - PSEUDOCODICE]
 
 while not state.done:
-    decision = supervisor.decide(
+    # Il supervisor valuta lo stato e decide la mossa successiva
+    decision = await supervisor.decide(
         goal=state.goal,
-        current_state=state.summary,
-        pending=state.pending,
-        available_workers=registry,
+        current_state=state.summary, # Mantiene una sintesi pulita del lavoro fatto finora
+        available_workers=registry.list_tools(),
     )
 
-    result = await registry[decision.worker].run(decision.task)
-    state.record(result)
+    if decision.is_final:
+        state.done = True
+        break
+
+    # Delega il compito specifico allo specialista prescelto
+    worker_output = await registry[decision.worker].run(decision.task_parameters)
+    
+    # Registra l'esito nello stato globale (senza passare l'intera trascrizione della sotto-chat)
+    state.record_step(
+        worker=decision.worker,
+        task=decision.task_parameters,
+        output=worker_output.summary
+    )
 ```
 
-Il costo è evidente: un'altra inferenza, un altro punto di non determinismo, più latenza. Perciò la domanda corretta non è «posso usare un supervisor?», ma:
+Il costo di questo pattern è evidente: ogni decisione del Supervisor richiede un'inferenza LLM aggiuntiva (latenza e costo in token). Perciò, prima di implementarlo, poniti questa domanda:
 
-> **C'è ancora qualcosa da negoziare?**
+> **C'è una reale negoziazione o ambiguità da gestire tra i passaggi?**
 
-Se la risposta è già dentro uno schema, il supervisor è un modo costoso per leggere un campo.
+Se la risposta è no, e i passaggi sono sequenziali o guidati da regole fisse, usa il **Routing** o un **Workflow a grafo deterministico**.
 
-### Handoff: cambia il proprietario del prossimo turno
+### Handoff: una conversazione tra agenti
 
-> **Quando usarlo.** Usa un handoff quando, oltre al lavoro da svolgere, deve cambiare chi possiede il dialogo nel turno successivo. Se un agente deve solo eseguire un sotto-compito e restituirne l'esito, mantieni il controllo nell'orchestratore e usa una delegation o un agente come tool.
+> **Quando usarlo:** Usa un handoff quando, oltre al lavoro da svolgere, deve cambiare chi possiede il dialogo nel turno successivo. 
+
+> **Quando non usarlo:** Se un agente deve solo eseguire un sotto-compito e restituirne l'esito, mantieni il controllo nell'orchestratore e usa una delegation o un agente come tool.
 
 Nella delegation il manager resta l'interlocutore. Nell'handoff il controllo passa allo specialista.
 
 ```mermaid
-flowchart LR
-    subgraph Delegation
-        S1[Supervisor] --> A1[Specialista]
-        A1 --> S1
-        S1 --> U1[Utente]
+flowchart TB
+    subgraph H["Handoff · ownership trasferita"]
+        direction LR
+        T[Triage] -->|passa contesto + ownership| A2[Specialista]
+        A2 -->|risponde nei turni successivi| U2([Utente])
     end
 
-    subgraph Handoff
-        T[Triage] --> A2[Specialista]
-        A2 --> U2[Utente]
+    subgraph D["Delegation · ownership mantenuta dal Supervisor"]
+        direction LR
+        S1[Supervisor] -->|delega un task circoscritto| A1[Specialista]
+        A1 -. risultato .-> S1
+        S1 -->|fornisce la risposta finale| U1([Utente])
     end
+
+    classDef triage fill:#F5A623,stroke:#FBBF24,color:#1F2937,stroke-width:2px;
+    classDef owner fill:#1B64F5,stroke:#60A5FA,color:#FFFFFF,stroke-width:2px;
+    classDef specialist fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef user fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    class T triage;
+    class S1 owner;
+    class A1,A2 specialist;
+    class U1,U2 user;
+    style H fill:#101A30,stroke:#F5A623,stroke-width:2px,color:#FDE68A
+    style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE
 ```
 
 OpenAI Agents SDK distingue esplicitamente queste due topologie: *agents as tools* quando il manager mantiene il controllo; *handoffs* quando lo specialista prende in carico la parte successiva dell'interazione ([OpenAI Agents SDK — orchestrazione](https://openai.github.io/openai-agents-python/multi_agent/), [handoff](https://openai.github.io/openai-agents-python/handoffs/)).
@@ -366,22 +431,13 @@ Handoff    → cambia chi possiede il controllo.
 
 
 
-## Un handoff è un contratto
+#### Un handoff è un contratto a tutti gli effetti
 
-Nei diagrammi l'handoff è una freccia. Nei sistemi veri è un confine.
+Nei diagrammi architetturali l'handoff viene spesso liquidato come una semplice freccia direzionale. Nella realtà ingegneristica, tuttavia, esso rappresenta un vero e proprio **confine di isolamento (boundary)**.
 
-Il passaggio ingenuo è questo:
-
-```python
-# [ANTI-PATTERN]
-await specialist.run(full_history)
-```
-
-Il passaggio progettato assomiglia di più a questo:
+Per strutturare un passaggio di consegne robusto, non possiamo affidarci a scambi di messaggi destrutturati. Dobbiamo definire un contratto formale, modellabile ad esempio tramite Pydantic:
 
 ```python
-# [REFERENCE DESIGN]
-
 class HandoffContract(BaseModel):
     goal: str
     reason: str
@@ -401,14 +457,14 @@ flowchart LR
     class H contract;
 ```
 
-Qui diventano visibili due decisioni che spesso vengono confuse:
+La formalizzazione di questo schema evidenzia due responsabilità architetturali distinte che spesso i team confondono in fase di design:
 
-1. **chi possiede il controllo;**
-2. **quale informazione attraversa il confine.**
+1. **La governance del flusso (Control Ownership):** Chi ha l'autorità di decidere quale azione compiere in seguito?
+2. **La minimizzazione del contesto (Information Boundary):** Quali dati devono realmente superare la barriera dell'agente?
 
-LangChain documenta gli handoff come transizioni guidate dallo stato. LangGraph mostra inoltre che parent graph e subgraph possono avere schemi di stato distinti, mappando esplicitamente l'input verso il subgraph e il suo output di ritorno ([LangChain — handoff](https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs), [LangGraph — subgraph](https://docs.langchain.com/oss/python/langgraph/use-subgraphs)).
+Sia LangChain che LangGraph supportano nativamente questo livello di astrazione. LangGraph, ad esempio, permette di definire subgraph indipendenti dotati di schemi di stato (state schemas) dedicati, incapsulando la memoria locale dello specialista e mappando in modo esplicito solo gli input e gli output concordati ([LangChain — handoff](https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs), [LangGraph — subgraph](https://docs.langchain.com/oss/python/langgraph/use-subgraphs)).
 
-La conseguenza è importante: un handoff non dovrebbe passare «tutto, per sicurezza». Dovrebbe passare ciò che serve a lavorare senza costringere lo specialista a ricostruire il mondo.
+La regola aurea di un handoff progettato con criteri moderni è chiara: **evitare la tentazione di passare lo stato globale "per sicurezza"**. L'agente ricevente deve disporre esclusivamente del contesto minimo necessario per compiere il proprio dovere, senza l'onere computazionale e cognitivo di dover ricostruire l'intero storico del sistema.
 
 
 

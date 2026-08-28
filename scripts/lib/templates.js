@@ -1622,6 +1622,7 @@ export function renderBlogDetail({
     .post-body .mermaid-diagram {
       position: relative;
       margin: 2rem 0;
+      isolation: isolate;
     }
     .post-body .mermaid-diagram pre.mermaid {
       margin: 0;
@@ -1637,6 +1638,7 @@ export function renderBlogDetail({
       padding: 0.35rem 0.9rem;
       font-size: 0.85rem;
       font-weight: 600;
+      min-height: 2.75rem;
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
@@ -1686,6 +1688,7 @@ export function renderBlogDetail({
       padding: 0.4rem 1rem;
       font-size: 0.9rem;
       font-weight: 600;
+      min-height: 2.75rem;
       cursor: pointer;
       transition: background 0.2s ease, color 0.2s ease;
       z-index: 2;
@@ -1702,6 +1705,8 @@ export function renderBlogDetail({
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
     .mermaid-overlay__scroll svg {
       max-width: none;
@@ -2184,10 +2189,32 @@ export function renderBlogDetail({
         padding: 0.25rem 0.75rem;
       }
       .post-body .mermaid-diagram__expand {
-        top: 0.6rem;
-        right: 0.6rem;
-        font-size: 0.78rem;
-        padding: 0.25rem 0.75rem;
+        top: auto;
+        right: 0.55rem;
+        bottom: 0.55rem;
+        min-height: 2.75rem;
+        padding: 0.35rem 0.8rem;
+        font-size: 0.82rem;
+      }
+      .post-body .mermaid-diagram pre.mermaid {
+        padding: 1rem 0.85rem 4.25rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .mermaid-overlay {
+        padding: 0.5rem;
+      }
+      .mermaid-overlay__content {
+        max-width: 100%;
+        max-height: 100dvh;
+        border-radius: 18px;
+      }
+      .mermaid-overlay__close {
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+      }
+      .mermaid-overlay__scroll {
+        max-height: 100dvh;
+        padding: 4rem 1rem 1.5rem;
       }
       .table-overlay__scroll {
         padding: 1.8rem 1.25rem 1.5rem;
@@ -2216,10 +2243,24 @@ export function renderBlogDetail({
     const hasMermaid = document.querySelector('.mermaid');
     if (hasMermaid) {
       const labels = document.documentElement.lang === 'it'
-        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
-        : { expand: 'Open full screen', close: 'Close' };
+        ? { expand: 'Apri diagramma', close: 'Chiudi', dialog: 'Diagramma ingrandito' }
+        : { expand: 'Open diagram', close: 'Close', dialog: 'Expanded diagram' };
       let overlay = null;
       let overlayScroll = null;
+      let lastTrigger = null;
+
+      const closeOverlay = () => {
+        if (!overlay) {
+          return;
+        }
+        overlay.classList.remove('mermaid-overlay--visible');
+        document.body.classList.remove('no-scroll');
+        if (overlayScroll) {
+          overlayScroll.innerHTML = '';
+        }
+        lastTrigger?.focus();
+        lastTrigger = null;
+      };
 
       const ensureOverlay = () => {
         if (overlay) {
@@ -2227,6 +2268,9 @@ export function renderBlogDetail({
         }
         overlay = document.createElement('div');
         overlay.className = 'mermaid-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', labels.dialog);
         overlay.innerHTML =
           '<div class="mermaid-overlay__content">' +
             '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
@@ -2236,28 +2280,16 @@ export function renderBlogDetail({
         overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
         const closeButton = overlay.querySelector('.mermaid-overlay__close');
         closeButton?.addEventListener('click', () => {
-          overlay.classList.remove('mermaid-overlay--visible');
-          document.body.classList.remove('no-scroll');
-          if (overlayScroll) {
-            overlayScroll.innerHTML = '';
-          }
+          closeOverlay();
         });
         overlay.addEventListener('click', (event) => {
           if (event.target === overlay) {
-            overlay.classList.remove('mermaid-overlay--visible');
-            document.body.classList.remove('no-scroll');
-            if (overlayScroll) {
-              overlayScroll.innerHTML = '';
-            }
+            closeOverlay();
           }
         });
         document.addEventListener('keydown', (event) => {
           if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
-            overlay.classList.remove('mermaid-overlay--visible');
-            document.body.classList.remove('no-scroll');
-            if (overlayScroll) {
-              overlayScroll.innerHTML = '';
-            }
+            closeOverlay();
           }
         });
       };
@@ -2282,16 +2314,24 @@ export function renderBlogDetail({
         expandButton.className = 'mermaid-diagram__expand';
         expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
         expandButton.setAttribute('aria-label', labels.expand);
-        expandButton.addEventListener('click', () => {
+        const openDiagram = (trigger) => {
           ensureOverlay();
           if (!overlay || !overlayScroll) {
             return;
           }
+          lastTrigger = trigger;
           overlayScroll.innerHTML = '';
           const clone = diagram.cloneNode(true);
           overlayScroll.appendChild(clone);
           overlay.classList.add('mermaid-overlay--visible');
           document.body.classList.add('no-scroll');
+          overlay.querySelector('.mermaid-overlay__close')?.focus();
+        };
+        expandButton.addEventListener('click', () => openDiagram(expandButton));
+        diagram.addEventListener('click', (event) => {
+          if (window.matchMedia('(max-width: 720px)').matches && !event.target.closest('a, button')) {
+            openDiagram(expandButton);
+          }
         });
         wrapper.appendChild(expandButton);
       });

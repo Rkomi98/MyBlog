@@ -42,7 +42,7 @@
     "headline": "Progettare sistemi multiagentici nel 2026",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-20T00:00:00.000Z",
-    "dateModified": "2026-08-27T14:44:38.000Z",
+    "dateModified": "2026-08-27T15:41:55.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -694,6 +694,7 @@
     .post-body .mermaid-diagram {
       position: relative;
       margin: 2rem 0;
+      isolation: isolate;
     }
     .post-body .mermaid-diagram pre.mermaid {
       margin: 0;
@@ -709,6 +710,7 @@
       padding: 0.35rem 0.9rem;
       font-size: 0.85rem;
       font-weight: 600;
+      min-height: 2.75rem;
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
@@ -758,6 +760,7 @@
       padding: 0.4rem 1rem;
       font-size: 0.9rem;
       font-weight: 600;
+      min-height: 2.75rem;
       cursor: pointer;
       transition: background 0.2s ease, color 0.2s ease;
       z-index: 2;
@@ -774,6 +777,8 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
     .mermaid-overlay__scroll svg {
       max-width: none;
@@ -1256,10 +1261,32 @@
         padding: 0.25rem 0.75rem;
       }
       .post-body .mermaid-diagram__expand {
-        top: 0.6rem;
-        right: 0.6rem;
-        font-size: 0.78rem;
-        padding: 0.25rem 0.75rem;
+        top: auto;
+        right: 0.55rem;
+        bottom: 0.55rem;
+        min-height: 2.75rem;
+        padding: 0.35rem 0.8rem;
+        font-size: 0.82rem;
+      }
+      .post-body .mermaid-diagram pre.mermaid {
+        padding: 1rem 0.85rem 4.25rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .mermaid-overlay {
+        padding: 0.5rem;
+      }
+      .mermaid-overlay__content {
+        max-width: 100%;
+        max-height: 100dvh;
+        border-radius: 18px;
+      }
+      .mermaid-overlay__close {
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+      }
+      .mermaid-overlay__scroll {
+        max-height: 100dvh;
+        padding: 4rem 1rem 1.5rem;
       }
       .table-overlay__scroll {
         padding: 1.8rem 1.25rem 1.5rem;
@@ -1288,10 +1315,24 @@
     const hasMermaid = document.querySelector('.mermaid');
     if (hasMermaid) {
       const labels = document.documentElement.lang === 'it'
-        ? { expand: 'Apri a schermo intero', close: 'Chiudi' }
-        : { expand: 'Open full screen', close: 'Close' };
+        ? { expand: 'Apri diagramma', close: 'Chiudi', dialog: 'Diagramma ingrandito' }
+        : { expand: 'Open diagram', close: 'Close', dialog: 'Expanded diagram' };
       let overlay = null;
       let overlayScroll = null;
+      let lastTrigger = null;
+
+      const closeOverlay = () => {
+        if (!overlay) {
+          return;
+        }
+        overlay.classList.remove('mermaid-overlay--visible');
+        document.body.classList.remove('no-scroll');
+        if (overlayScroll) {
+          overlayScroll.innerHTML = '';
+        }
+        lastTrigger?.focus();
+        lastTrigger = null;
+      };
 
       const ensureOverlay = () => {
         if (overlay) {
@@ -1299,6 +1340,9 @@
         }
         overlay = document.createElement('div');
         overlay.className = 'mermaid-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', labels.dialog);
         overlay.innerHTML =
           '<div class="mermaid-overlay__content">' +
             '<button type="button" class="mermaid-overlay__close">' + labels.close + '</button>' +
@@ -1308,28 +1352,16 @@
         overlayScroll = overlay.querySelector('.mermaid-overlay__scroll');
         const closeButton = overlay.querySelector('.mermaid-overlay__close');
         closeButton?.addEventListener('click', () => {
-          overlay.classList.remove('mermaid-overlay--visible');
-          document.body.classList.remove('no-scroll');
-          if (overlayScroll) {
-            overlayScroll.innerHTML = '';
-          }
+          closeOverlay();
         });
         overlay.addEventListener('click', (event) => {
           if (event.target === overlay) {
-            overlay.classList.remove('mermaid-overlay--visible');
-            document.body.classList.remove('no-scroll');
-            if (overlayScroll) {
-              overlayScroll.innerHTML = '';
-            }
+            closeOverlay();
           }
         });
         document.addEventListener('keydown', (event) => {
           if (event.key === 'Escape' && overlay?.classList.contains('mermaid-overlay--visible')) {
-            overlay.classList.remove('mermaid-overlay--visible');
-            document.body.classList.remove('no-scroll');
-            if (overlayScroll) {
-              overlayScroll.innerHTML = '';
-            }
+            closeOverlay();
           }
         });
       };
@@ -1354,16 +1386,24 @@
         expandButton.className = 'mermaid-diagram__expand';
         expandButton.innerHTML = '<span aria-hidden="true">⤢</span> ' + labels.expand;
         expandButton.setAttribute('aria-label', labels.expand);
-        expandButton.addEventListener('click', () => {
+        const openDiagram = (trigger) => {
           ensureOverlay();
           if (!overlay || !overlayScroll) {
             return;
           }
+          lastTrigger = trigger;
           overlayScroll.innerHTML = '';
           const clone = diagram.cloneNode(true);
           overlayScroll.appendChild(clone);
           overlay.classList.add('mermaid-overlay--visible');
           document.body.classList.add('no-scroll');
+          overlay.querySelector('.mermaid-overlay__close')?.focus();
+        };
+        expandButton.addEventListener('click', () => openDiagram(expandButton));
+        diagram.addEventListener('click', (event) => {
+          if (window.matchMedia('(max-width: 720px)').matches && !event.target.closest('a, button')) {
+            openDiagram(expandButton);
+          }
         });
         wrapper.appendChild(expandButton);
       });
@@ -1404,7 +1444,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">20 agosto 2026 • 26 min</span>
+            <span class="post-hero__author-meta">20 agosto 2026 • 28 min</span>
           </div>
         </div>
       </section>
@@ -1466,46 +1506,64 @@
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#routing-la-decisione-gi-nello-stato">
+          <a class="post-toc__link" href="#routing-sai-gi-cosa-vuoi">
             <span class="post-toc__number">4.1</span>
-            <span class="post-toc__text">Routing: la decisione è già nello stato</span>
+            <span class="post-toc__text">Routing: sai già cosa vuoi?</span>
           </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#supervisor-la-decisione-richiede-ancora-giudizio">
-            <span class="post-toc__number">4.2</span>
-            <span class="post-toc__text">Supervisor: la decisione richiede ancora giudizio</span>
-          </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#handoff-cambia-il-proprietario-del-prossimo-turno">
-            <span class="post-toc__number">4.3</span>
-            <span class="post-toc__text">Handoff: cambia il proprietario del prossimo turno</span>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#perch-questo-approccio-formidabile">
+            <span class="post-toc__number">4.1.1</span>
+            <span class="post-toc__text">Perché questo approccio è formidabile?</span>
           </a>
           
         </li>
   </ul>
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#un-handoff-un-contratto">
-            <span class="post-toc__number">5</span>
-            <span class="post-toc__text">Un handoff è un contratto</span>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#supervisor-la-decisione-resta-labile">
+            <span class="post-toc__number">4.2</span>
+            <span class="post-toc__text">Supervisor: la decisione resta labile</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#perch-importante-lownership-del-contesto">
+            <span class="post-toc__number">4.2.1</span>
+            <span class="post-toc__text">Perché è importante l&#39;Ownership del Contesto?</span>
           </a>
           
+        </li>
+  </ul>
+        </li><li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#handoff-una-conversazione-tra-agenti">
+            <span class="post-toc__number">4.3</span>
+            <span class="post-toc__text">Handoff: una conversazione tra agenti</span>
+          </a>
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
+          <a class="post-toc__link" href="#un-handoff-un-contratto-a-tutti-gli-effetti">
+            <span class="post-toc__number">4.3.1</span>
+            <span class="post-toc__text">Un handoff è un contratto a tutti gli effetti</span>
+          </a>
+          
+        </li>
+  </ul>
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#chi-fa-cosa">
-            <span class="post-toc__number">6</span>
+            <span class="post-toc__number">5</span>
             <span class="post-toc__text">Chi fa cosa?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#tool-worker-subagent">
-            <span class="post-toc__number">6.1</span>
+            <span class="post-toc__number">5.1</span>
             <span class="post-toc__text">Tool, worker, subagent</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#parallelismo-prima-le-dipendenze">
-            <span class="post-toc__number">6.2</span>
+            <span class="post-toc__number">5.2</span>
             <span class="post-toc__text">Parallelismo: prima le dipendenze</span>
           </a>
           
@@ -1513,13 +1571,13 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#chi-sa-cosa">
-            <span class="post-toc__number">7</span>
+            <span class="post-toc__number">6</span>
             <span class="post-toc__text">Chi sa cosa?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-paradosso-del-contesto-condiviso">
-            <span class="post-toc__number">7.1</span>
+            <span class="post-toc__number">6.1</span>
             <span class="post-toc__text">Il paradosso del contesto condiviso</span>
           </a>
           
@@ -1527,31 +1585,31 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#stato-memoria-e-artefatti">
-            <span class="post-toc__number">8</span>
+            <span class="post-toc__number">7</span>
             <span class="post-toc__text">Stato, memoria e artefatti</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#conversation-state">
-            <span class="post-toc__number">8.1</span>
+            <span class="post-toc__number">7.1</span>
             <span class="post-toc__text">Conversation state</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#task-state">
-            <span class="post-toc__number">8.2</span>
+            <span class="post-toc__number">7.2</span>
             <span class="post-toc__text">Task state</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#local-state">
-            <span class="post-toc__number">8.3</span>
+            <span class="post-toc__number">7.3</span>
             <span class="post-toc__text">Local state</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#artifact">
-            <span class="post-toc__number">8.4</span>
+            <span class="post-toc__number">7.4</span>
             <span class="post-toc__text">Artifact</span>
           </a>
           
@@ -1559,31 +1617,31 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#chi-controlla">
-            <span class="post-toc__number">9</span>
+            <span class="post-toc__number">8</span>
             <span class="post-toc__text">Chi controlla?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#controlli-deterministici">
-            <span class="post-toc__number">9.1</span>
+            <span class="post-toc__number">8.1</span>
             <span class="post-toc__text">Controlli deterministici</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#verifica-nellambiente">
-            <span class="post-toc__number">9.2</span>
+            <span class="post-toc__number">8.2</span>
             <span class="post-toc__text">Verifica nell&#39;ambiente</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#valutazione-semantica">
-            <span class="post-toc__number">9.3</span>
+            <span class="post-toc__number">8.3</span>
             <span class="post-toc__text">Valutazione semantica</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#un-ciclo-ha-bisogno-di-un-freno">
-            <span class="post-toc__number">9.4</span>
+            <span class="post-toc__number">8.4</span>
             <span class="post-toc__text">Un ciclo ha bisogno di un freno</span>
           </a>
           
@@ -1591,13 +1649,13 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#evals-il-sistema-va-misurato-intero">
-            <span class="post-toc__number">10</span>
+            <span class="post-toc__number">9</span>
             <span class="post-toc__text">Evals: il sistema va misurato intero</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#non-premiare-un-percorso-rigido">
-            <span class="post-toc__number">10.1</span>
+            <span class="post-toc__number">9.1</span>
             <span class="post-toc__text">Non premiare un percorso rigido</span>
           </a>
           
@@ -1605,37 +1663,37 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#il-mondo-va-storto">
-            <span class="post-toc__number">11</span>
+            <span class="post-toc__number">10</span>
             <span class="post-toc__text">Il mondo va storto</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#output-formalmente-invalido">
-            <span class="post-toc__number">11.1</span>
+            <span class="post-toc__number">10.1</span>
             <span class="post-toc__text">Output formalmente invalido</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#output-valido-ma-semanticamente-incerto">
-            <span class="post-toc__number">11.2</span>
+            <span class="post-toc__number">10.2</span>
             <span class="post-toc__text">Output valido ma semanticamente incerto</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#tool-esterno-non-disponibile">
-            <span class="post-toc__number">11.3</span>
+            <span class="post-toc__number">10.3</span>
             <span class="post-toc__text">Tool esterno non disponibile</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#successo-parziale">
-            <span class="post-toc__number">11.4</span>
+            <span class="post-toc__number">10.4</span>
             <span class="post-toc__text">Successo parziale</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#idempotenza-e-side-effect">
-            <span class="post-toc__number">11.5</span>
+            <span class="post-toc__number">10.5</span>
             <span class="post-toc__text">Idempotenza e side effect</span>
           </a>
           
@@ -1643,37 +1701,37 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#blast-radius-e-human-in-the-loop">
-            <span class="post-toc__number">12</span>
+            <span class="post-toc__number">11</span>
             <span class="post-toc__text">Blast radius e human-in-the-loop</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#quando-il-lavoro-dura-pi-della-conversazione">
-            <span class="post-toc__number">13</span>
+            <span class="post-toc__number">12</span>
             <span class="post-toc__text">Quando il lavoro dura più della conversazione</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#compaction">
-            <span class="post-toc__number">13.1</span>
+            <span class="post-toc__number">12.1</span>
             <span class="post-toc__text">Compaction</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#context-reset">
-            <span class="post-toc__number">13.2</span>
+            <span class="post-toc__number">12.2</span>
             <span class="post-toc__text">Context reset</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#checkpoint">
-            <span class="post-toc__number">13.3</span>
+            <span class="post-toc__number">12.3</span>
             <span class="post-toc__text">Checkpoint</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#artifact-persistence">
-            <span class="post-toc__number">13.4</span>
+            <span class="post-toc__number">12.4</span>
             <span class="post-toc__text">Artifact persistence</span>
           </a>
           
@@ -1681,13 +1739,13 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#dal-sistema-di-agenti-allharness">
-            <span class="post-toc__number">14</span>
+            <span class="post-toc__number">13</span>
             <span class="post-toc__text">Dal sistema di agenti all&#39;harness</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#molti-cervelli-molte-mani">
-            <span class="post-toc__number">14.1</span>
+            <span class="post-toc__number">13.1</span>
             <span class="post-toc__text">Molti cervelli, molte mani</span>
           </a>
           
@@ -1695,19 +1753,19 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#mcp-e-a2a-due-problemi-differenti">
-            <span class="post-toc__number">15</span>
+            <span class="post-toc__number">14</span>
             <span class="post-toc__text">MCP e A2A: due problemi differenti</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#mcp">
-            <span class="post-toc__number">15.1</span>
+            <span class="post-toc__number">14.1</span>
             <span class="post-toc__text">MCP</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#a2a">
-            <span class="post-toc__number">15.2</span>
+            <span class="post-toc__number">14.2</span>
             <span class="post-toc__text">A2A</span>
           </a>
           
@@ -1715,19 +1773,19 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#quando-una-decisione-diventa-un-edge">
-            <span class="post-toc__number">16</span>
+            <span class="post-toc__number">15</span>
             <span class="post-toc__text">Quando una decisione diventa un edge</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#la-reference-architecture-spotify">
-            <span class="post-toc__number">17</span>
+            <span class="post-toc__number">16</span>
             <span class="post-toc__text">La reference architecture Spotify</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-runtime-in-pseudocodice">
-            <span class="post-toc__number">17.1</span>
+            <span class="post-toc__number">16.1</span>
             <span class="post-toc__text">Il runtime, in pseudocodice</span>
           </a>
           
@@ -1735,49 +1793,49 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#cosa-sta-convergendo-nel-2026">
-            <span class="post-toc__number">18</span>
+            <span class="post-toc__number">17</span>
             <span class="post-toc__text">Cosa sta convergendo nel 2026</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#la-semplicit-viene-prima-della-decomposizione">
-            <span class="post-toc__number">18.1</span>
+            <span class="post-toc__number">17.1</span>
             <span class="post-toc__text">La semplicità viene prima della decomposizione</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-contesto-un-oggetto-di-progetto">
-            <span class="post-toc__number">18.2</span>
+            <span class="post-toc__number">17.2</span>
             <span class="post-toc__text">Il contesto è un oggetto di progetto</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-controllo-deve-essere-localizzato">
-            <span class="post-toc__number">18.3</span>
+            <span class="post-toc__number">17.3</span>
             <span class="post-toc__text">Il controllo deve essere localizzato</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#la-verifica-deve-toccare-lambiente">
-            <span class="post-toc__number">18.4</span>
+            <span class="post-toc__number">17.4</span>
             <span class="post-toc__text">La verifica deve toccare l&#39;ambiente</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#lo-stato-deve-sopravvivere-al-prompt">
-            <span class="post-toc__number">18.5</span>
+            <span class="post-toc__number">17.5</span>
             <span class="post-toc__text">Lo stato deve sopravvivere al prompt</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-rischio-si-gestisce-con-confini-deterministici">
-            <span class="post-toc__number">18.6</span>
+            <span class="post-toc__number">17.6</span>
             <span class="post-toc__text">Il rischio si gestisce con confini deterministici</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#il-modello-e-lharness-vanno-valutati-insieme">
-            <span class="post-toc__number">18.7</span>
+            <span class="post-toc__number">17.7</span>
             <span class="post-toc__text">Il modello e l&#39;harness vanno valutati insieme</span>
           </a>
           
@@ -1785,37 +1843,37 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#una-grammatica-per-progettare">
-            <span class="post-toc__number">19</span>
+            <span class="post-toc__number">18</span>
             <span class="post-toc__text">Una grammatica per progettare</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#chi-decide-1">
-            <span class="post-toc__number">19.1</span>
+            <span class="post-toc__number">18.1</span>
             <span class="post-toc__text">Chi decide?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#chi-sa-cosa-1">
-            <span class="post-toc__number">19.2</span>
+            <span class="post-toc__number">18.2</span>
             <span class="post-toc__text">Chi sa cosa?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#chi-fa-cosa-1">
-            <span class="post-toc__number">19.3</span>
+            <span class="post-toc__number">18.3</span>
             <span class="post-toc__text">Chi fa cosa?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#chi-controlla-1">
-            <span class="post-toc__number">19.4</span>
+            <span class="post-toc__number">18.4</span>
             <span class="post-toc__text">Chi controlla?</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#chi-tiene-in-piedi-il-sistema">
-            <span class="post-toc__number">19.5</span>
+            <span class="post-toc__number">18.5</span>
             <span class="post-toc__text">Chi tiene in piedi il sistema?</span>
           </a>
           
@@ -1823,25 +1881,25 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#un-laboratorio-interattivo">
-            <span class="post-toc__number">20</span>
+            <span class="post-toc__number">19</span>
             <span class="post-toc__text">Un laboratorio interattivo</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#conclusione">
-            <span class="post-toc__number">21</span>
+            <span class="post-toc__number">20</span>
             <span class="post-toc__text">Conclusione</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#fonti-e-note-di-lettura">
-            <span class="post-toc__number">22</span>
+            <span class="post-toc__number">21</span>
             <span class="post-toc__text">Fonti e note di lettura</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#altre-letture-utili">
-            <span class="post-toc__number">22.1</span>
+            <span class="post-toc__number">21.1</span>
             <span class="post-toc__text">Altre letture utili</span>
           </a>
           
@@ -2028,91 +2086,152 @@ Giudicare la coerenza        → evaluator, se resta soggettività</code></pre><
 <h2 id="chi-decide">Chi decide?</h2>
 <p>Una volta rappresentato il lavoro, dobbiamo assegnare il controllo.</p>
 <p>Nella mia esperienza ho visto che ci sono tre pattern che vengono confusi, o meglio pensati come equivalenti: routing, supervisor e handoff. In realtà rispondono a domande differenti!</p>
-<h3 id="routing-la-decisione-gi-nello-stato">Routing: la decisione è già nello stato</h3>
+<h3 id="routing-sai-gi-cosa-vuoi">Routing: sai già cosa vuoi?</h3>
 <blockquote>
-<p><strong>Quando usarlo.</strong> Usa il routing quando la scelta del prossimo passo può essere ridotta a uno stato o a una classificazione esplicita e verificabile: un campo tipizzato, una soglia, una policy o un booleano. Il modello può estrarre o classificare quell&#39;informazione; il codice deve decidere il ramo. Se la scelta dipende invece dall&#39;evoluzione del compito, da risultati intermedi o da un compromesso non rappresentato nello stato, serve un supervisor.</p>
+<p><strong>Quando usarlo:</strong> Usa il routing quando la scelta del prossimo passo può essere ricondotta a una classificazione esplicita o a uno stato ben definito (un campo tipizzato, una soglia, una policy booleana). L&#39;LLM si limita ad analizzare l&#39;input ed estrarre i parametri; poi, un semplice algoritmo deterministico in codice (es. <code>if/else</code>) smista l&#39;esecuzione verso il nodo corretto.</p>
 </blockquote>
-<p>Il primo passo del running example consiste nel chiedere al modello di produrre uno stato semantico tipizzato.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFICATO NEL REPO] - mood_interpreter.py</span>
+<blockquote>
+<p><strong>Quando NON usarlo:</strong> Se la decisione sul passo successivo richiede di valutare dinamicamente trade-off, negoziare tra agenti o rivalutare la strategia in base a risultati parziali, usa un <strong>Supervisor</strong>.</p>
+</blockquote>
+<p>Il routing è il pattern più efficiente in assoluto: massimizza la prevedibilità, minimizza la latenza e riduce i costi di chiamata LLM, spostando la logica di controllo dal prompt al codice applicativo.</p>
+<p>Prendiamo il nostro utente che dice: <em>«Sono stanco, ma voglio ballare.»</em></p>
+<p>Anziché chiedere a un agente di &quot;decidere cosa fare&quot;, usiamo uno schema di estrazione strutturata (<strong>Structured Outputs</strong>):</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PYTHON]</span>
+<span class="hljs-keyword">from</span> pydantic <span class="hljs-keyword">import</span> BaseModel, Field
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Literal</span>
 
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">MoodProfile</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
-    current_energy: <span class="hljs-built_in">float</span>
-    desired_energy: <span class="hljs-built_in">float</span>
-    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>]
-    needs_clarification: <span class="hljs-built_in">bool</span></code></pre><p>A quel punto il ramo non richiede un&#39;altra inferenza.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [VERIFICATO NEL REPO]</span>
-
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">route</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;clarification&quot;</span>, <span class="hljs-string">&quot;search&quot;</span>]:
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarification&quot;</span> <span class="hljs-keyword">if</span> profile.needs_clarification <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;search&quot;</span></code></pre><pre class="mermaid">flowchart LR
-    P[Prompt] --&gt; M[MoodProfile]
-    M --&gt; G{needs_clarification?}
-    G --&gt;|sì| C[Clarifier]
-    G --&gt;|no| S[Search]
+    current_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Livello di energia stimato dell&#x27;utente (1-10)&quot;</span>)
+    desired_energy: <span class="hljs-built_in">float</span> = Field(..., description=<span class="hljs-string">&quot;Livello di energia desiderato (1-10)&quot;</span>)
+    intent: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;maintain&quot;</span>, <span class="hljs-string">&quot;shift&quot;</span>, <span class="hljs-string">&quot;explore&quot;</span>] = Field(
+        ..., description=<span class="hljs-string">&quot;Mantenere lo stato, cambiarlo attivamente (shift) o esplorare cose nuove&quot;</span>
+    )
+    needs_clarification: <span class="hljs-built_in">bool</span> = Field(
+        ..., description=<span class="hljs-string">&quot;True se la richiesta è troppo vaga o contraddittoria e richiede domande di chiarimento&quot;</span>
+    )</code></pre><p>Una volta che l&#39;LLM ha estratto e validato questo schema, il passaggio successivo viene deciso da una funzione Python deterministica. Non c&#39;è alcun bisogno di un&#39;altra inferenza generativa:</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Il router è codice, puro e semplice. 100% deterministico e testabile con pytest.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">determine_next_node</span>(<span class="hljs-params">profile: MoodProfile</span>) -&gt; <span class="hljs-built_in">str</span>:
+    <span class="hljs-keyword">if</span> profile.needs_clarification:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;clarifier_agent&quot;</span>
+    <span class="hljs-keyword">if</span> profile.intent == <span class="hljs-string">&quot;shift&quot;</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;energy_transition_planner&quot;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;standard_search_agent&quot;</span></code></pre><pre class="mermaid">flowchart LR
+    U[Richiesta Utente] --&gt;|1. Estrazione strutturata| M[MoodProfile]
+    M --&gt;|2. Valutazione deterministica| R{needs_clarification?}
+    R --&gt;|Sì| C[Clarifier Agent]
+    R --&gt;|No| P{intent == &#39;shift&#39;?}
+    P --&gt;|Sì| T[Transition Planner]
+    P --&gt;|No| S[Standard Search]
 
     classDef model fill:#1B64F5,stroke:#1B64F5,color:#fff;
     classDef code fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
     class M model;
-    class G code;</pre><p>La mossa importante non è «usare Pydantic». È <strong>rendere la decisione rappresentabile</strong>.</p>
-<p>Finché la differenza fra «sono stanco» e «voglio ballare» vive soltanto nel testo, il control flow resta affidato al ragionamento del modello. Quando diventa <code>current_energy != desired_energy</code> e <code>intent=&quot;shift&quot;</code>, una parte del controllo può uscire dal prompt ed entrare nel codice.</p>
-<h3 id="supervisor-la-decisione-richiede-ancora-giudizio">Supervisor: la decisione richiede ancora giudizio</h3>
+    class R,P code;</pre><h4 id="perch-questo-approccio-formidabile">Perché questo approccio è formidabile?</h4>
+<ol>
+<li><strong>Zero latenza decisionale</strong>: Il calcolo del percorso successivo richiede frazioni di millisecondo.</li>
+<li><strong>Facilità di test</strong>: Puoi scrivere unit test tradizionali (<code>pytest</code>) per verificare la logica di routing su centinaia di profili d&#39;uso, senza doverti preoccupare di allucinazioni o non-determinismo del modello in questa fase.</li>
+<li><strong>Meno sovraccarico nel prompt</strong>: Gli agenti a valle ricevono un input pulito e pre-strutturato (<code>MoodProfile</code>), liberandoli dal dover re-interpretare le intenzioni iniziali dell&#39;utente.</li>
+</ol>
+<h3 id="supervisor-la-decisione-resta-labile">Supervisor: la decisione resta labile</h3>
 <blockquote>
-<p><strong>Quando usarlo.</strong> Usa un supervisor quando il prossimo passo non è deducibile da una regola stabile: deve scegliere fra specialisti in base all&#39;obiettivo, allo stato, agli output intermedi e a trade-off che cambiano durante l&#39;esecuzione. Il supervisor conserva l&#39;ownership della conversazione e ricompone i risultati. Se basta leggere un campo o applicare una policy deterministica, è routing: un supervisor aggiungerebbe inferenza, latenza e non-determinismo senza produrre giudizio utile.</p>
+<p><strong>Quando usarlo:</strong> Usa un supervisor quando il prossimo passo non è deducibile da una regola deterministica e richiede <strong>giudizio continuo</strong>. Il supervisor agisce come un &quot;Project Manager&quot; o un &quot;Direttore d&#39;Orchestra&quot;: valuta lo stato corrente, sceglie dinamicamente quale specialista (worker) attivare, riceve l&#39;output, aggiorna lo stato e decide il passo successivo. Conserva l&#39;ownership globale del contesto e della conversazione.</p>
 </blockquote>
-<p>Un supervisor serve quando non basta leggere un campo.</p>
-<pre class="mermaid">flowchart TD
-    U[Utente] --&gt; S[Supervisor]
-    S --&gt; M[Mood Interpreter]
-    S --&gt; SC[Music Scout]
-    S --&gt; C[Curator]
-    M --&gt; S
-    SC --&gt; S
-    C --&gt; S
-    S --&gt; O[Output]
+<blockquote>
+<p><strong>Quando NON usarlo:</strong> Se la sequenza dei passaggi è fissa (A -&gt; B -&gt; C) o se la scelta del ramo dipende da una variabile nota (es. un boolean nel database), usa un workflow deterministico o un Router basato su codice. Eviterai latenza, costi di chiamata LLM e non-determinismo inutile.</p>
+</blockquote>
+<p>In pratica, il Supervisor serve quando dobbiamo coordinare diversi agenti specialisti le cui interazioni non sono prevedibili a priori. </p>
+<p>Prendiamo il nostro esempio di Spotify:</p>
+<ol>
+<li>L&#39;utente dice: <em>«Sono stanco, ma voglio ballare.»</em></li>
+<li>Il <strong>Supervisor</strong> riceve la richiesta e decide di interpellare il <code>Mood Interpreter</code>.</li>
+<li>Il <code>Mood Interpreter</code> restituisce una diagnosi: <em>&quot;L&#39;utente è affaticato ma cerca una transizione attiva (shift) verso l&#39;energia alta&quot;</em>.</li>
+<li>Il <strong>Supervisor</strong> legge questa diagnosi e decide dinamicamente che il prossimo passo non è ancora creare la playlist, ma chiedere al <code>Music Scout</code> di cercare generi di transizione (es. Deep House soft).</li>
+<li>Se lo <code>Scout</code> restituisce pochi risultati, il <strong>Supervisor</strong> non fallisce: decide di cambiare strategia e attivare un secondo Scout su generi alternativi (es. Funk ritmico).</li>
+</ol>
+<p>Questo flusso dinamico e adattivo non può essere mappato facilmente con un semplice <code>if/else</code>.</p>
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    participant U as Utente
+    participant S as Supervisor
+    participant M as Mood Interpreter
+    participant SC as Music Scout
+    participant C as Curator
 
-    classDef key fill:#1B64F5,stroke:#1B64F5,color:#fff;
-    class S key;</pre><p>Il supervisor conserva il filo della conversazione, decide quale specialista chiamare, riceve il risultato e può delegare di nuovo.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
+    U-&gt;&gt;S: Richiesta musicale
+    S-&gt;&gt;M: Interpreta il mood
+    M--&gt;&gt;S: Shift energetico
+    S-&gt;&gt;SC: Cerca brani adatti
+    SC--&gt;&gt;S: Tracce candidate
+    S-&gt;&gt;C: Cura e ordina
+    C--&gt;&gt;S: Playlist rifinita
+    S--&gt;&gt;U: Risposta finale</pre><h4 id="perch-importante-lownership-del-contesto">Perché è importante l&#39;Ownership del Contesto?</h4>
+<p>A differenza di un &quot;handoff&quot; (dove il controllo passa definitivamente a un altro agente e la conversazione continua lì), nel pattern <strong>Supervisor</strong> gli specialisti sono &quot;ciechi&quot; rispetto alla storia passata della conversazione globale. Ricevono solo un task circoscritto (<em>context minimization</em>) e restituiscono un risultato strutturato al Supervisor.
+Questo impedisce che il contesto dei sotto-agenti si saturi di informazioni inutili (rumore) e che l&#39;utente debba interagire con entità diverse, mantenendo l&#39;esperienza fluida e centralizzata sul Supervisor.</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE IMPLEMENTATION - PSEUDOCODICE]</span>
 
 <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> state.done:
-    decision = supervisor.decide(
+    <span class="hljs-comment"># Il supervisor valuta lo stato e decide la mossa successiva</span>
+    decision = <span class="hljs-keyword">await</span> supervisor.decide(
         goal=state.goal,
-        current_state=state.summary,
-        pending=state.pending,
-        available_workers=registry,
+        current_state=state.summary, <span class="hljs-comment"># Mantiene una sintesi pulita del lavoro fatto finora</span>
+        available_workers=registry.list_tools(),
     )
 
-    result = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task)
-    state.record(result)</code></pre><p>Il costo è evidente: un&#39;altra inferenza, un altro punto di non determinismo, più latenza. Perciò la domanda corretta non è «posso usare un supervisor?», ma:</p>
+    <span class="hljs-keyword">if</span> decision.is_final:
+        state.done = <span class="hljs-literal">True</span>
+        <span class="hljs-keyword">break</span>
+
+    <span class="hljs-comment"># Delega il compito specifico allo specialista prescelto</span>
+    worker_output = <span class="hljs-keyword">await</span> registry[decision.worker].run(decision.task_parameters)
+    
+    <span class="hljs-comment"># Registra l&#x27;esito nello stato globale (senza passare l&#x27;intera trascrizione della sotto-chat)</span>
+    state.record_step(
+        worker=decision.worker,
+        task=decision.task_parameters,
+        output=worker_output.summary
+    )</code></pre><p>Il costo di questo pattern è evidente: ogni decisione del Supervisor richiede un&#39;inferenza LLM aggiuntiva (latenza e costo in token). Perciò, prima di implementarlo, poniti questa domanda:</p>
 <blockquote>
-<p><strong>C&#39;è ancora qualcosa da negoziare?</strong></p>
+<p><strong>C&#39;è una reale negoziazione o ambiguità da gestire tra i passaggi?</strong></p>
 </blockquote>
-<p>Se la risposta è già dentro uno schema, il supervisor è un modo costoso per leggere un campo.</p>
-<h3 id="handoff-cambia-il-proprietario-del-prossimo-turno">Handoff: cambia il proprietario del prossimo turno</h3>
+<p>Se la risposta è no, e i passaggi sono sequenziali o guidati da regole fisse, usa il <strong>Routing</strong> o un <strong>Workflow a grafo deterministico</strong>.</p>
+<h3 id="handoff-una-conversazione-tra-agenti">Handoff: una conversazione tra agenti</h3>
 <blockquote>
-<p><strong>Quando usarlo.</strong> Usa un handoff quando, oltre al lavoro da svolgere, deve cambiare chi possiede il dialogo nel turno successivo. Se un agente deve solo eseguire un sotto-compito e restituirne l&#39;esito, mantieni il controllo nell&#39;orchestratore e usa una delegation o un agente come tool.</p>
+<p><strong>Quando usarlo:</strong> Usa un handoff quando, oltre al lavoro da svolgere, deve cambiare chi possiede il dialogo nel turno successivo. </p>
+</blockquote>
+<blockquote>
+<p><strong>Quando non usarlo:</strong> Se un agente deve solo eseguire un sotto-compito e restituirne l&#39;esito, mantieni il controllo nell&#39;orchestratore e usa una delegation o un agente come tool.</p>
 </blockquote>
 <p>Nella delegation il manager resta l&#39;interlocutore. Nell&#39;handoff il controllo passa allo specialista.</p>
-<pre class="mermaid">flowchart LR
-    subgraph Delegation
-        S1[Supervisor] --&gt; A1[Specialista]
-        A1 --&gt; S1
-        S1 --&gt; U1[Utente]
+<pre class="mermaid">flowchart TB
+    subgraph H[&quot;Handoff · ownership trasferita&quot;]
+        direction LR
+        T[Triage] --&gt;|passa contesto + ownership| A2[Specialista]
+        A2 --&gt;|risponde nei turni successivi| U2([Utente])
     end
 
-    subgraph Handoff
-        T[Triage] --&gt; A2[Specialista]
-        A2 --&gt; U2[Utente]
-    end</pre><p>OpenAI Agents SDK distingue esplicitamente queste due topologie: <em>agents as tools</em> quando il manager mantiene il controllo; <em>handoffs</em> quando lo specialista prende in carico la parte successiva dell&#39;interazione (<a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — orchestrazione</a>, <a href="https://openai.github.io/openai-agents-python/handoffs/">handoff</a>).</p>
+    subgraph D[&quot;Delegation · ownership mantenuta dal Supervisor&quot;]
+        direction LR
+        S1[Supervisor] --&gt;|delega un task circoscritto| A1[Specialista]
+        A1 -. risultato .-&gt; S1
+        S1 --&gt;|fornisce la risposta finale| U1([Utente])
+    end
+
+    classDef triage fill:#F5A623,stroke:#FBBF24,color:#1F2937,stroke-width:2px;
+    classDef owner fill:#1B64F5,stroke:#60A5FA,color:#FFFFFF,stroke-width:2px;
+    classDef specialist fill:#7C3AED,stroke:#A78BFA,color:#FFFFFF,stroke-width:2px;
+    classDef user fill:#0F766E,stroke:#5EEAD4,color:#ECFEFF,stroke-width:2px;
+    class T triage;
+    class S1 owner;
+    class A1,A2 specialist;
+    class U1,U2 user;
+    style H fill:#101A30,stroke:#F5A623,stroke-width:2px,color:#FDE68A
+    style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE</pre><p>OpenAI Agents SDK distingue esplicitamente queste due topologie: <em>agents as tools</em> quando il manager mantiene il controllo; <em>handoffs</em> quando lo specialista prende in carico la parte successiva dell&#39;interazione (<a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — orchestrazione</a>, <a href="https://openai.github.io/openai-agents-python/handoffs/">handoff</a>).</p>
 <p>La differenza si può ricordare così:</p>
 <pre><code class="hljs language-text">Delegation → cambia chi lavora.
-Handoff    → cambia chi possiede il controllo.</code></pre><h2 id="un-handoff-un-contratto">Un handoff è un contratto</h2>
-<p>Nei diagrammi l&#39;handoff è una freccia. Nei sistemi veri è un confine.</p>
-<p>Il passaggio ingenuo è questo:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [ANTI-PATTERN]</span>
-<span class="hljs-keyword">await</span> specialist.run(full_history)</code></pre><p>Il passaggio progettato assomiglia di più a questo:</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
-
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
+Handoff    → cambia chi possiede il controllo.</code></pre><h4 id="un-handoff-un-contratto-a-tutti-gli-effetti">Un handoff è un contratto a tutti gli effetti</h4>
+<p>Nei diagrammi architetturali l&#39;handoff viene spesso liquidato come una semplice freccia direzionale. Nella realtà ingegneristica, tuttavia, esso rappresenta un vero e proprio <strong>confine di isolamento (boundary)</strong>.</p>
+<p>Per strutturare un passaggio di consegne robusto, non possiamo affidarci a scambi di messaggi destrutturati. Dobbiamo definire un contratto formale, modellabile ad esempio tramite Pydantic:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     goal: <span class="hljs-built_in">str</span>
     reason: <span class="hljs-built_in">str</span>
     relevant_state: <span class="hljs-built_in">dict</span>
@@ -2124,13 +2243,13 @@ Handoff    → cambia chi possiede il controllo.</code></pre><h2 id="un-handoff-
     H --&gt; B[Specialista]
 
     classDef contract fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
-    class H contract;</pre><p>Qui diventano visibili due decisioni che spesso vengono confuse:</p>
+    class H contract;</pre><p>La formalizzazione di questo schema evidenzia due responsabilità architetturali distinte che spesso i team confondono in fase di design:</p>
 <ol>
-<li><strong>chi possiede il controllo;</strong></li>
-<li><strong>quale informazione attraversa il confine.</strong></li>
+<li><strong>La governance del flusso (Control Ownership):</strong> Chi ha l&#39;autorità di decidere quale azione compiere in seguito?</li>
+<li><strong>La minimizzazione del contesto (Information Boundary):</strong> Quali dati devono realmente superare la barriera dell&#39;agente?</li>
 </ol>
-<p>LangChain documenta gli handoff come transizioni guidate dallo stato. LangGraph mostra inoltre che parent graph e subgraph possono avere schemi di stato distinti, mappando esplicitamente l&#39;input verso il subgraph e il suo output di ritorno (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
-<p>La conseguenza è importante: un handoff non dovrebbe passare «tutto, per sicurezza». Dovrebbe passare ciò che serve a lavorare senza costringere lo specialista a ricostruire il mondo.</p>
+<p>Sia LangChain che LangGraph supportano nativamente questo livello di astrazione. LangGraph, ad esempio, permette di definire subgraph indipendenti dotati di schemi di stato (state schemas) dedicati, incapsulando la memoria locale dello specialista e mappando in modo esplicito solo gli input e gli output concordati (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
+<p>La regola aurea di un handoff progettato con criteri moderni è chiara: <strong>evitare la tentazione di passare lo stato globale &quot;per sicurezza&quot;</strong>. L&#39;agente ricevente deve disporre esclusivamente del contesto minimo necessario per compiere il proprio dovere, senza l&#39;onere computazionale e cognitivo di dover ricostruire l&#39;intero storico del sistema.</p>
 <h2 id="chi-fa-cosa">Chi fa cosa?</h2>
 <p>A questo punto sappiamo chi prende le decisioni. Resta da distribuire il lavoro.</p>
 <h3 id="tool-worker-subagent">Tool, worker, subagent</h3>
