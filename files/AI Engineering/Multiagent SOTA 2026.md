@@ -1,6 +1,6 @@
 # Progettare sistemi multiagentici nel 2026 — Parte 1
 
-Ho sentito sviluppatori vantarsi di aver progettato sistemi multiagentici solo per farsi figo davanti ai colleghi o per vendere la propria soluzione con "temi di moda". Ecco, in questo articolo voglio andare deep su questo e non fermarmi al come costruirli. Perché prima di progettare un sistema così complesso, ha senso chiedersi se ha senso definirlo!
+Ho sentito sviluppatori vantarsi di aver progettato sistemi multiagentici solo per farsi fighi davanti ai colleghi o per vendere la propria soluzione con "temi di moda". Ecco, in questo articolo voglio andare deep su questo e non fermarmi al come costruirli. Perché prima di progettare un sistema così complesso, ha senso chiedersi se ha senso definirlo!
 
 Per questo motivo, prima di parlare di swarm, supervisor e handoff, conviene fare un passo indietro.
 

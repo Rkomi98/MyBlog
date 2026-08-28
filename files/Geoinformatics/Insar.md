@@ -8,10 +8,6 @@ Sembrerà assurdo (magari solo a me), ma quando inizi a studiare l'InSAR, scopri
 
 Detta così sembra quasi magia... In realtà, prima di inebriarci con la parola “millimetrico”, conviene capire bene che **cosa** stiamo misurando.
 
-> **Cosa significa davvero “millimetrico”?**
->
-> Dire che l'InSAR rileva movimenti alla scala dei millimetri non significa che ogni pixel di una singola coppia SAR restituisca la posizione assoluta del terreno con un errore di un millimetro. Nei prodotti multi-temporali come EGMS, le misure sono stimate per punti di misura selezionati, rispetto a un riferimento e con condizioni di qualità esplicite. Le specifiche correnti di EGMS dichiarano, per i prodotti Basic e Calibrated, una **deviazione standard della velocità media di 0,5 mm/anno (1σ)** per coppie di punti distanti fino a 10 km, con velocità costante nell'intervallo elaborato e coerenza superiore a 0,7. Per il prodotto Ortho il valore è **0,7 mm/anno (1σ)** alle stesse condizioni [2]. Sono incertezze sulla *velocità media*, non l'accuratezza assoluta della posizione a ogni data. La risoluzione spaziale è un'altra cosa: per Basic e Calibrated è di 5 × 20 m per i Persistent Scatterer e migliore di 100 m per i Distributed Scatterer; Ortho è invece riportato su una griglia di 100 × 100 m [2].
-
 Resta comunque un fatto notevole: Sentinel-1 osserva la Terra da un'orbita a circa **693 km di quota** [3], e da lassù possiamo ricostruire movimenti superficiali inferiori al centimetro.
 
 Come ci riesce?
@@ -81,7 +77,10 @@ In altre parole, **un ciclo completo della fase interferometrica corrisponde a u
 
 Sentinel-1 lavora a 5,405 GHz, che corrispondono a una lunghezza d'onda di circa **5,55 cm**. Un ciclo interferometrico completo corrisponde quindi a circa **2,8 cm di variazione LOS** [3] [6]. Nella fase wrapped, tuttavia, $0$ e $2\pi$ coincidono: è per questo che un nuovo ciclo ricomincia dallo stesso valore di fase e, nell'interferogramma, dallo stesso colore.
 
-Tra poco quei 2,8 cm compariranno su una zona dell'Italia centrale.
+Tra poco vediamo come quei 2,8 cm compaiono nella pratica su una zona dell'Italia centrale. Intanto inserisco un'immagine presa direttamente dall'ESA:
+
+![Interferogramma Sentinel-1B/1A del terremoto del 24 agosto 2016: le sette frange colorate corrispondono a circa 20 cm di deformazione LOS; una singola frangia vale circa 2,8 cm. (Fonte: ESA, Italy earthquake displacement)](../Assets/Italy_earthquake.jpg)
+*Interferogramma Sentinel-1B/1A del terremoto del 24 agosto 2016 in Italia centrale: le frange colorate rappresentano cicli di fase interferometrica, ciascuno equivalente a circa 2,8 cm di variazione lungo la LOS. Sette frange = ~20 cm di deformazione. (Fonte: ESA, [Italy earthquake displacement](https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement))*
 
 > **Definizione: Line of Sight**
 >
@@ -89,13 +88,13 @@ Tra poco quei 2,8 cm compariranno su una zona dell'Italia centrale.
 
 ---
 
-## Un interferogramma nasce dal confronto, non dalla sottrazione di due mappe
+### Come nasce un interferogramma?
 
 Per costruire un interferogramma dobbiamo prima fare in modo che due immagini SAR “parlino” pixel per pixel della stessa porzione di terreno. Serve quindi una **co-registrazione** molto accurata.
 
-A quel punto si combinano i segnali complessi delle due acquisizioni. In termini operativi, l'interferogramma nasce moltiplicando il valore complesso di una scena per il complesso coniugato dell'altra; la fase del risultato contiene la differenza di fase tra i due passaggi [5].
+A quel punto si combinano i segnali complessi delle due acquisizioni. Per dirlo in "matematichese", l'interferogramma nasce moltiplicando il valore complesso di una scena per il complesso coniugato dell'altra. La fase del risultato invece contiene la differenza di fase tra i due passaggi [5].
 
-Sembra quasi risolto. Peccato che tra un'acquisizione e l'altra cambino più cose del solo terreno.
+Sembra facile, peccato che tra un'acquisizione e l'altra cambino più cose del solo terreno😜!
 
 Il satellite non passa esattamente nello stesso punto dello spazio. Le due posizioni orbitali sono separate da una **baseline interferometrica**; la sua componente perpendicolare alla linea di vista è particolarmente importante perché modifica la sensibilità alla topografia e può contribuire alla decorrelazione geometrica. Cambiano anche l'atmosfera attraversata dal segnale, lo stato della superficie e, inevitabilmente, il rumore.
 
