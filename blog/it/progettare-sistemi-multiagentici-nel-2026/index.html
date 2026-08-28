@@ -42,7 +42,7 @@
     "headline": "Progettare sistemi multiagentici nel 2026",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-20T00:00:00.000Z",
-    "dateModified": "2026-08-27T15:41:55.000Z",
+    "dateModified": "2026-08-28T07:51:28.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -2201,7 +2201,7 @@ Questo impedisce che il contesto dei sotto-agenti si saturi di informazioni inut
 <blockquote>
 <p><strong>Quando non usarlo:</strong> Se un agente deve solo eseguire un sotto-compito e restituirne l&#39;esito, mantieni il controllo nell&#39;orchestratore e usa una delegation o un agente come tool.</p>
 </blockquote>
-<p>Nella delegation il manager resta l&#39;interlocutore. Nell&#39;handoff il controllo passa allo specialista.</p>
+<p>Nella fase di delegazione, il manager resta l&#39;interlocutore. Nell&#39;handoff il controllo passa allo specialista.</p>
 <pre class="mermaid">flowchart TB
     subgraph H[&quot;Handoff · ownership trasferita&quot;]
         direction LR
@@ -2228,7 +2228,14 @@ Questo impedisce che il contesto dei sotto-agenti si saturi di informazioni inut
     style D fill:#101A30,stroke:#1B64F5,stroke-width:2px,color:#BFDBFE</pre><p>OpenAI Agents SDK distingue esplicitamente queste due topologie: <em>agents as tools</em> quando il manager mantiene il controllo; <em>handoffs</em> quando lo specialista prende in carico la parte successiva dell&#39;interazione (<a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — orchestrazione</a>, <a href="https://openai.github.io/openai-agents-python/handoffs/">handoff</a>).</p>
 <p>La differenza si può ricordare così:</p>
 <pre><code class="hljs language-text">Delegation → cambia chi lavora.
-Handoff    → cambia chi possiede il controllo.</code></pre><h4 id="un-handoff-un-contratto-a-tutti-gli-effetti">Un handoff è un contratto a tutti gli effetti</h4>
+Handoff    → cambia chi possiede il controllo.</code></pre><p>Riassumendo:</p>
+<ul>
+<li><p><strong>Delegation</strong>: il Supervisor assegna un task a uno specialista, lo specialista lo esegue e restituisce un risultato, ma il Supervisor resta l&#39;unico che parla con l&#39;utente. Cambia solo chi esegue il lavoro; il controllo della conversazione (chi risponde al turno successivo) resta al Supervisor.</p>
+</li>
+<li><p><strong>Handoff</strong>: non è solo il lavoro a passare allo specialista, ma anche il diritto/dovere di gestire i turni successivi della conversazione. Da quel momento l&#39;utente parla direttamente con lo specialista, non più tramite il Supervisor.</p>
+</li>
+</ul>
+<h4 id="un-handoff-un-contratto-a-tutti-gli-effetti">Un handoff è un contratto a tutti gli effetti</h4>
 <p>Nei diagrammi architetturali l&#39;handoff viene spesso liquidato come una semplice freccia direzionale. Nella realtà ingegneristica, tuttavia, esso rappresenta un vero e proprio <strong>confine di isolamento (boundary)</strong>.</p>
 <p>Per strutturare un passaggio di consegne robusto, non possiamo affidarci a scambi di messaggi destrutturati. Dobbiamo definire un contratto formale, modellabile ad esempio tramite Pydantic:</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HandoffContract</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
@@ -2251,9 +2258,9 @@ Handoff    → cambia chi possiede il controllo.</code></pre><h4 id="un-handoff-
 <p>Sia LangChain che LangGraph supportano nativamente questo livello di astrazione. LangGraph, ad esempio, permette di definire subgraph indipendenti dotati di schemi di stato (state schemas) dedicati, incapsulando la memoria locale dello specialista e mappando in modo esplicito solo gli input e gli output concordati (<a href="https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs">LangChain — handoff</a>, <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph — subgraph</a>).</p>
 <p>La regola aurea di un handoff progettato con criteri moderni è chiara: <strong>evitare la tentazione di passare lo stato globale &quot;per sicurezza&quot;</strong>. L&#39;agente ricevente deve disporre esclusivamente del contesto minimo necessario per compiere il proprio dovere, senza l&#39;onere computazionale e cognitivo di dover ricostruire l&#39;intero storico del sistema.</p>
 <h2 id="chi-fa-cosa">Chi fa cosa?</h2>
-<p>A questo punto sappiamo chi prende le decisioni. Resta da distribuire il lavoro.</p>
+<p>Abbiamo più o meno capito ad alto livello cosa dobbiamo fare e a chi assenare le decisioni in base ai problemi. Resta ora da distribuire il lavoro!</p>
 <h3 id="tool-worker-subagent">Tool, worker, subagent</h3>
-<p>Sono tre cose diverse.</p>
+<p>Diamo un po&#39; di definizioni:</p>
 <p>Un <strong>tool</strong> espone una capacità. Non possiede un obiettivo e non decide il passo successivo.</p>
 <p>Un <strong>worker</strong> riceve un compito circoscritto e restituisce un risultato.</p>
 <p>Un <strong>subagent</strong> è un worker con un proprio ciclo di ragionamento, un contesto locale e, spesso, strumenti propri.</p>
