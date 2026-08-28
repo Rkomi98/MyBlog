@@ -42,7 +42,7 @@
     "headline": "Progettare sistemi multiagentici nel 2026 — Parte 2",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-28T00:00:00.000Z",
-    "dateModified": "2026-08-28T08:57:43.000Z",
+    "dateModified": "2026-08-28T09:56:24.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1578,40 +1578,40 @@
             <span class="post-toc__number">2</span>
             <span class="post-toc__text">Evals</span>
           </a>
-          
-        </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#e-quando-il-mondo-va-a-rotoli">
-            <span class="post-toc__number">3</span>
-            <span class="post-toc__text">E quando il mondo va a rotoli?</span>
-          </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
+          <a class="post-toc__link" href="#e-quando-il-mondo-va-a-rotoli">
+            <span class="post-toc__number">2.1</span>
+            <span class="post-toc__text">E quando il mondo va a rotoli?</span>
+          </a>
+          
+        </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#output-formalmente-invalido">
-            <span class="post-toc__number">3.1</span>
+            <span class="post-toc__number">2.2</span>
             <span class="post-toc__text">Output formalmente invalido</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#output-valido-ma-semanticamente-incerto">
-            <span class="post-toc__number">3.2</span>
+            <span class="post-toc__number">2.3</span>
             <span class="post-toc__text">Output valido ma semanticamente incerto</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#tool-esterno-non-disponibile">
-            <span class="post-toc__number">3.3</span>
+            <span class="post-toc__number">2.4</span>
             <span class="post-toc__text">Tool esterno non disponibile</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#successo-parziale">
-            <span class="post-toc__number">3.4</span>
+            <span class="post-toc__number">2.5</span>
             <span class="post-toc__text">Successo parziale</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#idempotenza-e-side-effect">
-            <span class="post-toc__number">3.5</span>
+            <span class="post-toc__number">2.6</span>
             <span class="post-toc__text">Idempotenza e side effect</span>
           </a>
           
@@ -1619,19 +1619,19 @@
   </ul>
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#blast-radius-e-human-in-the-loop">
-            <span class="post-toc__number">4</span>
+            <span class="post-toc__number">3</span>
             <span class="post-toc__text">Blast radius e human-in-the-loop</span>
           </a>
           
         </li><li class="post-toc__item" data-depth="0">
           <a class="post-toc__link" href="#fonti-e-note-di-lettura">
-            <span class="post-toc__number">5</span>
+            <span class="post-toc__number">4</span>
             <span class="post-toc__text">Fonti e note di lettura</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#altre-letture-utili">
-            <span class="post-toc__number">5.1</span>
+            <span class="post-toc__number">4.1</span>
             <span class="post-toc__text">Altre letture utili</span>
           </a>
           
@@ -1952,8 +1952,17 @@ fallimenti silenziosi</code></pre><p>In uno dei miei substack preferiti, Hamel H
 </blockquote>
 <p>Se il workflow è lungo e modifica lo stato, valuta checkpoint di stato (es. “rimborso creato”, “notifica inviata”) invece di ogni singolo click o chiamata. È un compromesso di gran lunga migliore tra libertà di strategia e controllo.</p>
 <p>Infine, misurare tool call, token, errori e runtime resta prezioso: serve a trovare flussi ridondanti e strumenti mal progettati, non necessariamente a decretare che l’agente abbia fallito</p>
-<h2 id="e-quando-il-mondo-va-a-rotoli">E quando il mondo va a rotoli?</h2>
-<p>Un sistema multiagentico DEVE essere definito ANCHE da ciò che succede quando un nodo non fa il proprio dovere!</p>
+<h3 id="e-quando-il-mondo-va-a-rotoli">E quando il mondo va a rotoli?</h3>
+<p>Un sistema multiagentico non è definito soltanto da chi fa cosa quando tutto funziona. DEVE essere definito ANCHE da ciò che accade quando un nodo restituisce un output sbagliato, incompleto, incerto o non restituisce nulla. </p>
+<p>Un buon orchestratore non tratta tutti i fallimenti allo stesso modo:</p>
+<ul>
+<li>un timeout può richiedere un retry;</li>
+<li>un output formalmente invalido può richiedere una riparazione;</li>
+<li>un output valido ma incerto può richiedere una domanda all&#39;utente;</li>
+<li>un tool indisponibile può richiedere un fallback;</li>
+<li>un&#39;azione costosa, irreversibile o ambigua può richiedere approvazione umana;</li>
+<li>un errore fatale deve fermare il flusso, non produrre un risultato inventato.</li>
+</ul>
 <pre class="mermaid">stateDiagram-v2
     [*] --&gt; Running
     Running --&gt; Success: outcome verificato
@@ -1962,6 +1971,7 @@ fallimenti silenziosi</code></pre><p>In uno dei miei substack preferiti, Hamel H
     Running --&gt; Replan: evidenza insufficiente
     Running --&gt; Human: azione rischiosa o ambigua
     Running --&gt; Failed: errore fatale
+
     Retry --&gt; Running
     Fallback --&gt; Running
     Replan --&gt; Running
