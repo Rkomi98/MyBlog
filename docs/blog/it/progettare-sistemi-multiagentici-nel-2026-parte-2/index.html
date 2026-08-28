@@ -25,7 +25,7 @@
   <meta property="og:title" content="Progettare sistemi multiagentici nel 2026 — Parte 2">
   <meta property="og:description" content="Progettare sistemi multiagentici nel 2026 — Parte 2 Nel primo capitolo abbiamo deciso quando un sistema merita davvero più agenti e chi debba possedere le decisioni. Ora rendiamo quel disegno operativo: distribuiamo ruoli, contesto e controlli senza trasforma…">
   <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
-  <meta property="article:published_time" content="2026-08-21T00:00:00.000Z">
+  <meta property="article:published_time" content="2026-08-28T00:00:00.000Z">
   <meta property="article:author" content="Mirko Calcaterra">
   <meta property="article:section" content="Percorso AI Engineering">
 
@@ -41,8 +41,8 @@
     "@type": "BlogPosting",
     "headline": "Progettare sistemi multiagentici nel 2026 — Parte 2",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
-    "datePublished": "2026-08-21T00:00:00.000Z",
-    "dateModified": "2026-08-28T08:49:46.000Z",
+    "datePublished": "2026-08-28T00:00:00.000Z",
+    "dateModified": "2026-08-28T08:57:43.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1452,7 +1452,7 @@
           <img class="post-hero__avatar" src="../../../Assets/profile.webp" alt="Mirko Calcaterra">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">21 agosto 2026 • 11 min</span>
+            <span class="post-hero__author-meta">28 agosto 2026 • 11 min</span>
           </div>
         </div>
       </section>
@@ -1544,51 +1544,45 @@
             <span class="post-toc__number">1.4</span>
             <span class="post-toc__text">Chi controlla?</span>
           </a>
-          
-        </li><li class="post-toc__item" data-depth="1">
+          <ul class="post-toc__list post-toc__sublist">
+    <li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#controlli-deterministici">
-            <span class="post-toc__number">1.5</span>
+            <span class="post-toc__number">1.4.1</span>
             <span class="post-toc__text">Controlli deterministici</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#verifica-nellambiente">
-            <span class="post-toc__number">1.6</span>
+            <span class="post-toc__number">1.4.2</span>
             <span class="post-toc__text">Verifica nell&#39;ambiente</span>
           </a>
           
-        </li><li class="post-toc__item" data-depth="1">
+        </li><li class="post-toc__item" data-depth="2">
           <a class="post-toc__link" href="#valutazione-semantica">
-            <span class="post-toc__number">1.7</span>
+            <span class="post-toc__number">1.4.3</span>
             <span class="post-toc__text">Valutazione semantica</span>
           </a>
           
+        </li>
+  </ul>
         </li><li class="post-toc__item" data-depth="1">
           <a class="post-toc__link" href="#un-ciclo-ha-bisogno-di-un-freno">
-            <span class="post-toc__number">1.8</span>
+            <span class="post-toc__number">1.5</span>
             <span class="post-toc__text">Un ciclo ha bisogno di un freno</span>
           </a>
           
         </li>
   </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#evals-il-sistema-va-misurato-intero">
+          <a class="post-toc__link" href="#evals">
             <span class="post-toc__number">2</span>
-            <span class="post-toc__text">Evals: il sistema va misurato intero</span>
-          </a>
-          <ul class="post-toc__list post-toc__sublist">
-    <li class="post-toc__item" data-depth="1">
-          <a class="post-toc__link" href="#non-premiare-un-percorso-rigido">
-            <span class="post-toc__number">2.1</span>
-            <span class="post-toc__text">Non premiare un percorso rigido</span>
+            <span class="post-toc__text">Evals</span>
           </a>
           
-        </li>
-  </ul>
         </li><li class="post-toc__item" data-depth="0">
-          <a class="post-toc__link" href="#il-mondo-va-storto">
+          <a class="post-toc__link" href="#e-quando-il-mondo-va-a-rotoli">
             <span class="post-toc__number">3</span>
-            <span class="post-toc__text">Il mondo va storto</span>
+            <span class="post-toc__text">E quando il mondo va a rotoli?</span>
           </a>
           <ul class="post-toc__list post-toc__sublist">
     <li class="post-toc__item" data-depth="1">
@@ -1779,9 +1773,9 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
 <h3 id="stato-memoria-e-artefatti">Stato, memoria e artefatti</h3>
 <p>Nel linguaggio degli agenti, la parola <em>memory</em> l&#39;ho sentita per indicare troppe cose. Fermiamoci un attimo e facciamo chiarezza.</p>
 <h4 id="conversation-state">Conversation state</h4>
-<p>È ciò che serve a mantenere continuità nell&#39;interazione: messaggi, turni, identità dell&#39;agente attivo, richieste pendenti.</p>
+<p>È l&#39;elemento che serve a garantire la continuità nell&#39;interazione. Tiene traccia di messaggi, turni, identità dell&#39;agente attivo e richieste in sospeso.</p>
 <h4 id="task-state">Task state</h4>
-<p>È lo stato operativo del lavoro:</p>
+<p>Definisce l&#39;avanzamento e lo stato puramente operativo del lavoro in corso:</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">WorkflowState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
@@ -1792,15 +1786,14 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     verification: VerificationResult | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span>
     retries: <span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">int</span>] = {}
     status: <span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;running&quot;</span>, <span class="hljs-string">&quot;waiting&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>, <span class="hljs-string">&quot;done&quot;</span>] = <span class="hljs-string">&quot;running&quot;</span></code></pre><h4 id="local-state">Local state</h4>
-<p>È ciò che appartiene a uno specialista e non deve per forza risalire:</p>
+<p>Rappresenta le informazioni di servizio confinate a un singolo specialista, che <strong>non hanno alcuna necessità di inquinare il contesto globale</strong>:</p>
 <pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScoutLocalState</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):
     attempted_queries: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]
     visited_track_ids: <span class="hljs-built_in">set</span>[<span class="hljs-built_in">str</span>]
     raw_tool_outputs: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</code></pre><h4 id="artifact">Artifact</h4>
-<p>È un prodotto persistente del lavoro: file, report, patch, tabella, playlist, dataset, piano.</p>
-<p>Quando l&#39;output è grande, passare un riferimento è spesso più sano che reiniettare tutto nel prompt.</p>
-<pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
-
+<p>Costituisce l&#39;esito persistente del lavoro svolto. Può essere un file, un report, una patch, una playlist, un piano o un intero dataset.</p>
+<p>Quando l&#39;output generato è voluminoso, passare un semplice riferimento (<em>reference</em>) è una scelta di gran lunga preferibile rispetto a reiniettare l&#39;intero contenuto nel prompt!</p>
+<pre><code class="hljs language-python">
 <span class="hljs-keyword">return</span> WorkerResult(
     summary=<span class="hljs-string">&quot;Trovati 84 candidati, 61 dopo i filtri.&quot;</span>,
     artifact_ref=<span class="hljs-string">&quot;artifacts/run-284/candidate_set.json&quot;</span>,
@@ -1810,11 +1803,11 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     S --&gt; R[Summary]
     A --&gt; C[Curator]
     R --&gt; SUP[Supervisor]
-    SUP --&gt; C</pre><p>L&#39;artefatto conserva fedeltà. Il riepilogo conserva spazio nel contesto.</p>
+    SUP --&gt; C</pre><p>L&#39;artefatto conserva la fedeltà, mentre il riepilogo conserva spazio nel contesto.</p>
 <p>È un equilibrio molto più solido del tentativo di trasformare ogni passaggio in un messaggio sempre più lungo.</p>
 <h3 id="chi-controlla">Chi controlla?</h3>
-<p>Fin qui abbiamo distribuito il lavoro. Ora dobbiamo evitare che il sistema confonda «ho prodotto qualcosa» con «ho finito».</p>
-<p>La verifica moderna ha almeno tre strati.</p>
+<p>Fin qui abbiamo distribuito il lavoro. Ora dobbiamo capire come far capire quando ha finito (spoiler non quando ha prodotto le cose).</p>
+<p>Nella mia esperienza + blog che ho letto in passato, esistono 3 fasi che ora vediamo nelle prossime sezioni.</p>
 <pre class="mermaid">flowchart TD
     A[Artifact] --&gt; D[Deterministic checks]
     D --&gt;|pass| E[Environmental verification]
@@ -1829,8 +1822,8 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     classDef hard fill:#D9EEE3,stroke:#2E8B6B,color:#164B36;
     classDef soft fill:#F4E3B2,stroke:#C8902B,color:#5A4405;
     class D,E hard;
-    class J soft;</pre><h3 id="controlli-deterministici">Controlli deterministici</h3>
-<p>Se una proprietà si può verificare in Python, non serve chiedere a un LLM.</p>
+    class J soft;</pre><h4 id="controlli-deterministici">Controlli deterministici</h4>
+<p>Se una proprietà si può verificare in Python, non serve chiedere a un LLM. Dovrebbe essere la prima cosa da verificare.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">hard_checks</span>(<span class="hljs-params">playlist: Playlist, request: PlaylistRequest</span>) -&gt; CheckResult:
@@ -1850,19 +1843,19 @@ rubrica di valutazione</code></pre><p>La regola del «contesto minimo sufficient
     ):
         errors.append(<span class="hljs-string">&quot;energy_curve&quot;</span>)
 
-    <span class="hljs-keyword">return</span> CheckResult(passed=<span class="hljs-keyword">not</span> errors, errors=errors)</code></pre><h3 id="verifica-nellambiente">Verifica nell&#39;ambiente</h3>
-<p>Un agente può dire di aver creato una playlist. La domanda è se la playlist esista davvero nel sistema esterno.</p>
+    <span class="hljs-keyword">return</span> CheckResult(passed=<span class="hljs-keyword">not</span> errors, errors=errors)</code></pre><h4 id="verifica-nellambiente">Verifica nell&#39;ambiente</h4>
+<p>Un agente può dire di aver creato una playlist. La domanda è se la playlist esista davvero nel sistema esterno... Sembra una banalità ma non lo è 🧐...</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [PSEUDOCODICE]</span>
 
 playlist_id = spotify.create_playlist(payload)
 
-<span class="hljs-keyword">assert</span> spotify.get_playlist(playlist_id).track_ids == payload.track_ids</code></pre><p>Anthropic distingue con precisione transcript e outcome: il primo è ciò che l&#39;agente ha detto e fatto; il secondo è lo stato finale dell&#39;ambiente. Un eval robusto tende a preferire l&#39;outcome quando è osservabile (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals per agenti</a>).</p>
-<h3 id="valutazione-semantica">Valutazione semantica</h3>
-<p>Rimane poi ciò che non si lascia ridurre a un&#39;asserzione netta:</p>
+<span class="hljs-keyword">assert</span> spotify.get_playlist(playlist_id).track_ids == payload.track_ids</code></pre><p>Anthropic distingue con precisione transcript e outcome: il primo è ciò che l&#39;agente ha detto e fatto; il secondo è lo stato finale dell&#39;ambiente. Un eval robusto tende a preferire l&#39;outcome quando è osservabile (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals per agenti</a>). Ma di questo parliamo dopo</p>
+<h4 id="valutazione-semantica">Valutazione semantica</h4>
+<p>Rimane poi ciò che non si lascia ridurre a una regola precisa:</p>
 <ul>
 <li>la playlist racconta una transizione coerente?</li>
 <li>la selezione è varia senza sembrare casuale?</li>
-<li>il risultato interpreta bene la tensione fra stanchezza e desiderio di ballare?</li>
+<li>il risultato interpreta bene la tensione tra stanchezza e desiderio di ballare?</li>
 </ul>
 <p>Qui un evaluator separato può aggiungere valore.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
@@ -1871,9 +1864,10 @@ playlist_id = spotify.create_playlist(payload)
     mood_coherence: <span class="hljs-built_in">float</span>
     transition_quality: <span class="hljs-built_in">float</span>
     rationale: <span class="hljs-built_in">str</span>
-    passed: <span class="hljs-built_in">bool</span></code></pre><p>Il principio non è «servono sempre due agenti». Nel suo case study del marzo 2026, Anthropic propone di separare generator ed evaluator perché è più facile rendere un valutatore autonomo severo che convincere un generatore a criticare il proprio output. Lo stesso case study mostra però che il beneficio dipende dal compito e dal modello, mentre costo e latenza possono crescere di un ordine di grandezza (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
-<p>In uno degli esperimenti descritti, il sistema completo ha lavorato per circa sei ore e consumato circa 200 dollari, contro venti minuti e 9 dollari del singolo agente. La qualità era superiore, ma il conto ci ricorda che un evaluator deve guadagnarsi il proprio posto esattamente come gli altri agenti (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
+    passed: <span class="hljs-built_in">bool</span></code></pre><p>Attenzione non sto dicendo che è «servono sempre più agenti». Nel suo case study del marzo 2026, Anthropic (giuro che non sono stato pagato da Anthropic per scrivere questo articolo) propone di separare generator ed evaluator perché è più facile rendere un valutatore autonomo severo per convincere un generatore a criticare il proprio output. Lo stesso case study mostra però che il beneficio dipende dal compito e dal modello, mentre costo e latenza possono crescere di un ordine di grandezza (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>).</p>
+<p>In uno degli esperimenti descritti, il sistema completo ha lavorato per circa sei ore e consumato circa 200 dollari, contro venti minuti e 9 dollari del singolo agente. La qualità era superiore, ma il conto ci ricorda che un evaluator deve guadagnarsi il proprio posto esattamente come gli altri agenti (<a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic — Harness long-running</a>)!</p>
 <h3 id="un-ciclo-ha-bisogno-di-un-freno">Un ciclo ha bisogno di un freno</h3>
+<p>Bisogna fermare un ciclo agentico, altrimenti rischia che sia più la spesa che l&#39;impresa, come si suol dire.</p>
 <pre><code class="hljs language-python"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-keyword">for</span> revision <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(MAX_REVISIONS + <span class="hljs-number">1</span>):
@@ -1890,10 +1884,10 @@ playlist_id = spotify.create_playlist(payload)
 
     feedback = semantic.rationale
 
-<span class="hljs-keyword">raise</span> VerificationFailed(<span class="hljs-string">&quot;revision budget exhausted&quot;</span>)</code></pre><p>Senza criteri, budget e stop condition, evaluator-optimizer è soltanto una conversazione circolare fra modelli.</p>
-<h2 id="evals-il-sistema-va-misurato-intero">Evals: il sistema va misurato intero</h2>
-<p>Gli eval per agenti non possono limitarsi alla risposta finale.</p>
-<p>Anthropic propone una terminologia utile:</p>
+<span class="hljs-keyword">raise</span> VerificationFailed(<span class="hljs-string">&quot;revision budget exhausted&quot;</span>)</code></pre><p>Senza criteri, budget e stop condition, il ciclo evaluator-optimizer è soltanto una conversazione circolare fra modelli, potenzialmente infinita!</p>
+<h2 id="evals">Evals</h2>
+<p>Gli eval per agenti non possono limitarsi alla risposta finale, ma devono misurare il sistema a 360 gradi.</p>
+<p>Anthropic propone una terminologia utile che ho personalmente adottato (stesso articolo che ho menzionato poco fa):</p>
 <ul>
 <li><strong>task</strong>: il singolo caso di test;</li>
 <li><strong>trial</strong>: un tentativo, da ripetere perché il sistema è stocastico;</li>
@@ -1902,7 +1896,7 @@ playlist_id = spotify.create_playlist(payload)
 <li><strong>outcome</strong>: lo stato finale dell&#39;ambiente;</li>
 <li><strong>evaluation harness</strong>: l&#39;infrastruttura che esegue, registra e valuta (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Evals per agenti</a>).</li>
 </ul>
-<p>Nel running example, una suite sensata non dovrebbe chiedere soltanto «ha prodotto una playlist?». Dovrebbe definire una semantica diversa per ogni richiesta.</p>
+<p>Applicando questi principi al nostro <em>running example</em>, una suite di eval sensata non può limitarsi alla banale domanda: «Il sistema ha prodotto una playlist?». Al contrario, deve definire un&#39;aspettativa semantica rigorosa e specifica per ogni singolo intento.</p>
 <pre><code class="hljs language-yaml"><span class="hljs-comment"># [REFERENCE DESIGN]</span>
 
 <span class="hljs-attr">tasks:</span>
@@ -1929,7 +1923,7 @@ playlist_id = spotify.create_playlist(payload)
   <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">E05</span>
     <span class="hljs-attr">prompt:</span> <span class="hljs-string">&quot;Che ore sono?&quot;</span>
     <span class="hljs-attr">expected:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-string">out_of_domain</span></code></pre><p>Poi si osservano dimensioni differenti:</p>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">out_of_domain</span></code></pre><p>A partire da questi scenari, l&#39;infrastruttura di valutazione non si limita a giudicare l&#39;esito, ma scompone l&#39;analisi del sistema su dimensioni differenti e ortogonali:</p>
 <pre><code class="hljs language-text">OUTCOME
 playlist creata?
 vincoli rispettati?
@@ -1952,11 +1946,14 @@ AFFIDABILITÀ
 pass@1
 pass^k
 tasso di recovery
-fallimenti silenziosi</code></pre><p>Hamel Husain insiste su una distinzione che vale la pena portarsi dietro: errori differenti richiedono tassonomie differenti. Chiamare tutto «hallucination» rende invisibili i guasti che contano. La pratica utile parte dalla lettura dei trace, costruisce un vocabolario degli errori e calibra gli evaluator contro giudizi umani (<a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals skills</a>).</p>
-<h3 id="non-premiare-un-percorso-rigido">Non premiare un percorso rigido</h3>
-<p>Un eval troppo prescrittivo rischia di bocciare una soluzione valida soltanto perché il modello ha trovato una strada diversa. Quando possibile, verifica l&#39;outcome e usa la traiettoria per individuare comportamenti rischiosi, sprechi o violazioni di policy, senza trasformare ogni tool call in un copione obbligatorio.</p>
-<h2 id="il-mondo-va-storto">Il mondo va storto</h2>
-<p>Un sistema multiagentico non è definito soltanto dal percorso felice. È definito da ciò che succede quando un nodo non fa il proprio dovere.</p>
+fallimenti silenziosi</code></pre><p>In uno dei miei substack preferiti, Hamel Husain insiste su una distinzione secondo me importante: errori differenti richiedono tassonomie differenti. Chiamare tutto «hallucination» rende invisibili i guasti, o meglio risulta difficile isolarli e risolverli. Bisogna partire dalla lettura dei trace, si costruisce un vocabolario degli errori e si calibra gli evaluator contro giudizi umani (<a href="https://hamelhusain.substack.com/p/evals-skills-for-coding-agents">Hamel Husain — Evals skills</a>).</p>
+<blockquote>
+<p><strong>Non premiare un percorso rigido</strong>. Un eval troppo prescrittivo può bocciare una soluzione valida solo perché l’agente ha seguito una strada diversa. Quando possibile, verifica anzitutto l’outcome e lo stato finale dell’ambiente. Usa poi la traiettoria per rilevare violazioni di policy, azioni non autorizzate, sprechi, fragilità o inefficienze, senza trasformare ogni tool call in un copione super severo da seguire. Rendi prescrittivi soltanto i passaggi necessari per sicurezza, compliance o correttezza.</p>
+</blockquote>
+<p>Se il workflow è lungo e modifica lo stato, valuta checkpoint di stato (es. “rimborso creato”, “notifica inviata”) invece di ogni singolo click o chiamata. È un compromesso di gran lunga migliore tra libertà di strategia e controllo.</p>
+<p>Infine, misurare tool call, token, errori e runtime resta prezioso: serve a trovare flussi ridondanti e strumenti mal progettati, non necessariamente a decretare che l’agente abbia fallito</p>
+<h2 id="e-quando-il-mondo-va-a-rotoli">E quando il mondo va a rotoli?</h2>
+<p>Un sistema multiagentico DEVE essere definito ANCHE da ciò che succede quando un nodo non fa il proprio dovere!</p>
 <pre class="mermaid">stateDiagram-v2
     [*] --&gt; Running
     Running --&gt; Success: outcome verificato

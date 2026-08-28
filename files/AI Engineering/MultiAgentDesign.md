@@ -184,11 +184,11 @@ Nel linguaggio degli agenti, la parola *memory* l'ho sentita per indicare troppe
 
 #### Conversation state
 
-È ciò che serve a mantenere continuità nell'interazione: messaggi, turni, identità dell'agente attivo, richieste pendenti.
+È l'elemento che serve a garantire la continuità nell'interazione. Tiene traccia di messaggi, turni, identità dell'agente attivo e richieste in sospeso.
 
 #### Task state
 
-È lo stato operativo del lavoro:
+Definisce l'avanzamento e lo stato puramente operativo del lavoro in corso:
 
 ```python
 # [REFERENCE DESIGN]
@@ -205,7 +205,7 @@ class WorkflowState(BaseModel):
 
 #### Local state
 
-È ciò che appartiene a uno specialista e non deve per forza risalire:
+Rappresenta le informazioni di servizio confinate a un singolo specialista, che **non hanno alcuna necessità di inquinare il contesto globale**:
 
 ```python
 class ScoutLocalState(BaseModel):
@@ -216,12 +216,11 @@ class ScoutLocalState(BaseModel):
 
 #### Artifact
 
-È un prodotto persistente del lavoro: file, report, patch, tabella, playlist, dataset, piano.
+Costituisce l'esito persistente del lavoro svolto. Può essere un file, un report, una patch, una playlist, un piano o un intero dataset.
 
-Quando l'output è grande, passare un riferimento è spesso più sano che reiniettare tutto nel prompt.
+Quando l'output generato è voluminoso, passare un semplice riferimento (*reference*) è una scelta di gran lunga preferibile rispetto a reiniettare l'intero contenuto nel prompt!
 
 ```python
-# [REFERENCE DESIGN]
 
 return WorkerResult(
     summary="Trovati 84 candidati, 61 dopo i filtri.",
@@ -239,15 +238,15 @@ flowchart LR
     SUP --> C
 ```
 
-L'artefatto conserva fedeltà. Il riepilogo conserva spazio nel contesto.
+L'artefatto conserva la fedeltà, mentre il riepilogo conserva spazio nel contesto.
 
 È un equilibrio molto più solido del tentativo di trasformare ogni passaggio in un messaggio sempre più lungo.
 
 ### Chi controlla?
 
-Fin qui abbiamo distribuito il lavoro. Ora dobbiamo evitare che il sistema confonda «ho prodotto qualcosa» con «ho finito».
+Fin qui abbiamo distribuito il lavoro. Ora dobbiamo capire come far capire quando ha finito (spoiler non quando ha prodotto le cose).
 
-La verifica moderna ha almeno tre strati.
+Nella mia esperienza + blog che ho letto in passato, esistono 3 fasi che ora vediamo nelle prossime sezioni.
 
 ```mermaid
 flowchart TD
@@ -267,9 +266,9 @@ flowchart TD
     class J soft;
 ```
 
-### Controlli deterministici
+#### Controlli deterministici
 
-Se una proprietà si può verificare in Python, non serve chiedere a un LLM.
+Se una proprietà si può verificare in Python, non serve chiedere a un LLM. Dovrebbe essere la prima cosa da verificare.
 
 ```python
 # [REFERENCE DESIGN]
@@ -294,9 +293,9 @@ def hard_checks(playlist: Playlist, request: PlaylistRequest) -> CheckResult:
     return CheckResult(passed=not errors, errors=errors)
 ```
 
-### Verifica nell'ambiente
+#### Verifica nell'ambiente
 
-Un agente può dire di aver creato una playlist. La domanda è se la playlist esista davvero nel sistema esterno.
+Un agente può dire di aver creato una playlist. La domanda è se la playlist esista davvero nel sistema esterno... Sembra una banalità ma non lo è 🧐...
 
 ```python
 # [PSEUDOCODICE]
@@ -306,15 +305,15 @@ playlist_id = spotify.create_playlist(payload)
 assert spotify.get_playlist(playlist_id).track_ids == payload.track_ids
 ```
 
-Anthropic distingue con precisione transcript e outcome: il primo è ciò che l'agente ha detto e fatto; il secondo è lo stato finale dell'ambiente. Un eval robusto tende a preferire l'outcome quando è osservabile ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
+Anthropic distingue con precisione transcript e outcome: il primo è ciò che l'agente ha detto e fatto; il secondo è lo stato finale dell'ambiente. Un eval robusto tende a preferire l'outcome quando è osservabile ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)). Ma di questo parliamo dopo
 
-### Valutazione semantica
+#### Valutazione semantica
 
-Rimane poi ciò che non si lascia ridurre a un'asserzione netta:
+Rimane poi ciò che non si lascia ridurre a una regola precisa:
 
 - la playlist racconta una transizione coerente?
 - la selezione è varia senza sembrare casuale?
-- il risultato interpreta bene la tensione fra stanchezza e desiderio di ballare?
+- il risultato interpreta bene la tensione tra stanchezza e desiderio di ballare?
 
 Qui un evaluator separato può aggiungere valore.
 
@@ -328,11 +327,13 @@ class SemanticEvaluation(BaseModel):
     passed: bool
 ```
 
-Il principio non è «servono sempre due agenti». Nel suo case study del marzo 2026, Anthropic propone di separare generator ed evaluator perché è più facile rendere un valutatore autonomo severo che convincere un generatore a criticare il proprio output. Lo stesso case study mostra però che il beneficio dipende dal compito e dal modello, mentre costo e latenza possono crescere di un ordine di grandezza ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
+Attenzione non sto dicendo che è «servono sempre più agenti». Nel suo case study del marzo 2026, Anthropic (giuro che non sono stato pagato da Anthropic per scrivere questo articolo) propone di separare generator ed evaluator perché è più facile rendere un valutatore autonomo severo per convincere un generatore a criticare il proprio output. Lo stesso case study mostra però che il beneficio dipende dal compito e dal modello, mentre costo e latenza possono crescere di un ordine di grandezza ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
 
-In uno degli esperimenti descritti, il sistema completo ha lavorato per circa sei ore e consumato circa 200 dollari, contro venti minuti e 9 dollari del singolo agente. La qualità era superiore, ma il conto ci ricorda che un evaluator deve guadagnarsi il proprio posto esattamente come gli altri agenti ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps)).
+In uno degli esperimenti descritti, il sistema completo ha lavorato per circa sei ore e consumato circa 200 dollari, contro venti minuti e 9 dollari del singolo agente. La qualità era superiore, ma il conto ci ricorda che un evaluator deve guadagnarsi il proprio posto esattamente come gli altri agenti ([Anthropic — Harness long-running](https://www.anthropic.com/engineering/harness-design-long-running-apps))!
 
 ### Un ciclo ha bisogno di un freno
+
+Bisogna fermare un ciclo agentico, altrimenti rischia che sia più la spesa che l'impresa, come si suol dire.
 
 ```python
 # [REFERENCE DESIGN]
@@ -354,15 +355,13 @@ for revision in range(MAX_REVISIONS + 1):
 raise VerificationFailed("revision budget exhausted")
 ```
 
-Senza criteri, budget e stop condition, evaluator-optimizer è soltanto una conversazione circolare fra modelli.
+Senza criteri, budget e stop condition, il ciclo evaluator-optimizer è soltanto una conversazione circolare fra modelli, potenzialmente infinita!
 
+## Evals
 
+Gli eval per agenti non possono limitarsi alla risposta finale, ma devono misurare il sistema a 360 gradi.
 
-## Evals: il sistema va misurato intero
-
-Gli eval per agenti non possono limitarsi alla risposta finale.
-
-Anthropic propone una terminologia utile:
+Anthropic propone una terminologia utile che ho personalmente adottato (stesso articolo che ho menzionato poco fa):
 
 - **task**: il singolo caso di test;
 - **trial**: un tentativo, da ripetere perché il sistema è stocastico;
@@ -371,7 +370,7 @@ Anthropic propone una terminologia utile:
 - **outcome**: lo stato finale dell'ambiente;
 - **evaluation harness**: l'infrastruttura che esegue, registra e valuta ([Anthropic — Evals per agenti](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
-Nel running example, una suite sensata non dovrebbe chiedere soltanto «ha prodotto una playlist?». Dovrebbe definire una semantica diversa per ogni richiesta.
+Applicando questi principi al nostro *running example*, una suite di eval sensata non può limitarsi alla banale domanda: «Il sistema ha prodotto una playlist?». Al contrario, deve definire un'aspettativa semantica rigorosa e specifica per ogni singolo intento.
 
 ```yaml
 # [REFERENCE DESIGN]
@@ -403,7 +402,7 @@ tasks:
       - out_of_domain
 ```
 
-Poi si osservano dimensioni differenti:
+A partire da questi scenari, l'infrastruttura di valutazione non si limita a giudicare l'esito, ma scompone l'analisi del sistema su dimensioni differenti e ortogonali:
 
 ```text
 OUTCOME
@@ -431,17 +430,17 @@ tasso di recovery
 fallimenti silenziosi
 ```
 
-Hamel Husain insiste su una distinzione che vale la pena portarsi dietro: errori differenti richiedono tassonomie differenti. Chiamare tutto «hallucination» rende invisibili i guasti che contano. La pratica utile parte dalla lettura dei trace, costruisce un vocabolario degli errori e calibra gli evaluator contro giudizi umani ([Hamel Husain — Evals skills](https://hamelhusain.substack.com/p/evals-skills-for-coding-agents)).
+In uno dei miei substack preferiti, Hamel Husain insiste su una distinzione secondo me importante: errori differenti richiedono tassonomie differenti. Chiamare tutto «hallucination» rende invisibili i guasti, o meglio risulta difficile isolarli e risolverli. Bisogna partire dalla lettura dei trace, si costruisce un vocabolario degli errori e si calibra gli evaluator contro giudizi umani ([Hamel Husain — Evals skills](https://hamelhusain.substack.com/p/evals-skills-for-coding-agents)).
 
-### Non premiare un percorso rigido
+> **Non premiare un percorso rigido**. Un eval troppo prescrittivo può bocciare una soluzione valida solo perché l’agente ha seguito una strada diversa. Quando possibile, verifica anzitutto l’outcome e lo stato finale dell’ambiente. Usa poi la traiettoria per rilevare violazioni di policy, azioni non autorizzate, sprechi, fragilità o inefficienze, senza trasformare ogni tool call in un copione super severo da seguire. Rendi prescrittivi soltanto i passaggi necessari per sicurezza, compliance o correttezza.
 
-Un eval troppo prescrittivo rischia di bocciare una soluzione valida soltanto perché il modello ha trovato una strada diversa. Quando possibile, verifica l'outcome e usa la traiettoria per individuare comportamenti rischiosi, sprechi o violazioni di policy, senza trasformare ogni tool call in un copione obbligatorio.
+Se il workflow è lungo e modifica lo stato, valuta checkpoint di stato (es. “rimborso creato”, “notifica inviata”) invece di ogni singolo click o chiamata. È un compromesso di gran lunga migliore tra libertà di strategia e controllo.
 
+Infine, misurare tool call, token, errori e runtime resta prezioso: serve a trovare flussi ridondanti e strumenti mal progettati, non necessariamente a decretare che l’agente abbia fallito
 
+## E quando il mondo va a rotoli?
 
-## Il mondo va storto
-
-Un sistema multiagentico non è definito soltanto dal percorso felice. È definito da ciò che succede quando un nodo non fa il proprio dovere.
+Un sistema multiagentico DEVE essere definito ANCHE da ciò che succede quando un nodo non fa il proprio dovere!
 
 ```mermaid
 stateDiagram-v2
