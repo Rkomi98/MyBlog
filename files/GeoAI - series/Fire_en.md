@@ -163,7 +163,7 @@ Copernicus EMS provides a JSON API for querying public activations. The general 
 
 The following box tests these interfaces in sequence and declares which response it managed to use. It displays only publicly available metadata, retains the time of the last check, and, when available, starts from a local snapshot generated during publication. The JRC catalogs the service as public and allows its reuse with attribution to the European Commission, subject to any third-party works ([official service sheet and reuse conditions](https://data.jrc.ec.europa.eu/service/9d439213-2598-5d04-b6b3-f2882e4b0fb6)).
 
-<cems-activation activation="EMSR906" snapshot="/Assets/fire-assets/data/emsr906-fallback.json"></cems-activation>
+<cems-activation activation="EMSR906" snapshot="/Assets/fire-assets/data/cems-activations.json"></cems-activation>
 
 This module should be read as an editorial window into the evolution of a geospatial product. For alerts, evacuations, and safety decisions, always rely on official communications from Civil Protection, the Fire Department, and local authorities.
 

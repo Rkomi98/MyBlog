@@ -94,11 +94,11 @@ Per costruire un interferogramma dobbiamo prima fare in modo che due immagini SA
 
 A quel punto si combinano i segnali complessi delle due acquisizioni. Per dirlo in "matematichese", l'interferogramma nasce moltiplicando il valore complesso di una scena per il complesso coniugato dell'altra. La fase del risultato invece contiene la differenza di fase tra i due passaggi [5].
 
-Sembra facile, peccato che tra un'acquisizione e l'altra cambino più cose del solo terreno😜!
+Come se non bastasse, tra un'acquisizione e l'altra cambino più cose del solo terreno😜!
 
-Il satellite non passa esattamente nello stesso punto dello spazio. Le due posizioni orbitali sono separate da una **baseline interferometrica**; la sua componente perpendicolare alla linea di vista è particolarmente importante perché modifica la sensibilità alla topografia e può contribuire alla decorrelazione geometrica. Cambiano anche l'atmosfera attraversata dal segnale, lo stato della superficie e, inevitabilmente, il rumore.
+Il satellite non passa esattamente nello stesso punto dello spazio. Le due posizioni orbitali sono separate da una <span class="inline-note"><strong>baseline interferometrica</strong><button type="button" class="inline-note__trigger" aria-label="Spiega baseline interferometrica"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Baseline interferometrica</strong> è la distanza tra le due posizioni orbitali del satellite nelle due acquisizioni. Si scompone in una componente parallela alla LOS e in una perpendicolare, spesso indicata con $B_\perp$: quest'ultima è quella che conta di più, perché modula la sensibilità alla topografia e, se diventa troppo ampia, può contribuire alla decorrelazione geometrica.</span></span>. Cosa voglio dire in parole più semplici? Se tra un passaggio e l'altro il satellite si sposta troppo lateralmente (rispetto al punto che sta osservando), l'angolo di vista cambia. Se questa distanza laterale è eccessiva, le due "foto" radar diventano così diverse tra loro che non è più possibile sovrapporle per confrontarle. Oltre a tutto questo, cambiano anche l'atmosfera attraversata dal segnale, lo stato della superficie e, inevitabilmente, il rumore.
 
-Quindi l'interferogramma grezzo contiene una miscela. Una rappresentazione schematica utile è:
+Quindi l'interferogramma grezzo contiene una miscela di informazioni. Una rappresentazione schematica utile è:
 
 $$
 \Delta \phi =
@@ -110,7 +110,7 @@ $$
 \Delta \phi_{noise}
 $$
 
-Non è un'equazione universale con una notazione obbligatoria, ma è un buon promemoria del problema: **la deformazione è soltanto uno dei contributi alla fase interferometrica**. La documentazione teorica di EGMS distingue esplicitamente i termini legati a geometria, topografia, atmosfera, decorrelazione e movimento del bersaglio [7].
+> Attenzione però, **la deformazione è soltanto uno dei contributi alla fase interferometrica**. Se si legge la documentazione di EGMS vengono distinti esplicitamente i termini legati a geometria, topografia, atmosfera, decorrelazione e movimento del bersaglio [7].
 
 Il lavoro serio comincia proprio qui: modellare, sottrarre o almeno quantificare tutto ciò che potrebbe sembrare movimento senza esserlo.
 

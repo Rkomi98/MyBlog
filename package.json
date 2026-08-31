@@ -8,6 +8,8 @@
     "clean": "rm -rf dist docs",
     "deploy": "npm run build && gh-pages -d docs",
     "translate": "node scripts/translate-missing.js",
+    "cems:refresh": "node scripts/refresh-cems-cache.mjs",
+    "test:cems": "node --test test/cems-live.test.mjs",
     "notebook:export": "node scripts/notebook-to-markdown.js"
   },
   "repository": {
