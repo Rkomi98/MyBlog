@@ -42,7 +42,7 @@
     "headline": "InSAR: Quando SAR non basta",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-27T00:00:00.000Z",
-    "dateModified": "2026-08-28T14:53:19.000Z",
+    "dateModified": "2026-08-31T14:39:42.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -584,6 +584,37 @@
     .post-body a:hover {
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
+    }
+    .post-body a.citation-link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.28rem;
+      margin: 0 0.08rem;
+      padding: 0.08rem 0.4rem;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.08);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.78em;
+      font-weight: 600;
+      line-height: 1.35;
+      white-space: nowrap;
+      vertical-align: baseline;
+    }
+    .post-body a.citation-link:hover {
+      border-color: var(--accent-strong);
+    }
+    .post-body .citation-link__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--accent-strong);
+      font-variant-numeric: tabular-nums;
+    }
+    .post-body .citation-link__source {
+      color: var(--text-secondary);
+    }
+    .post-body .citation-link__icon {
+      color: var(--accent);
+      font-size: 0.9em;
     }
     .post-body .inline-note {
       position: relative;
@@ -1685,7 +1716,10 @@ $$</p>
 \Delta \phi_{scatt} +
 \Delta \phi_{noise}
 $$</p>
-<p>Non è un&#39;equazione universale con una notazione obbligatoria, ma è un buon promemoria del problema: <strong>la deformazione è soltanto uno dei contributi alla fase interferometrica</strong>. La documentazione teorica di EGMS distingue esplicitamente i termini legati a geometria, topografia, atmosfera, decorrelazione e movimento del bersaglio [7].</p>
+<blockquote>
+<p>Attenzione però, <strong>la deformazione è soltanto uno dei contributi alla fase interferometrica</strong>. Se si legge la documentazione di EGMS vengono distinti esplicitamente i termini legati a geometria, topografia, atmosfera, decorrelazione e movimento del bersaglio [7].</p>
+</blockquote>
+<p><img src="../../../Assets/Decorrelation.jpg" alt="Esempio di interferogramma SAR differenziale (dopo la rimozione delle componenti topografiche). Le frange interferometriche sono generate dallo schema di deformazione co-sismica causato dal terremoto dell'Aquila in Italia (aprile 2009). Immagini acquisite da SAR in banda C con lunghezza d'onda di circa 5,6 cm, per cui ogni frangia rappresenta circa 28 mm di spostamento nella linea di vista del satellite. Dati SAR acquisiti dalla missione Envisat dell'ESA."></p>
 <p>Il lavoro serio comincia proprio qui: modellare, sottrarre o almeno quantificare tutto ciò che potrebbe sembrare movimento senza esserlo.</p>
 <hr>
 <h2 id="quelle-frange-colorate-non-sono-decorazione">Quelle frange colorate non sono decorazione</h2>

@@ -585,6 +585,37 @@
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
     }
+    .post-body a.citation-link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.28rem;
+      margin: 0 0.08rem;
+      padding: 0.08rem 0.4rem;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.08);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.78em;
+      font-weight: 600;
+      line-height: 1.35;
+      white-space: nowrap;
+      vertical-align: baseline;
+    }
+    .post-body a.citation-link:hover {
+      border-color: var(--accent-strong);
+    }
+    .post-body .citation-link__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--accent-strong);
+      font-variant-numeric: tabular-nums;
+    }
+    .post-body .citation-link__source {
+      color: var(--text-secondary);
+    }
+    .post-body .citation-link__icon {
+      color: var(--accent);
+      font-size: 0.9em;
+    }
     .post-body .inline-note {
       position: relative;
       display: inline-flex;
@@ -1745,12 +1776,12 @@ Bag-of-Words: { &quot;cat&quot;: 1, &quot;chases&quot;: 1, &quot;the&quot;: 2, &
 <tbody><tr>
 <td><strong>No semantic understanding</strong> - Words treated as unique IDs (one-hot); no similarity between related terms.</td>
 <td>Bag-of-Words, TF-IDF, count-based linear models.</td>
-<td><strong>Sparsity &amp; lack of meaning</strong>: massive, sparse vectors; no concept of synonyms or polysemy (to the model, &quot;dog&quot; and &quot;puppy&quot; share nothing in common)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A">[1]</a>.</td>
+<td><strong>Sparsity &amp; lack of meaning</strong>: massive, sparse vectors; no concept of synonyms or polysemy (to the model, &quot;dog&quot; and &quot;puppy&quot; share nothing in common)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A" class="citation-link" target="_blank" rel="noopener noreferrer" aria-label="Reference 1: https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A" data-citation-number="1" data-citation-host="medium.com"><span class="citation-link__number">[1]</span><span class="citation-link__source">medium.com</span><span class="citation-link__icon" aria-hidden="true">↗</span></a>.</td>
 </tr>
 <tr>
 <td><strong>Limited local context</strong> - Word order matters, but unigram models ignore sequence.</td>
 <td>N-grams (bigrams, trigrams, etc.) that consider windows of $N-1$ preceding words.</td>
-<td><strong>Rigid window and data sparsity</strong>: they only capture short-range dependencies; rare word combinations never seen before cannot be predicted<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations">[3]</a>. Memory is limited to $N-1$ words, with no long-term dependencies.</td>
+<td><strong>Rigid window and data sparsity</strong>: they only capture short-range dependencies; rare word combinations never seen before cannot be predicted<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations" class="citation-link" target="_blank" rel="noopener noreferrer" aria-label="Reference 3: https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations" data-citation-number="3" data-citation-host="medium.com"><span class="citation-link__number">[3]</span><span class="citation-link__source">medium.com</span><span class="citation-link__icon" aria-hidden="true">↗</span></a>. Memory is limited to $N-1$ words, with no long-term dependencies.</td>
 </tr>
 <tr>
 <td><strong>Hand-crafted features and simplistic assumptions</strong> - Simple generative models (NB, HMM) or &quot;shallow&quot; neural networks.</td>

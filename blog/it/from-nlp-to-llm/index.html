@@ -585,6 +585,37 @@
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
     }
+    .post-body a.citation-link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.28rem;
+      margin: 0 0.08rem;
+      padding: 0.08rem 0.4rem;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.08);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.78em;
+      font-weight: 600;
+      line-height: 1.35;
+      white-space: nowrap;
+      vertical-align: baseline;
+    }
+    .post-body a.citation-link:hover {
+      border-color: var(--accent-strong);
+    }
+    .post-body .citation-link__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--accent-strong);
+      font-variant-numeric: tabular-nums;
+    }
+    .post-body .citation-link__source {
+      color: var(--text-secondary);
+    }
+    .post-body .citation-link__icon {
+      color: var(--accent);
+      font-size: 0.9em;
+    }
     .post-body .inline-note {
       position: relative;
       display: inline-flex;
@@ -1751,12 +1782,12 @@ Bag-of-Words: { &quot;gatto&quot;: 1, &quot;insegue&quot;: 1, &quot;il&quot;: 2,
 <tbody><tr>
 <td><strong>Nessuna comprensione semantica</strong> - Parole come ID univoci (one-hot), nessuna similarità tra termini correlati.</td>
 <td>Bag-of-Words, TF-IDF, modelli lineari basati su conteggi.</td>
-<td><strong>Sparsità &amp; no meaning</strong>: vettori enormi e sparsi; nessun concetto di sinonimi o polisemia (per il modello &quot;dog&quot; e &quot;puppy&quot; non hanno nulla in comune)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A">[1]</a>.</td>
+<td><strong>Sparsità &amp; no meaning</strong>: vettori enormi e sparsi; nessun concetto di sinonimi o polisemia (per il modello &quot;dog&quot; e &quot;puppy&quot; non hanno nulla in comune)<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A" class="citation-link" target="_blank" rel="noopener noreferrer" aria-label="Reference 1: https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=Why%20it%20fell%20short%3A" data-citation-number="1" data-citation-host="medium.com"><span class="citation-link__number">[1]</span><span class="citation-link__source">medium.com</span><span class="citation-link__icon" aria-hidden="true">↗</span></a>.</td>
 </tr>
 <tr>
 <td><strong>Uso del contesto locale limitato</strong> - L&#39;ordine delle parole conta, ma modelli unigram ignorano la sequenza.</td>
 <td>N-grammi (bigram, trigram, …) che considerano finestre di $N-1$ parole precedenti.</td>
-<td><strong>Finestra rigida e data sparsity</strong>: catturano solo dipendenze brevi; combinazioni rare di parole mai viste non possono essere previste<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations">[3]</a>. Memoria limitata a $N-1$ parole, niente dipendenze a lungo termine.</td>
+<td><strong>Finestra rigida e data sparsity</strong>: catturano solo dipendenze brevi; combinazioni rare di parole mai viste non possono essere previste<a href="https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations" class="citation-link" target="_blank" rel="noopener noreferrer" aria-label="Reference 3: https://medium.com/@akankshasinha247/from-n-grams-to-transformers-tracing-the-evolution-of-language-models-101f10e86eba#:~:text=,handle%20long%20dependencies%20or%20variations" data-citation-number="3" data-citation-host="medium.com"><span class="citation-link__number">[3]</span><span class="citation-link__source">medium.com</span><span class="citation-link__icon" aria-hidden="true">↗</span></a>. Memoria limitata a $N-1$ parole, niente dipendenze a lungo termine.</td>
 </tr>
 <tr>
 <td><strong>Feature fatte a mano e assunzioni semplicistiche</strong> - Modelli generativi semplici (NB, HMM) o reti neurali &quot;shallow&quot;.</td>

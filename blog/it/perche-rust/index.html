@@ -585,6 +585,37 @@
       color: var(--accent-strong);
       border-bottom-color: var(--accent-strong);
     }
+    .post-body a.citation-link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.28rem;
+      margin: 0 0.08rem;
+      padding: 0.08rem 0.4rem;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.08);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.78em;
+      font-weight: 600;
+      line-height: 1.35;
+      white-space: nowrap;
+      vertical-align: baseline;
+    }
+    .post-body a.citation-link:hover {
+      border-color: var(--accent-strong);
+    }
+    .post-body .citation-link__number {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      color: var(--accent-strong);
+      font-variant-numeric: tabular-nums;
+    }
+    .post-body .citation-link__source {
+      color: var(--text-secondary);
+    }
+    .post-body .citation-link__icon {
+      color: var(--accent);
+      font-size: 0.9em;
+    }
     .post-body .inline-note {
       position: relative;
       display: inline-flex;
@@ -1840,7 +1871,7 @@
 <p>Vale la pena sottolineare <em>quanto</em> il compilatore Rust sia effettivamente diverso da altri. Non è marketing: i messaggi di Rust sono notoriamente più descrittivi e utili di quelli di, ad esempio, C++ o Java. Questo è frutto di uno sforzo cosciente della community di Rust fin dagli albori - c&#39;è chi dice scherzando che Rust abbia <em>&quot;il team di UX applicata ai messaggi d&#39;errore&quot;</em>. Infatti, nel corso degli anni i messaggi sono migliorati al punto che spesso suggeriscono direttamente la correzione. Ci sono <a href="https://news.ycombinator.com/item?id=44005195#:~:text=Evolution%20of%20Rust%20Compiler%20Errors,explanation%20of%20why%20it%27s%20wrong">blog</a> che mostrano l&#39;evoluzione degli errori di Rust: da frasi criptiche a spiegazioni quasi in prosa. Lo scopo è fare del compilatore un <strong>strumento didattico</strong> e non solo un giudice. </p>
 <p>Il compilatore è come una bussola: se stai &quot;lottando&quot; troppo contro di esso, probabilmente ti sta indicando che c&#39;è una via più pulita.</p>
 <p>Un ulteriore aiuto viene dagli strumenti satellite come <strong>Clippy</strong>, il linter di Rust. È <a href="https://corrode.dev/blog/flattening-rusts-learning-curve/#:~:text=Turn%20on%20all%20clippy%20lints,step%20once%20your%20program%20compiles">consigliatissimo</a> attivare tutti i <em>lint</em> di Clippy fin dal primo giorno. Clippy ti darà consigli su come migliorare il codice anche oltre gli errori strettamente necessari: ad esempio ti avvisa di possibili usi subottimali, codice non idiomatico, ecc. È come avere un reviewer robotico sempre disponibile. </p>
-<p>Unendo i puntini: <em>compilatore + Clippy + messaggi d&#39;errore dettagliati</em> trasformano quella che poteva essere un&#39;esperienza di apprendimento ostica e solitaria in qualcosa di molto più guidato. Certo, rimane <strong>impegnativo</strong> (Rust non ti regala nulla) ma non sei solo: è come avere un team di mentori virtuali sempre con te (e aggiungiamo la community sui forum/Discord/Stack Overflow, che in Rust è notoriamente accogliente<a href="https://users.rust-lang.org/t/isnt-rust-too-difficult-to-be-widely-adopted/6173#:~:text=Isn%27t%20rust%20too%20difficult%20to,the%20rough%20spots%20and%20surprises">[48]</a>).</p>
+<p>Unendo i puntini: <em>compilatore + Clippy + messaggi d&#39;errore dettagliati</em> trasformano quella che poteva essere un&#39;esperienza di apprendimento ostica e solitaria in qualcosa di molto più guidato. Certo, rimane <strong>impegnativo</strong> (Rust non ti regala nulla) ma non sei solo: è come avere un team di mentori virtuali sempre con te (e aggiungiamo la community sui forum/Discord/Stack Overflow, che in Rust è notoriamente accogliente<a href="https://users.rust-lang.org/t/isnt-rust-too-difficult-to-be-widely-adopted/6173#:~:text=Isn%27t%20rust%20too%20difficult%20to,the%20rough%20spots%20and%20surprises" class="citation-link" target="_blank" rel="noopener noreferrer" aria-label="Reference 48: https://users.rust-lang.org/t/isnt-rust-too-difficult-to-be-widely-adopted/6173#:~:text=Isn%27t%20rust%20too%20difficult%20to,the%20rough%20spots%20and%20surprises" data-citation-number="48" data-citation-host="users.rust-lang.org"><span class="citation-link__number">[48]</span><span class="citation-link__source">users.rust-lang.org</span><span class="citation-link__icon" aria-hidden="true">↗</span></a>).</p>
 <p>In conclusione, il compilatore di Rust all&#39;inizio può sembrare un ostacolo, ma col tempo diventa <em>il tuo migliore amico</em>. Questo cambiamento di prospettiva, da &quot;lo odio&quot; a &quot;mi fido di lui&quot;, è forse il segnale più evidente che stai facendo tuo il modello mentale di Rust. Quando smetti di vederlo come un freno e inizi a usarlo come <strong>strumento attivo per migliorare il tuo codice</strong>, hai superato un punto di non ritorno: stai ragionando &quot;in Rust&quot;. E come vedremo, a quel punto molte delle difficoltà percepite svaniscono, lasciando il posto ai reali benefici.</p>
 <h2 id="difficolt-vere-e-proprie-vs-attrito-iniziale">Difficoltà vere e proprie vs attrito iniziale</h2>
 <p>Ci sono aspetti di Rust che <strong>sono realmente complessi</strong>, e altri che <em>sembrano</em> difficili solo finché non si adotta il giusto approccio mentale. È importante distinguere le due cose. Spesso chi è all&#39;inizio mette tutto sullo stesso piano (&quot;Rust è difficile e basta&quot;), ma facendo un passo indietro si può chiedere: quali concetti di Rust restano complicati anche dopo averli capiti, e quali invece diventano <strong>non-problemi</strong> una volta che hai fatto &quot;amucizia&quot; col linguaggio?</p>
