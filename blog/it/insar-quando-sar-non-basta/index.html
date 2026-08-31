@@ -42,7 +42,7 @@
     "headline": "InSAR: Quando SAR non basta",
     "image": "https://rkomi98.github.io/MyBlog/Assets/Logo.png",
     "datePublished": "2026-08-27T00:00:00.000Z",
-    "dateModified": "2026-08-28T12:33:05.000Z",
+    "dateModified": "2026-08-28T14:53:19.000Z",
     "author": {
       "@type": "Person",
       "name": "Mirko Calcaterra",
@@ -1674,7 +1674,7 @@ $$</p>
 <p>Per costruire un interferogramma dobbiamo prima fare in modo che due immagini SAR “parlino” pixel per pixel della stessa porzione di terreno. Serve quindi una <strong>co-registrazione</strong> molto accurata.</p>
 <p>A quel punto si combinano i segnali complessi delle due acquisizioni. Per dirlo in &quot;matematichese&quot;, l&#39;interferogramma nasce moltiplicando il valore complesso di una scena per il complesso coniugato dell&#39;altra. La fase del risultato invece contiene la differenza di fase tra i due passaggi [5].</p>
 <p>Sembra facile, peccato che tra un&#39;acquisizione e l&#39;altra cambino più cose del solo terreno😜!</p>
-<p>Il satellite non passa esattamente nello stesso punto dello spazio. Le due posizioni orbitali sono separate da una <strong>baseline interferometrica</strong>; la sua componente perpendicolare alla linea di vista è particolarmente importante perché modifica la sensibilità alla topografia e può contribuire alla decorrelazione geometrica. Cambiano anche l&#39;atmosfera attraversata dal segnale, lo stato della superficie e, inevitabilmente, il rumore.</p>
+<p>Il satellite non passa esattamente nello stesso punto dello spazio. Le due posizioni orbitali sono separate da una <span class="inline-note"><strong>baseline interferometrica</strong><button type="button" class="inline-note__trigger" aria-label="Spiega baseline interferometrica"><span aria-hidden="true">&#42;</span></button><span class="inline-note__popup"><strong>Baseline interferometrica</strong> è la distanza tra le due posizioni orbitali del satellite nelle due acquisizioni. Si scompone in una componente parallela alla LOS e in una perpendicolare, spesso indicata con $B_\perp$: quest&#39;ultima è quella che conta di più, perché modula la sensibilità alla topografia e, se diventa troppo ampia, può contribuire alla decorrelazione geometrica.</span></span>. Cosa voglio dire? La sua componente perpendicolare alla linea di vista è particolarmente importante perché modifica la sensibilità alla topografia e può contribuire alla decorrelazione geometrica. Cambiano anche l&#39;atmosfera attraversata dal segnale, lo stato della superficie e, inevitabilmente, il rumore.</p>
 <p>Quindi l&#39;interferogramma grezzo contiene una miscela. Una rappresentazione schematica utile è:</p>
 <p>$$
 \Delta \phi =

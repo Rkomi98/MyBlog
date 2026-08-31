@@ -171,11 +171,12 @@
       refresh.disabled = true;
       if (!silent) this.setLoading();
       let snapshotPayload = null;
-      if (!forceLive) {
-        try { snapshotPayload = await this.getJson(this.snapshot, 3500); } catch { snapshotPayload = null; }
-        const snapActivation = unwrap(snapshotPayload);
-        if (snapActivation) this.render(snapActivation, { mode:'snapshot', url:this.snapshot, retrieved:first(snapshotPayload.retrieved_at, snapshotPayload.generated_at) });
-      }
+      try { snapshotPayload = await this.getJson(this.snapshot, 3500); } catch { snapshotPayload = null; }
+      const snapActivation = unwrap(snapshotPayload);
+      // A snapshot belongs to one activation only. It remains a safe, useful
+      // fallback when a browser cannot make cross-origin API requests.
+      const hasMatchingSnapshot = snapActivation && String(first(snapActivation.code, '')).toUpperCase() === this.code;
+      if (hasMatchingSnapshot) this.render(snapActivation, { mode:'snapshot', url:this.snapshot, retrieved:first(snapshotPayload.retrieved_at, snapshotPayload.generated_at) });
 
       let lastError = null;
       for (const url of this.endpoints(this.code)) {
@@ -188,7 +189,7 @@
           return;
         } catch (error) { lastError = error; }
       }
-      if (!unwrap(snapshotPayload) || forceLive) this.renderUnavailable(lastError);
+      if (!hasMatchingSnapshot) this.renderUnavailable(lastError);
       refresh.disabled = false;
     }
 
