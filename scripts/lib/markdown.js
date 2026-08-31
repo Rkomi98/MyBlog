@@ -71,6 +71,32 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+function extractCitationNumber(text) {
+  const plainText = stripHtmlEntities(text)
+    .replace(/\\([\[\]])/g, '$1')
+    .trim();
+  const match = plainText.match(/^\[?(\d+)\]?$/);
+  return match?.[1] ?? null;
+}
+
+function getExternalHost(href) {
+  try {
+    const url = new URL(href);
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      return null;
+    }
+    return url.hostname.replace(/^www\./i, '');
+  } catch {
+    return null;
+  }
+}
+
+function renderCitationLink(token, href, citationNumber, host) {
+  const title = token?.title ? ` title="${escapeHtml(token.title)}"` : '';
+  const fullReference = `Reference ${citationNumber}: ${href}`;
+  return `<a href="${escapeHtml(href)}" class="citation-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(fullReference)}"${title} data-citation-number="${citationNumber}" data-citation-host="${escapeHtml(host)}"><span class="citation-link__number">[${citationNumber}]</span><span class="citation-link__source">${escapeHtml(host)}</span><span class="citation-link__icon" aria-hidden="true">↗</span></a>`;
+}
+
 function resolveHtmlAttributePaths(markdown, relativeRoot) {
   if (!markdown || typeof markdown !== 'string') {
     return markdown;
@@ -138,6 +164,11 @@ export function markdownToHtml(markdown, { relativeRoot = '.' } = {}) {
 
   renderer.link = function link(token) {
     const resolved = resolveRelativeLink(token?.href, relativeRoot);
+    const citationNumber = extractCitationNumber(token?.text ?? '');
+    const citationHost = getExternalHost(resolved);
+    if (citationNumber && citationHost) {
+      return renderCitationLink(token, resolved, citationNumber, citationHost);
+    }
     return originalLink.call(this, { ...token, href: resolved });
   };
 

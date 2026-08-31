@@ -4,11 +4,11 @@ Qualche anno fa, durante un progetto universitario sull'alluvione che ha colpito
 
 In quel lavoro il protagonista assoluto è stato il **backscatter**. Guardavo quanta energia tornava indietro verso il satellite, come cambiava tra due acquisizioni e cosa potevo dedurne sulla superficie osservata. La fase del segnale c'era, naturalmente, ma l'avevo lasciata da parte. Per il problema che stavo cercando di risolvere, semplicemente, non mi serviva.
 
-Sembrerà assurdo (magari solo a me), ma quando inizi a studiare l'InSAR, scopri che proprio quella parte lasciata in disparte diventa quello che ti serve per risolvere il problema. Infatti, confrontando la fase di acquisizioni SAR successive possiamo stimare variazioni della distanza tra sensore e terreno lungo la **Line of Sight**, ovvero la direzione con cui il radar sta osservando il bersaglio. ESA parla esplicitamente di movimenti rilevabili fino alla scala di *pochi millimetri su vaste aree*! [1]
+Sembrerà assurdo (magari solo a me), ma quando inizi a studiare l'InSAR, scopri che proprio quella parte lasciata in disparte diventa quello che ti serve per risolvere il problema. Infatti, confrontando la fase di acquisizioni SAR successive possiamo stimare variazioni della distanza tra sensore e terreno lungo la **Line of Sight**, ovvero la direzione con cui il radar sta osservando il bersaglio. ESA parla esplicitamente di movimenti rilevabili fino alla scala di *pochi millimetri su vaste aree*! [1](https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Instrument)
 
 Detta così sembra quasi magia... In realtà, prima di inebriarci con la parola “millimetrico”, conviene capire bene che **cosa** stiamo misurando.
 
-Resta comunque un fatto notevole: Sentinel-1 osserva la Terra da un'orbita a circa **693 km di quota** [3], e da lassù possiamo ricostruire movimenti superficiali inferiori al centimetro.
+Resta comunque un fatto notevole: Sentinel-1 osserva la Terra da un'orbita a circa **693 km di quota** [3](https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures), e da lassù possiamo ricostruire movimenti superficiali inferiori al centimetro.
 
 Come ci riesce?
 
@@ -18,7 +18,7 @@ Per capirlo conviene tornare al punto da cui ero partito anch'io: quel pixel SAR
 
 ## Lo stesso pixel racconta due storie
 
-Un'immagine radar non nasce come una fotografia in bianco e nero. Nei prodotti **SLC, Single Look Complex**, ogni pixel è rappresentato da un valore complesso: dentro quel numero convivono **ampiezza** e **fase**. La specifica dei prodotti Sentinel-1 lo dice in maniera piuttosto netta: un SLC conserva entrambe; un prodotto **GRD, Ground Range Detected**, è invece rilevato e perde l'informazione di fase [4]!
+Un'immagine radar non nasce come una fotografia in bianco e nero. Nei prodotti **SLC, Single Look Complex**, ogni pixel è rappresentato da un valore complesso: dentro quel numero convivono **ampiezza** e **fase**. La specifica dei prodotti Sentinel-1 lo dice in maniera piuttosto netta: un SLC conserva entrambe; un prodotto **GRD, Ground Range Detected**, è invece rilevato e perde l'informazione di fase [4](https://sentinels.copernicus.eu/documents/247904/1877131/Sentinel-1-Product-Specification-18052021.pdf)!
 
 L'ampiezza descrive *quanto è forte il segnale* che torna verso l'antenna. Da lì ricaviamo l'intensità e, dopo la calibrazione radiometrica, grandezze come **sigma nought** che usiamo per ragionare sul **backscatter**.
 
@@ -30,11 +30,11 @@ Qui sta il primo piccolo inghippo.
 
 > **Definizione: SAR**
 >
-> Un **Synthetic Aperture Radar** è un sensore radar attivo: trasmette microonde verso la superficie e misura l'eco che ritorna. Sfruttando il movimento della piattaforma lungo l'orbita, combina coerentemente gli echi raccolti in posizioni successive e sintetizza un'apertura molto più lunga dell'antenna fisica. Sentinel-1 usa un SAR in **banda C a 5,405 GHz**; nella modalità Interferometric Wide Swath osserva una fascia larga circa **250 km** con una risoluzione nominale di **5 × 20 m** [3].
+> Un **Synthetic Aperture Radar** è un sensore radar attivo: trasmette microonde verso la superficie e misura l'eco che ritorna. Sfruttando il movimento della piattaforma lungo l'orbita, combina coerentemente gli echi raccolti in posizioni successive e sintetizza un'apertura molto più lunga dell'antenna fisica. Sentinel-1 usa un SAR in **banda C a 5,405 GHz**; nella modalità Interferometric Wide Swath osserva una fascia larga circa **250 km** con una risoluzione nominale di **5 × 20 m** [3](https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures).
 
 > **Box: perché per l'InSAR si parte dagli SLC?**
 >
-> Perché l'interferometria vive della **differenza di fase**. Nei GRD Sentinel-1 il segnale è già stato detected e la fase è persa; negli SLC rimangono sia ampiezza sia fase [4]. Possiamo quindi usare un GRD per moltissime analisi di backscatter, ma non per costruire a posteriori un interferogramma.
+> Perché l'interferometria vive della **differenza di fase**. Nei GRD Sentinel-1 il segnale è già stato detected e la fase è persa; negli SLC rimangono sia ampiezza sia fase [4](https://sentinels.copernicus.eu/documents/247904/1877131/Sentinel-1-Product-Specification-18052021.pdf). Possiamo quindi usare un GRD per moltissime analisi di backscatter, ma non per costruire a posteriori un interferogramma.
 
 ---
 
@@ -44,12 +44,12 @@ Immaginiamo di osservare una sinusoide. Se conosco soltanto la sua fase in un ce
 
 È come guardare la lancetta dei secondi di un orologio senza vedere ore e minuti. Se punta sul 15, conosco la posizione della lancetta, ma non so se siano passati 15 secondi, 75 o 135.
 
-La fase radar ha lo stesso problema: viene osservata modulo \(2\pi\). Una singola misura di fase non basta quindi a ricostruire la distanza assoluta tra satellite e bersaglio.
+La fase radar ha lo stesso problema: viene osservata modulo $2\pi$. Una singola misura di fase non basta quindi a ricostruire la distanza assoluta tra satellite e bersaglio.
 
-L'InSAR cambia domanda. Non cerca la distanza assoluta: **confronta la fase di due o più acquisizioni della stessa area** e osserva come è cambiata [5].
+L'InSAR cambia domanda. Non cerca la distanza assoluta: **confronta la fase di due o più acquisizioni della stessa area** e osserva come è cambiata [5](https://nisar.jpl.nasa.gov/mission/get-to-know-sar/interferometry/).
 
 ![Schema geometrico della misura di deformazione con InSAR: il sensore radar osserva la stessa area del terreno in due acquisizioni differenti e rileva la variazione della distanza lungo la Line of Sight. (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg)
-*Schema geometrico della misura della deformazione mediante InSAR: il sensore radar acquisisce immagini della stessa area in due passaggi successivi e, dalla differenza di fase del segnale, ricava la variazione della distanza sensore–terreno lungo la linea di vista (line of sight, LOS). (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))*
+*Figura 01: Schema geometrico della misura della deformazione mediante InSAR: il sensore radar acquisisce immagini della stessa area in due passaggi successivi e, dalla differenza di fase del segnale, ricava la variazione della distanza sensore–terreno lungo la linea di vista (line of sight, LOS). (Fonte: NASA/JPL, [NISAR mission](https://assets.science.nasa.gov/dynamicimage/assets/science/missions/nisar/nisar-jpl/images/InSAR_deformation_geometry.jpeg))*
 
 Se tra i due passaggi un punto a terra si sposta lungo la linea di vista del satellite, cambia la distanza tra sensore e bersaglio. Indichiamo questa variazione con $\Delta d_{LOS}$. Il segnale radar, però, non percorre quella distanza una sola volta: viaggia dal satellite al terreno e poi torna dal terreno al satellite. Uno spostamento $\Delta d_{LOS}$ modifica quindi il cammino complessivo dell'onda di $2\Delta d_{LOS}$.
 
@@ -75,16 +75,16 @@ $$
 
 In altre parole, **un ciclo completo della fase interferometrica corrisponde a uno spostamento pari a metà della lunghezza d'onda lungo la LOS**. La relazione riguarda il valore assoluto: il segno, che distingue un movimento verso il satellite da uno in allontanamento, dipende dalla convenzione adottata.
 
-Sentinel-1 lavora a 5,405 GHz, che corrispondono a una lunghezza d'onda di circa **5,55 cm**. Un ciclo interferometrico completo corrisponde quindi a circa **2,8 cm di variazione LOS** [3] [6]. Nella fase wrapped, tuttavia, $0$ e $2\pi$ coincidono: è per questo che un nuovo ciclo ricomincia dallo stesso valore di fase e, nell'interferogramma, dallo stesso colore.
+Sentinel-1 lavora a 5,405 GHz, che corrispondono a una lunghezza d'onda di circa **5,55 cm**. Un ciclo interferometrico completo corrisponde quindi a circa **2,8 cm di variazione LOS** [3](https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures) [6](https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement). Nella fase wrapped, tuttavia, $0$ e $2\pi$ coincidono: è per questo che un nuovo ciclo ricomincia dallo stesso valore di fase e, nell'interferogramma, dallo stesso colore.
 
 Tra poco vediamo come quei 2,8 cm compaiono nella pratica su una zona dell'Italia centrale. Intanto inserisco un'immagine presa direttamente dall'ESA:
 
 ![Interferogramma Sentinel-1B/1A del terremoto del 24 agosto 2016: le sette frange colorate corrispondono a circa 20 cm di deformazione LOS; una singola frangia vale circa 2,8 cm. (Fonte: ESA, Italy earthquake displacement)](../Assets/Italy_earthquake.jpg)
-*Interferogramma Sentinel-1B/1A del terremoto del 24 agosto 2016 in Italia centrale: le frange colorate rappresentano cicli di fase interferometrica, ciascuno equivalente a circa 2,8 cm di variazione lungo la LOS. Sette frange = ~20 cm di deformazione. (Fonte: ESA, [Italy earthquake displacement](https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement))*
+*Figura 02: Interferogramma Sentinel-1B/1A del terremoto del 24 agosto 2016 in Italia centrale: le frange colorate rappresentano cicli di fase interferometrica, ciascuno equivalente a circa 2,8 cm di variazione lungo la LOS. Sette frange = ~20 cm di deformazione. (Fonte: ESA, [Italy earthquake displacement](https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement))*
 
 > **Definizione: Line of Sight**
 >
-> La **LOS** è la linea che congiunge il sensore al bersaglio. L'InSAR misura la proiezione del vettore di spostamento lungo quella direzione [5]. Per questo “10 mm di displacement InSAR” non significa automaticamente “il terreno è sceso di 10 mm”. Potrebbe essersi mosso verticalmente, orizzontalmente o con una combinazione delle due componenti.
+> La **LOS** è la linea che congiunge il sensore al bersaglio. L'InSAR misura la proiezione del vettore di spostamento lungo quella direzione [5](https://nisar.jpl.nasa.gov/mission/get-to-know-sar/interferometry/). Per questo “10 mm di displacement InSAR” non significa automaticamente “il terreno è sceso di 10 mm”. Potrebbe essersi mosso verticalmente, orizzontalmente o con una combinazione delle due componenti.
 
 ---
 
@@ -92,7 +92,7 @@ Tra poco vediamo come quei 2,8 cm compaiono nella pratica su una zona dell'Itali
 
 Per costruire un interferogramma dobbiamo prima fare in modo che due immagini SAR “parlino” pixel per pixel della stessa porzione di terreno. Serve quindi una **co-registrazione** molto accurata.
 
-A quel punto si combinano i segnali complessi delle due acquisizioni. Per dirlo in "matematichese", l'interferogramma nasce moltiplicando il valore complesso di una scena per il complesso coniugato dell'altra. La fase del risultato invece contiene la differenza di fase tra i due passaggi [5].
+A quel punto si combinano i segnali complessi delle due acquisizioni. Per dirlo in "matematichese", l'interferogramma nasce moltiplicando il valore complesso di una scena per il complesso coniugato dell'altra. La fase del risultato invece contiene la differenza di fase tra i due passaggi [5](https://nisar.jpl.nasa.gov/mission/get-to-know-sar/interferometry/).
 
 Come se non bastasse, tra un'acquisizione e l'altra cambino più cose del solo terreno😜!
 
@@ -110,47 +110,45 @@ $$
 \Delta \phi_{noise}
 $$
 
-> Attenzione però, **la deformazione è soltanto uno dei contributi alla fase interferometrica**. Se si legge la documentazione di EGMS vengono distinti esplicitamente i termini legati a geometria, topografia, atmosfera, decorrelazione e movimento del bersaglio [7].
+> Attenzione però, **la deformazione è soltanto uno dei contributi alla fase interferometrica**. Se si legge la documentazione di EGMS vengono distinti esplicitamente i termini legati a geometria, topografia, atmosfera, decorrelazione e movimento del bersaglio [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
-Il lavoro serio comincia proprio qui: modellare, sottrarre o almeno quantificare tutto ciò che potrebbe sembrare movimento senza esserlo.
+![Esempio di interferogramma SAR differenziale (dopo la rimozione delle componenti topografiche). Le frange interferometriche sono generate dallo schema di deformazione co-sismica causato dal terremoto dell'Aquila in Italia (aprile 2009). Immagini acquisite da SAR in banda C con lunghezza d'onda di circa 5,6 cm, per cui ogni frangia rappresenta circa 28 mm di spostamento nella linea di vista del satellite. Dati SAR acquisiti dalla missione Envisat dell'ESA.](../Assets/Decorrelation.jpg)
+*Figura 03: Esempio di interferogramma SAR differenziale (dopo la rimozione delle componenti topografiche). Le frange interferometriche sono generate dallo schema di deformazione co-sismica causato dal terremoto dell'Aquila in Italia (aprile 2009). Immagini acquisite da SAR in banda C con lunghezza d'onda di circa 5,6 cm, per cui ogni frangia rappresenta circa 28 mm di spostamento nella linea di vista del satellite. Dati SAR acquisiti dalla missione Envisat dell'ESA. [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html)*
 
----
+Il lavoro diificile è proprio questo: modellare o almeno quantificare tutto ciò che potrebbe sembrare movimento senza esserlo.
 
-## Quelle frange colorate non sono decorazione
+### Perché quei colori?
 
-Il 24 agosto 2016 un terremoto colpì l'Italia centrale. ESA e CNR-IREA combinarono due acquisizioni Sentinel-1, una del **20 agosto** e una del **26 agosto**, e produssero un interferogramma dell'area deformata [6].
+Il 24 agosto 2016 un terremoto colpì l'Italia centrale. ESA e CNR-IREA combinarono due acquisizioni Sentinel-1, una del **20 agosto** e una del **26 agosto**, e produssero un interferogramma dell'area deformata (che è la Figiura 02 che abbiamo visto prima) [6](https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement).
 
-Nell'immagine compaiono **sette frange interferometriche**. ESA le tradusse in una misura molto intuitiva: sette cicli di colore corrispondevano a circa **20 cm di deformazione lungo la linea di vista del radar**; ogni singolo ciclo valeva approssimativamente **2,8 cm** [6].
+Nell'immagine compaiono **sette frange interferometriche**. ESA le tradusse in una misura molto intuitiva: sette cicli di colore corrispondevano a circa **20 cm di deformazione lungo la linea di vista del radar**; ogni singolo ciclo valeva approssimativamente **2,8 cm** [6](https://www.esa.int/ESA_Multimedia/Images/2016/08/Italy_earthquake_displacement).
 
-Eccolo di nuovo, \(\lambda/2\).
+Eccolo di nuovo, $\lambda/2$.
 
-L'interferogramma visualizza normalmente una fase **wrapped**, confinata in un intervallo di ampiezza \(2\pi\). Quando la fase completa un giro, il colore ricomincia. Le frange sono quindi un modo visivo per contare cicli di fase.
+L'interferogramma visualizza normalmente una fase **wrapped**, confinata in un intervallo di ampiezza $2\pi$. Quando la fase completa un giro, il colore ricomincia. Le frange sono quindi un modo visivo per contare cicli di fase.
 
-L'analogia più vicina sono forse le curve di livello di una carta topografica. Non perché rappresentino la stessa cosa, ovviamente, ma perché entrambe trasformano una quantità continua in una successione leggibile di livelli. Nell'interferogramma, però, non stiamo contando metri di quota: stiamo contando cicli della differenza di fase.
+L'analogia più vicina sono forse le curve di livello di una carta topografica. Non perché rappresentino la stessa cosa, ovviamente, ma perché entrambe trasformano una quantità continua in una successione leggibile di livelli. Nell'interferogramma, però, non stiamo contando ovviamente i metri di quota, ma i cicli della differenza di fase.
 
-> **Caso reale: Italia centrale, agosto 2016**
->
-> Sentinel-1B osservò l'area il 20 agosto e Sentinel-1A il 26 agosto, due giorni dopo il sisma. Nell'interferogramma pubblicato da ESA, **7 frange ≈ 20 cm LOS** e **1 frangia ≈ 2,8 cm** [6]. È un esempio particolarmente pulito perché collega in un colpo solo lunghezza d'onda, fase wrapped e spostamento.
+> Contare le frange non ci consegna il vettore tridimensionale del movimento. Siamo ancora dentro una proiezione lungo la LOS!
 
-C'è però un dettaglio da non perdere: contare le frange non ci consegna il vettore tridimensionale del movimento. Siamo ancora dentro una proiezione lungo la LOS.
-
----
-
-## Coherence: quando due acquisizioni si riconoscono
+### Coherence = Sovrapponibile
 
 Prima ancora di domandarci quanto si sia mosso il terreno, dobbiamo capire se le due acquisizioni possono essere confrontate in maniera affidabile.
 
-Qui entra la **coerenza interferometrica**, normalmente indicata con \(|\gamma|\), una misura normalizzata della somiglianza del segnale complesso tra le due osservazioni. Il suo modulo varia tra **0 e 1**: valori alti indicano una relazione interferometrica stabile, valori bassi una fase progressivamente meno affidabile per stimare lo spostamento [7].
+Qui entra la **coerenza interferometrica**, normalmente indicata con $|\gamma|$, una misura normalizzata della *somiglianza del segnale complesso* tra le due osservazioni. Il suo modulo varia tra **0 e 1**: valori alti indicano una relazione interferometrica stabile, valori bassi una fase progressivamente meno affidabile per stimare lo spostamento [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
-Perché si perde coerenza? Le ragioni sono parecchie. Può cambiare la geometria di osservazione, può passare troppo tempo, può cambiare l'umidità del suolo, può nevicare, può crescere o muoversi la vegetazione, oppure la superficie può essere stata modificata dallo stesso fenomeno che stiamo cercando di osservare. ESA ricorda esplicitamente che crescita della vegetazione, vento sulle foglie e pioggia possono impedire alle due immagini di correlarsi correttamente [8].
+Perché si perde coerenza? Le ragioni sono parecchie. Può cambiare la geometria di osservazione, può passare troppo tempo, può cambiare l'umidità del suolo, può nevicare, può crescere o muoversi la vegetazione, oppure la superficie può essere stata modificata dallo stesso fenomeno che stiamo cercando di osservare. ESA ricorda esplicitamente che crescita della vegetazione, vento sulle foglie e pioggia possono impedire alle due immagini di correlarsi correttamente [8](https://www.esa.int/Applications/Observing_the_Earth/How_does_interferometry_work).
 
 La cosa interessante è che la coerenza ha una doppia vita. Da un lato è una misura della qualità interferometrica; dall'altro la **perdita di coerenza può diventare essa stessa un segnale di cambiamento della superficie**.
 
-Per una frana rapida, per esempio, il movimento può essere talmente forte da cambiare completamente la disposizione degli scatterer tra due acquisizioni. In quel caso non otteniamo necessariamente “una deformazione più facile da misurare”: possiamo perdere proprio la relazione di fase che ci serviva. Nei materiali applicativi NISAR sulle frane viene sottolineato che, quando la superficie viene rimaneggiata al punto da perdere coerenza, l'InSAR non può più ricavare lo spostamento dalla fase, mentre la coherence loss può comunque aiutare a delimitare l'area interessata [9].
+Per una frana rapida, per esempio, il movimento può essere talmente forte da cambiare completamente la disposizione degli scatterer tra due acquisizioni. In quel caso non otteniamo necessariamente “una deformazione più facile da misurare”: possiamo perdere proprio la relazione di fase che ci serviva.
 
 > **Caso reale: Kåfjord, Norvegia**
 >
-> ESA combinò due acquisizioni Sentinel-1A del **30 agosto e 23 settembre 2014** per osservare una frana nel comune di Kåfjord, in Norvegia. Nei **24 giorni** tra le due acquisizioni il terreno si era mosso di circa **1 cm** [10]. Qui l'InSAR smette di essere la fotografia spettacolare di un terremoto e diventa uno strumento per seguire un movimento lento di versante.
+> ESA combinò due acquisizioni Sentinel-1A del **30 agosto e 23 settembre 2014** per osservare una frana nel comune di Kåfjord, in Norvegia. Nei **24 giorni** tra le due acquisizioni il terreno si era mosso di circa **1 cm** [10](https://www.esa.int/ESA_Multimedia/Images/2015/03/Landslide_risk_monitoring_with_Sentinel-1). In questo caso questa tecnologia diventa uno strumento per seguire un movimento lento di versante.
+
+![Immagine interferometrica Sentinel-1A della deformazione superficiale di una frana a Kåfjord, in Norvegia, ottenuta da due acquisizioni radar del 30 agosto e del 23 settembre 2014.](../Assets/Landslide_risk_monitoring_with_Sentinel-1.jpg)
+*Figura 04: Immagine interferometrica della deformazione superficiale di una frana nel comune di Kåfjord, nella contea di Troms (Norvegia), ottenuta combinando due acquisizioni radar Sentinel-1A del 30 agosto e del 23 settembre 2014. Nei 24 giorni tra i due passaggi il terreno si è mosso di circa 1 cm. L'InSAR è una tecnica impiegata dalle autorità norvegesi per mappare la pericolosità da frana su scala nazionale; la rivisita di Sentinel-1 ogni 12 giorni ne aumenta il valore operativo. (Fonte: ESA, [10](https://www.esa.int/ESA_Multimedia/Images/2015/03/Landslide_risk_monitoring_with_Sentinel-1)).*
 
 ---
 
@@ -158,17 +156,17 @@ Per una frana rapida, per esempio, il movimento può essere talmente forte da ca
 
 Torniamo alla lancetta dei secondi.
 
-Sappiamo dove si trova all'interno del giro, ma non quanti giri abbia già completato. Per trasformare la fase wrapped in una superficie continua dobbiamo ricostruire i multipli interi di \(2\pi\) persi nel processo.
+Sappiamo dove si trova all'interno del giro, ma non quanti giri abbia già completato. Per trasformare la fase wrapped in una superficie continua dobbiamo ricostruire i multipli interi di $2\pi$ persi nel processo.
 
 È il **phase unwrapping**.
 
 In un'area coerente e con variazioni spaziali graduali, possiamo seguire la continuità della fase e capire dove aggiungere o sottrarre cicli interi. Le cose si complicano quando compaiono rumore, buchi di coerenza, forti gradienti di deformazione o geometrie difficili.
 
-Un errore di un ciclo non è una piccola sbavatura. Con Sentinel-1 significa sbagliare di circa **2,8 cm lungo la LOS**. La documentazione EGMS definisce infatti l'unwrapping come il processo con cui si recupera il corretto numero di cicli da 360° necessario per arrivare alla stima dello spostamento [7].
+Un errore di un ciclo non è una piccola sbavatura. Con Sentinel-1 significa sbagliare di circa **2,8 cm lungo la LOS**. La documentazione EGMS definisce infatti l'unwrapping come il processo con cui si recupera il corretto numero di cicli da 360° necessario per arrivare alla stima dello spostamento [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
 > **Definizione: Phase unwrapping**
 >
-> È la ricostruzione di una fase continua a partire da misure note soltanto modulo \(2\pi\). In parole povere, dobbiamo capire quanti “giri completi” separano davvero due punti. Dove la coerenza crolla, questa ricostruzione diventa molto più fragile.
+> È la ricostruzione di una fase continua a partire da misure note soltanto modulo $2\pi$. In parole povere, dobbiamo capire quanti “giri completi” separano davvero due punti. Dove la coerenza crolla, questa ricostruzione diventa molto più fragile.
 
 Ecco perché una coherence map non è un allegato da guardare dopo. Dice dove stiamo ricostruendo la storia con indizi solidi e dove, invece, stiamo iniziando a camminare sul ghiaccio sottile.
 
@@ -180,15 +178,15 @@ Immaginiamo ora un punto che si sposti di 10 cm verso est. Il radar non misura �
 
 Lo stesso spostamento, osservato da una geometria diversa, produce quindi una misura diversa.
 
-Le orbite **ascending** e **descending** sono preziose proprio per questo: osservano il terreno da lati differenti. Combinando più geometrie possiamo ricostruire meglio alcune componenti del moto. Con satelliti quasi polari come Sentinel-1, però, la sensibilità alla componente nord-sud rimane debole; per questo la decomposizione più robusta riguarda in genere la componente verticale e quella est-ovest [7].
+Le orbite **ascending** e **descending** sono preziose proprio per questo: osservano il terreno da lati differenti. Combinando più geometrie possiamo ricostruire meglio alcune componenti del moto. Con satelliti quasi polari come Sentinel-1, però, la sensibilità alla componente nord-sud rimane debole; per questo la decomposizione più robusta riguarda in genere la componente verticale e quella est-ovest [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
-Il terremoto del **30 ottobre 2016** nell'Italia centrale è un caso quasi didattico. Analizzando varie acquisizioni Sentinel-1, CNR-IREA e INGV ricostruirono uno spostamento di circa **40 cm verso est** nell'area di Montegallo, circa **30 cm verso ovest** nell'area di Norcia, una subsidenza fino a circa **60 cm** intorno a Castelluccio e un sollevamento di circa **12 cm** vicino a Norcia [11].
+Il terremoto del **30 ottobre 2016** nell'Italia centrale è un caso quasi didattico. Analizzando varie acquisizioni Sentinel-1, CNR-IREA e INGV ricostruirono uno spostamento di circa **40 cm verso est** nell'area di Montegallo, circa **30 cm verso ovest** nell'area di Norcia, una subsidenza fino a circa **60 cm** intorno a Castelluccio e un sollevamento di circa **12 cm** vicino a Norcia [11](https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Sentinel_satellites_reveal_east_west_shift_in_Italian_quake).
 
 Sono numeri che raccontano una cosa importante: una singola LOS avrebbe visto soltanto la proiezione di quel movimento. Cambiando geometria, il fenomeno acquista direzione.
 
 > **Caso reale: Norcia e Castelluccio, ottobre 2016**
 >
-> ESA specifica che le componenti **est-ovest e verticale** furono ricavate utilizzando Sentinel-1A e Sentinel-1B in differenti geometrie di osservazione [11]. È il passaggio giusto per smettere di pensare alla misura InSAR come a un generico “abbassamento del terreno”.
+> ESA specifica che le componenti **est-ovest e verticale** furono ricavate utilizzando Sentinel-1A e Sentinel-1B in differenti geometrie di osservazione [11](https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Sentinel_satellites_reveal_east_west_shift_in_Italian_quake). È il passaggio giusto per smettere di pensare alla misura InSAR come a un generico “abbassamento del terreno”.
 
 ---
 
@@ -200,13 +198,13 @@ Voglio sapere se il movimento è lineare, stagionale, intermittente. Voglio capi
 
 È qui che entrano le tecniche **multi-temporali InSAR**.
 
-Due nomi tornano continuamente: **Persistent Scatterer Interferometry (PSI)** e **Small Baseline Subset (SBAS)**. La documentazione algoritmica di EGMS li tratta come due delle famiglie consolidate delle tecniche multi-interferogramma [7].
+Due nomi tornano continuamente: **Persistent Scatterer Interferometry (PSI)** e **Small Baseline Subset (SBAS)**. La documentazione algoritmica di EGMS li tratta come due delle famiglie consolidate delle tecniche multi-interferogramma [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
-Nella **PSI** si cercano bersagli che mantengano nel tempo una risposta radar sufficientemente stabile. In città possono essere spigoli di edifici, strutture metalliche, parapetti di ponti, tralicci o altri oggetti capaci di creare uno scattering dominante e ripetibile. EGMS sottolinea infatti che gli ambienti urbani tendono ad avere una densità elevata di Persistent Scatterer, mentre la vegetazione è molto meno favorevole [7].
+Nella **PSI** si cercano bersagli che mantengano nel tempo una risposta radar sufficientemente stabile. In città possono essere spigoli di edifici, strutture metalliche, parapetti di ponti, tralicci o altri oggetti capaci di creare uno scattering dominante e ripetibile. EGMS sottolinea infatti che gli ambienti urbani tendono ad avere una densità elevata di Persistent Scatterer, mentre la vegetazione è molto meno favorevole [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
-Lo **SBAS** parte invece dalla rete di interferogrammi: vengono imposte soglie sulla baseline temporale e su quella spaziale e si selezionano coppie sufficientemente vicine per contenere la decorrelazione. L'insieme delle differenze viene poi utilizzato per ricostruire l'evoluzione temporale dello spostamento [7] [12].
+Lo **SBAS** parte invece dalla rete di interferogrammi: vengono imposte soglie sulla baseline temporale e su quella spaziale e si selezionano coppie sufficientemente vicine per contenere la decorrelazione. L'insieme delle differenze viene poi utilizzato per ricostruire l'evoluzione temporale dello spostamento [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html) [12](https://doi.org/10.1016/j.geog.2021.09.007).
 
-Nelle pipeline moderne il confine è meno rigido di quanto sembri sui libri. Accanto ai Persistent Scatterer compaiono i **Distributed Scatterer**, regioni nelle quali nessun singolo pixel è un bersaglio dominante ma gruppi di pixel statisticamente omogenei possono essere mediati per aumentare il rapporto segnale-rumore [7].
+Nelle pipeline moderne il confine è meno rigido di quanto sembri sui libri. Accanto ai Persistent Scatterer compaiono i **Distributed Scatterer**, regioni nelle quali nessun singolo pixel è un bersaglio dominante ma gruppi di pixel statisticamente omogenei possono essere mediati per aumentare il rapporto segnale-rumore [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
 > **Box: PSI e SBAS in una frase, senza barare troppo**
 >
@@ -218,9 +216,9 @@ Nelle pipeline moderne il confine è meno rigido di quanto sembri sui libri. Acc
 
 A questo punto possiamo riprendere la frase da cui eravamo partiti e darle finalmente un significato meno nebuloso.
 
-Lo **European Ground Motion Service**, EGMS, produce misure InSAR su scala europea usando dati Sentinel-1. Nel prodotto Basic ogni measurement point ha una velocità media lungo la LOS, indicatori di qualità e una serie temporale; i prodotti Calibrated vengono riferiti a un modello derivato da GNSS, mentre l'Ortho combina le geometrie per produrre componenti verticale ed est-ovest su una griglia regolare [2].
+Lo **European Ground Motion Service**, EGMS, produce misure InSAR su scala europea usando dati Sentinel-1. Nel prodotto Basic ogni measurement point ha una velocità media lungo la LOS, indicatori di qualità e una serie temporale; i prodotti Calibrated vengono riferiti a un modello derivato da GNSS, mentre l'Ortho combina le geometrie per produrre componenti verticale ed est-ovest su una griglia regolare [2](https://land.copernicus.eu/en/technical-library/egms-product-description-document/@@download/file).
 
-Le specifiche correnti riportano una **mean velocity STD di 0,5 mm/anno (1σ)** per Basic e Calibrated e di **0,7 mm/anno (1σ)** per Ortho. In entrambi i casi il requisito vale per coppie di punti fino a 10 km di distanza, con velocità costante nell'intervallo elaborato e coherence > 0,7 [2]. La documentazione spiega inoltre che la *mean velocity STD* è stimata dalla propagazione della varianza del modello di regressione e non considera l'Atmospheric Phase Screen [2].
+Le specifiche correnti riportano una **mean velocity STD di 0,5 mm/anno (1σ)** per Basic e Calibrated e di **0,7 mm/anno (1σ)** per Ortho. In entrambi i casi il requisito vale per coppie di punti fino a 10 km di distanza, con velocità costante nell'intervallo elaborato e coherence > 0,7 [2](https://land.copernicus.eu/en/technical-library/egms-product-description-document/@@download/file). La documentazione spiega inoltre che la *mean velocity STD* è stimata dalla propagazione della varianza del modello di regressione e non considera l'Atmospheric Phase Screen [2](https://land.copernicus.eu/en/technical-library/egms-product-description-document/@@download/file).
 
 Quindi sì: parlare di scala millimetrica ha senso. Ma ora sappiamo cosa dobbiamo chiedere subito dopo: *millimetri di cosa, stimati come, su quale intervallo temporale e con quale incertezza?*
 
@@ -232,7 +230,7 @@ Questa domanda vale molto più dello slogan.
 
 Fin qui possiamo ancora immaginare un ricercatore davanti a una workstation che processa una stack di immagini.
 
-EGMS cambia scala. Nel 2024 l'Agenzia Europea dell'Ambiente ha affidato al consorzio **ORIGINAL**, guidato da e-GEOS, l'implementazione e l'operatività end-to-end del servizio per il periodo **2024-2028**. e-GEOS spiega che la produzione si basa sui dati InSAR Sentinel-1 e utilizza anche l'infrastruttura HPC **davinci-1 di Leonardo** [13].
+EGMS cambia scala. Nel 2024 l'Agenzia Europea dell'Ambiente ha affidato al consorzio **ORIGINAL**, guidato da e-GEOS, l'implementazione e l'operatività end-to-end del servizio per il periodo **2024-2028**. e-GEOS spiega che la produzione si basa sui dati InSAR Sentinel-1 e utilizza anche l'infrastruttura HPC **davinci-1 di Leonardo** [13](https://www.e-geos.it/press-release/rilevare-e-misurare-i-movimenti-del-terreno-dallo-spazio-e-geos-alla-guida-del-progetto-europeo/).
 
 Questo passaggio mi interessa quasi quanto la fisica del radar, perché mostra cosa succede quando una tecnica scientifica entra in produzione.
 
@@ -246,15 +244,15 @@ Ed è probabilmente questo il punto in cui la parola **pipeline** smette di esse
 
 C'è un esempio che porta tutto questo sotto una città.
 
-In un approfondimento Telespazio del 2025, **Emanuele Mele, Head of InSAR Service di e-GEOS**, cita il caso della **Metro C di Roma**: durante la costruzione sono stati effettuati monitoraggi interferometrici per verificare deformazioni in atto, osservando fenomeni di **subsidenza e compattazione nelle zone di scavo sotto il tessuto urbano** [14].
+In un approfondimento Telespazio del 2025, **Emanuele Mele, Head of InSAR Service di e-GEOS**, cita il caso della **Metro C di Roma**: durante la costruzione sono stati effettuati monitoraggi interferometrici per verificare deformazioni in atto, osservando fenomeni di **subsidenza e compattazione nelle zone di scavo sotto il tessuto urbano** [14](https://www.telespazio.com/it/focus-detail/-/detail/space-panorama-episodio-4).
 
-Lo stesso articolo parla di precisione interferometrica inferiore al centimetro e allarga il quadro a frane, vulcani, edifici, beni culturali, ponti, strade, oleodotti e gasdotti [14].
+Lo stesso articolo parla di precisione interferometrica inferiore al centimetro e allarga il quadro a frane, vulcani, edifici, beni culturali, ponti, strade, oleodotti e gasdotti [14](https://www.telespazio.com/it/focus-detail/-/detail/space-panorama-episodio-4).
 
 Qui la serie temporale conta più del singolo interferogramma. Non sto cercando soltanto “quanto è cambiato tra il giorno A e il giorno B”; voglio capire se un punto segue una tendenza, se accelera, se compare una discontinuità e se quel cambio coincide con una fase di cantiere o con un'altra causa.
 
 > **Caso reale: Metro C, Roma**
 >
-> L'InSAR viene usato come strumento di monitoraggio durante una grande opera nel sottosuolo urbano. Il vantaggio non è soltanto la sensibilità della misura: è poter osservare contemporaneamente molti bersagli distribuiti sul territorio e seguirne l'evoluzione senza installare un sensore fisico su ciascun punto [14].
+> L'InSAR viene usato come strumento di monitoraggio durante una grande opera nel sottosuolo urbano. Il vantaggio non è soltanto la sensibilità della misura: è poter osservare contemporaneamente molti bersagli distribuiti sul territorio e seguirne l'evoluzione senza installare un sensore fisico su ciascun punto [14](https://www.telespazio.com/it/focus-detail/-/detail/space-panorama-episodio-4).
 
 Questo non rende inutili GNSS, livellazione o sensori in situ. Piuttosto cambia il rapporto tra misura puntuale e visione d'insieme: il satellite aiuta a capire **dove vale la pena guardare più da vicino**.
 
@@ -266,12 +264,12 @@ Sentinel-1 è il punto di partenza più naturale, ma in una pipeline InSAR possi
 
 | Missione | Banda | Un numero da ricordare | Perché mi interessa |
 |---|---|---|---|
-| **Sentinel-1** | C | 5,405 GHz; λ ≈ 5,55 cm; IW 250 km, 5 × 20 m | Copertura sistematica, grande swath, prodotti SLC e archivio Copernicus [3] [4] |
-| **COSMO-SkyMed** | X | Stripmap HIMAGE: 3 m single-look su 40 km nella prima generazione | Alta risoluzione e forte flessibilità di acquisizione; missione progettata anche per applicazioni interferometriche [15] |
-| **RADARSAT-2 / RCM** | C | 5,405 GHz; λ ≈ 5,55 cm | Molte modalità e polarizzazioni; continuità canadese delle osservazioni SAR in banda C [16] |
-| **SAOCOM-1** | L | 1,275 GHz; λ ≈ 23,5 cm; 10–100 m a seconda del modo | Lunghezza d'onda molto maggiore e acquisizioni polarimetriche in banda L [17] |
+| **Sentinel-1** | C | 5,405 GHz; λ ≈ 5,55 cm; IW 250 km, 5 × 20 m | Copertura sistematica, grande swath, prodotti SLC e archivio Copernicus [3](https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures) [4](https://sentinels.copernicus.eu/documents/247904/1877131/Sentinel-1-Product-Specification-18052021.pdf) |
+| **COSMO-SkyMed** | X | Stripmap HIMAGE: 3 m single-look su 40 km nella prima generazione | Alta risoluzione e forte flessibilità di acquisizione; missione progettata anche per applicazioni interferometriche [15](https://www.asi.it/wp-content/uploads/2019/08/COSMO-SkyMed-Mission-and-Products-Description_rev3-2.pdf) |
+| **RADARSAT-2 / RCM** | C | 5,405 GHz; λ ≈ 5,55 cm | Molte modalità e polarizzazioni; continuità canadese delle osservazioni SAR in banda C [16](https://www.asc-csa.gc.ca/eng/satellites/radarsat/technical-features/radarsat-comparison.asp) |
+| **SAOCOM-1** | L | 1,275 GHz; λ ≈ 23,5 cm; 10–100 m a seconda del modo | Lunghezza d'onda molto maggiore e acquisizioni polarimetriche in banda L [17](https://www.argentina.gob.ar/ciencia/conae/misiones-espaciales/saocom/caracteristicas-tecnicas) |
 
-La banda non decide da sola quale sensore sia “migliore”. Una lunghezza d'onda maggiore tende a penetrare più profondamente nella vegetazione e può mantenere coerenza in condizioni nelle quali bande più corte decorrelano più rapidamente, ma risoluzione, geometria, baseline temporale, modalità di acquisizione e disponibilità dei dati possono ribaltare la scelta [8].
+La banda non decide da sola quale sensore sia “migliore”. Una lunghezza d'onda maggiore tende a penetrare più profondamente nella vegetazione e può mantenere coerenza in condizioni nelle quali bande più corte decorrelano più rapidamente, ma risoluzione, geometria, baseline temporale, modalità di acquisizione e disponibilità dei dati possono ribaltare la scelta [8](https://www.esa.int/Applications/Observing_the_Earth/How_does_interferometry_work).
 
 Per questo la domanda “Sentinel-1 o COSMO-SkyMed?” è formulata male finché non sappiamo che cosa dobbiamo misurare.
 
@@ -285,7 +283,7 @@ Il sensore arriva dopo il requisito, non prima.
 
 Nel 2024 e-GEOS ha raccontato il monitoraggio del **Parco archeologico di Sibari**, un'area vulnerabile sia all'instabilità del terreno sia alle esondazioni del vicino fiume Crati.
 
-Per il rischio di instabilità è stata costruita una catena basata su **InSAR e dati COSMO-SkyMed**. Il processamento viene eseguito offline a cadenze definite e le informazioni sugli spostamenti sono poi rese disponibili agli utenti attraverso servizi di visualizzazione e interrogazione della piattaforma di data intelligence di Leonardo [18].
+Per il rischio di instabilità è stata costruita una catena basata su **InSAR e dati COSMO-SkyMed**. Il processamento viene eseguito offline a cadenze definite e le informazioni sugli spostamenti sono poi rese disponibili agli utenti attraverso servizi di visualizzazione e interrogazione della piattaforma di data intelligence di Leonardo [18](https://www.e-geos.it/news-stories/giornata-internazionale-dei-monumenti-e-dei-siti-2024/).
 
 È un esempio utile perché fa vedere dove finisce il lavoro del remote sensing specialist e dove comincia quello del servizio.
 
@@ -299,15 +297,15 @@ Il prodotto finale, quasi mai, coincide con l'algoritmo che lo ha generato.
 
 Ora possiamo rimettere in fila il percorso senza trasformarlo in una ricetta da software.
 
-Si parte dalla **selezione delle acquisizioni**: stessa area, geometria compatibile, modalità e polarizzazione coerenti con l'analisi. Si lavora su prodotti **SLC**, perché la fase deve essere ancora disponibile [4].
+Si parte dalla **selezione delle acquisizioni**: stessa area, geometria compatibile, modalità e polarizzazione coerenti con l'analisi. Si lavora su prodotti **SLC**, perché la fase deve essere ancora disponibile [4](https://sentinels.copernicus.eu/documents/247904/1877131/Sentinel-1-Product-Specification-18052021.pdf).
 
-Le immagini vengono quindi **co-registrate**, portando i bersagli nella stessa geometria radar. Da qui nasce l'**interferogramma** e, insieme, si stima la coherence. Si modella poi la fase topografica utilizzando un DEM e si correggono, per quanto possibile, i contributi geometrici e orbitali [5] [7].
+Le immagini vengono quindi **co-registrate**, portando i bersagli nella stessa geometria radar. Da qui nasce l'**interferogramma** e, insieme, si stima la coherence. Si modella poi la fase topografica utilizzando un DEM e si correggono, per quanto possibile, i contributi geometrici e orbitali [5](https://nisar.jpl.nasa.gov/mission/get-to-know-sar/interferometry/) [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
 Il segnale interferometrico può essere filtrato per ridurre il rumore. Nelle aree sufficientemente coerenti si passa al **phase unwrapping**, poi alla conversione della fase in spostamento LOS e al geocoding. A questo punto arriva una fase che nei tutorial viene spesso liquidata troppo in fretta: la **validazione**.
 
-Se disponiamo di una lunga sequenza di acquisizioni, il problema si allarga ancora. Bisogna costruire la rete interferometrica, stimare o mitigare l'Atmospheric Phase Screen, scegliere i measurement point, definire il riferimento, individuare outlier e ricostruire velocità e serie temporali [7].
+Se disponiamo di una lunga sequenza di acquisizioni, il problema si allarga ancora. Bisogna costruire la rete interferometrica, stimare o mitigare l'Atmospheric Phase Screen, scegliere i measurement point, definire il riferimento, individuare outlier e ricostruire velocità e serie temporali [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
-Con Sentinel-1 IW entra inoltre in gioco la modalità TOPS, con burst e sub-swath che richiedono una co-registrazione azimutale particolarmente accurata. Le pipeline EGMS, per esempio, descrivono esplicitamente strategie multi-burst, correzioni geometriche ed **Enhanced Spectral Diversity** nella fase di co-registrazione [7].
+Con Sentinel-1 IW entra inoltre in gioco la modalità TOPS, con burst e sub-swath che richiedono una co-registrazione azimutale particolarmente accurata. Le pipeline EGMS, per esempio, descrivono esplicitamente strategie multi-burst, correzioni geometriche ed **Enhanced Spectral Diversity** nella fase di co-registrazione [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html).
 
 Visto così, “fare InSAR” smette rapidamente di significare premere il pulsante *Create Interferogram*.
 
@@ -324,10 +322,10 @@ Se prendessi oggi quelle stesse scene con l'idea di fare interferometria, però,
 | Flood mapping SAR | InSAR per deformazione |
 |---|---|
 | Il protagonista è il **backscatter** | Il protagonista è la **differenza di fase** |
-| Un prodotto GRD può essere sufficiente | Serve conservare la fase: tipicamente si parte dagli **SLC** [4] |
-| Cerco cambiamenti nelle proprietà di scattering della superficie | Cerco variazioni della distanza lungo la **LOS** [5] |
-| Una zona che cambia molto può essere proprio ciò che voglio trovare | Una zona che cambia troppo può perdere **coerenza** e diventare difficile da misurare interferometricamente [8] [9] |
-| Il terrain correction serve a riportare correttamente il prodotto sulla geometria terrestre | Un DEM entra anche nella modellazione e rimozione della **fase topografica** [5] [7] |
+| Un prodotto GRD può essere sufficiente | Serve conservare la fase: tipicamente si parte dagli **SLC** [4](https://sentinels.copernicus.eu/documents/247904/1877131/Sentinel-1-Product-Specification-18052021.pdf) |
+| Cerco cambiamenti nelle proprietà di scattering della superficie | Cerco variazioni della distanza lungo la **LOS** [5](https://nisar.jpl.nasa.gov/mission/get-to-know-sar/interferometry/) |
+| Una zona che cambia molto può essere proprio ciò che voglio trovare | Una zona che cambia troppo può perdere **coerenza** e diventare difficile da misurare interferometricamente [8](https://www.esa.int/Applications/Observing_the_Earth/How_does_interferometry_work) [9](https://nisar.jpl.nasa.gov/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBdFlDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--71a88c2421e26bd9885040497c3420fa08d1da05/2019_NISAR_Landslide_Applications_Workshop_Report_DRAFT_07Feb2023.pdf) |
+| Il terrain correction serve a riportare correttamente il prodotto sulla geometria terrestre | Un DEM entra anche nella modellazione e rimozione della **fase topografica** [5](https://nisar.jpl.nasa.gov/mission/get-to-know-sar/interferometry/) [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html) |
 
 Ed è qui che, almeno per me, i due pezzi finalmente si ricompongono.
 
@@ -343,7 +341,7 @@ Arrivati fin qui è facile innamorarsi della tecnica. È elegante, usa la fase d
 
 Ma ha limiti molto precisi.
 
-Se la superficie cambia troppo tra due acquisizioni, la fase perde coerenza. Se il terreno è coperto da vegetazione dinamica, neve o acqua, la relazione interferometrica può diventare instabile. Se il movimento è quasi nord-sud, la geometria di un SAR quasi polare lo vede male. Se il gradiente di deformazione è troppo forte, l'unwrapping può fallire. Se l'atmosfera cambia tra i due passaggi, può introdurre un ritardo che imita una deformazione [7] [8].
+Se la superficie cambia troppo tra due acquisizioni, la fase perde coerenza. Se il terreno è coperto da vegetazione dinamica, neve o acqua, la relazione interferometrica può diventare instabile. Se il movimento è quasi nord-sud, la geometria di un SAR quasi polare lo vede male. Se il gradiente di deformazione è troppo forte, l'unwrapping può fallire. Se l'atmosfera cambia tra i due passaggi, può introdurre un ritardo che imita una deformazione [7](https://library.land.copernicus.eu/products/European_Ground_Motion_Service_Algorithm_Theoretical_Basis_Document_v4.html) [8](https://www.esa.int/Applications/Observing_the_Earth/How_does_interferometry_work).
 
 Una frana molto rapida può quindi essere **più difficile** da misurare interferometricamente di una deformazione lenta. Un edificio può essere un Persistent Scatterer eccellente mentre il prato accanto non produce nessun measurement point utile. Un pattern apparentemente elegante può essere in parte atmosferico.
 
@@ -360,7 +358,7 @@ Se la risposta è no, nessun algoritmo a valle può inventare l'informazione che
 Mi sono accorto che per imparare questi concetti serve poco rileggere una definizione dieci volte. Funziona molto meglio provare a rispondere senza guardare.
 
 1. Perché un SLC contiene qualcosa che un GRD non può più restituirmi?
-2. Perché un ciclo completo della fase interferometrica corrisponde a \(\lambda/2\) di variazione LOS?
+2. Perché un ciclo completo della fase interferometrica corrisponde a $\lambda/2$ di variazione LOS?
 3. Quali contributi, oltre alla deformazione, entrano nell'interferogramma?
 4. Cosa significa davvero avere coherence bassa? È sempre soltanto “dato cattivo”? 
 5. Perché un edificio tende a essere più favorevole di un campo coltivato per la PSI?

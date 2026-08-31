@@ -52,6 +52,25 @@ test('a catalog activation remains rendered when the live browser request is COR
   assert.equal(unavailable, false);
 });
 
+test('Rapid Mapping activations retain their official perimeter in the local catalog', () => {
+  const activation = cache.results.find(item => item.code === 'EMSR920');
+  assert.match(activation?.extent || '', /^POLYGON\s*\(\(/);
+  assert.ok(activation.aois?.every(aoi => /^POLYGON\s*\(\(/.test(aoi.extent)));
+});
+
+test('a Rapid Mapping perimeter renders as a polygon rather than a centroid marker', () => {
+  const activation = cache.results.find(item => item.code === 'EMSR920');
+  const points = [...activation.extent.matchAll(/(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)/g)]
+    .map(([, x, y]) => [Number(x), Number(y)]);
+  const widget = new Widget();
+  widget.copy = { extent: 'Extent', extentNote: 'Official perimeter', centroid: 'Centroid', centroidNote: 'Centroid only', noGeometry: 'No geometry', openViewerMap: 'Open viewer' };
+
+  const svg = widget.drawMap([points], activation.centroid);
+
+  assert.match(svg, /<path d="M /);
+  assert.doesNotMatch(svg, /<circle /);
+});
+
 test('a code absent from the catalog never receives another activation’s data', async () => {
   const widget = widgetFor('EMSR000');
   let rendered = false;
