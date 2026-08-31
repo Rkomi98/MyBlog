@@ -81,6 +81,16 @@
     return null;
   }
 
+  function findActivation(payload, code) {
+    if (!payload || !code) return null;
+    const expectedCode = String(code).toUpperCase();
+    const candidates = Array.isArray(payload.results) ? payload.results : [];
+    const match = candidates.find(item => String(item?.code || '').toUpperCase() === expectedCode);
+    if (match) return match;
+    const activation = unwrap(payload);
+    return String(activation?.code || '').toUpperCase() === expectedCode ? activation : null;
+  }
+
   function flattenProducts(activation) {
     const direct = first(activation.products, activation.mapProducts, activation.product_list, []);
     const products = Array.isArray(direct) ? direct.slice() : [];
@@ -128,7 +138,7 @@
       this.copy = COPY[this.language];
       this.locale = this.language === 'en' ? 'en-US' : 'it-IT';
       this.code = (this.getAttribute('activation') || 'EMSR906').toUpperCase();
-      this.snapshot = this.getAttribute('snapshot') || 'assets/data/emsr906-fallback.json';
+      this.snapshot = this.getAttribute('snapshot') || 'assets/data/cems-activations.json';
       this.root.innerHTML = `<style>${STYLE}</style><div class="box"><header><div><div class="eyebrow">${this.copy.eyebrow}</div><h3>${this.copy.title}</h3><p>${this.copy.intro}</p></div><div class="badge" id="badge">${this.copy.waiting}</div></header><div class="toolbar"><input id="code" maxlength="10" value="${this.code}" aria-label="${this.copy.codeLabel}"><button id="refresh">${this.copy.refresh}</button><a class="button" id="viewer" target="_blank" rel="noopener">${this.copy.viewer}</a></div><div id="body"><div class="main"><div class="notice"><span class="spinner"></span> ${this.copy.loading}</div></div></div><div class="source"><span id="source">${this.copy.source}: —</span><span id="checked"></span></div></div>`;
       this.root.querySelector('#refresh').addEventListener('click', () => {
         this.code = this.root.querySelector('#code').value.trim().toUpperCase() || this.code;
@@ -172,10 +182,10 @@
       if (!silent) this.setLoading();
       let snapshotPayload = null;
       try { snapshotPayload = await this.getJson(this.snapshot, 3500); } catch { snapshotPayload = null; }
-      const snapActivation = unwrap(snapshotPayload);
-      // A snapshot belongs to one activation only. It remains a safe, useful
-      // fallback when a browser cannot make cross-origin API requests.
-      const hasMatchingSnapshot = snapActivation && String(first(snapActivation.code, '')).toUpperCase() === this.code;
+      const snapActivation = findActivation(snapshotPayload, this.code);
+      // The locally generated public catalog is same-origin and covers every
+      // activation present when it was refreshed, avoiding browser CORS limits.
+      const hasMatchingSnapshot = Boolean(snapActivation);
       if (hasMatchingSnapshot) this.render(snapActivation, { mode:'snapshot', url:this.snapshot, retrieved:first(snapshotPayload.retrieved_at, snapshotPayload.generated_at) });
 
       let lastError = null;
