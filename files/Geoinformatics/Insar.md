@@ -156,7 +156,9 @@ Per una frana rapida, per esempio, il movimento può essere talmente forte da ca
 
 Torniamo alla lancetta dei secondi.
 
-Sappiamo dove si trova all'interno del giro, ma non quanti giri abbia già completato. Per trasformare la fase wrapped in una superficie continua dobbiamo ricostruire i multipli interi di $2\pi$ persi nel processo.
+La fase è un angolo: aggiungere o sottrarre un giro completo, cioè $2\pi$, non ne cambia il valore osservabile. Per questo l'interferogramma non mostra la fase completa, ma la **fase wrapped**: ogni valore viene riportato in un intervallo di ampiezza $2\pi$, per esempio tra $-\pi$ e $+\pi$.
+
+Quando la fase supera uno dei limiti di quell'intervallo, il valore ricompare dal limite opposto. Come per una lancetta dei secondi, quindi, sappiamo dove si trova all'interno del giro, ma non quanti giri abbia già completato. Per ricostruire una superficie di fase continua dobbiamo individuare questi "salti artificiali" e aggiungere o sottrarre i corretti multipli interi di $2\pi$.
 
 È il **phase unwrapping**.
 
