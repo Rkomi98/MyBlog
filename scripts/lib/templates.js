@@ -199,7 +199,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -256,7 +256,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
     .filter select,
     .post-item__meta,
     footer {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .hero h1,
     .post-item__title {
@@ -914,7 +914,7 @@ export function renderBlogDetail({
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -1008,7 +1008,7 @@ export function renderBlogDetail({
     .theme-toggle,
     .post-toc,
     footer {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .post-hero__title,
     .post-body h2,
@@ -1173,7 +1173,7 @@ export function renderBlogDetail({
       display: flex;
       flex-direction: column;
       gap: 0.1rem;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .post-hero__author-name {
       color: var(--text-primary);
@@ -1397,7 +1397,7 @@ export function renderBlogDetail({
       border: 1px solid rgba(16, 185, 129, 0.35);
       border-radius: 999px;
       background: rgba(16, 185, 129, 0.08);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.78em;
       font-weight: 600;
       line-height: 1.35;
@@ -1463,7 +1463,7 @@ export function renderBlogDetail({
       background: var(--bg-card-strong);
       color: var(--text-secondary);
       box-shadow: var(--shadow-lg);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.92rem;
       line-height: 1.55;
       z-index: 8;
@@ -1485,7 +1485,7 @@ export function renderBlogDetail({
       border-radius: 0 12px 12px 0;
       background: rgba(30, 41, 59, 0.45);
       color: var(--text-primary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.98rem;
       font-style: italic;
     }
@@ -1664,7 +1664,7 @@ export function renderBlogDetail({
       padding: 0.48rem 0.78rem;
       background: rgba(255, 255, 255, 0.04);
       border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .post-code-card__filename {
       color: var(--text-muted);
@@ -1764,7 +1764,7 @@ export function renderBlogDetail({
     }
     .code-copy-btn__text {
       display: inline-block;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     body[data-theme="light"] .code-copy-btn {
       color: var(--text-muted);
@@ -1791,7 +1791,7 @@ export function renderBlogDetail({
     .post-body .article-figure figcaption {
       margin-top: 0.8rem;
       color: var(--text-muted);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.92rem;
       line-height: 1.55;
     }
