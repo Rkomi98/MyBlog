@@ -93,45 +93,6 @@ function renderTocList(nodes, isRoot = true, showNumbers = true) {
   </ul>`;
 }
 
-const sharedStyles = `
-  :root {
-    color-scheme: light dark;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height: 1.6;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg, #0f172a);
-    color: #0f172a;
-  }
-  @media (prefers-color-scheme: dark) {
-    body {
-      color: #e2e8f0;
-    }
-  }
-  .page {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 4rem;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-  }
-  header nav a {
-    margin-left: 1rem;
-    text-decoration: none;
-    font-weight: 500;
-    color: inherit;
-  }
-  header nav a:hover {
-    text-decoration: underline;
-  }
-`;
-
 export function renderBlogIndex({ posts, relativeRoot }) {
   const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
   const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
@@ -161,6 +122,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
   });
 
   const serializedPosts = serializeForScript(postsPayload);
+  const themeLabel = 'Cambia tema';
   const homeLink = joinUrl(relativeRoot, 'index.html');
   const currentYear = new Date().getFullYear();
   const baseUrl = 'https://rkomi98.github.io/MyBlog';
@@ -639,7 +601,6 @@ export function renderBlogIndex({ posts, relativeRoot }) {
         body: document.body,
         langBtn: document.querySelector('.lang-btn'),
         themeToggle: document.querySelector('.theme-toggle'),
-        themeThumb: document.querySelector('.theme-toggle .theme-thumb'),
         categorySelect: document.getElementById('category-filter'),
         sortSelect: document.getElementById('sort-order'),
         postsGrid: document.getElementById('posts-grid'),
@@ -668,9 +629,6 @@ export function renderBlogIndex({ posts, relativeRoot }) {
         elements.body.setAttribute('data-theme', state.theme);
         if (elements.themeToggle) {
           elements.themeToggle.classList.toggle('active', state.theme === 'dark');
-        }
-        if (elements.themeThumb) {
-          elements.themeThumb.textContent = state.theme === 'dark' ? '🌙' : '☀️';
         }
         localStorage.setItem('blogTheme', state.theme);
       }
@@ -879,7 +837,6 @@ export function renderBlogDetail({
     post.meta?.categoryLabels?.[language] ??
     post.meta?.category ??
     (language === 'it' ? 'Generale' : 'General');
-  const icon = post.meta?.icon ?? '📝';
 
   const tocTree = buildTocTree(headings);
   const showTocNumbers = post.meta?.showTocNumbers !== false;
@@ -906,7 +863,7 @@ export function renderBlogDetail({
   const pageTitle = escapeHtml(langData.title);
   const formattedCategory = escapeHtml(categoryLabel);
   const formattedDateHtml = escapeHtml(formattedDate);
-  const iconHtml = escapeHtml(icon);
+  const themeLabel = language === 'it' ? 'Cambia tema' : 'Toggle theme';
   const currentYear = new Date().getFullYear();
   const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
   const authorAvatarPath = joinUrl(relativeRoot, 'Assets', 'profile.webp');
@@ -1088,17 +1045,6 @@ export function renderBlogDetail({
     .post-toc__number {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
     }
-    body[data-theme="light"] .post-toc {
-      background: rgba(255, 255, 255, 0.96);
-    }
-    body[data-theme="light"] .post-body {
-      background: rgba(255, 255, 255, 0.96);
-      color: var(--text-secondary);
-    }
-    body[data-theme="light"] .post-hero__category {
-      background: rgba(5, 150, 105, 0.12);
-      color: var(--accent-strong);
-    }
     body[data-theme="light"] .post-body blockquote {
       background: rgba(5, 150, 105, 0.08);
       color: var(--text-primary);
@@ -1122,7 +1068,7 @@ export function renderBlogDetail({
     .site-header__inner {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 1.15rem clamp(1.5rem, 3vw, 3rem);
+      padding: 0.75rem clamp(1rem, 3vw, 3rem);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1156,8 +1102,11 @@ export function renderBlogDetail({
       font-weight: 500;
       color: var(--text-muted);
     }
+    .site-nav a {
+      padding: 0.5rem 0.25rem;
+    }
     .site-nav a:hover {
-      color: var(--accent);
+      color: var(--accent-strong);
     }
     .header-controls {
       display: flex;
@@ -1222,154 +1171,109 @@ export function renderBlogDetail({
       padding: 3.5rem clamp(1.5rem, 3vw, 3rem) 4.5rem;
     }
     .post-hero {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(15, 23, 42, 0.55) 70%), var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.75rem;
-      box-shadow: var(--shadow-lg);
-      margin-bottom: 3rem;
-    }
-    .post-hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 20% 22%, rgba(16, 185, 129, 0.18) 0%, transparent 56%);
-      pointer-events: none;
-    }
-    .post-hero__icon {
-      position: relative;
-      font-size: 3.1rem;
-      margin-bottom: 1.5rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .post-hero__category {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      background: rgba(16, 185, 129, 0.13);
-      color: var(--accent-strong);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      margin-bottom: 1.25rem;
-      text-transform: uppercase;
-      font-size: 0.8rem;
+      max-width: 52rem;
+      margin: 0 0 clamp(2rem, 5vw, 3.5rem);
     }
     .post-hero__title {
-      position: relative;
-      margin: 0 0 1.25rem;
-      font-size: clamp(2.4rem, 4vw, 3.2rem);
-      letter-spacing: -0.025em;
-      line-height: 1.2;
+      margin: 0 0 1.5rem;
+      font-size: clamp(1.85rem, 1.2rem + 2.8vw, 3rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
       color: var(--text-primary);
+      text-wrap: balance;
     }
     .post-hero__author {
-      position: relative;
       display: flex;
       align-items: center;
       gap: 0.85rem;
-      padding-left: 0.85rem;
-      border-left: 2px solid var(--accent);
     }
     .post-hero__avatar {
       width: 40px;
       height: 40px;
+      flex: 0 0 auto;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
+      border: 1px solid var(--border);
       object-fit: cover;
       background: var(--surface);
     }
     .post-hero__author-text {
       display: flex;
       flex-direction: column;
-      gap: 0.12rem;
+      gap: 0.1rem;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .post-hero__author-name {
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
       color: var(--text-primary);
-      font-size: 0.86rem;
+      font-size: 0.92rem;
       font-weight: 600;
-      letter-spacing: 0.01em;
     }
     .post-hero__author-meta {
       color: var(--text-muted);
-      font-size: 0.82rem;
-      font-weight: 500;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
     }
     .post-layout {
       display: grid;
-      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
-      gap: 2.75rem;
-      align-items: flex-start;
+      grid-template-columns: 15rem minmax(0, 1fr);
+      gap: clamp(2.5rem, 5vw, 4.5rem);
+      align-items: start;
     }
     .post-layout--single {
       grid-template-columns: minmax(0, 1fr);
     }
     .post-toc {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 1.5rem 1.6rem 1.8rem;
-      box-shadow: var(--shadow-lg);
       position: sticky;
-      top: 120px;
-      max-height: calc(100vh - 160px);
-      overflow: hidden;
+      top: 96px;
+      max-height: calc(100vh - 128px);
       display: flex;
       flex-direction: column;
+      padding-top: 0.35rem;
+      font-size: 0.9rem;
     }
     .post-toc__header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.75rem;
-      margin-bottom: 0.5rem;
     }
     .post-toc__title {
       text-transform: uppercase;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
-      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      font-weight: 600;
       color: var(--text-muted);
     }
     .post-toc__toggle {
       display: none;
-      border: 1px solid var(--border);
+      width: 100%;
+      border: 0;
       background: transparent;
-      color: var(--text-secondary);
-      border-radius: 999px;
-      padding: 0.25rem 0.8rem;
-      font-size: 0.85rem;
+      color: var(--text-primary);
+      padding: 0;
+      min-height: 48px;
+      font: inherit;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       align-items: center;
-      gap: 0.4rem;
-      transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
-    .post-toc__toggle:hover {
-      background: rgba(16, 185, 129, 0.15);
-      border-color: transparent;
-      color: var(--accent);
+    .post-toc__toggle-icon {
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+    .post-toc--collapsed .post-toc__toggle-icon {
+      transform: rotate(-90deg);
     }
     .post-toc__content {
-      margin-top: 0.6rem;
+      margin-top: 0.85rem;
       overflow-y: auto;
-      padding-right: 0.4rem;
-      transition: max-height 0.25s ease, opacity 0.25s ease;
-      max-height: calc(100vh - 220px);
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
     }
     .post-toc--collapsed .post-toc__content {
-      max-height: 0;
-      opacity: 0;
-      margin-top: 0;
-      pointer-events: none;
+      display: none;
     }
     .post-toc__list {
       list-style: none;
@@ -1377,80 +1281,79 @@ export function renderBlogDetail({
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.15rem;
     }
     .post-toc__sublist {
-      margin-left: 0.85rem;
-      padding-left: 0.85rem;
-      border-left: 1px solid rgba(148, 163, 184, 0.35);
-      margin-top: 0.4rem;
-      gap: 0.35rem;
+      margin: 0.15rem 0 0.35rem 0.75rem;
+      padding-left: 0.75rem;
+      border-left: 1px solid var(--border);
     }
     .post-toc__item {
       margin: 0;
     }
     .post-toc__link {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.45;
+      color: var(--text-muted);
+      line-height: 1.4;
       display: flex;
-      align-items: flex-start;
+      align-items: baseline;
       gap: 0.5rem;
-      border-bottom: 1px dashed transparent;
-      transition: color 0.2s ease, border-bottom 0.2s ease, transform 0.2s ease;
+      padding: 0.3rem 0;
+      transition: color 0.15s ease;
     }
     .post-toc__link:hover {
-      color: var(--accent);
-      border-bottom-color: rgba(16, 185, 129, 0.4);
-      transform: translateX(2px);
+      color: var(--text-primary);
     }
     .post-toc__link--active {
       color: var(--accent-strong);
-      border-bottom-color: var(--accent-strong);
     }
     .post-toc__number {
       font-variant-numeric: tabular-nums;
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       min-width: 2.5ch;
-      display: inline-flex;
-      justify-content: flex-end;
-      padding-top: 0.15rem;
+      opacity: 0.8;
     }
     .post-toc__text {
       flex: 1;
     }
     .post-body {
-      background: var(--bg-card-strong);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 2.5rem;
-      box-shadow: var(--shadow-lg);
-      font-size: 1.12rem;
-      line-height: 1.78;
+      max-width: 42rem;
+      font-size: 1.15rem;
+      line-height: 1.75;
       color: var(--text-secondary);
+      overflow-wrap: break-word;
+    }
+    .post-body > :first-child {
+      margin-top: 0;
+    }
+    .post-body h2,
+    .post-body h3,
+    .post-body h4 {
+      color: var(--text-primary);
+      text-wrap: balance;
+      scroll-margin-top: 88px;
     }
     .post-body h2 {
-      margin-top: 2.75rem;
-      margin-bottom: 1.25rem;
-      font-size: clamp(1.9rem, 3vw, 2.35rem);
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
+      margin: 3.25rem 0 1rem;
+      font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.85rem);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
     }
     .post-body h3 {
-      margin-top: 2.2rem;
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-      color: var(--text-primary);
+      margin: 2.5rem 0 0.75rem;
+      font-size: clamp(1.15rem, 1rem + 0.6vw, 1.35rem);
+      line-height: 1.3;
     }
     .post-body h4 {
-      margin-top: 1.8rem;
-      margin-bottom: 0.75rem;
-      font-size: 1.2rem;
-      color: var(--text-primary);
+      margin: 2rem 0 0.5rem;
+      font-size: 1.05rem;
+      line-height: 1.35;
     }
     .post-body p {
-      margin-bottom: 1.4rem;
+      margin: 0 0 1.35rem;
+    }
+    .post-body strong {
+      color: var(--text-primary);
     }
     .post-body .post-warning {
       margin: 2rem 0;
@@ -1767,26 +1670,17 @@ export function renderBlogDetail({
       margin: 2rem 0;
     }
     .post-code-card__language {
-      position: absolute;
-      right: 1rem;
-      top: -0.62rem;
-      z-index: 2;
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 0.65rem;
-      font-weight: 700;
+      font-size: 0.68rem;
+      font-weight: 600;
       letter-spacing: 0.08em;
-      padding: 0.15rem 0.5rem;
-      border-radius: 6px;
-      background: var(--surface);
-      border: 1px solid rgba(148, 163, 184, 0.26);
       color: var(--accent-strong);
       text-transform: uppercase;
     }
     .post-code-card__frame {
       background: var(--code-block-bg);
-      border-radius: 12px;
+      border-radius: 10px;
       border: 1px solid var(--code-border);
-      box-shadow: var(--code-shadow);
       overflow: hidden;
     }
     .post-code-card__header {
@@ -1797,30 +1691,6 @@ export function renderBlogDetail({
       background: rgba(255, 255, 255, 0.04);
       border-bottom: 1px solid rgba(148, 163, 184, 0.15);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .post-code-card__window-controls {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.32rem;
-      flex: 0 0 auto;
-    }
-    .post-code-card__window-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-    }
-    .post-code-card__window-dot--red {
-      background: rgba(248, 113, 113, 0.25);
-      border-color: rgba(248, 113, 113, 0.6);
-    }
-    .post-code-card__window-dot--yellow {
-      background: rgba(251, 191, 36, 0.25);
-      border-color: rgba(251, 191, 36, 0.6);
-    }
-    .post-code-card__window-dot--green {
-      background: rgba(74, 222, 128, 0.22);
-      border-color: rgba(74, 222, 128, 0.65);
     }
     .post-code-card__filename {
       color: var(--text-muted);
@@ -1899,7 +1769,8 @@ export function renderBlogDetail({
       color: var(--text-muted);
       border: 0;
       border-radius: 999px;
-      padding: 0.25rem 0.45rem;
+      min-height: 32px;
+      padding: 0.25rem 0.5rem;
       font-size: 0.74rem;
       font-weight: 500;
       display: inline-flex;
@@ -1916,7 +1787,7 @@ export function renderBlogDetail({
       color: var(--accent-strong);
     }
     .code-copy-btn__icon {
-      font-size: 0.88rem;
+      flex: 0 0 auto;
     }
     .code-copy-btn__text {
       display: inline-block;
@@ -1934,8 +1805,7 @@ export function renderBlogDetail({
       margin: 2.2rem 0;
       border: 1px solid rgba(148, 163, 184, 0.2);
       background: var(--surface);
-      opacity: 0.88;
-      box-shadow: 0 24px 45px -28px rgba(15, 23, 42, 0.55);
+      height: auto;
     }
     .post-body .article-figure {
       margin: 2.4rem 0;
@@ -2411,12 +2281,11 @@ export function renderBlogDetail({
     <div class="site-header__inner">
       <div class="site-header__left">
         <a class="logo" href="${homeLink}">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img">
+          <img src="${logoPath}" alt="" class="logo-img" width="36" height="36">
           <span class="logo-text">Mirko Calcaterra</span>
         </a>
-        <nav class="site-nav">
-          <a href="${homeLink}" data-it="Home" data-en="Home">Home</a>
-          <a href="${blogHome}" data-it="Blog" data-en="Blog">Blog</a>
+        <nav class="site-nav" aria-label="${language === 'it' ? 'Navigazione' : 'Navigation'}">
+          <a href="${blogHome}">Blog</a>
         </nav>
       </div>
       <div class="header-controls">
@@ -2430,18 +2299,16 @@ export function renderBlogDetail({
   </header>
   <main class="page">
     <article class="post">
-      <section class="post-hero">
-        <div class="post-hero__icon">${iconHtml}</div>
-        <span class="post-hero__category">${formattedCategory}</span>
+      <header class="post-hero">
         <h1 class="post-hero__title">${pageTitle}</h1>
         <div class="post-hero__author">
-          <img class="post-hero__avatar" src="${authorAvatarPath}" alt="Mirko Calcaterra">
+          <img class="post-hero__avatar" src="${authorAvatarPath}" alt="" width="40" height="40">
           <div class="post-hero__author-text">
             <span class="post-hero__author-name">Mirko Calcaterra</span>
-            <span class="post-hero__author-meta">${formattedDateHtml} • ${readTime} min</span>
+            <span class="post-hero__author-meta"><time datetime="${publishedAt.toISOString().slice(0, 10)}">${formattedDateHtml}</time> · ${readTime} min · ${formattedCategory}</span>
           </div>
         </div>
-      </section>
+      </header>
       <section class="${layoutClass}">
         ${tocHtml}
         <div class="post-body">
@@ -2466,7 +2333,6 @@ export function renderBlogDetail({
       const body = document.body;
       const readingProgressBar = document.getElementById('reading-progress-bar');
       const themeToggle = document.querySelector('.theme-toggle');
-      const themeThumb = document.querySelector('.theme-toggle .theme-thumb');
       const langBtn = document.querySelector('.lang-btn');
       const tocElement = document.querySelector('.post-toc');
       const tocToggle = tocElement ? tocElement.querySelector('.post-toc__toggle') : null;
@@ -2862,9 +2728,6 @@ export function renderBlogDetail({
         body.setAttribute('data-theme', resolved);
         if (themeToggle) {
           themeToggle.classList.toggle('active', resolved === 'dark');
-        }
-        if (themeThumb) {
-          themeThumb.textContent = resolved === 'dark' ? '🌙' : '☀️';
         }
         localStorage.setItem(BLOG_THEME_KEY, resolved);
         syncEmbeddedThemes(resolved);
