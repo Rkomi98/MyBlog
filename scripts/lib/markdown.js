@@ -233,10 +233,21 @@ export function extractTitle(markdown, fallback = '') {
 
 export function extractSummary(markdown, length = DEFAULT_SUMMARY_LENGTH) {
   const cleaned = markdown
-    .replace(/`{1,3}[^`]*`{1,3}/g, '') // inline code
+    .replace(/^---\n[\s\S]*?\n---\n/, '') // front matter
+    .replace(/```[\s\S]*?```/g, '') // fenced code
+    .replace(/<details[\s\S]*?<\/details>/gi, '') // collapsible notes (e.g. "in revisione")
+    .replace(/<(script|style|iframe)[\s\S]*?<\/\1>/gi, '')
+    .replace(/<[^>]+>/g, '') // remaining html tags
+    .replace(/^\s{0,3}#{1,6}\s.*$/gm, '') // headings: the title is shown separately
+    .replace(/^\s*(abstract|introduzione|introduction)\s*$/gim, '')
+    .replace(/^\s*\|.*$/gm, '') // tables
+    .replace(/^\s*([-*+]|\d+\.)\s+/gm, '') // list markers
+    .replace(/^\s*>\s?/gm, '') // blockquotes
+    .replace(/`([^`]*)`/g, '$1') // inline code -> text
     .replace(/!\[[^\]]*]\([^)]+\)/g, '') // images
     .replace(/\[([^\]]+)]\([^)]+\)/g, '$1') // links -> text
-    .replace(/[*_>#`~\-]/g, '') // formatting chars
+    .replace(/(\*\*|__|\*|_|~~)(\S[\s\S]*?\S|\S)\1/g, '$2') // emphasis
+    .replace(/\$\$[\s\S]*?\$\$/g, '') // display math
     .replace(/\s+/g, ' ')
     .trim();
 

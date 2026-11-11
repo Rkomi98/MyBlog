@@ -215,7 +215,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -223,7 +223,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
     body {
       margin: 0;
       position: relative;
-      font-family: 'Charter', Georgia, serif;
+      font-family: 'Charter', 'Source Serif 4', Georgia, serif;
       background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
       color: var(--text-primary);
       transition: background 0.3s ease, color 0.3s ease;
@@ -329,56 +329,49 @@ export function renderBlogIndex({ posts, relativeRoot }) {
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text-primary);
-      padding: 0.45rem 0.9rem;
+      min-width: 40px;
+      height: 40px;
+      padding: 0 0.75rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
       border-radius: 12px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
     }
     .lang-btn:hover {
-      background: var(--accent);
-      color: #ffffff;
-      transform: translateY(-1px);
-      border-color: transparent;
+      color: var(--accent-strong);
+      border-color: var(--accent);
     }
     .theme-toggle {
-      position: relative;
-      width: 52px;
-      height: 28px;
-      border-radius: 999px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--bg-card);
+      color: var(--text-secondary);
       cursor: pointer;
       padding: 0;
-      transition: background 0.3s ease, border 0.3s ease;
-      display: flex;
-      align-items: center;
-    }
-    .theme-toggle .theme-thumb {
-      position: absolute;
-      top: 50%;
-      left: 4px;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      color: #1f2937;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
-      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
-      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+      transition: color 0.2s ease, border-color 0.2s ease;
     }
-    body[data-theme="dark"] .theme-toggle .theme-thumb {
-      transform: translate(20px, -50%);
-      background: #1f2937;
-      color: #f8fafc;
+    .theme-toggle:hover {
+      color: var(--accent-strong);
+      border-color: var(--accent);
     }
-    body[data-theme="dark"] .theme-toggle {
-      background: rgba(16, 185, 129, 0.18);
-      border-color: rgba(16, 185, 129, 0.35);
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+    .theme-toggle .icon-moon,
+    body[data-theme="dark"] .theme-toggle .icon-sun {
+      display: block;
+    }
+    .theme-toggle .icon-sun,
+    body[data-theme="dark"] .theme-toggle .icon-moon {
+      display: none;
     }
     main.page {
       max-width: 1100px;
@@ -583,8 +576,9 @@ export function renderBlogIndex({ posts, relativeRoot }) {
       </a>
       <div class="header-controls">
         <button class="lang-btn" type="button">EN</button>
-        <button class="theme-toggle" type="button" aria-label="Toggle theme">
-          <span class="theme-thumb">☀️</span>
+        <button class="theme-toggle" type="button" aria-label="${themeLabel}" title="${themeLabel}">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
       </div>
     </div>
@@ -990,7 +984,7 @@ export function renderBlogDetail({
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -1001,7 +995,7 @@ export function renderBlogDetail({
     body {
       margin: 0;
       position: relative;
-      font-family: 'Charter', Georgia, serif;
+      font-family: 'Charter', 'Source Serif 4', Georgia, serif;
       background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
       color: var(--text-primary);
       transition: background 0.3s ease, color 0.3s ease;
@@ -1066,9 +1060,17 @@ export function renderBlogDetail({
     .reading-progress__bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #10b981 0%, #22c55e 55%, #2dd4bf 100%);
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+      background: var(--accent);
       transition: width 0.1s ease-out;
+    }
+    ::selection {
+      background: rgba(16, 185, 129, 0.32);
+      color: var(--text-primary);
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent-strong);
+      outline-offset: 3px;
+      border-radius: 4px;
     }
     .site-header__inner,
     .site-nav,
@@ -1166,60 +1168,53 @@ export function renderBlogDetail({
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text-primary);
-      padding: 0.45rem 0.9rem;
+      min-width: 40px;
+      height: 40px;
+      padding: 0 0.75rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
       border-radius: 12px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
     }
     .lang-btn:hover:not(.lang-btn--disabled) {
-      background: var(--accent);
-      color: #ffffff;
-      transform: translateY(-1px);
-      border-color: transparent;
+      color: var(--accent-strong);
+      border-color: var(--accent);
     }
     .lang-btn--disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
     .theme-toggle {
-      position: relative;
-      width: 52px;
-      height: 28px;
-      border-radius: 999px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--bg-card);
+      color: var(--text-secondary);
       cursor: pointer;
       padding: 0;
-      transition: background 0.3s ease, border 0.3s ease;
-      display: flex;
-      align-items: center;
-    }
-    .theme-toggle .theme-thumb {
-      position: absolute;
-      top: 50%;
-      left: 4px;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      color: #1f2937;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
-      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
-      box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.6);
+      transition: color 0.2s ease, border-color 0.2s ease;
     }
-    body[data-theme="dark"] .theme-toggle .theme-thumb {
-      transform: translate(20px, -50%);
-      background: #1f2937;
-      color: #f8fafc;
+    .theme-toggle:hover {
+      color: var(--accent-strong);
+      border-color: var(--accent);
     }
-    body[data-theme="dark"] .theme-toggle {
-      background: rgba(37, 99, 235, 0.2);
-      border-color: rgba(37, 99, 235, 0.3);
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+    .theme-toggle .icon-moon,
+    body[data-theme="dark"] .theme-toggle .icon-sun {
+      display: block;
+    }
+    .theme-toggle .icon-sun,
+    body[data-theme="dark"] .theme-toggle .icon-moon {
+      display: none;
     }
     main.page {
       max-width: 1200px;
@@ -2426,8 +2421,9 @@ export function renderBlogDetail({
       </div>
       <div class="header-controls">
         <button class="lang-btn" type="button">EN</button>
-        <button class="theme-toggle" type="button" aria-label="Toggle theme">
-          <span class="theme-thumb">☀️</span>
+        <button class="theme-toggle" type="button" aria-label="${themeLabel}" title="${themeLabel}">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
       </div>
     </div>
@@ -2761,15 +2757,10 @@ export function renderBlogDetail({
           const wrapper = document.createElement('div');
           wrapper.className = 'post-code-card';
           wrapper.innerHTML =
-            '<div class="post-code-card__language">' + languageLabel + '</div>' +
             '<div class="post-code-card__frame">' +
               '<div class="post-code-card__header">' +
-                '<div class="post-code-card__window-controls" aria-hidden="true">' +
-                  '<span class="post-code-card__window-dot post-code-card__window-dot--red"></span>' +
-                  '<span class="post-code-card__window-dot post-code-card__window-dot--yellow"></span>' +
-                  '<span class="post-code-card__window-dot post-code-card__window-dot--green"></span>' +
-                '</div>' +
                 '<span class="post-code-card__filename">' + filenameLabel + '</span>' +
+                '<span class="post-code-card__language">' + languageLabel + '</span>' +
               '</div>' +
               '<div class="post-code-card__body"></div>' +
             '</div>';
@@ -2786,7 +2777,7 @@ export function renderBlogDetail({
           button.className = 'code-copy-btn';
           button.setAttribute('aria-label', labels.copy);
           button.innerHTML =
-            '<span class="code-copy-btn__icon" aria-hidden="true">⧉</span>' +
+            '<svg class="code-copy-btn__icon" aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>' +
             '<span class="code-copy-btn__text">' + labels.copy + '</span>';
           button.addEventListener('click', async () => {
             const text = (code.textContent || '').replace(/\s+$/, '');
