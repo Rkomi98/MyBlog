@@ -93,6 +93,29 @@ function renderTocList(nodes, isRoot = true, showNumbers = true) {
   </ul>`;
 }
 
+const SOCIAL_LINKS = [
+  { href: 'https://www.instagram.com/quasi.evidente/', it: 'Q.E.D. su Instagram', en: 'Q.E.D. on Instagram' },
+  { href: 'https://www.linkedin.com/in/mirko-calcaterra-30029519b/', it: 'LinkedIn', en: 'LinkedIn' },
+  { href: 'https://github.com/Rkomi98', it: 'GitHub', en: 'GitHub' },
+  { href: 'https://www.youtube.com/@mirkocalcaterra983', it: 'YouTube', en: 'YouTube' },
+];
+
+function renderSiteFooter({ currentYear, language = null }) {
+  const links = SOCIAL_LINKS.map((link) => {
+    const label = language ? link[language] : link.it;
+    const i18nAttrs = language ? '' : ` data-it="${link.it}" data-en="${link.en}"`;
+    return `<a href="${link.href}" target="_blank" rel="noopener noreferrer"${i18nAttrs}>${label}</a>`;
+  }).join('\n        ');
+  return `<footer>
+    <div class="footer-inner">
+      <span>© ${currentYear} Mirko Calcaterra</span>
+      <nav class="footer-links" aria-label="Social">
+        ${links}
+      </nav>
+    </div>
+  </footer>`;
+}
+
 export function renderBlogIndex({ posts, relativeRoot }) {
   const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
   const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
@@ -110,7 +133,6 @@ export function renderBlogIndex({ posts, relativeRoot }) {
     const publishedAt = post.meta?.publishedAt ?? post.updatedAt;
     return {
       slug: post.slug,
-      icon: post.meta?.icon ?? '📝',
       category: post.meta?.category ?? 'General',
       categoryLabels: post.meta?.categoryLabels ?? { it: 'Generale', en: 'General' },
       readTime: post.meta?.readTime ?? 1,
@@ -232,13 +254,12 @@ export function renderBlogIndex({ posts, relativeRoot }) {
     .filters,
     .filter label,
     .filter select,
-    .post-card-meta,
-    .post-card-footer,
+    .post-item__meta,
     footer {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .hero h1,
-    .post-card-title {
+    .post-item__title {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
     }
     a {
@@ -260,7 +281,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
     .site-header__inner {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 1.2rem 2rem;
+      padding: 0.75rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -335,192 +356,167 @@ export function renderBlogIndex({ posts, relativeRoot }) {
     body[data-theme="dark"] .theme-toggle .icon-moon {
       display: none;
     }
+    ::selection {
+      background: rgba(16, 185, 129, 0.32);
+      color: var(--text-primary);
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent-strong);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
     main.page {
-      max-width: 1100px;
+      max-width: 46rem;
       margin: 0 auto;
-      padding: 3.5rem 2rem 4rem;
+      padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) 4rem;
     }
     .hero {
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
     .hero h1 {
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      margin: 0 0 1rem;
-      letter-spacing: -0.02em;
+      font-size: clamp(1.9rem, 1.3rem + 2.6vw, 2.8rem);
+      line-height: 1.15;
+      margin: 0 0 0.85rem;
+      letter-spacing: -0.03em;
     }
     .hero p {
       margin: 0;
-      max-width: 720px;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.7;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      line-height: 1.6;
     }
     .filters {
       display: flex;
       flex-wrap: wrap;
-      align-items: flex-end;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
+      gap: 0.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
     }
     .filter {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      min-width: 220px;
+      gap: 0.35rem;
+      flex: 1 1 9rem;
     }
     .filter label {
+      font-size: 0.78rem;
       font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+      color: var(--text-muted);
     }
     .filter select {
-      background: var(--bg-card);
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      min-height: 44px;
+      background: var(--bg-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.85rem center;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 0.65rem 0.9rem;
+      border-radius: 10px;
+      padding: 0.55rem 2.25rem 0.55rem 0.85rem;
       color: var(--text-primary);
+      font: inherit;
       font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease;
     }
+    .filter select:hover,
     .filter select:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
     }
-    .posts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
+    .post-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
-    .post-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 24px;
+    .post-item {
+      position: relative;
+      padding: 1.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .post-item__title {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.15rem, 1rem + 0.6vw, 1.35rem);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+    }
+    .post-item__title a {
+      color: var(--text-primary);
+      transition: color 0.15s ease;
+    }
+    .post-item__title a::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .post-item:hover .post-item__title a {
+      color: var(--accent-strong);
+    }
+    .post-item__summary {
+      margin: 0 0 0.75rem;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      box-shadow: var(--shadow-lg);
+    }
+    .post-item__meta {
       display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .post-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 32px 60px -40px rgba(15, 23, 42, 0.95);
-    }
-    .post-card-hero {
-      height: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .post-card-icon {
-      font-size: 2.8rem;
-      filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.45));
-    }
-    .post-card-body {
-      padding: 1.8rem 1.8rem 1.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-      flex: 1;
-    }
-    .post-card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 0.92rem;
-    }
-    .post-card-category {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      background: rgba(16, 185, 129, 0.16);
-      color: var(--accent);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    body[data-theme="light"] .post-card-category {
-      background: rgba(5, 150, 105, 0.12);
-    }
-    .post-card-date {
+      flex-wrap: wrap;
+      gap: 0.2rem 0.75rem;
+      margin: 0;
       color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .post-item__meta span + span::before {
+      content: '·';
+      margin-right: 0.5rem;
+    }
+    .post-item__category {
+      color: var(--accent);
       font-weight: 500;
     }
-    .post-card-title {
-      margin: 0;
-      font-size: 1.35rem;
-      line-height: 1.3;
-      color: var(--text-primary);
-    }
-    .post-card-summary {
-      margin: 0;
-      color: var(--text-secondary);
-      font-size: 1rem;
-      line-height: 1.65;
-    }
-    .post-card-footer {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-    }
-    .post-card-link {
-      font-weight: 600;
-      color: var(--accent);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-    .post-card-link:hover {
-      color: var(--accent-strong);
-      transform: translateX(2px);
+    .post-item__meta .post-item__category::before {
+      content: none;
     }
     .no-results {
-      text-align: center;
-      margin-top: 3rem;
+      margin: 3rem 0;
       color: var(--text-muted);
       font-size: 1rem;
       display: none;
     }
     footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      text-align: center;
+      margin-top: 2rem;
+      padding: 2rem 1.25rem;
       color: var(--text-muted);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       border-top: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.35);
     }
-    body[data-theme="light"] footer {
-      background: rgba(255, 255, 255, 0.72);
+    .footer-inner {
+      max-width: 46rem;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+    }
+    .footer-links a {
+      padding: 0.35rem 0;
+      color: var(--text-secondary);
+    }
+    .footer-links a:hover {
+      color: var(--accent-strong);
     }
     @media (max-width: 768px) {
       .site-header__inner {
-        padding: 1rem 1.5rem;
-      }
-      main.page {
-        padding: 2.75rem 1.5rem 3.25rem;
-      }
-      .filters {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .filter {
-        width: 100%;
-      }
-      .post-card-body {
-        padding: 1.6rem 1.6rem 1.4rem;
-      }
-      .post-card-hero {
-        height: 120px;
+        padding: 0.6rem 1rem;
       }
     }
   </style>
@@ -532,7 +528,7 @@ export function renderBlogIndex({ posts, relativeRoot }) {
         <picture>
           <source srcset="${logoWebpPath}" type="image/webp">
           <source srcset="${logoPath}" type="image/png">
-          <img src="${logoPath}" alt="Mirko Calcaterra logo" class="logo-img" width="40" height="40">
+          <img src="${logoPath}" alt="" class="logo-img" width="36" height="36">
         </picture>
         <span class="logo-text">Mirko Calcaterra</span>
       </a>
@@ -555,13 +551,13 @@ export function renderBlogIndex({ posts, relativeRoot }) {
     </section>
     <section class="filters" aria-label="Blog controls">
       <div class="filter">
-        <label for="category-filter" data-it="Filtra per categoria" data-en="Filter by category">Filtra per categoria</label>
+        <label for="category-filter" data-it="Categoria" data-en="Category">Categoria</label>
         <select id="category-filter">
           <option value="all" data-it="Tutte" data-en="All">Tutte</option>
         </select>
       </div>
       <div class="filter">
-        <label for="sort-order" data-it="Ordina per data" data-en="Sort by date">Ordina per data</label>
+        <label for="sort-order" data-it="Ordine" data-en="Order">Ordine</label>
         <select id="sort-order">
           <option value="desc" data-it="Più recenti" data-en="Newest first">Più recenti</option>
           <option value="asc" data-it="Meno recenti" data-en="Oldest first">Meno recenti</option>
@@ -569,30 +565,20 @@ export function renderBlogIndex({ posts, relativeRoot }) {
       </div>
     </section>
     <section aria-live="polite">
-      <div id="posts-grid" class="posts-grid"></div>
+      <ol id="posts-grid" class="post-list"></ol>
       <p id="no-results" class="no-results" data-it="Nessun articolo trovato." data-en="No articles found.">Nessun articolo trovato.</p>
     </section>
   </main>
-  <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
-    </span>
-  </footer>
+  ${renderSiteFooter({ currentYear })}
   <script>
     const POSTS_DATA = ${serializedPosts};
     (function() {
-      const gradients = [
-        'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-        'linear-gradient(135deg, #f97316 0%, #fb7185 100%)',
-        'linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%)',
-        'linear-gradient(135deg, #f472b6 0%, #c084fc 100%)'
-      ];
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const storedTheme = (localStorage.getItem('blogTheme') || '').toLowerCase();
       const storedLang = (localStorage.getItem('blogLang') || '').toLowerCase();
+      const browserLang = ((navigator.language || 'it').slice(0, 2)).toLowerCase();
       const state = {
-        lang: storedLang === 'en' ? 'en' : 'it',
+        lang: storedLang === 'en' || storedLang === 'it' ? storedLang : (browserLang === 'it' ? 'it' : 'en'),
         theme: storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light')),
         category: 'all',
         sort: 'desc'
@@ -641,6 +627,12 @@ export function renderBlogIndex({ posts, relativeRoot }) {
         });
         if (elements.langBtn) {
           elements.langBtn.textContent = state.lang === 'it' ? 'EN' : 'IT';
+          elements.langBtn.setAttribute('aria-label', state.lang === 'it' ? 'Read in English' : 'Leggi in italiano');
+        }
+        if (elements.themeToggle) {
+          const themeLabel = state.lang === 'it' ? 'Cambia tema' : 'Toggle theme';
+          elements.themeToggle.setAttribute('aria-label', themeLabel);
+          elements.themeToggle.setAttribute('title', themeLabel);
         }
       }
       function populateCategoryOptions() {
@@ -691,64 +683,45 @@ export function renderBlogIndex({ posts, relativeRoot }) {
           elements.noResults.style.display = 'none';
         }
         const fragment = document.createDocumentFragment();
-        posts.forEach((post, index) => {
-          const card = document.createElement('article');
-          card.className = 'post-card';
-          card.setAttribute('data-category', post.category);
-          const hero = document.createElement('div');
-          hero.className = 'post-card-hero';
-          hero.style.background = gradients[index % gradients.length];
-          const icon = document.createElement('div');
-          icon.className = 'post-card-icon';
-          icon.textContent = post.icon || '📝';
-          hero.appendChild(icon);
-          card.appendChild(hero);
-          const body = document.createElement('div');
-          body.className = 'post-card-body';
-          const metaRow = document.createElement('div');
-          metaRow.className = 'post-card-meta';
-          const categoryChip = document.createElement('span');
-          categoryChip.className = 'post-card-category';
-          const categoryLabel = (post.categoryLabels && post.categoryLabels[state.lang]) || post.category;
-          categoryChip.textContent = categoryLabel;
-          const dateSpan = document.createElement('span');
-          dateSpan.className = 'post-card-date';
-          dateSpan.textContent = formatDate(post.publishedAt);
-          metaRow.appendChild(categoryChip);
-          metaRow.appendChild(dateSpan);
-          body.appendChild(metaRow);
-          const titleEl = document.createElement('h3');
-          titleEl.className = 'post-card-title';
-          titleEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].title) ||
-            (post.languages.it && post.languages.it.title) ||
-            (post.languages.en && post.languages.en.title) ||
-            '';
-          body.appendChild(titleEl);
-          const summaryEl = document.createElement('p');
-          summaryEl.className = 'post-card-summary';
-          summaryEl.textContent =
-            (post.languages[state.lang] && post.languages[state.lang].summary) ||
-            (post.languages.it && post.languages.it.summary) ||
-            (post.languages.en && post.languages.en.summary) ||
-            '';
-          body.appendChild(summaryEl);
-          const footerRow = document.createElement('div');
-          footerRow.className = 'post-card-footer';
-          const readSpan = document.createElement('span');
-          readSpan.className = 'post-card-readtime';
-          const readTime = (post.readTimes && post.readTimes[state.lang]) || post.readTime;
-          readSpan.textContent = '⏱️ ' + readTime + ' min';
+        const pick = (post, key) =>
+          (post.languages[state.lang] && post.languages[state.lang][key]) ||
+          (post.languages.it && post.languages.it[key]) ||
+          (post.languages.en && post.languages.en[key]) ||
+          '';
+        posts.forEach((post) => {
+          const item = document.createElement('li');
+          item.className = 'post-item';
+          item.setAttribute('data-category', post.category);
+          const titleEl = document.createElement('h2');
+          titleEl.className = 'post-item__title';
           const linkEl = document.createElement('a');
-          linkEl.className = 'post-card-link';
-          const fallbackLink = (post.languages.it && post.languages.it.link) || (post.languages.en && post.languages.en.link) || '#';
-          linkEl.href = (post.languages[state.lang] && post.languages[state.lang].link) || fallbackLink;
-          linkEl.textContent = state.lang === 'it' ? 'Leggi di più →' : 'Read more →';
-          footerRow.appendChild(readSpan);
-          footerRow.appendChild(linkEl);
-          body.appendChild(footerRow);
-          card.appendChild(body);
-          fragment.appendChild(card);
+          linkEl.href = pick(post, 'link') || '#';
+          linkEl.textContent = pick(post, 'title');
+          titleEl.appendChild(linkEl);
+          item.appendChild(titleEl);
+          const summary = pick(post, 'summary');
+          if (summary) {
+            const summaryEl = document.createElement('p');
+            summaryEl.className = 'post-item__summary';
+            summaryEl.textContent = summary;
+            item.appendChild(summaryEl);
+          }
+          const meta = document.createElement('p');
+          meta.className = 'post-item__meta';
+          const dateEl = document.createElement('time');
+          dateEl.dateTime = post.publishedAt.slice(0, 10);
+          dateEl.textContent = formatDate(post.publishedAt);
+          const dateWrap = document.createElement('span');
+          dateWrap.appendChild(dateEl);
+          const readTime = (post.readTimes && post.readTimes[state.lang]) || post.readTime;
+          const readEl = document.createElement('span');
+          readEl.textContent = readTime + ' min';
+          const categoryEl = document.createElement('span');
+          categoryEl.className = 'post-item__category';
+          categoryEl.textContent = (post.categoryLabels && post.categoryLabels[state.lang]) || post.category;
+          meta.append(dateWrap, readEl, categoryEl);
+          item.appendChild(meta);
+          fragment.appendChild(item);
         });
         elements.postsGrid.appendChild(fragment);
       }
@@ -851,7 +824,7 @@ export function renderBlogDetail({
           <div class="post-toc__title" data-it="Indice" data-en="Table of contents">${tocLabels.title}</div>
           <button class="post-toc__toggle" type="button" aria-expanded="true" aria-label="${tocLabels.close}">
             <span class="post-toc__toggle-text">${tocLabels.title}</span>
-            <span class="post-toc__toggle-icon" aria-hidden="true">▾</span>
+            <svg class="post-toc__toggle-icon" aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </button>
         </div>
         <div class="post-toc__content">
@@ -1522,7 +1495,7 @@ export function renderBlogDetail({
       padding: 0.15rem 0.42rem;
       border-radius: 4px;
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 0.88rem;
+      font-size: 0.82em;
     }
     .post-code-card pre code {
       background: transparent;
@@ -1676,6 +1649,7 @@ export function renderBlogDetail({
       letter-spacing: 0.08em;
       color: var(--accent-strong);
       text-transform: uppercase;
+      margin-left: auto;
     }
     .post-code-card__frame {
       background: var(--code-block-bg);
@@ -1764,7 +1738,6 @@ export function renderBlogDetail({
       color: #cbd5f5;
     }
     .code-copy-btn {
-      margin-left: auto;
       background: transparent;
       color: var(--text-muted);
       border: 0;
@@ -2003,76 +1976,93 @@ export function renderBlogDetail({
       overflow: hidden;
     }
     footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      text-align: center;
+      margin-top: 2rem;
+      padding: 2rem clamp(1.25rem, 3vw, 3rem);
       color: var(--text-muted);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       border-top: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.35);
     }
-    body[data-theme="light"] footer {
-      background: rgba(255, 255, 255, 0.72);
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+    }
+    .footer-links a {
+      padding: 0.35rem 0;
+      color: var(--text-secondary);
+    }
+    .footer-links a:hover {
+      color: var(--accent-strong);
     }
     @media (max-width: 1024px) {
       .site-header__inner {
-        padding: 1rem clamp(1.25rem, 4vw, 2rem);
+        padding: 0.6rem clamp(1rem, 4vw, 2rem);
       }
       main.page {
-        padding: 2.75rem clamp(1.25rem, 4vw, 2rem) 4rem;
+        padding: 2rem clamp(1.25rem, 4vw, 2rem) 3.5rem;
       }
       .post-layout {
         grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+      }
+      .post-body {
+        margin: 0 auto;
+        width: 100%;
+      }
+      .post-hero {
+        max-width: 42rem;
+        margin-left: auto;
+        margin-right: auto;
       }
       .post-toc {
-        position: sticky;
-        top: 88px;
-        z-index: 6;
-        max-height: calc(100vh - 140px);
-        margin-bottom: 2rem;
-        padding: 1.1rem 1.25rem 1.35rem;
+        position: static;
+        max-height: none;
+        max-width: 42rem;
+        width: 100%;
+        margin: 0 auto 2.5rem;
+        padding: 0 1rem;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg-card);
+      }
+      .post-toc__title {
+        display: none;
       }
       .post-toc__toggle {
-        display: inline-flex;
+        display: flex;
       }
       .post-toc__content {
-        max-height: none;
-        margin-top: 0.4rem;
+        margin: 0 0 0.85rem;
         overflow: visible;
       }
     }
     @media (max-width: 720px) {
-      .post-hero {
-        padding: 2.1rem 1.65rem;
-      }
       .post-body {
-        padding: 1.9rem 1.5rem;
-        font-size: 1.04rem;
+        font-size: 1.0625rem;
+        line-height: 1.7;
+      }
+      .post-body h2 {
+        margin-top: 2.75rem;
       }
       .post-body .article-figure--wide {
         left: auto;
         transform: none;
         width: 100%;
       }
-      .site-header__inner {
-        flex-direction: column;
-        align-items: stretch;
+      .site-header__left {
         gap: 1rem;
       }
-      .site-header__left {
-        justify-content: space-between;
-      }
-      .header-controls {
-        align-self: flex-end;
-      }
-      .post-hero__title {
-        font-size: clamp(2rem, 6vw, 2.6rem);
-      }
-      .post-hero__author {
-        gap: 0.7rem;
-      }
       .post-hero__author-meta {
-        font-size: 0.78rem;
+        font-size: 0.8rem;
       }
       .post-code-card__header {
         padding: 0.45rem 0.6rem;
@@ -2125,6 +2115,11 @@ export function renderBlogDetail({
       }
       .mermaid-overlay__scroll {
         padding: 1.8rem 1.25rem 1.5rem;
+      }
+    }
+    @media (max-width: 420px) {
+      .logo-text {
+        display: none;
       }
     }
   </style>
@@ -2317,12 +2312,7 @@ export function renderBlogDetail({
       </section>
     </article>
   </main>
-  <footer>
-    <span data-it="© ${currentYear} Mirko Calcaterra. Tutti i diritti riservati."
-          data-en="© ${currentYear} Mirko Calcaterra. All rights reserved.">
-      © ${currentYear} Mirko Calcaterra. Tutti i diritti riservati.
-    </span>
-  </footer>
+  ${renderSiteFooter({ currentYear, language })}
   <script>
     const BLOG_LANG_KEY = 'blogLang';
     const BLOG_THEME_KEY = 'blogTheme';
