@@ -1,0 +1,1 @@
+import{B as e,L as t,g as n,y as r}from"./modules/shiki-BdeKa7dA.js";import{et as i}from"./index-s2PrNcwO.js";var a={class:`slidev-layout dp-section`},o={__name:`dp-section`,setup(o){let{$slidev:s,$nav:c,$clicksContext:l,$clicks:u,$page:d,$renderContext:f,$frontmatter:p}=i();return(i,o)=>(t(),r(`div`,a,[n(`main`,null,[e(i.$slots,`default`)])]))}};export{o as t};

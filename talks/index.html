@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interventi | Mirko Calcaterra</title>
+  <meta name="description" content="Slide e materiali dei miei interventi, lezioni e talk su AI, dati e sviluppo software.">
+  <link rel="canonical" href="https://rkomi98.github.io/MyBlog/talks/index.html">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rkomi98.github.io/MyBlog/talks/index.html">
+  <meta property="og:title" content="Interventi | Mirko Calcaterra">
+  <meta property="og:description" content="Slide e materiali dei miei interventi, lezioni e talk.">
+  <meta property="og:image" content="https://rkomi98.github.io/MyBlog/Assets/Logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      position: relative;
+      font-family: 'Charter', 'Source Serif 4', Georgia, serif;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.16) 0%, transparent 65%), var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+      --bg-primary: #0b1120;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.84);
+      --border: rgba(148, 163, 184, 0.2);
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-strong: #34d399;
+      --shadow-lg: 0 24px 45px -32px rgba(2, 6, 23, 0.85);
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2310b981' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    body[data-theme="light"] {
+      --bg-primary: #f6f8f7;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.96);
+      --border: rgba(148, 163, 184, 0.18);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #059669;
+      --accent-strong: #047857;
+      --shadow-lg: 0 24px 45px -30px rgba(15, 23, 42, 0.14);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(16, 185, 129, 0.13) 0%, transparent 65%), var(--bg-primary);
+    }
+    .site-header__inner,
+    .header-controls,
+    .lang-btn,
+    .theme-toggle,
+    .filters,
+    .filter label,
+    .filter select,
+    .post-item__meta,
+    footer {
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .hero h1,
+    .post-item__title {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    body[data-theme="light"] header.site-header {
+      background: rgba(248, 250, 252, 0.9);
+    }
+    .site-header__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px -12px rgba(15, 23, 42, 0.6);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      min-width: 40px;
+      height: 40px;
+      padding: 0 0.75rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease, transform 0.2s ease;
+    }
+    .lang-btn:hover {
+      color: var(--accent-strong);
+      border-color: var(--accent);
+    }
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .theme-toggle:hover {
+      color: var(--accent-strong);
+      border-color: var(--accent);
+    }
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+    .theme-toggle .icon-moon,
+    body[data-theme="dark"] .theme-toggle .icon-sun {
+      display: block;
+    }
+    .theme-toggle .icon-sun,
+    body[data-theme="dark"] .theme-toggle .icon-moon {
+      display: none;
+    }
+    ::selection {
+      background: rgba(16, 185, 129, 0.32);
+      color: var(--text-primary);
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent-strong);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    main.page {
+      max-width: 46rem;
+      margin: 0 auto;
+      padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) 4rem;
+    }
+    .hero {
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.9rem, 1.3rem + 2.6vw, 2.8rem);
+      line-height: 1.15;
+      margin: 0 0 0.85rem;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1 1 9rem;
+    }
+    .filter label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text-muted);
+    }
+    .filter select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      min-height: 44px;
+      background: var(--bg-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.85rem center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.55rem 2.25rem 0.55rem 0.85rem;
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease;
+    }
+    .filter select:hover,
+    .filter select:focus {
+      border-color: var(--accent);
+    }
+    .post-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .post-item {
+      position: relative;
+      padding: 1.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .post-item__title {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.15rem, 1rem + 0.6vw, 1.35rem);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+    }
+    .post-item__title a {
+      color: var(--text-primary);
+      transition: color 0.15s ease;
+    }
+    .post-item__title a::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .post-item:hover .post-item__title a {
+      color: var(--accent-strong);
+    }
+    .post-item__summary {
+      margin: 0 0 0.75rem;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .post-item__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem 0.75rem;
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .post-item__meta span + span::before {
+      content: '·';
+      margin-right: 0.5rem;
+    }
+    .post-item__category {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .post-item__meta .post-item__category::before {
+      content: none;
+    }
+    .no-results {
+      margin: 3rem 0;
+      color: var(--text-muted);
+      font-size: 1rem;
+      display: none;
+    }
+    footer {
+      margin-top: 2rem;
+      padding: 2rem 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      max-width: 46rem;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+    }
+    .footer-links a {
+      padding: 0.35rem 0;
+      color: var(--text-secondary);
+    }
+    .footer-links a:hover {
+      color: var(--accent-strong);
+    }
+    @media (max-width: 768px) {
+      .site-header__inner {
+        padding: 0.6rem 1rem;
+      }
+    }
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: auto;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .site-nav a {
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .site-nav a:hover,
+    .site-nav a[aria-current="page"] {
+      color: var(--accent-strong);
+    }
+    .site-nav a[aria-current="page"] {
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .talk-item__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      margin: 0.9rem 0 0;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+    .talk-item__links a {
+      color: var(--accent-strong);
+    }
+    .talk-item__links a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+</style>
+</head>
+<body data-theme="dark">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="../index.html">
+        <picture>
+          <source srcset="../Assets/Logo.webp" type="image/webp">
+          <source srcset="../Assets/Logo.png" type="image/png">
+          <img src="../Assets/Logo.png" alt="" class="logo-img" width="36" height="36">
+        </picture>
+        <span class="logo-text">Mirko Calcaterra</span>
+      </a>
+      <nav class="site-nav" aria-label="Sezioni">
+        <a href="../blog/index.html" data-it="Blog" data-en="Blog">Blog</a>
+        <a href="./index.html" aria-current="page" data-it="Interventi" data-en="Talks">Interventi</a>
+      </nav>
+      <div class="header-controls">
+        <button class="lang-btn" type="button">EN</button>
+        <button class="theme-toggle" type="button" aria-label="Cambia tema" title="Cambia tema">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <section class="hero">
+      <h1 data-it="I miei interventi" data-en="My talks">I miei interventi</h1>
+      <p data-it="Lezioni, workshop e talk che ho tenuto. Le slide sono navigabili direttamente dal browser."
+         data-en="Lessons, workshops and talks I have given. The slides can be browsed right in the browser.">
+         Lezioni, workshop e talk che ho tenuto. Le slide sono navigabili direttamente dal browser.
+      </p>
+    </section>
+    <section aria-live="polite">
+      <ol class="post-list">
+      <li class="post-item">
+        <h2 class="post-item__title"><a href="./cernusco-lezione-1-capire-ai/" data-it="Capire l’AI" data-en="Understanding AI">Capire l’AI</a></h2>
+        <p class="post-item__summary" data-it="Come funziona, perché sorprende e perché può sbagliare. Dalla storia dell’intelligenza artificiale ai token, dal contesto agli agenti, fino ai quattro limiti da conoscere. Prima lezione del ciclo «AI a Cernusco», con quiz in aula, una pausa e un esercizio pratico di gruppo." data-en="How it works, why it surprises us and why it can get things wrong. From the history of AI to tokens, context and agents, down to the four limits worth knowing. First lesson of the “AI a Cernusco” series, with in-room quizzes, a break and a hands-on group exercise.">Come funziona, perché sorprende e perché può sbagliare. Dalla storia dell’intelligenza artificiale ai token, dal contesto agli agenti, fino ai quattro limiti da conoscere. Prima lezione del ciclo «AI a Cernusco», con quiz in aula, una pausa e un esercizio pratico di gruppo.</p>
+        <p class="post-item__meta"><span><time datetime="2026-11-14" data-date="2026-11-14">2026-11-14</time></span><span data-it="AI a Cernusco · Lezione 1" data-en="AI a Cernusco · Lesson 1">AI a Cernusco · Lezione 1</span><span data-it="Biblioteca di Cernusco sul Naviglio" data-en="Cernusco sul Naviglio Public Library">Biblioteca di Cernusco sul Naviglio</span><span>49 slide</span><span class="post-item__category" data-it="Lezione" data-en="Lesson">Lezione</span></p>
+        <p class="talk-item__links">
+          <a href="./cernusco-lezione-1-capire-ai/" data-it="Apri le slide →" data-en="Open the slides →">Apri le slide →</a>
+        </p>
+      </li>
+      </ol>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <span>© 2026 Mirko Calcaterra</span>
+      <nav class="footer-links" aria-label="Social">
+        <a href="https://www.instagram.com/quasi.evidente/" target="_blank" rel="noopener noreferrer" data-it="Q.E.D. su Instagram" data-en="Q.E.D. on Instagram">Q.E.D. su Instagram</a>
+        <a href="https://www.linkedin.com/in/mirko-calcaterra-30029519b/" target="_blank" rel="noopener noreferrer" data-it="LinkedIn" data-en="LinkedIn">LinkedIn</a>
+        <a href="https://github.com/Rkomi98" target="_blank" rel="noopener noreferrer" data-it="GitHub" data-en="GitHub">GitHub</a>
+        <a href="https://www.youtube.com/@mirkocalcaterra983" target="_blank" rel="noopener noreferrer" data-it="YouTube" data-en="YouTube">YouTube</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    (function() {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const read = (key) => { try { return (localStorage.getItem(key) || '').toLowerCase(); } catch (e) { return ''; } };
+      const write = (key, value) => { try { localStorage.setItem(key, value); } catch (e) {} };
+      const storedTheme = read('blogTheme');
+      const storedLang = read('blogLang');
+      const browserLang = ((navigator.language || 'it').slice(0, 2)).toLowerCase();
+      const state = {
+        lang: storedLang === 'en' || storedLang === 'it' ? storedLang : (browserLang === 'it' ? 'it' : 'en'),
+        theme: storedTheme === 'light' ? 'light' : (storedTheme === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light'))
+      };
+      const langBtn = document.querySelector('.lang-btn');
+      const themeToggle = document.querySelector('.theme-toggle');
+
+      function applyTheme(theme) {
+        state.theme = theme === 'dark' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', state.theme);
+        write('blogTheme', state.theme);
+      }
+      function applyLanguage(lang) {
+        state.lang = lang === 'en' ? 'en' : 'it';
+        document.documentElement.setAttribute('lang', state.lang);
+        write('blogLang', state.lang);
+        document.querySelectorAll('[data-it][data-en]').forEach((node) => {
+          node.textContent = node.getAttribute(state.lang === 'it' ? 'data-it' : 'data-en');
+        });
+        const locale = state.lang === 'it' ? 'it-IT' : 'en-US';
+        const formatter = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' });
+        document.querySelectorAll('time[data-date]').forEach((node) => {
+          const date = new Date(node.getAttribute('data-date') + 'T12:00:00');
+          if (!Number.isNaN(date.valueOf())) node.textContent = formatter.format(date);
+        });
+        langBtn.textContent = state.lang === 'it' ? 'EN' : 'IT';
+        langBtn.setAttribute('aria-label', state.lang === 'it' ? 'Read in English' : 'Leggi in italiano');
+        const themeLabel = state.lang === 'it' ? 'Cambia tema' : 'Toggle theme';
+        themeToggle.setAttribute('aria-label', themeLabel);
+        themeToggle.setAttribute('title', themeLabel);
+      }
+
+      langBtn.addEventListener('click', () => applyLanguage(state.lang === 'it' ? 'en' : 'it'));
+      themeToggle.addEventListener('click', () => applyTheme(state.theme === 'dark' ? 'light' : 'dark'));
+      applyTheme(state.theme);
+      applyLanguage(state.lang);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+var e=`/MyBlog/talks/cernusco-lezione-1-capire-ai/media/deep-blue.png`;export{e as t};
