@@ -5,7 +5,7 @@ function toPosix(input) {
   return input.split(path.sep).join('/');
 }
 
-function joinUrl(base, ...parts) {
+export function joinUrl(base, ...parts) {
   const normalisedBase = base ? toPosix(base) : '.';
   return toPosix(path.posix.join(normalisedBase, ...parts.filter(Boolean)));
 }
@@ -18,14 +18,14 @@ function formatDate(date) {
   return d.toISOString().split('T')[0];
 }
 
-function serializeForScript(value) {
+export function serializeForScript(value) {
   return JSON.stringify(value)
     .replace(/</g, '\\u003c')
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029');
 }
 
-function escapeHtml(value) {
+export function escapeHtml(value) {
   if (value == null) {
     return '';
   }
@@ -100,7 +100,7 @@ const SOCIAL_LINKS = [
   { href: 'https://www.youtube.com/@mirkocalcaterra983', it: 'YouTube', en: 'YouTube' },
 ];
 
-function renderSiteFooter({ currentYear, language = null }) {
+export function renderSiteFooter({ currentYear, language = null }) {
   const links = SOCIAL_LINKS.map((link) => {
     const label = language ? link[language] : link.it;
     const i18nAttrs = language ? '' : ` data-it="${link.it}" data-en="${link.en}"`;
@@ -116,91 +116,7 @@ function renderSiteFooter({ currentYear, language = null }) {
   </footer>`;
 }
 
-export function renderBlogIndex({ posts, relativeRoot }) {
-  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
-  const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
-  const visiblePosts = posts.filter((post) => !post.meta?.hiddenFromIndex);
-  const postsPayload = visiblePosts.map((post) => {
-    const languages = {};
-    for (const [lang, langData] of Object.entries(post.languages)) {
-      languages[lang] = {
-        title: langData.title,
-        summary: langData.summary,
-        link: joinUrl('.', lang, post.slug, 'index.html'),
-      };
-    }
-
-    const publishedAt = post.meta?.publishedAt ?? post.updatedAt;
-    return {
-      slug: post.slug,
-      category: post.meta?.category ?? 'General',
-      categoryLabels: post.meta?.categoryLabels ?? { it: 'Generale', en: 'General' },
-      readTime: post.meta?.readTime ?? 1,
-      readTimes: post.meta?.readTimes ?? {},
-      publishedAt: publishedAt.toISOString(),
-      timestamp: publishedAt.getTime(),
-      languages,
-    };
-  });
-
-  const serializedPosts = serializeForScript(postsPayload);
-  const themeLabel = 'Cambia tema';
-  const homeLink = joinUrl(relativeRoot, 'index.html');
-  const currentYear = new Date().getFullYear();
-  const baseUrl = 'https://rkomi98.github.io/MyBlog';
-  const canonicalUrl = `${baseUrl}/blog/index.html`;
-
-  return `<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Blog | Mirko Calcaterra</title>
-  <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
-  <meta name="keywords" content="Mirko Calcaterra, Blog, AI, Data Engineering, Geoinformatica, GeoAI, FRIA, AI Act, Python, Deep Learning">
-  <link rel="canonical" href="${canonicalUrl}">
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-9EVQ8G9W48');
-  </script>
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="blog">
-  <meta property="og:url" content="${canonicalUrl}">
-  <meta property="og:title" content="Blog | Mirko Calcaterra">
-  <meta property="og:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="og:image" content="${baseUrl}/Assets/Logo.png">
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary">
-  <meta property="twitter:title" content="Blog | Mirko Calcaterra">
-  <meta property="twitter:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
-  <meta property="twitter:image" content="${baseUrl}/Assets/Logo.png">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "Mirko Calcaterra Blog",
-    "url": "${canonicalUrl}",
-    "description": "Blog tecnico su AI e Geoinformatica",
-    "publisher": {
-      "@type": "Person",
-      "name": "Mirko Calcaterra"
-    }
-  }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
+export const INDEX_PAGE_CSS = `
     * {
       box-sizing: border-box;
     }
@@ -519,7 +435,133 @@ export function renderBlogIndex({ posts, relativeRoot }) {
         padding: 0.6rem 1rem;
       }
     }
-  </style>
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: auto;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .site-nav a {
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .site-nav a:hover,
+    .site-nav a[aria-current="page"] {
+      color: var(--accent-strong);
+    }
+    .site-nav a[aria-current="page"] {
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .talk-item__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      margin: 0.9rem 0 0;
+      font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+    .talk-item__links a {
+      color: var(--accent-strong);
+    }
+    .talk-item__links a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+`;
+
+export function renderBlogIndex({ posts, relativeRoot }) {
+  const logoPath = joinUrl(relativeRoot, 'Assets', 'Logo.png');
+  const logoWebpPath = joinUrl(relativeRoot, 'Assets', 'Logo.webp');
+  const visiblePosts = posts.filter((post) => !post.meta?.hiddenFromIndex);
+  const postsPayload = visiblePosts.map((post) => {
+    const languages = {};
+    for (const [lang, langData] of Object.entries(post.languages)) {
+      languages[lang] = {
+        title: langData.title,
+        summary: langData.summary,
+        link: joinUrl('.', lang, post.slug, 'index.html'),
+      };
+    }
+
+    const publishedAt = post.meta?.publishedAt ?? post.updatedAt;
+    return {
+      slug: post.slug,
+      category: post.meta?.category ?? 'General',
+      categoryLabels: post.meta?.categoryLabels ?? { it: 'Generale', en: 'General' },
+      readTime: post.meta?.readTime ?? 1,
+      readTimes: post.meta?.readTimes ?? {},
+      publishedAt: publishedAt.toISOString(),
+      timestamp: publishedAt.getTime(),
+      languages,
+    };
+  });
+
+  const serializedPosts = serializeForScript(postsPayload);
+  const themeLabel = 'Cambia tema';
+  const homeLink = joinUrl(relativeRoot, 'index.html');
+  const currentYear = new Date().getFullYear();
+  const baseUrl = 'https://rkomi98.github.io/MyBlog';
+  const canonicalUrl = `${baseUrl}/blog/index.html`;
+
+  return `<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog | Mirko Calcaterra</title>
+  <meta name="description" content="Blog tecnico di Mirko Calcaterra: approfondimenti su AI, Data Engineering, Geoinformatica e sviluppo software.">
+  <meta name="keywords" content="Mirko Calcaterra, Blog, AI, Data Engineering, Geoinformatica, GeoAI, FRIA, AI Act, Python, Deep Learning">
+  <link rel="canonical" href="${canonicalUrl}">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9EVQ8G9W48"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9EVQ8G9W48');
+  </script>
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="blog">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="Blog | Mirko Calcaterra">
+  <meta property="og:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
+  <meta property="og:image" content="${baseUrl}/Assets/Logo.png">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary">
+  <meta property="twitter:title" content="Blog | Mirko Calcaterra">
+  <meta property="twitter:description" content="Approfondimenti e tutorial su AI, Geoinformatica e tecnologia.">
+  <meta property="twitter:image" content="${baseUrl}/Assets/Logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Mirko Calcaterra Blog",
+    "url": "${canonicalUrl}",
+    "description": "Blog tecnico su AI e Geoinformatica",
+    "publisher": {
+      "@type": "Person",
+      "name": "Mirko Calcaterra"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>${INDEX_PAGE_CSS}</style>
 </head>
 <body data-theme="dark">
   <header class="site-header">
@@ -532,6 +574,10 @@ export function renderBlogIndex({ posts, relativeRoot }) {
         </picture>
         <span class="logo-text">Mirko Calcaterra</span>
       </a>
+      <nav class="site-nav" aria-label="Sezioni">
+        <a href="./index.html" aria-current="page" data-it="Blog" data-en="Blog">Blog</a>
+        <a href="${joinUrl(relativeRoot, 'talks', 'index.html')}" data-it="Interventi" data-en="Talks">Interventi</a>
+      </nav>
       <div class="header-controls">
         <button class="lang-btn" type="button">EN</button>
         <button class="theme-toggle" type="button" aria-label="${themeLabel}" title="${themeLabel}">

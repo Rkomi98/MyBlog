@@ -50,6 +50,27 @@ file is removed.
 4. **Store supporting assets** (SVG, PNG, etc.) inside `Assets/` and reference them relatively (e.g. `![Alt](../Assets/my-graphic.svg)`).
 5. **Regenerate the site** with `npm run build` (or `npm run translate && npm run build`) and open `dist/blog/index.html` to verify the article card and detail page.
 
+## Sezione Interventi (slide Slidev)
+
+Le slide dei miei interventi vivono in `talks/<slug>/` (build Slidev già compilata) e sono elencate in
+`/talks/index.html`, generata da `data/talks.json`.
+
+Per aggiungere un nuovo intervento:
+
+1. **Importa il deck** (serve `npm install` già fatto nella cartella del deck Slidev):
+   ```bash
+   npm run talk:import -- "/percorso/al/deck" nome-slug-dell-intervento
+   ```
+   Lo script ricompila il deck con base `/MyBlog/talks/<slug>/` e `routerMode: hash` (necessario su GitHub Pages,
+   che non gestisce le URL "pulite" di Slidev) usando una copia temporanea dell'entry: il deck originale non viene toccato.
+2. **Registra i metadati** aggiungendo una voce a `data/talks.json` (stesso `slug`, `date`, `titles`, `summaries`,
+   `event`, `venue`, `type`, `slides`; testi in `it` e `en`). Con `"draft": true` la voce resta nascosta.
+3. **Rigenera il sito** con `npm run build`: la build copia `talks/` in `dist/`, crea `talks/index.html` e
+   aggiunge le URL a `sitemap.xml`. Una voce senza deck in `talks/<slug>/` viene saltata con un avviso.
+
+Nota: le note del relatore e la vista presentatore (`#/presenter/1`) sono incluse nella build di Slidev e quindi
+raggiungibili da chiunque. I quiz AULA live funzionano solo mentre la stanza è attiva.
+
 ## GitHub Pages
 
 After running `npm run build` locally, the generated site lives in `dist/`.  

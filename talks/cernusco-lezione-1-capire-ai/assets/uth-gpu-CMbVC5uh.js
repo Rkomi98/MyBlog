@@ -1,0 +1,1 @@
+var e=`/MyBlog/talks/cernusco-lezione-1-capire-ai/media/uth-dati.png`,t=`/MyBlog/talks/cernusco-lezione-1-capire-ai/media/uth-gpu.png`;export{e as n,t};

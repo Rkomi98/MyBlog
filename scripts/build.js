@@ -5,6 +5,7 @@ import { collectPosts } from './lib/content.js';
 import { loadProjectEnv } from './lib/env.js';
 import { renderBlogDetail, renderBlogIndex } from './lib/templates.js';
 import { loadBlogMetadata } from './lib/postMetadata.js';
+import { loadTalks, renderTalksIndex } from './lib/talks.js';
 
 function toPosix(input) {
   return input.split(path.sep).join('/');
@@ -175,12 +176,19 @@ async function writeManifest(posts, outputDir) {
   await fs.writeJson(path.join(outputDir, 'posts.json'), manifest, { spaces: 2 });
 }
 
-async function generateSitemap(posts, distDir) {
+async function generateSitemap(posts, distDir, talks = []) {
   const baseUrl = 'https://rkomi98.github.io/MyBlog';
   const urls = [
     { loc: `${baseUrl}/`, priority: '1.0', changefreq: 'weekly' },
     { loc: `${baseUrl}/blog/index.html`, priority: '0.8', changefreq: 'weekly' },
   ];
+
+  if (talks.length) {
+    urls.push({ loc: `${baseUrl}/talks/index.html`, priority: '0.8', changefreq: 'monthly' });
+    for (const talk of talks) {
+      urls.push({ loc: `${baseUrl}/talks/${talk.slug}/`, priority: '0.6', changefreq: 'yearly', lastmod: talk.date });
+    }
+  }
 
   for (const post of posts) {
     for (const lang of Object.keys(post.languages)) {
@@ -263,10 +271,24 @@ async function build() {
   await writeManifest(publishedPosts, blogDir);
   await copyStaticBlogPages(rootDir, blogDir);
 
-  await generateSitemap(publishedPosts, distDir);
+  const talks = await loadTalks({ rootDir, logger: console });
+  if (talks.length) {
+    const talksDir = path.join(distDir, 'talks');
+    for (const talk of talks) {
+      await fs.copy(path.join(rootDir, 'talks', talk.slug), path.join(talksDir, talk.slug), { overwrite: true });
+    }
+    const talksIndexHtml = renderTalksIndex({
+      talks,
+      relativeRoot: path.relative(talksDir, distDir) || '.',
+    });
+    await fs.writeFile(path.join(talksDir, 'index.html'), talksIndexHtml, 'utf8');
+  }
+
+  await generateSitemap(publishedPosts, distDir, talks);
 
   await syncDocsDirectory(distDir, rootDir);
 
+  console.log(`✔️  Generated ${talks.length} talk(s)`);
   console.log(`✔️  Generated ${publishedPosts.length} post(s) into ${toPosix(path.relative(rootDir, distDir))}`);
 }
 
